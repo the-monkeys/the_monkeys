@@ -1,11 +1,19 @@
-import logo from './logo.svg';
-import './App.css';
+import Navigation from "./Navigation/Navigation";
+import About from "./Navigation/About";
+import Contact from "./Navigation/Contact";
+import "./index.css";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <h1> The Monkeys' </h1>
-    </div>
+    <>
+      <Navigation />
+      <Routes>
+        <Route path="/" element={App} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+    </>
   );
 }
 
