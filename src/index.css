@@ -29,5 +29,5 @@ ul {
 }
 .navlinks:hover {
   transition: all .200ms ease;
-  border-bottom: solid 2px #343434;
+  box-shadow: 0px 2px 0px 0px #343434;
 }
