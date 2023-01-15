@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Sans:wght@400;500;600;700&display=swap');
+body {
+  margin: 0;
+  font-family: 'Noto Sans', BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+ul {
+  transition: all .200ms ease;
+}
+.navlinks {
+  height: 100%;
+  width: 25%;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navlinks:hover {
+  transition: all .200ms ease;
+  border-bottom: solid 2px #343434;
+}
