@@ -1,6 +1,7 @@
-import Navigation from "./Navigation/Navigation";
-import About from "./Navigation/About";
-import Contact from "./Navigation/Contact";
+import Navigation from "./components/Navigation";
+import Footer from "./components/Footer";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 import "./index.css";
 import { Route, Routes } from "react-router-dom";
 
@@ -10,9 +11,10 @@ function App() {
       <Navigation />
       <Routes>
         <Route path="/" element={App} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={About} />
+        <Route path="/contact" element={Contact} />
       </Routes>
+      <Footer />
     </>
   );
 }

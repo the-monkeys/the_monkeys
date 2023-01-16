@@ -31,3 +31,9 @@ ul {
   transition: all 0.2ms ease;
   box-shadow: 0px 2px 0px 0px #343434;
 }
+.links > a {
+  color: #343434;
+}
+.links > a:hover {
+  text-decoration: underline;
+}

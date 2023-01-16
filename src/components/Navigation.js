@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom"
+import Logo from "./Logo"
 export default function Navigation () {
     return (
     <nav className="relative bg-offWhite shadow-md p-3">
         <div className="container mx-auto w-full flex items-center justify-between">
 
-        <div className="text-3xl font-bold font-dance"><Link to="/">The Monkeys'</Link></div>
+        <Logo />
         <ul className="h-full hidden md:flex items-center justify-between space-x-12">
             <Link className="navlinks" to="/">Home</Link>
             <Link className="navlinks" to="/about">About</Link>
