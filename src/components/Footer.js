@@ -17,7 +17,7 @@ export default function Footer() {
         >
           <Logo />
           <div className="text-sm mx-auto my-6 text-center text-white md:hidden">
-            &copy; 2023, The Monkeys'
+            &copy; 2023, The Monkeys' 
           </div>
         </div>
         {/* Other Links */}
