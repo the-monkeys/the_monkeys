@@ -64,7 +64,7 @@ export default function Footer() {
               </button>
             </div>
           </form>
-          <div className="w-full flex  space-x-4">
+          <div className="w-full flex items-center space-x-4">
             <div>Let's be friends</div>
             <a
               href="https://www.instagram.com/_the__monkeys_/"
@@ -73,7 +73,7 @@ export default function Footer() {
             >
               <img src={instIcon} alt="Insta-logo"></img>
             </a>
-            <a
+            <a className="mb-0.5"
               href="https://twitter.com/DaVeTwEeTlive"
               target="_blank"
               rel="noopener noreferrer"
