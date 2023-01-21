@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import instIcon from "../images/icon.insta.svg";
 import TwitterIcon from "../images/icon-twitter.svg";
+import Developer from "./developer";
 export default function Footer() {
   return (
     <footer className="absolute bottom-0 w-full bg-offWhite">
