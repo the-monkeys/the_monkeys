@@ -11,12 +11,12 @@ export default function Navigation() {
          <div className="hidden md:flex justify-between items-center space-x-6">
            <NavLink
              to="/login"
-             className="py-1 px-4 bg-transparent baseline 
-              cursor-pointer border-2 border-transparent main-link hover:text-black">
+             className="py-2 px-6 bg-transparent baseline 
+              cursor-pointer border-2 border-transparent main-link hover:text-black text-[1.05rem]">
              Login
            </NavLink>
            <NavLink
-             className="py-1 px-4 text-white bg-lightBlack baseline
+             className="py-2 px-6 text-white text-[1.05rem] bg-lightBlack baseline
              cursor-pointer rounded-sm hover:bg-transparent hover:text-lightBlack
              border-2 hover: border-lightBlack"
              to="/register">

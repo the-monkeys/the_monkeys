@@ -4,7 +4,7 @@ import instIcon from "../images/icon.insta.svg";
 import TwitterIcon from "../images/icon-twitter.svg";
 export default function Footer() {
   return (
-    <footer className="absolute bottom-0 w-full bg-offWhite">
+    <footer className=" bottom-0 w-full">
       {/* Absolute property is temporary */}
       <div
         className="container flex flex-col-reverse justify-between 
@@ -38,7 +38,7 @@ export default function Footer() {
           </div>
           <div className="links flex flex-col space-y-3">
             <Link to="/" className="main-link">
-              Developers
+              Meet the Monkeys
             </Link>
             <Link to="/" className="main-link">
               Terms of service
