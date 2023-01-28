@@ -4,7 +4,7 @@ import instIcon from "../images/icon.insta.svg";
 import TwitterIcon from "../images/icon-twitter.svg";
 export default function Footer() {
   return (
-    <footer className=" bottom-0 w-full">
+    <footer className="w-full">
       {/* Absolute property is temporary */}
       <div
         className="container flex flex-col-reverse justify-between 
@@ -36,18 +36,18 @@ export default function Footer() {
               Publishers
             </Link>
           </div>
-          <div className="links flex flex-col space-y-3">
-            <Link to="/" className="main-link">
-              Meet the Monkeys
-            </Link>
-            <Link to="/" className="main-link">
+          <div className="links flex flex-col space-y-3 text-white">
+            <Link to="/tos" className="main-link">
               Terms of service
             </Link>
             <Link to="/" className="main-link">
               Privacy Policy
             </Link>
-            <Link to="/" className="main-link">
+            <Link to="/" className="hover:text-gray">
               Support
+            </Link>
+            <Link to="/" className="main-link">
+              Meet the Monkeys
             </Link>
           </div>
         </div>
@@ -73,7 +73,7 @@ export default function Footer() {
             >
               <img src={instIcon} alt="Insta-logo"></img>
             </a>
-            <a 
+            <a
               href="https://twitter.com/DaVeTwEeTlive"
               target="_blank"
               rel="noopener noreferrer"
@@ -81,9 +81,7 @@ export default function Footer() {
               <img src={TwitterIcon} alt="Twitter-logo"></img>
             </a>
           </div>
-          <div className="hidden md:block">
-            &copy; 2023, The Monkeys'
-          </div>
+          <div className="hidden md:block">&copy; 2023, The Monkeys'</div>
         </div>
       </div>
     </footer>
