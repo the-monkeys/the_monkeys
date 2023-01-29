@@ -91,6 +91,58 @@ export default function Navigation() {
           </Link>
         </ul>
       </div>
+      <div className="hidden flex container md:flex items-center justify-center">
+        <ul className="py-4 flex justify-center items-center space-x-14">
+            <Link className="navlinks main-link" to="/contact">
+              Trending
+            </Link>
+            <Link className="navlinks main-link" to="/">
+              Technology
+            </Link>
+            <Link className="navlinks main-link" to="/contact">
+              Lifestyle
+            </Link>
+            <Link className="navlinks main-link" to="/contact">
+              Health
+            </Link>
+            <Link className="navlinks main-link" to="/about">
+              Business & Finance
+            </Link>
+            <Link className="navlinks main-link" to="/#">
+              Philosophy & psychology
+            </Link>
+          </ul>
+      </div>
+      {/* Dropdown Nav */}
+      <div className="md:hidden">
+        <ul className="mobile-nav hidden absolute flex flex-col items-center self-end py-8 space-y-6 
+        bg-white sm:self-center w-full shadow-md">
+          <Link className="" to="/contact">
+              Trending
+            </Link>
+            <Link className="" to="/">
+              Technology
+            </Link>
+            <Link className="" to="/contact">
+              Lifestyle
+            </Link>
+            <Link className="" to="/contact">
+              Health
+            </Link>
+            <Link className="" to="/about">
+              Business & Finance
+            </Link>
+            <Link className="" to="/#">
+              Philosophy & psychology
+            </Link>
+            <Link className="" to="/register">
+              Register
+            </Link>
+            <Link className="" to="/login">
+              Login
+            </Link>
+        </ul>
+      </div>
     </nav>
   );
 }

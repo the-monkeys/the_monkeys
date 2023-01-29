@@ -43,7 +43,7 @@ export default function Footer() {
             <Link to="/" className="main-link">
               Privacy Policy
             </Link>
-            <Link to="/" className="hover:text-gray">
+            <Link to="/" className="main-link">
               Support
             </Link>
             <Link to="/" className="main-link">
@@ -66,6 +66,7 @@ export default function Footer() {
           </form>
           <div className="hidden md:flex w-full items-center space-x-4 text-gray-700">
             <p>Social Media</p>
+
             <a
               href="https://www.instagram.com/_the__monkeys_/"
               target="_blank"
