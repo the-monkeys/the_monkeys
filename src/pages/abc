@@ -1,0 +1,8 @@
+curl --location --request POST 'http://ec2-18-117-11-154.us-east-2.compute.amazonaws.com:5001/api/v1/auth/register' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "first_name": "Shoaib",
+    "last_name": "Akhtar",
+    "email": "sakhtar8272@gmail.com",
+    "password": "12345"
+}'

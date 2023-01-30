@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Noto+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap&family=Noto+Sans:wght@400;500;600;700&display=swap");
 body {
   margin: 0;
   font-family: "Noto Sans", BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -19,13 +19,16 @@ code {
 ul {
   transition: all 0.2ms ease;
 }
+.logo {
+  font-family: 'Josefin Sans', cursive;
+}
 .navlinks {
   height: 100%;
   font-weight: 500;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: .95rem;
+  font-size: 1.05rem;
 }
 .navlinks:hover {
   transition: all 0.25s ease;
@@ -42,6 +45,28 @@ ul {
 .main-link {
   color: rgb(0, 0, 0, 70%);
   transition: all 0.25s ease;
+}
+.slide {
+  animation: slide-up 0.5s ease forwards;
+}
+.slideLeft {
+  animation: slide-left 0.5s ease forwards;
+}
+@keyframes slide-up {
+  0% {
+    transform: translateY(2.5rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes slide-left {
+  0% {
+    transform: translateX(2.5rem);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 section {
   width: 100%;

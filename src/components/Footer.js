@@ -4,7 +4,7 @@ import instIcon from "../images/icon.insta.svg";
 import TwitterIcon from "../images/icon-twitter.svg";
 export default function Footer() {
   return (
-    <footer className="absolute bottom-0 w-full bg-offWhite">
+    <footer className="w-full">
       {/* Absolute property is temporary */}
       <div
         className="container flex flex-col-reverse justify-between 
@@ -36,11 +36,8 @@ export default function Footer() {
               Publishers
             </Link>
           </div>
-          <div className="links flex flex-col space-y-3">
-            <Link to="/" className="main-link">
-              Developers
-            </Link>
-            <Link to="/" className="main-link">
+          <div className="links flex flex-col space-y-3 text-white">
+            <Link to="/tos" className="main-link">
               Terms of service
             </Link>
             <Link to="/" className="main-link">
@@ -48,6 +45,9 @@ export default function Footer() {
             </Link>
             <Link to="/" className="main-link">
               Support
+            </Link>
+            <Link to="/" className="main-link">
+              Meet the Monkeys
             </Link>
           </div>
         </div>
@@ -64,8 +64,9 @@ export default function Footer() {
               </button>
             </div>
           </form>
-          <div className="hidden md:flex w-full items-center space-x-4">
-            <div>Let's be friends</div>
+          <div className="hidden md:flex w-full items-center space-x-4 text-gray-700">
+            <p>Social Media</p>
+
             <a
               href="https://www.instagram.com/_the__monkeys_/"
               target="_blank"
@@ -73,17 +74,15 @@ export default function Footer() {
             >
               <img src={instIcon} alt="Insta-logo"></img>
             </a>
-            <a 
-              href="https://twitter.com/DaVeTwEeTlive"
+            <a
+              href="https://twitter.com/themonkeyslife?s=11&t=DhJUJw7KSAV1RJND90bHUg"
               target="_blank"
               rel="noopener noreferrer"
             >
               <img src={TwitterIcon} alt="Twitter-logo"></img>
             </a>
           </div>
-          <div className="hidden md:block">
-            &copy; 2023, The Monkeys'
-          </div>
+          <div className="hidden md:block">&copy; 2023, The Monkeys'</div>
         </div>
       </div>
     </footer>

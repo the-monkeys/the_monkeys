@@ -1,7 +1,9 @@
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import About from "./pages/About";
+import Home from "./pages/Home";
 import Contact from "./pages/Contact";
+import Legal from "./pages/Legal";
 import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import Login from "./auth/Login";
@@ -12,9 +14,10 @@ function App() {
     <>
       <Navigation />
       <Routes>
-        <Route path="/" element={App} />
-        <Route path="/about" element={About} />
-        <Route path="/contact" element={Contact} />
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About/>} />
+        <Route path="/contact" element={<Contact/>} />
+        <Route path="/tos" element={<Legal/>} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />

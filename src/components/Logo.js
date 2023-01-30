@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom"
+import monkey from '../images/logo-1.jpg'
 
 export default function Logo () {
     return(
-        <div className="text-4xl md:text-3xl font-bold font-dance">
-            <Link className='text-lightBlack' to="/">The Monkeys'</Link>
+        <div>
+            <Link className='logo text-lightBlack flex items-center pt-2 w-40' to="/">
+                <img className="" src={monkey} alt="The Monkeys" />
+            </Link>
         </div>
     )
 }
