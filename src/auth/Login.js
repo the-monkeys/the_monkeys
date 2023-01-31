@@ -13,7 +13,7 @@ const Login = () => {
       </div>
       <Card>
         <div className={styles.form}>
-          <h2>Login</h2>
+          <h2 style={{ color: "black" }}>Login</h2>
           <form>
             <input type="text" placeholder="email" required />
             <input type="password" placeholder="password" required />
@@ -26,7 +26,7 @@ const Login = () => {
             <p>-- or --</p>
           </form>
           <button className="--btn --btn-danger --btn-block">
-            <FaGoogle color="fff" /> Login with Google
+            Login with <FaGoogle color="fff" style={{ margin: 5 }} />
           </button>
           <span className={styles.register}>
             <p>Don't have an account?</p>
