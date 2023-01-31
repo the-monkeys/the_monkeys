@@ -43,7 +43,7 @@ export default function Footer() {
             <Link to="/" className="main-link">
               Privacy Policy
             </Link>
-            <Link to="/" className="hover:text-gray">
+            <Link to="/" className="main-link">
               Support
             </Link>
             <Link to="/" className="main-link">

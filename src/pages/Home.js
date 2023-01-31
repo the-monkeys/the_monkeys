@@ -22,7 +22,7 @@ export default function Home() {
               <img src={instIcon} className="w-14" alt="Insta-logo"></img>
             </a>
             <a
-              href="https://twitter.com/DaVeTwEeTlive"
+              href="https://twitter.com/themonkeyslife"
               target="_blank"
               rel="noopener noreferrer"
             >
