@@ -39,7 +39,7 @@ export default function Navigation() {
       </div>
       <div className="hidden flex container md:flex items-center justify-center">
         <ul className="py-4 flex justify-center items-center space-x-14">
-          <Link className="navlinks main-link" to="/contact">
+          <Link className="navlinks main-link" to="/">
             Trending
           </Link>
           <Link className="navlinks main-link" to="/">
