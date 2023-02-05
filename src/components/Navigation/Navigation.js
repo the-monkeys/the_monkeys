@@ -1,7 +1,7 @@
 import { Link, NavLink } from "react-router-dom";
-import Logo from "./Logo";
+import { Logo } from "../Logo";
 
-export default function Navigation() {
+export const Navigation = () => {
   return (
     <nav className="relative md:px-2 shadow-sm z-10">
       <div className="container mx-auto">
@@ -93,4 +93,4 @@ export default function Navigation() {
       </div>
     </nav>
   );
-}
+};

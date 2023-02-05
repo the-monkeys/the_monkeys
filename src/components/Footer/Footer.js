@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import Logo from "./Logo";
-import instIcon from "../images/icon.insta.svg";
-import TwitterIcon from "../images/icon-twitter.svg";
-export default function Footer() {
+import { Logo } from "../Logo";
+import instIcon from "../../images/icon.insta.svg";
+import TwitterIcon from "../../images/icon-twitter.svg";
+
+export const Footer = () => {
   return (
     <footer className="w-full">
       {/* Absolute property is temporary */}
@@ -86,4 +87,4 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};
