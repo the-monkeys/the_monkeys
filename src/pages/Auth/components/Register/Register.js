@@ -1,10 +1,10 @@
 import React from "react";
-import styles from "./auth.module.scss";
-import { Card } from "../components/Card";
+import styles from "../../auth.module.scss";
+import { Card } from "../../../../components/Card";
 import { Link } from "react-router-dom";
-import RegisterImg from "../../src/assets/login.png";
+import RegisterImg from "../../../../assets/login.png";
 
-const Register = () => {
+export const Register = () => {
   return (
     <>
       <section className={`container ${styles.auth}`}>
@@ -56,5 +56,3 @@ const Register = () => {
     </>
   );
 };
-
-export default Register;

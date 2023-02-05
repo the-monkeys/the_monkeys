@@ -1,11 +1,11 @@
 import React from "react";
-import styles from "./auth.module.scss";
-import { NavLink } from "react-router-dom";
+import styles from "../../auth.module.scss";
 import { Link } from "react-router-dom";
-import lodingImg from "../../src/assets/login.png";
+import lodingImg from "../../../../assets/login.png";
 import { FaGoogle } from "react-icons/fa";
-import { Card } from "../components/Card";
-const Login = () => {
+import { Card } from "../../../../components/Card";
+
+export const Login = () => {
   return (
     <section className={`container ${styles.auth}`}>
       <div className={styles.img}>
@@ -37,5 +37,3 @@ const Login = () => {
     </section>
   );
 };
-
-export default Login;
