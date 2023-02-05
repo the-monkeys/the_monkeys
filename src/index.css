@@ -29,7 +29,7 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.05rem;
+  font-size: 1.4rem;
 }
 .navlinks:hover {
   transition: all 0.25s ease;
@@ -550,10 +550,10 @@ a {
   transition: all 0.2s;
 }
 
-a:hover {
+/* a:hover {
   color: var(--color-dark);
   font-size: 1.5rem;
-}
+} */
 
 /* navication{
   mobile-nav hidden absolute flex flex-col items-center self-end py-8 space-y-6 
