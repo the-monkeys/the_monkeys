@@ -11,12 +11,12 @@ export default function Navigation() {
             <NavLink
               to="/login"
               className="py-2 px-6 bg-transparent baseline 
-              cursor-pointer border-2 border-transparent main-link hover:text-black text-[1.05rem]"
+              cursor-pointer border-2 border-transparent main-link hover:text-black "
             >
               Login
             </NavLink>
             <NavLink
-              className="py-2 px-6 text-white text-[1.05rem] bg-lightBlack baseline
+              className="py-2 px-6 text-white  bg-lightBlack baseline
              cursor-pointer rounded-sm hover:bg-transparent hover:text-lightBlack
              border-2 hover: border-lightBlack"
               to="/register"
