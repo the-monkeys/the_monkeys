@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-export default function Legal() {
+
+export const Legal = () => {
   return (
     <div className="container h-full mx-auto">
       <div className="flex flex-col my-12 px-6 space-y-6">
@@ -79,4 +80,4 @@ export default function Legal() {
       </div>
     </div>
   );
-}
+};

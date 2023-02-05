@@ -1,8 +1,8 @@
-import instIcon from "../images/icon.insta.svg";
-import TwitterIcon from "../images/icon-twitter.svg";
-import Illustration from "../images/illustration-home.svg";
+import instIcon from "../../images/icon.insta.svg";
+import TwitterIcon from "../../images/icon-twitter.svg";
+import Illustration from "../../images/illustration-home.svg";
 
-export default function Home() {
+export const Home = () => {
   return (
     <div className="bg-offWhite py-24 md:py-44">
       <div className="text-xl container mx-auto flex-col-reverse md:flex-row flex items-center justify-between">
@@ -30,10 +30,10 @@ export default function Home() {
             </a>
           </div>
         </div>
-      <div className="w-1/2 mb-4 md:mb-0 md:w-1/3">
-        <img src={Illustration} className="slide" alt="img" />
-      </div>
+        <div className="w-1/2 mb-4 md:mb-0 md:w-1/3">
+          <img src={Illustration} className="slide" alt="img" />
+        </div>
       </div>
     </div>
   );
-}
+};

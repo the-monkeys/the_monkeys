@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import { Link } from "react-router-dom";
 import lodingImg from "../../src/assets/login.png";
 import { FaGoogle } from "react-icons/fa";
-import Card from "../component/card";
+import { Card } from "../components/Card";
 const Login = () => {
   return (
     <section className={`container ${styles.auth}`}>
