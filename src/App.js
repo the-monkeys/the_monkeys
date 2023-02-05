@@ -4,8 +4,8 @@ import { Home } from "./pages/Home/Home";
 import { Legal } from "./pages/Legal/Legal";
 import "./index.css";
 import { Route, Routes } from "react-router-dom";
-import Login from "./auth/Login";
-import Register from "./auth/Register";
+import { Login } from "./pages/Auth/components/Login";
+import { Register } from "./pages/Auth/components/Register";
 import AdScript from "./AdScript";
 
 function App() {
