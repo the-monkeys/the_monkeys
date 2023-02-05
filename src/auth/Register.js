@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./auth.module.scss";
-import Card from "../component/card";
+import { Card } from "../components/Card";
 import { Link } from "react-router-dom";
 import RegisterImg from "../../src/assets/login.png";
 

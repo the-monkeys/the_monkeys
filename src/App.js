@@ -1,7 +1,7 @@
-import Navigation from "./components/Navigation";
-import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import Legal from "./pages/Legal";
+import { Navigation } from "./components/Navigation";
+import { Footer } from "./components/Footer";
+import { Home } from "./pages/Home/Home";
+import { Legal } from "./pages/Legal/Legal";
 import "./index.css";
 import { Route, Routes } from "react-router-dom";
 import Login from "./auth/Login";
