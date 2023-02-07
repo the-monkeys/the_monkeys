@@ -1,5 +1,6 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Logo } from "../Logo";
+import { SignupBtn } from './SignupBtn'
 
 export const Navigation = () => {
   return (
@@ -7,24 +8,7 @@ export const Navigation = () => {
       <div className="container mx-auto">
         <div className="flex items-center justify-between py-4">
           <Logo />
-          <div className="hidden md:flex justify-between items-center space-x-6">
-            <NavLink
-              to="/login"
-              className="py-2 px-6 bg-transparent baseline 
-              cursor-pointer border-2 border-transparent main-link hover:text-black "
-            >
-              Login
-            </NavLink>
-            <NavLink
-              className="py-2 px-6 text-white  bg-lightBlack baseline
-             cursor-pointer rounded-sm hover:bg-transparent hover:text-lightBlack
-             border-2 hover: border-lightBlack"
-              to="/register"
-            >
-              Sign Up
-            </NavLink>
-          </div>
-          {/* Hamburger Menu Button */}
+          <SignupBtn />
           <button
             onClick={() => {
               document.querySelector(".mobile-nav").classList.toggle("hidden");
