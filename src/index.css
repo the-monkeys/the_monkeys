@@ -50,8 +50,8 @@ ul {
 .slide {
   animation: slide-up 0.5s ease forwards;
 }
-.slideLeft {
-  animation: slide-left 0.5s ease forwards;
+.slideDown {
+  animation: slide-down 0.5s ease forwards;
 }
 @keyframes slide-up {
   0% {
@@ -61,9 +61,9 @@ ul {
     transform: translateY(0);
   }
 }
-@keyframes slide-left {
+@keyframes slide-down {
   0% {
-    transform: translateX(2.5rem);
+    transform: translateY(-2.5rem);
   }
   100% {
     transform: translateX(0);
