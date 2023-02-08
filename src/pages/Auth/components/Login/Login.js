@@ -48,7 +48,7 @@ export const Login = () => {
         </div>
         <div className="w-full flex flex-col justify-between items-center">
           <p>Or</p>
-          <button className="flex items-center w-full bg-white p-4 text-bold text-grey shadow-md space-x-4">
+          <button className="flex items-center justify-center w-full bg-white p-4 text-bold text-grey shadow-md space-x-4">
             <img src={GoogleIcon} alt="google-icon" className="h-12" />
             <span>Login with Google</span>
           </button>

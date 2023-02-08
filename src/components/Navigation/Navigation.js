@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { Logo } from "../Logo";
 import { Dropdown } from "./Dropdown/Dropdown";
 import { SignupBtn } from './SignupBtn'
+import MenuBtn from "../../assets/menu_icon.png";
 
 export const Navigation = () => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   document.onclick = function(clickevent) {
-    if (clickevent.target.id !== 'menu') {
+    if (clickevent.target.id !== 'menu' && clickevent.target !== 'path') {
       setShowDropdown(false)
     }
   }
@@ -18,17 +19,13 @@ export const Navigation = () => {
         <div className="flex items-center justify-between py-4">
           <Logo />
           <SignupBtn />
-          <button
-          id="menu"
+            <div id='cont'
             onClick={() => {
               setShowDropdown(!showDropdown);
             }}
-            className="md:hidden h-[20px] w-[25px] flex flex-col justify-between z-1"
-          >
-            <span className="block h-0.5 w-8 bg-lightBlack"></span>
-            <span className="block h-0.5 w-8 bg-lightBlack"></span>
-            <span className="block h-0.5 w-8 bg-lightBlack"></span>
-          </button>
+            className="absolute right-[19px] top-[9.5px] w-12">
+            <img id="menu" className="md:hidden w-full" src={MenuBtn} alt='menu btn'/>
+            </div>
         </div>
       </div>
       <div className="hidden flex container md:flex items-center justify-center">
