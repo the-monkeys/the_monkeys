@@ -24,7 +24,7 @@ export const Navigation = () => {
               setShowDropdown(!showDropdown);
             }}
             className="absolute right-[19px] top-[9.5px] w-12">
-            <img id="menu" className="w-full" src={MenuBtn} alt='menu btn'/>
+            <img id="menu" className="md:hidden w-full" src={MenuBtn} alt='menu btn'/>
             </div>
         </div>
       </div>
