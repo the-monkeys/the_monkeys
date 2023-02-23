@@ -1,6 +1,7 @@
 import instIcon from "../../images/icon.insta.svg";
 import TwitterIcon from "../../images/icon-twitter.svg";
 import Illustration from "../../images/illustration-home.svg";
+import ReactPlayer from 'react-player/youtube';
 
 export const Home = () => {
   return (
@@ -31,7 +32,8 @@ export const Home = () => {
           </div>
         </div>
         <div className="w-1/2 mb-4 md:mb-0 md:w-1/3">
-          <img src={Illustration} className="slide" alt="img" />
+          {/* <img src={Illustration} className="slide" alt="img" /> */}
+          <ReactPlayer url='https://www.youtube.com/watch?v=ysz5S6PUM-U' />
         </div>
       </div>
     </div>
