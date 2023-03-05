@@ -1,7 +1,10 @@
 import axios from "axios";
 
 export const API = () => {
-  const BASE_URI = process.env.REACT_APP_API_HTTP;
+  const BASE_URI =
+    process.env.NODE_ENV === "production"
+      ? process.env.REACT_APP_API_HTTPS
+      : process.env.REACT_APP_API_HTTP;
 
   const ENDPOINTS = {
     REGISTER: {
