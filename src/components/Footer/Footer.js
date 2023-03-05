@@ -5,7 +5,7 @@ import TwitterIcon from "../../images/icon-twitter.svg";
 
 export const Footer = () => {
   return (
-    <footer className="w-full">
+    <footer className="w-full" data-testid="footer">
       {/* Absolute property is temporary */}
       <div
         className="container flex flex-col-reverse justify-between 

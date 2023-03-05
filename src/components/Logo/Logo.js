@@ -3,7 +3,7 @@ import monkey from "../../images/logo-1.jpg";
 
 export const Logo = () => {
   return (
-    <div>
+    <div data-testid="logo">
       <Link className="logo text-lightBlack flex items-center pt-2 w-40" to="/">
         <img className="" src={monkey} alt="The Monkeys" />
       </Link>

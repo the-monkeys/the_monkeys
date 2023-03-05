@@ -7,7 +7,10 @@ import GoogleIcon from "../../../../assets/google-icon.svg";
 
 export const Login = () => {
   return (
-    <section className="container mx-auto flex items-center justify-center md:justify-end">
+    <section
+      className="container mx-auto flex items-center justify-center md:justify-end"
+      data-testid="login"
+    >
       <div className="hidden md:block w-1/2 p-24 pl-0">
         <img className="slide" src={LoginSvg} alt="illustration" />
       </div>

@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export const Legal = () => {
   return (
-    <div className="container h-full mx-auto">
+    <div className="container h-full mx-auto" data-testid="legal">
       <div className="flex flex-col my-12 px-6 space-y-6">
         <h2 className="text-bold">Terms of Service</h2>
         <p className="text-xl text-justify">
