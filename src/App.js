@@ -7,6 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import { Login } from "./pages/Auth/components/Login";
 import { Register } from "./pages/Auth/components/Register";
 import AdScript from "./AdScript";
+import "izitoast-react/dist/iziToast.css";
 
 function App() {
   return (
