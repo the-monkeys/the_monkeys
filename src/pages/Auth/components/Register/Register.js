@@ -16,7 +16,7 @@ export const Register = () => {
           <label>Name:</label>
           <input
             className="border-solid border-2 border-lightBlack rounded-sm mt-2 w-full p-4"
-            type="email"
+            type="name"
             placeholder="Enter your Name"
             required
           />
