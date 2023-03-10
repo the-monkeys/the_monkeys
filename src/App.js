@@ -3,15 +3,17 @@ import { Footer } from "./components/Footer";
 import { Home } from "./pages/Home/Home";
 import { Legal } from "./pages/Legal/Legal";
 import "./index.css";
+import { useState } from 'react'
 import { Route, Routes } from "react-router-dom";
 import { Login } from "./pages/Auth/components/Login";
 import { Register } from "./pages/Auth/components/Register";
 import AdScript from "./AdScript";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   return (
     <>
-      <Navigation />
+      <Navigation isLoggedIn={isLoggedIn} />
       {/* AdScript will add script tag to all the component present here */}
       <AdScript />
       <Routes>

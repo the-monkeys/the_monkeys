@@ -5,7 +5,7 @@ import { Dropdown } from "./Dropdown/Dropdown";
 import { SignupBtn } from './SignupBtn'
 import MenuBtn from "../../assets/menu_icon.png";
 
-export const Navigation = () => {
+export const Navigation = ({ isLoggedIn }) => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   document.onclick = function(clickevent) {
@@ -18,7 +18,7 @@ export const Navigation = () => {
       <div className="container mx-auto">
         <div className="flex items-center justify-between py-4">
           <Logo />
-          <SignupBtn />
+          {isLoggedIn ? '' : <SignupBtn />}
             <div id='cont'
             onClick={() => {
               setShowDropdown(!showDropdown);
