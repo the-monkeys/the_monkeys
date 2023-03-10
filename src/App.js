@@ -11,7 +11,7 @@ import AdScript from "./AdScript";
 import "izitoast-react/dist/iziToast.css";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
   return (
     <>
       <Navigation isLoggedIn={isLoggedIn} />
