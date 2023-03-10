@@ -10,7 +10,7 @@ import { Register } from "./pages/Auth/components/Register";
 import AdScript from "./AdScript";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
   return (
     <>
       <Navigation isLoggedIn={isLoggedIn} />
