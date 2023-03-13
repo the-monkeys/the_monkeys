@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-export const Dropdown = ({ isLoggedIn }) => {
+export const Dropdown = ({ isLoggedIn, logOut }) => {
     return(
         <div>
         <ul
@@ -24,7 +24,12 @@ export const Dropdown = ({ isLoggedIn }) => {
           <Link to="/">
             Philosophy & psychology
           </Link>
-          {isLoggedIn ? '' : <><Link to="/login">
+          {isLoggedIn ? 
+          <>
+          <Link to=''>Profile</Link>
+          <Link to=''>Settings</Link>
+          <Link onClick={logOut}>Log Out</Link>
+          </> : <><Link to="/login">
             Login
           </Link>
           <Link to="/register">

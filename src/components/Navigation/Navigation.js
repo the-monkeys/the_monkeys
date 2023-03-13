@@ -52,7 +52,7 @@ export const Navigation = ({ isLoggedIn, logOut }) => {
           </Link>
         </ul>
       </div>
-      {showDropdown ? <Dropdown isLoggedIn={isLoggedIn} /> : ''}
+      {showDropdown ? <Dropdown isLoggedIn={isLoggedIn} logOut={logOut} /> : ''}
     </nav>
   )
 }

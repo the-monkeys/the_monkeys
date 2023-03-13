@@ -12,7 +12,7 @@ import AdScript from "./AdScript";
 function App() {
   const navigate = useNavigate();
   // User status
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
   // Temporary Log out function
   const logOut = () => {
     setIsLoggedIn(false)
