@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { Logo } from "../Logo";
 import { Dropdown } from "./Dropdown/Dropdown";
 import { SignupBtn } from './SignupBtn'
+import { ProfileIcon } from './ProfileIcon'
 import MenuBtn from "../../assets/menu_icon.png";
 
-export const Navigation = () => {
+export const Navigation = ({ isLoggedIn, logOut }) => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   document.onclick = function(clickevent) {
@@ -18,7 +19,7 @@ export const Navigation = () => {
       <div className="container mx-auto">
         <div className="flex items-center justify-between py-4">
           <Logo />
-          <SignupBtn />
+          {isLoggedIn ? <ProfileIcon logOut={logOut} /> : <SignupBtn />}
             <div id='cont'
             onClick={() => {
               setShowDropdown(!showDropdown);
@@ -51,7 +52,7 @@ export const Navigation = () => {
           </Link>
         </ul>
       </div>
-      {showDropdown ? <Dropdown /> : ''}
+      {showDropdown ? <Dropdown isLoggedIn={isLoggedIn} logOut={logOut} /> : ''}
     </nav>
   )
 }
