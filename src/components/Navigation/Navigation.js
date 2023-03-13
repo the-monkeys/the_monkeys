@@ -6,7 +6,7 @@ import { SignupBtn } from './SignupBtn'
 import { ProfileIcon } from './ProfileIcon'
 import MenuBtn from "../../assets/menu_icon.png";
 
-export const Navigation = ({ isLoggedIn }) => {
+export const Navigation = ({ isLoggedIn, logOut }) => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   document.onclick = function(clickevent) {
@@ -19,7 +19,7 @@ export const Navigation = ({ isLoggedIn }) => {
       <div className="container mx-auto">
         <div className="flex items-center justify-between py-4">
           <Logo />
-          {isLoggedIn ? <ProfileIcon /> : <SignupBtn />}
+          {isLoggedIn ? <ProfileIcon logOut={logOut} /> : <SignupBtn />}
             <div id='cont'
             onClick={() => {
               setShowDropdown(!showDropdown);
@@ -52,7 +52,7 @@ export const Navigation = ({ isLoggedIn }) => {
           </Link>
         </ul>
       </div>
-      {showDropdown ? <Dropdown /> : ''}
+      {showDropdown ? <Dropdown isLoggedIn={isLoggedIn} /> : ''}
     </nav>
   )
 }
