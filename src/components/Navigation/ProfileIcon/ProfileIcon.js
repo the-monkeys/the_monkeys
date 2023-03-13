@@ -1,12 +1,13 @@
 import { FaUser } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
-export function ProfileIcon() {
+
+export function ProfileIcon({ logOut }) {
   const [profileDropdown, setProfileDropdown] = useState(false)
 
   return (
         <div
-        onClick={(e) => { setProfileDropdown(!profileDropdown); console.log(e.target) }}
+        onClick={(e) => { setProfileDropdown(!profileDropdown) }}
         className="relative hidden md:flex bg-purple-600 h-full w-16 h-16 items-center
          justify-center text-white rounded-full cursor-pointer text-3xl z-10">
             <FaUser />
@@ -19,7 +20,7 @@ export function ProfileIcon() {
                     <Link className='text-[12px]'>Settings</Link>
                 </li>
                 <li className='w-full hover:bg-gray-300 px-12 h-14 flex items-center justify-center'>
-                    <Link className='text-[12px]'>Log Out</Link>
+                    <Link onClick={() => { logOut(true) }} className='text-[12px]'>Log Out</Link>
                 </li>
             </ul>
         </div>
