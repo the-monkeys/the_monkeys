@@ -28,7 +28,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/tos" element={<Legal />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={<Register isLoggedIn={isLoggedIn} />} />
       </Routes>
       <Footer />
     </>
