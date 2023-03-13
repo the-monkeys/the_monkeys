@@ -1,11 +1,59 @@
-// import React from "react";
+import {useState} from "react"
 // import styles from "../../auth.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LoginSvg from "../../../../assets/Login.svg";
 import GoogleIcon from "../../../../assets/google-icon.svg";
 // import { Card } from "../../../../components/Card";
 
-export const Login = () => {
+export const Login = ({ isLoggedIn }) => {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  })
+
+  const [formErrors, setFormErrors] = useState({
+    email: '',
+  })
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  }
+  const validateForm = () => {
+    let isValid = true;
+    const errors = {};
+
+    if (!formData.email.trim()) {
+      errors.email = 'Email is required';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      errors.email = 'Invalid Email format';
+      isValid = false;
+    }
+
+    setFormErrors(errors);
+    return isValid;
+  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    if (validateForm()) {
+      // reset form data
+      setFormData({
+        email: '',
+        password: ''
+      });
+      setFormErrors({
+        email: ''
+      });
+      navigate('/')
+      alert('success')
+      isLoggedIn(true)
+    }
+  }
   return (
     <section
       className="container mx-auto flex items-center justify-center md:justify-end"
@@ -14,24 +62,32 @@ export const Login = () => {
       <div className="hidden md:block w-1/2 p-24 pl-0">
         <img className="slide" src={LoginSvg} alt="illustration" />
       </div>
-      <form className="slideDown py-28 md:py-0 text-2xl md:w-1/2 md:pl-28 bg-white flex flex-col space-y-8">
+      <form onSubmit={handleSubmit} className="slideDown py-28 md:py-0 text-2xl md:w-1/2 md:pl-28 bg-white flex flex-col space-y-8">
         <div>
           <label>Email:</label>
           <input
-            className="border-solid border-2 border-lightBlack rounded-sm mt-2 w-full p-4"
+            className="border-solid border-2 border-lightBlack rounded-sm mt-2 mb-2 w-full p-4"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
             type="email"
             placeholder="Enter your Email"
             required
           />
+          {formErrors.email && <span className="text-red-500">{formErrors.email}</span>}
         </div>
         <div>
           <label>Password:</label>
           <input
             className="border-solid border-2 border-lightBlack rounded-sm mt-2 w-full p-4"
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
             type="password"
             placeholder="Enter your Password"
             required
           />
+
         </div>
         <div className="flex space-x-2 items-center">
           <input className="w-6 h-6" type="checkbox" />

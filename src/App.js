@@ -13,7 +13,7 @@ import "izitoast-react/dist/iziToast.css";
 function App() {
   const navigate = useNavigate();
   // User status
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   // Temporary Log out function
   const logOut = () => {
     setIsLoggedIn(false)
@@ -27,8 +27,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/tos" element={<Legal />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register isLoggedIn={isLoggedIn} />} />
+        <Route path="/login" element={<Login isLoggedIn={setIsLoggedIn} />} />
+        <Route path="/register" element={<Register isLoggedIn={setIsLoggedIn} />} />
       </Routes>
       <Footer />
     </>
