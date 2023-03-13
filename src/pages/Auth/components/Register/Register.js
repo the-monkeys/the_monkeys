@@ -1,22 +1,54 @@
-// import React from "react";
-// import styles from "../../auth.module.scss";
-// import { Card } from "../../../../components/Card";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import RegisterImg from "../../../../assets/register.svg";
 import GoogleIcon from "../../../../assets/google-icon.svg";
 
-export const Register = () => {
+export const Register = ({ isLoggedIn}) => {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+  const [passwordError, setPasswordError] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      setPasswordError('Passwords do not match')
+    } else {
+      setPasswordError('')
+      navigate('/')
+      alert('Success!')
+      isLoggedIn(true)
+    }
+    console.log(formData)
+  }
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  }
+
   return (
     <section className="container mx-auto flex items-center justify-center md:justify-end">
       <div className="hidden md:block w-1/2 p-24 pl-0">
         <img className="slide" src={RegisterImg} alt="illustration" />
       </div>
-      <form className="slideDown py-12 md:py-28 text-2xl md:w-1/2 md:pl-28 bg-white flex flex-col space-y-6">
+      <form onSubmit={handleSubmit} 
+      className="slideDown py-12 md:py-28 text-2xl md:w-1/2 md:pl-28 bg-white flex flex-col space-y-6">
         <div>
           <label>Name:</label>
           <input
             className="border-solid border-2 border-lightBlack rounded-sm mt-2 w-full p-4"
+            value={formData.name}
+            onChange={handleChange}
             type="name"
+            name="name"
             placeholder="Enter your Name"
             required
           />
@@ -25,6 +57,9 @@ export const Register = () => {
           <label>Email:</label>
           <input
             className="border-solid border-2 border-lightBlack rounded-sm mt-2 w-full p-4"
+            value={formData.email}
+            onChange={handleChange}
+            name="email"
             type="email"
             placeholder="Enter your Email"
             required
@@ -34,16 +69,23 @@ export const Register = () => {
           <label>Password:</label>
           <input
             className="border-solid border-2 border-lightBlack rounded-sm mt-2 w-full p-4"
+            value={formData.password}
+            onChange={handleChange}
             type="password"
+            name="password"
             placeholder="Enter your Password"
             required
           />
+          {passwordError && <div className="text-red-500 mt-2">{passwordError}</div>}
         </div>
         <div>
           <label>Confirm Password:</label>
           <input
             className="border-solid border-2 border-lightBlack rounded-sm mt-2 w-full p-4"
+            value={formData.confirmPassword}
+            onChange={handleChange}
             type="password"
+            name="confirmPassword"
             placeholder="Re-enter your Password"
             required
           />
@@ -84,53 +126,5 @@ export const Register = () => {
         </div>
       </form>
     </section>
-    // <>
-    //   <section className={`container ${styles.auth}`}>
-    //     <Card>
-    //       <div className={styles.form}>
-    //         <h2 style={{ color: "black" }}>Register</h2>
-    //         <form>
-    //           <input
-    //             type="text"
-    //             placeholder="Email"
-    //             required
-    //             // value={email}
-    //             // onChange={(e) => setEmail(e.target.value)}
-    //           />
-    //           <input
-    //             type="password"
-    //             placeholder="Password"
-    //             required
-    //             // value={password}
-    //             // onChange={(e) => setPassword(e.target.value)}
-    //           />
-    //           <input
-    //             type="password"
-    //             placeholder="Confirm Password "
-    //             required
-    //             // value={cpassword}
-    //             // onChange={(e) => setCpassword(e.target.value)}
-    //           />
-    //           <button className="--btn --btn-primary --btn-block" type="submit">
-    //             Register
-    //           </button>
-    //         </form>
-
-    //         <span className={styles.register}>
-    //           <p>Already an account?</p>
-    //           <Link to="/login">Login</Link>
-    //         </span>
-    //       </div>
-    //     </Card>
-    //     <div>
-    //       <img
-    //         className={styles.img}
-    //         src={RegisterImg}
-    //         alt="register"
-    //         width="400"
-    //       />
-    //     </div>
-    //   </section>
-    // </>
   )
 }
