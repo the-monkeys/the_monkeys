@@ -1,4 +1,4 @@
-import {useState} from "react"
+import { useState } from "react";
 // import styles from "../../auth.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import LoginSvg from "../../../../assets/Login.svg";
@@ -6,15 +6,15 @@ import GoogleIcon from "../../../../assets/google-icon.svg";
 // import { Card } from "../../../../components/Card";
 
 export const Login = ({ isLoggedIn }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  })
+    email: "",
+    password: "",
+  });
 
   const [formErrors, setFormErrors] = useState({
-    email: '',
-  })
+    email: "",
+  });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -22,38 +22,38 @@ export const Login = ({ isLoggedIn }) => {
       ...prevFormData,
       [name]: value,
     }));
-  }
+  };
   const validateForm = () => {
     let isValid = true;
     const errors = {};
 
     if (!formData.email.trim()) {
-      errors.email = 'Email is required';
+      errors.email = "Email is required";
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = 'Invalid Email format';
+      errors.email = "Invalid Email format";
       isValid = false;
     }
 
     setFormErrors(errors);
     return isValid;
-  }
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     if (validateForm()) {
       // reset form data
       setFormData({
-        email: '',
-        password: ''
+        email: "",
+        password: "",
       });
       setFormErrors({
-        email: ''
+        email: "",
       });
-      navigate('/')
-      alert('success')
-      isLoggedIn(true)
+      navigate("/");
+      alert("success");
+      isLoggedIn(true);
     }
-  }
+  };
   return (
     <section
       className="container mx-auto flex items-center justify-center md:justify-end"
@@ -62,7 +62,10 @@ export const Login = ({ isLoggedIn }) => {
       <div className="hidden md:block w-1/2 p-24 pl-0">
         <img className="slide" src={LoginSvg} alt="illustration" />
       </div>
-      <form onSubmit={handleSubmit} className="slideDown py-28 md:py-0 text-2xl md:w-1/2 md:pl-28 bg-white flex flex-col space-y-8">
+      <form
+        onSubmit={handleSubmit}
+        className="slideDown py-28 md:py-0 text-2xl md:w-1/2 md:pl-28 bg-white flex flex-col space-y-8"
+      >
         <div>
           <label>Email:</label>
           <input
@@ -74,7 +77,9 @@ export const Login = ({ isLoggedIn }) => {
             placeholder="Enter your Email"
             required
           />
-          {formErrors.email && <span className="text-red-500">{formErrors.email}</span>}
+          {formErrors.email && (
+            <span className="text-red-500">{formErrors.email}</span>
+          )}
         </div>
         <div>
           <label>Password:</label>
@@ -87,7 +92,6 @@ export const Login = ({ isLoggedIn }) => {
             placeholder="Enter your Password"
             required
           />
-
         </div>
         <div className="flex space-x-2 items-center">
           <input className="w-6 h-6" type="checkbox" />
@@ -144,3 +148,5 @@ export const Login = ({ isLoggedIn }) => {
     // </section>
   );
 };
+
+// fn ln email pas
