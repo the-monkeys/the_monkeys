@@ -4,8 +4,10 @@ import { Logo } from "../Logo";
 import { Dropdown } from "./Dropdown/Dropdown";
 import { SignupBtn } from "./SignupBtn";
 import MenuBtn from "../../assets/menu_icon.png";
+import { ProfileIcon } from "./ProfileIcon/ProfileIcon";
 
-export const Navigation = () => {
+export const Navigation = (props) => {
+  console.log("isLoggedIn", props.isLoggedIn);
   const [showDropdown, setShowDropdown] = useState(false);
 
   document.onclick = function (clickevent) {
@@ -17,8 +19,9 @@ export const Navigation = () => {
     <nav className="relative md:px-2 shadow-sm z-10" data-testid="navigation">
       <div className="container mx-auto">
         <div className="flex items-center justify-between py-4">
-          <Logo />
-          <SignupBtn />
+          {!props.isLoggedIn ? <Logo /> : ""}
+          {!props.isLoggedIn ? <SignupBtn /> : ""}
+          {props.isLoggedIn ? <ProfileIcon /> : ""}
           <div
             id="cont"
             onClick={() => {

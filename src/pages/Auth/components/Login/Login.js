@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import LoginSvg from "../../../../assets/Login.svg";
 import GoogleIcon from "../../../../assets/google-icon.svg";
 // import { Card } from "../../../../components/Card";
+// import { ProfileIcon } from "./components/Navigation/ProfileIcon/ProfileIcon";
+import { ProfileIcon } from "../../../../components/Navigation/ProfileIcon/ProfileIcon";
 
 export const Login = ({ isLoggedIn }) => {
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ export const Login = ({ isLoggedIn }) => {
       setFormErrors({
         email: "",
       });
-      navigate("/");
+      navigate("/profile");
       alert("success");
       isLoggedIn(true);
     }
