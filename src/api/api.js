@@ -17,7 +17,7 @@ export const API = () => {
   const ENDPOINTS = {
     REGISTER: {
       method: Method.Post,
-      uri: rewritePath("auth/resgister"),
+      uri: rewritePath("auth/register"),
     },
     LOGIN: {
       method: Method.Post,
