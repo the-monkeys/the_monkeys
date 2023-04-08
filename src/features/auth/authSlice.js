@@ -1,18 +1,30 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { postRequest } from "../../utils/requests";
+import { API } from "../../api";
+
+const { register, login } = API();
 
 const initialState = {
   isLoading: false,
-  registerError: false,
-  registerData: [],
+  isAuthenticated: false,
+  error: false,
+  data: [],
 };
 
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (data, thunkAPI) => {
     try {
-      const response = await postRequest("/auth/register", data);
-      return response;
+      return register(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error });
+    }
+  }
+);
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+  async (data, thunkAPI) => {
+    try {
+      return login(data);
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error });
     }
@@ -27,24 +39,54 @@ export const authSlice = createSlice({
     //     // this state is not global state. it is only books slice
     //         state.registerData = action.payload;
     //   },
+    logoutUser: (state) => {
+      state.isAuthenticated = false;
+      state.data = [];
+      state.error = false;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(registerUser.pending, (state) => {
       state.isLoading = true;
     });
     builder.addCase(registerUser.fulfilled, (state, { payload }) => {
-      state.registerData = payload.data;
+      state.data = payload;
+      state.isAuthenticated = true;
       state.isLoading = false;
+      state.error = false;
     });
-
     builder.addCase(registerUser.rejected, (state, action) => {
       state.isLoading = false;
-      state.registerData = [];
-      state.registerError = action.error.message;
+      state.data = [];
+      state.isAuthenticated = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(loginUser.pending, (state) => {
+      state.isLoading = true;
+      state.data = [];
+      state.error = false;
+      state.isAuthenticated = false;
+    });
+    builder.addCase(loginUser.fulfilled, (state, { payload }) => {
+      state.data = payload;
+      state.isAuthenticated = true;
+      state.isLoading = false;
+      state.error = false;
+    });
+    builder.addCase(loginUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.data = [];
+      state.isAuthenticated = false;
+      state.error = action.error.message;
+    });
+
+    builder.addCase(logoutUser, () => {
+      return initialState;
     });
   },
 });
 
-// export const { addUser } = authSlice.actions
+export const { logoutUser } = authSlice.actions;
 
 export default authSlice.reducer;

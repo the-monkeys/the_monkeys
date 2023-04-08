@@ -1,24 +1,24 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Logo } from "../Logo";
-import { Dropdown } from "./Dropdown/Dropdown";
+import { Dropdown } from "./Dropdown/Navbar";
 import { SignupBtn } from "./SignupBtn";
+import { useSelector } from "react-redux";
 import MenuBtn from "../../assets/menu_icon.png";
+import { ProfileMenu } from "../../components/ProfileMenu";
 
 export const Navigation = () => {
   const [showDropdown, setShowDropdown] = useState(false);
 
-  document.onclick = function (clickevent) {
-    if (clickevent.target.id !== "menu" && clickevent.target !== "path") {
-      setShowDropdown(false);
-    }
-  };
+  const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
+
   return (
     <nav className="relative md:px-2 shadow-sm z-10" data-testid="navigation">
       <div className="container mx-auto">
         <div className="flex items-center justify-between py-4">
           <Logo />
-          <SignupBtn />
+          {isAuthenticated && <ProfileMenu />}
+          {!isAuthenticated && <SignupBtn />}
           <div
             id="cont"
             onClick={() => {
