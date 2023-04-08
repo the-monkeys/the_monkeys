@@ -8,28 +8,33 @@ const Method = {
   Delete: "DELETE",
 };
 
+const rewritePath = (path) =>
+  process.env.NODE_ENV === "production"
+    ? `${process.env.REACT_APP_API_URI}/api/v1/${path}`
+    : `/api/${path}`;
+
 export const API = () => {
   const ENDPOINTS = {
     REGISTER: {
       method: Method.Post,
-      uri: "/api/register",
+      uri: rewritePath("resgister"),
     },
     LOGIN: {
       method: Method.Post,
-      uri: "/api/login",
+      uri: rewritePath("login"),
     },
     PASSWORD: {
       FORGOT_PASS: {
         method: Method.Post,
-        uri: "/api/forgot-pass",
+        uri: rewritePath("forgot-pass"),
       },
       VERIFY_EMAIL: {
         method: Method.Get,
-        uri: "/api/reset-password?verificationparams",
+        uri: rewritePath("reset-password?verificationparams"),
       },
       UPDATE_PASS: {
         method: Method.Post,
-        uri: "/api/update-password",
+        uri: rewritePath("update-password"),
       },
     },
   };

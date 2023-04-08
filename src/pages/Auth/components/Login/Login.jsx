@@ -44,7 +44,7 @@ export const Login = () => {
         }
       });
     },
-    [dispatch, showErrorMessage, showSuccessMessage]
+    [dispatch, showErrorMessage, showSuccessMessage, navigate]
   );
 
   return (
