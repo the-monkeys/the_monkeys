@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
@@ -8,23 +7,22 @@ import { useRegisterForm } from "./hooks";
 import { useCallback } from "react";
 import { useToast } from "izitoast-react";
 import { registerUser } from "../../../../features/auth/authSlice";
-import { useSelector, useDispatch } from 'react-redux'
-import LoadingButton from "../../../../components/LoadingButton/LoadingButton";
+import { useSelector, useDispatch } from "react-redux";
+import SignUpButton from "../../../../components/LoadingButton/LoadingButton";
 
 export const Register = () => {
   const { handleSubmit, control, formState } = useRegisterForm();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isLoading, } = useSelector(state => state.auth)
-
+  const { isLoading } = useSelector((state) => state.auth);
 
   const showSuccessMessage = useToast({
     message: "User registered successfully",
     title: "Success",
     backgroundColor: "#a2fc62",
     messageColor: "#191919",
-    position: "topRight"
+    position: "topRight",
   });
 
   const showErrorMessage = useToast({
@@ -32,30 +30,24 @@ export const Register = () => {
     title: "Error",
     backgroundColor: "#ff3838",
     messageColor: "#fff",
-    position: "topRight"
+    position: "topRight",
   });
 
-  const onSubmit = useCallback((data) => {
- 
-    dispatch(registerUser(data)).then(response => {
-
-
-      if(response && response.type === "auth/registerUser/fulfilled"){
-        showSuccessMessage()
-        navigate("/login")
-      }
-
-
-      if(response && response.type === "auth/registerUser/rejected"){
-        const { payload: { error }} = response;
-        if(error && error.response && error.response.status === 409){
-          showErrorMessage()
+  const onSubmit = useCallback(
+    (data) => {
+      dispatch(registerUser(data)).then((response) => {
+        if (response && response.type === "auth/registerUser/fulfilled") {
+          showSuccessMessage();
+          navigate("/login");
         }
 
-      }
-    })
-
-  }, [dispatch, navigate, showErrorMessage, showSuccessMessage]);
+        if (response && response.type === "auth/registerUser/rejected") {
+          showErrorMessage();
+        }
+      });
+    },
+    [dispatch, navigate, showErrorMessage, showSuccessMessage]
+  );
 
   return (
     <section
@@ -170,11 +162,11 @@ export const Register = () => {
         >
           Sign Up
         </button> */}
-        <LoadingButton
+        <SignUpButton
           text="Sign Up!"
           onSubmit={handleSubmit(onSubmit)}
           loading={isLoading}
-          disabled={isLoading} 
+          disabled={isLoading}
         />
         <div className="w-full flex space-x-2">
           <p className="text-md">Already a Member?</p>

@@ -4,7 +4,8 @@ const API_BASE_URI = (path) => `/api/v1/${path}`;
 
 module.exports = function (app) {
   app.use(
-    createProxyMiddleware("/api", {
+    "/api",
+    createProxyMiddleware({
       pathRewrite: { "/api": API_BASE_URI("auth") },
       target: "https://themonkeys.tech",
       changeOrigin: true,
@@ -15,7 +16,7 @@ module.exports = function (app) {
         Connection: "keep-alive",
       },
     }),
-    createProxyMiddleware("/api", {
+    createProxyMiddleware({
       pathRewrite: { "/api": API_BASE_URI("profile") },
       target: "https://themonkeys.tech",
       changeOrigin: true,

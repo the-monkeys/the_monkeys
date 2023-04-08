@@ -47,7 +47,7 @@ export const Footer = () => {
             <Link to="/" className="main-link">
               Support
             </Link>
-            <Link to="/" className="main-link">
+            <Link to="/meet-the-monkeys" className="main-link">
               Meet the Monkeys
             </Link>
           </div>

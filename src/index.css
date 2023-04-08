@@ -4,6 +4,15 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@700&display=swap&family=Noto+Sans:wght@400;500;600;700&display=swap");
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
+main {
+  min-height: calc(100vh - 250px);
+}
 
 body {
   margin: 0;
@@ -550,6 +559,25 @@ a {
   color: var(--dark-blue);
   text-decoration: none;
   transition: all 0.2s;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
+.inline-block {
+  display: inline-block;
+  padding: 6px;
+}
+
+.members-grid {
+  margin: 50px;
+}
+
+.dropdown-image {
+  border-radius: 50%;
 }
 
 /* a:hover {
