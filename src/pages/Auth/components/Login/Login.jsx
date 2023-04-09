@@ -4,47 +4,35 @@ import { Controller } from "react-hook-form";
 import { useLoginForm } from "./hooks";
 import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useToast } from "izitoast-react";
-import { loginUser } from "../../../../features/auth/authSlice";
+import { loginUser } from "../../../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "izitoast-react";
+import { Alert } from "../../../../common/utils/alertConfig";
 
 export const Login = () => {
   const { control, formState, handleSubmit } = useLoginForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const successAlert = useToast(Alert("Login successful").success);
+  const errorAlert = useToast(Alert("Something went wrong").error);
+
   const { isLoading } = useSelector((state) => state.auth);
-
-  const showSuccessMessage = useToast({
-    message: "Login successful",
-    title: "Success",
-    backgroundColor: "#a2fc62",
-    messageColor: "#191919",
-    position: "topRight",
-  });
-
-  const showErrorMessage = useToast({
-    message: "User not found",
-    title: "Error",
-    backgroundColor: "#ff3838",
-    messageColor: "#fff",
-    position: "topRight",
-  });
 
   const onSubmit = useCallback(
     (data) => {
       dispatch(loginUser(data)).then((response) => {
         if (response && response.type === "auth/loginUser/fulfilled") {
-          showSuccessMessage();
+          successAlert();
           navigate("/profile");
         }
 
         if (response && response.type === "auth/loginUser/rejected") {
-          showErrorMessage();
+          errorAlert();
         }
       });
     },
-    [dispatch, showErrorMessage, showSuccessMessage, navigate]
+    [dispatch, errorAlert, successAlert, navigate]
   );
 
   return (

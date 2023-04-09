@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
-export const Dropdown = () => {
+
+export const Navbar = () => {
   const navLinks = useMemo(() => {
     return [
       {

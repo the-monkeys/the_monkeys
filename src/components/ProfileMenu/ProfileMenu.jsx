@@ -8,7 +8,7 @@ import {
   StyledSpan,
   StyledSvg,
 } from "./ProfileMenu.styles";
-import { logoutUser } from "../../features/auth/authSlice";
+import { logoutUser } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
 
 const LINKS = ["/profile", "/settings"];

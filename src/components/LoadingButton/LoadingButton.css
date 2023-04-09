@@ -1,40 +1,39 @@
 .submit-btn {
-    font-family: 'Anek Malayalam', sans-serif;
-    background: #454545;
-    border: none;
-    outline: none;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 14px;
-    color: #ffffff;
-    min-width: 200px;
-    min-height: 36px;
-    cursor: pointer;
-    outline: none;
+  font-family: "Anek Malayalam", sans-serif;
+  background: #454545;
+  border: none;
+  outline: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  color: #ffffff;
+  min-width: 200px;
+  min-height: 36px;
+  cursor: pointer;
+  outline: none;
+}
+
+.submit-btn:disabled {
+  background: #454545;
+  color: #9fa3a9;
+  cursor: not-allowed;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation-name: spin;
+  animation-duration: 500ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
-  
-  .submit-btn:disabled {
-    background: #454545;
-    color: #9fa3a9;
-    cursor: not-allowed;
+  to {
+    transform: rotate(360deg);
   }
-  
-  .spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;  
-    margin-left: 190px;
-    animation-name: spin;
-    animation-duration: 500ms;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-  }
-  
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
 }

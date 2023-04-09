@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Logo } from "../Logo";
-import { Dropdown } from "./Dropdown/Navbar";
+import { Navbar } from "./Navbar";
 import { SignupBtn } from "./SignupBtn";
 import { useSelector } from "react-redux";
 import MenuBtn from "../../assets/menu_icon.png";
@@ -57,7 +57,7 @@ export const Navigation = () => {
           </Link>
         </ul>
       </div>
-      {showDropdown ? <Dropdown /> : ""}
+      {showDropdown ? <Navbar /> : ""}
     </nav>
   );
 };

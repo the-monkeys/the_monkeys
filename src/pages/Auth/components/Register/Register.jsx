@@ -5,48 +5,36 @@ import RegisterImg from "../../../../assets/register.svg";
 import GoogleIcon from "../../../../assets/google-icon.svg";
 import { useRegisterForm } from "./hooks";
 import { useCallback } from "react";
-import { useToast } from "izitoast-react";
-import { registerUser } from "../../../../features/auth/authSlice";
+import { registerUser } from "../../../../redux/auth/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import SignUpButton from "../../../../components/LoadingButton/LoadingButton";
+import { useToast } from "izitoast-react";
+import { Alert } from "../../../../common/utils/alertConfig";
 
 export const Register = () => {
   const { handleSubmit, control, formState } = useRegisterForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const successAlert = useToast(Alert("Registered successfully").success);
+  const errorAlert = useToast(Alert("Something went wrong").error);
+
   const { isLoading } = useSelector((state) => state.auth);
-
-  const showSuccessMessage = useToast({
-    message: "User registered successfully",
-    title: "Success",
-    backgroundColor: "#a2fc62",
-    messageColor: "#191919",
-    position: "topRight",
-  });
-
-  const showErrorMessage = useToast({
-    message: "User already exists",
-    title: "Error",
-    backgroundColor: "#ff3838",
-    messageColor: "#fff",
-    position: "topRight",
-  });
 
   const onSubmit = useCallback(
     (data) => {
       dispatch(registerUser(data)).then((response) => {
         if (response && response.type === "auth/registerUser/fulfilled") {
-          showSuccessMessage();
-          navigate("/login");
+          successAlert();
+          navigate("/profile");
         }
 
         if (response && response.type === "auth/registerUser/rejected") {
-          showErrorMessage();
+          errorAlert();
         }
       });
     },
-    [dispatch, navigate, showErrorMessage, showSuccessMessage]
+    [dispatch, navigate, errorAlert, successAlert]
   );
 
   return (
