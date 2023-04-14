@@ -14,10 +14,14 @@ import FontSize from 'editorjs-inline-font-size-tool'
 import CodeTool from '@editorjs/code';
 import "./ArticleEditor.css"
 import Highlight, { defaultProps } from "prism-react-renderer";
+import axios from "axios"
+import { useSelector } from "react-redux";
+
 
 // s3://themonkeys/blogsimages/
 
 const Content = (code) => {
+
 
     console.log("Contentn,", code)
     return <Highlight {...defaultProps} code={`${code.code}`} language="jsx">
@@ -38,7 +42,6 @@ const Content = (code) => {
 
 
 const DisplayList = ({ list }) => {
-    console.log(list, "list")
     return (
         <div className="list">
             {
@@ -51,13 +54,55 @@ const DisplayList = ({ list }) => {
     )
 }
 
+
+
 export const ArticleEditor = () => {
 
     const [htmlCode, setHtmlCode] = useState()
 
+    const [imagesUploaded, setImagesUploaded] = useState([])
 
     const [page, setPage] = useState("Editor")
 
+    console.log({
+        imagesUploaded
+    })
+
+    const token = useSelector((store) => store?.auth?.data?.token);
+
+    
+    const handleChange = () => {
+        let currentImages = []
+        document.querySelectorAll(".image-tool__image-picture").forEach((x) => {
+			currentImages.push(...currentImages, x?.src);
+		});
+
+        console.log(currentImages)
+        console.log("----", imagesUploaded , currentImages.length)
+        if (imagesUploaded.length > currentImages.length) {
+            console.log("Yeah, lets delete")
+            imagesUploaded.forEach(async (img) => {
+                console.log("img", img)
+
+            //   if (!currentImages.includes(img)) {
+            //     try {
+            //       const res = await fetch('/api/upload', {
+            //         method: 'DELETE',
+            //         headers: {
+            //           'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify({ path: img.match(/image.*$/g)[0] }),
+            //       })
+            //       const data = await res.text()
+            //       console.log(data)
+            //       setImagesUploaded((images) => images.filter((x) => x !== img))
+            //     } catch (err) {
+            //       console.log(err.message)
+            //     }
+            //   }
+            })
+          }
+    }
 
 
     const editor = new EditorJS({
@@ -79,11 +124,55 @@ export const ArticleEditor = () => {
             image: {
                 class: ImageTool,
                 config: {
-                    endpoints: {
-                        byFile: 'http://localhost:8008/uploadFile', // Your backend file uploader endpoint
-                        byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
+                    uploader: {
+                        uploadByFile(file) {
+                            let formData = new FormData()
+
+                            formData.append("file", file)
+                            return axios.post("http://localhost:3000/api/files/post/334343", formData, {
+                                headers: {
+                                    'Access-Control-Allow-Origin': '*',
+                                    "Content-Type": "multipart/form-data",
+                                    "Authorization": "Bearer " + token
+                                },
+                            }).then(data => {
+                                return axios.get("http://localhost:3000/api/files/post/334343/" + file?.name, {
+                                    headers: {
+                                        "Authorization": "Bearer " + token,
+                                    },
+                                    responseType: 'blob'
+
+                                }).then(data => {
+                                    setImagesUploaded((x) => [...x, {
+                                        src: URL.createObjectURL(data?.data),
+                                        fileName: file?.name,
+                                    } ])
+
+                                    return {
+                                        success: 1,
+                                        file: {
+                                            url: URL.createObjectURL(data?.data),
+                                            alt: file?.name,
+                                            id: file?.name,
+                                            width: 100
+                                            // any other image data you want to store, such as width, height, color, extension, etc
+                                        }
+                                    };
+                                })
+                                // console.log("Image upload data, ", data)
+                            })
+
+                        }
                     }
+
+
+                    // endpoints: {
+                    //     byFile: 'http://localhost:8008/uploadFile', // Your backend file uploader endpoint
+                    //     byUrl: 'http://localhost:8008/fetchUrl', // Your endpoint that provides uploading by Url
+                    // }
                 }
+
+
             },
             raw: RawTool,
             checklist: {
@@ -102,6 +191,8 @@ export const ArticleEditor = () => {
             code: CodeTool,
             fontSize: FontSize
         },
+
+        onChange: handleChange,
 
         minHeight: 0
 
