@@ -322,6 +322,21 @@ export const ArticleEditor = () => {
       }
     });
 
+                  return dispatch(
+                    getImageData({
+                      config: {
+                        headers: {
+                          Authorization: "Bearer " + token,
+                        },
+                        responseType: "blob",
+                      },
+                      url: "/334343/" + file?.name,
+                    })
+                  ).then((res) => {
+                    console.log(res, "get api");
+                    if (res?.type === "articleEditor/getImage/fulfilled") {
+                      if (res?.payload) {
+                        let url = URL.createObjectURL(res?.payload);
 
     setHtmlCode(html);
   };
