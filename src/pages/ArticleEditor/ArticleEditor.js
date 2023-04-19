@@ -27,7 +27,6 @@ const Content = (code) => {
   return (
     <Highlight {...defaultProps} code={`${code.code}`} language="jsx">
       {({ className, style, tokens, getLineProps, getTokenProps }) => {
-        console.log(className, "className---");
         return (
           <pre className={className + " pre-code"} style={style}>
             {tokens.map((line, i) => (
@@ -75,15 +74,9 @@ export const ArticleEditor = () => {
 
 
     useEffect(() => {
-    console.log("In useEffect", {
-      imagesUploadedData,
-    });
-  }, [imagesUploadedData]);
-
-
-  const handleChange = (api, event) => {
 
     let currentImages = [];
+
     document.querySelectorAll(".image-tool__image-picture").forEach((x) => {
       currentImages.push(...currentImages, x?.src);
     });
@@ -95,7 +88,7 @@ export const ArticleEditor = () => {
       imagesUploadedData.forEach(async (img) => {
         if (!currentImages.includes(img.src) ) {
           try {
-            if(!img?.isDeleted){
+            if(img?.isDeleted){
             let response = await dispatch(
               deleteImageData({
                 config: {
@@ -113,6 +106,47 @@ export const ArticleEditor = () => {
             }
 
             } 
+          } catch (err) {
+          }
+        }      
+      });
+    }
+    
+  }, [imagesUploadedData]);
+
+
+  const handleChange = (api, event) => {
+
+    let currentImages = [];
+    document.querySelectorAll(".image-tool__image-picture").forEach((x) => {
+      currentImages.push(...currentImages, x?.src);
+    });
+
+
+
+
+    if (imagesUploadedData.length > currentImages.length) {
+      imagesUploadedData.forEach(async (img) => {
+        if (!currentImages.includes(img.src) ) {
+          try {
+            // if(!img?.isDeleted){
+            // let response = await dispatch(
+            //   deleteImageData({
+            //     config: {
+            //       headers: {
+            //         Authorization: "Bearer " + token,
+            //       },
+            //     },
+            //     url: "/334343/" + img?.fileName,
+            //   })
+
+            // );
+
+            // if(response){
+                dispatch(deleteUnusedImage({fileName: img?.fileName}))
+            // }
+
+            // } 
           } catch (err) {
             console.log(err.message);
           }
@@ -156,7 +190,6 @@ export const ArticleEditor = () => {
                 addImageData({ formData, config, url: "/334343" })
               ).then((response) => {
                 if (response?.payload?.status === 200) {
-                  console.log("hey im ere");
 
                   return dispatch(
                     getImageData({
@@ -169,7 +202,6 @@ export const ArticleEditor = () => {
                       url: "/334343/" + file?.name,
                     })
                   ).then((res) => {
-                    console.log(res, "get api");
                     if (res?.type === "articleEditor/getImage/fulfilled") {
                       if (res?.payload) {
                         let url = URL.createObjectURL(res?.payload);
@@ -225,12 +257,10 @@ export const ArticleEditor = () => {
   });
 
   const convertToHTML = (data) => {
-    console.log(data, "---data ");
 
     let html = "";
 
     data?.blocks?.forEach((item) => {
-      // console.log(item, "---")
 
       if (item?.type === "paragraph") {
         html += `<p>${item?.data?.text}</p>`;
@@ -251,7 +281,6 @@ export const ArticleEditor = () => {
       }
     });
 
-    console.log(html, "---html");
 
     setHtmlCode(html);
   };
@@ -263,12 +292,10 @@ export const ArticleEditor = () => {
         convertToHTML(outputData);
       })
       .catch((error) => {
-        console.log("Saving failed: ", error);
       });
   };
 
   const handlePreviewClick = (page) => {
-    console.log(page, "click---");
     if (page === "Editor") {
       setPage("Preview");
     } else {

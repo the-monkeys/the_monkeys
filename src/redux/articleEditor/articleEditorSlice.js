@@ -66,13 +66,18 @@ export const articleEditorSlice = createSlice({
 
     deleteUnusedImage : (state, action) => {
 
-      // console.log(action.payload.fileName, 'payload', current(state.imagesUploaded))
-      console.log(action.payload.fileName, '--')
+      state.imagesUploaded = state.imagesUploaded.filter(item => item.isDeleted === false)
+
+
       state.imagesUploaded.forEach (item => {
         if(item.fileName === action.payload.fileName){
           item.isDeleted = true;
         }
       })
+
+
+
+
     // return {
     //    ...state,
     //    imagesUploaded: [...state.imagesUploaded].filter(item => item.fileName !== action.payload.fileName)
