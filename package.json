@@ -28,6 +28,7 @@
     "redux-devtools-extension": "^2.13.9",
     "redux-persist": "^6.0.0",
     "styled-components": "^5.3.9",
+    "uuidv4": "^6.2.13",
     "web-vitals": "^2.1.4",
     "yup": "^1.0.2"
   },

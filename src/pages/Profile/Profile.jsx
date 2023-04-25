@@ -1,7 +1,12 @@
 export const Profile = () => {
+
+
+  const handleWriteArticle = () => {
+
+  }
+
   return (
     <div>
-      <h1>This is the Profile page</h1>
     </div>
   );
 };

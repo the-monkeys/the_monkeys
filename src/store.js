@@ -1,14 +1,18 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import authReducer from "./redux/auth/authSlice";
+import articleEditorReducer from "./redux/articleEditor/articleEditorSlice"
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  articleEditor: articleEditorReducer
 });
 
 const persistConfig = {
   key: "root",
+    blacklist: ['articleEditor'],
+
   storage,
 };
 

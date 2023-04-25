@@ -37,10 +37,34 @@ export const API = () => {
         uri: rewritePath("auth/update-password"),
       },
     },
+
+    ARTICLE_EDITOR: {
+      ADD_IMAGE: {
+        method: Method.Post,
+        uri: rewritePath("files/post"),
+      },
+      GET_IMAGE: {
+        method: Method.Get,
+        uri: rewritePath("files/post"),
+      },
+      DELETE_IMAGE: {
+        method: Method.Delete,
+        uri: rewritePath("files/post"),
+      },
+    },
   };
 
-  const callApi = (api, data = null, config = undefined) => {
-    const { method, uri } = api;
+  const callApi = (
+    api,
+    data = null,
+    config = undefined,
+    rewriteUrl = false
+  ) => {
+    let { method, uri } = api;
+
+    if (rewriteUrl) {
+      uri = uri + rewriteUrl;
+    }
 
     switch (method) {
       case Method.Get:
@@ -61,5 +85,11 @@ export const API = () => {
   return {
     register: (data) => callApi(ENDPOINTS.REGISTER, data),
     login: (data) => callApi(ENDPOINTS.LOGIN, data),
+    addImage: (data, config, url) =>
+      callApi(ENDPOINTS.ARTICLE_EDITOR.ADD_IMAGE, data, config, url),
+    getImage: (config, url) =>
+      callApi(ENDPOINTS.ARTICLE_EDITOR.GET_IMAGE, {}, config, url),
+    deleteImage: (config, url) =>
+      callApi(ENDPOINTS.ARTICLE_EDITOR.DELETE_IMAGE, {}, config, url),
   };
 };
