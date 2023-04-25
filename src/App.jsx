@@ -8,6 +8,7 @@ import { Register } from "./pages/Auth/components/Register";
 import { ArticleEditor } from "./pages/ArticleEditor/ArticleEditor";
 import AdScript from "./AdScript";
 import Membersmain from "./components/Contributors/MembersMain";
+import ProtectedRoute from './common/utils/ProtectedRoute'
 import { Profile } from "./pages/Profile";
 import { Settings } from "./pages/Settings";
 import "./index.css";
@@ -26,10 +27,10 @@ function App() {
           <Route path="/tos" element={<Legal />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/article-editor" element={<ArticleEditor />} />
+          <Route path="/write/:id" element={<ProtectedRoute><ArticleEditor /> </ProtectedRoute>} />
           <Route path="/meet-the-monkeys" element={<Membersmain />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route path="/profile" element={<ProtectedRoute > <Profile /> </ProtectedRoute>} />
+          <Route path="/settings" element={ <Settings /> }  />
         </Routes>
       </main>
 

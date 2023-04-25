@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import ReactDOMServer from "react-dom/server";
-
 import EditorJS from "@editorjs/editorjs";
 import Header from "@editorjs/header";
 import List from "@editorjs/list";
@@ -112,7 +111,7 @@ export const ArticleEditor = () => {
       });
     }
     
-  }, [imagesUploadedData]);
+  }, [imagesUploadedData, dispatch, token]);
 
 
   const handleChange = (api, event) => {
@@ -307,24 +306,6 @@ export const ArticleEditor = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-center">
-        <button
-          className="mx-6 my-12 text-2xl py-2 px-6 text-white  bg-lightBlack baseline
-            cursor-pointer rounded-sm hover:bg-transparent hover:text-lightBlack
-            border-2 hover: border-lightBlack"
-          onClick={() => handlePreviewClick(page)}
-        >
-          {page === "Editor" ? "Show Preview" : "Exit Preview"}
-        </button>
-        <button
-          className="  text-2xl  py-2 px-6 text-white  bg-lightBlack baseline
-            cursor-pointer rounded-sm hover:bg-transparent hover:text-lightBlack
-            border-2 hover: border-lightBlack"
-          onClick={handleSubmit}
-        >
-          Submit Your Article
-        </button>
-      </div>
       {page === "Editor" && (
         <div>
           <div className="editor-container">
@@ -345,6 +326,26 @@ export const ArticleEditor = () => {
           ></div>
         </div>
       )}
+
+            <div className="flex items-center justify-center">
+        <button
+          className="mx-6 my-12 text-2xl py-2 px-6 text-white  bg-lightBlack baseline
+            cursor-pointer rounded-sm hover:bg-transparent hover:text-lightBlack
+            border-2 hover: border-lightBlack"
+          onClick={() => handlePreviewClick(page)}
+        >
+          {page === "Editor" ? "Save & Preview" : "Exit Preview"}
+        </button>
+        <button
+          className="  text-2xl  py-2 px-6 text-white  bg-lightBlack baseline
+            cursor-pointer rounded-sm hover:bg-transparent hover:text-lightBlack
+            border-2 hover: border-lightBlack"
+          onClick={handleSubmit}
+        >
+          Save & Publish
+        </button>
+      </div> 
+
     </div>
   );
 };

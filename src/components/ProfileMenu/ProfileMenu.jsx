@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Menu, Transition } from "@headlessui/react";
+import { v4 as uuidv4 } from 'uuid';
 import {
   StyledMenuButton,
   StyledMenuItem,
@@ -10,6 +11,7 @@ import {
 } from "./ProfileMenu.styles";
 import { logoutUser } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
+import {  useNavigate } from "react-router-dom";
 
 const LINKS = ["/profile", "/settings"];
 
@@ -17,10 +19,26 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+
+
 export const ProfileMenu = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
+    const navigate = useNavigate();
+   
+
+  const handleLogOut = () => {
+        dispatch(logoutUser())
+                         navigate('/');
+
+  }
+
 
   return (
+    <div className="flex justify-items-center items-center px-12  ">
+           <Link className="px-8" to={"/write/" + uuidv4()} key={uuidv4()}>
+              Write
+            </Link>
+
     <Menu
       as="div"
       className="relative inline-block text-left"
@@ -71,7 +89,7 @@ export const ProfileMenu = () => {
                   active ? "bg-gray-100 text-gray-900" : "text-gray-700",
                   "block px-4 py-2"
                 )}
-                onClick={() => dispatch(logoutUser())}
+                onClick={handleLogOut}
               >
                 Logout
               </StyledMenuButton>
@@ -80,5 +98,6 @@ export const ProfileMenu = () => {
         </StyledMenuItems>
       </Transition>
     </Menu>
+    </div>
   );
 };

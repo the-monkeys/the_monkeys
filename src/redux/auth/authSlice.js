@@ -22,11 +22,18 @@ export const registerUser = createAsyncThunk(
     }
   }
 );
+
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (data, thunkAPI) => {
     try {
-      return login(data);
+
+      let result = await login(data);
+
+      if(result?.status === 200){
+          localStorage.setItem("authToken", result?.token)
+      }
+      return result
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error });
     }
@@ -42,6 +49,7 @@ export const authSlice = createSlice({
     //         state.registerData = action.payload;
     //   },
     logoutUser: (state) => {
+      localStorage.removeItem("authToken")
       state.isAuthenticated = false;
       state.data = [];
       state.error = false;
