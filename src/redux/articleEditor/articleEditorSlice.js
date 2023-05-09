@@ -75,8 +75,6 @@ export const articleEditorSlice = createSlice({
       })
 
 
-
-
     // return {
     //    ...state,
     //    imagesUploaded: [...state.imagesUploaded].filter(item => item.fileName !== action.payload.fileName)

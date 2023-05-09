@@ -344,6 +344,7 @@ currentImages = [...new Set(currentImages)];
     editor
       .save()
       .then((outputData) => {
+        console.log(outputData, "output data---")
         convertToHTML(outputData);
       })
       .catch((error) => {
