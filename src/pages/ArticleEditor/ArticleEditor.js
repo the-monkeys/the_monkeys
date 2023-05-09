@@ -57,57 +57,16 @@ const DisplayList = ({ list }) => {
   );
 };
 
-
-
 export const ArticleEditor = () => {
   const [htmlCode, setHtmlCode] = useState();
 
-    const [imagesUploaded, setImagesUploaded] = useState([])
 
   const [page, setPage] = useState("Editor");
 
 
   const dispatch = useDispatch();
 
-    console.log({
-        imagesUploaded
-    })
-
-    const token = useSelector((store) => store?.auth?.data?.token);
-
-    
-    const handleChange = () => {
-        let currentImages = []
-        document.querySelectorAll(".image-tool__image-picture").forEach((x) => {
-			currentImages.push(...currentImages, x?.src);
-		});
-
-        console.log(currentImages)
-        console.log("----", imagesUploaded , currentImages.length)
-        if (imagesUploaded.length > currentImages.length) {
-            console.log("Yeah, lets delete")
-            imagesUploaded.forEach(async (img) => {
-                console.log("img", img)
-
-            //   if (!currentImages.includes(img)) {
-            //     try {
-            //       const res = await fetch('/api/upload', {
-            //         method: 'DELETE',
-            //         headers: {
-            //           'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify({ path: img.match(/image.*$/g)[0] }),
-            //       })
-            //       const data = await res.text()
-            //       console.log(data)
-            //       setImagesUploaded((images) => images.filter((x) => x !== img))
-            //     } catch (err) {
-            //       console.log(err.message)
-            //     }
-            //   }
-            })
-          }
-    }
+  const {id} = useParams()
 
   console.log({id})
 
@@ -321,21 +280,6 @@ currentImages = [...new Set(currentImages)];
       }
     });
 
-                  return dispatch(
-                    getImageData({
-                      config: {
-                        headers: {
-                          Authorization: "Bearer " + token,
-                        },
-                        responseType: "blob",
-                      },
-                      url: "/334343/" + file?.name,
-                    })
-                  ).then((res) => {
-                    console.log(res, "get api");
-                    if (res?.type === "articleEditor/getImage/fulfilled") {
-                      if (res?.payload) {
-                        let url = URL.createObjectURL(res?.payload);
 
     setHtmlCode(html);
   };
