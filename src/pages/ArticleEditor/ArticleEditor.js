@@ -10,6 +10,7 @@ import Quote from "@editorjs/quote";
 import ImageTool from "@editorjs/image";
 import FontSize from "editorjs-inline-font-size-tool";
 import CodeTool from "@editorjs/code";
+import { useParams } from 'react-router-dom'
 import "./ArticleEditor.css";
 import Highlight, { defaultProps } from "prism-react-renderer";
 import { useSelector, useDispatch } from "react-redux";
@@ -65,28 +66,32 @@ export const ArticleEditor = () => {
 
   const dispatch = useDispatch();
 
+  const {id} = useParams()
 
+  console.log({id})
 
-
-  const token = useSelector((store) => store?.auth?.data?.token);
+    const token = useSelector((store) => store?.auth?.data?.token);
   let imagesUploadedData = useSelector(state => state.articleEditor.imagesUploaded)
 
 
     useEffect(() => {
 
-    let currentImages = [];
+    // let currentImages = [];
 
-    document.querySelectorAll(".image-tool__image-picture").forEach((x) => {
-      currentImages.push(...currentImages, x?.src);
-    });
-
-
+    // document.querySelectorAll(".image-tool__image-picture").forEach((x) => {
+    //   currentImages.push(...currentImages, x?.src);
+    // });
 
 
-    if (imagesUploadedData.length > currentImages.length) {
-      imagesUploadedData.forEach(async (img) => {
-        if (!currentImages.includes(img.src) ) {
+
+
+    // if (imagesUploadedData.length > currentImages.length) {
+    //   imagesUploadedData.forEach(async (img) => {
+    //     if (!currentImages.includes(img.src) ) {
+     async function deleteImg(){
           try {
+            console.log({imagesUploadedData})
+            imagesUploadedData.forEach(async (img) => {
             if(img?.isDeleted){
             let response = await dispatch(
               deleteImageData({
@@ -95,7 +100,7 @@ export const ArticleEditor = () => {
                     Authorization: "Bearer " + token,
                   },
                 },
-                url: "/334343/" + img?.fileName,
+                url: "/" + id + "/" + img?.fileName,
               })
 
             );
@@ -104,14 +109,20 @@ export const ArticleEditor = () => {
                 dispatch(deleteUnusedImage({fileName: img?.fileName}))
             }
 
-            } 
+}
+          }    )
           } catch (err) {
           }
-        }      
-      });
-    }
+        }
+        
+        // }      
+
+      // });
+    // }
     
-  }, [imagesUploadedData, dispatch, token]);
+    deleteImg()
+
+  }, [imagesUploadedData, dispatch, token, id]);
 
 
   const handleChange = (api, event) => {
@@ -121,6 +132,9 @@ export const ArticleEditor = () => {
       currentImages.push(...currentImages, x?.src);
     });
 
+currentImages = [...new Set(currentImages)];
+
+
 
 
 
@@ -128,24 +142,10 @@ export const ArticleEditor = () => {
       imagesUploadedData.forEach(async (img) => {
         if (!currentImages.includes(img.src) ) {
           try {
-            // if(!img?.isDeleted){
-            // let response = await dispatch(
-            //   deleteImageData({
-            //     config: {
-            //       headers: {
-            //         Authorization: "Bearer " + token,
-            //       },
-            //     },
-            //     url: "/334343/" + img?.fileName,
-            //   })
 
-            // );
-
-            // if(response){
+            console.log({ imagesUploadedData})
                 dispatch(deleteUnusedImage({fileName: img?.fileName}))
-            // }
 
-            // } 
           } catch (err) {
             console.log(err.message);
           }
@@ -186,7 +186,7 @@ export const ArticleEditor = () => {
               };
 
               return dispatch(
-                addImageData({ formData, config, url: "/334343" })
+                addImageData({ formData, config, url: "/" + id })
               ).then((response) => {
                 if (response?.payload?.status === 200) {
 
@@ -198,7 +198,7 @@ export const ArticleEditor = () => {
                         },
                         responseType: "blob",
                       },
-                      url: "/334343/" + file?.name,
+                      url: "/" + id + "/" + file?.name,
                     })
                   ).then((res) => {
                     if (res?.type === "articleEditor/getImage/fulfilled") {
@@ -288,6 +288,7 @@ export const ArticleEditor = () => {
     editor
       .save()
       .then((outputData) => {
+        console.log(outputData, "output data---")
         convertToHTML(outputData);
       })
       .catch((error) => {

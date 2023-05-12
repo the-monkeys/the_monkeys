@@ -11,7 +11,7 @@ import {
 } from "./ProfileMenu.styles";
 import { logoutUser } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
-import {  useNavigate } from "react-router-dom";
+import {  useNavigate, useParams } from "react-router-dom";
 
 const LINKS = ["/profile", "/settings"];
 
@@ -24,7 +24,11 @@ function classNames(...classes) {
 export const ProfileMenu = () => {
   const dispatch = useDispatch(); 
     const navigate = useNavigate();
-   
+
+
+  let paramsData = useParams()
+
+  console.log(paramsData, '/sfsd  ')
 
   const handleLogOut = () => {
         dispatch(logoutUser())
