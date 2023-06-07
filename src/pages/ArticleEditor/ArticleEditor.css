@@ -1,0 +1,19 @@
+.editor-container {
+    font-size: 18px;
+}
+
+.pre-code{
+    text-align: left;
+    margin: 1em 0;
+    padding: 0.5em;
+    font-size: 1.5rem;
+    width: 540px;
+
+    /* overflow: scroll; */
+}
+
+.article {
+    padding: 0 20em;
+}
+
+.makeColor{}
