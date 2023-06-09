@@ -16,8 +16,8 @@ export const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const successAlert = useToast(Alert("Registered successfully").success);
-  const errorAlert = useToast(Alert("Something went wrong").error);
+  const successAlert = useToast({ title: "Registered successfully", titleColor: 'green', color: "green", icon: 'ico-success', position: 'topCenter' });
+  const errorAlert = useToast({ title: "Something went wrong", titleColor: 'red', color: "red", icon: 'ico-error', position: 'topCenter' });
 
   const { isLoading } = useSelector((state) => state.auth);
 

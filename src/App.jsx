@@ -6,6 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import { Login } from "./pages/Auth/components/Login";
 import { Register } from "./pages/Auth/components/Register";
 import { ArticleEditor } from "./pages/ArticleEditor/ArticleEditor";
+import  QuillEditor  from "./pages/QuillEditor/QuillEditor";
 import AdScript from "./AdScript";
 import Membersmain from "./components/Contributors/MembersMain";
 import ProtectedRoute from './common/utils/ProtectedRoute'
@@ -27,7 +28,8 @@ function App() {
           <Route path="/tos" element={<Legal />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/write/:id" element={<ProtectedRoute><ArticleEditor /> </ProtectedRoute>} />
+          {/* <Route path="/write/:id" element={<ProtectedRoute><ArticleEditor /> </ProtectedRoute>} /> */}
+          <Route path="/type/:id" element={<ProtectedRoute><QuillEditor /> </ProtectedRoute>} />
           <Route path="/meet-the-monkeys" element={<Membersmain />} />
           <Route path="/profile" element={<ProtectedRoute > <Profile /> </ProtectedRoute>} />
           <Route path="/settings" element={ <Settings /> }  />

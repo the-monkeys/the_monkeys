@@ -14,8 +14,8 @@ export const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const successAlert = useToast(Alert("Login successful").success);
-  const errorAlert = useToast(Alert("Something went wrong").error);
+  const successAlert = useToast({ title: "Login Success", titleColor: 'green', color: "green", icon: 'ico-success', position: 'topCenter' });
+  const errorAlert = useToast({ title: "Something went wrong", titleColor: 'red', color: "red", icon: 'ico-warning', position: 'topCenter' });
 
   const { isLoading } = useSelector((state) => state.auth);
 
