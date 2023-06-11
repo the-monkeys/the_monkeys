@@ -26,7 +26,7 @@ export const Register = () => {
       dispatch(registerUser(data)).then((response) => {
         if (response && response.type === "auth/registerUser/fulfilled") {
           successAlert();
-          navigate("/profile");
+          navigate("/");
         }
 
         if (response && response.type === "auth/registerUser/rejected") {

@@ -9,7 +9,7 @@ import { useParams } from 'react-router-dom';
 const QuillEditor = () => {
   const [data, setData] = useState('');
 
-  const { blogid } = useParams()
+  const { id } = useParams()
 
   const module = {
     toolbar: toolbarOptions,
@@ -20,15 +20,15 @@ const QuillEditor = () => {
     if (!data) {
       alert("Write a blog to continue...");
     } else {
-      const response = await BlogService.postBlog(blogid);
-      console.log(blogid, data)
+      const response = await BlogService.postBlog(id);
+      console.log(response)
 
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <ReactQuill id='toolbar' className='w-[47%] h-[700px] m-auto mt-20 border-[24px] border-[#232222] rounded-lg' modules={module} theme='snow' value={data} onChange={setData} />
+      <ReactQuill id='toolbar' className='m-auto mt-10 border-[24px] border-[#232222] rounded-2xl' modules={module} theme='snow' value={data} onChange={setData} />
       <div className="flex items-center justify-center">
         <button
           className="mx-6 my-12 text-2xl py-2 px-6 text-white  bg-lightBlack baseline
