@@ -37,14 +37,14 @@ export const Login = () => {
 
   return (
     <section
-      className="container mx-auto flex items-center justify-center md:justify-end"
+      className="container flex items-center justify-center md:justify-end w-[95%] mx-auto"
       data-testid="login"
     >
       <div className="hidden md:block w-1/2 p-24 pl-0">
         <img className="slide" src={LoginSvg} alt="illustration" />
       </div>
       <form
-        className="slideDown py-28 md:py-0 text-2xl md:w-1/2 md:pl-28 bg-white flex flex-col space-y-8"
+        className="slideDown py-28 md:py-0 text-2xl md:w-96 md:pl-28 flex flex-col space-y-8"
         onSubmit={(e) => e.preventDefault()}
       >
         <Controller

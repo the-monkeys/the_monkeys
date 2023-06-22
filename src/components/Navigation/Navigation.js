@@ -35,7 +35,7 @@ export const Navigation = () => {
           </div>
         </div>
       </div>
-      <div className="hidden flex container md:flex items-center justify-center">
+      <div className="hidden container md:flex items-center justify-center">
         <ul className="py-4 flex justify-center items-center space-x-14">
           <Link className="navlinks main-link" to="/">
             Trending
@@ -57,7 +57,7 @@ export const Navigation = () => {
           </Link>
         </ul>
       </div>
-      {showDropdown ? <Navbar /> : ""}
+    {showDropdown ? <Navbar /> : ""}
     </nav>
   );
 };
