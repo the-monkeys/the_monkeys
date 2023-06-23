@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MenuBtn from "../../assets/menu_icon.png";
 import { Logo } from "../Logo";
 import { AiOutlineDown, AiOutlineSearch } from "react-icons/ai";
@@ -21,6 +21,17 @@ const Nav2 = () => {
     icon: "ico-success",
     position: "topCenter",
   });
+
+  let menuRef = useRef();
+
+  useEffect(()=>{
+    let handler = (e) => {
+      if(!menuRef.current.contains(e.target)){
+        setIsEditorMenu(false);
+      }
+    }
+    document.addEventListener("mousedown", handler);
+  })
 
   const navigate = useNavigate();
 
@@ -49,7 +60,7 @@ const Nav2 = () => {
           <div id="cont" className="top-[9.5px] w-8 ml-4 flex gap-10">
             <img
               onClick={() => {
-                setIsMenu(!isMenu) && setIsEditorMenu(!isEditorMenu);
+                setIsMenu(!isMenu);
               }}
               id="menu"
               className="w-full cursor-pointer"
@@ -58,7 +69,7 @@ const Nav2 = () => {
             />
             <div
               className="md:flex items-center gap-1 text-[#333030] cursor-pointer hidden"
-              onClick={() => setIsEditorMenu(!isEditorMenu)}
+              onClick={() => setIsEditorMenu(!isEditorMenu)} ref={menuRef}
             >
               <p className="text-[#333030]">Editor</p>
               <AiOutlineDown />
@@ -110,7 +121,7 @@ const Nav2 = () => {
         </div>
       </div>
       {isSearch && (
-        <div className="h-8 w-full bg-[#FFC7C7] flex items-center justify-center md:hidden">
+        <div className="h-8 w-full bg-[#F2F1EE] flex items-center justify-center md:hidden">
           <input
             type="text"
             className="w-full mx-4 rounded-lg px-[4px] border-solid border-[1.5px] border-lightBlack"
@@ -119,10 +130,10 @@ const Nav2 = () => {
         </div>
       )}
       <div>
-        <div className="md:flex justify-center items-center h-28 hidden bg-[#FFE2E2]">
+        <div className="md:flex justify-center items-center h-28 hidden bg-[#fffbfa]">
           <Logo />
         </div>
-        <div className="md:flex justify-center items-center h-12 bg-[#F2F1EE] border-2 hidden">
+        <div className="md:flex justify-center items-center h-12 bg-[#F2F1EE] hidden">
           <div className="w-full flex justify-self-stretch items-center text-[#333030] font-sans">
             <Link
               className="cursor-pointer flex items-center justify-center w-full"
@@ -216,7 +227,7 @@ const Nav2 = () => {
         )}
 
         {isMenu && (
-          <div className="absolute md:top-12 text-xl top-12 md:left-[150px] shadow-md px-4 py-2 bg-red-50 flex items-center rounded-b-xl justify-center flex-col border-t-2">
+          <div className="absolute md:top-12 text-xl top-12 md:left-[150px] px-4 py-2 bg-[#F1F5F9] md:rounded-b-xl md:shadow-md flex items-center justify-start flex-col h-screen md:h-48">
             <Link
               className="cursor-pointer flex items-center justify-start w-full border-b-[1px]"
               to="/"
@@ -256,7 +267,7 @@ const Nav2 = () => {
           </div>
         )}
         {isProfile && (
-          <div className="absolute top-12 right-[150px] w-94 flex items-center justify-center rounded-b-2xl shadow-md bg-[#F1F5F9] border-t-2 p-4 flex-col">
+          <div className="absolute top-12 right-[180px] w-94 flex items-center justify-center rounded-b-2xl shadow-md bg-[#F1F5F9] border-t-2 p-4 flex-col">
             <div
               className={`flex items-center justify-center py-4 border-gray-300 border-b-[1px]`}
             >
