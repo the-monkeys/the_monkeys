@@ -75,7 +75,7 @@ export const Register = () => {
                     </label>
                     <input
                       type="text"
-                      className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none text-neutral-900 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0 bg-neutral-100 shadow-inner"
+                      className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none text-neutral-900 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0 bg-zinc-100 shadow-inner"
                       id="exampleFormControlInput3"
                       placeholder="First Name"
                       value={value}
@@ -101,7 +101,7 @@ export const Register = () => {
                     </label>
                     <input
                       type="text"
-                      className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none text-neutral-900 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0 bg-neutral-100 shadow-inner"
+                      className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none text-neutral-900 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0 bg-zinc-100 shadow-inner"
                       id="exampleFormControlInput3"
                       placeholder="Last Name"
                       value={value}
@@ -155,7 +155,7 @@ export const Register = () => {
                     </label>
                     <input
                       type="password"
-                      className="peer block min-h-[auto] w-full rounded border-0 px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none text-neutral-900 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0 bg-zinc-100 shadow-inner"
+                      className="peer block min-h-[auto] w-full rounded border-0 px-3 py-[0.32rem] leading-[2.15] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none text-neutral-900 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0 bg-neutral-100 shadow-inner"
                       id="exampleFormControlInput33"
                       placeholder="Password"
                       value={value}
