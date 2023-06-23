@@ -17,10 +17,11 @@ import { Settings } from "./pages/Settings";
 import "./index.css";
 import "./App.css";
 import "izitoast-react/dist/iziToast.css";
+import { AnimatePresence } from "framer-motion";
 
 function App() {
   return (
-    <>
+    <AnimatePresence exitBeforeEnter>
       <Navigation />
       {/* AdScript will add script tag to all the component present here */}
       <AdScript />
@@ -61,7 +62,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
-    </>
+    </AnimatePresence>
   );
 }
 
