@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import useOutsideClickEditor from "../Navigation/Toggle/useOutsideClickEdit";
 import useOutsideClickProfile from "../Navigation/Toggle/useOutsideClickProf";
+import { ProfileMenu } from "../ProfileMenu";
 
 const Nav2 = () => {
   const [isProfile, setIsProfile] = useState(false);
@@ -59,7 +60,6 @@ const Nav2 = () => {
     localStorage.clear();
     navigate("/");
     successAlert();
-    console.log();
   };
 
   return (
@@ -76,15 +76,17 @@ const Nav2 = () => {
             src={MenuBtn}
             alt="menu btn"
           />
-
-          <div
-            className="md:flex items-center gap-1 text-[#333030] cursor-pointer hidden"
-            onClick={() => setIsEditorMenu(!isEditorMenu)}
-            ref={ref}
-          >
-            <p className="text-[#333030]">Editor</p>
-            <AiOutlineDown />
-          </div>
+          {isAuthenticated && (
+            <motion.div
+              whileTap={{ scale: 0.75 }}
+              className="md:flex items-center gap-1 text-[#333030] cursor-pointer hidden"
+              onClick={() => setIsEditorMenu(!isEditorMenu)}
+              ref={ref}
+            >
+              <p className="text-[#333030]">Editor</p>
+              <AiOutlineDown />
+            </motion.div>
+          )}
         </div>
         <div className="flex items-center gap-2 cursor-pointer -ml-4">
           <input
@@ -99,13 +101,14 @@ const Nav2 = () => {
 
         <div className="relative">
           <div className="drop-shadow-lg cursor-pointer" ref={ref1}>
-            <div
+            <motion.div
+              whileTap={{ scale: 0.75 }}
               onClick={() => setIsProfile(!isProfile)}
               className="flex items-center justify-center rounded-2xl w-48 h-12 cursor-pointer gap-2"
             >
-              <FaUserCircle className="text-4xl text-[#333030] mr-4" />
+              <FaUserCircle className="text-4xl text-[#333030] mr-1" />
               <p className="flex flex-row">Hello, Login</p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -281,77 +284,129 @@ const Nav2 = () => {
             </div>
             <div className="w-full flex flex-col justify-self-stretch items-center text- font-sans text-lg border-1 mt-[4%] text-offWhite">
               <div className="w-[75%] md:w-72 flex flex-col items-center justify-center gap-8">
-                <Link
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
                 >
                   Trending
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
                   to="/"
                 >
                   Technology
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
                   to="/"
                 >
                   Business
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
                   to="/"
                 >
                   Philosophy
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
                   to="/"
                 >
                   Lifestyle
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
                   to="/"
                 >
                   Health
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
                 >
                   Opinion
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
                 >
                   Sports
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
                   to="/"
                 >
                   Cuisine
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
                   to="/"
                 >
                   Travel
-                </Link>
-                <Link
+                </button>
+                <button
+                  onClick={() => {
+                    setIsMenu(false);
+                    navigate("/");
+                  }}
                   className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md md:mb-24"
-                  to="/"
                 >
                   Humor
-                </Link>
+                </button>
                 <div className="flex md:hidden items-center justify-between h-10 w-full mb-24">
-                  <button className="bg-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center">
+                  <button
+                    onClick={() => {
+                      setIsMenu(false);
+                      navigate("/login");
+                    }}
+                    className="bg-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
+                  >
                     Login
                   </button>
-                  <button className="bg-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center">
+                  <button
+                    onClick={() => {
+                      setIsMenu(false);
+                      navigate("/register");
+                    }}
+                    className="bg-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
+                  >
                     Sign Up
                   </button>
                 </div>
@@ -369,7 +424,9 @@ const Nav2 = () => {
             className="absolute top-12 right-[0px] w-94 flex items-center justify-center rounded-b-2xl shadow-md bg-[#f2f1ee] border-t-2 p-4 flex-col"
           >
             <div
-              className={`flex items-center justify-center py-4 border-gray-300 border-b-[1px]`}
+              className={`flex items-center justify-center py-4 border-gray-300 ${
+                isAuthenticated ? "border-b-[1px]" : ""
+              }`}
             >
               <button
                 onClick={Login}
@@ -385,23 +442,30 @@ const Nav2 = () => {
                 Signup
               </button>
             </div>
-            <div className="flex items-center justify-start pt-4">
-              <p className="font-bold">My Account</p>
-            </div>
-            <div className="flex items-center pt-4">
-              <Link className="cursor-pointer" to={"/profile"}>
-                Profile
-              </Link>
-            </div>
-            <div className="flex items-center pt-4 cursor-pointer">
-              <p>Settings</p>
-            </div>
-            <div
-              onClick={Logout}
-              className="flex items-center pt-4 cursor-pointer"
-            >
-              <p>Logout</p>
-            </div>
+            {isAuthenticated && (
+              <>
+                <div className="flex items-center justify-start pt-4">
+                  <p className="font-bold">My Account</p>
+                </div>
+                <div className="flex items-center pt-4">
+                  <Link className="cursor-pointer" to={"/profile"}>
+                    Profile
+                  </Link>
+                </div>
+                <Link
+                  className="flex items-center pt-4 cursor-pointer"
+                  to={"/settings"}
+                >
+                  <p>Settings</p>
+                </Link>
+                <div
+                  onClick={Logout}
+                  className="flex items-center pt-4 cursor-pointer"
+                >
+                  <p>Logout</p>
+                </div>
+              </>
+            )}
           </motion.div>
         )}
       </div>

@@ -19,19 +19,19 @@ export const Home = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src={instIcon} className="w-14" alt="Insta-logo"></img>
+              <img draggable="false" src={instIcon} className="w-14" alt="Insta-logo"></img>
             </a>
             <a
               href="https://twitter.com/themonkeyslife"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <img src={TwitterIcon} className="w-12" alt="Twitter-logo"></img>
+              <img draggable="false" src={TwitterIcon} className="w-12" alt="Twitter-logo"></img>
             </a>
           </div>
         </div>
         <div className="w-1/2 mb-4 md:mb-0 md:w-1/3">
-          <img src={Illustration} className="slide" alt="img" />
+          <img draggable="false" src={Illustration} className="slide" alt="img" />
         </div>
       </div>
     </div>
