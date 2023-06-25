@@ -1,5 +1,5 @@
 // import { Navigation } from "./components/Navigation";
-import Navigation from "./components/Navigation/Nav2";
+import Navigation from "./components/Navigation/Navigation";
 import { Footer } from "./components/Footer";
 import { Home } from "./pages/Home/Home";
 import { Legal } from "./pages/Legal/Legal";

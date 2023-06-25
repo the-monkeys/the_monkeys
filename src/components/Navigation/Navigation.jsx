@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import MenuBtn from "../../assets/menu_icon.png";
 import { Logo } from "../Logo";
 import {
@@ -8,25 +8,29 @@ import {
 } from "react-icons/ai";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaUserCircle } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useToast } from "izitoast-react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
-import useOutsideClickEditor from "../Navigation/Toggle/useOutsideClickEdit";
-import useOutsideClickProfile from "../Navigation/Toggle/useOutsideClickProf";
-import { ProfileMenu } from "../ProfileMenu";
+import useOutsideClickEditor from "./Toggle/useOutsideClickEdit";
+import useOutsideClickProfile from "./Toggle/useOutsideClickProf";
+import UserService from "../../utils/UserService";
+import { useEffect } from "react";
 
-const Nav2 = () => {
+const Navigation = () => {
   const [isProfile, setIsProfile] = useState(false);
   const [isEditorMenu, setIsEditorMenu] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
+  const [data, setData]  = useState([])
 
   const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
 
   const ref = useRef();
   const ref1 = useRef();
+
+  const id = useParams()
 
   useOutsideClickEditor(ref, () => {
     setIsEditorMenu(false);
@@ -43,6 +47,14 @@ const Nav2 = () => {
     icon: "ico-success",
     position: "topCenter",
   });
+
+  const loadData = async () => {
+    const response = await UserService.getOne(47);
+    console.log(response)
+  };
+  useEffect(() => {
+    // loadData();
+  }, []);
 
   const navigate = useNavigate();
 
@@ -284,6 +296,26 @@ const Nav2 = () => {
             </div>
             <div className="w-full flex flex-col justify-self-stretch items-center text- font-sans text-lg border-1 mt-[4%] text-offWhite">
               <div className="w-[75%] md:w-72 flex flex-col items-center justify-center gap-8">
+              <div className="flex md:hidden items-center justify-between h-10 w-full">
+                  <button
+                    onClick={() => {
+                      setIsMenu(false);
+                      navigate("/login");
+                    }}
+                    className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsMenu(false);
+                      navigate("/register");
+                    }}
+                    className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
+                  >
+                    Sign Up
+                  </button>
+                </div>
                 <button
                   onClick={() => {
                     setIsMenu(false);
@@ -386,30 +418,10 @@ const Nav2 = () => {
                     setIsMenu(false);
                     navigate("/");
                   }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md md:mb-24"
+                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md mb-24"
                 >
                   Humor
                 </button>
-                <div className="flex md:hidden items-center justify-between h-10 w-full mb-24">
-                  <button
-                    onClick={() => {
-                      setIsMenu(false);
-                      navigate("/login");
-                    }}
-                    className="bg-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsMenu(false);
-                      navigate("/register");
-                    }}
-                    className="bg-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
-                  >
-                    Sign Up
-                  </button>
-                </div>
               </div>
             </div>
           </motion.div>
@@ -473,4 +485,4 @@ const Nav2 = () => {
   );
 };
 
-export default Nav2;
+export default Navigation;

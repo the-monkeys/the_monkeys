@@ -1,0 +1,16 @@
+import axios from "axios";
+import Constant from "./Constant";
+
+const REACT_APP_API = process.env.REACT_APP_API;
+
+class UserService {
+  getOne(id) {
+    return axios.get(
+      REACT_APP_API + `/v1/profile/user/${id}`,
+      Constant.getHeader()
+    );
+  }
+
+}
+
+export default new UserService();
