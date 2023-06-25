@@ -17,20 +17,22 @@ import useOutsideClickEditor from "./Toggle/useOutsideClickEdit";
 import useOutsideClickProfile from "./Toggle/useOutsideClickProf";
 import UserService from "../../utils/UserService";
 import { useEffect } from "react";
+import { logoutUser } from "../../redux/auth/authSlice";
+import { useDispatch } from "react-redux";
 
 const Navigation = () => {
   const [isProfile, setIsProfile] = useState(false);
   const [isEditorMenu, setIsEditorMenu] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
-  const [data, setData]  = useState([])
+  const [data, setData] = useState([]);
 
   const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
 
   const ref = useRef();
   const ref1 = useRef();
 
-  const id = useParams()
+  const dispatch = useDispatch(); 
 
   useOutsideClickEditor(ref, () => {
     setIsEditorMenu(false);
@@ -50,7 +52,7 @@ const Navigation = () => {
 
   const loadData = async () => {
     const response = await UserService.getOne(47);
-    console.log(response)
+    console.log(response);
   };
   useEffect(() => {
     // loadData();
@@ -69,7 +71,7 @@ const Navigation = () => {
   };
 
   const Logout = () => {
-    localStorage.clear();
+    dispatch(logoutUser())
     navigate("/");
     successAlert();
   };
@@ -119,7 +121,7 @@ const Navigation = () => {
               className="flex items-center justify-center rounded-2xl w-48 h-12 cursor-pointer gap-2"
             >
               <FaUserCircle className="text-4xl text-[#333030] mr-1" />
-              <p className="flex flex-row">Hello, Login</p>
+              <p className="flex flex-row">Hello, User</p>
             </motion.div>
           </div>
         </div>
@@ -296,26 +298,28 @@ const Navigation = () => {
             </div>
             <div className="w-full flex flex-col justify-self-stretch items-center text- font-sans text-lg border-1 mt-[4%] text-offWhite">
               <div className="w-[75%] md:w-72 flex flex-col items-center justify-center gap-8">
-              <div className="flex md:hidden items-center justify-between h-10 w-full">
-                  <button
-                    onClick={() => {
-                      setIsMenu(false);
-                      navigate("/login");
-                    }}
-                    className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsMenu(false);
-                      navigate("/register");
-                    }}
-                    className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
-                  >
-                    Sign Up
-                  </button>
-                </div>
+                  <div className={`${
+                isAuthenticated ? "hidden" : "visible"
+              } flex md:hidden items-center justify-between h-10 w-full `}>
+                    <button
+                      onClick={() => {
+                        setIsMenu(false);
+                        navigate("/login");
+                      }}
+                      className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
+                    >
+                      Login
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsMenu(false);
+                        navigate("/register");
+                      }}
+                      className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
+                    >
+                      Sign Up
+                    </button>
+                  </div>
                 <button
                   onClick={() => {
                     setIsMenu(false);
@@ -433,11 +437,11 @@ const Navigation = () => {
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
-            className="absolute top-12 right-[0px] w-94 flex items-center justify-center rounded-b-2xl shadow-md bg-[#f2f1ee] border-t-2 p-4 flex-col"
+            className="absolute top-12 right-[0px] w-[255px] flex items-center justify-center rounded-b-2xl shadow-md bg-[#f2f1ee] border-t-2 p-4 flex-col"
           >
             <div
               className={`flex items-center justify-center py-4 border-gray-300 ${
-                isAuthenticated ? "border-b-[1px]" : ""
+                isAuthenticated ? "border-b-[1px] hidden" : ""
               }`}
             >
               <button
