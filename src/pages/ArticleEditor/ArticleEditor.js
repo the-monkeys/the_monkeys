@@ -66,15 +66,15 @@ export const ArticleEditor = () => {
 
   const dispatch = useDispatch();
 
-  const {id} = useParams()
+  const { id } = useParams()
 
-  console.log({id})
+  console.log({ id })
 
-    const token = useSelector((store) => store?.auth?.data?.token);
+  const token = useSelector((store) => store?.auth?.data?.token);
   let imagesUploadedData = useSelector(state => state.articleEditor.imagesUploaded)
 
 
-    useEffect(() => {
+  useEffect(() => {
 
     // let currentImages = [];
 
@@ -88,11 +88,11 @@ export const ArticleEditor = () => {
     // if (imagesUploadedData.length > currentImages.length) {
     //   imagesUploadedData.forEach(async (img) => {
     //     if (!currentImages.includes(img.src) ) {
-     async function deleteImg(){
-          try {
-            console.log({imagesUploadedData})
-            imagesUploadedData.forEach(async (img) => {
-            if(img?.isDeleted){
+    async function deleteImg() {
+      try {
+        console.log({ imagesUploadedData })
+        imagesUploadedData.forEach(async (img) => {
+          if (img?.isDeleted) {
             let response = await dispatch(
               deleteImageData({
                 config: {
@@ -105,21 +105,21 @@ export const ArticleEditor = () => {
 
             );
 
-            if(response){
-                dispatch(deleteUnusedImage({fileName: img?.fileName}))
+            if (response) {
+              dispatch(deleteUnusedImage({ fileName: img?.fileName }))
             }
 
-}
-          }    )
-          } catch (err) {
           }
-        }
-        
-        // }      
+        })
+      } catch (err) {
+      }
+    }
 
-      // });
+    // }      
+
+    // });
     // }
-    
+
     deleteImg()
 
   }, [imagesUploadedData, dispatch, token, id]);
@@ -132,7 +132,7 @@ export const ArticleEditor = () => {
       currentImages.push(...currentImages, x?.src);
     });
 
-currentImages = [...new Set(currentImages)];
+    currentImages = [...new Set(currentImages)];
 
 
 
@@ -140,16 +140,16 @@ currentImages = [...new Set(currentImages)];
 
     if (imagesUploadedData.length > currentImages.length) {
       imagesUploadedData.forEach(async (img) => {
-        if (!currentImages.includes(img.src) ) {
+        if (!currentImages.includes(img.src)) {
           try {
 
-            console.log({ imagesUploadedData})
-                dispatch(deleteUnusedImage({fileName: img?.fileName}))
+            console.log({ imagesUploadedData })
+            dispatch(deleteUnusedImage({ fileName: img?.fileName }))
 
           } catch (err) {
             console.log(err.message);
           }
-        }      
+        }
       });
     }
   };
@@ -206,12 +206,12 @@ currentImages = [...new Set(currentImages)];
                         let url = URL.createObjectURL(res?.payload);
 
                         dispatch(updateUploadedImages(
-                           {
+                          {
                             src: url,
                             fileName: file?.name,
                             isDeleted: false,
                           }
-                          ))
+                        ))
 
                         return {
                           success: 1,
@@ -225,11 +225,11 @@ currentImages = [...new Set(currentImages)];
                 }
               });
 
-         
+
             },
           },
 
-   
+
         },
       },
       raw: RawTool,
@@ -328,7 +328,7 @@ currentImages = [...new Set(currentImages)];
         </div>
       )}
 
-            <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center">
         <button
           className="mx-6 my-12 text-2xl py-2 px-6 text-white  bg-lightBlack baseline
             cursor-pointer rounded-sm hover:bg-transparent hover:text-lightBlack
@@ -345,7 +345,7 @@ currentImages = [...new Set(currentImages)];
         >
           Save & Publish
         </button>
-      </div> 
+      </div>
 
     </div>
   );

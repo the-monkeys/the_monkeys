@@ -17,6 +17,10 @@ const initialState = {
   isLoadingDeleteImage: false,
   deleteImageData: [],
   errorDeleteImage: false,
+
+  isBlogId: false,
+  BlogData: [],
+  errorBlogId: false
 };
 
 export const addImageData = createAsyncThunk(

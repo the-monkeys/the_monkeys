@@ -5,16 +5,16 @@ import TwitterIcon from "../../images/icon-twitter.svg";
 
 export const Footer = () => {
   return (
-    <footer className="w-full" data-testid="footer">
+    <footer className="w-full bg-[#F2F1EE]" data-testid="footer">
       {/* Absolute property is temporary */}
       <div
         className="container flex flex-col-reverse justify-between 
-      px-6 py-5 md:py-10 mx-auto space-y-8 md:flex-row md:space-y-0 "
+      px-6 py-5 md:py-10 mx-auto space-y-8 md:flex-row md:space-y-0"
       >
         {/* Logo and Social Links*/}
         <div
           className="flex flex-col items-center justify-around space-y-5
-         md:items-start mt-8 md:mt-0"
+         md:items-start mt-8 md:mt-0 "
         >
           <Logo />
           <div className="text-sm mx-auto my-6 text-center md:hidden">
@@ -23,7 +23,7 @@ export const Footer = () => {
         </div>
         {/* Other Links */}
         <div className="flex justify-around space-x-18 md:space-x-32">
-          <div className="links flex flex-col space-y-3">
+          <div className="links flex flex-col space-y-3 text-[#333030]">
             <Link to="/" className="text-gray">
               Blog
             </Link>
@@ -37,7 +37,7 @@ export const Footer = () => {
               Publishers
             </Link>
           </div>
-          <div className="links flex flex-col space-y-3 text-white">
+          <div className="links flex flex-col space-y-3 text-[#333030]">
             <Link to="/tos" className="main-link">
               Terms of service
             </Link>
@@ -57,7 +57,7 @@ export const Footer = () => {
             <div className="flex space-x-3">
               <input
                 type="text"
-                className="border-solid border-[1.5px] border-lightBlack flex-1 px-4 rounded active-lightBlack"
+                className="border-solid border-[1.5px] border-lightBlack flex-1 px-4 rounded active-lightBlack outline-none"
                 placeholder="Get Updates"
               />
               <button className="px-6 py-1 rounded-sm text-offWhite bg-lightBlack hover:bg-transparent hover:text-lightBlack focus:outline-none hover:border-solid border-2 border-lightBlack">
