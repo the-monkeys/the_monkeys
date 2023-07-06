@@ -4,17 +4,17 @@ class Constant {
         return {
             headers: {
                 "Content-Type": "application/json",
-                Authorization: this.getToken(),
+                Authorization: "Bearer " + this.getToken(),
             },
         };
     }
 
-    setToken(payload) {
-        localStorage.setItem("token", payload)
-    }
+    // setToken(payload) {
+    //     localStorage.setItem("authToken", payload)
+    // }
 
     getToken() {
-        return localStorage.getItem("token")
+        return atob(localStorage.getItem("authToken"))
     }
 
 }

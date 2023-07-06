@@ -7,8 +7,7 @@ import {
   AiOutlineSearch,
 } from "react-icons/ai";
 import { BsPencilSquare } from "react-icons/bs";
-import { FaUserCircle } from "react-icons/fa";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { useToast } from "izitoast-react";
 import { motion } from "framer-motion";
@@ -19,20 +18,24 @@ import UserService from "../../utils/UserService";
 import { useEffect } from "react";
 import { logoutUser } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { HiUserCircle } from "react-icons/hi2";
 
 const Navigation = () => {
   const [isProfile, setIsProfile] = useState(false);
   const [isEditorMenu, setIsEditorMenu] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
+  const [isMobMenu, setIsMobMenu] = useState(false);
   const [data, setData] = useState([]);
+  const [imgData, setImgData] = useState([])
 
   const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
 
   const ref = useRef();
   const ref1 = useRef();
 
-  const dispatch = useDispatch(); 
+  const id = atob(localStorage.getItem("userId"))
+
+  const dispatch = useDispatch();
 
   useOutsideClickEditor(ref, () => {
     setIsEditorMenu(false);
@@ -48,14 +51,28 @@ const Navigation = () => {
     color: "green",
     icon: "ico-success",
     position: "topCenter",
+    timeout: 0.2
   });
 
   const loadData = async () => {
-    const response = await UserService.getOne(47);
-    console.log(response);
+    const response = await UserService.getOne(id);
+    setData(response.data.firstName)
   };
+
+  const imgLoader = async () => {
+    const response = await UserService.getProfImg(id);
+    
+    let imgUrl = response.data;
+
+    setImgData(imgUrl)
+    btoa(console.log(imgUrl))
+  }
+
   useEffect(() => {
-    // loadData();
+    if (isAuthenticated) {
+      imgLoader();
+      loadData();
+    }
   }, []);
 
   const navigate = useNavigate();
@@ -120,8 +137,9 @@ const Navigation = () => {
               onClick={() => setIsProfile(!isProfile)}
               className="flex items-center justify-center rounded-2xl w-48 h-12 cursor-pointer gap-2"
             >
-              <FaUserCircle className="text-4xl text-[#333030] mr-1" />
-              <p className="flex flex-row">Hello, User</p>
+              <img src={`data:image/jpeg;base32,${imgData}`} alt="" />
+              {/* <FaUserCircle className="text-4xl text-[#333030] mr-1" /> */}
+              {isAuthenticated ? <p className="flex flex-row">Hello, {data}</p> : <p className="flex flex-row">Hello, User</p>}
             </motion.div>
           </div>
         </div>
@@ -144,30 +162,51 @@ const Navigation = () => {
         </Link>
 
         <div className="relative">
-          <AiOutlineSearch
+          <HiUserCircle
             className="w-8 min-w-8 min-h-8 h-8 drop-shadow-lg cursor-pointer rounded-[50%] ml-4"
             onClick={() => {
-              setIsSearch(!isSearch);
+              setIsMobMenu(!isMobMenu);
             }}
           />
         </div>
       </div>
 
-      {/* Mobile Search */}
-      {isSearch && (
+      {/* Mobile Menu */}
+      {isAuthenticated?<>
+      {isMobMenu && (
         <motion.div
           initial={{ opacity: 0, scale: 0.6 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.6 }}
-          className=" absolute h-8 w-full bg-[#f2f1ee] flex items-center justify-center md:hidden"
+          className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
         >
-          <input
-            type="text"
-            className="w-full mx-4 rounded-lg px-[4px] border-solid border-[1.5px] border-lightBlack"
-            placeholder="Search"
-          />
+           {isAuthenticated && (
+              <>
+                <div className="flex items-center justify-start">
+                  <p className="font-bold">My Account</p>
+                </div>
+                <div className="flex items-center pt-4">
+                  <Link className="cursor-pointer" to={"/profile"}>
+                    Profile
+                  </Link>
+                </div>
+                <Link
+                  className="flex items-center pt-4 cursor-pointer"
+                  to={"/settings"}
+                >
+                  <p>Settings</p>
+                </Link>
+                <div
+                  onClick={Logout}
+                  className="flex items-center pt-4 cursor-pointer"
+                >
+                  <p>Logout</p>
+                </div>
+              </>
+            )}
         </motion.div>
-      )}
+      )}</>:""}
+      {/* Desktop Menu */}
       <div>
         <div className="md:flex justify-center items-center h-28 hidden bg-[#fffbfa]">
           <Logo />
@@ -249,7 +288,7 @@ const Navigation = () => {
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
-            className="absolute top-12 rounded-b-xl md:left-[40px] flex justify-center items-center flex-col shadow-md w-48 px-2 gap-1 bg-[#f2f1ee] border-t-2"
+            className="absolute top-14 rounded-lg md:left-[40px] flex justify-center items-center flex-col shadow-md w-48 px-2 gap-1 bg-[#f2f1ee]"
           >
             <div
               onClick={() => setIsEditorMenu(!isEditorMenu)}
@@ -298,28 +337,32 @@ const Navigation = () => {
             </div>
             <div className="w-full flex flex-col justify-self-stretch items-center text- font-sans text-lg border-1 mt-[4%] text-offWhite">
               <div className="w-[75%] md:w-72 flex flex-col items-center justify-center gap-8">
-                  <div className={`${
-                isAuthenticated ? "hidden" : "visible"
-              } flex md:hidden items-center justify-between h-10 w-full `}>
-                    <button
-                      onClick={() => {
-                        setIsMenu(false);
-                        navigate("/login");
-                      }}
-                      className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
-                    >
-                      Login
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsMenu(false);
-                        navigate("/register");
-                      }}
-                      className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
-                    >
-                      Sign Up
-                    </button>
-                  </div>
+                <input
+                  type="text"
+                  className="w-full mx-4 rounded-lg px-[4px] border-solid border-[1.5px] border-lightBlack text-lightBlack flex md:hidden items-center justify-between"
+                  placeholder="Search"
+                />
+                <div className={`${isAuthenticated ? "hidden" : "visible"
+                  } flex md:hidden items-center justify-between h-10 w-full `}>
+                  <button
+                    onClick={() => {
+                      setIsMenu(false);
+                      navigate("/login");
+                    }}
+                    className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsMenu(false);
+                      navigate("/register");
+                    }}
+                    className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
+                  >
+                    Sign Up
+                  </button>
+                </div>
                 <button
                   onClick={() => {
                     setIsMenu(false);
@@ -437,12 +480,11 @@ const Navigation = () => {
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
-            className="absolute top-12 right-[0px] w-[255px] flex items-center justify-center rounded-b-2xl shadow-md bg-[#f2f1ee] border-t-2 p-4 flex-col"
+            className="absolute top-14 right-2 w-[255px] flex items-center justify-center rounded-lg shadow-md bg-[#f2f1ee] p-4 flex-col"
           >
             <div
-              className={`flex items-center justify-center py-4 border-gray-300 ${
-                isAuthenticated ? "border-b-[1px] hidden" : ""
-              }`}
+              className={`flex items-center justify-center py-4 border-gray-300 ${isAuthenticated ? "border-b-[1px] hidden" : ""
+                }`}
             >
               <button
                 onClick={Login}

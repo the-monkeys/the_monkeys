@@ -7,7 +7,7 @@ const ProtectedRoute = (props) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const checkUserToken = () => {
-        const userToken = localStorage.getItem('authToken');
+        const userToken = atob(localStorage.getItem('authToken'));
         if (!userToken || userToken === 'undefined') {
             setIsLoggedIn(false);
             return navigate('/login');

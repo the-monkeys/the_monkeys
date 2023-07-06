@@ -21,6 +21,7 @@ export const Login = () => {
     color: "green",
     icon: "ico-success",
     position: "topCenter",
+    timeout: 0.2
   });
   const errorAlert = useToast({
     title: "Something went wrong",
@@ -28,6 +29,7 @@ export const Login = () => {
     color: "red",
     icon: "ico-warning",
     position: "topCenter",
+    timeout: 0.2
   });
 
   const { isLoading } = useSelector((state) => state.auth);
