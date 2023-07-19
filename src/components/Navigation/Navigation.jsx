@@ -19,23 +19,46 @@ import { useEffect } from "react";
 import { logoutUser } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { HiUserCircle } from "react-icons/hi2";
+import { HeaderData } from "../../utils/HeaderData";
+import { FaUserCircle } from "react-icons/fa";
+import { AiOutlineMenu } from "react-icons/ai";
+import { changeTheme } from "../../redux/theme/theme";
 
 const Navigation = () => {
   const [isProfile, setIsProfile] = useState(false);
   const [isEditorMenu, setIsEditorMenu] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isMobMenu, setIsMobMenu] = useState(false);
-  const [data, setData] = useState([]);
-  const [imgData, setImgData] = useState([])
+  const [name, setName] = useState([]);
+  const [imgData, setImgData] = useState([]);
+  const [activeStatus, setActiveStatus] = useState(1);
 
   const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
+
+
+  const dispatch = useDispatch()
 
   const ref = useRef();
   const ref1 = useRef();
 
-  const id = atob(localStorage.getItem("userId"))
+  // console.log(data)
 
-  const dispatch = useDispatch();
+  // const theme = useSelector((store) => store.theme.theme)
+  const [theme, setTheme] = useState([])
+
+  const data = useSelector((store) => store.auth.data);
+
+  console.log(theme)
+
+  // initially set the theme and "listen" for changes to apply them to the HTML tag
+  React.useEffect(() => {
+    document.querySelector('html').setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(theme === 'business' ? 'light' : 'business')
+    // dispatch(changeTheme((theme === 'business' ? 'light' : 'business')))
+  };
 
   useOutsideClickEditor(ref, () => {
     setIsEditorMenu(false);
@@ -55,17 +78,18 @@ const Navigation = () => {
   });
 
   const loadData = async () => {
-    const response = await UserService.getOne(id);
-    setData(response.data.firstName)
+    const response = await UserService.getOne(data.userId);
+    setName(response.data.firstName)
+    console.log(response)
   };
 
   const imgLoader = async () => {
-    const response = await UserService.getProfImg(id);
-    
+    const response = await UserService.getProfImg(data.userId);
+
     let imgUrl = response.data;
 
     setImgData(imgUrl)
-    btoa(console.log(imgUrl))
+    // btoa(console.log(imgUrl))
   }
 
   useEffect(() => {
@@ -96,37 +120,32 @@ const Navigation = () => {
   return (
     <>
       {/* Desktop */}
-      <div className="md:flex items-center justify-between hidden w-full h-12 bg-[#F2F1EE]">
+      <div className={`md:flex items-center justify-between hidden w-full h-12 ${theme == "light" ? "bg-[#f2f1ee]" : "bg-[#27282b]"}`}>
         <div className="relative flex items-center justify-center gap-12 ml-4">
-          <img
-            onClick={() => {
-              setIsMenu(!isMenu);
-            }}
-            id="menu"
-            className="w-full cursor-pointer h-8"
-            src={MenuBtn}
-            alt="menu btn"
-          />
+          <AiOutlineMenu id="menu" onClick={() => {
+            setIsMenu(!isMenu);
+          }} className={`w-full cursor-pointer h-6 ${theme == "light" ? "text-[#333030]" : "text-[#ff462e]"} `} />
+
           {isAuthenticated && (
             <motion.div
               whileTap={{ scale: 0.75 }}
-              className="md:flex items-center gap-1 text-[#333030] cursor-pointer hidden"
+              className={`md:flex items-center gap-1 ${theme == "light" ? "text-[#333030]" : "text-[#ff462e]"} cursor-pointer hidden`}
               onClick={() => setIsEditorMenu(!isEditorMenu)}
               ref={ref}
             >
-              <p className="text-[#333030]">Editor</p>
+              <p className={`${theme == "light" ? "text-[#333030]" : "text-[#ff462e]"}`}>Editor</p>
               <AiOutlineDown />
             </motion.div>
           )}
         </div>
-        <div className="flex items-center gap-2 cursor-pointer -ml-4">
+        <div className={`flex items-center gap-2 cursor-pointer ${isAuthenticated ? "-ml-[-40px]" : "ml-[150px]"}`}>
           <input
             placeholder="Search Blogs..."
-            className="h-[26px] w-460 rounded-full p-4 text-2xl ml-8 outline-none text-[#333030] border-solid border-[1.5px] border-lightBlack"
+            className={`h-[26px] w-375 rounded-full p-4 text-base ml-8 outline-none shadow-md`}
             type="text"
           />
-          <button className="searchbtn h-[23px] w-[23px] rounded-full text-white bg-[#333030] text-2xl -ml-9">
-            <AiOutlineSearch />
+          <button className="searchbtn h-[29px] w-[29px] rounded-full text-white bg-[#333030] text-2xl -ml-10 flex items-center justify-center">
+            <AiOutlineSearch className={`text-lg ${theme == "light" ? "text-[#eee]" : "text-[#ff462e]"} `} />
           </button>
         </div>
 
@@ -138,10 +157,18 @@ const Navigation = () => {
               className="flex items-center justify-center rounded-2xl w-48 h-12 cursor-pointer gap-2"
             >
               <img src={`data:image/jpeg;base32,${imgData}`} alt="" />
-              {/* <FaUserCircle className="text-4xl text-[#333030] mr-1" /> */}
-              {isAuthenticated ? <p className="flex flex-row">Hello, {data}</p> : <p className="flex flex-row">Hello, User</p>}
+              <FaUserCircle className={`text-3xl mr-1 ${theme == "light" ? "text-[#333030]" : "text-[#ff462e]"}`} />
+              {isAuthenticated ? <p className={`${theme == "light" ? "text-[#333030]" : "text-[#ff462e]"}`}>Hello, {name}</p> : <p className={`${theme == "light" ? "text-[#333030]" : "text-[#ff462e]"}`}>Hello, User</p>}
             </motion.div>
           </div>
+        </div>
+
+        <div className="flex-none -ml-[310px]">
+          <label className="swap swap-rotate items-center">
+            <input type="checkbox" onChange={toggleTheme} checked={theme === "light" ? false : true} />
+            <svg className="swap-on fill-current w-8 h-8 text-[#ff462e]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" /></svg>
+            <svg className="swap-off fill-current w-8 h-8 text-[#333030]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" /></svg>
+          </label>
         </div>
       </div>
       {/* Mobile */}
@@ -172,15 +199,15 @@ const Navigation = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isAuthenticated?<>
-      {isMobMenu && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.6 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.6 }}
-          className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
-        >
-           {isAuthenticated && (
+      {isAuthenticated ? <>
+        {isMobMenu && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+          >
+            {isAuthenticated && (
               <>
                 <div className="flex items-center justify-start">
                   <p className="font-bold">My Account</p>
@@ -204,82 +231,24 @@ const Navigation = () => {
                 </div>
               </>
             )}
-        </motion.div>
-      )}</>:""}
+          </motion.div>
+        )}</> : ""}
       {/* Desktop Menu */}
       <div>
-        <div className="md:flex justify-center items-center h-28 hidden bg-[#fffbfa]">
+        <div className={`md:flex justify-center items-center h-28 hidden  ${theme == "light" ? "bg-[#fffbfa]" : "bg-[#39393a]"}`}>
           <Logo />
         </div>
-        <div className="md:flex justify-center items-center h-12 bg-[#F2F1EE] hidden">
-          <div className="w-full flex justify-self-stretch items-center text-[#333030] font-sans">
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Trending
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Technology
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Business
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Philosophy
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Lifestyle
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Health
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Opinion
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Sports
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Cuisine
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Travel
-            </Link>
-            <Link
-              className="cursor-pointer flex items-center justify-center w-full"
-              to="/"
-            >
-              Humor
-            </Link>
-          </div>
+        <div className={`md:flex justify-between xl:justify-evenly items-center xl:w-full xl:mx-0 h-12 sm:block ${theme == "light" ? "bg-[#F2F1EE]" : "bg-[#27282b]"} overflow-x-scroll scrollbar-hide hidden`}>
+          <ul className="flex xl:ml-0 md:ml-8">
+            {HeaderData.map((item) => (
+              <li onClick={() => setActiveStatus(item.id)} className={activeStatus == item.id ? "text-sm border-[#ff462e] pt-3 rounded-t text-[#ff462e] mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-[#ff462e] cursor-pointer"}>
+                <div className="flex items-center mb-3">
+                  <span className="ml-1 font-normal">{activeStatus == item.id ? item.name : item.name}</span>
+                </div>
+                {activeStatus == item.id && <div className="w-full h-1 bg-[#ff462e] rounded-t-md" />}
+              </li>
+            ))}
+          </ul>
         </div>
 
         {/* Editor */}
@@ -317,7 +286,7 @@ const Navigation = () => {
             initial={{ opacity: 0, x: 200 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 200 }}
-            className="fixed top-0 left-0 bg-opacity-90 w-full h-screen bg-white drop-shadow-md flex flex-col z-[101] overflow-y-scroll scrollbar-hide"
+            className={`fixed top-0 left-0 bg-opacity-90 w-full h-screen ${theme == "light" ? "bg-white" : "bg-[#505151]"} drop-shadow-md flex flex-col z-[101] overflow-y-scroll scrollbar-hide`}
           >
             <div className="w-full flex items-center justify-between p-4 cursor-pointer">
               <div></div>

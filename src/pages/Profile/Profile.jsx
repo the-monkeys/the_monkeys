@@ -14,20 +14,20 @@ import { useSelector } from "react-redux";
 import UserService from "../../utils/UserService";
 
 export const Profile = () => {
-  const [data, setData] = useState([])
+  const [loadData, setloadData] = useState([])
   const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
 
-  const id = atob(localStorage.getItem("userId"))
+  const data = useSelector((store)=>store.auth.data);
 
-  const loadData = async () => {
-    const response = await UserService.getOne(id);
-    setData(response.data);
+  const loadingData = async () => {
+    const response = await UserService.getOne(data.userId);
+    setloadData(response.data);
     console.log(response.data);
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadData();
+      loadingData();
     }
   }, []);
 
@@ -48,7 +48,7 @@ export const Profile = () => {
                 </div>
               </div>
               {isAuthenticated ? <p className="text-gray-700 text-4xl font-bold font-sans pt-8">
-                {data.firstName + " " + data.lastName}
+                {loadData.firstName + " " + loadData.lastName}
               </p> : <p className="text-gray-700 text-4xl text-center font-bold font-sans pt-8">
                 User
               </p>}

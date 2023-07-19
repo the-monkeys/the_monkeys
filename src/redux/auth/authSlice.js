@@ -32,7 +32,6 @@ export const loginUser = createAsyncThunk(
 
       if(result?.status === 200){
           localStorage.setItem("authToken", btoa(result?.token))
-          localStorage.setItem("userId", btoa(result?.userId))
       }
       return result
     } catch (error) {
@@ -51,7 +50,6 @@ export const authSlice = createSlice({
     //   },
     logoutUser: (state) => {
       localStorage.removeItem("authToken");
-      localStorage.removeItem("userId");
       state.isAuthenticated = false;
       state.data = [];
       state.error = false;

@@ -1,7 +1,7 @@
 export const Settings = () => {
   return (
     <div>
-      <h1>This is the settings page</h1>
+      <h1>hgfuyd</h1>
     </div>
   );
 };

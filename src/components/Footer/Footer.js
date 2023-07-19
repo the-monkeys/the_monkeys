@@ -3,6 +3,8 @@ import { Logo } from "../Logo";
 import instIcon from "../../images/icon.insta.svg";
 import TwitterIcon from "../../images/icon-twitter.svg";
 
+// With Left Aligned Newsletter {about, career}
+
 export const Footer = () => {
   return (
     <footer className="w-full bg-[#F2F1EE]" data-testid="footer">

@@ -3,10 +3,12 @@ import authReducer from "./redux/auth/authSlice";
 import articleEditorReducer from "./redux/articleEditor/articleEditorSlice"
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import {changeTheme} from "./redux/theme/theme"
 
 const rootReducer = combineReducers({
   auth: authReducer,
-  articleEditor: articleEditorReducer
+  articleEditor: articleEditorReducer,
+  theme: changeTheme
 });
 
 const persistConfig = {

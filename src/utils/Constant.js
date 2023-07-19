@@ -9,10 +9,6 @@ class Constant {
         };
     }
 
-    // setToken(payload) {
-    //     localStorage.setItem("authToken", payload)
-    // }
-
     getToken() {
         return atob(localStorage.getItem("authToken"))
     }
