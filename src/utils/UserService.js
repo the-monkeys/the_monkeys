@@ -1,6 +1,5 @@
 import axios from "axios";
 import Constant from "./Constant";
-import { useSelector } from "react-redux";
 
 const REACT_APP_API = process.env.REACT_APP_API;
 
@@ -14,8 +13,8 @@ class UserService {
 
   getProfImg(id) {
     return axios.get(
-      REACT_APP_API + `/profile/user/pic/${id}`,
-      Constant.getHeader()
+      REACT_APP_API + `/files/profile/${id}/profile`,
+      // Constant.getHeader()
     )
   }
 

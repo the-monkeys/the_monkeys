@@ -1,20 +1,22 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import authReducer from "./redux/auth/authSlice";
-import articleEditorReducer from "./redux/articleEditor/articleEditorSlice"
+import authReducer from "./auth/authSlice";
+import articleEditorReducer from "./articleEditor/articleEditorSlice";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import {changeTheme} from "./redux/theme/theme"
 
 const rootReducer = combineReducers({
   auth: authReducer,
   articleEditor: articleEditorReducer,
-  theme: changeTheme
 });
+
+// Your async action using createAsyncThunk (replace this with your actual async action)
+// const fetchSomeData = createAsyncThunk('someData/fetch', async () => {
+//   // Fetch some data from API or perform async operation
+// });
 
 const persistConfig = {
   key: "root",
-    blacklist: ['articleEditor'],
-
+  blacklist: ['articleEditor'],
   storage,
 };
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {  useNavigate } from "react-router-dom";
 
 
@@ -6,9 +7,10 @@ const ProtectedRoute = (props) => {
     const navigate = useNavigate();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
+
     const checkUserToken = () => {
-        const userToken = atob(localStorage.getItem('authToken'));
-        if (!userToken || userToken === 'undefined') {
+        if (!isAuthenticated) {
             setIsLoggedIn(false);
             return navigate('/login');
         }

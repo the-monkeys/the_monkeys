@@ -1,6 +1,5 @@
-// import { Navigation } from "./components/Navigation";
-import Navigation from "./components/Navigation/Navigation";
-import { Footer } from "./components/Footer";
+import { Navigation } from "./components/Navigation";
+import {Footer} from "./components/Footer/Footer";
 import { Home } from "./pages/Home/Home";
 import { Legal } from "./pages/Legal/Legal";
 import { Route, Routes } from "react-router-dom";
@@ -14,7 +13,6 @@ import ProtectedRoute from "./common/utils/ProtectedRoute";
 import { Profile } from "./pages/Profile";
 
 import { Settings } from "./pages/Settings";
-import "./index.css";
 import "./App.css";
 import "izitoast-react/dist/iziToast.css";
 import { AnimatePresence } from "framer-motion";
@@ -53,7 +51,7 @@ function App() {
             element={
               <ProtectedRoute>
                 {" "}
-                <Profile />{" "}
+                <Profile />
               </ProtectedRoute>
             }
           />
