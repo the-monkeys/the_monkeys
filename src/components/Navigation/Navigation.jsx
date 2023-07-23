@@ -28,7 +28,7 @@ export const Navigation = () => {
   const [isEditorMenu, setIsEditorMenu] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isMobMenu, setIsMobMenu] = useState(false);
-  const [name, setName] = useState([]);
+  const [name, setName] = useState("User");
   const [imgData, setImgData] = useState(null);
   const [activeStatus, setActiveStatus] = useState(1);
 
@@ -76,7 +76,7 @@ export const Navigation = () => {
     if (isAuthenticated) {
       loadData();
     }
-  }, []);
+  }, [data.userId]);
 
   const navigate = useNavigate();
 
@@ -94,6 +94,8 @@ export const Navigation = () => {
     dispatch(logoutUser())
     navigate("/");
     successAlert();
+    setImgData(null);
+    setName("User")
   };
 
   return (
@@ -137,7 +139,7 @@ export const Navigation = () => {
             >
               {
                 imgData != null ? <img src={imgData} className="h-8 w-8 rounded-full" alt="" /> :
-                <FaUserCircle className={`text-3xl mr-1 text-[#333030]`} />
+                  <FaUserCircle className={`text-3xl mr-1 text-[#333030]`} />
               }
               {isAuthenticated ? <p className={`text-[#333030]`}>Hello, {name}</p> : <p className={`text-[#333030]`}>Hello, User</p>}
             </motion.div>
@@ -169,51 +171,73 @@ export const Navigation = () => {
           <Logo />
         </Link>
 
-        <div className="relative">
-        {
-                imgData != null ? <img src={imgData} className="h-8 w-8 rounded-full" alt="" /> :
-                <FaUserCircle className={`text-3xl mr-1 text-[#333030] w-8 min-w-8 min-h-8 h-8 drop-shadow-lg cursor-pointer rounded-[50%]`} onClick={() => {
-              setIsMobMenu(!isMobMenu);
-            }}/>
-        }
+        <div className="relative" onClick={() => {
+                setIsMobMenu(!isMobMenu);
+              }} >
+          {
+            imgData != null ? <img src={imgData} className="h-8 w-8 rounded-full" alt="" /> :
+              <FaUserCircle className={`text-3xl mr-1 text-[#333030] w-8 min-w-8 min-h-8 h-8 drop-shadow-lg cursor-pointer rounded-[50%]`} />
+          }
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isAuthenticated ? <>
-        {isMobMenu && (
-          <motion.div
+      {isMobMenu && (
+        <>
+        {
+          isAuthenticated ? <motion.div
+          initial={{ opacity: 0, scale: 0.6 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.6 }}
+          className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+        >
+          <>
+            <div className="flex items-center justify-start">
+              <p className="font-bold">My Account</p>
+            </div>
+            <div className="flex items-center pt-4">
+              <Link className="cursor-pointer" to={"/profile"}>
+                Profile
+              </Link>
+            </div>
+            <Link
+              className="flex items-center pt-4 cursor-pointer"
+              to={"/settings"}
+            >
+              <p>Settings</p>
+            </Link>
+            <div
+              onClick={Logout}
+              className="flex items-center pt-4 cursor-pointer"
+            >
+              <p>Logout</p>
+            </div>
+          </>
+        </motion.div>: <motion.div
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
-            className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+            className=" absolute top-14 right-2 h-24 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
           >
-            {isAuthenticated && (
-              <>
-                <div className="flex items-center justify-start">
-                  <p className="font-bold">My Account</p>
-                </div>
-                <div className="flex items-center pt-4">
-                  <Link className="cursor-pointer" to={"/profile"}>
-                    Profile
-                  </Link>
-                </div>
-                <Link
-                  className="flex items-center pt-4 cursor-pointer"
-                  to={"/settings"}
-                >
-                  <p>Settings</p>
-                </Link>
-                <div
-                  onClick={Logout}
-                  className="flex items-center pt-4 cursor-pointer"
-                >
-                  <p>Logout</p>
-                </div>
-              </>
-            )}
+            <>
+              <Link
+                className="flex items-center cursor-pointer"
+                to={"/login"}
+              >
+                <p>Login</p>
+              </Link>
+              <Link
+                className="flex items-center cursor-pointer pt-4"
+                to={"/register"}
+              >
+                <p>Register</p>
+              </Link>
+            </>
           </motion.div>
-        )}</> : ""}
+        }       
+        </>
+      )}
+
       {/* Desktop Menu */}
       <div>
         <div className={`md:flex justify-center items-center h-28 hidden  bg-[#fffbfa]`}>
@@ -293,27 +317,6 @@ export const Navigation = () => {
                   Black text-lightBlack flex md:hidden items-center justify-between"
                   placeholder="Search"
                 />
-                <div className={`${isAuthenticated ? "hidden" : "visible"
-                  } flex md:hidden items-center justify-between h-10 w-full `}>
-                  <button
-                    onClick={() => {
-                      setIsMenu(false);
-                      navigate("/login");
-                    }}
-                    className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsMenu(false);
-                      navigate("/register");
-                    }}
-                    className="cursor-pointer border-2 border-[#ff462e] text-[#ff462e] w-[44%] h-10 rounded-md flex items-center justify-center"
-                  >
-                    Sign Up
-                  </button>
-                </div>
                 <button
                   onClick={() => {
                     setIsMenu(false);

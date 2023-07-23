@@ -1,21 +1,10 @@
 import instIcon from "../../images/icon.insta.svg";
 import TwitterIcon from "../../images/icon-twitter.svg";
 import Illustration from "../../images/illustration-home.svg";
-import { useEffect } from "react";
-import { useState } from "react";
 
 export const Home = () => {
- 
-  const [theme, setTheme] = useState()
-
- useEffect(()=>{
-    const localTheme = localStorage.getItem("theme");
-    document.querySelector('html').setAttribute('data-theme', localTheme);
-    setTheme(localTheme)
- },[]);
-
   return (
-    <div className={`py-24 md:py-44 h-screen ${theme == "light" ? "bg-white" : "bg-[#39393a]"}`} data-testid="home">
+    <div className={`py-24 md:py-44 h-screen bg-white`} data-testid="home">
       <div className="text-xl container w-[85%] mx-auto flex-col-reverse md:flex-row flex items-center justify-between">
         <div className="slideLeft w-full md:w-1/2 flex-col items-center space-y-4 text-center md:text-left">
           <h2>We are Coming Soon!</h2>
