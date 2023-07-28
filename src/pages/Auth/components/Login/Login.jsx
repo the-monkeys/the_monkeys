@@ -7,8 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "izitoast-react";
-import { Alert } from "../../../../common/utils/alertConfig";
-import { Logo } from "../../../../components/Logo";
 import { FcGoogle } from "react-icons/fc";
 
 export const Login = () => {
@@ -40,7 +38,7 @@ export const Login = () => {
       dispatch(loginUser(data)).then((response) => {
         if (response && response.type === "auth/loginUser/fulfilled") {
           successAlert();
-          navigate("/profile");
+          navigate("/");
         }
 
         if (response && response.type === "auth/loginUser/rejected") {

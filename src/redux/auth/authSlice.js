@@ -31,7 +31,7 @@ export const loginUser = createAsyncThunk(
       let result = await login(data);
 
       if(result?.status === 200){
-          localStorage.setItem("authToken", btoa(result?.token))
+          localStorage.setItem("authToken", result?.token)
       }
       return result
     } catch (error) {

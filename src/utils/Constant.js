@@ -10,7 +10,7 @@ class Constant {
     }
 
     getToken() {
-        return atob(localStorage.getItem("authToken"))
+        return localStorage.getItem("authToken")
     }
 
 }

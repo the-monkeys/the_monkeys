@@ -1,46 +1,57 @@
 export const HeaderData = [
     {
         id: 1,
-        name: 'Trending'
+        name: 'Trending',
+        link: "/"
     },
     {
         id: 2,
-        name: 'Technology'
+        name: 'Technology',
+        link: "/"
     },
     {
         id: 3,
-        name: 'Business'
+        name: 'Business',
+        link: "/"
     },
     {
         id: 4,
-        name: 'Philosophy'
+        name: 'Philosophy',
+        link: "/"
     },
     {
         id: 5,
-        name: 'Lifestyle'
+        name: 'Lifestyle',
+        link: "/"
     },
     {
         id: 6,
-        name: 'Health'
+        name: 'Health',
+        link: "/"
     },
     {
         id: 7,
-        name: 'Opinion'
+        name: 'Opinion',
+        link: "/"
     },
     {
         id: 8,
-        name: 'Sports'
+        name: 'Sports',
+        link: "/"
     },
     {
         id: 9,
-        name: 'Cuisine'
+        name: 'Cuisine',
+        link: "/"
     },
     {
         id: 10,
-        name: 'Travel'
+        name: 'Travel',
+        link: "/"
     },
     {
         id: 11,
-        name: 'Humor'
+        name: 'Humor',
+        link: "/"
     },
 ]
