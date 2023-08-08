@@ -36,7 +36,6 @@ export const Register = () => {
 
   const onSubmit = useCallback(
     (data) => {
-      debugger;
       dispatch(registerUser(data)).then((response) => {
         if (response && response.type === "auth/registerUser/fulfilled") {
           successAlert();
