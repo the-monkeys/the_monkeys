@@ -14,11 +14,11 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import useOutsideClickEditor from "./Toggle/useOutsideClickEdit";
 import useOutsideClickProfile from "./Toggle/useOutsideClickProf";
-import useOutsideClickMobMenu from "./Toggle/useOutsideClickMobMenu"
 import UserService from "../../utils/UserService";
 import { useEffect } from "react";
 import { logoutUser } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
+import { HiUserCircle } from "react-icons/hi2";
 import { HeaderData } from "../../utils/HeaderData";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -28,7 +28,7 @@ export const Navigation = () => {
   const [isEditorMenu, setIsEditorMenu] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isMobMenu, setIsMobMenu] = useState(false);
-  const [name, setName] = useState("User");
+  const [name, setName] = useState("");
   const [imgData, setImgData] = useState(null);
   const [activeStatus, setActiveStatus] = useState(1);
 
@@ -40,7 +40,6 @@ export const Navigation = () => {
 
   const ref = useRef();
   const ref1 = useRef();
-  const ref2 = useRef();
 
   // const toggleTheme = (e) => {
   //   if (e.target.checked)
@@ -58,10 +57,6 @@ export const Navigation = () => {
     setIsProfile(false);
   });
 
-  useOutsideClickMobMenu(ref2, () => {
-    setIsMobMenu(false);
-  })
-
   const successAlert = useToast({
     title: "Successfully Logout",
     titleColor: "green",
@@ -71,25 +66,11 @@ export const Navigation = () => {
     timeout: 0.2
   });
 
-  // const loadData = async () => {
-  //   const response = await UserService.getOne(data.userId);
-  //   setName(response.data.firstName);
-  //   setImgData(`https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`);
-  // };
-
-  
-const loadData = async () => {
-  try {
-    if (isAuthenticated) {
-      const response = await UserService.getOne(data.userId);
-      setName(response.data.firstName);
-      setImgData(`https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`);
-      console.log(response)
-    }
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-};
+  const loadData = async () => {
+    const response = await UserService.getOne(data.userId);
+    setName(response.data.firstName);
+    setImgData(`https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`);
+  };
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -124,7 +105,7 @@ const loadData = async () => {
         <div className="relative flex items-center justify-center gap-12 ml-4">
           <AiOutlineMenu id="menu" onClick={() => {
             setIsMenu(!isMenu);
-          }} className={`w-full cursor-pointer h-8 text-[#333030]`} />
+          }} className={`w-full cursor-pointer h-6 text-[#333030]`} />
 
           {isAuthenticated && (
             <motion.div
@@ -190,26 +171,26 @@ const loadData = async () => {
           <Logo />
         </Link>
 
-        <motion.div whileTap={{ scale: 0.75 }} className="relative" onClick={() => {
-          setIsMobMenu(!isMobMenu);
-        }} ref={ref2} >
+        <div className="relative">
           {
             imgData != null ? <img src={imgData} className="h-8 w-8 rounded-full" alt="" /> :
-              <FaUserCircle className={`text-3xl mr-1 text-[#333030] w-8 min-w-8 min-h-8 h-8 drop-shadow-lg cursor-pointer rounded-[50%]`} />
+              <FaUserCircle className={`text-3xl mr-1 text-[#333030] w-8 min-w-8 min-h-8 h-8 drop-shadow-lg cursor-pointer rounded-[50%]`} onClick={() => {
+                setIsMobMenu(!isMobMenu);
+              }} />
           }
-        </motion.div>
+        </div>
       </div>
 
       {/* Mobile Menu */}
-      {isMobMenu && (
-        <>
-          {
-            isAuthenticated ? <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
-            >
+      {isAuthenticated ? <>
+        {isMobMenu && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+          >
+            {isAuthenticated && (
               <>
                 <div className="flex items-center justify-start">
                   <p className="font-bold">My Account</p>
@@ -232,33 +213,11 @@ const loadData = async () => {
                   <p>Logout</p>
                 </div>
               </>
-            </motion.div> : <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              className=" absolute top-14 right-2 h-24 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
-            >
-              <>
-                <Link
-                  className="flex items-center cursor-pointer"
-                  to={"/login"}
-                >
-                  <p>Login</p>
-                </Link>
-                <Link
-                  className="flex items-center cursor-pointer pt-4"
-                  to={"/register"}
-                >
-                  <p>Register</p>
-                </Link>
-              </>
-            </motion.div>
-          }
-        </>
-      )}
-
+            )}
+          </motion.div>
+        )}</> : ""}
       {/* Desktop Menu */}
-      <div className="header">
+      <div>
         <div className={`md:flex justify-center items-center h-28 hidden  bg-[#fffbfa]`}>
           <Logo />
         </div>
@@ -267,7 +226,7 @@ const loadData = async () => {
             {HeaderData.map((item) => (
               <li onClick={() => setActiveStatus(item.id)} className={activeStatus == item.id ? "text-sm border-[#ff462e] pt-3 rounded-t text-[#ff462e] mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-[#ff462e] cursor-pointer"}>
                 <div className="flex items-center mb-3">
-                  <Link to={item.link} id={item.id} className="ml-1 font-normal">{activeStatus == item.id ? item.name : item.name}</Link>
+                  <span className="ml-1 font-normal">{activeStatus == item.id ? item.name : item.name}</span>
                 </div>
                 {activeStatus == item.id && <div className="w-full h-1 bg-[#ff462e] rounded-t-md" />}
               </li>
@@ -332,7 +291,8 @@ const loadData = async () => {
               <div className="w-[75%] md:w-72 flex flex-col items-center justify-center gap-8">
                 <input
                   type="text"
-                  className="w-full mx-4 h-10 rounded-lg px-3 border-solid border-[#ff462e] text-lightBlack bg-transparent border-2 flex md:hidden items-center justify-between outline-none"
+                  className="w-full mx-4 rounded-lg px-[4px] border-solid border-[1.5px] border-
+                  Black text-lightBlack flex md:hidden items-center justify-between"
                   placeholder="Search"
                 />
                 <button
