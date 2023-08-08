@@ -28,7 +28,7 @@ export const Navigation = () => {
   const [isEditorMenu, setIsEditorMenu] = useState(false);
   const [isMenu, setIsMenu] = useState(false);
   const [isMobMenu, setIsMobMenu] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(null);
   const [imgData, setImgData] = useState(null);
   const [activeStatus, setActiveStatus] = useState(1);
 
@@ -36,7 +36,7 @@ export const Navigation = () => {
 
   const data = useSelector((store) => store.auth.data);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const ref = useRef();
   const ref1 = useRef();
@@ -63,13 +63,16 @@ export const Navigation = () => {
     color: "green",
     icon: "ico-success",
     position: "topCenter",
-    timeout: 0.2
+    timeout: 0.2,
   });
 
   const loadData = async () => {
     const response = await UserService.getOne(data.userId);
+    debugger;
     setName(response.data.firstName);
-    setImgData(`https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`);
+    setImgData(
+      `https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`
+    );
   };
 
   useEffect(() => {
@@ -91,21 +94,27 @@ export const Navigation = () => {
   };
 
   const Logout = () => {
-    dispatch(logoutUser())
+    dispatch(logoutUser());
     navigate("/");
     successAlert();
     setImgData(null);
-    setName("User")
+    setName("User");
   };
 
   return (
     <>
       {/* Desktop */}
-      <div className={`md:flex items-center justify-between hidden w-full h-12 bg-[#f2f1ee]`}>
+      <div
+        className={`md:flex items-center justify-between hidden w-full h-12 bg-[#f2f1ee]`}
+      >
         <div className="relative flex items-center justify-center gap-12 ml-4">
-          <AiOutlineMenu id="menu" onClick={() => {
-            setIsMenu(!isMenu);
-          }} className={`w-full cursor-pointer h-6 text-[#333030]`} />
+          <AiOutlineMenu
+            id="menu"
+            onClick={() => {
+              setIsMenu(!isMenu);
+            }}
+            className={`w-full cursor-pointer h-6 text-[#333030]`}
+          />
 
           {isAuthenticated && (
             <motion.div
@@ -119,7 +128,11 @@ export const Navigation = () => {
             </motion.div>
           )}
         </div>
-        <div className={`flex items-center gap-2 cursor-pointer ${isAuthenticated ? "-ml-[-40px]" : "ml-[150px]"} `}>
+        <div
+          className={`flex items-center gap-2 cursor-pointer ${
+            isAuthenticated ? "-ml-[-40px]" : "ml-[150px]"
+          } `}
+        >
           <input
             placeholder="Search Blogs..."
             className={`h-[26px] w-375 rounded-full p-4 text-base ml-8 outline-none shadow-md bg-white`}
@@ -137,11 +150,17 @@ export const Navigation = () => {
               onClick={() => setIsProfile(!isProfile)}
               className="flex items-center justify-center rounded-2xl w-48 h-12 cursor-pointer gap-2"
             >
-              {
-                imgData != null ? <img src={imgData} className="h-8 w-8 rounded-full" alt="" /> :
-                  <FaUserCircle className={`text-3xl mr-1 text-[#333030]`} />
-              }
-              {isAuthenticated ? <p className={`text-[#333030]`}>Hello, {name}</p> : <p className={`text-[#333030]`}>Hello, User</p>}
+              {imgData != null ? (
+                <img src={imgData} className="h-8 w-8 rounded-full" alt="" />
+              ) : (
+                <FaUserCircle className={`text-3xl mr-1 text-[#333030]`} />
+              )}
+              {console.log(isAuthenticated, "isAuthenticated")}
+              {isAuthenticated ? (
+                <p className={`text-[#333030]`}>Hello, {name}</p>
+              ) : (
+                <p className={`text-[#333030]`}>Hello, User</p>
+              )}
             </motion.div>
           </div>
         </div>
@@ -172,63 +191,87 @@ export const Navigation = () => {
         </Link>
 
         <div className="relative">
-          {
-            imgData != null ? <img src={imgData} className="h-8 w-8 rounded-full" alt="" /> :
-              <FaUserCircle className={`text-3xl mr-1 text-[#333030] w-8 min-w-8 min-h-8 h-8 drop-shadow-lg cursor-pointer rounded-[50%]`} onClick={() => {
+          {imgData != null ? (
+            <img src={imgData} className="h-8 w-8 rounded-full" alt="" />
+          ) : (
+            <FaUserCircle
+              className={`text-3xl mr-1 text-[#333030] w-8 min-w-8 min-h-8 h-8 drop-shadow-lg cursor-pointer rounded-[50%]`}
+              onClick={() => {
                 setIsMobMenu(!isMobMenu);
-              }} />
-          }
+              }}
+            />
+          )}
         </div>
       </div>
 
       {/* Mobile Menu */}
-      {isAuthenticated ? <>
-        {isMobMenu && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.6 }}
-            className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
-          >
-            {isAuthenticated && (
-              <>
-                <div className="flex items-center justify-start">
-                  <p className="font-bold">My Account</p>
-                </div>
-                <div className="flex items-center pt-4">
-                  <Link className="cursor-pointer" to={"/profile"}>
-                    Profile
+      {isAuthenticated ? (
+        <>
+          {isMobMenu && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+            >
+              {isAuthenticated && (
+                <>
+                  <div className="flex items-center justify-start">
+                    <p className="font-bold">My Account</p>
+                  </div>
+                  <div className="flex items-center pt-4">
+                    <Link className="cursor-pointer" to={"/profile"}>
+                      Profile
+                    </Link>
+                  </div>
+                  <Link
+                    className="flex items-center pt-4 cursor-pointer"
+                    to={"/settings"}
+                  >
+                    <p>Settings</p>
                   </Link>
-                </div>
-                <Link
-                  className="flex items-center pt-4 cursor-pointer"
-                  to={"/settings"}
-                >
-                  <p>Settings</p>
-                </Link>
-                <div
-                  onClick={Logout}
-                  className="flex items-center pt-4 cursor-pointer"
-                >
-                  <p>Logout</p>
-                </div>
-              </>
-            )}
-          </motion.div>
-        )}</> : ""}
+                  <div
+                    onClick={Logout}
+                    className="flex items-center pt-4 cursor-pointer"
+                  >
+                    <p>Logout</p>
+                  </div>
+                </>
+              )}
+            </motion.div>
+          )}
+        </>
+      ) : (
+        ""
+      )}
       {/* Desktop Menu */}
       <div>
-        <div className={`md:flex justify-center items-center h-28 hidden  bg-[#fffbfa]`}>
+        <div
+          className={`md:flex justify-center items-center h-28 hidden  bg-[#fffbfa]`}
+        >
           <Logo />
         </div>
-        <div className={`md:flex justify-between xl:justify-evenly items-center xl:w-full xl:mx-0 h-12 sm:block bg-[#F2F1EE] overflow-x-scroll scrollbar-hide hidden`}>
+        <div
+          className={`md:flex justify-between xl:justify-evenly items-center xl:w-full xl:mx-0 h-12 sm:block bg-[#F2F1EE] overflow-x-scroll scrollbar-hide hidden`}
+        >
           <ul className="flex xl:ml-0 md:ml-8">
             {HeaderData.map((item) => (
-              <li onClick={() => setActiveStatus(item.id)} className={activeStatus == item.id ? "text-sm border-[#ff462e] pt-3 rounded-t text-[#ff462e] mr-12" : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-[#ff462e] cursor-pointer"}>
+              <li
+                onClick={() => setActiveStatus(item.id)}
+                className={
+                  activeStatus == item.id
+                    ? "text-sm border-[#ff462e] pt-3 rounded-t text-[#ff462e] mr-12"
+                    : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-[#ff462e] cursor-pointer"
+                }
+              >
                 <div className="flex items-center mb-3">
-                  <span className="ml-1 font-normal">{activeStatus == item.id ? item.name : item.name}</span>
+                  <span className="ml-1 font-normal">
+                    {activeStatus == item.id ? item.name : item.name}
+                  </span>
                 </div>
-                {activeStatus == item.id && <div className="w-full h-1 bg-[#ff462e] rounded-t-md" />}
+                {activeStatus == item.id && (
+                  <div className="w-full h-1 bg-[#ff462e] rounded-t-md" />
+                )}
               </li>
             ))}
           </ul>
@@ -415,8 +458,9 @@ export const Navigation = () => {
             className="absolute top-14 right-2 w-[255px] flex items-center justify-center rounded-lg shadow-md bg-[#f2f1ee] p-4 flex-col"
           >
             <div
-              className={`flex items-center justify-center py-4 border-gray-300 ${isAuthenticated ? "border-b-[1px] hidden" : ""
-                }`}
+              className={`flex items-center justify-center py-4 border-gray-300 ${
+                isAuthenticated ? "border-b-[1px] hidden" : ""
+              }`}
             >
               <button
                 onClick={Login}
