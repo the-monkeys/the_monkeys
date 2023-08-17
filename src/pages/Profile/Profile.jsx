@@ -14,20 +14,21 @@ import { useSelector } from "react-redux";
 import UserService from "../../utils/UserService";
 
 export const Profile = () => {
-  const [data, setData] = useState([])
+  const [loadData, setloadData] = useState([])
   const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
+  const [imgData, setImgData] = useState(null);
 
-  const id = atob(localStorage.getItem("userId"))
+  const data = useSelector((store)=>store.auth.data);
 
-  const loadData = async () => {
-    const response = await UserService.getOne(id);
-    setData(response.data);
-    console.log(response.data);
+  const loadingData = async () => {
+    const response = await UserService.getOne(data.userId);
+    setloadData(response.data);
+    setImgData(`https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`);
   };
 
   useEffect(() => {
     if (isAuthenticated) {
-      loadData();
+      loadingData();
     }
   }, []);
 
@@ -44,11 +45,14 @@ export const Profile = () => {
             <div className="px-6 py-4">
               <div className="w-full px-4 lg:order-2 flex justify-center">
                 <div className="relative">
+                {
+                imgData != null ? <img src={imgData} className="h-28 w-36 shadow-xl text-8xl rounded-full md:-mt-20 -mt-16 -ml-8" alt="" /> :
                   <HiUserCircle className="shadow-xl md:text-9xl text-8xl rounded-full md:-mt-20 -mt-16 bg-white text-[#27282b]" />
+              }
                 </div>
               </div>
               {isAuthenticated ? <p className="text-gray-700 text-4xl font-bold font-sans pt-8">
-                {data.firstName + " " + data.lastName}
+                {loadData.firstName + " " + loadData.lastName}
               </p> : <p className="text-gray-700 text-4xl text-center font-bold font-sans pt-8">
                 User
               </p>}

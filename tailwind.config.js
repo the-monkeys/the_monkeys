@@ -1,7 +1,9 @@
 /** / @type {import('tailwindcss').Config} */
-const defaultTheme = require("tailwindcss/defaultTheme");
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}",
+    'node_modules/daisyui/dist/**/*.js',
+    'node_modules/react-daisyui/dist/**/*.js',
+  ],
   theme: {
     extend: {
       width: {
@@ -48,7 +50,7 @@ module.exports = {
         "2xl": "1536px",
       },
       variants: {
-        display: ["responsive","scrollbar"],
+        display: ["responsive", "scrollbar"],
       },
       fontFamily: {
         dance: "Dancing Script",
@@ -59,5 +61,10 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwind-scrollbar-hide')],
+  daisyui: {
+    themes: ["light", "dark", "cupcake", "bumblebee", "emerald", "corporate", "synthwave", "retro", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi", "pastel", "fatasy", "wireframe", "black", "luxury", "dracula", "cmyk", "autumn", "business", "acid", "lemonade", "night", "cofee", "winter"],
+  },
+  plugins: [require('tailwind-scrollbar-hide'), 
+  require('daisyui')
+],
 };
