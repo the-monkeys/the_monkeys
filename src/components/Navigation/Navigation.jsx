@@ -74,11 +74,11 @@ export const Navigation = () => {
     );
   };
 
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     loadData();
-  //   }
-  // }, [data.userId]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      loadData();
+    }
+  }, [data.userId]);
 
   const navigate = useNavigate();
 
