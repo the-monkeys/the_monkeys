@@ -15,12 +15,12 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const successAlert = useToast({
-    title: "Login Success",
+    title: "Sign in Success",
     titleColor: "green",
     color: "green",
     icon: "ico-success",
     position: "topCenter",
-    timeout: 0.2
+    timeout: 0.2,
   });
   const errorAlert = useToast({
     title: "Something went wrong",
@@ -28,7 +28,7 @@ export const Login = () => {
     color: "red",
     icon: "ico-warning",
     position: "topCenter",
-    timeout: 0.2
+    timeout: 0.2,
   });
 
   const { isLoading } = useSelector((state) => state.auth);
@@ -50,18 +50,12 @@ export const Login = () => {
   );
 
   return (
-    <section
-      data-testid="login"
-    >
+    <section data-testid="login">
       <div className="container h-full px-6 md:py-24 w-[80%] m-auto">
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
           {/* Left column container with background*/}
           <div className="mb-12 md:mb-0 md:w-8/12 lg:w-6/12">
-            <img
-              src={LoginSvg}
-              className="w-full"
-              alt="illustration"
-            />
+            <img src={LoginSvg} className="w-full" alt="illustration" />
           </div>
           {/* Right column container with form */}
           <div className="md:w-8/12 md:mt-0 -mt-12 lg:ml-6 lg:w-5/12">
@@ -75,7 +69,7 @@ export const Login = () => {
                   <div className="relative mb-6" data-te-input-wrapper-init="">
                     <label
                       htmlFor="exampleFormControlInput3"
-                    // className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
+                      // className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
                     >
                       Email address
                     </label>
@@ -103,7 +97,7 @@ export const Login = () => {
                   <div className="relative mb-6" data-te-input-wrapper-init="">
                     <label
                       htmlFor="exampleFormControlInput33"
-                    // className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
+                      // className="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[2.15] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[1.15rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[te-input-state-active]:-translate-y-[1.15rem] peer-data-[te-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:peer-focus:text-primary"
                     >
                       Password
                     </label>
@@ -148,7 +142,7 @@ export const Login = () => {
               </div>
               {/* Submit button */}
               <LoginButton
-                text="Login"
+                text="Sign in"
                 onSubmit={handleSubmit(onSubmit)}
                 loading={isLoading}
                 disabled={isLoading}

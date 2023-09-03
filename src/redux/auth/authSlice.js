@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { API } from "../../api";
 
-
 const { register, login } = API();
 
 const initialState = {
@@ -16,7 +15,11 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (data, thunkAPI) => {
     try {
-      return register(data);
+      let result = await register(data);
+      if (result?.status === 201) {
+        localStorage.setItem("SignUpAuthToken", result?.token);
+        return result;
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error });
     }
@@ -27,13 +30,12 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (data, thunkAPI) => {
     try {
-
       let result = await login(data);
 
-      if(result?.status === 200){
-          localStorage.setItem("authToken", result?.token)
+      if (result?.status === 200) {
+        localStorage.setItem("authToken", result?.token);
       }
-      return result
+      return result;
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error });
     }

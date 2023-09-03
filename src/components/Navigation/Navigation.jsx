@@ -68,18 +68,17 @@ export const Navigation = () => {
 
   const loadData = async () => {
     const response = await UserService.getOne(data.userId);
-    debugger;
     setName(response.data.firstName);
     setImgData(
       `https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`
     );
   };
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      loadData();
-    }
-  }, [data.userId]);
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     loadData();
+  //   }
+  // }, [data.userId]);
 
   const navigate = useNavigate();
 
