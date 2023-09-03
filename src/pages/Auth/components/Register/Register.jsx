@@ -40,6 +40,7 @@ export const Register = () => {
         if (response && response.type === "auth/registerUser/fulfilled") {
           successAlert();
           navigate("/");
+          return;
         }
 
         if (response && response.type === "auth/registerUser/rejected") {
@@ -197,12 +198,7 @@ export const Register = () => {
                 </div>
               </div>
               {/* Submit button */}
-              <SignUpButton
-                text="Signup"
-                onSubmit={handleSubmit(onSubmit)}
-                loading={isLoading}
-                disabled={isLoading}
-              />
+              <SignUpButton text="Sign up" onSubmit={handleSubmit(onSubmit)} />
               {/* Divider */}
               <div className="my-4 flex items-center before:mt-0.5 before:flex-1 before:border-t before:border-neutral-300 after:mt-0.5 after:flex-1 after:border-t after:border-neutral-300">
                 <p className="mx-4 mb-0 text-center font-semibold text-[#333030]">

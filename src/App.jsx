@@ -1,5 +1,5 @@
 import { Navigation } from "./components/Navigation";
-import {Footer} from "./components/Footer/Footer";
+import { Footer } from "./components/Footer/Footer";
 import { Home } from "./pages/Home/Home";
 import { Legal } from "./pages/Legal/Legal";
 import { Route, Routes } from "react-router-dom";
