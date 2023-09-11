@@ -3,9 +3,11 @@ import MenuBtn from "../../assets/menu_icon.png";
 import { Logo } from "../Logo";
 import {
   AiFillCloseSquare,
-  AiOutlineDown,
+  // AiOutlineDown,
   AiOutlineSearch,
 } from "react-icons/ai";
+import {TfiWrite} from 'react-icons/tfi'
+// import { FaPenToSquare } from "react-icons/fa";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -18,7 +20,7 @@ import UserService from "../../utils/UserService";
 import { useEffect } from "react";
 import { logoutUser } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
-import { HiUserCircle } from "react-icons/hi2";
+// import { HiUserCircle } from "react-icons/hi2";
 import { HeaderData } from "../../utils/HeaderData";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -68,6 +70,7 @@ export const Navigation = () => {
 
   const loadData = async () => {
     const response = await UserService.getOne(data.userId);
+    debugger;
     setName(response.data.firstName);
     setImgData(
       `https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`
@@ -119,11 +122,13 @@ export const Navigation = () => {
             <motion.div
               whileTap={{ scale: 0.75 }}
               className={`md:flex items-center gap-1 text-[#333030] cursor-pointer hidden`}
-              onClick={() => setIsEditorMenu(!isEditorMenu)}
+              // onClick={() => setIsEditorMenu(!isEditorMenu)}
+              onClick={()=> navigate('/write')}
               ref={ref}
             >
-              <p className={`text-[#333030]`}>Editor</p>
-              <AiOutlineDown />
+              <p className={`text-[#333030]`}>Write</p>
+              <TfiWrite style={{ fontSize: '15px' }}/>
+              {/* <AiOutlineDown /> */}
             </motion.div>
           )}
         </div>
@@ -258,17 +263,17 @@ export const Navigation = () => {
               <li
                 onClick={() => setActiveStatus(item.id)}
                 className={
-                  activeStatus == item.id
+                  activeStatus === item.id
                     ? "text-sm border-[#ff462e] pt-3 rounded-t text-[#ff462e] mr-12"
                     : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-[#ff462e] cursor-pointer"
                 }
               >
                 <div className="flex items-center mb-3">
                   <span className="ml-1 font-normal">
-                    {activeStatus == item.id ? item.name : item.name}
+                    {activeStatus === item.id ? item.name : item.name}
                   </span>
                 </div>
-                {activeStatus == item.id && (
+                {activeStatus === item.id && (
                   <div className="w-full h-1 bg-[#ff462e] rounded-t-md" />
                 )}
               </li>

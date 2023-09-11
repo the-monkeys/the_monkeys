@@ -1,0 +1,10 @@
+
+#editorjs::-webkit-scrollbar {
+  width: 10px; 
+  background-color: #f1f1f1; /* Color of the track */
+}
+
+#editorjs::-webkit-scrollbar-thumb {
+  background-color: #ff462e; /* Color of the thumb */
+  border-radius: 6px;
+}

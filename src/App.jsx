@@ -1,5 +1,5 @@
 import { Navigation } from "./components/Navigation";
-import { Footer } from "./components/Footer/Footer";
+import {Footer} from "./components/Footer/Footer";
 import { Home } from "./pages/Home/Home";
 import { Legal } from "./pages/Legal/Legal";
 import { Route, Routes } from "react-router-dom";
@@ -16,6 +16,7 @@ import { Settings } from "./pages/Settings";
 import "./App.css";
 import "izitoast-react/dist/iziToast.css";
 import { AnimatePresence } from "framer-motion";
+import Write from "./pages/write/Write";
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
           />
           {/* <Route path="/profile" element={<ProtectedRoute > <Profile /> </ProtectedRoute>} /> */}
           <Route path="/settings" element={<Settings />} />
+          <Route path="/write" element={<Write />} />
         </Routes>
       </main>
       <Footer />
