@@ -1,0 +1,41 @@
+@media (max-width: 768px) {
+    .smallText, .divTittle, .text-primary {
+      display: none;
+    }
+  }
+  @media (max-width: 768px) {
+    .settings.-img {
+      display: none;
+    }
+    
+    
+  }
+  
+  :root{
+    --PrimaryColor: hsl(239, 59%, 35%);
+    --HoverColor: #94adf0;
+    --paleBlue: hsl(220, 75%, 89%);
+    --whiteColor: hsl(0,0%,100%);
+    --blackColor: hsl(0,0%,18%);
+    --textColor: hsl(240,1%,48%);
+    --bgColor: hsl(220,10%,94%);
+    --greyText: rgb(190,190,190);
+    --inputColor:hsl(330,12%,97%);
+  
+    --biggestFontSize: 2.5rem;
+    --h1FontSize: 1.5rem;
+    --h2FontSize: 1.25rem;
+    --h3FontSize: 1rem;
+    --normalFontSize: .938rem;
+    --smallFontSize: .813rem;
+    --SmallestFontSize:.75rem;
+  }
+
+  .listItem:hover span{
+    color: white;
+  }
+  .listItem:hover .mr-3{
+    color: white;
+  }
+ 
+  
