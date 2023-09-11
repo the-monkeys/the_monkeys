@@ -206,7 +206,7 @@ export const Settings = () => {
         <div className="flex flex-col pt-12">
           <div className="form-control w-52">
             <label className="cursor-pointer label flex justify-center">
-              <span className="label-text text-lg smallText hover:bg-[#ff462e] font-bold mr-5">
+              <span className="label-text text-lg smallText  font-bold mr-5">
                 Theme mode
               </span>
 
