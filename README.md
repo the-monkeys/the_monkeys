@@ -14,3 +14,12 @@ Thank you for visiting our platform. We hope you find it informative and educati
 
 
 For contribution fork the branch
+
+## Running in the system
+To install the package and the dependencies do,
+``` yarn install ```
+
+Then, ``` npm install``` and ``` npm start```
+(if the server is taking too much time to load, then try ``` npm install --force```)
+
+Do, a git checkout for working in another branch
