@@ -1,6 +1,13 @@
 # The Monkeys
+![Website Status](https://img.shields.io/badge/status-under%20construction-yellow)
+[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg)](#contributors)
+[![License](https://img.shields.io/badge/license-Monkeys-blue)](https://opensource.org/licenses/YourLicense)
 
-Welcome to The Monkeys, an educational and informational blogging platform!
+<img src="./src/images/the_monkeys.svg" alt="Image Alt Text" width="300" height="80">
+
+##
+
+__Welcome to The Monkeys, an educational and informational blogging platform!__
 
 We are dedicated to providing a space for individuals to share their knowledge and experiences on a variety of topics. Our platform is designed to be a resource for people looking to learn new things and expand their understanding of the world.
 
@@ -13,11 +20,13 @@ We also believe in the power of community. Our platform encourages engagement an
 Thank you for visiting our platform. We hope you find it informative and educational, and that you come back often to learn and grow with us.
 
 
+
+
 For contribution fork the branch
 
 ## Running in the system
 To install the package and the dependencies do,
-``` yarn install ```
+``` yarn install ``` 
 
 Then, ``` npm install``` and ``` npm start```
 (if the server is taking too much time to load, then try ``` npm install --force```)
