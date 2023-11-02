@@ -6,7 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import { Login } from "./pages/Auth/components/Login";
 import { Register } from "./pages/Auth/components/Register";
 import { ArticleEditor } from "./pages/ArticleEditor/ArticleEditor";
-import QuillEditor from "./pages/QuillEditor/QuillEditor";
+// import QuillEditor from "./pages/QuillEditor/QuillEditor";
 import AdScript from "./AdScript";
 import Membersmain from "./components/Contributors/MembersMain";
 import ProtectedRoute from "./common/utils/ProtectedRoute";
@@ -42,7 +42,7 @@ function App() {
             path="/type/:id"
             element={
               <ProtectedRoute>
-                <QuillEditor />{" "}
+                {/* <QuillEditor />{" "} */}
               </ProtectedRoute>
             }
           />

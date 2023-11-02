@@ -52,20 +52,20 @@ export const API = () => {
     //     uri: rewritePath("files/post"),
     //   },
     // },
-    QUILL_EDITOR: {
-      ADD_IMAGE: {
-        method: Method.Post,
-        uri: rewritePath("files/post"),
-      },
-      GET_IMAGE: {
-        method: Method.Get,
-        uri: rewritePath("files/post"),
-      },
-      DELETE_IMAGE: {
-        method: Method.Delete,
-        uri: rewritePath("files/post"),
-      },
-    },
+    // QUILL_EDITOR: {
+    //   ADD_IMAGE: {
+    //     method: Method.Post,
+    //     uri: rewritePath("files/post"),
+    //   },
+    //   GET_IMAGE: {
+    //     method: Method.Get,
+    //     uri: rewritePath("files/post"),
+    //   },
+    //   DELETE_IMAGE: {
+    //     method: Method.Delete,
+    //     uri: rewritePath("files/post"),
+    //   },
+    // },
   };
 
   const callApi = (
@@ -105,11 +105,11 @@ export const API = () => {
     //   callApi(ENDPOINTS.ARTICLE_EDITOR.GET_IMAGE, {}, config, url),
     // deleteImage: (config, url) =>
     //   callApi(ENDPOINTS.ARTICLE_EDITOR.DELETE_IMAGE, {}, config, url),
-    addImage: (data, config, url) =>
-      callApi(ENDPOINTS.QUILL_EDITOR.ADD_IMAGE, data, config, url),
-    getImage: (config, url) =>
-      callApi(ENDPOINTS.QUILL_EDITOR.GET_IMAGE, {}, config, url),
-    deleteImage: (config, url) =>
-      callApi(ENDPOINTS.QUILL_EDITOR.DELETE_IMAGE, {}, config, url),
+    // addImage: (data, config, url) =>
+    //   callApi(ENDPOINTS.QUILL_EDITOR.ADD_IMAGE, data, config, url),
+    // getImage: (config, url) =>
+    //   callApi(ENDPOINTS.QUILL_EDITOR.GET_IMAGE, {}, config, url),
+    // deleteImage: (config, url) =>
+    //   callApi(ENDPOINTS.QUILL_EDITOR.DELETE_IMAGE, {}, config, url),
   };
 };

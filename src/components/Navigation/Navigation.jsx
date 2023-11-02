@@ -304,7 +304,7 @@ export const Navigation = () => {
             >
               <BsPencilSquare className="py-2 text-4xl" />
               <Link to={"/type/" + uuidv4()} key={uuidv4()}>
-                Quill Editor
+                {/* Quill Editor */}
               </Link>
             </div>
           </motion.div>
