@@ -14,16 +14,19 @@ import { useSelector } from "react-redux";
 import UserService from "../../utils/UserService";
 
 export const Profile = () => {
-  const [loadData, setloadData] = useState([])
+  const [loadData, setloadData] = useState([]);
   const isAuthenticated = useSelector((store) => store.auth.isAuthenticated);
   const [imgData, setImgData] = useState(null);
 
-  const data = useSelector((store)=>store.auth.data);
+  const data = useSelector((store) => store.auth.data);
 
   const loadingData = async () => {
     const response = await UserService.getOne(data.userId);
     setloadData(response.data);
-    setImgData(`https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`);
+
+    setImgData(
+      `https://themonkeys.tech/api/v1/files/profile/${data.userId}/profile`
+    );
   };
 
   useEffect(() => {
@@ -45,17 +48,27 @@ export const Profile = () => {
             <div className="px-6 py-4">
               <div className="w-full px-4 lg:order-2 flex justify-center">
                 <div className="relative">
-                {
-                imgData != null ? <img src={imgData} className="h-28 w-36 shadow-xl text-8xl rounded-full md:-mt-20 -mt-16 -ml-8" alt="" /> :
-                  <HiUserCircle className="shadow-xl md:text-9xl text-8xl rounded-full md:-mt-20 -mt-16 bg-white text-[#27282b]" />
-              }
+                  {/* for time being Adding a random image will revert it once api will give proper img  */}
+                  {imgData != null ? (
+                    <img
+                      src={imgData ? "favicons/apple-touch-icon.png" : imgData}
+                      className="h-28 w-36 shadow-xl text-8xl rounded-full md:-mt-20 -mt-16 -ml-8"
+                      alt=""
+                    />
+                  ) : (
+                    <HiUserCircle className="shadow-xl md:text-9xl text-8xl rounded-full md:-mt-20 -mt-16 bg-white text-[#27282b]" />
+                  )}
                 </div>
               </div>
-              {isAuthenticated ? <p className="text-gray-700 text-4xl font-bold font-sans pt-8">
-                {loadData.firstName + " " + loadData.lastName}
-              </p> : <p className="text-gray-700 text-4xl text-center font-bold font-sans pt-8">
-                User
-              </p>}
+              {isAuthenticated ? (
+                <p className="text-gray-700 text-4xl font-bold font-sans pt-8">
+                  {loadData.firstName + " " + loadData.lastName}
+                </p>
+              ) : (
+                <p className="text-gray-700 text-4xl text-center font-bold font-sans pt-8">
+                  User
+                </p>
+              )}
             </div>
             <div className="px-6 pt-4 pb-2">
               <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
