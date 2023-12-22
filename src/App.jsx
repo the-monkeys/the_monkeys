@@ -17,6 +17,7 @@ import "./App.css";
 import "izitoast-react/dist/iziToast.css";
 import { AnimatePresence } from "framer-motion";
 import Write from "./pages/write/Write";
+import TermsOfUse from "./components/Footer/TermsOfUse";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/tos" element={<Legal />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/termsofuse" element={<TermsOfUse />}/>
           <Route
             path="/write/:id"
             element={
