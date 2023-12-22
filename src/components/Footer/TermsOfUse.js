@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+//  bg-white text-black overflow-hidden lg:pl-44 lg:pr-48 flex justify-center
 const TermsOfUse = () => {
     return (
-        <div>
-            <div className='md:m-16'>
+        <div className='bg-white text-black overflow-hidden lg:pl-36 lg:pr-44 flex justify-center'>
+            <div className='md:m-8'>
                 <div className=' text-center m-14'>
                     <h1 className='text-4xl underline font-semibold mb-2'>Terms of Use</h1>
                 </div>
