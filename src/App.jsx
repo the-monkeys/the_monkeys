@@ -18,6 +18,7 @@ import "izitoast-react/dist/iziToast.css";
 import { AnimatePresence } from "framer-motion";
 import Write from "./pages/write/Write";
 import TermsOfUse from "./components/Footer/TermsOfUse";
+import Cookie from "./components/Cookie/Cookie";
 
 function App() {
   return (
@@ -63,6 +64,7 @@ function App() {
           <Route path="/write" element={<Write />} />
         </Routes>
       </main>
+      <Cookie />
       <Footer />
     </AnimatePresence>
   );
