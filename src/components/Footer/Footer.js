@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useEffect } from "react"
+import { Link } from "react-router-dom";
 
 export const Footer = () => {
     return (
@@ -20,7 +21,8 @@ export const Footer = () => {
             </div>
             <div>
                 <span className="footer-title">Legal</span>
-                <a className="link link-hover">Terms of use</a>
+                <Link to="/termsofuse" className="link link-hover">Terms of use</Link>
+                {/* <a href="/tos" className="link link-hover">Terms of use</a> */}
                 <a className="link link-hover">Privacy policy</a>
                 <a className="link link-hover">Cookie policy</a>
             </div>
