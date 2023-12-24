@@ -23,7 +23,7 @@ export const Footer = () => {
                 <span className="footer-title">Legal</span>
                 <Link to="/termsofuse" className="link link-hover">Terms of use</Link>
                 <Link to="/privacypolicy" className="link link-hover">Privacy Policy</Link>
-                <a className="link link-hover">Cookie policy</a>
+                <Link to="/cookiepolicy" className="link link-hover">Cookie Policy</Link>
             </div>
             <div>
                 <span className="footer-title">Get Into Contact</span>
