@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import "./TermsOfUse.css";
+import "./FooterComponent.css";
 
 const TermsOfUse = () => {
     return (
-        <div className='termsofuse-container'>
-            <div className='termsofuse-container-in'>
+        <div className='footer-component-container'>
+            <div className='footer-component-container-in'>
                 <div className='text-center m-14'>
                     <h1>Terms of Use</h1>
                 </div>

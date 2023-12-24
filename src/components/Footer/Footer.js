@@ -22,8 +22,7 @@ export const Footer = () => {
             <div>
                 <span className="footer-title">Legal</span>
                 <Link to="/termsofuse" className="link link-hover">Terms of use</Link>
-                {/* <a href="/tos" className="link link-hover">Terms of use</a> */}
-                <a className="link link-hover">Privacy policy</a>
+                <Link to="/privacypolicy" className="link link-hover">Privacy Policy</Link>
                 <a className="link link-hover">Cookie policy</a>
             </div>
             <div>
