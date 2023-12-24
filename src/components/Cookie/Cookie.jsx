@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './Cookie.css'
 import cookie from "../../images/cookie.jpg";
+import { Link } from "react-router-dom";
 
 const Cookie = () => {
   useEffect(() => {
@@ -42,7 +43,7 @@ const Cookie = () => {
           Our website uses cookies to provide your browsing experience and
           relevant information. Before continuing to use our website, you agree
           & accept our{' '}
-          <a href="#">Cookie Policy & Privacy.</a>
+          <Link to="/cookiepolicy" className="link link-hover">Cookie Policy</Link>
         </p>
         <button id="acceptCookie" onClick={cookieHandler}>
           Accept
