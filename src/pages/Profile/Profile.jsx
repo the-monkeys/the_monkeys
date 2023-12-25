@@ -12,6 +12,13 @@ import {
 } from "react-icons/si";
 import { useSelector } from "react-redux";
 import UserService from "../../utils/UserService";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import { ExitToApp as LogoutIcon } from "@material-ui/icons";
+import { Link } from "react-router-dom";
+import "./profile.css";
+import { useHistory } from "react-router-dom";
 
 export const Profile = () => {
   const [loadData, setloadData] = useState([]);
@@ -36,121 +43,150 @@ export const Profile = () => {
   }, []);
 
   return (
-    <>
-      <div className="md:mt-16 mt-8 flex items-center justify-center">
-        <div className="w-[95%] md:w-[55%] m-auto rounded-3xl overflow-hidden shadow-md">
-          <img
-            className="w-full md:h-48 h-28"
-            src={ImgBg}
-            alt="Sunset in the mountains"
-          />
-          <div className="flex justify-center items-center flex-col w-300">
-            <div className="px-6 py-4">
-              <div className="w-full px-4 lg:order-2 flex justify-center">
-                <div className="relative">
-                  {/* for time being Adding a random image will revert it once api will give proper img  */}
-                  {imgData != null ? (
-                    <img
-                      src={imgData ? "favicons/apple-touch-icon.png" : imgData}
-                      className="h-28 w-36 shadow-xl text-8xl rounded-full md:-mt-20 -mt-16 -ml-8"
-                      alt=""
-                    />
-                  ) : (
-                    <HiUserCircle className="shadow-xl md:text-9xl text-8xl rounded-full md:-mt-20 -mt-16 bg-white text-[#27282b]" />
-                  )}
-                </div>
-              </div>
-              {isAuthenticated ? (
-                <p className="text-gray-700 text-4xl font-bold font-sans pt-8">
-                  {loadData.firstName + " " + loadData.lastName}
-                </p>
-              ) : (
-                <p className="text-gray-700 text-4xl text-center font-bold font-sans pt-8">
-                  User
-                </p>
-              )}
+    <div className="rootProfile">
+      <div className="header-root">
+        <Typography variant="h5" component="h1" className="headingProfile">
+          Hi, Monkey !
+        </Typography>
+
+        <Typography variant="body2" className="greeting">
+          Welcome back! Happy Reading!
+        </Typography>
+      </div>
+
+      <div className="profileConatiner">
+        <div className="leftCotainer">
+          <h4
+          
+            className="profileHeadingLeft"
+          >
+            Profile Overview
+          </h4>
+          <div className="profileSection">
+            <Avatar
+              alt="Monkey Image"
+              src="../../images/the_monkeys.png"
+              className="profileAvatar"
+            />
+            <div className="leftDetails">
+              <Typography className="profileText">
+                <h5 className="profileSubHeading">Name :</h5>
+                The monkey
+              </Typography>
+              <Typography className="profileText">
+                <h5 className="profileSubHeading">Email : </h5>
+               goyalyash1211@gmail.com
+              </Typography>
+              <Typography className="profileText">
+                <h5 className="profileSubHeading">Member since :</h5>{" "}
+                Dec 25,2023
+              </Typography>
             </div>
-            <div className="px-6 pt-4 pb-2">
-              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                Software Developer
-              </span>
-              <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-                Web Designer
-              </span>
-              <div className="text-base leading-normal mt-0 mb-2 text-gray-500 font-semibold">
-                <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
-                Los Angeles, California, Unitedstate Of America
-              </div>
-              <div className="text-base leading-normal mt-0 mb-2 text-gray-500 font-semibold">
-                <i className="fas fa-map-marker-alt mr-2 text-lg text-gray-500"></i>{" "}
-                480 connections
-              </div>
+          </div>
+
+          <div className="myOrder">
+            <Typography variant="h4" component="h1" className="profileHeading">
+              Blogs
+            </Typography>
+            <Link
+              to="/orders"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <Button variant="contained" className="blogsButton">
+                Blogs
+              </Button>
+            </Link>
+          </div>
+        </div>
+
+        <div className="rightConatiner">
+          <div className="righHeadings">
+            <Typography variant="h4" component="h1" className="profileHeading">
+              Personal Information
+            </Typography>
+            <Typography className="profileText2">
+              Hey there ! Feel free to edit any of your details below so your
+              account is up to date.
+            </Typography>
+          </div>
+          <div className="profileDetials">
+            <div className="detials">
+              <Typography
+                variant="h4"
+                component="h1"
+                className="profileHeading"
+              >
+                MY DETAILS
+              </Typography>
+              <Typography className="profileText">The Monkey</Typography>
+              <Typography className="profileText">goyalyash1211@gmail.com</Typography>
+              <Typography className="profileText"> PHONE NUMBER</Typography>
+              <Typography className="profileText">Male</Typography>
             </div>
 
-            <div className="px-6 pt-4 pb-2 flex items-center">
-              <div className="mr-4 p-4 text-center">
-                <AiFillTwitterCircle className="cursor-pointer text-[26px] text-[#27282b]" />
-                <p className="text-base leading-normal mt-0 mb-2 text-gray-500 font-bold">
-                  480
-                </p>
-              </div>
-              <div className="mr-4 p-3 text-center">
-                <AiFillInstagram className="cursor-pointer text-[26px] text-[#27282b]" />
-                <p className="text-base leading-normal mt-0 mb-2 text-gray-500 font-bold">
-                  480
-                </p>
-              </div>
-              <div className="mr-4 p-3 text-center">
-                <BsPinterest className="cursor-pointer text-[26px] text-[#27282b]" />
-                <p className="text-base leading-normal mt-0 mb-2 text-gray-500 font-bold">
-                  480
-                </p>
-              </div>
+            <Link to="/profile/update" style={{ textDecoration: "none" }}>
+              <Button variant="contained" className="profileButton">
+                EDIT DETAILS
+              </Button>
+            </Link>
+            <div className="detials">
+              <Typography
+                variant="h4"
+                component="h1"
+                className="profileHeading"
+                style={{ marginTop: "1.5rem" }}
+              >
+                LOGIN DETAILS
+              </Typography>
+              <Typography className="profileSubHeading">EMAIL</Typography>
+              <Typography className="profileText">goyalyash1211@gmail.com</Typography>
+
+              <Typography
+                className="profileSubHeading"
+                style={{ marginTop: "10px" }}
+              >
+                PASSWORD
+              </Typography>
+              <Typography className="profileSubHeading">
+                *************
+              </Typography>
             </div>
+            <Link
+              to="/password/update"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              <Button variant="contained" className="profileButton">
+                UPDATE PASSWORD
+              </Button>
+            </Link>
+
+            <div className="mangeAccount">
+              <Typography
+                variant="h4"
+                component="h1"
+                className="profileHeading"
+              >
+                Log out from all devices
+              </Typography>
+
+              <p className="profileText3">
+                To access the Cricket Weapon Store website again, you need to
+                provide your credentials. This action will log you out from any
+                other web browsers you have used before.
+              </p>
+            </div>
+            <Button
+              variant="contained"
+              color="primary"
+              className="profileButton"
+              startIcon={<LogoutIcon />}
+              
+            >
+              Logout Account
+            </Button>
           </div>
         </div>
       </div>
-
-      <div className="w-[95%] md:w-[55%] m-auto mt-12 rounded-3xl shadow-md border">
-        <div className="px-6 py-4">
-          <div className="font-bold text-xl mb-2">Skills</div>
-        </div>
-        <div className="px-6 pb-2 flex-wrap">
-          <span className="inline-block border-2 rounded-lg px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-            devOops
-          </span>
-          <span className="inline-block border-2 rounded-lg px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-            Microsoft Dynamic 365 Finance and Operation
-          </span>
-          <span className="inline-block border-2 rounded-lg px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
-            Python
-          </span>
-        </div>
-      </div>
-
-      <div className="w-[95%] md:w-[55%] m-auto mt-12 rounded-3xl shadow-md border">
-        <div className="px-6 py-4">
-          <div className="font-bold text-xl mb-2">Software Skill</div>
-        </div>
-        <div className="px-6 pb-2 md:flex flex-wrap items-center">
-          <div className="p-4">
-            <SiAdobeillustrator className="cursor-pointer text-[26px] rounded-xl text-[#310000] bg-[#F79500]" />
-          </div>
-          <div className="p-3 text-center">
-            <SiAdobeindesign className="cursor-pointer text-[26px] rounded-xl text-[#47021E] bg-[#F73163]" />
-          </div>
-          <div className="p-3 text-center">
-            <SiAdobephotoshop className="cursor-pointer text-[26px] rounded-xl text-[#001D34] bg-[#2FA3F7]" />
-          </div>
-          <div className="p-3 text-center">
-            <SiAdobexd className="cursor-pointer text-[26px] rounded-xl text-[#450135] bg-[#F75EEE]" />
-          </div>
-          <div className="p-3 text-center">
-            <SiAdobeaftereffects className="cursor-pointer text-[26px] rounded-xl text-[#000058] bg-[#9494F7]" />
-          </div>
-        </div>
-      </div>
-      <div className="h-24"></div>
-    </>
+    </div>
   );
 };
