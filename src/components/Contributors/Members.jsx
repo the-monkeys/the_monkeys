@@ -12,7 +12,7 @@ const Member = (props) => {
         />
         <div class="text-center space-y-2 sm:text-left">
           <div class="space-y-0.5">
-            {/* props name written here */}
+            {/* props name written here !*/}
             <p class="text-lg text-black font-semibold">{props.name}</p>
             <p class="text-slate-500 font-medium">{props.role}</p>
             <ul>
