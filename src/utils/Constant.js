@@ -9,7 +9,7 @@ class Constant {
   }
 
   getToken() {
-    return localStorage.getItem("SignUpAuthToken");
+    return localStorage.getItem("authToken");
   }
 }
 
