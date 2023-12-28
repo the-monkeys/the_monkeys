@@ -149,7 +149,7 @@ export const Navigation = () => {
               ) : (
                 <FaUserCircle className={`text-3xl mr-1 text-[#333030]`} />
               )}
-              {console.log(isAuthenticated, "isAuthenticated")}
+
               {isAuthenticated ? (
                 <p className={`text-[#333030]`}>Hello, {name}</p>
               ) : (
@@ -240,14 +240,14 @@ export const Navigation = () => {
         <div
           className={`md:flex justify-between xl:justify-evenly items-center xl:w-full xl:mx-0 h-12 sm:block bg-[#F2F1EE] overflow-x-scroll scrollbar-hide hidden`}
         >
-          <ul className="flex xl:ml-0 md:ml-8">
+          <ul className="flex xl:ml-0 md:ml-8 gap-12 items-center">
             {HeaderData.map((item) => (
               <li
                 onClick={() => setActiveStatus(item.id)}
                 className={
                   activeStatus === item.id
-                    ? "text-sm border-[#ff462e] pt-3 rounded-t text-[#ff462e] mr-12"
-                    : "text-sm text-gray-600 py-3 flex items-center mr-12 hover:text-[#ff462e] cursor-pointer"
+                    ? "text-sm border-[#ff462e] pt-3 rounded-t items-center text-[#ff462e] "
+                    : "text-sm text-gray-600 pt-3 flex items-center  hover:text-[#ff462e] cursor-pointer"
                 }
               >
                 <div className="flex items-center mb-3">
