@@ -50,7 +50,7 @@ export const Login = () => {
   );
 
   return (
-    <section data-testid="login">
+    <section data-testid="login" className="bg-white">
       <div className="container h-full px-6 md:py-24 w-[80%] m-auto">
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
           {/* Left column container with background*/}
@@ -58,7 +58,7 @@ export const Login = () => {
             <img src={LoginSvg} className="w-full" alt="illustration" />
           </div>
           {/* Right column container with form */}
-          <div className="md:w-8/12 md:mt-0 -mt-12 lg:ml-6 lg:w-5/12">
+          <div className="md:w-8/12 md:mt-0 -mt-12 lg:ml-6 lg:w-5/12 border p-12 rounded-lg">
             <form onSubmit={(e) => e.preventDefault()}>
               {/* Email input */}
               <Controller
@@ -135,7 +135,7 @@ export const Login = () => {
                 {/* Forgot password link */}
                 <a
                   href="#!"
-                  className="text-primary transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
+                  className="text-black underline transition duration-150 ease-in-out hover:text-primary-600 focus:text-primary-600 active:text-primary-700 dark:text-primary-400 dark:hover:text-primary-500 dark:focus:text-primary-500 dark:active:text-primary-600"
                 >
                   Forgot password?
                 </a>

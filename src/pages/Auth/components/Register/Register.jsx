@@ -52,7 +52,7 @@ export const Register = () => {
   );
 
   return (
-    <section data-testid="register">
+    <section data-testid="register" className="bg-white">
       <div className="container h-full px-6 md:py-24 py-4 w-[80%] m-auto">
         <div className="g-6 flex h-full flex-wrap items-center justify-center lg:justify-between">
           {/* Left column container with background*/}
@@ -60,7 +60,7 @@ export const Register = () => {
             <img src={RegisterImg} className="w-full" alt="illustration" />
           </div>
           {/* Right column container with form */}
-          <div className="md:w-8/12 md:mt-0 -mt-12 lg:ml-6 lg:w-5/12">
+          <div className="md:w-8/12 md:mt-0 -mt-12 lg:ml-6 lg:w-5/12 border p-12 rounded-lg">
             <form onSubmit={(e) => e.preventDefault()}>
               {/* Email input */}
               <Controller
