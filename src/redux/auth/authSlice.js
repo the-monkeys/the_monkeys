@@ -17,7 +17,7 @@ export const registerUser = createAsyncThunk(
     try {
       let result = await register(data);
       if (result?.status === 201) {
-        localStorage.setItem("SignUpAuthToken", result?.token);
+        localStorage.setItem("authToken", result?.token);
         return result;
       }
     } catch (error) {
