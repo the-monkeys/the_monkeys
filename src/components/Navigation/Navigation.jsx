@@ -37,12 +37,16 @@ export const Navigation = () => {
 
   const ref = useRef();
   const ref1 = useRef();
+  const ref2 = useRef();
   useOutsideClickEditor(ref, () => {
     setIsEditorMenu(false);
   });
 
   useOutsideClickProfile(ref1, () => {
     setIsProfile(false);
+  });
+  useOutsideClickProfile(ref2, () => {
+    setIsMobMenu(false);
   });
 
   const successAlert = useToast({
@@ -160,7 +164,10 @@ export const Navigation = () => {
         </div>
       </div>
       {/* Mobile */}
-      <div className="flex items-center justify-between md:hidden w-full h-12 bg-[#F2F1EE]">
+      <div
+        className="flex items-center justify-between md:hidden w-full h-12 bg-[#F2F1EE]"
+        ref={ref2}
+      >
         <div className="relative flex items-center justify-center">
           <img
             onClick={() => {
@@ -191,45 +198,61 @@ export const Navigation = () => {
       </div>
 
       {/* Mobile Menu */}
-      {isAuthenticated ? (
-        <>
-          {isMobMenu && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+      <>
+        {isMobMenu && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+          >
+            <div
+              className={`flex flex-col justify-center items-center py-4 border-gray-300 ${
+                isAuthenticated ? "border-b-[1px] hidden" : ""
+              }`}
             >
-              {isAuthenticated && (
-                <>
-                  <div className="flex items-center justify-start">
-                    <p className="font-bold">My Account</p>
-                  </div>
-                  <div className="flex items-center pt-4">
-                    <Link className="cursor-pointer" to={"/profile"}>
-                      Profile
-                    </Link>
-                  </div>
-                  <Link
-                    className="flex items-center pt-4 cursor-pointer"
-                    to={"/settings"}
-                  >
-                    <p>Settings</p>
+              <button
+                onClick={Login}
+                className="bg-[#ff462e] w-24 h-12 rounded-full mr-2 text-white font-sans text-2xl"
+              >
+                Login
+              </button>
+              <p>or</p>
+              <button
+                onClick={Register}
+                className="border-2 border-black w-24 h-12 rounded-full ml-2 font-sans text-2xl"
+              >
+                Signup
+              </button>
+            </div>
+            {isAuthenticated && (
+              <>
+                <div className="flex items-center justify-start">
+                  <p className="font-bold">My Account</p>
+                </div>
+                <div className="flex items-center pt-4">
+                  <Link className="cursor-pointer" to={"/profile"}>
+                    Profile
                   </Link>
-                  <div
-                    onClick={Logout}
-                    className="flex items-center pt-4 cursor-pointer"
-                  >
-                    <p>Logout</p>
-                  </div>
-                </>
-              )}
-            </motion.div>
-          )}
-        </>
-      ) : (
-        ""
-      )}
+                </div>
+                <Link
+                  className="flex items-center pt-4 cursor-pointer"
+                  to={"/settings"}
+                >
+                  <p>Settings</p>
+                </Link>
+                <div
+                  onClick={Logout}
+                  className="flex items-center pt-4 cursor-pointer"
+                >
+                  <p>Logout</p>
+                </div>
+              </>
+            )}
+          </motion.div>
+        )}
+      </>
+
       {/* Desktop Menu */}
       <div>
         <div
