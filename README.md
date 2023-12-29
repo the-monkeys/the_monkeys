@@ -14,12 +14,22 @@ Thank you for visiting our platform. We hope you find it informative and educati
 
 
 For contribution fork the branch
+### 1. Install the correct versions of dependencies
+
+This app was created with:
+
+* *React 18.2.0*
+
+* *node v18.19.0*
+
+* *yarn 1.22.19*
 
 ## Running in the system
 To install the package and the dependencies do,
 ``` yarn install ```
 
 Then, ``` npm install``` and ``` npm start```
-(if the server is taking too much time to load, then try ``` npm install --force```)
+(if the server is taking too much time to load, 
+then try ``` npm install --force```)
 
 Do, a git checkout for working in another branch
