@@ -1,12 +1,11 @@
 import { Navigation } from "./components/Navigation";
-import {Footer} from "./components/Footer/Footer";
+import { Footer } from "./components/Footer/Footer";
 import { Home } from "./pages/Home/Home";
 import { Legal } from "./pages/Legal/Legal";
 import { Route, Routes } from "react-router-dom";
 import { Login } from "./pages/Auth/components/Login";
 import { Register } from "./pages/Auth/components/Register";
 import { ArticleEditor } from "./pages/ArticleEditor/ArticleEditor";
-import QuillEditor from "./pages/QuillEditor/QuillEditor";
 import AdScript from "./AdScript";
 import Membersmain from "./components/Contributors/MembersMain";
 import ProtectedRoute from "./common/utils/ProtectedRoute";
@@ -34,7 +33,7 @@ function App() {
           <Route path="/tos" element={<Legal />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/termsofuse" element={<TermsOfUse />}/>
+          <Route path="/termsofuse" element={<TermsOfUse />} />
           <Route path="/privacypolicy" element={<PrivacyPolicyPage />} />
           <Route path="/cookiepolicy" element={<CookiePolicyPage />} />
           <Route
@@ -42,14 +41,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <ArticleEditor />{" "}
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/type/:id"
-            element={
-              <ProtectedRoute>
-                <QuillEditor />{" "}
               </ProtectedRoute>
             }
           />
