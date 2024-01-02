@@ -1,5 +1,4 @@
 import { Navigation } from "./components/Navigation";
-import { Footer } from "./components/Footer/Footer";
 import { Home } from "./pages/Home/Home";
 import { Legal } from "./pages/Legal/Legal";
 import { Route, Routes } from "react-router-dom";
@@ -20,6 +19,7 @@ import TermsOfUse from "./components/Footer/TermsOfUse";
 import Cookie from "./components/Cookie/Cookie";
 import PrivacyPolicyPage from "./components/Footer/PrivacyPolicyPage";
 import CookiePolicyPage from "./components/Footer/CookiePolicyPage";
+import Footer from "./components/Footer/Footer";
 
 function App() {
   return (
