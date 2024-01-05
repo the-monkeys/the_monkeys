@@ -88,6 +88,19 @@ export const Navigation = () => {
     setName("User");
   };
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 760);
+
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 760);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
     <>
       {/* Desktop */}
@@ -95,13 +108,15 @@ export const Navigation = () => {
         className={`md:flex items-center justify-between hidden w-full h-12 bg-[#f2f1ee]`}
       >
         <div className="relative flex items-center justify-center gap-12 ml-4">
-          <AiOutlineMenu
-            id="menu"
-            onClick={() => {
-              setIsMenu(!isMenu);
-            }}
-            className={`w-full cursor-pointer h-6 text-[#333030]`}
-          />
+          {isMobile && (
+            <AiOutlineMenu
+              id="menu"
+              onClick={() => {
+                setIsMenu(!isMenu);
+              }}
+              className={`w-full cursor-pointer h-6 text-[#333030]`}
+            />
+          )}
 
           {isAuthenticated && (
             <motion.div
