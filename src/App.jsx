@@ -12,7 +12,6 @@ import { Profile } from "./pages/Profile";
 
 import { Settings } from "./pages/Settings";
 import "./App.css";
-import "izitoast-react/dist/iziToast.css";
 import { AnimatePresence } from "framer-motion";
 import Write from "./pages/write/Write";
 import TermsOfUse from "./components/Footer/TermsOfUse";

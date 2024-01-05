@@ -6,7 +6,6 @@ import { TfiWrite } from "react-icons/tfi";
 import { BsPencilSquare } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { useToast } from "izitoast-react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import useOutsideClickEditor from "./Toggle/useOutsideClickEdit";
@@ -19,6 +18,7 @@ import { useDispatch } from "react-redux";
 import { HeaderData } from "../../utils/HeaderData";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
+import toast from "react-hot-toast";
 
 export const Navigation = () => {
   const [isProfile, setIsProfile] = useState(false);
@@ -43,15 +43,6 @@ export const Navigation = () => {
 
   useOutsideClickProfile(ref1, () => {
     setIsProfile(false);
-  });
-
-  const successAlert = useToast({
-    title: "Successfully Logout",
-    titleColor: "green",
-    color: "green",
-    icon: "ico-success",
-    position: "topCenter",
-    timeout: 0.2,
   });
 
   const loadData = async () => {
@@ -83,7 +74,7 @@ export const Navigation = () => {
   const Logout = () => {
     dispatch(logoutUser());
     navigate("/");
-    successAlert();
+    toast.success("Successfully Logout");
     setImgData(null);
     setName("User");
   };
