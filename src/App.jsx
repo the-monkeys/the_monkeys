@@ -20,11 +20,13 @@ import Cookie from "./components/Cookie/Cookie";
 import PrivacyPolicyPage from "./components/Footer/PrivacyPolicyPage";
 import CookiePolicyPage from "./components/Footer/CookiePolicyPage";
 import Footer from "./components/Footer/Footer";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <AnimatePresence exitBeforeEnter>
       <Navigation />
+      <Toaster position="top-right" />
       {/* AdScript will add script tag to all the component present here */}
       <AdScript />
       <main>
