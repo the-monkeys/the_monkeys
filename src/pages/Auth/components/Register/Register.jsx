@@ -2,35 +2,17 @@ import { Link } from "react-router-dom";
 import { Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import RegisterImg from "../../../../assets/Register.jpg";
-import GoogleIcon from "../../../../assets/google-icon.svg";
 import { useRegisterForm } from "./hooks";
 import { useCallback } from "react";
 import { registerUser } from "../../../../redux/auth/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import SignUpButton from "../../../../components/LoadingButton/LoadingButton";
-import { useToast } from "izitoast-react";
-import { Alert } from "../../../../common/utils/alertConfig";
 import { FcGoogle } from "react-icons/fc";
-
+import toast from "react-hot-toast";
 export const Register = () => {
   const { handleSubmit, control, formState } = useRegisterForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const successAlert = useToast({
-    title: "Registered successfully",
-    titleColor: "green",
-    color: "green",
-    icon: "ico-success",
-    position: "topCenter",
-  });
-  const errorAlert = useToast({
-    title: "Something went wrong",
-    titleColor: "red",
-    color: "red",
-    icon: "ico-error",
-    position: "topCenter",
-  });
 
   const { isLoading } = useSelector((state) => state.auth);
 
@@ -38,17 +20,17 @@ export const Register = () => {
     (data) => {
       dispatch(registerUser(data)).then((response) => {
         if (response && response.type === "auth/registerUser/fulfilled") {
-          successAlert();
+          toast.success("Registered successfully");
           navigate("/");
           return;
         }
 
         if (response && response.type === "auth/registerUser/rejected") {
-          errorAlert();
+          toast.error("Something went wrong");
         }
       });
     },
-    [dispatch, navigate, errorAlert, successAlert]
+    [dispatch, navigate]
   );
 
   return (
