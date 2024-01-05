@@ -6,30 +6,12 @@ import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../../../../redux/auth/authSlice";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "izitoast-react";
 import { FcGoogle } from "react-icons/fc";
-
+import toast from "react-hot-toast";
 export const Login = () => {
   const { control, formState, handleSubmit } = useLoginForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const successAlert = useToast({
-    title: "Sign in Success",
-    titleColor: "green",
-    color: "green",
-    icon: "ico-success",
-    position: "topCenter",
-    timeout: 0.2,
-  });
-  const errorAlert = useToast({
-    title: "Something went wrong",
-    titleColor: "red",
-    color: "red",
-    icon: "ico-warning",
-    position: "topCenter",
-    timeout: 0.2,
-  });
 
   const { isLoading } = useSelector((state) => state.auth);
 
@@ -37,16 +19,16 @@ export const Login = () => {
     (data) => {
       dispatch(loginUser(data)).then((response) => {
         if (response && response.type === "auth/loginUser/fulfilled") {
-          successAlert();
+          toast.success("Sign in Success");
           navigate("/");
         }
 
         if (response && response.type === "auth/loginUser/rejected") {
-          errorAlert();
+          toast.error("Something went wrong");
         }
       });
     },
-    [dispatch, errorAlert, successAlert, navigate]
+    [dispatch, navigate]
   );
 
   return (
