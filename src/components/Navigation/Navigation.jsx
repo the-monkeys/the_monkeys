@@ -14,7 +14,6 @@ import UserService from "../../utils/UserService";
 import { useEffect } from "react";
 import { logoutUser } from "../../redux/auth/authSlice";
 import { useDispatch } from "react-redux";
-// import { HiUserCircle } from "react-icons/hi2";
 import { HeaderData } from "../../utils/HeaderData";
 import { FaUserCircle } from "react-icons/fa";
 import { AiOutlineMenu } from "react-icons/ai";
@@ -37,12 +36,16 @@ export const Navigation = () => {
 
   const ref = useRef();
   const ref1 = useRef();
+  const ref2 = useRef();
   useOutsideClickEditor(ref, () => {
     setIsEditorMenu(false);
   });
 
   useOutsideClickProfile(ref1, () => {
     setIsProfile(false);
+  });
+  useOutsideClickProfile(ref2, () => {
+    setIsMobMenu(false);
   });
 
   const loadData = async () => {
@@ -166,76 +169,106 @@ export const Navigation = () => {
         </div>
       </div>
       {/* Mobile */}
-      <div className="flex items-center justify-between md:hidden w-full h-12 bg-[#F2F1EE]">
-        <div className="relative flex items-center justify-center">
-          <img
-            onClick={() => {
-              setIsMenu(!isMenu);
-            }}
-            id="menu"
-            className="w-full cursor-pointer h-8 ml-2"
-            src={MenuBtn}
-            alt="menu btn"
-          />
-        </div>
-        <Link to={"/"} className="flex items-center gap-2 cursor-pointer">
-          <Logo />
-        </Link>
+      <div className="flex items-center justify-between md:hidden w-full h-12 bg-[#F2F1EE]" >
 
+        <motion.div
+          className="flex items-center gap-2 cursor-pointer mx-auto"
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.3 }}
+          
+        >
+          <Link to={"/"}>
+            <Logo />
+          </Link>
+        </motion.div>
+        
         <div className="relative">
-          {imgData != null ? (
-            <img src={imgData} className="h-8 w-8 rounded-full" alt="" />
-          ) : (
-            <FaUserCircle
-              className={`text-3xl mr-1 text-[#333030] w-8 min-w-8 min-h-8 h-8 drop-shadow-lg cursor-pointer rounded-[50%]`}
-              onClick={() => {
-                setIsMobMenu(!isMobMenu);
-              }}
-            />
-          )}
+          <div className="drop-shadow-lg cursor-pointer" ref={ref2}>
+              <motion.div
+              whileTap={{ scale: 0.75 }}
+              onClick={() => setIsMobMenu(!isMobMenu)}
+              className="rounded-2xl mr-4 cursor-pointer"
+              > 
+                {imgData != null ? (
+                  <img
+                    src={imgData ? "favicons/apple-touch-icon.png" : imgData}
+                    className="h-8 w-8 rounded-full"
+                    alt=""
+                  />
+                ) : (
+                  <FaUserCircle className={`text-3xl mr-1 text-[#333030]`} />
+                )}
+              </motion.div>
+          </div>
         </div>
+        
       </div>
 
       {/* Mobile Menu */}
-      {isAuthenticated ? (
-        <>
-          {isMobMenu && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              className=" absolute top-14 right-2 h-44 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+      <>
+        {isMobMenu && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.6 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.6 }}
+            className=" absolute top-14 right-2 h-48 w-36 bg-[#f2f1ee] flex flex-col items-center justify-center md:hidden rounded-lg z-10"
+          >
+            <div
+              className={`flex flex-col justify-center items-center py-4 border-gray-300 ${
+                isAuthenticated ? "border-b-[1px] hidden" : ""
+              }`}
             >
-              {isAuthenticated && (
-                <>
-                  <div className="flex items-center justify-start">
-                    <p className="font-bold">My Account</p>
-                  </div>
-                  <div className="flex items-center pt-4">
-                    <Link className="cursor-pointer" to={"/profile"}>
-                      Profile
-                    </Link>
-                  </div>
-                  <Link
-                    className="flex items-center pt-4 cursor-pointer"
-                    to={"/settings"}
-                  >
-                    <p>Settings</p>
-                  </Link>
-                  <div
-                    onClick={Logout}
-                    className="flex items-center pt-4 cursor-pointer"
-                  >
-                    <p>Logout</p>
-                  </div>
-                </>
-              )}
-            </motion.div>
-          )}
-        </>
-      ) : (
-        ""
-      )}
+              <motion.button
+                whileHover={{ scale: 1.1, backgroundColor: "rgb(57 57 58)" }}
+                onClick={Login}
+                className="bg-[#ff462e] w-20 h-10 rounded-full mb-2 text-white font-sans text-xxl md:text-xl"
+              >
+                Login
+              </motion.button>
+              <p className="mb-2 text-sm md:text-base">or</p>
+              <motion.button
+                whileHover={{ scale: 1.1, borderColor: "#ff462e" }}
+                onClick={Register}
+                className="border-2 border-black w-20 h-10 rounded-full mt-2 font-sans text-xxl md:text-xl"
+              >
+                Signup
+              </motion.button>
+            </div>
+            {isAuthenticated && (
+              <>
+              <motion.div
+                className="flex items-center justify-start pt-2"
+              >
+                <p className="font-bold">My Account</p>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 ,color: "#ff462e"}}
+                className="flex items-center pt-4"
+              >
+                <Link className="cursor-pointer" to={"/profile"}>
+                  Profile
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 ,color: "#ff462e"}}
+                className="flex items-center pt-4 cursor-pointer"
+              >
+                <Link to={"/settings"}>
+                  <p>Settings</p>
+                </Link>
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.05 ,color: "#ff462e"}}
+                onClick={Logout}
+                className="flex items-center pt-4 cursor-pointer"
+              >
+                <p>Logout</p>
+              </motion.div>
+            </>
+            )}
+          </motion.div>
+        )}
+      </>
       {/* Desktop Menu */}
       <div>
         <div
@@ -298,202 +331,71 @@ export const Navigation = () => {
           </motion.div>
         )}
 
-        {/* Menu */}
-        {isMenu && (
-          <motion.div
-            initial={{ opacity: 0, x: 200 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 200 }}
-            className={`fixed top-0 left-0 bg-opacity-90 w-full h-screen bg-white drop-shadow-md flex flex-col z-[101] overflow-y-scroll scrollbar-hide`}
-          >
-            <div className="w-full flex items-center justify-between p-4 cursor-pointer">
-              <div></div>
-              <motion.div whileTap={{ scale: 0.75 }}>
-                <div className="ml-8">
-                  <Logo />
-                </div>
-              </motion.div>
-
-              <motion.p
-                whileTap={{ scale: 0.75 }}
-                className="flex items-center gap-2 p-1 px-2 my-2 rounded-md cursor-pointer text-textColor text-base"
-                onClick={() => setIsMenu(!isMenu)}
-              >
-                <AiFillCloseSquare className="text-2xl text-[#ff462e]" />
-              </motion.p>
-            </div>
-            <div className="w-full flex flex-col justify-self-stretch items-center text- font-sans text-lg border-1 mt-[4%] text-offWhite">
-              <div className="w-[75%] md:w-72 flex flex-col items-center justify-center gap-8">
-                <input
-                  type="text"
-                  className="w-full mx-4 rounded-lg px-[4px] border-solid border-[1.5px] border-
-                  Black text-lightBlack flex md:hidden items-center justify-between"
-                  placeholder="Search"
-                />
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                >
-                  Trending
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
-                >
-                  Technology
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
-                >
-                  Business
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
-                >
-                  Philosophy
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
-                >
-                  Lifestyle
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
-                >
-                  Health
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                >
-                  Opinion
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                >
-                  Sports
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
-                >
-                  Cuisine
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md"
-                  to="/"
-                >
-                  Travel
-                </button>
-                <button
-                  onClick={() => {
-                    setIsMenu(false);
-                    navigate("/");
-                  }}
-                  className="cursor-pointer flex items-center justify-center h-10 w-full bg-[#ff462e] rounded-md mb-24"
-                >
-                  Humor
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
+ 
         {/* Profile */}
         {isProfile && (
           <motion.div
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.6 }}
-            className="absolute top-14 right-2 w-[255px] flex items-center justify-center rounded-lg shadow-md bg-[#f2f1ee] p-4 flex-col"
+            className="absolute top-10 right-2 w-[255px] flex items-center justify-center rounded-lg shadow-md bg-[#f2f1ee] p-4 flex-col"
           >
             <div
               className={`flex items-center justify-center py-4 border-gray-300 ${
                 isAuthenticated ? "border-b-[1px] hidden" : ""
               }`}
             >
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1, backgroundColor: "rgb(57 57 58)" }}
                 onClick={Login}
-                className="bg-[#ff462e] w-24 h-12 rounded-full mr-2 text-white font-sans text-2xl"
+                className="bg-[#ff462e] w-24 h-12 rounded-full mr-2 text-white text-xl"
               >
                 Login
-              </button>
+              </motion.button>
               <p>or</p>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.1, borderColor: "#ff462e" }}
                 onClick={Register}
-                className="border-2 border-black w-24 h-12 rounded-full ml-2 font-sans text-2xl"
+                className="border-2 border-black w-24 h-12 rounded-full ml-2 text-xl"
               >
                 Signup
-              </button>
+              </motion.button>
             </div>
             {isAuthenticated && (
               <>
-                <div className="flex items-center justify-start pt-4">
+                <motion.div
+                  className="flex items-center justify-start pt-4"
+                >
                   <p className="font-bold">My Account</p>
-                </div>
-                <div className="flex items-center pt-4">
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 ,color: "#ff462e"}}
+                  className="flex items-center pt-4"
+                >
                   <Link className="cursor-pointer" to={"/profile"}>
                     Profile
                   </Link>
-                </div>
-                <Link
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 ,color: "#ff462e"}}
                   className="flex items-center pt-4 cursor-pointer"
-                  to={"/settings"}
                 >
-                  <p>Settings</p>
-                </Link>
-                <div
+                  <Link to={"/settings"}>
+                    <p>Settings</p>
+                  </Link>
+                </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05 ,color: "#ff462e"}}
                   onClick={Logout}
                   className="flex items-center pt-4 cursor-pointer"
                 >
                   <p>Logout</p>
-                </div>
+                </motion.div>
               </>
             )}
           </motion.div>
         )}
+
       </div>
     </>
   );
