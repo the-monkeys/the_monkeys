@@ -3,7 +3,7 @@ import React from "react";
 const CookiePolicyPage: React.FC = () => {
   return (
     <div className=" bg-gray-100 py-12">
-      <div className=" mx-auto max-w-4xl">
+      <div className=" mx-auto max-w-4xl px-5">
         <div className="text-center mb-14">
           <h1 className="text-4xl font-bold">Cookie Policy for The Monkeys</h1>
         </div>
