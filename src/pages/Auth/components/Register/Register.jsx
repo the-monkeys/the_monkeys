@@ -1,14 +1,13 @@
-import { Link } from "react-router-dom";
-import { Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import RegisterImg from "../../../../assets/Register.jpg";
-import { useRegisterForm } from "./hooks";
 import { useCallback } from "react";
-import { registerUser } from "../../../../redux/auth/authSlice";
-import { useSelector, useDispatch } from "react-redux";
-import SignUpButton from "../../../../components/LoadingButton/LoadingButton";
-import { FcGoogle } from "react-icons/fc";
+import { Controller } from "react-hook-form";
 import toast from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import RegisterImg from "../../../../assets/Register.jpg";
+import SignUpButton from "../../../../components/LoadingButton/LoadingButton";
+import { registerUser } from "../../../../redux/auth/authSlice";
+import { useRegisterForm } from "./hooks";
 export const Register = () => {
   const { handleSubmit, control, formState } = useRegisterForm();
   const dispatch = useDispatch();
