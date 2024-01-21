@@ -1,13 +1,13 @@
-import LoginButton from "../../../../components/LoadingButton/LoadingButton";
-import LoginSvg from "../../../../assets/Login.jpg";
-import { Controller } from "react-hook-form";
-import { useLoginForm } from "./hooks";
 import { useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { loginUser } from "../../../../redux/auth/authSlice";
-import { useNavigate } from "react-router-dom";
-import { FcGoogle } from "react-icons/fc";
+import { Controller } from "react-hook-form";
 import toast from "react-hot-toast";
+import { FcGoogle } from "react-icons/fc";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import LoginSvg from "../../../../assets/Login.jpg";
+import LoginButton from "../../../../components/LoadingButton/LoadingButton";
+import { loginUser } from "../../../../redux/auth/authSlice";
+import { useLoginForm } from "./hooks";
 export const Login = () => {
   const { control, formState, handleSubmit } = useLoginForm();
   const dispatch = useDispatch();
