@@ -1,77 +1,31 @@
 {
   "name": "the_monkeys",
-  "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@editorjs/attaches": "^1.3.0",
-    "@editorjs/editorjs": "^2.26.5",
-    "@editorjs/embed": "^2.5.3",
-    "@editorjs/header": "^2.7.0",
-    "@editorjs/list": "^1.8.0",
-    "@editorjs/nested-list": "^1.3.0",
-    "@editorjs/table": "^2.2.2",
-    "@hookform/resolvers": "^2.9.11",
-    "@reduxjs/toolkit": "^1.9.3",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/react": "^18.2.47",
-    "@types/react-dom": "^18.2.18",
-    "@uidotdev/usehooks": "^2.0.1",
-    "axios": "^1.3.4",
-    "framer-motion": "6.3.15",
-    "http-proxy-middleware": "^2.0.6",
-    "prism-react-renderer": "^1.3.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-hook-form": "^7.43.4",
-    "react-hot-toast": "^2.4.1",
-    "react-icons": "^4.7.1",
-    "react-redux": "^8.0.5",
-    "react-router-dom": "^6.6.2",
-    "react-scripts": "^5.0.1",
-    "redux": "^4.2.1",
-    "redux-persist": "^6.0.0",
-    "tailwind-scrollbar-hide": "^1.1.7",
-    "typescript": "^5.3.3",
-    "uuidv4": "^6.2.13",
-    "web-vitals": "^2.1.4",
-    "yup": "^1.0.2"
-  },
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@editorjs/checklist": "^1.4.0",
-    "@editorjs/code": "^2.8.0",
-    "@editorjs/image": "^2.8.1",
-    "@editorjs/link": "^2.5.0",
-    "@editorjs/quote": "^2.5.0",
-    "@editorjs/raw": "^2.4.0",
-    "@editorjs/simple-image": "^1.5.1",
-    "editorjs-inline-font-size-tool": "^1.0.1",
-    "sass": "^1.57.1",
-    "tailwindcss": "^3.2.4"
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@typescript-eslint/eslint-plugin": "^6.14.0",
+    "@typescript-eslint/parser": "^6.14.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^8.55.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.5",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.8"
   }
 }
