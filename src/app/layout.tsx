@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Josefin_Sans, Jost, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { ThemeProviders } from "./theme-provider";
 
 const jost = Jost({
   subsets: ["latin"],
@@ -30,11 +31,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${jost.variable} ${josefin_Sans.variable}  ${playfair_Display.variable}`}
       >
-        {children}
+        <ThemeProviders>
+          <main>{children}</main>
+        </ThemeProviders>
       </body>
     </html>
   );
