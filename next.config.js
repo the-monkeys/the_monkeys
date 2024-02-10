@@ -1,5 +1,5 @@
 module.exports = {
-    output: 'export',
-    // other configurations...
-  }
-  
+  output: "export",
+  images: { unoptimized: true },
+  // other configurations...
+};
