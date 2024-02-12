@@ -1,38 +1,49 @@
 "use client";
 
+import Icon from "../Icon";
+
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { FiMoon, FiSun } from "react-icons/fi";
 
 export default function ThemeSwitch() {
-  const [mounted, setMounted] = useState(false);
-  const { setTheme, resolvedTheme } = useTheme();
+	const [mounted, setMounted] = useState(false);
+	const { setTheme, resolvedTheme } = useTheme();
 
-  useEffect(() => setMounted(true), []);
+	useEffect(() => setMounted(true), []);
 
-  if (!mounted)
-    return (
-      <Image
-        src="data:image/svg+xml;base64,PHN2ZyBzdHJva2U9IiNGRkZGRkYiIGZpbGw9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iMCIgdmlld0JveD0iMCAwIDI0IDI0IiBoZWlnaHQ9IjIwMHB4IiB3aWR0aD0iMjAwcHgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiB4PSIyIiB5PSIyIiBmaWxsPSJub25lIiBzdHJva2Utd2lkdGg9IjIiIHJ4PSIyIj48L3JlY3Q+PC9zdmc+Cg=="
-        width={36}
-        height={36}
-        sizes="36x36"
-        alt="Loading Light/Dark Toggle"
-        priority={false}
-        title="Loading Light/Dark Toggle"
-      />
-    );
+	if (!mounted)
+		return (
+			<Image
+				src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='ff462e'%3E%3Cpath d='M4 3H20C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3ZM5 5V19H19V5H5Z'%3E%3C/path%3E%3C/svg%3E"
+				width={24}
+				height={24}
+				sizes="24x24"
+				alt="Loading Light/Dark Toggle"
+				priority={false}
+				title="Loading Light/Dark Toggle"
+			/>
+		);
 
-  if (resolvedTheme === "dark") {
-    return (
-      <FiSun className="cursor-pointer" onClick={() => setTheme("light")} />
-    );
-  }
+	if (resolvedTheme === "dark") {
+		return (
+			<Icon
+				title="Toggle Light"
+				name="RiToggleLine"
+				color="#FFF4ED"
+				onClick={() => setTheme("light")}
+			/>
+		);
+	}
 
-  if (resolvedTheme === "light") {
-    return (
-      <FiMoon className="cursor-pointer" onClick={() => setTheme("dark")} />
-    );
-  }
+	if (resolvedTheme === "light") {
+		return (
+			<Icon
+				title="Toggle Dark"
+				name="RiToggleFill"
+				color="#101010"
+				onClick={() => setTheme("dark")}
+			/>
+		);
+	}
 }
