@@ -1,4 +1,4 @@
-import ComingSoon from "./ComingSoon";
+import ComingSoon from "../components/ComingSoon";
 
 const Home = () => {
 	return (

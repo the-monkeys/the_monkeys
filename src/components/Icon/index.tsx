@@ -14,23 +14,31 @@ type IconProps = {
 		| "RiArrowRightUpLine"
 		| "RiMoreLine"
 		| "RiCloseLine"
+		| "RiAddLine"
+		| "RiMailFill"
+		| "RiShareForwardFill"
+		| "RiShareForwardLine"
+		| "RiEyeLine"
+		| "RiEyeFill"
+		| "RiCake2Fill"
 		| "RiGithubFill"
-		| "RiTwitterFill";
+		| "RiTwitterFill"
+		| "RiGoogleFill";
 	size?: number;
 	color: string;
 	onClick?: () => void;
 };
 
-const Icon: FC<IconProps> = (props) => {
-	const DynamicIcon = RemixIcons[props.name];
+const Icon: FC<IconProps> = ({ title, name, size, color, onClick }) => {
+	const DynamicIcon = RemixIcons[name];
 
 	return (
 		<div className="flex items-center justify-center">
 			<DynamicIcon
 				className="cursor-pointer hover:opacity-80"
-				size={props?.size || 24}
-				color={props?.color || "#ff462e"}
-				onClick={props.onClick}
+				size={size || 24}
+				color={color || "#ff462e"}
+				onClick={onClick}
 			/>
 		</div>
 	);
