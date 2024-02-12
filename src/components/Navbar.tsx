@@ -5,8 +5,7 @@ import {
   RiAddLine,
   RiGenderlessLine,
   RiNotification3Line,
-  RiToggleLine,
-  RiUser3Line,
+    RiUser3Line,
   RiPencilLine,
 } from "@remixicon/react";
 import { AiOutlineMinus } from "react-icons/ai";
