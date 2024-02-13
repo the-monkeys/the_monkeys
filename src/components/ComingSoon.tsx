@@ -8,8 +8,6 @@ const ComingSoon = () => {
 	return (
 		<div className="w-4/5 md:w-3/5 flex flex-col items-center justify-center min-h-screen">
 			<div className="w-full mb-16 flex item-center justify-between">
-				<Logo />
-				<ThemeSwitch />
 			</div>
 			<h1 className="font-playfair_Display text-3xl md:text-4xl dark:text-secondary-white font-extrabold text-center mb-8">
 				We&apos;re Coming Soon!
