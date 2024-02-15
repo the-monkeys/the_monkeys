@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Josefin_Sans, Jost, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProviders } from "./theme-provider";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const jost = Jost({
   subsets: ["latin"],
@@ -36,7 +38,9 @@ export default function RootLayout({
         className={`${jost.variable} ${josefin_Sans.variable}  ${playfair_Display.variable}`}
       >
         <ThemeProviders>
+          <Navbar />
           <main>{children}</main>
+          <Footer />
         </ThemeProviders>
       </body>
     </html>
