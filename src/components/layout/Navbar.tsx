@@ -1,17 +1,16 @@
-// ./src/components/Navbar.tsx
 "use client";
 
 import {
   RiAddLine,
   RiGenderlessLine,
   RiNotification3Line,
-    RiUser3Line,
   RiPencilLine,
+  RiUser3Line,
 } from "@remixicon/react";
-import { AiOutlineMinus } from "react-icons/ai";
-import Logo from "./basic/Logo";
 import { useState } from "react";
-import ThemeSwitch from "./basic/ThemeSwitch";
+import { AiOutlineMinus } from "react-icons/ai";
+import Logo from "../basic/Logo";
+import ThemeSwitch from "../basic/ThemeSwitch";
 
 const Navbar = () => {
   const [isInputVisible, setIsInputVisible] = useState(false);
@@ -21,7 +20,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="flex gap-5 justify-between px-5 py-4 w-full text-base max-md:flex-wrap max-md:max-w-full bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
+    <header className="flex gap-5  justify-between px-5 py-4 w-full text-base max-md:flex-wrap max-md:max-w-full bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
       <div className="flex gap-5 justify-between items-center">
         <div>
           <Logo showMobileLogo={true} />
