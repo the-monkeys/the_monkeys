@@ -1,7 +1,7 @@
 import { RiDiscordLine, RiGithubLine, RiTwitterLine } from "@remixicon/react";
 import * as React from "react";
-import Button from "./Button";
-import Logo from "./basic/Logo";
+import Button from "../basic/Button";
+import Logo from "../basic/Logo";
 
 function Footer() {
   return (
