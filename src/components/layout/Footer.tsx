@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import Button from "../button";
 import Logo from "../logo";
-import Icon from "../icon";
+import Icon from "../icon/index";
 
 function Footer() {
 	return (
