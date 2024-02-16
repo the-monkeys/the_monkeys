@@ -7,10 +7,10 @@ import Image from "next/image";
 import Icon from "../icon";
 
 export default function ThemeSwitch() {
-	const [mounted, setMounted] = useState(false);
-	const { setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { setTheme, resolvedTheme } = useTheme();
 
-	useEffect(() => setMounted(true), []);
+  useEffect(() => setMounted(true), []);
 
 	if (!mounted)
 		return (

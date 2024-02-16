@@ -32,17 +32,17 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
-	return (
-		<html lang="en" suppressHydrationWarning>
-			<body
-				className={`${jost.variable} ${josefin_Sans.variable}  ${playfair_Display.variable}`}
-			>
-				<ThemeProviders>
-					<Navbar />
-					<main>{children}</main>
-					<Footer />
-				</ThemeProviders>
-			</body>
-		</html>
-	);
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${jost.variable} ${josefin_Sans.variable}  ${playfair_Display.variable}`}
+      >
+        <ThemeProviders>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </ThemeProviders>
+      </body>
+    </html>
+  );
 }
