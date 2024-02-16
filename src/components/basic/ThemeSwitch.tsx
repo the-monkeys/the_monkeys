@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Icon from "../icon/index";
+import Icon from "../icon/icon";
 
 export default function ThemeSwitch() {
   const [mounted, setMounted] = useState(false);

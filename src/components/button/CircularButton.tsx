@@ -1,4 +1,4 @@
-import Icon, { IconName } from "../icon/index";
+import Icon, { IconName } from "../icon/icon";
 
 type CircularButtonProps = {
   iconName: IconName;

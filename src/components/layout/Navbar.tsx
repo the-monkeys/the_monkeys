@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import ThemeSwitch from "../basic/ThemeSwitch";
 import Button from "../button";
-import Icon from "../icon/index";
+import Icon from "../icon/icon";
 import Logo from "../logo";
 
 const Navbar = () => {
