@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import Button from "../button";
-import Icon from "../icon";
+import Icon from "../icon/index";
 import Logo from "../logo";
 
 function Footer() {
