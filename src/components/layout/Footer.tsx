@@ -1,17 +1,15 @@
-import { RiDiscordLine, RiGithubLine, RiTwitterLine } from "@remixicon/react";
-import * as React from "react";
-import Button from "../basic/Button";
-import Logo from "../basic/Logo";
+import Link from "next/link";
+
+import Button from "../button";
+import Icon from "../icon/icon";
+import Logo from "../logo";
 
 function Footer() {
   return (
-    <footer className="bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
+    <footer className="px-5 py-4 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
       <div className="flex gap-5 justify-between max-md:flex-wrap ">
         <div className="flex flex-col px-5">
-          <Logo />
-          <div className="text-base text-orange-50">
-            A Jungle of Insights and Clarity
-          </div>
+          <Logo showSubHeading={true} showMix={true} />
           <div className="flex gap-2 justify-between mt-12 max-md:mt-10">
             <div className="flex flex-col flex-1">
               <div className="text-xl py-2">Get in Contact</div>
@@ -20,14 +18,13 @@ function Footer() {
                   type="email"
                   id="email"
                   aria-label="Email"
-                  aria-role="textbox"
                   className="py-2 px-8 w-full rounded-lg border border-solid border-[color:var(--Monkeys-White,#FFF4ED)] text-white-100"
                   placeholder="Enter your email"
                 />
               </div>
             </div>
             <div className="justify-center self-end px-1 py-0.9 mt-6 text-base whitespace-nowrap bg-sky-500 rounded-lg">
-              <Button bgColor="#ff462e">Subscribe</Button>
+              <Button variant="primary" title="Subscribe" />
             </div>
           </div>
         </div>
@@ -53,15 +50,34 @@ function Footer() {
           </div>
         </div>
       </div>
-      <div className="mb-2 px-5 gap-5">
-        <div className="flex gap-2 mt-1 w-[76px] max-md:mt-10">
-          <RiDiscordLine />
-          <RiTwitterLine />
-          <RiGithubLine />
+      <div className="flex flex-col items-start gap-1">
+        <div className="flex justify-center items-center gap-2">
+          <Link
+            className="flex items-center gap-2"
+            href="https://discord.gg/HTuz82d8"
+            target="_blank"
+          >
+            <Icon name="RiDiscordFill" size={20} />
+          </Link>
+          <Link
+            className="flex items-center gap-2"
+            href="https://github.com/the-monkeys/the_monkeys"
+            target="_blank"
+          >
+            <Icon name="RiGithubFill" size={20} />
+          </Link>
+
+          <Link
+            className="flex items-center gap-2"
+            href="https://twitter.com/TheMonkeysLife"
+            target="_blank"
+          >
+            <Icon name="RiTwitterXFill" size={20} />
+          </Link>
         </div>
-        <div className="mt-2 text-xs text-neutral-600">
+        <p className="w-fit font-josefin_Sans text-xs text-secondary-lightGrey cursor-default">
           Monkeys, 2024, All Rights Reserved
-        </div>
+        </p>
       </div>
     </footer>
   );

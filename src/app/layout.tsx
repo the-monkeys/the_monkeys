@@ -6,31 +6,31 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 const jost = Jost({
-  subsets: ["latin"],
-  variable: "--font-jost",
-  display: "swap",
+	subsets: ["latin"],
+	variable: "--font-jost",
+	display: "swap",
 });
 
 const josefin_Sans = Josefin_Sans({
-  subsets: ["latin"],
-  variable: "--font-josefin_Sans",
-  display: "swap",
+	subsets: ["latin"],
+	variable: "--font-josefin_Sans",
+	display: "swap",
 });
 const playfair_Display = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-playfair_Display",
-  display: "swap",
+	subsets: ["latin"],
+	variable: "--font-playfair_Display",
+	display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Monkeys",
-  description: "We are the Monkeys!",
+	title: "Monkeys",
+	description: "We are the Monkeys!",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
