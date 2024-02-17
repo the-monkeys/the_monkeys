@@ -10,30 +10,25 @@ import Input from "../input";
 
 const Navbar = () => {
 	const [searchInput, setSearchInput] = useState<string>("");
-	const [inputVisibility, setInputVisibility] = useState<boolean>(false);
-
-	const handleInputToggle = () => {
-		setInputVisibility((prevVal) => !prevVal);
-	};
 
 	return (
 		<header className="p-4 w-full flex justify-between">
-			<div className="w-2/5 flex items-center gap-4">
-				<div>
-					<Logo showMobileLogo={true} />
+			<div className="w-[30%] flex items-center">
+				<Logo showMobileLogo={true} />
+				<div className="ml-5">
+					<Icon name="RiSearchLine" />
 				</div>
-				<div>
-					<Icon name="RiSearchLine" onClick={handleInputToggle} />
-				</div>
-				{inputVisibility && (
+				<div className="flex-1 flex justify-center items-center">
 					<div className="flex-1">
 						<Input
-							variant="search"
-							placeholderText="search here"
+							type="text"
+							placeholderText="Search here"
 							setInputText={setSearchInput}
+							variant="ghost"
+							clearIcon
 						/>
 					</div>
-				)}
+				</div>
 			</div>
 
 			<div className="flex gap-5 justify-between items-center">
@@ -45,7 +40,7 @@ const Navbar = () => {
 						title="Create"
 						variant="circular"
 						iconName="RiPencilLine"
-						animate={true}
+						animateIcon
 					/>
 					<p className="font-playfair_Display font-medium">Create</p>
 				</div>

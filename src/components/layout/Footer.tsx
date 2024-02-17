@@ -16,17 +16,18 @@ function Footer() {
 			<div className="flex justify-between">
 				<div className="pb-10 flex flex-col gap-10">
 					<Logo showSubHeading={true} showMix={true} />
-					<div className="flex justify-center items-end gap-2">
-						<div className="w-56">
+					<form className="flex justify-center items-end gap-2">
+						<div className="w-72">
 							<Input
-								variant="form"
-								label="Get in Touch"
-								placeholderText="Enter you mail"
+								type="email"
+								placeholderText="Your email address"
 								setInputText={setUserMail}
+								label="Get in Touch"
+								variant="border"
 							/>
 						</div>
 						<Button variant="primary" title="Subscribe" />
-					</div>
+					</form>
 				</div>
 			</div>
 			<div className="flex flex-col items-start gap-1">
