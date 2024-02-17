@@ -6,9 +6,9 @@ import Logo from "../logo";
 
 function Footer() {
   return (
-    <footer className="px-5 py-4 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
-      <div className="flex gap-5 justify-between max-md:flex-wrap ">
-        <div className="flex flex-col px-5">
+    <footer className="px-5 py-4 border-t border-secondary-lightGrey bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
+      <div className="flex gap-5 justify-between max-md:flex-wrap py-4">
+        <div className="flex flex-col px-5 ">
           <Logo showSubHeading={true} showMix={true} />
           <div className="flex gap-2 justify-between mt-12 max-md:mt-10">
             <div className="flex flex-col flex-1">
