@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import ThemeSwitch from "../basic/ThemeSwitch";
 import Button from "../button";
-import Icon from "../icon/icon";
+import Icon from "../icon";
 import Logo from "../logo";
 import Input from "../input";
 

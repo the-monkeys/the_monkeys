@@ -1,7 +1,7 @@
 import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
-import Icon from "../icon/icon";
+import Icon from "../icon";
 import { inputVariantStyles } from "../variantStyles";
 
 type InputVariants = "border" | "ghost" | "area";

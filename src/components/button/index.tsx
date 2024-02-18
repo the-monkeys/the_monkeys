@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-import Icon, { IconName } from "../icon/icon";
+import Icon, { IconName } from "../icon";
 import CircularButton from "./CircularButton";
 import { buttonVariantStyles } from "../variantStyles";
 

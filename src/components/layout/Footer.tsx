@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import Button from "../button";
-import Icon from "../icon/icon";
+import Icon from "../icon";
 import Logo from "../logo";
 import Input from "../input";
 
@@ -12,10 +12,10 @@ function Footer() {
 	const [userMail, setUserMail] = useState<string>("");
 
 	return (
-		<footer className="px-5 py-4 flex flex-col">
-			<div className="flex flex-col gap-10">
+		<footer className="px-5 pb-4 pt-10 flex flex-col gap-10 md:gap-5 border-t-[1px] border-opacity-20 border-secondary-lightGrey">
+			<div className="w-fit">
 				<Logo showSubHeading={true} showMix={true} />
-				<form className="flex items-end gap-2">
+				<form className="mt-5 md:mt-10 flex items-end gap-2">
 					<Input
 						className="w-64"
 						type="email"
@@ -27,48 +27,48 @@ function Footer() {
 					<Button variant="primary" title="Subscribe" />
 				</form>
 			</div>
-			<div className="w-fit self-center md:self-end flex gap-5 items-start">
+			<div className="self-center md:self-end w-full md:w-fit flex justify-between gap-10">
 				<div className="flex flex-col">
 					<p className="font-josefin_Sans text-lg">Services</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Branding
 					</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Design
 					</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Marketing
 					</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Advertisement
 					</p>
 				</div>
 				<div className="flex flex-col">
 					<p className="font-josefin_Sans text-lg">Company</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						About Us
 					</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Contact
 					</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Press Kit
 					</p>
 				</div>
 				<div className="flex flex-col">
 					<p className="font-josefin_Sans text-lg">Legal</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Terms of Use
 					</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Privacy Policy
 					</p>
-					<p className="mt-2 font-jost text-secondary-lightGrey">
+					<p className="mt-1 font-jost text-secondary-lightGrey">
 						Cookie Policy
 					</p>
 				</div>
 			</div>
-			<div className="mt-10 flex flex-col items-start gap-1">
+			<div className="self-center w-fit flex flex-col items-center">
 				<div className="flex justify-center items-center gap-2">
 					<Link
 						className="flex items-center gap-2"

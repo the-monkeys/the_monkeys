@@ -1,7 +1,7 @@
 import { FC, InputHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-import Icon, { IconName } from "../icon/icon";
+import Icon, { IconName } from "../icon";
 
 interface CircularButtonProps extends InputHTMLAttributes<HTMLButtonElement> {
 	iconName?: IconName;
