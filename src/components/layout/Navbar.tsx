@@ -15,7 +15,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="flex gap-5 justify-between px-5 py-4 w-full text-base max-md:flex-wrap max-md:max-w-full bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
+    <header className="flex gap-5  justify-between px-5 py-4 w-full text-base max-md:flex-wrap max-md:max-w-full bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
       <div className="flex gap-5 justify-between items-center">
         <div>
           <Logo showMobileLogo={true} />
