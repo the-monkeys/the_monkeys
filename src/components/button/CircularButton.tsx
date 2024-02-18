@@ -12,13 +12,15 @@ const CircularButton: FC<CircularButtonProps> = ({
 	iconName = "RiErrorWarningLine",
 	animate,
 	disabled,
+	className,
 	onClick,
 }) => {
 	return (
 		<button
 			className={twMerge(
 				"group w-8 h-8 cur rounded-full flex items-center justify-center bg-primary-monkeyOrange cursor-pointer transition-all",
-				disabled && "opacity-75"
+				className,
+				disabled && "opacity-75 cursor-not-allowed"
 			)}
 			onClick={onClick}
 			disabled={disabled}

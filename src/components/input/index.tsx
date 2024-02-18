@@ -1,8 +1,16 @@
 import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+
 import Icon from "../icon/icon";
+import { inputVariantStyles } from "../variantStyles";
 
 type InputVariants = "border" | "ghost" | "area";
+
+export type InputVariantStyles = {
+	base: string;
+	border: string;
+	ghost: string;
+};
 
 interface InputProps
 	extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
@@ -21,6 +29,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 			label,
 			placeholderText,
 			variant,
+			className,
 			clearIcon,
 			setInputText,
 		},
@@ -28,20 +37,12 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 	) => {
 		const [localInput, setLocalInput] = useState<string>("");
 
-		const baseStyles =
-			"px-4 py-2 flex-1 font-jost text-base md:text-md bg-primary-monkeyWhite dark:bg-primary-monkeyBlack";
-		const borderInputStyles =
-			"border-2 focus:outline-none rounded-lg focus:border-secondary-lightGrey";
-		const ghostInputStyles = "focus:outline-none";
-
 		const getStyles = () => {
 			switch (variant) {
 				case "border":
-					return `${baseStyles} ${borderInputStyles}`;
+					return `${inputVariantStyles["base"]} ${inputVariantStyles["border"]}`;
 				case "ghost":
-					return `${baseStyles} ${ghostInputStyles}`;
-				case "area":
-					return `${baseStyles} ${borderInputStyles}`;
+					return `${inputVariantStyles["base"]} ${inputVariantStyles["ghost"]}`;
 			}
 		};
 
@@ -70,9 +71,10 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 						}
 						value={localInput}
 						className={twMerge(
+							className,
 							getStyles(),
 							"resize-none",
-							disabled && "opacity-75"
+							disabled && "cursor-not-allowed"
 						)}
 						rows={3}
 						disabled={disabled}
@@ -80,7 +82,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 						ref={ref as React.RefObject<HTMLTextAreaElement>}
 					/>
 				) : (
-					<div className="w-full flex justify-center items-center gap-1">
+					<div className="flex justify-center items-center gap-2">
 						<input
 							type={type}
 							placeholder={
@@ -88,15 +90,15 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 							}
 							value={localInput}
 							className={twMerge(
+								className,
 								getStyles(),
-								"h-10",
-								disabled && "opacity-75"
+								disabled && "cursor-not-allowed"
 							)}
 							disabled={disabled}
 							onChange={handleInputChange}
 							ref={ref as React.RefObject<HTMLInputElement>}
 						/>
-						{clearIcon && (
+						{localInput && clearIcon && (
 							<Icon
 								name="RiCloseLine"
 								size={16}

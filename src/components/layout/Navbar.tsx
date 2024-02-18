@@ -12,22 +12,21 @@ const Navbar = () => {
 	const [searchInput, setSearchInput] = useState<string>("");
 
 	return (
-		<header className="p-4 w-full flex justify-between">
-			<div className="w-[30%] flex items-center">
+		<header className="px-5 py-4 w-full flex justify-between">
+			<div className="flex items-center">
 				<Logo showMobileLogo={true} />
 				<div className="ml-5">
 					<Icon name="RiSearchLine" />
 				</div>
-				<div className="flex-1 flex justify-center items-center">
-					<div className="flex-1">
-						<Input
-							type="text"
-							placeholderText="Search here"
-							setInputText={setSearchInput}
-							variant="ghost"
-							clearIcon
-						/>
-					</div>
+				<div className="flex justify-center items-center">
+					<Input
+						className="w-32 md:w-64"
+						type="text"
+						placeholderText="Search here"
+						setInputText={setSearchInput}
+						variant="ghost"
+						clearIcon
+					/>
 				</div>
 			</div>
 
