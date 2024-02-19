@@ -62,7 +62,9 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 		return (
 			<div className="flex flex-col items-start">
 				{label && (
-					<p className="pl-1 font-josefin_Sans text-lg">{label}</p>
+					<p className="pl-1 font-josefin_Sans text-sm sm:text-base md:text-lg">
+						{label}
+					</p>
 				)}
 				{variant === "area" ? (
 					<textarea

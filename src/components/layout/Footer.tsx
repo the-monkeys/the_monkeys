@@ -8,16 +8,16 @@ import Icon from "../icon";
 import Logo from "../logo";
 import Input from "../input";
 
-function Footer() {
+const Footer = () => {
 	const [userMail, setUserMail] = useState<string>("");
 
 	return (
-		<footer className="px-5 pb-4 pt-10 flex flex-col gap-10 md:gap-5 border-t-[1px] border-opacity-20 border-secondary-lightGrey">
+		<footer className="px-5 pb-4 pt-10 flex flex-col gap-10 md:gap-5 border-t-1 border-opacity-25 border-secondary-lightGrey">
 			<div className="w-fit">
-				<Logo showSubHeading={true} showMix={true} />
-				<form className="mt-5 md:mt-10 flex items-end gap-2">
+				<Logo showSubHeading showMix />
+				<form className="mt-5 md:mt-10 flex flex-wrap items-end gap-2">
 					<Input
-						className="w-64"
+						className="w-44 sm:w-60 md:w-64"
 						type="email"
 						placeholderText="Your email address"
 						setInputText={setUserMail}
@@ -27,7 +27,7 @@ function Footer() {
 					<Button variant="primary" title="Subscribe" />
 				</form>
 			</div>
-			<div className="self-center md:self-end w-full md:w-fit flex justify-between gap-10">
+			<div className="self-center md:self-end w-full md:w-fit flex justify-between md:justify-start flex-wrap gap-10">
 				<div className="flex flex-col">
 					<p className="font-josefin_Sans text-lg">Services</p>
 					<p className="mt-1 font-jost text-secondary-lightGrey">
@@ -68,7 +68,7 @@ function Footer() {
 					</p>
 				</div>
 			</div>
-			<div className="self-center w-fit flex flex-col items-center">
+			<div className="self-center w-fit flex flex-col items-center gap-2">
 				<div className="flex justify-center items-center gap-2">
 					<Link
 						className="flex items-center gap-2"
@@ -98,6 +98,6 @@ function Footer() {
 			</div>
 		</footer>
 	);
-}
+};
 
 export default Footer;

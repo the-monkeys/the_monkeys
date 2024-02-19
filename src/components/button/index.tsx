@@ -89,7 +89,7 @@ const Button: React.FC<ButtonProps> = ({
 				{startIcon && (
 					<Icon name={iconName} size={20} hasHover={false} />
 				)}
-				<p className="font-jost">{title}</p>
+				<p>{title}</p>
 				{endIcon && <Icon name={iconName} size={20} hasHover={false} />}
 			</div>
 		</button>

@@ -2,7 +2,7 @@ import { ButtonVariantStyles } from "./button";
 import { InputVariantStyles } from "./input";
 
 export const buttonVariantStyles: ButtonVariantStyles = {
-	base: "px-4 py-2 rounded-lg cursor-pointer transition-all",
+	base: "px-4 py-2 font-jost text-xs sm:text-sm md:text-base rounded-lg cursor-pointer transition-all",
 	primary:
 		"bg-primary-monkeyOrange text-primary-monkeyWhite hover:rounded-sm",
 	secondary: "bg-secondary-darkGrey text-secondary-white hover:rounded-sm",
@@ -13,7 +13,7 @@ export const buttonVariantStyles: ButtonVariantStyles = {
 };
 
 export const inputVariantStyles: InputVariantStyles = {
-	base: "px-4 py-2 font-jost text-base md:text-md bg-primary-monkeyWhite dark:bg-primary-monkeyBlack",
+	base: "px-4 py-2 font-jost text-xs sm:text-sm md:text-base bg-primary-monkeyWhite dark:bg-primary-monkeyBlack",
 	border: "border-2 focus:outline-none rounded-lg focus:rounded-none",
 	ghost: "focus:outline-none",
 };
