@@ -34,7 +34,7 @@ const Logo: React.FC<LogoProps> = ({
 	}, []);
 
 	return (
-		<div className="flex flex-col items-start gap-2">
+		<div className="flex flex-col items-start">
 			{showMobileLogo && isMobile ? (
 				<MobileLogo />
 			) : showMix ? (

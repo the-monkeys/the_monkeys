@@ -30,7 +30,7 @@ const config: Config = {
 			playfair_Display: ["var(--font-playfair_Display)"],
 		},
 		animation: {
-			shake: "shake 800ms ease-in-out",
+			shake: "shake 600ms ease-in-out",
 		},
 		keyframes: {
 			shake: {
