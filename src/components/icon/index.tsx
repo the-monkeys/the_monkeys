@@ -4,6 +4,8 @@
 import * as RemixIcons from "@remixicon/react";
 
 export type IconName =
+	| "RiMenuLine"
+	| "RiMenu3Line"
 	| "RiToggleLine"
 	| "RiToggleFill"
 	| "RiNotification3Line"

@@ -1,86 +1,103 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 
 import Button from "../button";
-import Icon from "../icon/icon";
+import Icon from "../icon";
 import Logo from "../logo";
+import Input from "../input";
 
 function Footer() {
-  return (
-    <footer className="px-5 py-4 border-t border-secondary-lightGrey bg-primary-monkeyWhite dark:bg-primary-monkeyBlack">
-      <div className="flex gap-5 justify-between max-md:flex-wrap py-4">
-        <div className="flex flex-col px-5 ">
-          <Logo showSubHeading={true} showMix={true} />
-          <div className="flex gap-2 justify-between mt-12 max-md:mt-10">
-            <div className="flex flex-col flex-1">
-              <div className="text-xl py-2">Get in Contact</div>
-              <div>
-                <input
-                  type="email"
-                  id="email"
-                  aria-label="Email"
-                  className="py-2 px-8 w-full rounded-lg border border-solid border-[color:var(--Monkeys-White,#FFF4ED)] text-white-100"
-                  placeholder="Enter your email"
-                />
-              </div>
-            </div>
-            <div className="justify-center self-end px-1 py-0.9 mt-6 text-base whitespace-nowrap bg-sky-500 rounded-lg">
-              <Button variant="primary" title="Subscribe" />
-            </div>
-          </div>
-        </div>
-        <div className="flex gap-5 justify-between items-start self-end px-5 mt-36 text-base text-neutral-600 max-md:mt-10">
-          <div className="flex flex-col flex-1 self-stretch whitespace-nowrap">
-            <div className="text-xl font-medium text-orange-50">Services</div>
-            <div className="mt-5">Branding</div>
-            <div className="mt-2">Design</div>
-            <div className="mt-2">Marketing</div>
-            <div className="mt-2">Advertisement</div>
-          </div>
-          <div className="flex flex-col flex-1">
-            <div className="text-xl font-medium text-orange-50">Company</div>
-            <div className="mt-3.5 whitespace-nowrap">About Us</div>
-            <div className="mt-3">Contact</div>
-            <div className="mt-3">Press Kit</div>
-          </div>
-          <div className="flex flex-col flex-1 whitespace-nowrap">
-            <div className="text-xl font-medium text-orange-50">Legal</div>
-            <div className="mt-3.5">Terms of Use</div>
-            <div className="mt-3">Privacy Policy</div>
-            <div className="mt-2">Cookie Policy</div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col items-start gap-1">
-        <div className="flex justify-center items-center gap-2">
-          <Link
-            className="flex items-center gap-2"
-            href="https://discord.gg/HTuz82d8"
-            target="_blank"
-          >
-            <Icon name="RiDiscordFill" size={20} />
-          </Link>
-          <Link
-            className="flex items-center gap-2"
-            href="https://github.com/the-monkeys/the_monkeys"
-            target="_blank"
-          >
-            <Icon name="RiGithubFill" size={20} />
-          </Link>
+	const [userMail, setUserMail] = useState<string>("");
 
-          <Link
-            className="flex items-center gap-2"
-            href="https://twitter.com/TheMonkeysLife"
-            target="_blank"
-          >
-            <Icon name="RiTwitterXFill" size={20} />
-          </Link>
-        </div>
-        <p className="w-fit font-josefin_Sans text-xs text-secondary-lightGrey cursor-default">
-          Monkeys, 2024, All Rights Reserved
-        </p>
-      </div>
-    </footer>
-  );
+	return (
+		<footer className="px-5 pb-4 pt-10 flex flex-col gap-10 md:gap-5 border-t-[1px] border-opacity-20 border-secondary-lightGrey">
+			<div className="w-fit">
+				<Logo showSubHeading={true} showMix={true} />
+				<form className="mt-5 md:mt-10 flex items-end gap-2">
+					<Input
+						className="w-64"
+						type="email"
+						placeholderText="Your email address"
+						setInputText={setUserMail}
+						label="Get in Touch"
+						variant="border"
+					/>
+					<Button variant="primary" title="Subscribe" />
+				</form>
+			</div>
+			<div className="self-center md:self-end w-full md:w-fit flex justify-between gap-10">
+				<div className="flex flex-col">
+					<p className="font-josefin_Sans text-lg">Services</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Branding
+					</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Design
+					</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Marketing
+					</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Advertisement
+					</p>
+				</div>
+				<div className="flex flex-col">
+					<p className="font-josefin_Sans text-lg">Company</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						About Us
+					</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Contact
+					</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Press Kit
+					</p>
+				</div>
+				<div className="flex flex-col">
+					<p className="font-josefin_Sans text-lg">Legal</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Terms of Use
+					</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Privacy Policy
+					</p>
+					<p className="mt-1 font-jost text-secondary-lightGrey">
+						Cookie Policy
+					</p>
+				</div>
+			</div>
+			<div className="self-center w-fit flex flex-col items-center">
+				<div className="flex justify-center items-center gap-2">
+					<Link
+						className="flex items-center gap-2"
+						href="https://discord.gg/HTuz82d8"
+						target="_blank"
+					>
+						<Icon name="RiDiscordFill" size={20} />
+					</Link>
+					<Link
+						className="flex items-center gap-2"
+						href="https://github.com/the-monkeys/the_monkeys"
+						target="_blank"
+					>
+						<Icon name="RiGithubFill" size={20} />
+					</Link>
+					<Link
+						className="flex items-center gap-2"
+						href="https://twitter.com/TheMonkeysLife"
+						target="_blank"
+					>
+						<Icon name="RiTwitterXFill" size={20} />
+					</Link>
+				</div>
+				<p className="w-fit font-josefin_Sans text-xs text-secondary-lightGrey">
+					Monkeys, 2024, All Rights Reserved
+				</p>
+			</div>
+		</footer>
+	);
 }
 
 export default Footer;
