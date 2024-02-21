@@ -43,6 +43,8 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 					return `${inputVariantStyles["base"]} ${inputVariantStyles["border"]}`;
 				case "ghost":
 					return `${inputVariantStyles["base"]} ${inputVariantStyles["ghost"]}`;
+				case "area":
+					return `${inputVariantStyles["base"]} ${inputVariantStyles["border"]}`;
 			}
 		};
 
@@ -78,7 +80,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
 							"resize-none",
 							disabled && "cursor-not-allowed"
 						)}
-						rows={3}
+						rows={5}
 						disabled={disabled}
 						onChange={handleInputChange}
 						ref={ref as React.RefObject<HTMLTextAreaElement>}

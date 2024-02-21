@@ -13,7 +13,7 @@ export const buttonVariantStyles: ButtonVariantStyles = {
 };
 
 export const inputVariantStyles: InputVariantStyles = {
-	base: "px-4 py-2 font-jost text-xs sm:text-sm md:text-base bg-primary-monkeyWhite dark:bg-primary-monkeyBlack",
-	border: "border-2 focus:outline-none rounded-lg focus:rounded-none",
+	base: "px-4 py-2 font-jost text-xs sm:text-sm md:text-base bg-primary-monkeyWhite/0 dark:bg-primary-monkeyBlack/0",
+	border: "border-1 border-secondary-lightGrey/75 focus:border-secondary-lightGrey/25 focus:outline-none rounded-lg",
 	ghost: "focus:outline-none",
 };
