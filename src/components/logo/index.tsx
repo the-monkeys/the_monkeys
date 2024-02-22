@@ -21,7 +21,7 @@ const Logo: React.FC<LogoProps> = ({
 
 	useEffect(() => {
 		const handleResize = () => {
-			setIsMobile(window.innerWidth <= 768); // Set your desired breakpoint
+			setIsMobile(window.innerWidth <= 640);
 		};
 
 		handleResize();
