@@ -1,0 +1,28 @@
+# Ignore build directories
+node_modules/
+out/
+.cache/
+
+# Ignore configuration files
+.eslintcache
+.prettierignore
+.prettierrc
+babel.config.js
+next.config.js
+
+# Ignore coverage reports
+coverage/
+
+# Ignore public assets
+public/
+
+#Ignore API Documentation
+api_documentation/
+certs/
+
+# Ignore generated files
+*.generated.js
+
+
+README.md
+LICENSE.md
