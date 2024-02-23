@@ -2,6 +2,7 @@
 // Github: https://github.com/Remix-Design/RemixIcon
 
 import * as RemixIcons from "@remixicon/react";
+import { twMerge } from "tailwind-merge";
 
 export type IconName =
 	| "RiMenuLine"
@@ -57,28 +58,20 @@ const Icon: React.FC<IconProps> = ({
 		<div className="flex items-center justify-center">
 			{customColor ? (
 				<DynamicIcon
-					className={`${hasHover && "hover:opacity-80"}`}
+					className={twMerge(hasHover && "hover:opacity-75")}
 					size={size}
 					onClick={onClick}
 					color={color}
 				/>
 			) : (
-				<>
-					<DynamicIcon
-						className={`cursor-pointer ${
-							hasHover && "hover:opacity-80"
-						} dark:hidden`}
-						size={size}
-						onClick={onClick}
-					/>
-					<DynamicIcon
-						className={`cursor-pointer ${
-							hasHover && "hover:opacity-80"
-						} dark:block hidden`}
-						size={size}
-						onClick={onClick}
-					/>
-				</>
+				<DynamicIcon
+					className={twMerge(
+						"text-primary-monkeyBlack dark:text-primary-monkeyWhite cursor-pointer",
+						hasHover && "hover:opacity-75"
+					)}
+					size={size}
+					onClick={onClick}
+				/>
 			)}
 		</div>
 	);

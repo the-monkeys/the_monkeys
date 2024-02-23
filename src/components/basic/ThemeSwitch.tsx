@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import Icon from "../icon";
 
-export default function ThemeSwitch() {
+const ThemeSwitch = () => {
 	const [mounted, setMounted] = useState(false);
 	const { setTheme, resolvedTheme } = useTheme();
 
@@ -31,4 +31,6 @@ export default function ThemeSwitch() {
 	if (resolvedTheme === "light") {
 		return <Icon name="RiToggleFill" onClick={() => setTheme("dark")} />;
 	}
-}
+};
+
+export default ThemeSwitch;

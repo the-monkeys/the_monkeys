@@ -6,16 +6,16 @@ const MobileLogo = () => {
 			<Image
 				className="dark:hidden"
 				src={"/logo-dark.svg"}
-				alt="TheMonkeys Logog"
-				title="TheMonkeys Logo"
+				alt="TheMonkeys"
+				title="TheMonkeys"
 				height={10}
 				width={30}
 			/>
 			<Image
 				className="dark:block hidden"
 				src={"/logo-light.svg"}
-				alt="TheMonkeys Logo"
-				title="TheMonkeys Logo"
+				alt="TheMonkeys"
+				title="TheMonkeys"
 				height={10}
 				width={30}
 			/>

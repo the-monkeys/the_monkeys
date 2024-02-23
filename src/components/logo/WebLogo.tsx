@@ -6,16 +6,16 @@ const WebLogo = () => {
 			<Image
 				className="dark:hidden"
 				src={"/logo-full-dark.svg"}
-				alt="TheMonkeys Logo"
-				title="TheMonkeys Logo"
+				alt="TheMonkeys"
+				title="TheMonkeys"
 				height={30}
 				width={119}
 			/>
 			<Image
 				className="dark:block hidden"
 				src={"/logo-full-light.svg"}
-				alt="TheMonkeys Logo"
-				title="TheMonkeys Logo"
+				alt="TheMonkeys"
+				title="TheMonkeys"
 				height={30}
 				width={119}
 			/>
