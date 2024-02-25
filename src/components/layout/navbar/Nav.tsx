@@ -18,8 +18,8 @@ const Nav = () => {
 
       <div className='flex items-center gap-5'>
         <div className='flex items-center gap-5'>
-          <Icon name='RiNotification3Line' />
           <ThemeSwitch />
+          <Icon name='RiNotification3Line' />
           <Icon name='RiUser3Line' />
         </div>
         <div className='h-8 border-l-1 border-secondary-lightGrey/25'></div>
