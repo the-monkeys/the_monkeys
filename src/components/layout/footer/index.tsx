@@ -68,7 +68,7 @@ const Footer = () => {
           </Link>
           <Link
             className='flex items-center gap-2'
-            href='https://github.com/the-monkeys/the_monkeys'
+            href='https://github.com/the-monkeys'
             target='_blank'
           >
             <Icon name='RiGithubFill' size={20} />
