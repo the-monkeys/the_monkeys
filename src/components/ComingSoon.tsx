@@ -1,6 +1,11 @@
+'use client';
+
 import Image from 'next/image';
+import React from 'react';
+import LoginModal from './modals/LoginModal';
 
 const ComingSoon = () => {
+  const [showModal, setShowModal] = React.useState(false);
   return (
     <div className='flex min-h-screen w-4/5 flex-col items-center justify-center md:w-3/5'>
       <h1 className='mb-4 text-center font-playfair_Display text-3xl font-extrabold md:text-4xl'>
@@ -15,12 +20,14 @@ const ComingSoon = () => {
         title='Coming Soon!!'
         height={300}
         width={300}
+        onClick={() => setShowModal((prevValue) => !prevValue)}
       />
       <p className='mb-4 text-center font-jost text-base text-secondary-lightGrey md:text-lg'>
         Get ready to be part of the excitement and be the first to experience
         our grand reveal. Stay tuned for updates and announcements. Thank you
         for your anticipation and patience!
       </p>
+      {showModal && <LoginModal setModal={setShowModal} />}
     </div>
   );
 };

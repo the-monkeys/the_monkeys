@@ -17,7 +17,7 @@ const Footer = () => {
           <Logo showSubHeading showMix />
           <form className='mt-5 flex flex-wrap items-end gap-2 md:mt-10'>
             <Input
-              className='w-56 sm:w-60 md:w-64'
+              className='w-full sm:w-60 md:w-64'
               type='email'
               placeholderText='Your email address'
               setInputText={setUserMail}

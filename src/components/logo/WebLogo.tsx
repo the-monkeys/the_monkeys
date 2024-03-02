@@ -9,7 +9,7 @@ const WebLogo = () => {
         alt='TheMonkeys'
         title='TheMonkeys'
         height={30}
-        width={119}
+        width={120}
       />
       <Image
         className='hidden dark:block'
@@ -17,7 +17,7 @@ const WebLogo = () => {
         alt='TheMonkeys'
         title='TheMonkeys'
         height={30}
-        width={119}
+        width={120}
       />
     </>
   );
