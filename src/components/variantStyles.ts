@@ -1,8 +1,9 @@
 import { ButtonVariantStyles } from './button';
+import { IconVariantStyles } from './icon';
 import { InputVariantStyles } from './input';
 
 export const buttonVariantStyles: ButtonVariantStyles = {
-  base: 'px-4 py-2 font-jost text-xs sm:text-sm md:text-base rounded-lg cursor-pointer transition-all',
+  base: 'group px-4 py-2 font-jost text-xs sm:text-sm md:text-base rounded-lg cursor-pointer transition-all',
   primary: 'bg-primary-monkeyOrange text-primary-monkeyWhite hover:rounded-sm',
   secondary: 'bg-secondary-darkGrey text-secondary-white hover:rounded-sm',
   alert:
@@ -18,4 +19,15 @@ export const inputVariantStyles: InputVariantStyles = {
   border:
     'border-1 border-secondary-lightGrey/75 focus:border-secondary-lightGrey/25 focus:outline-none rounded-lg',
   ghost: 'focus:outline-none',
+};
+
+export const iconVariantStyles: IconVariantStyles = {
+  base: 'text-primary-monkeyBlack dark:text-primary-monkeyWhite',
+  primary: 'text-primary-monkeyWhite',
+  secondary: 'text-secondary-white',
+  alert: 'text-primary-monkeyWhite group-hover:text-alert-red',
+  shallow:
+    'group-hover:text-primary-monkeyWhite dark:group-hover:text-primary-monkeyBlack',
+  ghost:
+    'text-primary-monkeyBlack dark:text-primary-monkeyWhite group-hover:text-primary-monkeyWhite dark:group-hover:text-primary-monkeyBlack',
 };
