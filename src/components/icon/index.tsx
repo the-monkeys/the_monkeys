@@ -47,6 +47,7 @@ export type IconVariantStyles = {
 
 export type IconProps = {
   name: IconName;
+  className?: String;
   size?: number;
   hasHover?: boolean;
   toolTip?: boolean;
