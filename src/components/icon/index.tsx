@@ -35,6 +35,7 @@ export type IconName =
 
 export type IconProps = {
   name: IconName;
+  className?: String;
   size?: number;
   hasHover?: boolean;
   customColor?: boolean;
