@@ -34,7 +34,13 @@ export type IconName =
   | 'RiAlertLine'
   | 'RiErrorWarningLine';
 
-type IconVariants = 'primary' | 'secondary' | 'alert' | 'ghost' | 'shallow';
+type IconVariants =
+  | 'primary'
+  | 'secondary'
+  | 'alert'
+  | 'ghost'
+  | 'shallow'
+  | 'orange';
 
 export type IconVariantStyles = {
   base: string;
@@ -43,15 +49,16 @@ export type IconVariantStyles = {
   alert: string;
   shallow: string;
   ghost: string;
+  orange: string;
 };
 
 export type IconProps = {
   name: IconName;
-  className?: String;
   size?: number;
   hasHover?: boolean;
   toolTip?: boolean;
   toolTipSide?: 'top' | 'right' | 'bottom' | 'left';
+  color?: string;
   variant?: IconVariants;
   onClick?: () => void;
 };
@@ -61,6 +68,7 @@ const Icon: React.FC<IconProps> = ({
   size = 24,
   hasHover = true,
   variant = 'base',
+  color,
   toolTip,
   toolTipSide,
   onClick,
@@ -79,6 +87,8 @@ const Icon: React.FC<IconProps> = ({
         return `${iconVariantStyles['ghost']}`;
       case 'shallow':
         return `${iconVariantStyles['shallow']}`;
+      case 'orange':
+        return `${iconVariantStyles['orange']}`;
     }
   };
 

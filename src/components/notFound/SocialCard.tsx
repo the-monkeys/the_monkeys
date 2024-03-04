@@ -30,8 +30,7 @@ const SocialCard: FC<SocialCardProps> = ({ icon, title, text, link }) => {
       >
         <Icon
           name='RiArrowRightUpLine'
-          customColor
-          color='#ff462e'
+          variant='orange'
           size={24}
           hasHover={false}
         />

@@ -3,7 +3,6 @@ import { twMerge } from 'tailwind-merge';
 import Icon, { IconName } from '../icon';
 import { buttonVariantStyles } from '../variantStyles';
 import CircularButton from './CircularButton';
-import Loginbtn from '../modals/Loginbtn';
 
 type ButtonVariants =
   | 'primary'
@@ -11,7 +10,6 @@ type ButtonVariants =
   | 'alert'
   | 'ghost'
   | 'shallow'
-  | 'login'
   | 'circular';
 
 export type ButtonVariantStyles = {
@@ -21,7 +19,6 @@ export type ButtonVariantStyles = {
   alert: string;
   shallow: string;
   ghost: string;
-  login: string;
 };
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -62,12 +59,6 @@ const Button: React.FC<ButtonProps> = ({
         return `${buttonVariantStyles['base']} ${buttonVariantStyles['ghost']}`;
       case 'shallow':
         return `${buttonVariantStyles['base']} ${buttonVariantStyles['shallow']}`;
-      case 'circular':
-        return ''; // Leave circular variant as it is
-      case 'login':
-        return `${buttonVariantStyles['base']} ${buttonVariantStyles['login']}`;
-      default:
-        return `${buttonVariantStyles['base']}`;
     }
   };
 
@@ -79,20 +70,6 @@ const Button: React.FC<ButtonProps> = ({
         onClick={onClick}
         disabled={disabled}
         className={className}
-      />
-    );
-  }
-
-  if (variant === 'login') {
-    // Use the LoginButton component for the 'login' variant
-    return (
-      <Loginbtn
-        animate={animateIcon}
-        iconName={iconName}
-        onClick={onClick}
-        disabled={disabled}
-        className={className}
-        title={title}
       />
     );
   }
