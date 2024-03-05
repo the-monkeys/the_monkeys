@@ -3,6 +3,7 @@
 
 import * as RemixIcons from '@remixicon/react';
 import { twMerge } from 'tailwind-merge';
+import { iconVariantStyles } from '../variantStyles';
 
 export type IconName =
   | 'RiMenuLine'
@@ -33,15 +34,32 @@ export type IconName =
   | 'RiAlertLine'
   | 'RiErrorWarningLine';
 
+type IconVariants =
+  | 'primary'
+  | 'secondary'
+  | 'alert'
+  | 'ghost'
+  | 'shallow'
+  | 'orange';
+
+export type IconVariantStyles = {
+  base: string;
+  primary: string;
+  secondary: string;
+  alert: string;
+  shallow: string;
+  ghost: string;
+  orange: string;
+};
+
 export type IconProps = {
   name: IconName;
-  className?: String;
   size?: number;
   hasHover?: boolean;
-  customColor?: boolean;
-  color?: string;
   toolTip?: boolean;
   toolTipSide?: 'top' | 'right' | 'bottom' | 'left';
+  color?: string;
+  variant?: IconVariants;
   onClick?: () => void;
 };
 
@@ -49,7 +67,7 @@ const Icon: React.FC<IconProps> = ({
   name,
   size = 24,
   hasHover = true,
-  customColor,
+  variant = 'base',
   color,
   toolTip,
   toolTipSide,
@@ -57,25 +75,34 @@ const Icon: React.FC<IconProps> = ({
 }) => {
   const DynamicIcon = RemixIcons[name];
 
+  const getStyles = () => {
+    switch (variant) {
+      case 'primary':
+        return `${iconVariantStyles['primary']}`;
+      case 'secondary':
+        return `${iconVariantStyles['secondary']}`;
+      case 'alert':
+        return `${iconVariantStyles['alert']}`;
+      case 'ghost':
+        return `${iconVariantStyles['ghost']}`;
+      case 'shallow':
+        return `${iconVariantStyles['shallow']}`;
+      case 'orange':
+        return `${iconVariantStyles['orange']}`;
+    }
+  };
+
   return (
     <div className='flex items-center justify-center'>
-      {customColor ? (
-        <DynamicIcon
-          className={twMerge(hasHover && 'hover:opacity-75')}
-          size={size}
-          onClick={onClick}
-          color={color}
-        />
-      ) : (
-        <DynamicIcon
-          className={twMerge(
-            'cursor-pointer text-primary-monkeyBlack dark:text-primary-monkeyWhite',
-            hasHover && 'hover:opacity-75'
-          )}
-          size={size}
-          onClick={onClick}
-        />
-      )}
+      <DynamicIcon
+        className={twMerge(
+          getStyles(),
+          'cursor-pointer',
+          hasHover && 'hover:opacity-75'
+        )}
+        size={size}
+        onClick={onClick}
+      />
     </div>
   );
 };

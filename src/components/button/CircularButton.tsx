@@ -28,13 +28,7 @@ const CircularButton: FC<CircularButtonProps> = ({
       <div
         className={twMerge(!disabled && animate && 'group-hover:animate-shake')}
       >
-        <Icon
-          name={iconName}
-          size={18}
-          customColor={true}
-          color='#fff4ed'
-          hasHover={false}
-        />
+        <Icon name={iconName} size={18} variant='primary' hasHover={false} />
       </div>
     </button>
   );
