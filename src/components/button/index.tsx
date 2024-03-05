@@ -85,9 +85,13 @@ const Button: React.FC<ButtonProps> = ({
       disabled={disabled}
     >
       <div className='flex items-center justify-center gap-4'>
-        {startIcon && <Icon name={iconName} size={20} hasHover={false} />}
+        {startIcon && (
+          <Icon name={iconName} size={20} hasHover={false} variant={variant} />
+        )}
         <p>{title}</p>
-        {endIcon && <Icon name={iconName} size={20} hasHover={false} />}
+        {endIcon && (
+          <Icon name={iconName} size={20} hasHover={false} variant={variant} />
+        )}
       </div>
     </button>
   );
