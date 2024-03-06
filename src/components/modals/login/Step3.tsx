@@ -1,31 +1,23 @@
 import Button from '@/components/button';
 import ModalContent from '../layout/ModalContent';
+import Link from 'next/link';
 import Input from '@/components/input';
 import React, { FC } from 'react';
+import Checkbox from '@/components/input/Checkbox';
 import Icon from '@/components/icon';
 
-type Step2Props = {
+type Step3Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-const Step2: FC<Step2Props> = ({ setLoginStep }) => {
-  const [email, setEmail] = React.useState<string>('');
+const Step3: FC<Step3Props> = ({ setLoginStep }) => {
+  const [password, setPassword] = React.useState<string>('');
   const [inputError, setInputError] = React.useState<boolean>(false);
-
-  const validateEmail = (inputEmail: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(inputEmail);
-  };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    if (!validateEmail(email)) {
-      setInputError(true);
-      return;
-    }
-
-    setLoginStep(3);
+    setLoginStep(1);
   };
 
   return (
@@ -33,22 +25,32 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
       <form className='flex flex-col px-4'>
         <Input
           className='w-full'
-          label='Email'
-          placeholderText='enter email'
+          label='Password'
+          placeholderText='enter password'
           variant='border'
-          setInputText={setEmail}
-          type='email'
+          setInputText={setPassword}
+          type='password'
         />
 
         {inputError && (
           <div className='flex items-center gap-2 pl-1 font-jost text-xs text-alert-red sm:text-sm'>
             <Icon name='RiErrorWarningFill' size={16} />
-            <p>Couldn't find any matching email. Try again.</p>
+            <p>Wrong password. Try again or click 'Forgot password'.</p>
           </div>
         )}
 
+        <div className='mt-2 flex items-center justify-between pl-1'>
+          <Checkbox />
+          <Link
+            className='font-jost text-sm opacity-75 hover:opacity-100'
+            href='#'
+          >
+            Forgot Password?
+          </Link>
+        </div>
+
         <Button
-          title='Next'
+          title='Login'
           variant='primary'
           className='mt-8'
           onClick={(e) => handleSubmit(e)}
@@ -58,4 +60,4 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   );
 };
 
-export default Step2;
+export default Step3;

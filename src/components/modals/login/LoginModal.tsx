@@ -3,24 +3,29 @@
 import React, { FC } from 'react';
 import Modal from '..';
 import ModalHeader from '../layout/ModalHeader';
-import ModalContent from '../layout/ModalContent';
 import ModalFooter from '../layout/ModalFooter';
-import Button from '../../button';
-import Link from 'next/link';
 import Step1 from './Step1';
 import Step2 from './Step2';
+import Step3 from './Step3';
 
 type LoginModalProps = {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const LoginModal: FC<LoginModalProps> = ({ setModal }) => {
+  const [loginStep, setLoginStep] = React.useState<number>(1);
+
+  const handleLoginStep = () => {
+    if (loginStep === 1) return <Step1 setLoginStep={setLoginStep} />;
+    else if (loginStep === 2) return <Step2 setLoginStep={setLoginStep} />;
+    else return <Step3 setLoginStep={setLoginStep} />;
+  };
+
   return (
     <Modal setModal={setModal}>
       <ModalHeader showHeading setModal={setModal} heading='Welcome Back' />
 
-      {/* <Step1 /> */}
-      <Step2 />
+      {handleLoginStep()}
 
       <ModalFooter>
         <p className='text-center font-jost text-xs'>
