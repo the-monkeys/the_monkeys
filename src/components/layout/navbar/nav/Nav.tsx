@@ -5,8 +5,8 @@ import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import SearchBox from '@/components/searchBox';
 import CreateButton from '../CreateButton';
-import NotificationsCard from './NotificationsCard';
-import UserOptions from './UserOptions';
+import NotificationsDialog from './notifications/NotificationsDialog';
+import UserOptionsDialog from './userOptions/UserOptions';
 
 const Nav = () => {
   const [searchInput, setSearchInput] = useState<string>('');
@@ -36,18 +36,24 @@ const Nav = () => {
 
           <div className='relative'>
             {showNotifications ? (
-              <Icon
-                name='RiNotification3Fill'
-                onClick={handleShowNotifications}
-              />
+              <div className='relative'>
+                <span className='absolute right-0 top-0 z-10 h-2 w-2 rounded-full bg-primary-monkeyOrange'></span>
+                <Icon
+                  name='RiNotification3Fill'
+                  onClick={handleShowNotifications}
+                />
+              </div>
             ) : (
-              <Icon
-                name='RiNotification3Line'
-                onClick={handleShowNotifications}
-              />
+              <div className='relative'>
+                <span className='absolute right-0 top-0 z-10 h-2 w-2 rounded-full bg-primary-monkeyOrange'></span>
+                <Icon
+                  name='RiNotification3Line'
+                  onClick={handleShowNotifications}
+                />
+              </div>
             )}
             {showNotifications && (
-              <NotificationsCard setNotifications={setShowNotifications} />
+              <NotificationsDialog setNotifications={setShowNotifications} />
             )}
           </div>
 
@@ -58,7 +64,7 @@ const Nav = () => {
               <Icon name='RiUser3Line' onClick={handleShowUserOptions} />
             )}
             {showUserOptions && (
-              <UserOptions setUserOptions={setShowUserOptions} />
+              <UserOptionsDialog setUserOptions={setShowUserOptions} />
             )}
           </div>
         </div>

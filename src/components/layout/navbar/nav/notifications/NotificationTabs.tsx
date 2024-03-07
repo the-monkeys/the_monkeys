@@ -2,7 +2,7 @@ import React from 'react';
 
 type NavTabVariants = 'all' | 'comments' | 'reactions';
 
-const NavTabs = () => {
+const NotificationTabs = () => {
   const [tab, setTab] = React.useState<NavTabVariants>('all');
 
   return (
@@ -38,4 +38,4 @@ const NavTabs = () => {
   );
 };
 
-export default NavTabs;
+export default NotificationTabs;

@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const NotFound = () => {
   return (
-    <div className='mb-20 flex flex-col items-center gap-10 px-5 py-4'>
+    <div className='mb-20 flex h-fit flex-col items-center gap-10 px-5'>
       <div className='mt-10 flex items-center justify-center gap-10'>
         <Image
           className='hidden sm:block'
@@ -28,7 +28,6 @@ const NotFound = () => {
       </div>
 
       <div className='flex w-full flex-col items-start gap-5 sm:w-4/5 md:w-1/2'>
-        <p className='font-josefin_Sans'>No worries. Explore:</p>
         <SocialCard
           icon='RiDiscordFill'
           title='Join our Discord'
