@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import React from 'react';
-import LoginModal from './modals/LoginModal';
+import LoginModal from './modals/login/LoginModal';
 
 const ComingSoon = () => {
   const [showModal, setShowModal] = React.useState(false);

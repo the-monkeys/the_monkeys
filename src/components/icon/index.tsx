@@ -32,6 +32,8 @@ export type IconName =
   | 'RiDiscordFill'
   | 'RiGoogleFill'
   | 'RiAlertLine'
+  | 'RiCheckLine'
+  | 'RiErrorWarningFill'
   | 'RiErrorWarningLine';
 
 type IconVariants =

@@ -50,11 +50,13 @@ const NotFound = () => {
       </div>
 
       <Link href='/'>
-        <div className='flex items-center gap-2 transition-all hover:gap-3'>
+        <div className='group flex items-center'>
           <p className='font-josefin_Sans text-sm md:text-base'>
             Or go back to home
           </p>
-          <Icon name='RiArrowRightLine' size={16} />
+          <div className='ml-2 mr-2 transition-all group-hover:ml-3 group-hover:mr-1'>
+            <Icon name='RiArrowRightLine' size={16} />
+          </div>
         </div>
       </Link>
     </div>
