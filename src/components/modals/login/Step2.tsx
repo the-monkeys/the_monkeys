@@ -50,7 +50,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
         <Button
           title='Next'
           variant='primary'
-          className='mt-8'
+          className='mt-4'
           onClick={(e) => handleSubmit(e)}
         />
       </form>
