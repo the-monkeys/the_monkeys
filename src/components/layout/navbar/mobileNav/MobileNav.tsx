@@ -3,8 +3,16 @@ import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import CreateButton from '../CreateButton';
 import Link from 'next/link';
+import React from 'react';
+import MobileUserOptions from './mobileUserOptions/MobileUserOptions';
 
 const MobileNav = () => {
+  const [showUserOptions, setShowUserOptions] = React.useState<boolean>(false);
+
+  const handleShowUserOptions = () => {
+    setShowUserOptions((prevVal) => !prevVal);
+  };
+
   return (
     <>
       <div className='sticky left-0 top-0 flex w-full items-center justify-between gap-5 bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75'>
@@ -22,7 +30,10 @@ const MobileNav = () => {
           <span className='absolute right-0 top-0 z-10 h-2 w-2 rounded-full bg-primary-monkeyOrange'></span>
           <Icon name='RiNotification3Line' />
         </Link>
-        <Icon name='RiUser3Line' />
+        <div className='relative'>
+          <Icon name='RiUser3Line' onClick={handleShowUserOptions} />
+          {showUserOptions && <MobileUserOptions />}
+        </div>
       </div>
     </>
   );

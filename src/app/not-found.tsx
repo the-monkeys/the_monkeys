@@ -6,9 +6,9 @@ import Link from 'next/link';
 const NotFound = () => {
   return (
     <div className='mb-20 flex h-fit flex-col items-center gap-10 px-5'>
-      <div className='mt-10 flex items-center justify-center gap-10'>
+      <div className='mt-10 flex flex-wrap items-center justify-center gap-10'>
         <Image
-          className='hidden sm:block'
+          // className='hidden sm:block'
           src={'/not-found.svg'}
           alt='Page not found'
           title='Page not found'
