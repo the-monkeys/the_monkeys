@@ -11,7 +11,9 @@ export type IconName =
   | 'RiToggleLine'
   | 'RiToggleFill'
   | 'RiNotification3Line'
+  | 'RiNotification3Fill'
   | 'RiUser3Line'
+  | 'RiUser3Fill'
   | 'RiPencilLine'
   | 'RiSearchLine'
   | 'RiBookmarkLine'
@@ -19,8 +21,11 @@ export type IconName =
   | 'RiArrowRightLine'
   | 'RiMoreLine'
   | 'RiCloseLine'
+  | 'RiCheckDoubleLine'
   | 'RiAddLine'
   | 'RiCircleFill'
+  | 'RiSettings3Line'
+  | 'RiHistoryLine'
   | 'RiMailFill'
   | 'RiShareForwardFill'
   | 'RiShareForwardLine'
@@ -60,7 +65,6 @@ export type IconProps = {
   hasHover?: boolean;
   toolTip?: boolean;
   toolTipSide?: 'top' | 'right' | 'bottom' | 'left';
-  color?: string;
   variant?: IconVariants;
   onClick?: () => void;
 };
@@ -70,7 +74,6 @@ const Icon: React.FC<IconProps> = ({
   size = 24,
   hasHover = true,
   variant = 'base',
-  color,
   toolTip,
   toolTipSide,
   onClick,
