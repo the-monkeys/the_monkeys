@@ -14,7 +14,6 @@ export type IconName =
   | 'RiNotification3Fill'
   | 'RiUser3Line'
   | 'RiUser3Fill'
-  | 'RiUserSmileLine'
   | 'RiPencilLine'
   | 'RiSearchLine'
   | 'RiBookmarkLine'
