@@ -39,7 +39,7 @@ export type IconName =
   | 'RiAlertLine'
   | 'RiCheckLine'
   | 'RiErrorWarningFill'
-  | 'RiErrorWarningFill'
+  | 'RiErrorWarningLine'
   | 'RiLoginBoxLine'
   | 'RiLogoutCircleRLine';
 
