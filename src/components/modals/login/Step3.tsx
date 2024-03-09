@@ -2,7 +2,7 @@ import Button from '@/components/button';
 import ModalContent from '../layout/ModalContent';
 import Link from 'next/link';
 import Input from '@/components/input';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Checkbox from '@/components/input/Checkbox';
 import Icon from '@/components/icon';
 
@@ -11,8 +11,8 @@ type Step3Props = {
 };
 
 const Step3: FC<Step3Props> = ({ setLoginStep }) => {
-  const [password, setPassword] = React.useState<string>('');
-  const [inputError, setInputError] = React.useState<boolean>(false);
+  const [password, setPassword] = useState<string>('');
+  const [inputError, setInputError] = useState<boolean>(false);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
@@ -40,7 +40,7 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
         )}
 
         <div className='mt-2 flex items-center justify-between pl-1'>
-          <Checkbox />
+          <Checkbox title='Remember Me' />
           <Link
             className='font-jost text-sm opacity-75 hover:opacity-100'
             href='#'

@@ -6,7 +6,7 @@ import Logo from '@/components/logo';
 import SearchBox from '@/components/searchBox';
 import CreateButton from '../CreateButton';
 import NotificationsDialog from './notifications/NotificationsDialog';
-import UserOptionsDialog from './userOptions/UserOptions';
+import UserOptions from './UserOptions';
 
 const Nav = () => {
   const [searchInput, setSearchInput] = useState<string>('');
@@ -64,7 +64,7 @@ const Nav = () => {
               <Icon name='RiUser3Line' onClick={handleShowUserOptions} />
             )}
             {showUserOptions && (
-              <UserOptionsDialog setUserOptions={setShowUserOptions} />
+              <UserOptions setUserOptions={setShowUserOptions} />
             )}
           </div>
         </div>

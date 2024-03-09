@@ -1,7 +1,6 @@
-import Icon from '@/components/icon';
-import SocialCard, { SocialCardProps } from '@/components/notFound/SocialCard';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
+import SocialCard from '@/components/notFound/SocialCard';
 import Image from 'next/image';
-import Link from 'next/link';
 
 const NotFound = () => {
   return (
@@ -15,6 +14,7 @@ const NotFound = () => {
           height={50}
           width={200}
         />
+
         <div>
           <p className='font-josefin_Sans text-xs font-semibold text-primary-monkeyOrange sm:text-sm md:text-base'>
             ERROR 404
@@ -48,16 +48,7 @@ const NotFound = () => {
         />
       </div>
 
-      <Link href='/'>
-        <div className='group flex items-center'>
-          <p className='font-josefin_Sans text-sm md:text-base'>
-            Or go back to home
-          </p>
-          <div className='ml-2 mr-2 transition-all group-hover:ml-3 group-hover:mr-1'>
-            <Icon name='RiArrowRightLine' size={16} />
-          </div>
-        </div>
-      </Link>
+      <LinksRedirectArrow target='/' title='Or go back to home' />
     </div>
   );
 };

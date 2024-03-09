@@ -1,14 +1,14 @@
-import React from 'react';
+import { useState } from 'react';
 
-type NavTabVariants = 'all' | 'comments' | 'reactions';
+type NavTabVariants = 'all' | 'comments' | 'activity';
 
 const NotificationTabs = () => {
-  const [tab, setTab] = React.useState<NavTabVariants>('all');
+  const [tab, setTab] = useState<NavTabVariants>('all');
 
   return (
     <div className='flex gap-2 px-4'>
       <div
-        className='flex cursor-pointer flex-col'
+        className='flex cursor-pointer flex-col hover:opacity-75'
         onClick={() => setTab('all')}
       >
         <p className='px-2 font-josefin_Sans text-base'>All</p>
@@ -16,8 +16,9 @@ const NotificationTabs = () => {
           <span className='w-full border-b-2 border-primary-monkeyOrange'></span>
         )}
       </div>
+
       <div
-        className='flex cursor-pointer flex-col'
+        className='flex cursor-pointer flex-col hover:opacity-75'
         onClick={() => setTab('comments')}
       >
         <p className='px-2 font-josefin_Sans text-base'>Comments</p>
@@ -25,12 +26,13 @@ const NotificationTabs = () => {
           <span className='w-full border-b-2 border-primary-monkeyOrange'></span>
         )}
       </div>
+
       <div
-        className='flex cursor-pointer flex-col'
-        onClick={() => setTab('reactions')}
+        className='flex cursor-pointer flex-col hover:opacity-75'
+        onClick={() => setTab('activity')}
       >
-        <p className='px-2 font-josefin_Sans text-base'>Reactions</p>
-        {tab === 'reactions' && (
+        <p className='px-2 font-josefin_Sans text-base'>Post Activity</p>
+        {tab === 'activity' && (
           <span className='w-full border-b-2 border-primary-monkeyOrange'></span>
         )}
       </div>

@@ -21,7 +21,7 @@ const Logo: React.FC<LogoProps> = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 640);
+      setIsMobile(window.innerWidth <= 768);
     };
 
     handleResize();
