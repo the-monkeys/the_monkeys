@@ -25,7 +25,7 @@ const config: Config = {
         white: '#f2f2f3',
       },
       alert: {
-        red: '#F22020',
+        red: '#ED3232',
         green: '#34A853',
       },
     },

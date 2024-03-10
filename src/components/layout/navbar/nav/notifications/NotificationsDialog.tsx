@@ -1,7 +1,7 @@
-import Button from '@/components/button';
 import React, { FC, SetStateAction } from 'react';
 import NotificationContent from './NotificationContent';
 import NotificationTabs from './NotificationTabs';
+import Button from '@/components/button';
 import Link from 'next/link';
 
 type NotificationsDialogProps = {
@@ -18,14 +18,18 @@ const NotificationsDialog: FC<NotificationsDialogProps> = ({
       onMouseLeave={() => setNotifications(false)}
     >
       <h1 className='p-4 font-josefin_Sans text-xl'>Notifications</h1>
+
       <NotificationTabs />
+
       <NotificationContent />
-      <Link href='/notifications' className='my-2 w-fit self-center'>
+
+      <Link href='/notifications' className='self-center px-4 pb-4 pt-2'>
         <Button
           variant='ghost'
           title='See all notifications'
           endIcon
           iconName='RiArrowRightUpLine'
+          className='w-fit'
         />
       </Link>
     </div>

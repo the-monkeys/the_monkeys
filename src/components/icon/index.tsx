@@ -12,8 +12,8 @@ export type IconName =
   | 'RiToggleFill'
   | 'RiNotification3Line'
   | 'RiNotification3Fill'
-  | 'RiUser3Line'
-  | 'RiUser3Fill'
+  | 'RiUserLine'
+  | 'RiUserFill'
   | 'RiPencilLine'
   | 'RiSearchLine'
   | 'RiBookmarkLine'
@@ -39,7 +39,9 @@ export type IconName =
   | 'RiAlertLine'
   | 'RiCheckLine'
   | 'RiErrorWarningFill'
-  | 'RiErrorWarningLine';
+  | 'RiErrorWarningLine'
+  | 'RiLoginBoxLine'
+  | 'RiLogoutCircleRLine';
 
 type IconVariants =
   | 'primary'

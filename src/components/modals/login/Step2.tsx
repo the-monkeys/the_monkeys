@@ -1,7 +1,7 @@
 import Button from '@/components/button';
 import ModalContent from '../layout/ModalContent';
 import Input from '@/components/input';
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Icon from '@/components/icon';
 
 type Step2Props = {
@@ -9,8 +9,8 @@ type Step2Props = {
 };
 
 const Step2: FC<Step2Props> = ({ setLoginStep }) => {
-  const [email, setEmail] = React.useState<string>('');
-  const [inputError, setInputError] = React.useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
+  const [inputError, setInputError] = useState<boolean>(false);
 
   const validateEmail = (inputEmail: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
