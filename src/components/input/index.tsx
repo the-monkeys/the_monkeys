@@ -1,4 +1,5 @@
 import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
+
 import { twMerge } from 'tailwind-merge';
 
 import Icon from '../icon';
@@ -84,7 +85,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
             ref={ref as React.RefObject<HTMLTextAreaElement>}
           />
         ) : (
-          <div className='w-full flex-1 items-center justify-center gap-2'>
+          <div className='flex w-full flex-1 items-center justify-center'>
             <input
               type={type}
               placeholder={!disabled ? placeholderText : 'Input disabled'}

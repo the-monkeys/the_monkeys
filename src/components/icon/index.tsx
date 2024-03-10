@@ -1,8 +1,8 @@
 // Remix Icons: https://remixicon.com/
 // Github: https://github.com/Remix-Design/RemixIcon
-
 import * as RemixIcons from '@remixicon/react';
 import { twMerge } from 'tailwind-merge';
+
 import { iconVariantStyles } from '../variantStyles';
 
 export type IconName =
@@ -11,7 +11,9 @@ export type IconName =
   | 'RiToggleLine'
   | 'RiToggleFill'
   | 'RiNotification3Line'
-  | 'RiUser3Line'
+  | 'RiNotification3Fill'
+  | 'RiUserLine'
+  | 'RiUserFill'
   | 'RiPencilLine'
   | 'RiSearchLine'
   | 'RiBookmarkLine'
@@ -19,8 +21,11 @@ export type IconName =
   | 'RiArrowRightLine'
   | 'RiMoreLine'
   | 'RiCloseLine'
+  | 'RiCheckDoubleLine'
   | 'RiAddLine'
   | 'RiCircleFill'
+  | 'RiSettings3Line'
+  | 'RiHistoryLine'
   | 'RiMailFill'
   | 'RiShareForwardFill'
   | 'RiShareForwardLine'
@@ -34,7 +39,9 @@ export type IconName =
   | 'RiAlertLine'
   | 'RiCheckLine'
   | 'RiErrorWarningFill'
-  | 'RiErrorWarningLine';
+  | 'RiErrorWarningLine'
+  | 'RiLoginBoxLine'
+  | 'RiLogoutCircleRLine';
 
 type IconVariants =
   | 'primary'
@@ -60,7 +67,6 @@ export type IconProps = {
   hasHover?: boolean;
   toolTip?: boolean;
   toolTipSide?: 'top' | 'right' | 'bottom' | 'left';
-  color?: string;
   variant?: IconVariants;
   onClick?: () => void;
 };
@@ -70,7 +76,6 @@ const Icon: React.FC<IconProps> = ({
   size = 24,
   hasHover = true,
   variant = 'base',
-  color,
   toolTip,
   toolTipSide,
   onClick,
