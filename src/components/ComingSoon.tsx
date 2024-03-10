@@ -2,12 +2,12 @@
 
 import Image from 'next/image';
 import React from 'react';
-import LoginModal from './modals/LoginModal';
+import LoginModal from './modals/login/LoginModal';
 
 const ComingSoon = () => {
   const [showModal, setShowModal] = React.useState(false);
   return (
-    <div className='flex min-h-screen w-4/5 flex-col items-center justify-center md:w-3/5'>
+    <div className='mb-20 flex min-h-screen w-4/5 flex-col items-center justify-center md:w-3/5'>
       <h1 className='mb-4 text-center font-playfair_Display text-3xl font-extrabold md:text-4xl'>
         We&apos;re Coming Soon!
       </h1>
