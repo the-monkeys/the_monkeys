@@ -1,6 +1,6 @@
 'use client';
 
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Modal from '..';
 import ModalHeader from '../layout/ModalHeader';
 import ModalFooter from '../layout/ModalFooter';
@@ -13,7 +13,7 @@ type LoginModalProps = {
 };
 
 const LoginModal: FC<LoginModalProps> = ({ setModal }) => {
-  const [loginStep, setLoginStep] = React.useState<number>(1);
+  const [loginStep, setLoginStep] = useState<number>(1);
 
   const handleLoginStep = () => {
     if (loginStep === 1) return <Step1 setLoginStep={setLoginStep} />;

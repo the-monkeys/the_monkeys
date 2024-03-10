@@ -11,7 +11,11 @@ export type SocialCardProps = {
 
 const SocialCard: FC<SocialCardProps> = ({ icon, title, text, link }) => {
   return (
-    <div className='group flex w-full items-center justify-between border-1 border-secondary-lightGrey/25 p-4 hover:border-primary-monkeyOrange'>
+    <Link
+      href={link}
+      target='_blank'
+      className='group flex w-full items-center justify-between gap-2 border-1 border-secondary-lightGrey/25 p-4 hover:border-primary-monkeyOrange'
+    >
       <div className='flex gap-5'>
         <Icon name={icon} size={28} hasHover={false} />
         <div className='flex flex-col justify-center'>
@@ -23,19 +27,16 @@ const SocialCard: FC<SocialCardProps> = ({ icon, title, text, link }) => {
           </p>
         </div>
       </div>
-      <Link
-        className='opacity-0 group-hover:opacity-100'
-        href={link}
-        target='_blank'
-      >
+
+      <div className='opacity-0 group-hover:opacity-100'>
         <Icon
           name='RiArrowRightUpLine'
           variant='orange'
           size={24}
           hasHover={false}
         />
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
 };
 
