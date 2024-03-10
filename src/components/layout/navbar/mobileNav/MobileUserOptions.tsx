@@ -1,3 +1,4 @@
+import LogoutButton from '@/components/auth/LogoutButton';
 import Icon from '@/components/icon';
 import Link from 'next/link';
 import React, { FC, SetStateAction } from 'react';
@@ -18,7 +19,7 @@ const MobileUserOptions: FC<MobileUserOptionsProps> = ({ setUserOptions }) => {
           href='/profile'
           className='group flex w-full items-center justify-start gap-2 px-4 py-2 transition-all'
         >
-          <Icon name='RiUser3Line' size={20} />
+          <Icon name='RiUserLine' size={20} />
           <p className='font-josefin_Sans group-hover:opacity-75'>Profile</p>
         </Link>
 
@@ -29,17 +30,9 @@ const MobileUserOptions: FC<MobileUserOptionsProps> = ({ setUserOptions }) => {
           <Icon name='RiBookmarkLine' size={20} />
           <p className='font-josefin_Sans group-hover:opacity-75'>Bookmarks</p>
         </Link>
-
-        <Link
-          href='/profile/activity'
-          className='group flex w-full items-center justify-start gap-2 px-4 py-2 transition-all'
-        >
-          <Icon name='RiHistoryLine' size={20} />
-          <p className='font-josefin_Sans group-hover:opacity-75'>
-            Activity Logs
-          </p>
-        </Link>
       </div>
+
+      <LogoutButton className='self-center' />
     </div>
   );
 };

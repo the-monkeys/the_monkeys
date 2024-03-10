@@ -19,7 +19,7 @@ const UserOptions: FC<UserOptionsProps> = ({ setUserOptions }) => {
           href='/profile'
           className='group flex w-full items-center justify-start gap-2 px-4 py-2 transition-all'
         >
-          <Icon name='RiUser3Line' size={20} />
+          <Icon name='RiUserLine' size={20} />
           <p className='font-josefin_Sans group-hover:opacity-75'>Profile</p>
         </Link>
 
@@ -46,9 +46,7 @@ const UserOptions: FC<UserOptionsProps> = ({ setUserOptions }) => {
           className='group flex w-full items-center justify-start gap-2 px-4 py-2 transition-all'
         >
           <Icon name='RiHistoryLine' size={20} />
-          <p className='font-josefin_Sans group-hover:opacity-75'>
-            Activity Logs
-          </p>
+          <p className='font-josefin_Sans group-hover:opacity-75'>Activity</p>
         </Link>
       </div>
 

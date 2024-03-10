@@ -23,9 +23,9 @@ const MobileNav = () => {
 
         <div className='relative'>
           {showUserOptions ? (
-            <Icon name='RiUser3Fill' onClick={handleShowUserOptions} />
+            <Icon name='RiUserFill' onClick={handleShowUserOptions} />
           ) : (
-            <Icon name='RiUser3Line' onClick={handleShowUserOptions} />
+            <Icon name='RiUserLine' onClick={handleShowUserOptions} />
           )}
           {showUserOptions && (
             <MobileUserOptions setUserOptions={setShowUserOptions} />
@@ -33,8 +33,10 @@ const MobileNav = () => {
         </div>
       </div>
 
-      <div className='fixed bottom-0 left-0 flex w-full items-center justify-evenly border-t-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite/50 px-5 py-4 backdrop-blur-sm dark:bg-primary-monkeyBlack/50'>
-        <LogoutButton onlyIcon />
+      <div className='fixed bottom-0 left-0 flex w-full items-center justify-between border-t-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite/50 px-5 py-4 backdrop-blur-sm dark:bg-primary-monkeyBlack/50'>
+        <Link href='/profile/activity'>
+          <Icon name='RiHistoryLine' />
+        </Link>
 
         <Link href='/settings'>
           <Icon name='RiSettings3Line' />

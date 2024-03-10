@@ -23,13 +23,13 @@ const NotificationsDialog: FC<NotificationsDialogProps> = ({
 
       <NotificationContent />
 
-      <Link href='/notifications' className='px-4 py-2'>
+      <Link href='/notifications' className='self-center px-4 pb-4 pt-2'>
         <Button
-          variant='shallow'
+          variant='ghost'
           title='See all notifications'
           endIcon
           iconName='RiArrowRightUpLine'
-          className='w-full'
+          className='w-fit'
         />
       </Link>
     </div>
