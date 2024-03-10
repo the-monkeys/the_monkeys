@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import { Josefin_Sans, Jost, Playfair_Display } from 'next/font/google';
 
-import './globals.css';
-import { ThemeProviders } from './theme-provider';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
+
+import './globals.css';
+import { ThemeProviders } from './theme-provider';
 
 const jost = Jost({
   subsets: ['latin'],

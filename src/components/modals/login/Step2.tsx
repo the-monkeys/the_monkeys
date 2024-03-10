@@ -1,8 +1,10 @@
-import Button from '@/components/button';
-import ModalContent from '../layout/ModalContent';
-import Input from '@/components/input';
 import React, { FC, useState } from 'react';
+
+import Button from '@/components/button';
 import Icon from '@/components/icon';
+import Input from '@/components/input';
+
+import ModalContent from '../layout/ModalContent';
 
 type Step2Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<number>>;

@@ -1,7 +1,10 @@
-import Button from '@/components/button';
-import ModalContent from '../layout/ModalContent';
-import Link from 'next/link';
 import { FC } from 'react';
+
+import Link from 'next/link';
+
+import Button from '@/components/button';
+
+import ModalContent from '../layout/ModalContent';
 
 type Step1Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<number>>;

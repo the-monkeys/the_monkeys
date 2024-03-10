@@ -4,9 +4,10 @@ import ThemeSwitch from '@/components/basic/ThemeSwitch';
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import SearchBox from '@/components/searchBox';
+
 import CreateButton from '../CreateButton';
-import NotificationsDialog from './notifications/NotificationsDialog';
 import UserOptions from './UserOptions';
+import NotificationsDialog from './notifications/NotificationsDialog';
 
 const Nav = () => {
   const [searchInput, setSearchInput] = useState<string>('');
