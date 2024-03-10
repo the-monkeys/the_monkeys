@@ -1,4 +1,5 @@
 import React, { FC, PropsWithChildren } from 'react';
+
 import Logo from '../logo';
 
 type ModalProps = {

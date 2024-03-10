@@ -4,5 +4,20 @@
   "tabWidth": 2,
   "singleQuote": true,
   "jsxSingleQuote": true,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "plugins": [
+    "prettier-plugin-tailwindcss",
+    "@trivago/prettier-plugin-sort-imports"
+  ],
+  "importOrder": [
+    "^(react/(.*)$)|^(react$)",
+    "^(next/(.*)$)|^(next$)",
+    "<THIRD_PARTY_MODULES>",
+    "^app/(.*)$",
+    "^components/(.*)$|^components/(.*)$",
+    "^lib/(.*)$",
+    "^types/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
 }

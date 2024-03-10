@@ -1,6 +1,8 @@
 import { FC } from 'react';
-import Icon from '../icon';
+
 import { twMerge } from 'tailwind-merge';
+
+import Icon from '../icon';
 
 type LogoutButtonProps = {
   className?: string;

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+
 import Icon from '../../icon';
 
 type ModalHeaderProps = {

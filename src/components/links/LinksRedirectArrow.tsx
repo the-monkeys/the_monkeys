@@ -1,7 +1,10 @@
-import Link from 'next/link';
 import { FC } from 'react';
-import Icon from '../icon';
+
+import Link from 'next/link';
+
 import { twMerge } from 'tailwind-merge';
+
+import Icon from '../icon';
 
 type LinksRedirectProps = {
   target: string;

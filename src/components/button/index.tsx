@@ -1,5 +1,7 @@
 import { ButtonHTMLAttributes } from 'react';
+
 import { twMerge } from 'tailwind-merge';
+
 import Icon, { IconName } from '../icon';
 import { buttonVariantStyles } from '../variantStyles';
 import CircularButton from './CircularButton';
@@ -24,9 +26,7 @@ export type ButtonVariantStyles = {
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   title: string;
   variant: ButtonVariants;
-  // Left aligned icon
   startIcon?: boolean;
-  // Right aligned icon
   endIcon?: boolean;
   iconName?: IconName;
   animateIcon?: boolean;

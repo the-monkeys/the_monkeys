@@ -1,9 +1,10 @@
 'use client';
 
 import React, { FC, useState } from 'react';
+
 import Modal from '..';
-import ModalHeader from '../layout/ModalHeader';
 import ModalFooter from '../layout/ModalFooter';
+import ModalHeader from '../layout/ModalHeader';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';

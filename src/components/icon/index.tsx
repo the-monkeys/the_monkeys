@@ -1,8 +1,8 @@
 // Remix Icons: https://remixicon.com/
 // Github: https://github.com/Remix-Design/RemixIcon
-
 import * as RemixIcons from '@remixicon/react';
 import { twMerge } from 'tailwind-merge';
+
 import { iconVariantStyles } from '../variantStyles';
 
 export type IconName =

@@ -1,7 +1,9 @@
+import React, { FC, SetStateAction } from 'react';
+
+import Link from 'next/link';
+
 import LogoutButton from '@/components/auth/LogoutButton';
 import Icon from '@/components/icon';
-import Link from 'next/link';
-import React, { FC, SetStateAction } from 'react';
 
 type UserOptionsProps = {
   setUserOptions: React.Dispatch<SetStateAction<boolean>>;
