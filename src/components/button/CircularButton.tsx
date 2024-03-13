@@ -1,4 +1,5 @@
 import { FC, InputHTMLAttributes } from 'react';
+
 import { twMerge } from 'tailwind-merge';
 
 import Icon, { IconName } from '../icon';

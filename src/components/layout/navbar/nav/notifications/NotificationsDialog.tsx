@@ -1,8 +1,11 @@
 import React, { FC, SetStateAction } from 'react';
+
+import Link from 'next/link';
+
+import Button from '@/components/button';
+
 import NotificationContent from './NotificationContent';
 import NotificationTabs from './NotificationTabs';
-import Button from '@/components/button';
-import Link from 'next/link';
 
 type NotificationsDialogProps = {
   setNotifications: React.Dispatch<SetStateAction<boolean>>;

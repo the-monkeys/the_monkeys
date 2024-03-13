@@ -1,11 +1,16 @@
 'use client';
 
+import { useState } from 'react';
+
+import Link from 'next/link';
+
 import Button from '@/components/button';
 import Icon from '@/components/icon';
 import Input from '@/components/input';
 import Logo from '@/components/logo';
-import Link from 'next/link';
-import { useState } from 'react';
+
+import { footerList } from './footerList';
+import List from './list';
 
 const Footer = () => {
   const [userMail, setUserMail] = useState<string>('');
@@ -27,34 +32,11 @@ const Footer = () => {
             <Button variant='primary' title='Subscribe' />
           </form>
         </div>
+
         <div className='flex flex-wrap justify-between gap-5'>
-          <div className='flex w-full flex-col sm:w-fit'>
-            <p className='font-josefin_Sans text-lg'>Services</p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>Branding</p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>Design</p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>Marketing</p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>
-              Advertisement
-            </p>
-          </div>
-          <div className='flex w-full flex-col sm:w-fit'>
-            <p className='font-josefin_Sans text-lg'>Company</p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>About Us</p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>Contact</p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>Press Kit</p>
-          </div>
-          <div className='flex w-full flex-col sm:w-fit'>
-            <p className='font-josefin_Sans text-lg'>Legal</p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>
-              Terms of Use
-            </p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>
-              Privacy Policy
-            </p>
-            <p className='mt-1 font-jost text-secondary-lightGrey'>
-              Cookie Policy
-            </p>
-          </div>
+          {footerList.map((listItem, index) => {
+            return <List listData={listItem} key={index} />;
+          })}
         </div>
       </div>
       <div className='mb-10 flex w-fit flex-col items-center gap-2 self-center'>

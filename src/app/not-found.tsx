@@ -1,6 +1,7 @@
+import Image from 'next/image';
+
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import SocialCard from '@/components/notFound/SocialCard';
-import Image from 'next/image';
 
 const NotFound = () => {
   return (

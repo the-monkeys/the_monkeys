@@ -1,6 +1,8 @@
 import { FC } from 'react';
-import Icon, { IconName } from '../icon';
+
 import Link from 'next/link';
+
+import Icon, { IconName } from '../icon';
 
 export type SocialCardProps = {
   icon: IconName;

@@ -1,10 +1,13 @@
-import Button from '@/components/button';
-import ModalContent from '../layout/ModalContent';
-import Link from 'next/link';
-import Input from '@/components/input';
 import React, { FC, useState } from 'react';
-import Checkbox from '@/components/input/Checkbox';
+
+import Link from 'next/link';
+
+import Button from '@/components/button';
 import Icon from '@/components/icon';
+import Input from '@/components/input';
+import Checkbox from '@/components/input/Checkbox';
+
+import ModalContent from '../layout/ModalContent';
 
 type Step3Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<number>>;
