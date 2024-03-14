@@ -1,10 +1,12 @@
+import { useState } from 'react';
+
+import Link from 'next/link';
+
 import ThemeSwitch from '@/components/basic/ThemeSwitch';
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
+
 import CreateButton from '../CreateButton';
-import Link from 'next/link';
-import { useState } from 'react';
-import LogoutButton from '@/components/auth/LogoutButton';
 import MobileUserOptions from './MobileUserOptions';
 
 const MobileNav = () => {

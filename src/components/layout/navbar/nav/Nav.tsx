@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import ThemeSwitch from '@/components/basic/ThemeSwitch';
-import Icon from '@/components/icon';
+import IconContainer from '@/components/icon';
 import Logo from '@/components/logo';
 import SearchBox from '@/components/searchBox';
 
@@ -39,7 +39,7 @@ const Nav = () => {
             {showNotifications ? (
               <div className='relative'>
                 <span className='absolute right-0 top-0 z-10 h-2 w-2 rounded-full bg-primary-monkeyOrange'></span>
-                <Icon
+                <IconContainer
                   name='RiNotification3Fill'
                   onClick={handleShowNotifications}
                 />
@@ -47,7 +47,7 @@ const Nav = () => {
             ) : (
               <div className='relative'>
                 <span className='absolute right-0 top-0 z-10 h-2 w-2 rounded-full bg-primary-monkeyOrange'></span>
-                <Icon
+                <IconContainer
                   name='RiNotification3Line'
                   onClick={handleShowNotifications}
                 />
@@ -60,9 +60,15 @@ const Nav = () => {
 
           <div className='relative'>
             {showUserOptions ? (
-              <Icon name='RiUserFill' onClick={handleShowUserOptions} />
+              <IconContainer
+                name='RiUserFill'
+                onClick={handleShowUserOptions}
+              />
             ) : (
-              <Icon name='RiUserLine' onClick={handleShowUserOptions} />
+              <IconContainer
+                name='RiUserLine'
+                onClick={handleShowUserOptions}
+              />
             )}
             {showUserOptions && (
               <UserOptions setUserOptions={setShowUserOptions} />

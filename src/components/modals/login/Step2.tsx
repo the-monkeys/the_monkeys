@@ -5,9 +5,11 @@ import Icon from '@/components/icon';
 import Input from '@/components/input';
 
 import ModalContent from '../layout/ModalContent';
+import { LoginStep } from './LoginModal';
+import { loginSteps } from './loginSteps';
 
 type Step2Props = {
-  setLoginStep: React.Dispatch<React.SetStateAction<number>>;
+  setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
 };
 
 const Step2: FC<Step2Props> = ({ setLoginStep }) => {
@@ -27,12 +29,12 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
       return;
     }
 
-    setLoginStep(3);
+    setLoginStep(loginSteps[2]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center'>
-      <form className='flex flex-col px-4'>
+    <ModalContent className='flex flex-col justify-center px-4'>
+      <form className='flex flex-col'>
         <Input
           className='w-full'
           label='Email'

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import LoginModal from './modals/login/LoginModal';
+import SignupModal from './modals/signup/SignupModal';
 
 const ComingSoon = () => {
   const [showModal, setShowModal] = useState(false);
@@ -32,7 +33,8 @@ const ComingSoon = () => {
         our grand reveal. Stay tuned for updates and announcements. Thank you
         for your anticipation and patience!
       </p>
-      {showModal && <LoginModal setModal={setShowModal} />}
+      {/* {showModal && <LoginModal setModal={setShowModal} />} */}
+      {showModal && <SignupModal setModal={setShowModal} />}
     </div>
   );
 };

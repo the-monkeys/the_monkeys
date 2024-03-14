@@ -2,7 +2,9 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
-import Icon, { IconName } from '../icon';
+import Icon from '../icon';
+import IconContainer from '../icon';
+import { IconName } from '../icon/Icon';
 
 export type SocialCardProps = {
   icon: IconName;
@@ -30,14 +32,13 @@ const SocialCard: FC<SocialCardProps> = ({ icon, title, text, link }) => {
         </div>
       </div>
 
-      <div className='opacity-0 group-hover:opacity-100'>
-        <Icon
-          name='RiArrowRightUpLine'
-          variant='orange'
-          size={24}
-          hasHover={false}
-        />
-      </div>
+      <IconContainer
+        name='RiArrowRightUpLine'
+        variant='orange'
+        size={24}
+        hasHover={false}
+        className='opacity-0 group-hover:opacity-100'
+      />
     </Link>
   );
 };

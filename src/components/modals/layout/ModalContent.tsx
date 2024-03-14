@@ -11,7 +11,7 @@ const ModalContent: FC<PropsWithChildren<ModalContentProps>> = ({
   children,
   className,
 }) => {
-  return <div className={twMerge(className, 'flex-1 p-2')}>{children}</div>;
+  return <div className={twMerge(className, 'flex-1')}>{children}</div>;
 };
 
 export default ModalContent;

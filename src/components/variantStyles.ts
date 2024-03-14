@@ -1,13 +1,13 @@
 import { ButtonVariantStyles } from './button';
-import { IconVariantStyles } from './icon';
+import { IconVariantStyles } from './icon/Icon';
 import { InputVariantStyles } from './input';
 
 export const buttonVariantStyles: ButtonVariantStyles = {
   base: 'group px-4 py-2 font-jost text-xs sm:text-sm md:text-base rounded-lg cursor-pointer transition-all',
   primary:
-    'bg-primary-monkeyOrange text-primary-monkeyWhite hover:rounded-sm border-1 border-primary-monkeyOrange',
+    'bg-primary-monkeyOrange text-primary-monkeyWhite hover:text-primary-monkeyOrange border-2 border-primary-monkeyOrange hover:bg-primary-monkeyOrange/0',
   secondary:
-    'bg-secondary-darkGrey text-secondary-white hover:rounded-sm border-1 border-secondary-darkGrey',
+    'bg-secondary-darkGrey text-secondary-white hover:text-primary-monkeyBlack dark:hover:text-primary-monkeyWhite border-2 border-secondary-darkGrey hover:bg-secondary-darkGrey/0',
   alert:
     'text-primary-monkeyWhite hover:text-alert-red border-2 border-alert-red bg-alert-red hover:bg-opacity-0',
   shallow:
@@ -25,12 +25,14 @@ export const inputVariantStyles: InputVariantStyles = {
 
 export const iconVariantStyles: IconVariantStyles = {
   base: 'text-primary-monkeyBlack dark:text-primary-monkeyWhite',
-  primary: 'text-primary-monkeyWhite',
-  secondary: 'text-secondary-white',
+  primary: 'text-primary-monkeyWhite group-hover:text-primary-monkeyOrange',
+  secondary:
+    'text-secondary-white group-hover:text-primary-monkeyBlack dark:group-hover:text-primary-monkeyWhite',
   alert: 'text-primary-monkeyWhite group-hover:text-alert-red',
   shallow:
     'group-hover:text-primary-monkeyWhite dark:group-hover:text-primary-monkeyBlack',
   ghost:
     'text-primary-monkeyBlack dark:text-primary-monkeyWhite group-hover:text-primary-monkeyWhite dark:group-hover:text-primary-monkeyBlack',
   orange: 'text-primary-monkeyOrange',
+  white: 'text-primary-monkeyWhite',
 };

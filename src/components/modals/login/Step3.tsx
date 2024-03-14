@@ -8,9 +8,11 @@ import Input from '@/components/input';
 import Checkbox from '@/components/input/Checkbox';
 
 import ModalContent from '../layout/ModalContent';
+import { LoginStep } from './LoginModal';
+import { loginSteps } from './loginSteps';
 
 type Step3Props = {
-  setLoginStep: React.Dispatch<React.SetStateAction<number>>;
+  setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
 };
 
 const Step3: FC<Step3Props> = ({ setLoginStep }) => {
@@ -20,12 +22,12 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    setLoginStep(1);
+    setLoginStep(loginSteps[0]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center'>
-      <form className='flex flex-col px-4'>
+    <ModalContent className='flex flex-col justify-center px-4'>
+      <form className='flex flex-col'>
         <Input
           className='w-full'
           label='Password'
@@ -44,6 +46,7 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
 
         <div className='mt-2 flex items-center justify-between pl-1'>
           <Checkbox title='Remember Me' />
+
           <Link
             className='font-jost text-sm opacity-75 hover:opacity-100'
             href='#'
