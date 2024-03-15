@@ -18,7 +18,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    setLoginStep(signupSteps[1]);
+    setLoginStep(signupSteps[2]);
   };
 
   return (
@@ -44,8 +44,6 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
           className='mt-2 w-full'
           title='Next'
           variant='primary'
-          endIcon
-          iconName='RiArrowRightLine'
           onClick={(e) => handleSubmit(e)}
         />
       </form>

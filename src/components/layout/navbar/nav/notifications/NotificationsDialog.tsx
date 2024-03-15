@@ -3,6 +3,7 @@ import React, { FC, SetStateAction } from 'react';
 import Link from 'next/link';
 
 import Button from '@/components/button';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 
 import NotificationContent from './NotificationContent';
 import NotificationTabs from './NotificationTabs';
@@ -26,15 +27,11 @@ const NotificationsDialog: FC<NotificationsDialogProps> = ({
 
       <NotificationContent />
 
-      <Link href='/notifications' className='self-center px-4 pb-4 pt-2'>
-        <Button
-          variant='ghost'
-          title='See all notifications'
-          endIcon
-          iconName='RiArrowRightUpLine'
-          className='w-fit'
-        />
-      </Link>
+      <LinksRedirectArrow
+        target='/notifications'
+        title='See all notifications'
+        className='self-center py-2'
+      />
     </div>
   );
 };

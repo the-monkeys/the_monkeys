@@ -21,7 +21,12 @@ const SocialCard: FC<SocialCardProps> = ({ icon, title, text, link }) => {
       className='group flex w-full items-center justify-between gap-2 border-1 border-secondary-lightGrey/25 p-4 hover:border-primary-monkeyOrange'
     >
       <div className='flex gap-5'>
-        <Icon name={icon} size={28} hasHover={false} />
+        <Icon
+          name={icon}
+          size={28}
+          hasHover={false}
+          className='group-hover:text-primary-monkeyOrange'
+        />
         <div className='flex flex-col justify-center'>
           <p className='flex items-start font-josefin_Sans text-lg md:text-xl'>
             {title}

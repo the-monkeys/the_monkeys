@@ -36,9 +36,9 @@ const MobileUserOptions: FC<MobileUserOptionsProps> = ({ setUserOptions }) => {
         </p>
       </Link>
 
-      <div className='group flex w-full items-center justify-start gap-2 px-4 py-2 text-alert-red'>
+      <div className='group flex w-full items-center justify-start gap-2 px-4 py-2 text-alert-red cursor-pointer'>
         <Icon name='RiLogoutBoxRLine' size={20} className='text-alert-red' />
-        <p className='font-josefin_Sans group-hover:ml-2 transition-all'>
+        <p className='font-josefin_Sans group-hover:ml-1 transition-all'>
           Logout
         </p>
       </div>

@@ -85,12 +85,24 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
     >
-      {startIcon && (
-        <Icon name={iconName} size={20} hasHover={false} variant={variant} />
-      )}
-      <p>{title}</p>
-      {endIcon && (
-        <Icon name={iconName} size={20} hasHover={false} variant={variant} />
+      {startIcon || endIcon ? (
+        <>
+          <Icon
+            name={iconName}
+            size={20}
+            hasHover={false}
+            className={startIcon ? 'opacity-100' : 'opacity-0'}
+          />
+          <p className='flex-1'>{title}</p>
+          <Icon
+            name={iconName}
+            size={20}
+            hasHover={false}
+            className={endIcon ? 'opacity-100' : 'opacity-0'}
+          />
+        </>
+      ) : (
+        <p>{title}</p>
       )}
     </button>
   );

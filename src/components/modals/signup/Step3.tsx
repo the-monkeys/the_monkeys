@@ -1,18 +1,18 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 import Button from '@/components/button';
 import Icon from '@/components/icon/Icon';
 import Input from '@/components/input';
 
 import ModalContent from '../layout/ModalContent';
-import { LoginStep } from './LoginModal';
-import { loginSteps } from './loginSteps';
+import { SignupStep } from './SignupModal';
+import { signupSteps } from './signupSteps';
 
-type Step2Props = {
-  setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
+type Step3Props = {
+  setLoginStep: React.Dispatch<React.SetStateAction<SignupStep>>;
 };
 
-const Step2: FC<Step2Props> = ({ setLoginStep }) => {
+const Step3: FC<Step3Props> = ({ setLoginStep }) => {
   const [email, setEmail] = useState<string>('');
   const [inputError, setInputError] = useState<boolean>(false);
 
@@ -29,32 +29,32 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
       return;
     }
 
-    setLoginStep(loginSteps[2]);
+    setLoginStep(signupSteps[3]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center px-4'>
-      <form className='flex flex-col'>
+    <ModalContent className='flex flex-col justify-center gap-2 px-4'>
+      <form className='flex flex-col gap-2'>
         <Input
-          className='w-full'
-          label='Email'
-          placeholderText='enter email'
           variant='border'
+          placeholderText='Enter email address'
+          label='Email'
           setInputText={setEmail}
+          className='flex-1'
           type='email'
         />
 
         {inputError && (
           <div className='flex items-center gap-2 pl-1 font-jost text-xs text-alert-red sm:text-sm'>
             <Icon name='RiErrorWarningFill' size={16} />
-            <p>Couldn't find any matching email. Try again.</p>
+            <p>Enter correct email address. Try again.</p>
           </div>
         )}
 
         <Button
+          className='mt-2 w-full'
           title='Next'
           variant='primary'
-          className='mt-4'
           onClick={(e) => handleSubmit(e)}
         />
       </form>
@@ -62,4 +62,4 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   );
 };
 
-export default Step2;
+export default Step3;

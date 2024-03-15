@@ -7,11 +7,16 @@ export const signupSteps = [
   {
     id: 2,
     heading: 'Basic Details',
-    subHeading: 'Enter first and last name',
+    subHeading: 'Enter first name and last name',
   },
   {
     id: 3,
     heading: 'Login Details',
-    subHeading: 'Enter your email address and create a password',
+    subHeading: 'Set email address',
+  },
+  {
+    id: 4,
+    heading: 'Almost there',
+    subHeading: 'Secure your account',
   },
 ];

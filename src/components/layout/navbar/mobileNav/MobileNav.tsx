@@ -35,7 +35,7 @@ const MobileNav = () => {
         </div>
       </div>
 
-      <div className='fixed bottom-0 left-0 flex w-full items-center justify-between border-t-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite/50 px-5 py-4 backdrop-blur-sm dark:bg-primary-monkeyBlack/50'>
+      <div className='fixed bottom-0 left-0 flex w-full items-center justify-between  bg-primary-monkeyWhite/50 px-5 py-4 backdrop-blur-sm dark:bg-primary-monkeyBlack/50'>
         <Link href='/profile/activity'>
           <Icon name='RiHistoryLine' />
         </Link>

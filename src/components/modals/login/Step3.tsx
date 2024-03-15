@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react';
 import Link from 'next/link';
 
 import Button from '@/components/button';
-import Icon from '@/components/icon';
+import Icon from '@/components/icon/Icon';
 import Input from '@/components/input';
 import Checkbox from '@/components/input/Checkbox';
 
