@@ -1,5 +1,5 @@
 import { ButtonVariantStyles } from './button';
-import { IconVariantStyles } from './icon/Icon';
+import { IconVariantStyles } from './icon';
 import { InputVariantStyles } from './input';
 
 export const buttonVariantStyles: ButtonVariantStyles = {
