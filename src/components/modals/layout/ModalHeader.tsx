@@ -29,7 +29,9 @@ const ModalHeader: FC<ModalHeaderProps> = ({
           <p className='text-center font-playfair_Display text-2xl sm:text-3xl font-semibold'>
             {heading}
           </p>
-          <p className='text-center font-josefin_Sans'>{subHeading}</p>
+          <p className='text-center font-josefin_Sans text-sm sm:text-base'>
+            {subHeading}
+          </p>
         </div>
       )}
     </div>
