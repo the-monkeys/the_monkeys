@@ -1,8 +1,5 @@
 import React, { FC, SetStateAction } from 'react';
 
-import Link from 'next/link';
-
-import Button from '@/components/button';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 
 import NotificationContent from './NotificationContent';
@@ -17,7 +14,7 @@ const NotificationsDialog: FC<NotificationsDialogProps> = ({
 }) => {
   return (
     <div
-      className='absolute right-0 top-8 flex w-96 flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack'
+      className='absolute right-0 top-8 flex w-96 flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack pb-4'
       onMouseEnter={() => setNotifications(true)}
       onMouseLeave={() => setNotifications(false)}
     >

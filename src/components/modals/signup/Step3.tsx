@@ -32,6 +32,14 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
     setLoginStep(signupSteps[3]);
   };
 
+  const handlePreviousStep = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    setLoginStep(signupSteps[1]);
+  };
+
   return (
     <ModalContent className='flex flex-col justify-center gap-2 px-4'>
       <form className='flex flex-col gap-2'>
@@ -51,12 +59,20 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
           </div>
         )}
 
-        <Button
-          className='mt-2 w-full'
-          title='Next'
-          variant='primary'
-          onClick={(e) => handleSubmit(e)}
-        />
+        <div className='flex gap-2 items-center mt-4'>
+          <Button
+            className='w-full'
+            title='Previous'
+            variant='secondary'
+            onClick={(e) => handlePreviousStep(e)}
+          />
+          <Button
+            className='w-full'
+            title='Next'
+            variant='primary'
+            onClick={(e) => handleSubmit(e)}
+          />
+        </div>
       </form>
     </ModalContent>
   );

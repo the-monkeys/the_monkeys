@@ -33,6 +33,7 @@ const ComingSoon = () => {
         our grand reveal. Stay tuned for updates and announcements. Thank you
         for your anticipation and patience!
       </p>
+
       {/* {showModal && <LoginModal setModal={setShowModal} />} */}
       {showModal && <SignupModal setModal={setShowModal} />}
     </div>

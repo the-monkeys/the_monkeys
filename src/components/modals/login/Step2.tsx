@@ -32,6 +32,14 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
     setLoginStep(loginSteps[2]);
   };
 
+  const handlePreviousStep = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    setLoginStep(loginSteps[0]);
+  };
+
   return (
     <ModalContent className='flex flex-col justify-center px-4'>
       <form className='flex flex-col'>
@@ -51,12 +59,20 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
           </div>
         )}
 
-        <Button
-          title='Next'
-          variant='primary'
-          className='mt-4'
-          onClick={(e) => handleSubmit(e)}
-        />
+        <div className='flex gap-2 items-center mt-4'>
+          <Button
+            className='w-full'
+            title='Previous'
+            variant='secondary'
+            onClick={(e) => handlePreviousStep(e)}
+          />
+          <Button
+            className='w-full'
+            title='Next'
+            variant='primary'
+            onClick={(e) => handleSubmit(e)}
+          />
+        </div>
       </form>
     </ModalContent>
   );

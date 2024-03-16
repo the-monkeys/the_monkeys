@@ -3,11 +3,7 @@
 import * as RemixIcons from '@remixicon/react';
 import { twMerge } from 'tailwind-merge';
 
-import { iconVariantStyles } from '../variantStyles';
-
 export type IconName =
-  | 'RiMenuLine'
-  | 'RiMenu3Line'
   | 'RiToggleLine'
   | 'RiToggleFill'
   | 'RiNotification3Line'
