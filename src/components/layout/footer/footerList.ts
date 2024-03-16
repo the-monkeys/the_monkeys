@@ -44,15 +44,15 @@ export const footerList: FooterList[] = [
     listItems: [
       {
         title: 'Terms of Use',
-        link: '',
+        link: '/terms',
       },
       {
         title: 'Privacy Policy',
-        link: '',
+        link: '/privacy',
       },
       {
         title: 'Cookie Policy',
-        link: '',
+        link: '/cookie',
       },
     ],
   },
