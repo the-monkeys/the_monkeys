@@ -33,7 +33,7 @@ const NotFound = () => {
           icon='RiDiscordFill'
           title='Join our Discord'
           text='Connect with fellow enthusiasts and stay updated.'
-          link='https://discord.gg/HTuz82d8'
+          link='https://discord.gg/6fK9YuV8FV'
         />
         <SocialCard
           icon='RiGithubFill'
