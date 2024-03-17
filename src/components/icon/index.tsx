@@ -1,55 +1,17 @@
-// Remix Icons: https://remixicon.com/
-// Github: https://github.com/Remix-Design/RemixIcon
-import * as RemixIcons from '@remixicon/react';
 import { twMerge } from 'tailwind-merge';
 
 import { iconVariantStyles } from '../variantStyles';
+import Icon, { IconName } from './Icon';
 
-export type IconName =
-  | 'RiMenuLine'
-  | 'RiMenu3Line'
-  | 'RiToggleLine'
-  | 'RiToggleFill'
-  | 'RiNotification3Line'
-  | 'RiNotification3Fill'
-  | 'RiUserLine'
-  | 'RiUserFill'
-  | 'RiPencilLine'
-  | 'RiSearchLine'
-  | 'RiBookmarkLine'
-  | 'RiArrowRightUpLine'
-  | 'RiArrowRightLine'
-  | 'RiMoreLine'
-  | 'RiCloseLine'
-  | 'RiCheckDoubleLine'
-  | 'RiAddLine'
-  | 'RiCircleFill'
-  | 'RiSettings3Line'
-  | 'RiHistoryLine'
-  | 'RiMailFill'
-  | 'RiShareForwardFill'
-  | 'RiShareForwardLine'
-  | 'RiEyeLine'
-  | 'RiEyeFill'
-  | 'RiCake2Fill'
-  | 'RiGithubFill'
-  | 'RiTwitterXFill'
-  | 'RiDiscordFill'
-  | 'RiGoogleFill'
-  | 'RiAlertLine'
-  | 'RiCheckLine'
-  | 'RiErrorWarningFill'
-  | 'RiErrorWarningLine'
-  | 'RiLoginBoxLine'
-  | 'RiLogoutCircleRLine';
-
-type IconVariants =
+export type IconVariants =
+  | 'base'
   | 'primary'
   | 'secondary'
   | 'alert'
   | 'ghost'
   | 'shallow'
-  | 'orange';
+  | 'orange'
+  | 'white';
 
 export type IconVariantStyles = {
   base: string;
@@ -59,31 +21,32 @@ export type IconVariantStyles = {
   shallow: string;
   ghost: string;
   orange: string;
+  white: string;
 };
 
-export type IconProps = {
+export type IconContainerProps = {
   name: IconName;
   size?: number;
   hasHover?: boolean;
   toolTip?: boolean;
   toolTipSide?: 'top' | 'right' | 'bottom' | 'left';
   variant?: IconVariants;
+  className?: string;
   onClick?: () => void;
 };
 
-const Icon: React.FC<IconProps> = ({
+const IconContainer: React.FC<IconContainerProps> = ({
   name,
   size = 24,
   hasHover = true,
-  variant = 'base',
-  toolTip,
-  toolTipSide,
+  variant,
+  className,
   onClick,
 }) => {
-  const DynamicIcon = RemixIcons[name];
-
   const getStyles = () => {
     switch (variant) {
+      case 'base':
+        return `${iconVariantStyles['base']}`;
       case 'primary':
         return `${iconVariantStyles['primary']}`;
       case 'secondary':
@@ -96,22 +59,24 @@ const Icon: React.FC<IconProps> = ({
         return `${iconVariantStyles['shallow']}`;
       case 'orange':
         return `${iconVariantStyles['orange']}`;
+      case 'white':
+        return `${iconVariantStyles['white']}`;
     }
   };
 
   return (
-    <div className='flex items-center justify-center'>
-      <DynamicIcon
-        className={twMerge(
-          getStyles(),
-          'cursor-pointer',
-          hasHover && 'hover:opacity-75'
-        )}
+    <div
+      onClick={onClick}
+      className={twMerge(className, 'flex justify-center items-center')}
+    >
+      <Icon
+        name={name}
         size={size}
-        onClick={onClick}
+        hasHover={hasHover}
+        className={getStyles()}
       />
     </div>
   );
 };
 
-export default Icon;
+export default IconContainer;

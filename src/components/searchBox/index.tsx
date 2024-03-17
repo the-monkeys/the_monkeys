@@ -12,6 +12,7 @@ const SearchBox: FC<SearchBoxProps> = ({ className, setSearchInput }) => {
   return (
     <div className='flex items-center gap-2'>
       <Icon name='RiSearchLine' />
+
       <Input
         className={className}
         type='text'

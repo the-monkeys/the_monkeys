@@ -1,10 +1,12 @@
+import { useState } from 'react';
+
+import Link from 'next/link';
+
 import ThemeSwitch from '@/components/basic/ThemeSwitch';
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
+
 import CreateButton from '../CreateButton';
-import Link from 'next/link';
-import { useState } from 'react';
-import LogoutButton from '@/components/auth/LogoutButton';
 import MobileUserOptions from './MobileUserOptions';
 
 const MobileNav = () => {
@@ -17,7 +19,9 @@ const MobileNav = () => {
   return (
     <>
       <div className='sticky left-0 top-0 flex w-full items-center justify-between gap-5 bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75'>
-        <Logo showMobileLogo={true} />
+        <Link href='/'>
+          <Logo showMobileLogo={true} />
+        </Link>
 
         <CreateButton />
 
@@ -33,7 +37,7 @@ const MobileNav = () => {
         </div>
       </div>
 
-      <div className='fixed bottom-0 left-0 flex w-full items-center justify-between border-t-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite/50 px-5 py-4 backdrop-blur-sm dark:bg-primary-monkeyBlack/50'>
+      <div className='fixed bottom-0 left-0 flex w-full items-center justify-between  bg-primary-monkeyWhite/50 px-5 py-4 backdrop-blur-sm dark:bg-primary-monkeyBlack/50'>
         <Link href='/profile/activity'>
           <Icon name='RiHistoryLine' />
         </Link>

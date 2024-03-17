@@ -1,8 +1,6 @@
 import React, { FC, SetStateAction } from 'react';
 
-import Link from 'next/link';
-
-import Button from '@/components/button';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 
 import NotificationContent from './NotificationContent';
 import NotificationTabs from './NotificationTabs';
@@ -16,7 +14,7 @@ const NotificationsDialog: FC<NotificationsDialogProps> = ({
 }) => {
   return (
     <div
-      className='absolute right-0 top-8 flex w-96 flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack'
+      className='absolute right-0 top-8 flex w-96 flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack pb-4'
       onMouseEnter={() => setNotifications(true)}
       onMouseLeave={() => setNotifications(false)}
     >
@@ -26,15 +24,11 @@ const NotificationsDialog: FC<NotificationsDialogProps> = ({
 
       <NotificationContent />
 
-      <Link href='/notifications' className='self-center px-4 pb-4 pt-2'>
-        <Button
-          variant='ghost'
-          title='See all notifications'
-          endIcon
-          iconName='RiArrowRightUpLine'
-          className='w-fit'
-        />
-      </Link>
+      <LinksRedirectArrow
+        target='/notifications'
+        title='See all notifications'
+        className='self-center py-2'
+      />
     </div>
   );
 };

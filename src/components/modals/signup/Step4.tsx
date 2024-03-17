@@ -1,28 +1,32 @@
-import React, { FC, useState } from 'react';
-
-import Link from 'next/link';
+import { FC, useState } from 'react';
 
 import Button from '@/components/button';
 import Icon from '@/components/icon/Icon';
 import Input from '@/components/input';
-import Checkbox from '@/components/input/Checkbox';
 
+import SetPassword from '../SetPassword';
 import ModalContent from '../layout/ModalContent';
-import { LoginStep } from './LoginModal';
-import { loginSteps } from './loginSteps';
+import { SignupStep } from './SignupModal';
+import { signupSteps } from './signupSteps';
 
-type Step3Props = {
-  setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
+type Step4Props = {
+  setLoginStep: React.Dispatch<React.SetStateAction<SignupStep>>;
 };
 
-const Step3: FC<Step3Props> = ({ setLoginStep }) => {
+const Step4: FC<Step4Props> = ({ setLoginStep }) => {
   const [password, setPassword] = useState<string>('');
+  const [criteriaCount, setCriteriaCount] = useState<number>(0);
   const [inputError, setInputError] = useState<boolean>(false);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    setLoginStep(loginSteps[0]);
+    if (criteriaCount !== 3) {
+      setInputError(true);
+      return;
+    }
+
+    setLoginStep(signupSteps[0]);
   };
 
   const handlePreviousStep = (
@@ -30,38 +34,29 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
   ) => {
     e.preventDefault();
 
-    setLoginStep(loginSteps[2]);
+    setLoginStep(signupSteps[2]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center px-4'>
-      <form className='flex flex-col'>
+    <ModalContent className='flex flex-col justify-center gap-2 px-4'>
+      <form className='flex flex-col gap-2'>
         <Input
-          className='w-full'
-          label='Password'
-          placeholderText='enter password'
           variant='border'
+          placeholderText='Enter password'
+          label='Password'
           setInputText={setPassword}
+          className='flex-1'
           type='password'
         />
 
         {inputError && (
           <div className='flex items-center gap-2 pl-1 font-jost text-xs text-alert-red sm:text-sm'>
             <Icon name='RiErrorWarningFill' size={16} />
-            <p>Wrong password. Try again or click 'Forgot password'.</p>
+            <p>Please ensure your password meets the above criteria.</p>
           </div>
         )}
 
-        <div className='mt-2 flex items-center justify-between pl-1'>
-          <Checkbox title='Remember Me' />
-
-          <Link
-            className='font-jost text-sm opacity-75 hover:opacity-100'
-            href='#'
-          >
-            Forgot Password?
-          </Link>
-        </div>
+        <SetPassword password={password} setCriteriaCount={setCriteriaCount} />
 
         <div className='flex gap-2 items-center mt-4'>
           <Button
@@ -72,7 +67,7 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
           />
           <Button
             className='w-full'
-            title='Login'
+            title='Create'
             variant='primary'
             onClick={(e) => handleSubmit(e)}
           />
@@ -82,4 +77,4 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
   );
 };
 
-export default Step3;
+export default Step4;

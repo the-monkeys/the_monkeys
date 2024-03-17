@@ -14,7 +14,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
         <div className='ml-2'>
           <Logo showMix />
         </div>
-        <div className='flex h-[60vh] w-full flex-col gap-8 overflow-auto rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:h-[500px] sm:self-center'>
+        <div className='flex max-h-[60vh] w-full flex-col gap-10 overflow-auto rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>
           {children}
         </div>
       </div>
