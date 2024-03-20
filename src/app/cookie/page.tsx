@@ -9,8 +9,10 @@ const Cookie = () => {
           Cookie Policy
         </h1>
       </div>
-      <div className='flex flex-col items-start gap-2'>
-        <p className='font-jost p-2 text-sm sm:text-base'>Effective date:</p>
+      <div className='px-5 flex flex-col items-start gap-2'>
+        <p className='font-jost text-sm sm:text-base mb-4 text-secondary-lightGrey'>
+          Effective date: 03/20/2024
+        </p>
       </div>
     </>
   );
