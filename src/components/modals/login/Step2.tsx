@@ -1,13 +1,15 @@
 import React, { FC, useState } from 'react';
 
 import Button from '@/components/button';
-import Icon from '@/components/icon';
+import Icon from '@/components/icon/Icon';
 import Input from '@/components/input';
 
 import ModalContent from '../layout/ModalContent';
+import { LoginStep } from './LoginModal';
+import { loginSteps } from './loginSteps';
 
 type Step2Props = {
-  setLoginStep: React.Dispatch<React.SetStateAction<number>>;
+  setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
 };
 
 const Step2: FC<Step2Props> = ({ setLoginStep }) => {
@@ -27,12 +29,20 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
       return;
     }
 
-    setLoginStep(3);
+    setLoginStep(loginSteps[2]);
+  };
+
+  const handlePreviousStep = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
+
+    setLoginStep(loginSteps[0]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center'>
-      <form className='flex flex-col px-4'>
+    <ModalContent className='flex flex-col justify-center px-4'>
+      <form className='flex flex-col'>
         <Input
           className='w-full'
           label='Email'
@@ -49,12 +59,20 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
           </div>
         )}
 
-        <Button
-          title='Next'
-          variant='primary'
-          className='mt-4'
-          onClick={(e) => handleSubmit(e)}
-        />
+        <div className='flex gap-2 items-center mt-4'>
+          <Button
+            className='w-full'
+            title='Previous'
+            variant='secondary'
+            onClick={(e) => handlePreviousStep(e)}
+          />
+          <Button
+            className='w-full'
+            title='Next'
+            variant='primary'
+            onClick={(e) => handleSubmit(e)}
+          />
+        </div>
       </form>
     </ModalContent>
   );

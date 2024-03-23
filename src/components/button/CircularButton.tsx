@@ -2,7 +2,8 @@ import { FC, InputHTMLAttributes } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
-import Icon, { IconName } from '../icon';
+import IconContainer from '../icon';
+import { IconName } from '../icon/Icon';
 
 interface CircularButtonProps extends InputHTMLAttributes<HTMLButtonElement> {
   iconName?: IconName;
@@ -21,16 +22,18 @@ const CircularButton: FC<CircularButtonProps> = ({
       className={twMerge(
         'cur group flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary-monkeyOrange transition-all',
         className,
-        disabled && 'cursor-not-allowed opacity-75'
+        disabled && 'cursor-not-allowed'
       )}
       onClick={onClick}
       disabled={disabled}
     >
-      <div
+      <IconContainer
+        name={iconName}
+        size={18}
+        variant='white'
         className={twMerge(!disabled && animate && 'group-hover:animate-shake')}
-      >
-        <Icon name={iconName} size={18} variant='primary' hasHover={false} />
-      </div>
+        hasHover={false}
+      />
     </button>
   );
 };

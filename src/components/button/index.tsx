@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
-import Icon, { IconName } from '../icon';
+import Icon, { IconName } from '../icon/Icon';
 import { buttonVariantStyles } from '../variantStyles';
 import CircularButton from './CircularButton';
 
@@ -78,21 +78,32 @@ const Button: React.FC<ButtonProps> = ({
     <button
       className={twMerge(
         className,
+        'flex items-center gap-4 justify-center',
         getStyles(),
-        disabled && 'cursor-not-allowed opacity-75'
+        disabled && 'cursor-not-allowed'
       )}
       onClick={onClick}
       disabled={disabled}
     >
-      <div className='flex items-center justify-center gap-4'>
-        {startIcon && (
-          <Icon name={iconName} size={20} hasHover={false} variant={variant} />
-        )}
+      {startIcon || endIcon ? (
+        <>
+          <Icon
+            name={iconName}
+            size={20}
+            hasHover={false}
+            className={startIcon ? 'opacity-100' : 'opacity-0'}
+          />
+          <p className='flex-1'>{title}</p>
+          <Icon
+            name={iconName}
+            size={20}
+            hasHover={false}
+            className={endIcon ? 'opacity-100' : 'opacity-0'}
+          />
+        </>
+      ) : (
         <p>{title}</p>
-        {endIcon && (
-          <Icon name={iconName} size={20} hasHover={false} variant={variant} />
-        )}
-      </div>
+      )}
     </button>
   );
 };

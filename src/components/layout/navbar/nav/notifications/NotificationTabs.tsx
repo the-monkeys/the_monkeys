@@ -8,7 +8,7 @@ const NotificationTabs = () => {
   return (
     <div className='flex gap-2 px-4'>
       <div
-        className='flex cursor-pointer flex-col hover:opacity-75'
+        className='flex cursor-pointer flex-col'
         onClick={() => setTab('all')}
       >
         <p className='px-2 font-josefin_Sans text-base'>All</p>
@@ -18,7 +18,7 @@ const NotificationTabs = () => {
       </div>
 
       <div
-        className='flex cursor-pointer flex-col hover:opacity-75'
+        className='flex cursor-pointer flex-col'
         onClick={() => setTab('comments')}
       >
         <p className='px-2 font-josefin_Sans text-base'>Comments</p>
@@ -28,7 +28,7 @@ const NotificationTabs = () => {
       </div>
 
       <div
-        className='flex cursor-pointer flex-col hover:opacity-75'
+        className='flex cursor-pointer flex-col'
         onClick={() => setTab('activity')}
       >
         <p className='px-2 font-josefin_Sans text-base'>Post Activity</p>

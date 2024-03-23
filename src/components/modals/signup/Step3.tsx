@@ -1,28 +1,35 @@
-import React, { FC, useState } from 'react';
-
-import Link from 'next/link';
+import { FC, useState } from 'react';
 
 import Button from '@/components/button';
 import Icon from '@/components/icon/Icon';
 import Input from '@/components/input';
-import Checkbox from '@/components/input/Checkbox';
 
 import ModalContent from '../layout/ModalContent';
-import { LoginStep } from './LoginModal';
-import { loginSteps } from './loginSteps';
+import { SignupStep } from './SignupModal';
+import { signupSteps } from './signupSteps';
 
 type Step3Props = {
-  setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
+  setLoginStep: React.Dispatch<React.SetStateAction<SignupStep>>;
 };
 
 const Step3: FC<Step3Props> = ({ setLoginStep }) => {
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [inputError, setInputError] = useState<boolean>(false);
+
+  const validateEmail = (inputEmail: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(inputEmail);
+  };
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    setLoginStep(loginSteps[0]);
+    if (!validateEmail(email)) {
+      setInputError(true);
+      return;
+    }
+
+    setLoginStep(signupSteps[3]);
   };
 
   const handlePreviousStep = (
@@ -30,38 +37,27 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
   ) => {
     e.preventDefault();
 
-    setLoginStep(loginSteps[2]);
+    setLoginStep(signupSteps[1]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center px-4'>
-      <form className='flex flex-col'>
+    <ModalContent className='flex flex-col justify-center gap-2 px-4'>
+      <form className='flex flex-col gap-2'>
         <Input
-          className='w-full'
-          label='Password'
-          placeholderText='enter password'
           variant='border'
-          setInputText={setPassword}
-          type='password'
+          placeholderText='Enter email address'
+          label='Email'
+          setInputText={setEmail}
+          className='flex-1'
+          type='email'
         />
 
         {inputError && (
           <div className='flex items-center gap-2 pl-1 font-jost text-xs text-alert-red sm:text-sm'>
             <Icon name='RiErrorWarningFill' size={16} />
-            <p>Wrong password. Try again or click 'Forgot password'.</p>
+            <p>Enter correct email address. Try again.</p>
           </div>
         )}
-
-        <div className='mt-2 flex items-center justify-between pl-1'>
-          <Checkbox title='Remember Me' />
-
-          <Link
-            className='font-jost text-sm opacity-75 hover:opacity-100'
-            href='#'
-          >
-            Forgot Password?
-          </Link>
-        </div>
 
         <div className='flex gap-2 items-center mt-4'>
           <Button
@@ -72,7 +68,7 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
           />
           <Button
             className='w-full'
-            title='Login'
+            title='Next'
             variant='primary'
             onClick={(e) => handleSubmit(e)}
           />

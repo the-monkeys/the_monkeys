@@ -2,7 +2,7 @@ import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
-import Icon from '../icon';
+import IconContainer from '../icon';
 import { inputVariantStyles } from '../variantStyles';
 
 type InputVariants = 'border' | 'ghost' | 'area';
@@ -65,9 +65,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
     return (
       <div className='flex flex-col items-start'>
         {label && (
-          <p className='pl-1 font-josefin_Sans text-sm sm:text-base md:text-lg'>
-            {label}
-          </p>
+          <p className='pl-1 font-josefin_Sans text-xs sm:text-sm'>{label}</p>
         )}
         {variant === 'area' ? (
           <textarea
@@ -100,7 +98,11 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
               ref={ref as React.RefObject<HTMLInputElement>}
             />
             {localInput && clearIcon && (
-              <Icon name='RiCloseLine' size={16} onClick={handleClearInput} />
+              <IconContainer
+                name='RiCloseLine'
+                size={16}
+                onClick={handleClearInput}
+              />
             )}
           </div>
         )}
