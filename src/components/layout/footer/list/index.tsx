@@ -18,7 +18,7 @@ const List: FC<ListProps> = ({ listData }) => {
   return (
     <div className='flex w-full flex-col gap-2 sm:w-fit'>
       <p className='font-josefin_Sans text-lg'>{listData.listHeading}</p>
-      <div className='flex flex-col items-start gap-1'>
+      <div className='flex flex-col items-start gap-2'>
         {listData?.listItems.map((item, index) => {
           return (
             <LinksRedirectUnderline
