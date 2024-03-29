@@ -39,7 +39,7 @@ const Footer = () => {
           })}
         </div>
       </div>
-      <div className='mb-10 flex w-fit flex-col items-center gap-2 self-center'>
+      <div className='mb-14 flex w-fit flex-col items-center gap-2 self-center'>
         <div className='flex items-center justify-center gap-2'>
           <Link
             className='flex items-center gap-2'

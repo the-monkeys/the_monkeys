@@ -1,6 +1,12 @@
+import { FC } from 'react';
+
 import Button from '@/components/button';
 
-const CreateButton = () => {
+type CreateButtonProps = {
+  showTitle: boolean;
+};
+
+const CreateButton: FC<CreateButtonProps> = ({ showTitle }) => {
   return (
     <div className='flex flex-col items-center'>
       <Button
@@ -9,9 +15,7 @@ const CreateButton = () => {
         iconName='RiPencilLine'
         animateIcon
       />
-      <p className='hidden font-playfair_Display font-medium sm:block'>
-        Create
-      </p>
+      {showTitle && <p className='font-playfair_Display font-medium'>Create</p>}
     </div>
   );
 };

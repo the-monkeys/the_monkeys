@@ -21,8 +21,8 @@ const LinksRedirectUnderline: FC<LinksRedirectProps> = ({
       target='_blank'
       className={twMerge(className, 'group flex flex-col')}
     >
-      <p className='font-jost text-secondary-lightGrey'>{title}</p>
-      <span className='h-[1px] w-0 bg-secondary-lightGrey transition-all group-hover:w-full'></span>
+      <p className='font-jost opacity-85 group-hover:opacity-100'>{title}</p>
+      <span className='h-[1px] w-0 bg-primary-monkeyBlack/25 dark:bg-primary-monkeyWhite/25 transition-all group-hover:w-full'></span>
     </Link>
   );
 };

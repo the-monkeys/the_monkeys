@@ -80,7 +80,7 @@ const Nav = () => {
           </div>
         </div>
         <div className='h-8 border-l-1 border-secondary-lightGrey/25'></div>
-        <CreateButton />
+        <CreateButton showTitle />
       </div>
     </div>
   );

@@ -23,8 +23,6 @@ const MobileNav = () => {
           <Logo showMobileLogo={true} />
         </Link>
 
-        <CreateButton />
-
         <div className='relative'>
           {showUserOptions ? (
             <Icon name='RiUserFill' onClick={handleShowUserOptions} />
@@ -37,21 +35,15 @@ const MobileNav = () => {
         </div>
       </div>
 
-      <div className='fixed bottom-0 left-0 flex w-full items-center justify-between  bg-primary-monkeyWhite/50 px-5 py-4 backdrop-blur-sm dark:bg-primary-monkeyBlack/50'>
-        <Link href='/profile/activity'>
-          <Icon name='RiHistoryLine' />
-        </Link>
+      <div className='fixed bottom-0 left-0 flex w-full items-center justify-evenly bg-primary-monkeyWhite/50 px-5 py-4 backdrop-blur-sm dark:bg-primary-monkeyBlack/50 z-50'>
+        <ThemeSwitch />
 
-        <Link href='/settings'>
-          <Icon name='RiSettings3Line' />
-        </Link>
+        <CreateButton showTitle={false} />
 
         <Link href='/notifications' className='relative'>
           <span className='absolute right-0 top-0 z-10 h-2 w-2 rounded-full bg-primary-monkeyOrange'></span>
           <Icon name='RiNotification3Line' />
         </Link>
-
-        <ThemeSwitch />
       </div>
     </>
   );
