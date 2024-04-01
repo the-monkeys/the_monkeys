@@ -9,6 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/delimiter": "^1.4.0",
+    "@editorjs/editorjs": "^2.29.1",
+    "@editorjs/header": "^2.8.1",
+    "@editorjs/link": "^2.6.2",
+    "@editorjs/list": "^1.9.0",
+    "@editorjs/paragraph": "^2.11.4",
     "@remixicon/react": "^4.1.1",
     "next": "14.1.0",
     "next-themes": "^0.2.1",
