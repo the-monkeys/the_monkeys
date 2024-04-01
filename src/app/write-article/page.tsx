@@ -23,14 +23,7 @@ function App() {
   return (
     <div className="editor">
       <Editor data={data} onChange={setData} editorblock="editorjs-container" />
-      <button
-        className="savebtn"
-        onClick={() => {
-          alert(JSON.stringify(data));
-        }}
-      >
-        Save
-      </button>
+
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // @ts-ignore
 import Paragraph from "@editorjs/paragraph" ;
+// @ts-ignore
 import Header from "@editorjs/header";
 // @ts-ignore
 import List from "@editorjs/list";
