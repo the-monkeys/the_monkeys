@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import Image from 'next/image';
+import Link from 'next/link';
 
 import LoginModal from './modals/login/LoginModal';
 import SignupModal from './modals/signup/SignupModal';
@@ -19,14 +20,15 @@ const ComingSoon = () => {
         Our website is currently under construction!
       </p>
 
-      <Image
-        src={'/coming-soon.svg'}
-        alt='Coming Soon!!'
-        title='Coming Soon!!'
-        height={300}
-        width={300}
-        onClick={() => setShowModal((prevValue) => !prevValue)}
-      />
+      <Link href='/api/auth/signin'>
+        <Image
+          src={'/coming-soon.svg'}
+          alt='Coming Soon!!'
+          title='Coming Soon!!'
+          height={300}
+          width={300}
+        />
+      </Link>
 
       <p className='mt-4 text-center font-jost text-base text-secondary-lightGrey md:text-lg'>
         Get ready to be part of the excitement and be the first to experience
