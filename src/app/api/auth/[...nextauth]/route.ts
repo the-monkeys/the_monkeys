@@ -48,24 +48,27 @@ const authOptions: AuthOptions = {
       },
     }),
   ],
-  // callbacks: {
-  //   async jwt({ token, user }) {
-  //     if (user) token.user = user as unknown as User;
+  callbacks: {
+    // async jwt({ token, user }) {
+    //   if (user) token.user = user as unknown as User;
 
-  //     return token;
-  //   },
-  //   async session({ token, session, trigger }) {
-  //     session.user = token.user;
-  //     if (trigger === 'update') {
-  //       console.log(session);
+    //   return token;
+    // },
+    async session({ token, session, trigger }) {
+      session.user = token.user;
+      if (trigger === 'update') {
+        console.log(session);
 
-  //       return {
-  //         ...session,
-  //       };
-  //     }
-  //     return session;
-  //   },
-  // },
+        return {
+          ...session,
+        };
+      }
+      return session;
+    },
+  },
+  pages: {
+    signIn: '/login',
+  },
 };
 
 const handler = NextAuth(authOptions);
