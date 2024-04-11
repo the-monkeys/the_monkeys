@@ -4,6 +4,7 @@ import { Josefin_Sans, Jost, Playfair_Display } from 'next/font/google';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 
+import Providers from './Providers';
 import './globals.css';
 import { ThemeProviders } from './theme-provider';
 
@@ -39,11 +40,13 @@ export default function RootLayout({
       <body
         className={`${jost.variable} ${josefin_Sans.variable} bg-primary-monkeyWhite dark:bg-primary-monkeyBlack  ${playfair_Display.variable} mx-auto max-w-7xl`}
       >
-        <ThemeProviders>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-        </ThemeProviders>
+        <Providers>
+          <ThemeProviders>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </ThemeProviders>
+        </Providers>
       </body>
     </html>
   );

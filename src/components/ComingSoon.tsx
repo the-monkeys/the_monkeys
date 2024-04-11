@@ -9,7 +9,6 @@ import LoginModal from './modals/login/LoginModal';
 import SignupModal from './modals/signup/SignupModal';
 
 const ComingSoon = () => {
-  const [showModal, setShowModal] = useState(false);
   return (
     <div className='mb-20 flex min-h-screen w-4/5 flex-col items-center justify-center md:w-3/5'>
       <h1 className='mb-4 text-center font-playfair_Display text-3xl font-extrabold md:text-4xl'>
@@ -36,8 +35,7 @@ const ComingSoon = () => {
         for your anticipation and patience!
       </p>
 
-      {/* {showModal && <LoginModal setModal={setShowModal} />} */}
-      {showModal && <SignupModal setModal={setShowModal} />}
+      {/* {showModal && <SignupModal setModal={setShowModal} />} */}
     </div>
   );
 };

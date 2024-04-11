@@ -3,7 +3,7 @@ import { AuthOptions, User } from 'next-auth';
 import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-const api = process.env.API_URL;
+const api = process.env.NEXT_PUBLIC_API_URL;
 const authOptions: AuthOptions = {
   secret: 'the_monkeys',
   providers: [

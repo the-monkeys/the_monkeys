@@ -1,7 +1,14 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+
+import LoginModal from '@/components/modals/login/LoginModal';
+import SignupModal from '@/components/modals/signup/SignupModal';
 
 const page = () => {
-  return <div>This is the Login Page.</div>;
+  const [showModal, setShowModal] = useState(true);
+
+  return <div>{showModal && <LoginModal setModal={setShowModal} />}</div>;
 };
 
 export default page;
