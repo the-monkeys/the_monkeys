@@ -31,8 +31,10 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
+  auth,
   children,
 }: Readonly<{
+  auth: React.ReactNode;
   children: React.ReactNode;
 }>) {
   return (
@@ -43,6 +45,7 @@ export default function RootLayout({
         <Providers>
           <ThemeProviders>
             <Navbar />
+            <div>{auth}</div>
             <main>{children}</main>
             <Footer />
           </ThemeProviders>

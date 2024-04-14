@@ -5,7 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 
 const api = process.env.NEXT_PUBLIC_API_URL;
 const authOptions: AuthOptions = {
-  secret: 'the_monkeys',
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -50,7 +50,7 @@ const authOptions: AuthOptions = {
   ],
   callbacks: {
     // async jwt({ token, user }) {
-    //   if (user) token.user = user as unknown as User;
+    //   if (user) token = user as unknown as User;
 
     //   return token;
     // },
