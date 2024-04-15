@@ -25,9 +25,12 @@ const playfair_Display = Playfair_Display({
   display: 'swap',
 });
 
+const title = 'Monkeys';
+const description = 'We are The Monkeys! A blogging and educational platform.';
+
 export const metadata: Metadata = {
-  title: 'Monkeys',
-  description: 'We are the Monkeys!',
+  title: title,
+  description: description,
 };
 
 export default function RootLayout({

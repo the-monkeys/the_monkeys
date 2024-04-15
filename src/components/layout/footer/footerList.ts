@@ -6,19 +6,19 @@ export const footerList: FooterList[] = [
     listItems: [
       {
         title: 'Branding',
-        link: '',
+        link: '#',
       },
       {
         title: 'Design',
-        link: '',
+        link: '#',
       },
       {
         title: 'Marketing',
-        link: '',
+        link: '#',
       },
       {
         title: 'Advertisement',
-        link: '',
+        link: '#',
       },
     ],
   },
@@ -27,15 +27,15 @@ export const footerList: FooterList[] = [
     listItems: [
       {
         title: 'About Us',
-        link: '',
+        link: '#',
       },
       {
         title: 'Contact',
-        link: '',
+        link: '#',
       },
       {
         title: 'Press Kit',
-        link: '',
+        link: '#',
       },
     ],
   },
@@ -44,15 +44,15 @@ export const footerList: FooterList[] = [
     listItems: [
       {
         title: 'Terms of Use',
-        link: '',
+        link: '/terms',
       },
       {
         title: 'Privacy Policy',
-        link: '',
+        link: '/privacy',
       },
       {
         title: 'Cookie Policy',
-        link: '',
+        link: '/cookie',
       },
     ],
   },

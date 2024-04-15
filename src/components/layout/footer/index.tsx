@@ -43,7 +43,7 @@ const Footer = () => {
         <div className='flex items-center justify-center gap-2'>
           <Link
             className='flex items-center gap-2'
-            href='https://discord.gg/HTuz82d8'
+            href='https://discord.gg/6fK9YuV8FV'
             target='_blank'
           >
             <Icon name='RiDiscordFill' size={20} />
