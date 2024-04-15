@@ -2,7 +2,7 @@ const Cookie = () => {
   return (
     <>
       <div className='py-10 sm:py-16 flex flex-col items-center gap-2'>
-        <p className='w-fit font-josefin_Sans text-base sm:text-lg md:text-xl font-semibold text-center text-secondary-lightGrey border-b-1 border-primary-monkeyOrange'>
+        <p className='w-fit font-josefin_Sans text-base sm:text-lg md:text-xl font-semibold text-center border-b-1 border-primary-monkeyOrange opacity-75'>
           Monkeys
         </p>
         <h1 className='font-playfair_Display text-3xl sm:text-4xl md:text-5xl font-bold'>
@@ -10,7 +10,7 @@ const Cookie = () => {
         </h1>
       </div>
       <div className='px-5 flex flex-col items-start gap-2'>
-        <p className='font-jost text-sm sm:text-base mb-4 text-secondary-lightGrey'>
+        <p className='font-jost text-sm sm:text-base mb-4 opacity-75'>
           Effective date: 04/15/2024
         </p>
 
@@ -23,7 +23,7 @@ const Cookie = () => {
             transparent environment for our users.
           </p>
           <p className='my-4 font-jost text-justify'>
-            Our Cookie Policy explains how 'The Monkeys' ("we", "us", or "our")
+            Our Cookie Policy explains how The Monkeys ("we", "us", or "our")
             uses cookies and similar tracking technologies when you visit our
             website.
           </p>
