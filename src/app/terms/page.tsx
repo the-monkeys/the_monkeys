@@ -11,7 +11,7 @@ const Terms = () => {
       </div>
       <div className='px-5 flex flex-col items-start gap-2'>
         <p className='font-jost text-sm sm:text-base mb-4 text-secondary-lightGrey'>
-          Effective date: 03/20/2024
+          Effective date: 04/15/2024
         </p>
 
         <div className='my-2'>
@@ -121,7 +121,7 @@ const Terms = () => {
             You may use Service only for lawful purposes and in accordance with
             Terms. You agree not to use Service:
           </p>
-          <ul className='my-2 font-jost text-justify'>
+          <ul className='my-2 font-jost text-justify list-inside'>
             <li className='my-2 ml-8 list-disc'>
               In any way that violates any applicable national or international
               law or regulation.
@@ -188,11 +188,13 @@ const Terms = () => {
             Contact Us
           </h2>
           <p className='my-4 font-jost text-justify'>
-            If you have any questions about these Terms of Use, please contact
-            us.
+            We welcome your questions and feedback.
           </p>
           <p className='my-4 font-jost text-justify'>
-            We welcome your questions and feedback.
+            If you have any questions about these Terms of Use, please contact
+            us:
+            <br />
+            By mail: mail.themonkeys.life@gmail.com
           </p>
         </div>
       </div>
