@@ -1,5 +1,7 @@
 import { FC } from 'react';
 
+import Link from 'next/link';
+
 import Button from '@/components/button';
 
 type CreateButtonProps = {
@@ -8,7 +10,7 @@ type CreateButtonProps = {
 
 const CreateButton: FC<CreateButtonProps> = ({ showTitle }) => {
   return (
-    <div className='flex flex-col items-center'>
+    <Link href='/create' className='flex flex-col items-center'>
       <Button
         title='Create'
         variant='circular'
@@ -16,7 +18,7 @@ const CreateButton: FC<CreateButtonProps> = ({ showTitle }) => {
         animateIcon
       />
       {showTitle && <p className='font-playfair_Display font-medium'>Create</p>}
-    </div>
+    </Link>
   );
 };
 

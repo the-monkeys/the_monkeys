@@ -5,42 +5,19 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { EditorProps } from '@/components/editor';
 import { OutputData } from '@editorjs/editorjs';
 
-const INITIAL_DATA = {
+const initial_data = {
   time: new Date().getTime(),
   blocks: [
     {
-      type: 'header',
-      data: {
-        text: 'Heading 1',
-        level: 1,
-      },
-    },
-    {
-      type: 'header',
-      data: {
-        text: 'Heading 2',
-        level: 2,
-      },
-    },
-    {
-      type: 'header',
-      data: {
-        text: 'Heading 3',
-        level: 3,
-      },
-    },
-    {
       type: 'paragraph',
-      data: {
-        text: 'This is a paragraph',
-      },
+      data: {},
     },
   ],
 };
 
 function App() {
-  const [data, setData] = useState<OutputData>(INITIAL_DATA);
   const [Editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
+  const [data, setData] = useState<OutputData>(initial_data);
 
   useEffect(() => {
     const loadEditor = async () => {
@@ -52,9 +29,13 @@ function App() {
   }, []);
 
   return (
-    <Suspense fallback={<div className='h-screen'>Loading...</div>}>
-      {Editor && <Editor data={data} onChange={setData} />}
-    </Suspense>
+    <div>
+      <div></div>
+
+      <Suspense fallback={<p>Loading...</p>}>
+        {Editor && <Editor data={data} onChange={setData} />}
+      </Suspense>
+    </div>
   );
 }
 

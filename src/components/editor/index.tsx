@@ -33,7 +33,7 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
     };
   }, []);
 
-  return <div className='font-josefin_Sans' id='editorjs-container'></div>;
+  return <div className='px-4 py-2 font-jost' id='editorjs-container'></div>;
 };
 
 export default Editor;
