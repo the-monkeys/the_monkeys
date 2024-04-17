@@ -17,6 +17,7 @@ export type IconName =
   | 'RiArrowRightLine'
   | 'RiMoreLine'
   | 'RiCloseLine'
+  | 'RiMoreFill'
   | 'RiCheckDoubleLine'
   | 'RiAddLine'
   | 'RiCircleFill'

@@ -21,3 +21,50 @@ h3.ce-header {
 .codex-editor__redactor {
   padding-bottom: 0 !important;
 }
+
+.ce-block__content {
+  max-width: none;
+  margin: 0;
+}
+
+.ce-toolbar__content {
+  max-width: none;
+  margin: 0;
+}
+
+.ce-toolbar__actions svg {
+  color: #101010;
+}
+
+.dark .ce-toolbar__actions svg {
+  color: #fff4ed;
+}
+
+.ce-toolbar__actions svg:hover {
+  color: #ff462e;
+}
+
+@media (max-width: 650px) {
+  .ce-popover {
+    --offset: 5px;
+    position: absolute;
+    max-width: none;
+    min-width: calc(100% - var(--offset) * 2);
+    left: var(--offset);
+    right: var(--offset);
+    bottom: auto;
+    top: 100%;
+    border-radius: 10px;
+    margin-top: 1rem;
+  }
+
+  .ce-popover__overlay {
+    background: #f2f2f3;
+    opacity: 0.6;
+  }
+
+  .dark .ce-popover__overlay {
+    background: #2b2b2b;
+    opacity: 0.6;
+  }
+}

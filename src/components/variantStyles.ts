@@ -3,7 +3,7 @@ import { IconVariantStyles } from './icon';
 import { InputVariantStyles } from './input';
 
 export const buttonVariantStyles: ButtonVariantStyles = {
-  base: 'group px-4 py-2 font-jost text-xs sm:text-sm md:text-base rounded-lg cursor-pointer transition-all',
+  base: 'group px-4 py-2 font-jost text-sm sm:text-base rounded-lg cursor-pointer transition-all',
   primary:
     'bg-primary-monkeyOrange text-primary-monkeyWhite hover:text-primary-monkeyOrange border-2 border-primary-monkeyOrange hover:bg-primary-monkeyOrange/0',
   secondary:
@@ -17,7 +17,7 @@ export const buttonVariantStyles: ButtonVariantStyles = {
 };
 
 export const inputVariantStyles: InputVariantStyles = {
-  base: 'px-4 py-2 font-jost text-xs sm:text-sm md:text-base bg-primary-monkeyWhite/0 dark:bg-primary-monkeyBlack/0',
+  base: 'px-4 py-2 font-jost text-sm sm:text-base bg-primary-monkeyWhite/0 dark:bg-primary-monkeyBlack/0',
   border:
     'border-1 border-secondary-lightGrey/75 focus:border-secondary-lightGrey/25 focus:outline-none rounded-lg',
   ghost: 'focus:outline-none',

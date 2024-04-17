@@ -2,13 +2,12 @@ import { EditorConfig } from '@editorjs/editorjs';
 
 const editorConfig: EditorConfig = {
   holder: 'editorjs-container',
-  autofocus: true,
   tools: {
     header: {
       class: require('@editorjs/header'),
       inlineToolbar: true,
       config: {
-        placeholder: 'add title ...',
+        placeholder: 'Start with a title...',
         levels: [1, 2, 3],
         defaultLevel: 3,
       },
@@ -16,9 +15,7 @@ const editorConfig: EditorConfig = {
     paragraph: {
       class: require('@editorjs/paragraph'),
       inlineToolbar: true,
-      config: {
-        placeholder: 'write something ...',
-      },
+      config: {},
     },
     list: {
       class: require('@editorjs/list'),
@@ -27,7 +24,7 @@ const editorConfig: EditorConfig = {
     table: {
       class: require('@editorjs/table'),
       config: {
-        rows: 2,
+        rows: 3,
         cols: 3,
       },
     },
