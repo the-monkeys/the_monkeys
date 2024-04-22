@@ -6,8 +6,8 @@ import ThemeSwitch from '@/components/basic/ThemeSwitch';
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 
-import CreateButton from '../CreateButton';
-import MobileUserOptions from './MobileUserOptions';
+import CreateButton from '../../button/CreateButton';
+import UserOptions from './UserOptions';
 
 const MobileNav = () => {
   const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
@@ -30,7 +30,7 @@ const MobileNav = () => {
             <Icon name='RiUserLine' onClick={handleShowUserOptions} />
           )}
           {showUserOptions && (
-            <MobileUserOptions setUserOptions={setShowUserOptions} />
+            <UserOptions setUserOptions={setShowUserOptions} />
           )}
         </div>
       </div>

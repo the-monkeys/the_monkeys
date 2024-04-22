@@ -14,21 +14,22 @@ const NotificationsDialog: FC<NotificationsDialogProps> = ({
 }) => {
   return (
     <div
-      className='absolute right-0 top-8 flex w-96 flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack pb-4'
-      onMouseEnter={() => setNotifications(true)}
+      className='pt-4 absolute top-full right-0 w-96'
       onMouseLeave={() => setNotifications(false)}
     >
-      <h1 className='p-4 font-josefin_Sans text-xl'>Notifications</h1>
+      <div className='flex flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack drop-shadow-lg'>
+        <h1 className='p-4 font-josefin_Sans text-xl'>Notifications</h1>
 
-      <NotificationTabs />
+        <NotificationTabs />
 
-      <NotificationContent />
+        <NotificationContent />
 
-      <LinksRedirectArrow
-        target='/notifications'
-        title='See all notifications'
-        className='self-center py-2'
-      />
+        <LinksRedirectArrow
+          target='/notifications'
+          title='See all notifications'
+          className='self-center py-2'
+        />
+      </div>
     </div>
   );
 };

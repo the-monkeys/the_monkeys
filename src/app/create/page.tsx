@@ -3,7 +3,7 @@
 import React, { Suspense, useEffect, useState } from 'react';
 
 import Button from '@/components/button';
-import { EditorProps } from '@/components/editor';
+import Editor, { EditorProps } from '@/components/editor';
 import IconContainer from '@/components/icon';
 import { OutputData } from '@editorjs/editorjs';
 
@@ -11,16 +11,14 @@ const initial_data = {
   time: new Date().getTime(),
   blocks: [
     {
-      type: 'header',
-      data: {
-        level: 1,
-      },
+      type: 'paragraph',
+      data: {},
     },
   ],
 };
 
 function App() {
-  const [Editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
+  const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData>(initial_data);
 
   useEffect(() => {
@@ -34,16 +32,15 @@ function App() {
 
   return (
     <div>
-      <div className='px-5 sm:px-4 py-2 flex gap-4 items-end justify-between'>
-        <p className='font-josefin_Sans text-sm sm:text-base'>Draft saved</p>
+      <div className='px-5 sm:px-4 py-2 flex gap-4 items-end justify-end'>
         <div className='flex gap-4 items-center justify-between'>
-          <Button title='Publish Blog' variant='primary' />
+          <Button title='Publish Blog' variant='ghost' onClick={() => {}} />
           <IconContainer name='RiMoreFill' />
         </div>
       </div>
 
       <Suspense fallback={<p>Loading...</p>}>
-        {Editor && <Editor data={data} onChange={setData} />}
+        {editor && <Editor data={data} onChange={setData} />}
       </Suspense>
     </div>
   );

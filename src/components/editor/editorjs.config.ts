@@ -7,7 +7,7 @@ const editorConfig: EditorConfig = {
       class: require('@editorjs/header'),
       inlineToolbar: true,
       config: {
-        placeholder: 'Start with a title...',
+        placeholder: 'Title',
         levels: [1, 2, 3],
         defaultLevel: 3,
       },
@@ -15,7 +15,9 @@ const editorConfig: EditorConfig = {
     paragraph: {
       class: require('@editorjs/paragraph'),
       inlineToolbar: true,
-      config: {},
+      config: {
+        placeholder: 'Unleash your creativity ...',
+      },
     },
     list: {
       class: require('@editorjs/list'),
@@ -26,6 +28,15 @@ const editorConfig: EditorConfig = {
       config: {
         rows: 3,
         cols: 3,
+      },
+    },
+    image: {
+      class: require('@editorjs/image'),
+      config: {
+        endpoints: {
+          byFile: 'http://localhost:3000/api/uploadFile',
+          byUrl: 'http://localhost:3000/api/fetchUrl',
+        },
       },
     },
   },
