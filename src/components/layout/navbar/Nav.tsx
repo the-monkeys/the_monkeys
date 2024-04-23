@@ -17,12 +17,16 @@ const Nav = () => {
   const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
 
   return (
-    <div className='sticky left-0 top-0 flex w-full items-center justify-between bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75 z-50'>
+    <div className='sticky left-0 top-0 flex w-full items-center justify-between bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75 z-30'>
       <div className='flex items-center gap-5'>
         <Link href='/'>
           <Logo showMobileLogo={true} />
         </Link>
-        <SearchBox setSearchInput={setSearchInput} className='w-32 md:w-64' />
+
+        <SearchBox
+          setSearchInput={setSearchInput}
+          className='w-32 md:w-64 text-sm sm:text-base'
+        />
       </div>
 
       <div className='flex items-center gap-5'>
@@ -65,7 +69,9 @@ const Nav = () => {
             )}
           </div>
         </div>
+
         <div className='h-8 border-l-1 border-secondary-lightGrey/25'></div>
+
         <CreateButton showTitle />
       </div>
     </div>

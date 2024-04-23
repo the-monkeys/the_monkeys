@@ -5,6 +5,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import Button from '@/components/button';
 import Editor, { EditorProps } from '@/components/editor';
 import IconContainer from '@/components/icon';
+import PublishModal from '@/components/modals/publish/PublishModal';
 import { OutputData } from '@editorjs/editorjs';
 
 const initial_data = {
@@ -20,6 +21,7 @@ const initial_data = {
 function App() {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData>(initial_data);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
     const loadEditor = async () => {
@@ -34,7 +36,11 @@ function App() {
     <div>
       <div className='px-5 sm:px-4 py-2 flex gap-4 items-end justify-end'>
         <div className='flex gap-4 items-center justify-between'>
-          <Button title='Publish Blog' variant='ghost' onClick={() => {}} />
+          <Button
+            title='Publish Blog'
+            variant='ghost'
+            onClick={() => setShowModal(true)}
+          />
           <IconContainer name='RiMoreFill' />
         </div>
       </div>
@@ -42,6 +48,9 @@ function App() {
       <Suspense fallback={<p>Loading...</p>}>
         {editor && <Editor data={data} onChange={setData} />}
       </Suspense>
+
+      {showModal && <PublishModal setModal={setShowModal} />}
+      {/* {true && <PublishModal setModal={setShowModal} />} */}
     </div>
   );
 }
