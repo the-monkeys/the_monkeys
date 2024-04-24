@@ -7,7 +7,7 @@ const editorConfig: EditorConfig = {
       class: require('@editorjs/header'),
       inlineToolbar: true,
       config: {
-        placeholder: 'Title',
+        placeholder: 'Start writing ...',
         levels: [1, 2, 3],
         defaultLevel: 3,
       },
@@ -16,7 +16,7 @@ const editorConfig: EditorConfig = {
       class: require('@editorjs/paragraph'),
       inlineToolbar: true,
       config: {
-        placeholder: 'Unleash your creativity ...',
+        placeholder: 'Start writing ...',
       },
     },
     list: {

@@ -12,6 +12,7 @@ const UserOptions: FC<UserOptionsProps> = ({ setUserOptions }) => {
   return (
     <div
       className='pt-4 absolute top-full right-0 w-44'
+      onMouseEnter={() => setUserOptions(true)}
       onMouseLeave={() => setUserOptions(false)}
     >
       <div className='flex h-fit max-h-[80vh] flex-col gap-2 overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite py-2 dark:bg-primary-monkeyBlack drop-shadow-lg'>
@@ -26,12 +27,12 @@ const UserOptions: FC<UserOptionsProps> = ({ setUserOptions }) => {
         </Link>
 
         <Link
-          href='/bookmarks'
+          href='/saved'
           className='group flex w-full items-center justify-start gap-2 px-4 py-2'
         >
           <Icon name='RiBookmarkLine' size={20} hasHover={false} />
           <p className='font-josefin_Sans group-hover:ml-2 transition-all'>
-            Bookmarks
+            Saved
           </p>
         </Link>
 

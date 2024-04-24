@@ -12,8 +12,10 @@ const initial_data = {
   time: new Date().getTime(),
   blocks: [
     {
-      type: 'paragraph',
-      data: {},
+      type: 'header',
+      data: {
+        level: 1,
+      },
     },
   ],
 };
@@ -34,13 +36,14 @@ function App() {
 
   return (
     <div>
-      <div className='px-5 sm:px-4 py-2 flex gap-4 items-end justify-end'>
+      <div className='px-5 sm:px-4 py-2 flex gap-4 items-center justify-end'>
         <div className='flex gap-4 items-center justify-between'>
           <Button
             title='Publish Blog'
-            variant='ghost'
+            variant='primary'
             onClick={() => setShowModal(true)}
           />
+
           <IconContainer name='RiMoreFill' />
         </div>
       </div>
@@ -50,7 +53,6 @@ function App() {
       </Suspense>
 
       {showModal && <PublishModal setModal={setShowModal} />}
-      {/* {true && <PublishModal setModal={setShowModal} />} */}
     </div>
   );
 }

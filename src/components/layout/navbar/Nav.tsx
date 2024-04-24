@@ -16,6 +16,22 @@ const Nav = () => {
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
 
+  const handleNotificationHover = (status: boolean) => {
+    if (showUserOptions) {
+      setShowUserOptions(false);
+    }
+
+    setShowNotifications(status);
+  };
+
+  const handleUserOptionsHover = (status: boolean) => {
+    if (showNotifications) {
+      setShowNotifications(false);
+    }
+
+    setShowUserOptions(status);
+  };
+
   return (
     <div className='sticky left-0 top-0 flex w-full items-center justify-between bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75 z-30'>
       <div className='flex items-center gap-5'>
@@ -35,8 +51,8 @@ const Nav = () => {
 
           <div
             className='relative'
-            onMouseEnter={() => setShowNotifications(true)}
-            onMouseLeave={() => setShowNotifications(false)}
+            onMouseLeave={() => handleNotificationHover(false)}
+            onMouseEnter={() => handleNotificationHover(true)}
           >
             <div className='relative'>
               <IconContainer
@@ -56,8 +72,8 @@ const Nav = () => {
 
           <div
             className='relative'
-            onMouseEnter={() => setShowUserOptions(true)}
-            onMouseLeave={() => setShowUserOptions(false)}
+            onMouseEnter={() => handleUserOptionsHover(true)}
+            onMouseLeave={() => handleUserOptionsHover(false)}
           >
             <IconContainer
               name={showUserOptions ? 'RiUserFill' : 'RiUserLine'}

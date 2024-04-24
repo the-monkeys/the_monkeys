@@ -25,10 +25,10 @@ const PublishModal: FC<PublishModalProps> = ({ setModal }) => {
       <BlogDetails />
 
       <ModalFooter>
-        <p className='text-justify font-jost text-sm'>
+        <p className='text-center font-jost text-sm'>
           <b>Important: </b>Modifications made here will solely affect the
-          presentation of your blog in prominent locations such as Monkeys's
-          feed, without altering the actual content of your blog.
+          presentation of your blog, without altering the actual content of your
+          blog.
         </p>
       </ModalFooter>
     </Modal>

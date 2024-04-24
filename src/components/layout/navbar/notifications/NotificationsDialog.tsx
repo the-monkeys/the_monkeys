@@ -15,6 +15,7 @@ const NotificationsDialog: FC<NotificationsDialogProps> = ({
   return (
     <div
       className='pt-4 absolute top-full right-0 w-96'
+      onMouseEnter={() => setNotifications(true)}
       onMouseLeave={() => setNotifications(false)}
     >
       <div className='flex flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack drop-shadow-lg'>
