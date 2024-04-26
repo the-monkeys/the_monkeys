@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -16,21 +16,47 @@ const Nav = () => {
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
 
-  const handleNotificationHover = (status: boolean) => {
+  const notificationsRef = useRef<HTMLDivElement>(null);
+  const userOptionsRef = useRef<HTMLDivElement>(null);
+
+  const handleNotificationClick = () => {
     if (showUserOptions) {
       setShowUserOptions(false);
     }
 
-    setShowNotifications(status);
+    setShowNotifications(true);
   };
 
-  const handleUserOptionsHover = (status: boolean) => {
+  const handleUserOptionsClick = () => {
     if (showNotifications) {
       setShowNotifications(false);
     }
 
-    setShowUserOptions(status);
+    setShowUserOptions(true);
   };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      notificationsRef.current &&
+      !notificationsRef.current.contains(event.target as Node)
+    ) {
+      setShowNotifications(false);
+    }
+
+    if (
+      userOptionsRef.current &&
+      !userOptionsRef.current.contains(event.target as Node)
+    ) {
+      setShowUserOptions(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className='sticky left-0 top-0 flex w-full items-center justify-between bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75 z-30'>
@@ -51,8 +77,8 @@ const Nav = () => {
 
           <div
             className='relative'
-            onMouseLeave={() => handleNotificationHover(false)}
-            onMouseEnter={() => handleNotificationHover(true)}
+            onClick={handleNotificationClick}
+            ref={notificationsRef}
           >
             <div className='relative'>
               <IconContainer
@@ -72,8 +98,8 @@ const Nav = () => {
 
           <div
             className='relative'
-            onMouseEnter={() => handleUserOptionsHover(true)}
-            onMouseLeave={() => handleUserOptionsHover(false)}
+            onClick={handleUserOptionsClick}
+            ref={userOptionsRef}
           >
             <IconContainer
               name={showUserOptions ? 'RiUserFill' : 'RiUserLine'}

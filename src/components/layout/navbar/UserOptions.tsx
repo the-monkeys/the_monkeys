@@ -8,13 +8,9 @@ type UserOptionsProps = {
   setUserOptions: React.Dispatch<SetStateAction<boolean>>;
 };
 
-const UserOptions: FC<UserOptionsProps> = ({ setUserOptions }) => {
+const UserOptions: FC<UserOptionsProps> = () => {
   return (
-    <div
-      className='pt-4 absolute top-full right-0 w-44'
-      onMouseEnter={() => setUserOptions(true)}
-      onMouseLeave={() => setUserOptions(false)}
-    >
+    <div className='pt-4 absolute top-full right-0 w-44'>
       <div className='flex h-fit max-h-[80vh] flex-col gap-2 overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite py-2 dark:bg-primary-monkeyBlack drop-shadow-lg'>
         <Link
           href='/profile'

@@ -43,8 +43,6 @@ function App() {
             variant='primary'
             onClick={() => setShowModal(true)}
           />
-
-          <IconContainer name='RiMoreFill' />
         </div>
       </div>
 
