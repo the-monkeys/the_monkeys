@@ -4,7 +4,7 @@ export const loginSteps: LoginStep[] = [
   {
     id: 1,
     heading: 'Account Login',
-    subHeading: 'Choose an option to continue',
+    subHeading: 'choose an option to continue',
   },
   {
     id: 2,

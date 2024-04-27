@@ -3,13 +3,13 @@ import { PublishStep } from './PublishModal';
 export const publishSteps: PublishStep[] = [
   {
     id: 1,
-    heading: 'Blog Details',
-    subHeading: 'Add Title and Subheading to your blog',
+    heading: 'Blog Preview',
+    subHeading: 'add preview details',
   },
   {
     id: 2,
-    heading: 'Blog Topics',
-    subHeading: 'Add subitable topics to your blog',
+    heading: 'Blog Details',
+    subHeading: 'select topics suitable for your blog',
   },
   {
     id: 3,

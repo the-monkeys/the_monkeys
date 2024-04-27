@@ -1,3 +1,5 @@
+'use client';
+
 import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
 
 import { twMerge } from 'tailwind-merge';
@@ -17,6 +19,8 @@ interface InputProps
   extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
   placeholderText: string;
+  intialValue?: string;
+  disabledPlaceholderText?: string;
   variant: InputVariants;
   clearIcon?: boolean;
   setInputText: React.Dispatch<React.SetStateAction<string>>;
@@ -29,6 +33,8 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
       disabled,
       label,
       placeholderText,
+      intialValue = '',
+      disabledPlaceholderText = 'Input disabled',
       variant,
       className,
       clearIcon,
@@ -36,7 +42,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
     },
     ref
   ) => {
-    const [localInput, setLocalInput] = useState<string>('');
+    const [localInput, setLocalInput] = useState<string>(intialValue);
 
     const getStyles = () => {
       switch (variant) {
@@ -69,7 +75,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
         )}
         {variant === 'area' ? (
           <textarea
-            placeholder={!disabled ? placeholderText : 'Input disabled'}
+            placeholder={!disabled ? placeholderText : disabledPlaceholderText}
             value={localInput}
             className={twMerge(
               className,
@@ -83,10 +89,12 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
             ref={ref as React.RefObject<HTMLTextAreaElement>}
           />
         ) : (
-          <div className='flex w-full flex-1 items-center justify-center'>
+          <div className='flex w-full flex-1 items-center'>
             <input
               type={type}
-              placeholder={!disabled ? placeholderText : 'Input disabled'}
+              placeholder={
+                !disabled ? placeholderText : disabledPlaceholderText
+              }
               value={localInput}
               className={twMerge(
                 className,
@@ -102,6 +110,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
                 name='RiCloseLine'
                 size={16}
                 onClick={handleClearInput}
+                className='mr-2'
               />
             )}
           </div>
