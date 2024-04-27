@@ -34,18 +34,17 @@ const BlogDetails: FC<BlogDetailsProps> = ({ setPublishStep }) => {
         className='w-full'
       />
 
-      <div className='mt-4 flex items-center gap-2 flex-wrap'>
-        <Button
-          title='Save as Draft'
-          variant='secondary'
-          className='flex-grow'
-        />
-        <Button
-          title='Add Topics'
-          variant='secondary'
-          className='flex-grow'
-          onClick={() => setPublishStep(publishSteps[1])}
-        />
+      <div className='mt-4 flex flex-col gap-2'>
+        <div className='w-full sm:w-auto flex gap-2'>
+          <Button title='Save as Draft' variant='secondary' className='w-1/2' />
+          <Button
+            title='Add Topics'
+            variant='secondary'
+            className='w-1/2'
+            onClick={() => setPublishStep(publishSteps[1])}
+          />
+        </div>
+
         <Button
           title='Publish'
           variant='primary'
