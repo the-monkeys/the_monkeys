@@ -12,6 +12,7 @@ import { OutputData } from '@editorjs/editorjs';
 const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
 });
+
 const initial_data = {
   time: new Date().getTime(),
   blocks: [
@@ -23,10 +24,12 @@ const initial_data = {
     },
   ],
 };
+
 type EditorProps = {
   data: OutputData;
   onChange?: (data: OutputData) => void;
 };
+
 function App() {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData>(initial_data);
