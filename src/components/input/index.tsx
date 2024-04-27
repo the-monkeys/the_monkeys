@@ -1,4 +1,4 @@
-'use client';
+'use-client';
 
 import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
 
@@ -19,7 +19,6 @@ interface InputProps
   extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
   placeholderText: string;
-  intialValue?: string;
   disabledPlaceholderText?: string;
   variant: InputVariants;
   clearIcon?: boolean;
@@ -33,7 +32,6 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
       disabled,
       label,
       placeholderText,
-      intialValue = '',
       disabledPlaceholderText = 'Input disabled',
       variant,
       className,
@@ -42,7 +40,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
     },
     ref
   ) => {
-    const [localInput, setLocalInput] = useState<string>(intialValue);
+    const [localInput, setLocalInput] = useState<string>('');
 
     const getStyles = () => {
       switch (variant) {
