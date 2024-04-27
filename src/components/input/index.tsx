@@ -63,7 +63,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
     };
 
     return (
-      <div className='flex flex-col items-start'>
+      <div className='flex-grow flex flex-col items-start'>
         {label && (
           <p className='pl-1 font-josefin_Sans text-xs sm:text-sm'>{label}</p>
         )}

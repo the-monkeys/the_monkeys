@@ -6,17 +6,24 @@ import Input from '../input';
 type SearchBoxProps = {
   className?: string;
   setSearchInput: React.Dispatch<React.SetStateAction<string>>;
+  placeholder?: string;
+  showIcon?: boolean;
 };
 
-const SearchBox: FC<SearchBoxProps> = ({ className, setSearchInput }) => {
+const SearchBox: FC<SearchBoxProps> = ({
+  className,
+  setSearchInput,
+  placeholder,
+  showIcon = true,
+}) => {
   return (
     <div className='flex items-center'>
-      <Icon name='RiSearchLine' />
+      {showIcon && <Icon name='RiSearchLine' />}
 
       <Input
         className={className}
         type='text'
-        placeholderText='Search here'
+        placeholderText={placeholder ? placeholder : 'Search here'}
         setInputText={setSearchInput}
         variant='ghost'
         clearIcon

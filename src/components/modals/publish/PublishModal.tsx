@@ -6,8 +6,10 @@ import Modal from '..';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
 import BlogDetails from './BlogDetails';
+import BlogTopics from './BlogTopics';
+import { publishSteps } from './publishSteps';
 
-export type LoginStep = {
+export type PublishStep = {
   id: number;
   heading: string;
   subHeading?: string;
@@ -18,11 +20,26 @@ type PublishModalProps = {
 };
 
 const PublishModal: FC<PublishModalProps> = ({ setModal }) => {
+  const [publishStep, setPublishStep] = useState<PublishStep>(publishSteps[0]);
+
+  const handlePublishStep = () => {
+    if (publishStep.id === 1)
+      return <BlogDetails setPublishStep={setPublishStep} />;
+    else if (publishStep.id === 2)
+      return <BlogTopics setPublishStep={setPublishStep} />;
+    else return <BlogDetails setPublishStep={setPublishStep} />;
+  };
+
   return (
     <Modal setModal={setModal}>
-      <ModalHeader showHeading setModal={setModal} heading='Blog Details' />
+      <ModalHeader
+        showHeading
+        setModal={setModal}
+        heading={publishStep.heading}
+        subHeading={publishStep.subHeading}
+      />
 
-      <BlogDetails />
+      {handlePublishStep()}
 
       <ModalFooter>
         <p className='text-center font-jost text-sm'>
