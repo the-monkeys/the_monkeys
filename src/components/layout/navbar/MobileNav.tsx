@@ -6,8 +6,8 @@ import ThemeSwitch from '@/components/basic/ThemeSwitch';
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 
-import CreateButton from '../CreateButton';
-import MobileUserOptions from './MobileUserOptions';
+import CreateButton from '../../button/CreateButton';
+import UserOptions from './UserOptions';
 
 const MobileNav = () => {
   const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
@@ -18,7 +18,7 @@ const MobileNav = () => {
 
   return (
     <>
-      <div className='sticky left-0 top-0 flex w-full items-center justify-between gap-5 bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75'>
+      <div className='sticky left-0 top-0 flex w-full items-center justify-between gap-5 bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75 z-30'>
         <Link href='/'>
           <Logo showMobileLogo={true} />
         </Link>
@@ -30,7 +30,7 @@ const MobileNav = () => {
             <Icon name='RiUserLine' onClick={handleShowUserOptions} />
           )}
           {showUserOptions && (
-            <MobileUserOptions setUserOptions={setShowUserOptions} />
+            <UserOptions setUserOptions={setShowUserOptions} />
           )}
         </div>
       </div>

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef } from 'react';
 
-import EditorJS, { OutputData } from '@editorjs/editorjs';
+import EditorJS, { BlockToolData, OutputData } from '@editorjs/editorjs';
 
 import editorConfig from './editorjs.config';
 
@@ -19,8 +19,8 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
         data: data,
         onChange: async (api, event) => {
           if (onChange) {
-            const data = await api.saver.save();
-            onChange(data);
+            const modifiedData = addTimestampToBlock(await api.saver.save());
+            onChange(modifiedData);
           }
         },
       });
@@ -32,6 +32,19 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
       }
     };
   }, []);
+
+  const addTimestampToBlock = (data: OutputData): OutputData => {
+    return {
+      ...data,
+      blocks: data.blocks.map((block: BlockToolData) => ({
+        ...block,
+        data: {
+          ...block.data,
+          timestamp: new Date().getTime(),
+        },
+      })),
+    };
+  };
 
   return (
     <div className='px-5 sm:px-4 py-2 font-jost' id='editorjs-container'></div>

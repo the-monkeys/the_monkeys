@@ -17,3 +17,8 @@ declare module '@editorjs/table' {
   import Table from '@editorjs/table';
   export = Table;
 }
+
+declare module '@editorjs/image' {
+  import Image from '@editorjs/image';
+  export = Image;
+}

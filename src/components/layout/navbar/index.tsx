@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import MobileNav from './mobileNav/MobileNav';
-import Nav from './nav/Nav';
+import MobileNav from './MobileNav';
+import Nav from './Nav';
 
 const Navbar = () => {
   const [isMobile, setIsMobile] = useState<boolean>(false);

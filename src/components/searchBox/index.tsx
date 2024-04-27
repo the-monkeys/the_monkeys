@@ -10,7 +10,7 @@ type SearchBoxProps = {
 
 const SearchBox: FC<SearchBoxProps> = ({ className, setSearchInput }) => {
   return (
-    <div className='flex items-center gap-2'>
+    <div className='flex items-center'>
       <Icon name='RiSearchLine' />
 
       <Input

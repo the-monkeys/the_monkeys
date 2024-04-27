@@ -29,7 +29,7 @@ const ComingSoon = () => {
         />
       </Link>
 
-      <p className='mt-4 text-center font-jost text-base text-secondary-lightGrey md:text-lg'>
+      <p className='mt-4 text-center font-jost text-base text-secondary-darkGrey/75 dark:text-secondary-white/75 md:text-lg'>
         Get ready to be part of the excitement and be the first to experience
         our grand reveal. Stay tuned for updates and announcements. Thank you
         for your anticipation and patience!
