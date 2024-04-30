@@ -41,7 +41,6 @@ const MobileNav = () => {
         <CreateButton showTitle={false} />
 
         <Link href='/notifications' className='relative'>
-          <span className='absolute right-0 top-0 z-10 h-2 w-2 rounded-full bg-primary-monkeyOrange'></span>
           <Icon name='RiNotification3Line' />
         </Link>
       </div>
