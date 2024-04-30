@@ -23,9 +23,11 @@ const generatePreviewBlocks = (block: OutputBlockData) => {
     const level = data.level || 1;
     const styleClass = headerLevelStyles[level] || headerLevelStyles[1];
     const HeaderTag = `h${level}` as keyof JSX.IntrinsicElements;
+    const text = data.text.replace(/&nbsp;/g, ' ');
+
     return (
       <HeaderTag key={id} className={`${styleClass} pt-2`}>
-        {data.text}
+        {text}
       </HeaderTag>
     );
   };
@@ -40,18 +42,22 @@ const generatePreviewBlocks = (block: OutputBlockData) => {
               'py-2 font-jost'
             )}
           >
-            {item}
+            {item.replace(/&nbsp;/g, ' ')}
           </li>
         );
       })}
     </ul>
   );
 
-  const renderParagraphBlock = () => (
-    <p key={id} className='font-jost py-2 text-[1.2rem]'>
-      {data.text}
-    </p>
-  );
+  const renderParagraphBlock = () => {
+    const text = data.text.replace(/&nbsp;/g, ' ');
+
+    return (
+      <p key={id} className='font-jost py-2 text-[1.2rem]'>
+        {text}
+      </p>
+    );
+  };
 
   switch (type) {
     case 'header':

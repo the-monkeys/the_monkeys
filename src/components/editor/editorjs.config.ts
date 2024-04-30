@@ -23,13 +23,6 @@ const editorConfig: EditorConfig = {
       class: require('@editorjs/list'),
       config: {},
     },
-    table: {
-      class: require('@editorjs/table'),
-      config: {
-        rows: 3,
-        cols: 3,
-      },
-    },
     image: {
       class: require('@editorjs/image'),
       config: {
