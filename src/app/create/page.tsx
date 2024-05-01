@@ -58,18 +58,27 @@ function App() {
 
   return (
     <div>
-      <div className='px-5 sm:px-4 py-2 flex gap-2 items-center justify-end'>
+      <div className='px-5 sm:px-4 flex gap-2 items-center justify-end'>
+        {data?.blocks.length > 3 && (
+          <Button
+            title={editorState === 'Edit' ? 'Preview' : 'Modify'}
+            variant='secondary'
+            onClick={handleEditorState}
+            className='transition-all'
+          />
+        )}
         <Button
-          title={editorState === 'Edit' ? 'Preview' : 'Edit'}
-          variant='secondary'
-          onClick={handleEditorState}
-        />
-        <Button
-          title='Publish Blog'
+          title='Publish'
           variant='primary'
           onClick={() => setShowModal(true)}
         />
       </div>
+
+      {data?.blocks.length < 3 && (
+        <p className='px-5 sm:px-4 text-center font-josefin_Sans opacity-75'>
+          Add some more content to enable preview.
+        </p>
+      )}
 
       <Suspense fallback={<p>Loading...</p>}>
         {editor && editorState === 'Edit' && (

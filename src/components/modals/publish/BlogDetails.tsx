@@ -46,7 +46,7 @@ const BlogDetails: FC<BlogDetailsProps> = ({ setPublishStep }) => {
         </div>
 
         <Button
-          title='Publish'
+          title='Publish Blog'
           variant='primary'
           className='w-full'
           iconName='RiArrowRightUpLine'

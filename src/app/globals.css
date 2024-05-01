@@ -65,14 +65,15 @@ h3.ce-header {
 
 .ce-toolbar__plus,
 .ce-toolbar__settings-btn {
-  background-color: transparent !important;
+  background-color: #fff4ed;
+  border: 1px solid rgba(43, 43, 43, 0.25);
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .ce-toolbar__plus:hover,
 .ce-toolbar__settings-btn:hover {
-  background-color: rgba(0, 0, 0, 0.25) !important;
+  background-color: #fff4ed !important;
+  border: none;
 }
 
 .dark .ce-toolbar__plus svg,
@@ -82,14 +83,15 @@ h3.ce-header {
 
 .dark .ce-toolbar__plus,
 .dark .ce-toolbar__settings-btn {
-  background-color: transparent !important;
-  border-radius: 8px;
+  background-color: #101010;
   border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
 }
 
 .dark .ce-toolbar__plus:hover,
 .dark .ce-toolbar__settings-btn:hover {
-  background-color: rgba(255, 255, 255, 0.25) !important;
+  background-color: #101010 !important;
+  border: none;
 }
 
 /* popover toolbar styles*/
@@ -103,8 +105,8 @@ h3.ce-header {
   background-color: transparent !important;
 }
 
-.ce-popover-item .ce-popover-item__title:hover {
-  opacity: 0.75;
+.ce-popover-item:hover .ce-popover-item__title {
+  color: #ff462e;
 }
 
 .ce-popover-item--active {
