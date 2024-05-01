@@ -75,7 +75,7 @@ function App() {
       </div>
 
       {data?.blocks.length < 3 && (
-        <p className='px-5 sm:px-4 text-center font-josefin_Sans opacity-75'>
+        <p className='px-5 sm:px-4 pt-2 text-center font-josefin_Sans opacity-75'>
           Add some more content to enable preview.
         </p>
       )}
