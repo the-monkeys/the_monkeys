@@ -42,6 +42,7 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
           ...block.data,
           timestamp: new Date().getTime(),
         },
+        author: [],
       })),
     };
   };

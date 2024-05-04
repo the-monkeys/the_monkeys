@@ -57,6 +57,14 @@ h3.ce-header {
   margin: 0;
 }
 
+.ce-popover__overlay {
+  background-color: transparent !important;
+}
+
+.ce-block--selected .ce-block__content {
+  background: transparent !important;
+}
+
 /* toolbar: plus & setting button styles */
 .ce-toolbar__plus svg,
 .ce-toolbar__settings-btn svg {
@@ -293,15 +301,5 @@ h3.ce-header {
     top: 100%;
     border-radius: 10px;
     margin-top: 1rem;
-  }
-
-  .ce-popover__overlay {
-    background: #f2f2f3;
-    opacity: 0.6;
-  }
-
-  .dark .ce-popover__overlay {
-    background: #2b2b2b;
-    opacity: 0.6;
   }
 }

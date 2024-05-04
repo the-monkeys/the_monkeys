@@ -1,3 +1,4 @@
+import { BlogViewStyles } from './blog/BlogView';
 import { ButtonVariantStyles } from './button';
 import { IconVariantStyles } from './icon';
 import { InputVariantStyles } from './input';
@@ -35,4 +36,16 @@ export const iconVariantStyles: IconVariantStyles = {
     'text-primary-monkeyBlack dark:text-primary-monkeyWhite group-hover:text-primary-monkeyWhite dark:group-hover:text-primary-monkeyBlack',
   orange: 'text-primary-monkeyOrange',
   white: 'text-primary-monkeyWhite',
+};
+
+export const editorBlockVariantStyles: BlogViewStyles = {
+  base: 'font-jost',
+  header1: 'text-[2rem] pt-2',
+  header2: 'text-[1.8rem] pt-2',
+  header3: 'text-[1.5rem] pt-2',
+  paragraph: 'text-[1.2rem] py-2',
+  list: 'list-outside pl-10 py-2',
+  listItemOrdered: 'py-1 list-decimal',
+  listItemUnordered: 'py-1 list-disc',
+  delimiter: 'pt-2 text-[1.8rem] text-center',
 };

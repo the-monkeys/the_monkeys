@@ -4,6 +4,7 @@ const editorConfig: EditorConfig = {
   holder: 'editorjs-container',
   autofocus: true,
   tools: {
+    delimiter: require('@editorjs/delimiter'),
     header: {
       class: require('@editorjs/header'),
       inlineToolbar: true,
@@ -17,7 +18,7 @@ const editorConfig: EditorConfig = {
       class: require('@editorjs/paragraph'),
       inlineToolbar: true,
       config: {
-        placeholder: 'express your thoughts...',
+        placeholder: 'add some text...',
       },
     },
     list: {

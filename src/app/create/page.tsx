@@ -4,8 +4,8 @@ import React, { Suspense, useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
+import BlogView from '@/components/blog/BlogView';
 import Button from '@/components/button';
-import EditorPreview from '@/components/editor/Preview';
 // import Editor, { EditorProps } from '@/components/editor';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { OutputData } from '@editorjs/editorjs';
@@ -59,14 +59,13 @@ function App() {
   return (
     <div>
       <div className='px-5 sm:px-4 flex gap-2 items-center justify-end'>
-        {data?.blocks.length > 3 && (
-          <Button
-            title={editorState === 'Edit' ? 'Preview' : 'Modify'}
-            variant='secondary'
-            onClick={handleEditorState}
-            className='transition-all'
-          />
-        )}
+        <Button
+          title={editorState === 'Edit' ? 'Preview' : 'Modify'}
+          variant='secondary'
+          onClick={handleEditorState}
+          className='transition-all'
+        />
+
         <Button
           title='Publish'
           variant='primary'
@@ -74,19 +73,13 @@ function App() {
         />
       </div>
 
-      {data?.blocks.length < 3 && (
-        <p className='px-5 sm:px-4 pt-2 text-center font-josefin_Sans opacity-75'>
-          Add some more content to enable preview.
-        </p>
-      )}
-
       <Suspense fallback={<p>Loading...</p>}>
         {editor && editorState === 'Edit' && (
           <Editor data={data} onChange={setData} />
         )}
       </Suspense>
 
-      {editorState === 'Preview' && <EditorPreview data={data} />}
+      {editorState === 'Preview' && <BlogView data={data} />}
 
       {showModal && <PublishModal setModal={setShowModal} />}
     </div>

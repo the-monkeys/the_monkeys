@@ -17,3 +17,8 @@ declare module '@editorjs/image' {
   import Image from '@editorjs/image';
   export = Image;
 }
+
+declare module '@editorjs/delimiter' {
+  import Delimiter from '@editorjs/delimiter';
+  export = Delimiter;
+}
