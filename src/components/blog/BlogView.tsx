@@ -114,7 +114,7 @@ const generateBlogViewBlocks = (block: OutputBlockData) => {
         key={id}
         className={`${baseStyle} ${editorBlockVariantStyles.delimiter}`}
       >
-        * * *
+        ~ ~ ~
       </div>
     );
   };

@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef } from 'react';
 
 import EditorJS, { BlockToolData, OutputData } from '@editorjs/editorjs';
 
-import editorConfig from './editorjs.config';
+import editorConfig from '../../config/editorjs.config';
 
 export type EditorProps = {
   data: OutputData;

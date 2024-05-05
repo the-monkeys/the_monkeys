@@ -58,7 +58,7 @@ function App() {
 
   return (
     <div>
-      <div className='px-5 sm:px-4 flex gap-2 items-center justify-end'>
+      <div className='px-5 sm:px-4 flex gap-2 items-center justify-center'>
         <Button
           title={editorState === 'Edit' ? 'Preview' : 'Modify'}
           variant='secondary'

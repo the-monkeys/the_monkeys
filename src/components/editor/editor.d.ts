@@ -22,3 +22,8 @@ declare module '@editorjs/delimiter' {
   import Delimiter from '@editorjs/delimiter';
   export = Delimiter;
 }
+
+declare module '@editorjs/marker' {
+  import Marker from '@editorjs/marker';
+  export = Marker;
+}

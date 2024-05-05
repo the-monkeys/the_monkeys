@@ -5,10 +5,10 @@ import { FC, useState } from 'react';
 import Button from '@/components/button';
 import TopicChip from '@/components/chip/TopicChip';
 import SearchBox from '@/components/searchBox';
+import { publishSteps } from '@/constants/modal';
 import { BlogTopic, dummyTopics } from '@/constants/topics';
 
 import { PublishStep } from './PublishModal';
-import { publishSteps } from './publishSteps';
 
 type BlogTopicsProps = {
   setPublishStep: React.Dispatch<React.SetStateAction<PublishStep>>;

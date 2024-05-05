@@ -1,5 +1,7 @@
 import { FC, useState } from 'react';
 
+import { signupSteps } from '@/constants/modal';
+
 import Modal from '..';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
@@ -7,7 +9,6 @@ import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
 import Step4 from './Step4';
-import { signupSteps } from './signupSteps';
 
 export type SignupStep = {
   id: number;
@@ -33,7 +34,6 @@ const SignupModal: FC<SignupModalProps> = ({ setModal }) => {
     <Modal setModal={setModal}>
       <ModalHeader
         showHeading
-        setModal={setModal}
         heading={signupStep.heading}
         subHeading={signupStep.subHeading}
       />

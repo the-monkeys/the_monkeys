@@ -2,12 +2,13 @@
 
 import React, { FC, useState } from 'react';
 
+import { publishSteps } from '@/constants/modal';
+
 import Modal from '..';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
 import BlogDetails from './BlogDetails';
 import BlogTopics from './BlogTopics';
-import { publishSteps } from './publishSteps';
 
 export type PublishStep = {
   id: number;
@@ -34,7 +35,6 @@ const PublishModal: FC<PublishModalProps> = ({ setModal }) => {
     <Modal setModal={setModal}>
       <ModalHeader
         showHeading
-        setModal={setModal}
         heading={publishStep.heading}
         subHeading={publishStep.subHeading}
       />

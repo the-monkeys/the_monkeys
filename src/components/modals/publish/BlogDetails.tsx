@@ -4,9 +4,9 @@ import { FC, useState } from 'react';
 
 import Button from '@/components/button';
 import Input from '@/components/input';
+import { publishSteps } from '@/constants/modal';
 
 import { PublishStep } from './PublishModal';
-import { publishSteps } from './publishSteps';
 
 type BlogDetailsProps = {
   setPublishStep: React.Dispatch<React.SetStateAction<PublishStep>>;

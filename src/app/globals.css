@@ -164,10 +164,6 @@ h3.ce-header {
   background-color: transparent !important;
 }
 
-.dark .ce-popover-item .ce-popover-item__title:hover {
-  opacity: 0.75;
-}
-
 .dark .ce-popover-item--active {
   background-color: transparent !important;
 }
@@ -280,12 +276,32 @@ h3.ce-header {
   color: #2b2b2b;
 }
 
+/* delimiter styles */
+.ce-delimiter:before {
+  content: '~ ~ ~' !important;
+  font-size: 1.8rem !important;
+  line-height: normal !important;
+  height: fit-content !important;
+  letter-spacing: normal !important;
+}
+
+/* inline marker styles */
+.cdx-marker {
+  color: #101010;
+}
+
+.dark .cdx-marker {
+  color: #f2f2f3;
+}
+
 /* selection styles */
 .light ::selection {
+  background-color: #101010;
   color: #101010;
 }
 
 .dark ::selection {
+  background-color: #f2f2f3;
   color: #101010;
 }
 

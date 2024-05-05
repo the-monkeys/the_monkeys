@@ -24,7 +24,7 @@ const Nav = () => {
       setShowUserOptions(false);
     }
 
-    setShowNotifications(true);
+    setShowNotifications((prevVal) => !prevVal);
   };
 
   const handleUserOptionsClick = () => {
@@ -32,7 +32,7 @@ const Nav = () => {
       setShowNotifications(false);
     }
 
-    setShowUserOptions(true);
+    setShowUserOptions((prevVal) => !prevVal);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -59,7 +59,7 @@ const Nav = () => {
   }, []);
 
   return (
-    <div className='sticky left-0 top-0 flex w-full items-center justify-between bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-md dark:bg-primary-monkeyBlack/75 z-30'>
+    <div className='sticky left-0 top-0 flex w-full items-center justify-between bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-sm dark:bg-primary-monkeyBlack/75 z-30'>
       <div className='flex items-center gap-5'>
         <Link href='/'>
           <Logo showMobileLogo={true} />

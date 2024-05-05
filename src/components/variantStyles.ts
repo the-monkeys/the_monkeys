@@ -47,5 +47,5 @@ export const editorBlockVariantStyles: BlogViewStyles = {
   list: 'list-outside pl-10 py-2',
   listItemOrdered: 'py-1 list-decimal',
   listItemUnordered: 'py-1 list-disc',
-  delimiter: 'pt-2 text-[1.8rem] text-center',
+  delimiter: 'text-[2rem] text-center',
 };
