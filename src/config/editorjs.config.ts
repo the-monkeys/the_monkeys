@@ -1,28 +1,29 @@
 import { EditorConfig } from '@editorjs/editorjs';
 
-const editorConfig: EditorConfig = {
-  holder: 'editorjs-container',
+export const editorConfig: EditorConfig = {
+  holder: 'editorjs_editor-container',
   autofocus: true,
-  inlineToolbar: false,
   tools: {
     delimiter: require('@editorjs/delimiter'),
     header: {
       class: require('@editorjs/header'),
+      inlineToolbar: true,
       config: {
-        placeholder: 'add a title...',
+        placeholder: 'Add a title...',
         levels: [1, 2, 3],
-        defaultLevel: 3,
+        defaultLevel: 2,
       },
     },
     paragraph: {
       class: require('@editorjs/paragraph'),
+      inlineToolbar: true,
       config: {
-        placeholder: 'add some text...',
+        placeholder: 'Add some text...',
       },
     },
     list: {
       class: require('@editorjs/list'),
-      config: {},
+      inlineToolbar: true,
     },
     image: {
       class: require('@editorjs/image'),
@@ -41,4 +42,21 @@ const editorConfig: EditorConfig = {
   defaultBlock: 'paragraph',
 };
 
-export default editorConfig;
+export const editorViewConfig: EditorConfig = {
+  holder: 'editorjs_veiw-container',
+  tools: {
+    delimiter: require('@editorjs/delimiter'),
+    header: {
+      class: require('@editorjs/header'),
+    },
+    paragraph: {
+      class: require('@editorjs/paragraph'),
+    },
+    list: {
+      class: require('@editorjs/list'),
+    },
+    image: {
+      class: require('@editorjs/image'),
+    },
+  },
+};

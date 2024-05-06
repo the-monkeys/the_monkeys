@@ -278,7 +278,8 @@ h3.ce-header {
 
 /* delimiter styles */
 .ce-delimiter:before {
-  content: '~ ~ ~' !important;
+  content: '● ● ●' !important;
+  opacity: 0.75;
   font-size: 1.8rem !important;
   line-height: normal !important;
   height: fit-content !important;

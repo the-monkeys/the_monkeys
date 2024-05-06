@@ -1,13 +1,31 @@
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
-import EditorJS, { BlockToolData, OutputData } from '@editorjs/editorjs';
+import EditorJS, {
+  BlockId,
+  BlockToolData,
+  OutputData,
+  Tool,
+} from '@editorjs/editorjs';
+import { BlockTuneData } from '@editorjs/editorjs/types/block-tunes/block-tune-data';
 
-import editorConfig from '../../config/editorjs.config';
+import { editorConfig } from '../../config/editorjs.config';
 
 export type EditorProps = {
   data: OutputData;
   onChange?: (data: OutputData) => void;
 };
+
+interface ModifiedOutputData {
+  version?: string;
+  time?: number;
+  blocks: {
+    id?: string;
+    type: string;
+    data: BlockToolData;
+    time?: number;
+    tunes?: { [name: string]: BlockTuneData };
+  }[];
+}
 
 const Editor: FC<EditorProps> = ({ data, onChange }) => {
   const editorInstance = useRef<EditorJS | null>(null);
@@ -17,10 +35,11 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
       editorInstance.current = new EditorJS({
         ...editorConfig,
         data: data,
-        onChange: async (api, event) => {
+        onChange: async (api, event: any) => {
           if (onChange) {
-            const modifiedData = addTimestampToBlock(await api.saver.save());
-            onChange(modifiedData);
+            const savedData = await api.saver.save();
+
+            onChange(savedData);
           }
         },
       });
@@ -33,22 +52,11 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
     };
   }, []);
 
-  const addTimestampToBlock = (data: OutputData): OutputData => {
-    return {
-      ...data,
-      blocks: data.blocks.map((block: BlockToolData) => ({
-        ...block,
-        data: {
-          ...block.data,
-          timestamp: new Date().getTime(),
-        },
-        author: [],
-      })),
-    };
-  };
-
   return (
-    <div className='px-5 sm:px-4 py-2 font-jost' id='editorjs-container'></div>
+    <div
+      className='px-5 sm:px-4 font-jost'
+      id='editorjs_editor-container'
+    ></div>
   );
 };
 

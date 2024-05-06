@@ -4,9 +4,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 
-import BlogView from '@/components/blog/BlogView';
 import Button from '@/components/button';
-// import Editor, { EditorProps } from '@/components/editor';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { OutputData } from '@editorjs/editorjs';
 
@@ -37,7 +35,6 @@ function App() {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData>(initial_data);
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [editorState, setEditorState] = useState<EditorState>('Edit');
 
   useEffect(() => {
     const loadEditor = async () => {
@@ -48,24 +45,9 @@ function App() {
     loadEditor();
   }, []);
 
-  const handleEditorState = () => {
-    if (editorState === 'Edit') {
-      setEditorState('Preview');
-    } else {
-      setEditorState('Edit');
-    }
-  };
-
   return (
-    <div>
-      <div className='px-5 sm:px-4 flex gap-2 items-center justify-center'>
-        <Button
-          title={editorState === 'Edit' ? 'Preview' : 'Modify'}
-          variant='secondary'
-          onClick={handleEditorState}
-          className='transition-all'
-        />
-
+    <>
+      <div className='px-5 sm:px-2 flex gap-2 items-end justify-end'>
         <Button
           title='Publish'
           variant='primary'
@@ -73,16 +55,14 @@ function App() {
         />
       </div>
 
+      <p className='my-2 px-5 sm:px-2 font-jost text-sm'>Saved in Drafts</p>
+
       <Suspense fallback={<p>Loading...</p>}>
-        {editor && editorState === 'Edit' && (
-          <Editor data={data} onChange={setData} />
-        )}
+        {editor && <Editor data={data} onChange={setData} />}
       </Suspense>
 
-      {editorState === 'Preview' && <BlogView data={data} />}
-
       {showModal && <PublishModal setModal={setShowModal} />}
-    </div>
+    </>
   );
 }
 
