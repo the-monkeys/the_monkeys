@@ -20,17 +20,13 @@ const Nav = () => {
   const userOptionsRef = useRef<HTMLDivElement>(null);
 
   const handleNotificationClick = () => {
-    if (showUserOptions) {
-      setShowUserOptions(false);
-    }
+    setShowUserOptions(false);
 
     setShowNotifications((prevVal) => !prevVal);
   };
 
   const handleUserOptionsClick = () => {
-    if (showNotifications) {
-      setShowNotifications(false);
-    }
+    setShowNotifications(false);
 
     setShowUserOptions((prevVal) => !prevVal);
   };
@@ -91,9 +87,7 @@ const Nav = () => {
               />
             </div>
 
-            {showNotifications && (
-              <NotificationsDialog setNotifications={setShowNotifications} />
-            )}
+            {showNotifications && <NotificationsDialog />}
           </div>
 
           <div
