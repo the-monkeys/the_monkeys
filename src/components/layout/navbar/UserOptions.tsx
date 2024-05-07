@@ -11,57 +11,47 @@ type UserOptionsProps = {
 const UserOptions: FC<UserOptionsProps> = () => {
   return (
     <div className='pt-4 absolute top-full right-0 w-44'>
-      <div className='flex h-fit max-h-[80vh] flex-col gap-2 overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite py-2 dark:bg-primary-monkeyBlack drop-shadow-lg'>
+      <div className='flex h-fit max-h-[80vh] flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite py-2 dark:bg-primary-monkeyBlack drop-shadow-lg'>
         <Link
           href='/profile'
-          className='group flex w-full items-center justify-start gap-2 px-4 py-2'
+          className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
         >
           <Icon name='RiUserLine' size={20} hasHover={false} />
-          <p className='font-josefin_Sans group-hover:ml-2 transition-all'>
-            Profile
-          </p>
+          <p className='font-josefin_Sans'>Profile</p>
         </Link>
 
         <Link
-          href='/saved'
-          className='group flex w-full items-center justify-start gap-2 px-4 py-2'
+          href='/drafts'
+          className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
         >
-          <Icon name='RiBookmarkLine' size={20} hasHover={false} />
-          <p className='font-josefin_Sans group-hover:ml-2 transition-all'>
-            Saved
-          </p>
+          <Icon name='RiDraftLine' size={20} hasHover={false} />
+          <p className='font-josefin_Sans'>Drafts</p>
         </Link>
 
         <Link
           href='/settings'
-          className='group flex w-full items-center justify-start gap-2 px-4 py-2'
+          className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
         >
           <Icon name='RiSettings3Line' size={20} hasHover={false} />
-          <p className='font-josefin_Sans group-hover:ml-2 transition-all'>
-            Settings
-          </p>
+          <p className='font-josefin_Sans'>Settings</p>
         </Link>
 
         <Link
           href='/profile/activity'
-          className='group flex w-full items-center justify-start gap-2 px-4 py-2'
+          className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
         >
           <Icon name='RiHistoryLine' size={20} hasHover={false} />
-          <p className='font-josefin_Sans group-hover:ml-2 transition-all'>
-            Activity
-          </p>
+          <p className='font-josefin_Sans'>Activity</p>
         </Link>
 
-        <div className='group flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-red cursor-pointer'>
+        <div className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-red cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-red/25'>
           <Icon
             name='RiLogoutBoxRLine'
             size={20}
             className='text-alert-red'
             hasHover={false}
           />
-          <p className='font-josefin_Sans group-hover:ml-1 transition-all'>
-            Logout
-          </p>
+          <p className='font-josefin_Sans'>Logout</p>
         </div>
       </div>
     </div>

@@ -13,6 +13,7 @@ export type IconName =
   | 'RiPencilLine'
   | 'RiSearchLine'
   | 'RiBookmarkLine'
+  | 'RiDraftLine'
   | 'RiArrowRightUpLine'
   | 'RiArrowRightLine'
   | 'RiMoreLine'
