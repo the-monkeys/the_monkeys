@@ -1,33 +1,17 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 
-import EditorJS, {
-  BlockId,
-  BlockToolData,
-  OutputData,
-  Tool,
-} from '@editorjs/editorjs';
-import { BlockTuneData } from '@editorjs/editorjs/types/block-tunes/block-tune-data';
+import { BlockChanges } from '@/app/create/page';
+import EditorJS, { OutputData } from '@editorjs/editorjs';
 
 import { editorConfig } from '../../config/editorjs.config';
 
 export type EditorProps = {
   data: OutputData;
-  onChange?: (data: OutputData) => void;
+  onChange: (data: OutputData) => void;
+  setBlockChanges: React.Dispatch<React.SetStateAction<BlockChanges>>;
 };
 
-interface ModifiedOutputData {
-  version?: string;
-  time?: number;
-  blocks: {
-    id?: string;
-    type: string;
-    data: BlockToolData;
-    time?: number;
-    tunes?: { [name: string]: BlockTuneData };
-  }[];
-}
-
-const Editor: FC<EditorProps> = ({ data, onChange }) => {
+const Editor: FC<EditorProps> = ({ data, onChange, setBlockChanges }) => {
   const editorInstance = useRef<EditorJS | null>(null);
 
   useEffect(() => {
@@ -39,11 +23,24 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
           if (onChange) {
             const savedData = await api.saver.save();
 
+            const id = event?.detail?.target?.id;
+            const type = event?.detail?.target?.name;
+            const time = savedData.time;
+
+            if (id && type && time) {
+              setBlockChanges((prevChanges) => {
+                const newBlockChanges = new Map(prevChanges);
+                newBlockChanges.set(id, { id, type, time });
+                return newBlockChanges;
+              });
+            }
+
             onChange(savedData);
           }
         },
       });
     }
+
     return () => {
       if (editorInstance.current && editorInstance.current.destroy) {
         editorInstance.current.destroy();

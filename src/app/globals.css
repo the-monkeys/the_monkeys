@@ -35,10 +35,6 @@ h2.ce-header {
   font-size: 1.8rem;
 }
 
-h3.ce-header {
-  font-size: 1.5rem;
-}
-
 .ce-paragraph {
   font-size: 1.2rem;
 }
@@ -318,5 +314,9 @@ h3.ce-header {
     top: 100%;
     border-radius: 10px;
     margin-top: 1rem;
+  }
+
+  .ce-delimiter:before {
+    font-size: 1rem !important;
   }
 }

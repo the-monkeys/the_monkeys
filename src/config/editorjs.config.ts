@@ -1,32 +1,38 @@
+import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
+import Header from '@editorjs/header';
+import Image from '@editorjs/image';
+import List from '@editorjs/list';
+import Marker from '@editorjs/marker';
+import Paragraph from '@editorjs/paragraph';
 
 export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',
   autofocus: true,
   tools: {
-    delimiter: require('@editorjs/delimiter'),
+    delimiter: Delimiter,
     header: {
-      class: require('@editorjs/header'),
+      class: Header,
       inlineToolbar: true,
       config: {
-        placeholder: 'Add a title...',
-        levels: [1, 2, 3],
-        defaultLevel: 2,
+        placeholder: 'Pen your thoughts ...',
+        levels: [1, 2],
+        defaultLevel: 1,
       },
     },
     paragraph: {
-      class: require('@editorjs/paragraph'),
+      class: Paragraph,
       inlineToolbar: true,
       config: {
-        placeholder: 'Add some text...',
+        placeholder: 'Pen your thoughts ...',
       },
     },
     list: {
-      class: require('@editorjs/list'),
+      class: List,
       inlineToolbar: true,
     },
     image: {
-      class: require('@editorjs/image'),
+      class: Image,
       config: {
         endpoints: {
           byFile: 'http://localhost:3000/api/uploadFile',
@@ -35,7 +41,7 @@ export const editorConfig: EditorConfig = {
       },
     },
     Marker: {
-      class: require('@editorjs/marker'),
+      class: Marker,
       shortcut: 'CMD+SHIFT+M',
     },
   },
@@ -45,18 +51,18 @@ export const editorConfig: EditorConfig = {
 export const editorViewConfig: EditorConfig = {
   holder: 'editorjs_veiw-container',
   tools: {
-    delimiter: require('@editorjs/delimiter'),
+    delimiter: Delimiter,
     header: {
-      class: require('@editorjs/header'),
+      class: Header,
     },
     paragraph: {
-      class: require('@editorjs/paragraph'),
+      class: Paragraph,
     },
     list: {
-      class: require('@editorjs/list'),
+      class: List,
     },
     image: {
-      class: require('@editorjs/image'),
+      class: Image,
     },
   },
 };
