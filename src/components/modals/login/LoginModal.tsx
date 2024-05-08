@@ -2,13 +2,14 @@
 
 import React, { FC, useState } from 'react';
 
+import { loginSteps } from '@/constants/modal';
+
 import Modal from '..';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
-import { loginSteps } from './loginSteps';
 
 export type LoginStep = {
   id: number;
@@ -33,7 +34,6 @@ const LoginModal: FC<LoginModalProps> = ({ setModal }) => {
     <Modal setModal={setModal}>
       <ModalHeader
         showHeading
-        setModal={setModal}
         heading={loginStep?.heading}
         subHeading={loginStep?.subHeading}
       />

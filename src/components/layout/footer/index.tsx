@@ -22,7 +22,7 @@ const Footer = () => {
           <Logo showSubHeading showMix />
           <form className='mt-5 flex flex-wrap items-end gap-2 md:mt-10'>
             <Input
-              className='w-full sm:w-60 md:w-64'
+              className='w-full sm:w-60 md:w-64 text-sm sm:text-base'
               type='email'
               placeholderText='Your email address'
               setInputText={setUserMail}
@@ -39,6 +39,7 @@ const Footer = () => {
           })}
         </div>
       </div>
+
       <div className='mb-14 flex w-fit flex-col items-center gap-2 self-center'>
         <div className='flex items-center justify-center gap-2'>
           <Link

@@ -3,10 +3,10 @@ import React, { FC, useState } from 'react';
 import Button from '@/components/button';
 import Icon from '@/components/icon/Icon';
 import Input from '@/components/input';
+import { loginSteps } from '@/constants/modal';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-import { loginSteps } from './loginSteps';
 
 type Step2Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
