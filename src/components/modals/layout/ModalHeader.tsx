@@ -1,4 +1,7 @@
+// 'use client';
 import { FC } from 'react';
+
+import { useRouter } from 'next/navigation';
 
 import IconContainer from '@/components/icon';
 
@@ -15,13 +18,17 @@ const ModalHeader: FC<ModalHeaderProps> = ({
   subHeading,
   setModal,
 }) => {
+  const router = useRouter();
   return (
     <div className='flex flex-col justify-center'>
       <div className='m-2 flex justify-end'>
         <IconContainer
           name='RiCloseLine'
           size={20}
-          onClick={() => setModal(false)}
+          onClick={() => {
+            setModal(false);
+            router.back();
+          }}
         />
       </div>
       {showHeading && (

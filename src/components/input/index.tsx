@@ -19,21 +19,11 @@ interface InputProps
   placeholderText: string;
   variant: InputVariants;
   clearIcon?: boolean;
-  setInputText: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
   (
-    {
-      type,
-      disabled,
-      label,
-      placeholderText,
-      variant,
-      className,
-      clearIcon,
-      setInputText,
-    },
+    { type, disabled, label, placeholderText, variant, className, clearIcon },
     ref
   ) => {
     const [localInput, setLocalInput] = useState<string>('');
@@ -54,12 +44,10 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
     ) => {
       const newText = e.target.value;
       setLocalInput(newText);
-      setInputText(newText);
     };
 
     const handleClearInput = () => {
       setLocalInput('');
-      setInputText('');
     };
 
     return (
