@@ -1,18 +1,19 @@
+import { User } from '@/lib/types';
 import axios from 'axios';
-import { AuthOptions, User } from 'next-auth';
+import { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 const api = process.env.NEXT_PUBLIC_API_URL;
 const authOptions: AuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.AUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
         email: {
+          label: 'email',
           type: 'text',
-          label: 'Email',
         },
         first_name: {
           label: 'first_name',
@@ -29,31 +30,36 @@ const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         console.log(api);
+        console.log(credentials, 'credentials');
 
-        const authResponse = await fetch(api + '/users/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(credentials),
-        });
+        try {
+          const authResponse = await axios.post(
+            api + '/auth/login',
+            { email: credentials?.email, password: credentials?.password },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
 
-        if (!authResponse.ok) {
+          console.log(authResponse.data); // authResponse.data contains the response data
+          console.log('hello');
+
+          return authResponse.data; // Return the response data directly
+        } catch (error) {
+          console.error('Error occurred:', error);
           return null;
         }
-
-        const user = await authResponse.json();
-
-        return user;
       },
     }),
   ],
   callbacks: {
-    // async jwt({ token, user }) {
-    //   if (user) token = user as unknown as User;
+    jwt({ token, user }) {
+      if (user) token.user = user as unknown as User;
 
-    //   return token;
-    // },
+      return token;
+    },
     async session({ token, session, trigger }) {
       session.user = token.user;
       if (trigger === 'update') {
