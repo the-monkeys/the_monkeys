@@ -3,6 +3,7 @@ import React, { FC, SetStateAction } from 'react';
 import Link from 'next/link';
 
 import Icon from '@/components/icon/Icon';
+import { signOut } from 'next-auth/react';
 
 type MobileUserOptionsProps = {
   setUserOptions: React.Dispatch<SetStateAction<boolean>>;
@@ -55,7 +56,12 @@ const MobileUserOptions: FC<MobileUserOptionsProps> = ({ setUserOptions }) => {
         </p>
       </Link>
 
-      <div className='group flex w-full items-center justify-start gap-2 px-4 py-2 text-alert-red cursor-pointer'>
+      <div
+        onClick={() => {
+          signOut();
+        }}
+        className='group flex w-full items-center justify-start gap-2 px-4 py-2 text-alert-red cursor-pointer'
+      >
         <Icon
           name='RiLogoutBoxRLine'
           size={20}
