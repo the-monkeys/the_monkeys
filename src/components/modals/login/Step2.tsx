@@ -53,16 +53,17 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
     console.log(res?.ok, 'res.ok');
 
     if (res?.ok) {
-      toast({
-        variant: 'default',
-        title: 'user login sucess',
-      });
+      console.log('OK');
+      router.back();
+      setTimeout(() => {
+        router.refresh();
+      }, 300);
     }
-    console.log(res?.error, 'res.error');
     if (res?.error) {
+      console.log(res.error);
       toast({
         variant: 'destructive',
-        title: 'error',
+        title: 'Error',
         description: res.error,
       });
     }
@@ -85,9 +86,13 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder=' Enter Your Email' {...field} />
+                  <Input
+                    className=''
+                    placeholder=' Enter Your Email'
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
