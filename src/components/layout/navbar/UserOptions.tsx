@@ -1,6 +1,7 @@
 import React, { FC, SetStateAction } from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon/Icon';
 import { signOut } from 'next-auth/react';
@@ -10,6 +11,7 @@ type UserOptionsProps = {
 };
 
 const UserOptions: FC<UserOptionsProps> = () => {
+  const router = useRouter();
   return (
     <div className='pt-4 absolute top-full right-0 w-44'>
       <div className='flex h-fit max-h-[80vh] flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite py-2 dark:bg-primary-monkeyBlack drop-shadow-lg'>
@@ -47,7 +49,9 @@ const UserOptions: FC<UserOptionsProps> = () => {
 
         <div
           onClick={() => {
-            signOut();
+            signOut({ redirect: false }).then(() => {
+              router.push('/'); // Redirect to the dashboard page after signing out
+            });
           }}
           className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-red cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-red/25'
         >
