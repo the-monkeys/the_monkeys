@@ -44,7 +44,6 @@ const authOptions: AuthOptions = {
           );
 
           console.log(authResponse.data); // authResponse.data contains the response data
-          console.log('hello');
 
           return authResponse.data; // Return the response data directly
         } catch (error) {
