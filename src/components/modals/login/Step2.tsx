@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
+import { loginSchema } from '@/lib/schema/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -22,17 +23,6 @@ import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
 import { loginSteps } from './loginSteps';
 
-const formSchema = z.object({
-  email: z
-    .string({ required_error: 'Email is required' })
-    .min(1, 'Email is required')
-    .email('Invalid email'),
-  password: z
-    .string({ required_error: 'Password is required' })
-    .min(1, 'Password is required'),
-  // .min(8, 'Password must be more than 8 characters')
-  // .max(32, 'Password must be less than 32 characters'),
-});
 type Step2Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
 };
@@ -40,15 +30,15 @@ type Step2Props = {
 const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   const { toast } = useToast();
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
       password: '',
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof loginSchema>) {
     const res = await signIn('credentials', {
       email: values.email,
       password: values.password,
