@@ -52,7 +52,7 @@ export const footerList: FooterList[] = [
       },
       {
         title: 'Cookie Policy',
-        link: '/cookie',
+        link: '/cookies',
       },
     ],
   },

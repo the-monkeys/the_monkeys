@@ -6,10 +6,10 @@ import Button from '@/components/button';
 import Icon from '@/components/icon/Icon';
 import Input from '@/components/input';
 import Checkbox from '@/components/input/Checkbox';
+import { loginSteps } from '@/constants/modal';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-import { loginSteps } from './loginSteps';
 
 type Step3Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;

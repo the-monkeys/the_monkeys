@@ -9,14 +9,12 @@ type ModalHeaderProps = {
   heading?: string;
   subHeading?: string;
   showHeading?: boolean;
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ModalHeader: FC<ModalHeaderProps> = ({
   heading = 'Welcome to Monkeys',
   showHeading,
   subHeading,
-  setModal,
 }) => {
   const router = useRouter();
   return (
@@ -26,17 +24,16 @@ const ModalHeader: FC<ModalHeaderProps> = ({
           name='RiCloseLine'
           size={20}
           onClick={() => {
-            setModal(false);
             router.back();
           }}
         />
       </div>
       {showHeading && (
-        <div className='mt-4 flex flex-col gap-2'>
+        <div className='flex flex-col gap-2'>
           <p className='text-center font-playfair_Display text-2xl sm:text-3xl font-semibold'>
             {heading}
           </p>
-          <p className='text-center font-josefin_Sans text-sm sm:text-base'>
+          <p className='text-center font-josefin_Sans text-sm sm:text-base opacity-75'>
             {subHeading}
           </p>
         </div>

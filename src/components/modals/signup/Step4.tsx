@@ -3,11 +3,11 @@ import { FC, useState } from 'react';
 import Button from '@/components/button';
 import Icon from '@/components/icon/Icon';
 import Input from '@/components/input';
+import { signupSteps } from '@/constants/modal';
 
 import SetPassword from '../SetPassword';
 import ModalContent from '../layout/ModalContent';
 import { SignupStep } from './SignupModal';
-import { signupSteps } from './signupSteps';
 
 type Step4Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<SignupStep>>;

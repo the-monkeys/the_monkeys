@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
+import { loginSteps } from '@/constants/modal';
 import { loginSchema } from '@/lib/schema/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
@@ -21,7 +22,6 @@ import { z } from 'zod';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-import { loginSteps } from './loginSteps';
 
 type Step2Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
