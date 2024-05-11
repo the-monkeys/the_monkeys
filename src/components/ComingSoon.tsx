@@ -1,12 +1,5 @@
-'use client';
-
-import { useState } from 'react';
-
 import Image from 'next/image';
 import Link from 'next/link';
-
-import LoginModal from './modals/login/LoginModal';
-import SignupModal from './modals/signup/SignupModal';
 
 const ComingSoon = () => {
   return (
@@ -34,8 +27,6 @@ const ComingSoon = () => {
         our grand reveal. Stay tuned for updates and announcements. Thank you
         for your anticipation and patience!
       </p>
-
-      {/* {showModal && <SignupModal setModal={setShowModal} />} */}
     </div>
   );
 };
