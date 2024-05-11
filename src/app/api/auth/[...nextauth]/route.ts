@@ -25,7 +25,7 @@ const authOptions: AuthOptions = {
         },
         password: {
           label: 'password',
-          type: 'text',
+          type: 'password',
         },
       },
       async authorize(credentials) {

@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -38,33 +38,39 @@ type Step2Props = {
 };
 
 const Step2: FC<Step2Props> = ({ setLoginStep }) => {
+  const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     const res = await signIn('credentials', {
       email: values.email,
       password: values.password,
+      redirect: false,
     });
-    console.log(res);
-    console.log(res?.ok, 'res.ok');
-
     if (res?.ok) {
       console.log('OK');
       router.back();
+      toast({
+        variant: 'default',
+        title: 'success',
+        description: 'user login successfully',
+      });
       setTimeout(() => {
         router.refresh();
       }, 300);
     }
     if (res?.error) {
-      console.log(res.error);
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: res.error,
+        description: 'Failed to login please try again',
       });
     }
   }
