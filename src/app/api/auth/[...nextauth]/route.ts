@@ -48,7 +48,8 @@ const authOptions: AuthOptions = {
 
           return authResponse.data; // Return the response data directly
         } catch (error) {
-          console.error('Error occurred:', error);
+          console.log(error);
+
           return null;
         }
       },
