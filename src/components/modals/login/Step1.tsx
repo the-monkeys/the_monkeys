@@ -3,10 +3,10 @@ import { FC } from 'react';
 import Link from 'next/link';
 
 import Button from '@/components/button';
+import { loginSteps } from '@/constants/modal';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-import { loginSteps } from './loginSteps';
 
 type Step1Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
