@@ -44,6 +44,8 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
       password: values.password,
       redirect: false,
     });
+    console.log(res, 'res');
+
     if (res?.ok) {
       console.log('OK');
       router.back();

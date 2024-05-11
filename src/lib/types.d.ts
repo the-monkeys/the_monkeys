@@ -4,10 +4,11 @@ import { Router } from 'next/router';
 import NextAuth, { DefaultSession, Session } from 'next-auth';
 
 export interface User {
-  statusCode: number;
+  status_code: number;
+  account_id: string;
   token: string;
-  userId: number;
-  userName: string;
+  user_id: number;
+  user_name: string;
   first_name: string;
   last_name: string;
   email: string;

@@ -3,6 +3,7 @@ import React, { FC, SetStateAction } from 'react';
 import Link from 'next/link';
 
 import Icon from '@/components/icon/Icon';
+import { signOut } from 'next-auth/react';
 
 type UserOptionsProps = {
   setUserOptions: React.Dispatch<SetStateAction<boolean>>;
@@ -44,7 +45,12 @@ const UserOptions: FC<UserOptionsProps> = () => {
           <p className='font-josefin_Sans'>Activity</p>
         </Link>
 
-        <div className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-red cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-red/25'>
+        <div
+          onClick={() => {
+            signOut();
+          }}
+          className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-red cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-red/25'
+        >
           <Icon
             name='RiLogoutBoxRLine'
             size={20}
