@@ -51,7 +51,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
       router.back();
       toast({
         variant: 'default',
-        title: 'success',
+        title: 'Success',
         description: 'User logged in successfully.',
       });
       setTimeout(() => {

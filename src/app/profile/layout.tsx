@@ -1,11 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import type { Metadata } from 'next';
 
-import ProfileCard from '@/components/cards/ProfileCard';
-import { useSession } from 'next-auth/react';
-
-import ProfileSection from './ProfileSection';
+import ProfileSection from './components/ProfileSection';
 
 const title = 'Monkeys';
 const description = 'We are The Monkeys! A blogging and educational platform.';

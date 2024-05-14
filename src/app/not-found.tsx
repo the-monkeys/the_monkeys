@@ -28,7 +28,7 @@ const NotFound = () => {
         </div>
       </div>
 
-      <div className='flex w-full flex-col items-start gap-5 sm:w-4/5 md:w-1/2'>
+      <div className='flex w-full flex-col items-start gap-4 sm:w-4/5 md:w-1/2'>
         <SocialCard
           icon='RiDiscordFill'
           title='Join our Discord'

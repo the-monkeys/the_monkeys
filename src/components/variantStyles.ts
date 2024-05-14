@@ -1,6 +1,5 @@
 import { BlogViewStyles } from './blog/BlogView';
 import { ButtonVariantStyles } from './button';
-import { IconVariantStyles } from './icon';
 import { InputVariantStyles } from './input';
 
 export const buttonVariantStyles: ButtonVariantStyles = {
@@ -22,20 +21,6 @@ export const inputVariantStyles: InputVariantStyles = {
   border:
     'border-1 border-secondary-lightGrey/75 focus:border-secondary-lightGrey/25 focus:outline-none rounded-lg',
   ghost: 'focus:outline-none',
-};
-
-export const iconVariantStyles: IconVariantStyles = {
-  base: 'text-primary-monkeyBlack dark:text-primary-monkeyWhite',
-  primary: 'text-primary-monkeyWhite group-hover:text-primary-monkeyOrange',
-  secondary:
-    'text-secondary-white group-hover:text-primary-monkeyBlack dark:group-hover:text-primary-monkeyWhite',
-  alert: 'text-primary-monkeyWhite group-hover:text-alert-red',
-  shallow:
-    'group-hover:text-primary-monkeyWhite dark:group-hover:text-primary-monkeyBlack',
-  ghost:
-    'text-primary-monkeyBlack dark:text-primary-monkeyWhite group-hover:text-primary-monkeyWhite dark:group-hover:text-primary-monkeyBlack',
-  orange: 'text-primary-monkeyOrange',
-  white: 'text-primary-monkeyWhite',
 };
 
 export const editorBlockVariantStyles: BlogViewStyles = {

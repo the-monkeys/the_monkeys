@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react';
 
-import ProfileCard from '@/components/cards/ProfileCard';
+import ProfileCard from '@/app/profile/components/ProfileCard';
+import CircularButton from '@/components/button/CircularButton';
 import { useSession } from 'next-auth/react';
 
 const ProfileSection = () => {
@@ -15,6 +16,11 @@ const ProfileSection = () => {
   return (
     <div className='px-5 py-4 flex flex-col sm:flex-row lg:flex-col gap-4'>
       <div className='flex flex-col gap-2'>
+        <div className='flex gap-2 items-center justify-center'>
+          <CircularButton title='Share Profile' iconName='RiShareLine' />
+          <CircularButton title='Edit Profile' iconName='RiEditLine' />
+        </div>
+
         <ProfileCard
           firstName={data?.user.first_name}
           lastName={data?.user.last_name}
