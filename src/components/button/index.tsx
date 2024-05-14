@@ -4,15 +4,8 @@ import { twMerge } from 'tailwind-merge';
 
 import Icon, { IconName } from '../icon/Icon';
 import { buttonVariantStyles } from '../variantStyles';
-import CircularButton from './CircularButton';
 
-type ButtonVariants =
-  | 'primary'
-  | 'secondary'
-  | 'alert'
-  | 'ghost'
-  | 'shallow'
-  | 'circular';
+type ButtonVariants = 'primary' | 'secondary' | 'alert' | 'ghost' | 'shallow';
 
 export type ButtonVariantStyles = {
   base: string;
@@ -29,7 +22,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   startIcon?: boolean;
   endIcon?: boolean;
   iconName?: IconName;
-  animateIcon?: boolean;
   toolTip?: boolean;
   toolTipSide?: 'top' | 'right' | 'bottom' | 'left';
 }
@@ -40,9 +32,6 @@ const Button: React.FC<ButtonProps> = ({
   startIcon,
   endIcon,
   iconName = 'RiErrorWarningLine',
-  animateIcon,
-  toolTip,
-  toolTipSide,
   onClick,
   disabled,
   className,
@@ -62,18 +51,6 @@ const Button: React.FC<ButtonProps> = ({
     }
   };
 
-  if (variant === 'circular') {
-    return (
-      <CircularButton
-        animate={animateIcon}
-        iconName={iconName}
-        onClick={onClick}
-        disabled={disabled}
-        className={className}
-      />
-    );
-  }
-
   return (
     <button
       className={twMerge(
@@ -90,14 +67,12 @@ const Button: React.FC<ButtonProps> = ({
           <Icon
             name={iconName}
             size={20}
-            hasHover={false}
             className={startIcon ? 'opacity-100' : 'opacity-0'}
           />
           <p className='flex-1'>{title}</p>
           <Icon
             name={iconName}
             size={20}
-            hasHover={false}
             className={endIcon ? 'opacity-100' : 'opacity-0'}
           />
         </>

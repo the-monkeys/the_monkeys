@@ -20,6 +20,7 @@ const josefin_Sans = Josefin_Sans({
   variable: '--font-josefin_Sans',
   display: 'swap',
 });
+
 const playfair_Display = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair_Display',

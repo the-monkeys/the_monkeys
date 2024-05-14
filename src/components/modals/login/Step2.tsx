@@ -51,18 +51,19 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
       router.back();
       toast({
         variant: 'default',
-        title: 'success',
-        description: 'user login successfully',
+        title: 'Success',
+        description: 'User logged in successfully.',
       });
       setTimeout(() => {
         router.refresh();
       }, 300);
     }
+
     if (res?.error) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to login please try again',
+        description: 'Failed to log in. Please try again.',
       });
     }
   }
