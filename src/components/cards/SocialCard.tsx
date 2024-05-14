@@ -3,7 +3,6 @@ import { FC } from 'react';
 import Link from 'next/link';
 
 import Icon from '../icon';
-import IconContainer from '../icon';
 import { IconName } from '../icon/Icon';
 
 export type SocialCardProps = {
@@ -30,7 +29,7 @@ const SocialCard: FC<SocialCardProps> = ({ icon, title, text, link }) => {
         </div>
       </div>
 
-      <IconContainer
+      <Icon
         name='RiArrowRightUpLine'
         size={24}
         hasHover={false}

@@ -18,7 +18,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
           href='/profile'
           className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
         >
-          <Icon name='RiUserLine' size={20} hasHover={false} />
+          <Icon name='RiUserLine' size={20} />
           <p className='font-josefin_Sans'>Profile</p>
         </Link>
 
@@ -26,7 +26,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
           href='/drafts'
           className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
         >
-          <Icon name='RiDraftLine' size={20} hasHover={false} />
+          <Icon name='RiDraftLine' size={20} />
           <p className='font-josefin_Sans'>Drafts</p>
         </Link>
 
@@ -34,7 +34,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
           href='/settings'
           className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
         >
-          <Icon name='RiSettings3Line' size={20} hasHover={false} />
+          <Icon name='RiSettings3Line' size={20} />
           <p className='font-josefin_Sans'>Settings</p>
         </Link>
 
@@ -42,7 +42,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
           href='/profile/activity'
           className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
         >
-          <Icon name='RiHistoryLine' size={20} hasHover={false} />
+          <Icon name='RiHistoryLine' size={20} />
           <p className='font-josefin_Sans'>Activity</p>
         </Link>
 
@@ -59,7 +59,6 @@ const UserOptions: FC<UserOptionsProps> = () => {
               name='RiLogoutBoxRLine'
               size={20}
               className='text-alert-red'
-              hasHover={false}
             />
             <p className='font-josefin_Sans'>Logout</p>
           </div>
