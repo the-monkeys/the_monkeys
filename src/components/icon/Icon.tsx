@@ -1,7 +1,6 @@
 // Remix Icons: https://remixicon.com/
 // Github: https://github.com/Remix-Design/RemixIcon
 import * as RemixIcons from '@remixicon/react';
-import { twMerge } from 'tailwind-merge';
 
 export type IconName =
   | 'RiToggleLine'
@@ -18,18 +17,16 @@ export type IconName =
   | 'RiArrowRightLine'
   | 'RiMoreLine'
   | 'RiCloseLine'
-  | 'RiMoreFill'
-  | 'RiCheckDoubleLine'
   | 'RiAddLine'
+  | 'RiFileCopyLine'
   | 'RiCircleFill'
   | 'RiSettings3Line'
   | 'RiHistoryLine'
   | 'RiMailFill'
-  | 'RiShareForwardFill'
-  | 'RiShareForwardLine'
+  | 'RiShareLine'
+  | 'RiEditLine'
   | 'RiEyeLine'
-  | 'RiEyeFill'
-  | 'RiCake2Fill'
+  | 'RiCalendar2Line'
   | 'RiGithubFill'
   | 'RiTwitterXFill'
   | 'RiDiscordFill'
@@ -45,28 +42,13 @@ export type IconName =
 export type IconProps = {
   name: IconName;
   size?: number;
-  hasHover?: boolean;
   className?: string;
 };
 
-const Icon: React.FC<IconProps> = ({
-  name,
-  size = 24,
-  hasHover = true,
-  className,
-}) => {
+const Icon: React.FC<IconProps> = ({ name, size = 20, className }) => {
   const DynamicIcon = RemixIcons[name];
 
-  return (
-    <DynamicIcon
-      className={twMerge(
-        className,
-        'cursor-pointer',
-        hasHover && 'hover:opacity-75'
-      )}
-      size={size}
-    />
-  );
+  return <DynamicIcon className={className} size={size} />;
 };
 
 export default Icon;
