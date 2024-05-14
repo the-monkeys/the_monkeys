@@ -1,3 +1,4 @@
+// 'use client';
 import { FC } from 'react';
 
 type ModalHeaderProps = {
@@ -12,7 +13,7 @@ const ModalHeader: FC<ModalHeaderProps> = ({
   subHeading,
 }) => {
   return (
-    <div className='mt-8 flex flex-col justify-center'>
+    <div className='flex flex-col justify-center'>
       {showHeading && (
         <div className='flex flex-col gap-2'>
           <p className='text-center font-playfair_Display text-2xl sm:text-3xl font-semibold'>

@@ -1,14 +1,17 @@
 import React, { FC, PropsWithChildren } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import IconContainer from '../icon';
 import Logo from '../logo';
 
 type ModalProps = {
   children?: React.ReactNode;
-  setModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
+  const router = useRouter();
   return (
     <div className='fixed left-0 top-0 flex h-full w-full justify-center bg-secondary-white/60 backdrop-blur-sm dark:bg-secondary-darkGrey/60 z-50'>
       <div className='flex w-full flex-col items-start gap-1 self-end sm:max-w-md sm:self-center drop-shadow-xl'>
@@ -18,7 +21,12 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           <IconContainer
             name='RiCloseLine'
             size={20}
-            onClick={() => setModal(false)}
+            onClick={() => {
+              router.back();
+              if (setModal) {
+                setModal(false);
+              }
+            }}
           />
         </div>
 
