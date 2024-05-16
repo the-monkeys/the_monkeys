@@ -30,12 +30,13 @@ const ProfileCard: FC<ProfileCardProps> = ({
       navigator.clipboard.writeText(text).then(
         () => {
           toast({
+            variant: 'default',
             description: 'Username copied to clipboard.',
           });
         },
         (err) => {
           toast({
-            variant: 'destructive',
+            variant: 'error',
             title: 'Error',
             description: 'Failed to copy username.',
           });
