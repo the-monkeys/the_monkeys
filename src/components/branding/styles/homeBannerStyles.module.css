@@ -14,6 +14,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -80%);
+  animation: image-flicker 800ms infinite linear alternate;
 }
 
 .screen_overlay_linear {
@@ -65,5 +66,15 @@
 
   to {
     background-position: 0% -100%;
+  }
+}
+
+@keyframes image-flicker {
+  from {
+    opacity: 0.75;
+  }
+
+  to {
+    opacity: 1;
   }
 }

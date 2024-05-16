@@ -1,13 +1,21 @@
 import { FC } from 'react';
 
+import { twMerge } from 'tailwind-merge';
+
 type GridTagProps = {
   title: string;
+  className?: string;
 };
 
-const GridTag: FC<GridTagProps> = ({ title }) => {
+const GridTag: FC<GridTagProps> = ({ title, className }) => {
   return (
-    <div className='w-fit px-2 pt-1 flex items-center justify-center border-1 border-primary-monkeyOrange rounded-full'>
-      <p className='font-josefin_Sans uppercase text-xs'>{title}</p>
+    <div
+      className={twMerge(
+        className,
+        'w-fit px-2 pt-1 flex items-center justify-center border-1 border-primary-monkeyOrange rounded-full'
+      )}
+    >
+      <p className='font-josefin_Sans text-xs sm:text-sm'>{title}</p>
     </div>
   );
 };

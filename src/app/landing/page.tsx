@@ -10,7 +10,7 @@ const LandingPage = () => {
   const router = useRouter();
 
   return (
-    <div className='min-h-screen'>
+    <div className='min-h-screen flex flex-col gap-8'>
       <HomeBanner>
         <p className='font-playfair_Display font-semibold text-5xl sm:text-7xl md:text-8xl text-primary-monkeyBlack dark:text-primary-monkeyWhite'>
           Create. Collaborate.
