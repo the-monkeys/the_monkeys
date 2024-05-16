@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { loginSteps } from '@/constants/modal';
 import { loginSchema } from '@/lib/schema/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,7 +28,6 @@ type Step2Props = {
 };
 
 const Step2: FC<Step2Props> = ({ setLoginStep }) => {
-  const { toast } = useToast();
   const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -50,7 +49,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
       console.log('OK');
       router.back();
       toast({
-        variant: 'default',
+        variant: 'success',
         title: 'Success',
         description: 'User logged in successfully.',
       });
@@ -61,7 +60,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
 
     if (res?.error) {
       toast({
-        variant: 'destructive',
+        variant: 'error',
         title: 'Error',
         description: 'Failed to log in. Please try again.',
       });
@@ -77,7 +76,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center px-4'>
+    <ModalContent className='flex flex-col  justify-center px-4'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
           <FormField

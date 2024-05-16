@@ -2,13 +2,19 @@
 
 import { useEffect } from 'react';
 
-import ProfileCard from '@/app/profile/components/ProfileCard';
+import { useRouter } from 'next/navigation';
+
 import CircularButton from '@/components/button/CircularButton';
 import { useSession } from 'next-auth/react';
 
-const ProfileSection = () => {
-  const { data, status } = useSession();
+import ProfileCard from './ProfileCard';
 
+const ProfileSection = () => {
+  const router = useRouter();
+  const { data, status } = useSession();
+  // if (status === 'unauthenticated') {
+  //   router.push('/login');
+  // }
   useEffect(() => {
     // console.log(data);
   }, [status]);
