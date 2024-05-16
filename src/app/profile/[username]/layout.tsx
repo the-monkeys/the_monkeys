@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 
-import ProfileSection from './components/ProfileSection';
+import ProfileSection from '../components/ProfileSection';
 
-const title = 'Monkeys';
+const title = 'Profile';
 const description = 'We are The Monkeys! A blogging and educational platform.';
 
 export const metadata: Metadata = {
