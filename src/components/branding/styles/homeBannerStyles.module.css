@@ -1,0 +1,69 @@
+.screen {
+  width: 100%;
+  height: 28rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  overflow: hidden;
+}
+
+.screen_image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -80%);
+}
+
+.screen_overlay_linear {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    rgba(255, 70, 46, 0.5),
+    rgba(255, 70, 46, 0.5) 5px,
+    rgba(255, 70, 46, 0.15) 5px,
+    rgba(255, 70, 46, 0.15) 20px
+  );
+  background-size: 100% 20px;
+  animation: pan-overlay 25s infinite linear alternate-reverse;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.screen_overlay_radial_light {
+  height: 100%;
+  width: 100%;
+  background: radial-gradient(
+    40% 50% at 50% 50%,
+    rgba(255, 244, 237, 0) 0%,
+    #fff4ed 100%
+  );
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.screen_overlay_radial_dark {
+  height: 100%;
+  width: 100%;
+  background: radial-gradient(
+    40% 50% at 50% 50%,
+    rgba(16, 16, 16, 0) 0%,
+    #101010 100%
+  );
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+@keyframes pan-overlay {
+  from {
+    background-position: 0% 0%;
+  }
+
+  to {
+    background-position: 0% -100%;
+  }
+}

@@ -15,6 +15,7 @@ export type IconName =
   | 'RiDraftLine'
   | 'RiArrowRightUpLine'
   | 'RiArrowRightLine'
+  | 'RiArrowRightSLine'
   | 'RiMoreLine'
   | 'RiCloseLine'
   | 'RiAddLine'
