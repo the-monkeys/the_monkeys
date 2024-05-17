@@ -14,7 +14,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -80%);
-  animation: image-flicker 800ms infinite linear alternate;
+  animation: image-flicker 1000ms infinite linear alternate;
 }
 
 .screen_overlay_linear {

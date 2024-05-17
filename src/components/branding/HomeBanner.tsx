@@ -12,7 +12,7 @@ const HomeBanner: FC<HomeBannerProps> = ({ children }) => {
   return (
     <div className={Styles.screen}>
       <Image
-        src='./background_banner_image.svg'
+        src='./background_banner.svg'
         alt=''
         width={300}
         height={300}
