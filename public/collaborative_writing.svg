@@ -1,13 +1,13 @@
 <svg width="365" height="227" viewBox="0 0 365 227" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect opacity="0.25" y="116" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
-<rect opacity="0.25" y="128" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
-<rect opacity="0.25" y="140" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
-<path opacity="0.25" d="M0 156C0 153.791 1.79086 152 4 152H115V160H4C1.79086 160 0 158.209 0 156Z" fill="#4F4F4F" fill-opacity="0.25"/>
-<rect opacity="0.25" y="171" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
-<rect opacity="0.25" y="183" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
-<path opacity="0.25" d="M0 199C0 196.791 1.79086 195 4 195H298V203H4.00001C1.79087 203 0 201.209 0 199Z" fill="#4F4F4F" fill-opacity="0.25"/>
-<rect opacity="0.25" y="207" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
-<rect opacity="0.25" y="219" width="192" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
+<rect opacity="0.5" y="116" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
+<rect opacity="0.5" y="128" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
+<rect opacity="0.5" y="140" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
+<path opacity="0.5" d="M0 156C0 153.791 1.79086 152 4 152H115V160H4C1.79086 160 0 158.209 0 156Z" fill="#4F4F4F" fill-opacity="0.25"/>
+<rect opacity="0.5" y="171" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
+<rect opacity="0.5" y="183" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
+<path opacity="0.5" d="M0 199C0 196.791 1.79086 195 4 195H298V203H4.00001C1.79087 203 0 201.209 0 199Z" fill="#4F4F4F" fill-opacity="0.25"/>
+<rect opacity="0.5" y="207" width="365" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
+<rect opacity="0.5" y="219" width="192" height="8" rx="4" fill="#4F4F4F" fill-opacity="0.25"/>
 <g clip-path="url(#clip0_1436_1005)">
 <path d="M117.175 165.725L131.279 170.426C131.352 170.45 131.416 170.496 131.462 170.558C131.507 170.619 131.533 170.693 131.536 170.77C131.538 170.847 131.517 170.923 131.474 170.987C131.432 171.052 131.371 171.101 131.3 171.13L124.75 173.75L121.431 180.387C121.397 180.455 121.344 180.51 121.278 180.547C121.212 180.584 121.136 180.6 121.061 180.593C120.986 180.586 120.915 180.556 120.856 180.508C120.798 180.46 120.756 180.395 120.735 180.323L116.695 166.183C116.676 166.117 116.676 166.048 116.694 165.982C116.712 165.916 116.747 165.856 116.797 165.809C116.846 165.762 116.907 165.729 116.974 165.714C117.041 165.699 117.11 165.703 117.175 165.725V165.725Z" fill="#2EE08B"/>
 </g>

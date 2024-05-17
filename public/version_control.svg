@@ -16,16 +16,16 @@
 <path d="M112.5 -12L112.5 104.5C112.5 132.114 134.886 154.5 162.5 154.5L163.5 154.5" stroke="#EE3643" stroke-opacity="0.25" stroke-width="2"/>
 <path d="M132.5 -19L132.5 38.4999C132.5 54.7923 145.708 68 162 68V68" stroke="#FF7BB9" stroke-opacity="0.25" stroke-width="2"/>
 <rect x="45" y="214" width="235" height="290" rx="24" stroke="#FF462E" stroke-opacity="0.75" stroke-width="2"/>
-<path opacity="0.25" d="M62 254H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
-<path opacity="0.25" d="M62 261H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
-<path opacity="0.25" d="M62 268H198" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.5" d="M62 254H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.5" d="M62 261H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.5" d="M62 268H198" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
 <path d="M62 284H262" stroke="#ED3232" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
 <path d="M62 298H262" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
 <path d="M62 291H160" stroke="#ED3232" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
 <path d="M62 305H262" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
 <path d="M62 312H262" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
-<path opacity="0.25" d="M62 329H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
-<path opacity="0.25" d="M62 336H143" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.5" d="M62 329H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.5" d="M62 336H143" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
 <path d="M62 360H262" stroke="#ED3232" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
 <path d="M62 353H262" stroke="#ED3232" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
 <path d="M62 367H208" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
