@@ -4,13 +4,14 @@ import { useRouter } from 'next/navigation';
 
 import HomeBanner from '@/components/branding/HomeBanner';
 import BentoGrid from '@/components/branding/grid';
+import MobileGrid from '@/components/branding/grid/MobileGrid';
 import Icon from '@/components/icon/Icon';
 
 const LandingPage = () => {
   const router = useRouter();
 
   return (
-    <div className='min-h-screen flex flex-col'>
+    <div className='mb-8 min-h-screen flex flex-col'>
       <HomeBanner>
         <p className='font-playfair_Display font-semibold text-5xl sm:text-7xl md:text-8xl text-primary-monkeyBlack dark:text-primary-monkeyWhite'>
           Create. Collaborate.
@@ -30,21 +31,16 @@ const LandingPage = () => {
           <p className='mx-1 font-josefin_Sans'>Join Monkeys</p>
 
           <Icon
-            name='RiArrowRightSLine'
+            name='RiArrowRightLine'
+            size={16}
             className='mx-1 transition-all group-hover:ml-2 group-hover:mr-0'
           />
         </button>
       </HomeBanner>
 
-      {/* <h2 className='px-5 font-playfair_Display font-semibold text-2xl sm:text-3xl md:text-5xl italic opacity-25'>
-        Why Choose Monkeys?!
-      </h2> */}
-
-      <h2 className='px-5 font-playfair_Display font-semibold text-2xl sm:text-3xl md:text-5xl italic opacity-25'>
-        Features We Offer
-      </h2>
-
       <BentoGrid />
+
+      <MobileGrid />
     </div>
   );
 };

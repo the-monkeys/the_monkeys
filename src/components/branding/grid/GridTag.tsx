@@ -12,7 +12,7 @@ const GridTag: FC<GridTagProps> = ({ title, className }) => {
     <div
       className={twMerge(
         className,
-        'w-fit px-5 flex items-center justify-center border-1 border-primary-monkeyOrange rounded-full'
+        'w-fit px-4 flex items-center justify-center border-1 border-primary-monkeyOrange rounded-full'
       )}
     >
       <p className='font-jost uppercase text-xs sm:text-sm'>{title}</p>
