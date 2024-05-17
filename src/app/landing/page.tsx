@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import HomeBanner from '@/components/branding/HomeBanner';
-import BentoGrid from '@/components/branding/bentoGrid';
+import BentoGrid from '@/components/branding/grid';
 import Icon from '@/components/icon/Icon';
 
 const LandingPage = () => {
