@@ -2,15 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 
-import BentoGrid from '@/components/branding/BentoGrid';
 import HomeBanner from '@/components/branding/HomeBanner';
+import BentoGrid from '@/components/branding/bentoGrid';
 import Icon from '@/components/icon/Icon';
 
 const LandingPage = () => {
   const router = useRouter();
 
   return (
-    <div className='min-h-screen flex flex-col gap-8'>
+    <div className='min-h-screen flex flex-col'>
       <HomeBanner>
         <p className='font-playfair_Display font-semibold text-5xl sm:text-7xl md:text-8xl text-primary-monkeyBlack dark:text-primary-monkeyWhite'>
           Create. Collaborate.
@@ -35,6 +35,14 @@ const LandingPage = () => {
           />
         </button>
       </HomeBanner>
+
+      {/* <h2 className='px-5 font-playfair_Display font-semibold text-2xl sm:text-3xl md:text-5xl italic opacity-25'>
+        Why Choose Monkeys?!
+      </h2> */}
+
+      <h2 className='px-5 font-playfair_Display font-semibold text-2xl sm:text-3xl md:text-5xl italic opacity-25'>
+        Features We Offer
+      </h2>
 
       <BentoGrid />
     </div>

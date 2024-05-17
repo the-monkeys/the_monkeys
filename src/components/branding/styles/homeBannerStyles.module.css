@@ -1,14 +1,3 @@
-.screen {
-  width: 100%;
-  height: 28rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  overflow: hidden;
-}
-
 .screen_image {
   position: absolute;
   top: 50%;

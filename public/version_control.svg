@@ -1,0 +1,39 @@
+<svg width="328" height="380" viewBox="0 0 328 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1341_1186)">
+<line x1="162" y1="213" x2="162" y2="-12" stroke="#4F4F4F" stroke-opacity="0.15" stroke-width="2"/>
+<circle cx="162" cy="27" r="12" transform="rotate(-180 162 27)" fill="#FF97DD" fill-opacity="0.25"/>
+<circle cx="162" cy="69" r="12" transform="rotate(-180 162 69)" fill="#FF7BB9" fill-opacity="0.25"/>
+<circle cx="162" cy="111" r="12" transform="rotate(-180 162 111)" fill="#FF618B" fill-opacity="0.25"/>
+<circle cx="162" cy="153" r="12" transform="rotate(-180 162 153)" fill="#EE3643" fill-opacity="0.25"/>
+<circle cx="162" cy="213" r="12" transform="rotate(-180 162 213)" fill="#FF462E" fill-opacity="0.25"/>
+<circle cx="162" cy="27" r="6" transform="rotate(-180 162 27)" fill="#FF97DD"/>
+<circle cx="162" cy="69" r="6" transform="rotate(-180 162 69)" fill="#FF7BB9"/>
+<circle cx="162" cy="111" r="6" transform="rotate(-180 162 111)" fill="#FF618B"/>
+<circle cx="162" cy="153" r="6" transform="rotate(-180 162 153)" fill="#EE3643"/>
+<circle cx="162" cy="213" r="6" transform="rotate(-180 162 213)" fill="#FF462E"/>
+<path d="M207.5 -32L207.5 67.5001C207.5 91.5244 188.024 111 164 111V111" stroke="#FF618B" stroke-opacity="0.25" stroke-width="2"/>
+<path d="M186 -22L186 5.50006C186 17.6503 176.15 27.5 164 27.5V27.5" stroke="#FF97DD" stroke-opacity="0.25" stroke-width="2"/>
+<path d="M112.5 -12L112.5 104.5C112.5 132.114 134.886 154.5 162.5 154.5L163.5 154.5" stroke="#EE3643" stroke-opacity="0.25" stroke-width="2"/>
+<path d="M132.5 -19L132.5 38.4999C132.5 54.7923 145.708 68 162 68V68" stroke="#FF7BB9" stroke-opacity="0.25" stroke-width="2"/>
+<rect x="45" y="214" width="235" height="290" rx="24" stroke="#FF462E" stroke-opacity="0.75" stroke-width="2"/>
+<path opacity="0.25" d="M62 254H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.25" d="M62 261H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.25" d="M62 268H198" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 284H262" stroke="#ED3232" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 298H262" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 291H160" stroke="#ED3232" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 305H262" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 312H262" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.25" d="M62 329H262" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path opacity="0.25" d="M62 336H143" stroke="#4F4F4F" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 360H262" stroke="#ED3232" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 353H262" stroke="#ED3232" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 367H208" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+<path d="M62 374H247" stroke="#34A853" stroke-opacity="0.25" stroke-width="5" stroke-linecap="round"/>
+</g>
+<defs>
+<clipPath id="clip0_1341_1186">
+<rect width="328" height="380" fill="white"/>
+</clipPath>
+</defs>
+</svg>

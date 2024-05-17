@@ -10,7 +10,7 @@ type HomeBannerProps = {
 
 const HomeBanner: FC<HomeBannerProps> = ({ children }) => {
   return (
-    <div className={Styles.screen}>
+    <div className='mb-12 w-full h-[28rem] relative flex flex-col justify-end items-center overflow-hidden'>
       <Image
         src='./background_banner.svg'
         alt=''
