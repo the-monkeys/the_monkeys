@@ -28,9 +28,8 @@ const UserOptions: FC<UserOptionsProps> = () => {
           </div>
         ) : (
           <>
-            {' '}
             <Link
-              href={`/profile/${data?.user?.user_name}`}
+              href={`/${data?.user?.user_name}`}
               className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
             >
               <Icon name='RiUserLine' size={20} />

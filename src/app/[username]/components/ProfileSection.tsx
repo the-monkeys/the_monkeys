@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import CircularButton from '@/components/button/CircularButton';
 import { useSession } from 'next-auth/react';
@@ -10,7 +10,7 @@ import { useSession } from 'next-auth/react';
 import ProfileCard from './ProfileCard';
 
 const ProfileSection = () => {
-  const router = useRouter();
+  const params = useParams<{ username: string }>();
   const { data, status } = useSession();
   // if (status === 'unauthenticated') {
   //   router.push('/login');
@@ -24,7 +24,12 @@ const ProfileSection = () => {
       <div className='flex flex-col gap-2'>
         <div className='flex gap-2 items-center justify-center'>
           <CircularButton title='Share Profile' iconName='RiShareLine' />
-          <CircularButton title='Edit Profile' iconName='RiEditLine' />
+          {data?.user.user_name === params.username &&
+          status === 'authenticated' ? (
+            <CircularButton title='Edit Profile' iconName='RiEditLine' />
+          ) : (
+            ''
+          )}
         </div>
 
         <ProfileCard
