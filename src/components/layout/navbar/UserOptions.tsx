@@ -54,7 +54,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
               <p className='font-josefin_Sans'>Settings</p>
             </Link>
             <Link
-              href='/profile/activity'
+              href={`/activity`}
               className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
             >
               <Icon name='RiHistoryLine' size={20} />

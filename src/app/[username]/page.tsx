@@ -4,7 +4,7 @@ const UserPosts = () => {
   return (
     <div className='px-5 py-4'>
       <div className='flex justify-end'>
-        <LinksRedirectArrow target='/profile/activity' title='View Activity' />
+        <LinksRedirectArrow target='/activity' title='View Activity' />
       </div>
     </div>
   );
