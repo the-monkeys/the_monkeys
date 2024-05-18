@@ -21,9 +21,13 @@ const UserOptions: FC<UserOptionsProps> = () => {
             onClick={() => {
               router.push('api/auth/signin');
             }}
-            className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-red cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-red/25'
+            className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-green cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-green/25'
           >
-            <Icon name='RiLoginBoxLine' size={20} className='text-alert-red' />
+            <Icon
+              name='RiLoginBoxLine'
+              size={20}
+              className='text-alert-green'
+            />
             <p className='font-josefin_Sans'>Login</p>
           </div>
         ) : (
