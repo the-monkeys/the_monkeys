@@ -1,6 +1,6 @@
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 
-const UserActivity = () => {
+const Page = () => {
   return (
     <div className='px-5 py-4'>
       <div className='flex justify-end'>
@@ -10,4 +10,4 @@ const UserActivity = () => {
   );
 };
 
-export default UserActivity;
+export default Page;
