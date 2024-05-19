@@ -1,13 +1,13 @@
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 
-const UserActivity = () => {
+const UserPosts = () => {
   return (
     <div className='px-5 py-4'>
       <div className='flex justify-end'>
-        <LinksRedirectArrow target='/profile' title='View Posts' />
+        <LinksRedirectArrow target='/activity' title='View Activity' />
       </div>
     </div>
   );
 };
 
-export default UserActivity;
+export default UserPosts;

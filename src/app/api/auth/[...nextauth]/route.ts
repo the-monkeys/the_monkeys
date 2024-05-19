@@ -29,12 +29,9 @@ const authOptions: AuthOptions = {
         },
       },
       async authorize(credentials) {
-        console.log(api);
-        console.log(credentials, 'credentials');
-
         try {
           const authResponse = await axios.post(
-            api + '/auth/login',
+            `${api}/auth/login`,
             { email: credentials?.email, password: credentials?.password },
             {
               headers: {
@@ -43,12 +40,12 @@ const authOptions: AuthOptions = {
             }
           );
 
-          console.log(authResponse.data); // authResponse.data contains the response data
-
-          return authResponse.data; // Return the response data directly
+          if (authResponse.data && authResponse.data.token) {
+            return authResponse.data; // Assuming authResponse.data contains the user info
+          }
+          return null;
         } catch (error) {
-          console.log(error);
-
+          console.error('Error during authentication', error);
           return null;
         }
       },
