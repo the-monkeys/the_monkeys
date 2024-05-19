@@ -53,9 +53,6 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
         title: 'Success',
         description: 'User logged in successfully.',
       });
-      setTimeout(() => {
-        router.refresh();
-      }, 300);
     }
 
     if (res?.error) {
@@ -90,6 +87,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
                     className=''
                     placeholder=' Enter Your Email'
                     {...field}
+                    variant='border'
                   />
                 </FormControl>
                 <FormMessage />
@@ -106,6 +104,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
                   <Input
                     placeholder=' Enter Your Password'
                     {...field}
+                    variant='border'
                     type='password'
                   />
                 </FormControl>
@@ -113,18 +112,19 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
               </FormItem>
             )}
           />
-          <div className='flex gap-2 items-center mt-4'>
+          <div className='flex flex-row-reverse gap-2 items-center mt-4'>
             <Button
-              className='w-full'
-              title='Previous'
-              variant='secondary'
-              onClick={(e) => handlePreviousStep(e)}
-            />
-            <Button
-              className='w-full'
+              className='w-full order-1'
               title='Login'
               variant='primary'
               type='submit'
+            />
+            <Button
+              className='w-full order-2'
+              title='Previous'
+              variant='secondary'
+              type='button'
+              onClick={handlePreviousStep}
             />
           </div>
         </form>
