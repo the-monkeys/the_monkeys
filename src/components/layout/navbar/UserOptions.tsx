@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon/Icon';
+import { toast } from '@/components/ui/use-toast';
 import { signOut, useSession } from 'next-auth/react';
 
 type UserOptionsProps = {
@@ -15,7 +16,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
   const router = useRouter();
   return (
     <div className='pt-4 absolute top-full right-0 w-44'>
-      <div className='flex h-fit max-h-[80vh] flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite py-2 dark:bg-primary-monkeyBlack drop-shadow-lg'>
+      <div className='flex h-fit max-h-[80vh] flex-col overflow-hidden rounded-lg border-1 border-secondary-lightGrey/25 bg-primary-monkeyWhite py-2 dark:bg-primary-monkeyBlack dark:border-primary-monkeyWhite/20 drop-shadow-lg'>
         {status === 'unauthenticated' ? (
           <div
             onClick={() => {
@@ -63,6 +64,11 @@ const UserOptions: FC<UserOptionsProps> = () => {
             <div
               onClick={() => {
                 signOut();
+                toast({
+                  variant: 'success',
+                  title: 'Success',
+                  description: 'User logout in successfully.',
+                });
               }}
               className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-red cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-red/25'
             >
