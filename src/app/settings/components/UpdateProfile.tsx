@@ -12,32 +12,14 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { updateProfileSchema } from '@/lib/schema/settings';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const formSchema = z.object({
-  firstName: z.string().min(1, 'First name is required').max(50),
-  lastName: z.string().min(1, 'Last name is required').max(50),
-  location: z.string().max(100),
-  contactNumber: z
-    .string()
-    .regex(/^[0-9]+$/, 'Contact number must be digits only')
-    .min(10)
-    .max(15),
-  bio: z.string().max(500),
-  dateOfBirth: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date of birth must be in YYYY-MM-DD format'),
-  twitterProfile: z.string().url().optional(),
-  linkedin: z.string().url().optional(),
-  instagram: z.string().url().optional(),
-  github: z.string().url().optional(),
-});
-
 const UpdateProfile = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof updateProfileSchema>>({
+    resolver: zodResolver(updateProfileSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
@@ -52,7 +34,7 @@ const UpdateProfile = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof updateProfileSchema>) {
     console.log(values);
   }
 
@@ -64,7 +46,7 @@ const UpdateProfile = () => {
           className='max-w-[1000px] mx-auto'
         >
           {/* Basic Info  */}
-          <div className='grid grid-cols-2 '>
+          <div className='grid grid-cols-2'>
             <h3 className='font-josefin_Sans  text-xl'>Basic Info</h3>
             <div className='grid grid-cols-2 gap-x-[70px] gap-y-5'>
               <FormField
