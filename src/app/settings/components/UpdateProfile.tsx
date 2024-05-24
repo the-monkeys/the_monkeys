@@ -39,16 +39,16 @@ const UpdateProfile = () => {
   }
 
   return (
-    <div className='mt-[52px]'>
+    <div className='mt-12 px-4 sm:px-6 lg:px-8'>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='max-w-[1000px] ml-auto'
+          className='max-w-[1000px] mx-auto space-y-8'
         >
-          {/* Basic Info  */}
-          <div className='grid grid-cols-[25%_75%]'>
+          {/* Basic Info */}
+          <div className='grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] gap-4 md:gap-6 lg:gap-8'>
             <h3 className='font-josefin_Sans text-xl'>Basic Info</h3>
-            <div className='grid  grid-cols-2   gap-y-5 justify-center'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
                 name='firstName'
@@ -57,7 +57,7 @@ const UpdateProfile = () => {
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         variant='border'
                         {...field}
                       />
@@ -76,7 +76,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         variant='border'
                         {...field}
                       />
@@ -95,7 +95,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         variant='border'
                         {...field}
                       />
@@ -114,7 +114,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         variant='border'
                         {...field}
                       />
@@ -133,7 +133,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         variant='border'
                         {...field}
                       />
@@ -152,7 +152,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         type='date'
                         variant='border'
                         {...field}
@@ -165,10 +165,10 @@ const UpdateProfile = () => {
             </div>
           </div>
           {/* Basic Info END */}
-          {/* Social  */}
-          <div className='grid grid-cols-[25%_75%] mt-5'>
-            <h3 className='font-josefin_Sans text-xl '>Social</h3>
-            <div className='grid  grid-cols-2  gap-y-5 justify-center'>
+          {/* Social */}
+          <div className='grid grid-cols-1 md:grid-cols-[35%_65%] lg:grid-cols-[25%_75%] gap-4 md:gap-6 lg:gap-8 mt-5'>
+            <h3 className='font-josefin_Sans text-xl'>Social</h3>
+            <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
                 name='twitterProfile'
@@ -179,7 +179,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         type='url'
                         variant='border'
                         {...field}
@@ -199,7 +199,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         type='url'
                         variant='border'
                         {...field}
@@ -219,7 +219,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         type='url'
                         variant='border'
                         {...field}
@@ -239,7 +239,7 @@ const UpdateProfile = () => {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        className='max-w-[234px]'
+                        className='w-full max-w-[234px]'
                         type='url'
                         variant='border'
                         {...field}
@@ -252,8 +252,7 @@ const UpdateProfile = () => {
             </div>
           </div>
           {/* Social END */}
-          <div className='flex justify-center items-center mt-24'>
-            {' '}
+          <div className='flex justify-center items-center mt-12'>
             <Button title='Update Profile' variant='primary' type='submit' />
           </div>
         </form>

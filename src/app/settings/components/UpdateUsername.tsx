@@ -32,7 +32,7 @@ const UpdateUsername = () => {
 
   return (
     <div>
-      <div className='grid grid-cols-[25%_70%]'>
+      <div className='grid grid-cols-[25%_70%] px-4 sm:px-6 lg:px-8'>
         <div className='font-josefin_Sans text-xl '>Username</div>
         <div>
           <p className='font-josefin_Sans text-base text-primary-monkeyWhite '>
