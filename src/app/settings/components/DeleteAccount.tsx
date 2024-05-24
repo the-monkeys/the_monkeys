@@ -7,7 +7,7 @@ import Button from '@/components/button';
 const DeleteAccount = () => {
   return (
     <div>
-      <div className='grid grid-cols-2'>
+      <div className='grid grid-cols-[25%_70%]'>
         <div className='font-josefin_Sans text-xl text-alert-red'>
           Delete account
         </div>

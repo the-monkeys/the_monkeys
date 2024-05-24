@@ -36,7 +36,7 @@ const VerifyEmail = () => {
 
   return (
     <div>
-      <div className='grid grid-cols-2'>
+      <div className='grid grid-cols-[25%_70%]'>
         <div className='font-josefin_Sans text-xl '>Email</div>
         <div>
           <p className='font-josefin_Sans text-base  '>Verify your Email</p>
@@ -65,7 +65,12 @@ const VerifyEmail = () => {
                       Email Address{' '}
                     </FormLabel>
                     <FormControl>
-                      <Input variant='border' placeholder='' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        variant='border'
+                        placeholder=''
+                        {...field}
+                      />
                     </FormControl>
 
                     <FormMessage />

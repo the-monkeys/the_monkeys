@@ -32,13 +32,13 @@ const UpdateUsername = () => {
 
   return (
     <div>
-      <div className='grid grid-cols-2'>
+      <div className='grid grid-cols-[25%_70%]'>
         <div className='font-josefin_Sans text-xl '>Username</div>
         <div>
           <p className='font-josefin_Sans text-base text-primary-monkeyWhite '>
             Update Your Username
           </p>
-          <p className='font-jost text-secondary-mute'>
+          <p className='font-jost text-secondary-mute dark:text-secondary-mute'>
             Change your username to something that reflects your individuality.
           </p>
           <Form {...form}>
@@ -52,7 +52,12 @@ const UpdateUsername = () => {
                       Username
                     </FormLabel>
                     <FormControl>
-                      <Input variant='border' placeholder='shadcn' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        variant='border'
+                        placeholder='shadcn'
+                        {...field}
+                      />
                     </FormControl>
 
                     <FormMessage />

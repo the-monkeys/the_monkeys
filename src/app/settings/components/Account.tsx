@@ -7,7 +7,7 @@ import VerifyEmail from './VerifyEmail';
 
 const Account = () => {
   return (
-    <div className='flex flex-col gap-[34px] mt-[54px]'>
+    <div className='flex flex-col gap-[34px] mt-[54px] max-w-[1000px] ml-auto'>
       <UpdateUsername />
       <VerifyEmail />
       <ProfileVisibility />

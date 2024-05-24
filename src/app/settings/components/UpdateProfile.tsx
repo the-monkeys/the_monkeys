@@ -43,12 +43,12 @@ const UpdateProfile = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='max-w-[1000px] mx-auto'
+          className='max-w-[1000px] ml-auto'
         >
           {/* Basic Info  */}
-          <div className='grid grid-cols-2'>
+          <div className='grid grid-cols-[25%_75%]'>
             <h3 className='font-josefin_Sans text-xl'>Basic Info</h3>
-            <div className='grid grid-cols-[auto_auto] gap-x-[129px] gap-y-5 justify-center'>
+            <div className='grid  grid-cols-2   gap-y-5 justify-center'>
               <FormField
                 control={form.control}
                 name='firstName'
@@ -56,7 +56,11 @@ const UpdateProfile = () => {
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -71,7 +75,11 @@ const UpdateProfile = () => {
                       Last Name
                     </FormLabel>
                     <FormControl>
-                      <Input variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -86,7 +94,11 @@ const UpdateProfile = () => {
                       Location
                     </FormLabel>
                     <FormControl>
-                      <Input variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -101,7 +113,11 @@ const UpdateProfile = () => {
                       Contact Number
                     </FormLabel>
                     <FormControl>
-                      <Input variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -116,7 +132,11 @@ const UpdateProfile = () => {
                       Bio
                     </FormLabel>
                     <FormControl>
-                      <Input variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -131,7 +151,12 @@ const UpdateProfile = () => {
                       Date of Birth
                     </FormLabel>
                     <FormControl>
-                      <Input type='date' variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        type='date'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -141,9 +166,9 @@ const UpdateProfile = () => {
           </div>
           {/* Basic Info END */}
           {/* Social  */}
-          <div className='grid grid-cols-2 mt-5'>
-            <h3 className='font-josefin_Sans text-xl'>Social</h3>
-            <div className='grid grid-cols-[auto_auto] gap-x-[129px] gap-y-5 justify-center'>
+          <div className='grid grid-cols-[25%_75%] mt-5'>
+            <h3 className='font-josefin_Sans text-xl '>Social</h3>
+            <div className='grid  grid-cols-2  gap-y-5 justify-center'>
               <FormField
                 control={form.control}
                 name='twitterProfile'
@@ -153,7 +178,12 @@ const UpdateProfile = () => {
                       Twitter Profile
                     </FormLabel>
                     <FormControl>
-                      <Input type='url' variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        type='url'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -168,7 +198,12 @@ const UpdateProfile = () => {
                       LinkedIn Profile
                     </FormLabel>
                     <FormControl>
-                      <Input type='url' variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        type='url'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -183,7 +218,12 @@ const UpdateProfile = () => {
                       Instagram Profile
                     </FormLabel>
                     <FormControl>
-                      <Input type='url' variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        type='url'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -198,7 +238,12 @@ const UpdateProfile = () => {
                       GitHub Profile
                     </FormLabel>
                     <FormControl>
-                      <Input type='url' variant='border' {...field} />
+                      <Input
+                        className='max-w-[234px]'
+                        type='url'
+                        variant='border'
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
