@@ -27,6 +27,7 @@ const config = {
         darkGrey: '#2b2b2b',
         lightGrey: '#4f4f4f',
         white: '#f2f2f3',
+        mute: '#F2F2F3BF',
       },
       alert: {
         red: '#ED3232',

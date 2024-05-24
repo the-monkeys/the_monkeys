@@ -47,8 +47,8 @@ const UpdateProfile = () => {
         >
           {/* Basic Info  */}
           <div className='grid grid-cols-2'>
-            <h3 className='font-josefin_Sans  text-xl'>Basic Info</h3>
-            <div className='grid grid-cols-2 gap-x-[70px] gap-y-5'>
+            <h3 className='font-josefin_Sans text-xl'>Basic Info</h3>
+            <div className='grid grid-cols-[auto_auto] gap-x-[129px] gap-y-5 justify-center'>
               <FormField
                 control={form.control}
                 name='firstName'
@@ -143,7 +143,7 @@ const UpdateProfile = () => {
           {/* Social  */}
           <div className='grid grid-cols-2 mt-5'>
             <h3 className='font-josefin_Sans text-xl'>Social</h3>
-            <div className='grid grid-cols-2 gap-x-[70px] gap-y-5'>
+            <div className='grid grid-cols-[auto_auto] gap-x-[129px] gap-y-5 justify-center'>
               <FormField
                 control={form.control}
                 name='twitterProfile'
