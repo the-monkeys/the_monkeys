@@ -11,10 +11,11 @@ type GridHeaderProps = {
 const GridHeader: FC<GridHeaderProps> = ({ title, subheading, className }) => {
   return (
     <div className={twMerge(className, 'flex flex-col')}>
-      <p className='font-josefin_Sans font-semibold text-xl sm:text-2xl text-primary-monkeyBlack dark:text-primary-monkeyWhite'>
+      <p className='font-playfair_Display font-semibold text-2xl sm:text-3xl text-primary-monkeyBlack dark:text-primary-monkeyWhite'>
         {title}
       </p>
-      <p className='font-jost font-light text-sm sm:text-base text-secondary-darkGrey dark:text-secondary-white'>
+
+      <p className='mt-2 font-jost font-light text-base sm:text-lg text-secondary-darkGrey dark:text-secondary-white'>
         {subheading}
       </p>
     </div>

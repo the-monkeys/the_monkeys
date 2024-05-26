@@ -18,10 +18,13 @@ const HomeBanner: FC<HomeBannerProps> = ({ children }) => {
         height={300}
         className={Styles.screen_image}
       />
+
       <div className={Styles.screen_overlay_linear}></div>
+
       <div
         className={`${Styles.screen_overlay_radial_dark} opacity-0 dark:opacity-100`}
       ></div>
+
       <div
         className={`${Styles.screen_overlay_radial_light} opacity-100 dark:opacity-0`}
       ></div>
