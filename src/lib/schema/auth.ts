@@ -11,6 +11,11 @@ export const loginSchema = z.object({
     .min(1, 'Password is required'),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email('Invalid email address'),
+});
+
+
 // Registration Schema for validation
 export const registrationSchema = z.object({
   first_name: z
