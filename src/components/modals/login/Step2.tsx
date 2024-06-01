@@ -22,7 +22,7 @@ import { z } from 'zod';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-import Link from 'next/dist/client/link';
+import Link from 'next/link';
 
 type Step2Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
@@ -74,7 +74,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   };
 
   const handleForgotPassword = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
     e.preventDefault();
 
@@ -82,7 +82,7 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   };
 
   return (
-    <ModalContent className='flex flex-col  justify-center px-4'>
+    <ModalContent className='flex flex-col justify-center px-4'>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
           <FormField
@@ -137,15 +137,15 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
             />
           </div>
         </form>
-        <div className=' text-right font-jost text-sm mt-2'>
-            <Link
-              href="#"
-              className='text-primary-monkeyOrange'
-              onClick={handleForgotPassword}
-            >
-              Forgot Password
-            </Link>
-          </div>
+        <div className='text-right font-jost text-sm mt-2'>
+          <Link
+            href="#"
+            className='text-primary-monkeyOrange'
+            onClick={handleForgotPassword}
+          >
+            Forgot Password
+          </Link>
+        </div>
       </Form>
     </ModalContent>
   );
