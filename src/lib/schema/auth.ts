@@ -12,9 +12,11 @@ export const loginSchema = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z
+    .string({ required_error: 'Email is required' })
+    .min(1, 'Email is required')
+    .email('Invalid email'),
 });
-
 
 // Registration Schema for validation
 export const registrationSchema = z.object({
@@ -37,10 +39,9 @@ export const registrationSchema = z.object({
       'Last Name should contain only alphabets'
     ),
   email: z
-    .string()
-    .email('Invalid email address')
+    .string({ required_error: 'Email is required' })
     .min(1, 'Email is required')
-    .max(40, 'Email should not be more than 40 characters'),
+    .email('Invalid email'),
   password: z
     .string({ required_error: 'Password is required' })
     .min(1, 'Password is required')

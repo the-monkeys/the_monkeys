@@ -1,5 +1,4 @@
 import React, { FC, useState } from 'react';
-import axios from 'axios';
 
 import Button from '@/components/button';
 import {
@@ -12,14 +11,16 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
+import { API_URL } from '@/constants/api';
 import { loginSteps } from '@/constants/modal';
+import { forgotPasswordSchema } from '@/lib/schema/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { forgotPasswordSchema } from '@/lib/schema/auth';
+
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-
 
 type Step3Props = {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
@@ -33,13 +34,11 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
     },
   });
 
-  const NEXT_PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || "https://themonkeys.site/api/v1";
-const AUTH_SECRET = process.env.AUTH_SECRET;
-const NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET;
-
   async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
     try {
-      const response = await axios.post(`${NEXT_PUBLIC_API_URL}/auth/forgot-pass`, { email: values.email });
+      const response = await axios.post(`${API_URL}/auth/forgot-pass`, {
+        email: values.email,
+      });
 
       if (response.status === 200) {
         toast({
