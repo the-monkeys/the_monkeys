@@ -1,12 +1,23 @@
 import React, { FC, useState } from 'react';
 
-import Link from 'next/link';
-
 import Button from '@/components/button';
-import Icon from '@/components/icon/Icon';
-import Input from '@/components/input';
-import Checkbox from '@/components/input/Checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
+import { API_URL } from '@/constants/api';
 import { loginSteps } from '@/constants/modal';
+import { forgotPasswordSchema } from '@/lib/schema/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
@@ -16,68 +27,83 @@ type Step3Props = {
 };
 
 const Step3: FC<Step3Props> = ({ setLoginStep }) => {
-  const [password, setPassword] = useState<string>('');
-  const [inputError, setInputError] = useState<boolean>(false);
+  const form = useForm<z.infer<typeof forgotPasswordSchema>>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
+  async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
+    try {
+      const response = await axios.post(`${API_URL}/auth/forgot-pass`, {
+        email: values.email,
+      });
 
-    setLoginStep(loginSteps[0]);
-  };
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: response.data.message,
+        });
+        setLoginStep(loginSteps[0]); // Redirect to the first step or login step
+      }
+    } catch (error) {
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description: 'Failed to send password reset email. Please try again.',
+      });
+    }
+  }
 
   const handlePreviousStep = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
 
-    setLoginStep(loginSteps[2]);
+    setLoginStep(loginSteps[0]);
   };
 
   return (
     <ModalContent className='flex flex-col justify-center px-4'>
-      <form className='flex flex-col'>
-        <Input
-          className='w-full'
-          label='Password'
-          placeholderText='enter password'
-          variant='border'
-          setInputText={setPassword}
-          type='password'
-        />
-
-        {inputError && (
-          <div className='flex items-center gap-2 pl-1 font-jost text-xs text-alert-red sm:text-sm'>
-            <Icon name='RiErrorWarningFill' size={16} />
-            <p>Wrong password. Try again or click 'Forgot password'.</p>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    className=''
+                    placeholder='Enter Your Email'
+                    {...field}
+                    variant='border'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className='flex flex-row-reverse gap-2 items-center mt-4'>
+            <Button
+              className='w-full order-1'
+              title='Send Reset Link'
+              variant='primary'
+              type='submit'
+            />
+            <Button
+              className='w-full order-2'
+              title='Previous'
+              variant='secondary'
+              type='button'
+              onClick={handlePreviousStep}
+            />
           </div>
-        )}
-
-        <div className='mt-2 flex items-center justify-between pl-1'>
-          <Checkbox title='Remember Me' />
-
-          <Link
-            className='font-jost text-sm opacity-75 hover:opacity-100'
-            href='#'
-          >
-            Forgot Password?
-          </Link>
-        </div>
-
-        <div className='flex gap-2 items-center mt-4'>
-          <Button
-            className='w-full'
-            title='Previous'
-            variant='secondary'
-            onClick={(e) => handlePreviousStep(e)}
-          />
-          <Button
-            className='w-full'
-            title='Login'
-            variant='primary'
-            onClick={(e) => handleSubmit(e)}
-          />
-        </div>
-      </form>
+        </form>
+      </Form>
     </ModalContent>
   );
 };
