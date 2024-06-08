@@ -18,6 +18,20 @@ export const forgotPasswordSchema = z.object({
     .email('Invalid email'),
 });
 
+export const resetPasswordSchema = z
+  .object({
+    password: z
+      .string({ required_error: 'Password is required' })
+      .min(1, 'Password is required'),
+    confirmPassword: z
+      .string({ required_error: 'Confirm Password is required' })
+      .min(1, 'Confirm Password is required'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  });
+
 // Registration Schema for validation
 export const registrationSchema = z.object({
   first_name: z
