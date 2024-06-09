@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/toaster';
 
 import Providers from './Providers';
 import './globals.css';
+import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 
 const jost = Jost({
@@ -48,14 +49,16 @@ export default function RootLayout({
         className={`${jost.variable} ${josefin_Sans.variable} bg-primary-monkeyWhite dark:bg-primary-monkeyBlack  ${playfair_Display.variable} mx-auto max-w-7xl`}
       >
         <Toaster />
-        <Providers>
-          <ThemeProviders>
-            <Navbar />
-            <div>{auth}</div>
-            <main>{children}</main>
-            <Footer />
-          </ThemeProviders>
-        </Providers>
+        <SWRProvider>
+          <Providers>
+            <ThemeProviders>
+              <Navbar />
+              <div>{auth}</div>
+              <main>{children}</main>
+              <Footer />
+            </ThemeProviders>
+          </Providers>
+        </SWRProvider>
       </body>
     </html>
   );
