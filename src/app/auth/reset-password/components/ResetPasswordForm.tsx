@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useSearchParams } from 'next/navigation';
 
@@ -14,15 +14,36 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
 import { resetPasswordSchema } from '@/lib/schema/auth';
+import { getResetPasswordToken } from '@/services/auth/auth';
+import { axiosInstance } from '@/services/fetcher';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const ResetPasswordForm = () => {
   const searchParams = useSearchParams();
-  const search = searchParams.get('user');
-  console.log(search);
+  const username = searchParams.get('user');
+  const evpw = searchParams.get('evpw');
+  const [userToken, setuserToken] = useState<string | undefined>('');
+  console.log(username);
+  console.log(evpw);
+
+  useEffect(() => {
+    getResetPasswordToken(username, evpw)
+      .then((res) => {
+        console.log(res);
+        setuserToken(res?.response.token);
+      })
+      .catch((err) => {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message,
+        });
+      });
+  }, [username, evpw]);
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
@@ -34,6 +55,34 @@ const ResetPasswordForm = () => {
 
   function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
     console.log(values);
+    console.log(userToken);
+
+    axiosInstance
+      .post(
+        '/auth/update-password',
+        {
+          new_password: values.password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      )
+      .then((res) => {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your password has been updated successfully',
+        });
+      })
+      .catch((err) => {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message,
+        });
+      });
   }
 
   return (
