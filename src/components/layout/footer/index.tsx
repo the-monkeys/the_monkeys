@@ -100,8 +100,8 @@ const Footer = () => {
       </div>
 
       {/*Footer Icons*/}
-      <div className='mb-14 flex w-fit flex-col items-center gap-2 self-center'>
-        <div className='flex items-center justify-center gap-2'>
+      <div className='pb-8 space-y-2'>
+        <div className='py-2 flex items-center justify-center gap-4'>
           <Link
             className='flex items-center hover:opacity-75'
             href='https://discord.gg/6fK9YuV8FV'
