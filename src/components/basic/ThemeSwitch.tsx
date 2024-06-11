@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 import { useTheme } from 'next-themes';
 
-import IconContainer from '../icon';
+import Icon from '../icon/icon';
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
@@ -29,21 +29,17 @@ const ThemeSwitch = () => {
 
   if (resolvedTheme === 'dark') {
     return (
-      <IconContainer
-        name='RiToggleLine'
-        onClick={() => setTheme('light')}
-        hasHover={false}
-      />
+      <div onClick={() => setTheme('light')}>
+        <Icon name='RiToggle' size={24} />
+      </div>
     );
   }
 
   if (resolvedTheme === 'light') {
     return (
-      <IconContainer
-        name='RiToggleFill'
-        onClick={() => setTheme('dark')}
-        hasHover={false}
-      />
+      <div onClick={() => setTheme('dark')}>
+        <Icon name='RiToggle' type='Fill' size={24} />
+      </div>
     );
   }
 };

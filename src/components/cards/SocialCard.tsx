@@ -2,8 +2,7 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
-import Icon from '../icon';
-import { IconName } from '../icon/Icon';
+import Icon, { IconName } from '../icon/icon';
 
 export type SocialCardProps = {
   icon: IconName;
@@ -20,7 +19,8 @@ const SocialCard: FC<SocialCardProps> = ({ icon, title, text, link }) => {
       className='group flex w-full items-center justify-between gap-2 border-1 border-secondary-lightGrey/25 p-4 hover:border-primary-monkeyOrange rounded-lg'
     >
       <div className='flex gap-4'>
-        <Icon name={icon} size={28} hasHover={false} />
+        <Icon name={icon} size={28} />
+
         <div className='flex flex-col justify-center'>
           <p className='flex items-start font-josefin_Sans text-lg md:text-xl'>
             {title}
@@ -30,9 +30,8 @@ const SocialCard: FC<SocialCardProps> = ({ icon, title, text, link }) => {
       </div>
 
       <Icon
-        name='RiArrowRightUpLine'
+        name='RiArrowRightUp'
         size={24}
-        hasHover={false}
         className='text-primary-monkeyOrange opacity-0 group-hover:opacity-100'
       />
     </Link>

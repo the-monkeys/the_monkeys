@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
-import Icon, { IconName } from '../icon/Icon';
+import Icon, { IconName } from '../icon/icon';
 import { buttonVariantStyles } from '../variantStyles';
 
 type ButtonVariants = 'primary' | 'secondary' | 'alert' | 'ghost' | 'shallow';
@@ -31,7 +31,7 @@ const Button: React.FC<ButtonProps> = ({
   variant,
   startIcon,
   endIcon,
-  iconName = 'RiErrorWarningLine',
+  iconName,
   onClick,
   disabled,
   className,
@@ -65,14 +65,12 @@ const Button: React.FC<ButtonProps> = ({
       {startIcon || endIcon ? (
         <>
           <Icon
-            name={iconName}
-            size={20}
+            name={iconName || 'RiUser'}
             className={startIcon ? 'opacity-100' : 'opacity-0'}
           />
           <p className='flex-1'>{title}</p>
           <Icon
-            name={iconName}
-            size={20}
+            name={iconName || 'RiUser'}
             className={endIcon ? 'opacity-100' : 'opacity-0'}
           />
         </>

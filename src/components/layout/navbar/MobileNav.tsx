@@ -1,16 +1,37 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
 import ThemeSwitch from '@/components/basic/ThemeSwitch';
-import Icon from '@/components/icon';
+import CreateButton from '@/components/buttons/createButton';
+import Icon from '@/components/icon/icon';
 import Logo from '@/components/logo';
 
-import CreateButton from '../../button/CreateButton';
 import UserOptions from './UserOptions';
 
 const MobileNav = () => {
   const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
+
+  const [prevScrollpos, setPrevScrollpos] = useState(window.scrollY);
+  const [top, setTop] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      if (prevScrollpos > currentScrollPos) {
+        setTop(0);
+      } else {
+        setTop(-50);
+      }
+      setPrevScrollpos(currentScrollPos);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [prevScrollpos]);
 
   const handleShowUserOptions = () => {
     setShowUserOptions((prevVal) => !prevVal);
@@ -18,30 +39,36 @@ const MobileNav = () => {
 
   return (
     <>
-      <div className='sticky left-0 top-0 flex w-full items-center justify-between gap-5 bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-sm dark:bg-primary-monkeyBlack/75 z-30'>
+      <header
+        className={`sticky left-0 top-${top} flex w-full px-5 py-4 items-center justify-between bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
+      >
         <Link href='/'>
           <Logo showMobileLogo={true} />
         </Link>
 
         <div className='relative'>
           {showUserOptions ? (
-            <Icon name='RiUserFill' onClick={handleShowUserOptions} />
+            <div onClick={handleShowUserOptions}>
+              <Icon name='RiUser' type='Fill' size={24} />
+            </div>
           ) : (
-            <Icon name='RiUserLine' onClick={handleShowUserOptions} />
+            <div onClick={handleShowUserOptions}>
+              <Icon name='RiUser' size={24} />
+            </div>
           )}
           {showUserOptions && (
             <UserOptions setUserOptions={setShowUserOptions} />
           )}
         </div>
-      </div>
+      </header>
 
-      <div className='fixed bottom-0 left-0 flex w-full items-center justify-evenly bg-primary-monkeyWhite px-5 py-4 dark:bg-primary-monkeyBlack z-50 border-t-1 border-secondary-lightGrey/25'>
+      <div className='fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>
         <ThemeSwitch />
 
-        <CreateButton showTitle={false} />
+        <CreateButton />
 
         <Link href='/notifications' className='relative'>
-          <Icon name='RiNotification3Line' />
+          <Icon name='RiNotification3' />
         </Link>
       </div>
     </>

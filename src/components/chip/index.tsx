@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
-import IconContainer from '../icon';
+import Icon from '../icon/icon';
 
 type ChipProps = {
   label: string;
@@ -38,12 +38,9 @@ const Chip: FC<ChipProps> = ({
       <p className='font-jost cursor-default'>{label}</p>
 
       {removable && (
-        <IconContainer
-          name='RiCloseLine'
-          size={16}
-          onClick={onRemove}
-          className={iconStyles}
-        />
+        <div onClick={onRemove}>
+          <Icon name='RiClose' size={16} className={iconStyles} />
+        </div>
       )}
     </div>
   );

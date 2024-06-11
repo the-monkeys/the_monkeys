@@ -2,7 +2,7 @@ import React, { FC, PropsWithChildren } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import IconContainer from '../icon';
+import Icon from '../icon/icon';
 import Logo from '../logo';
 
 type ModalProps = {
@@ -18,16 +18,16 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
         <div className='w-full flex justify-between items-center px-2'>
           <Logo showMix />
 
-          <IconContainer
-            name='RiCloseLine'
-            size={20}
+          <div
             onClick={() => {
               router.back();
               if (setModal) {
                 setModal(false);
               }
             }}
-          />
+          >
+            <Icon name='RiClose' />
+          </div>
         </div>
 
         <div className='flex max-h-[60vh] sm:max-h-[80vh] w-full flex-col gap-10 overflow-auto rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import Icon from '@/components/icon/Icon';
+import Icon from '@/components/icon/icon';
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,12 +14,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { footerList } from '@/constants/footer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import { footerList } from './footerList';
-import List from './list';
 
 const contactFormSchema = z.object({
   email: z
@@ -27,6 +25,31 @@ const contactFormSchema = z.object({
     .min(1, 'Email is required')
     .email('Invalid email'),
 });
+
+const FooterList = ({
+  heading,
+  items,
+}: {
+  heading: string;
+  items: {
+    text: string;
+    link: string;
+  }[];
+}) => {
+  return (
+    <div className='space-y-2'>
+      <h4 className='font-josefin_Sans font-semibold uppercase'>{heading}</h4>
+
+      <ul className='font-jost space-y-2'>
+        {items.map((item, index) => (
+          <li className='opacity-75 hover:opacity-100' key={index}>
+            <Link href={item.link}>{item.text}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const Footer = () => {
   const form = useForm<z.infer<typeof contactFormSchema>>({
@@ -41,7 +64,7 @@ const Footer = () => {
   }
 
   return (
-    <footer className='px-5 py-10 space-y-6'>
+    <footer className='px-5 pt-10 pb-14 space-y-6'>
       <Logo showSubHeading showMix />
 
       <Form {...form}>
@@ -64,6 +87,7 @@ const Footer = () => {
                 </FormItem>
               )}
             />
+
             <Button size='lg' type='submit'>
               Subscribe
             </Button>
@@ -71,36 +95,36 @@ const Footer = () => {
         </form>
       </Form>
 
-      <div className='w-full py-4 flex flex-wrap justify-between gap-8'>
+      <div className='w-full p-2 flex flex-wrap justify-between gap-8'>
         {footerList.map((listItem, index) => {
-          return <List listData={listItem} key={index} />;
+          return <FooterList {...listItem} key={index} />;
         })}
       </div>
 
-      <div className='pb-10'>
+      <div className='space-y-2'>
         <div className='py-2 flex items-center justify-center gap-4'>
           <Link
-            className='flex items-center gap-2'
+            className='flex items-center hover:opacity-75'
             href='https://discord.gg/6fK9YuV8FV'
             target='_blank'
           >
-            <Icon name='RiDiscordFill' size={20} />
+            <Icon name='RiDiscord' type='Fill' />
           </Link>
 
           <Link
-            className='flex items-center gap-2'
+            className='flex items-center hover:opacity-75'
             href='https://github.com/the-monkeys'
             target='_blank'
           >
-            <Icon name='RiGithubFill' size={20} />
+            <Icon name='RiGithub' type='Fill' />
           </Link>
 
           <Link
-            className='flex items-center gap-2'
+            className='flex items-center hover:opacity-75'
             href='https://twitter.com/TheMonkeysLife'
             target='_blank'
           >
-            <Icon name='RiTwitterXFill' size={20} />
+            <Icon name='RiTwitterX' type='Fill' />
           </Link>
         </div>
 

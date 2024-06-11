@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { twMerge } from 'tailwind-merge';
 
-import Icon from '../icon/Icon';
+import Icon from '../icon/icon';
 
 type LinksRedirectProps = {
   target: string;
@@ -25,7 +25,7 @@ const LinksRedirectArrow: FC<LinksRedirectProps> = ({
       <p className='font-josefin_Sans'>{title}</p>
 
       <Icon
-        name='RiArrowRightLine'
+        name='RiArrowRight'
         size={16}
         className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1 group-hover:text-primary-monkeyOrange'
       />

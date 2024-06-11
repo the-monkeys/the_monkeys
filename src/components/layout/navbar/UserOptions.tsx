@@ -3,7 +3,7 @@ import React, { FC, SetStateAction } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import Icon from '@/components/icon/Icon';
+import Icon from '@/components/icon/icon';
 import { toast } from '@/components/ui/use-toast';
 import { signOut, useSession } from 'next-auth/react';
 
@@ -24,11 +24,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
             }}
             className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-green cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-green/25'
           >
-            <Icon
-              name='RiLoginBoxLine'
-              size={20}
-              className='text-alert-green'
-            />
+            <Icon name='RiLoginBox' className='text-alert-green' />
             <p className='font-josefin_Sans'>Login</p>
           </div>
         ) : (
@@ -37,28 +33,28 @@ const UserOptions: FC<UserOptionsProps> = () => {
               href={`/${data?.user?.user_name}`}
               className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
             >
-              <Icon name='RiUserLine' size={20} />
+              <Icon name='RiUser' />
               <p className='font-josefin_Sans'>Profile</p>
             </Link>
             <Link
               href='/drafts'
               className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
             >
-              <Icon name='RiDraftLine' size={20} />
+              <Icon name='RiDraft' />
               <p className='font-josefin_Sans'>Drafts</p>
             </Link>
             <Link
               href='/settings'
               className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
             >
-              <Icon name='RiSettings3Line' size={20} />
+              <Icon name='RiSettings3' />
               <p className='font-josefin_Sans'>Settings</p>
             </Link>
             <Link
               href={`/activity`}
               className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
             >
-              <Icon name='RiHistoryLine' size={20} />
+              <Icon name='RiHistory' />
               <p className='font-josefin_Sans'>Activity</p>
             </Link>
             <div
@@ -72,11 +68,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
               }}
               className='flex w-full items-center justify-start gap-2 px-4 py-2 transition-all text-alert-red cursor-pointer border-t-1 border-b-1 border-alert-red/0 hover:border-alert-red/25'
             >
-              <Icon
-                name='RiLogoutBoxRLine'
-                size={20}
-                className='text-alert-red'
-              />
+              <Icon name='RiLogoutBoxR' className='text-alert-red' />
               <p className='font-josefin_Sans'>Logout</p>
             </div>
           </>

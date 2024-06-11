@@ -4,7 +4,7 @@ import { ChangeEvent, InputHTMLAttributes, forwardRef, useState } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
-import IconContainer from '../icon';
+import Icon from '../icon/icon';
 import { inputVariantStyles } from '../variantStyles';
 
 type InputVariants = 'border' | 'ghost' | 'area';
@@ -104,12 +104,7 @@ const Input = forwardRef<HTMLInputElement | HTMLTextAreaElement, InputProps>(
               ref={ref as React.RefObject<HTMLInputElement>}
             />
             {localInput && clearIcon && (
-              <IconContainer
-                name='RiCloseLine'
-                size={16}
-                onClick={handleClearInput}
-                className='mr-2'
-              />
+              <Icon name='RiClose' size={16} className='mr-2' />
             )}
           </div>
         )}
