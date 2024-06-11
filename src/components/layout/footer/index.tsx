@@ -1,47 +1,84 @@
 'use client';
 
-import { useState } from 'react';
-
 import Link from 'next/link';
 
-import Button from '@/components/button';
-import Icon from '@/components/icon';
-import Input from '@/components/input';
+import Icon from '@/components/icon/Icon';
 import Logo from '@/components/logo';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import { footerList } from './footerList';
 import List from './list';
 
+const contactFormSchema = z.object({
+  email: z
+    .string({ required_error: 'Email is required' })
+    .min(1, 'Email is required')
+    .email('Invalid email'),
+});
+
 const Footer = () => {
-  const [userMail, setUserMail] = useState<string>('');
+  const form = useForm<z.infer<typeof contactFormSchema>>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof contactFormSchema>) {
+    console.log(values.email);
+  }
 
   return (
-    <footer className='flex flex-col gap-10 border-t-1 border-secondary-lightGrey/25 px-5 pb-4 pt-10'>
-      <div className='item-start flex flex-col justify-between gap-10 md:flex-row md:items-end'>
-        <div>
-          <Logo showSubHeading showMix />
-          <form className='mt-5 flex flex-wrap items-end gap-2 md:mt-10'>
-            <Input
-              className='w-full sm:w-60 md:w-64 text-sm sm:text-base'
-              type='email'
-              placeholderText='Your email address'
-              setInputText={setUserMail}
-              label='Get in Touch'
-              variant='border'
-            />
-            <Button variant='primary' title='Subscribe' />
-          </form>
-        </div>
+    <footer className='px-5 py-10 space-y-6'>
+      <Logo showSubHeading showMix />
 
-        <div className='flex flex-wrap justify-between gap-5'>
-          {footerList.map((listItem, index) => {
-            return <List listData={listItem} key={index} />;
-          })}
-        </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className='flex items-end gap-2'>
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem className='w-72 md:w-80'>
+                  <FormLabel htmlFor='contact_email'>Get in Touch</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input
+                      id='contact_email'
+                      placeholder='Enter email address'
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button size='lg' type='submit'>
+              Subscribe
+            </Button>
+          </div>
+        </form>
+      </Form>
+
+      <div className='w-full py-4 flex flex-wrap justify-between gap-8'>
+        {footerList.map((listItem, index) => {
+          return <List listData={listItem} key={index} />;
+        })}
       </div>
 
-      <div className='mb-14 flex w-fit flex-col items-center gap-2 self-center'>
-        <div className='flex items-center justify-center gap-2'>
+      <div className='pb-10'>
+        <div className='py-2 flex items-center justify-center gap-4'>
           <Link
             className='flex items-center gap-2'
             href='https://discord.gg/6fK9YuV8FV'
@@ -49,6 +86,7 @@ const Footer = () => {
           >
             <Icon name='RiDiscordFill' size={20} />
           </Link>
+
           <Link
             className='flex items-center gap-2'
             href='https://github.com/the-monkeys'
@@ -56,6 +94,7 @@ const Footer = () => {
           >
             <Icon name='RiGithubFill' size={20} />
           </Link>
+
           <Link
             className='flex items-center gap-2'
             href='https://twitter.com/TheMonkeysLife'
@@ -64,7 +103,8 @@ const Footer = () => {
             <Icon name='RiTwitterXFill' size={20} />
           </Link>
         </div>
-        <p className='w-fit font-josefin_Sans text-xs text-secondary-lightGrey'>
+
+        <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center'>
           Monkeys, 2024, All Rights Reserved
         </p>
       </div>
