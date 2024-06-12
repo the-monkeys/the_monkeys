@@ -1,53 +1,39 @@
-import { FC, useState } from 'react';
-
-import Button from '@/components/button';
-import Input from '@/components/input';
+import Icon from '@/components/icon/icon';
+import { Button } from '@/components/ui/button';
 import { signupSteps } from '@/constants/modal';
 
 import ModalContent from '../layout/ModalContent';
 import { SignupStep } from './SignupModal';
 
-type Step1Props = {
-  setLoginStep: React.Dispatch<React.SetStateAction<SignupStep>>;
-};
-
-const Step1: FC<Step1Props> = ({ setLoginStep }) => {
+const SignupStep1 = ({
+  setSignupStep,
+}: {
+  setSignupStep: React.Dispatch<React.SetStateAction<SignupStep>>;
+}) => {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    setLoginStep(signupSteps[1]);
+    setSignupStep(signupSteps[1]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center gap-4 px-4'>
-      <Button
-        className='w-full'
-        title='Signup with Email'
-        variant='primary'
-        startIcon
-        iconName='RiMailFill'
-        onClick={(e) => handleSubmit(e)}
-      />
+    <ModalContent className='space-y-4'>
+      <Button className='w-full flex' onClick={(e) => handleSubmit(e)}>
+        <Icon name='RiMail' type='Fill' />
+        <p className='flex-1'>Sign up using Email</p>
+      </Button>
 
-      <Button
-        className='w-full'
-        title='Coming soon'
-        variant='shallow'
-        startIcon
-        iconName='RiGoogleFill'
-        disabled
-      />
+      <Button variant='outline' disabled className='w-full flex'>
+        <Icon name='RiGoogle' type='Fill' />
+        <p className='flex-1'>Coming Soon</p>
+      </Button>
 
-      <Button
-        className='w-full'
-        title='Coming soon'
-        variant='shallow'
-        startIcon
-        iconName='RiInstagramFill'
-        disabled
-      />
+      <Button variant='outline' disabled className='w-full flex'>
+        <Icon name='RiMeta' type='Fill' />
+        <p className='flex-1'>Coming Soon</p>
+      </Button>
     </ModalContent>
   );
 };
 
-export default Step1;
+export default SignupStep1;

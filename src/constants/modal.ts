@@ -6,17 +6,17 @@ export const loginSteps: LoginStep[] = [
   {
     id: 1,
     heading: 'Account Login',
-    subHeading: 'choose an option to continue',
+    subHeading: 'Select an option to log in',
   },
   {
     id: 2,
-    heading: 'Log in',
-    subHeading: 'to continue to Monkeys',
+    heading: 'Log In',
+    subHeading: 'Access your Monkeys account',
   },
   {
     id: 3,
-    heading: 'Welcome',
-    subHeading: 'to Monkeys',
+    heading: 'Forgot Password',
+    subHeading: 'Enter your email to reset your password',
   },
 ];
 
@@ -24,22 +24,12 @@ export const signupSteps: SignupStep[] = [
   {
     id: 1,
     heading: 'Join Monkeys',
-    subHeading: 'choose an option to continue',
+    subHeading: 'Select an option to sign up',
   },
   {
     id: 2,
-    heading: 'Basic Details',
-    subHeading: 'enter first name and last name',
-  },
-  {
-    id: 3,
-    heading: 'Login Details',
-    subHeading: 'set email address',
-  },
-  {
-    id: 4,
-    heading: 'Almost there',
-    subHeading: 'secure your account',
+    heading: 'Enter Details',
+    subHeading: 'Provide your personal information',
   },
 ];
 
@@ -47,16 +37,16 @@ export const publishSteps: PublishStep[] = [
   {
     id: 1,
     heading: 'Blog Preview',
-    subHeading: 'add preview details',
+    subHeading: 'Add preview details to your blog',
   },
   {
     id: 2,
     heading: 'Blog Details',
-    subHeading: 'select suitable topics for your blog',
+    subHeading: 'Select suitable topics for your blog',
   },
   {
     id: 3,
-    heading: '',
-    subHeading: '',
+    heading: 'Publish',
+    subHeading: 'Finalize and publish your blog post',
   },
 ];

@@ -2,8 +2,8 @@
 
 import { FC, useState } from 'react';
 
-import Button from '@/components/button';
 import Input from '@/components/input';
+import { Button } from '@/components/ui/button';
 import { publishSteps } from '@/constants/modal';
 
 import { PublishStep } from './PublishModal';
@@ -36,22 +36,17 @@ const BlogDetails: FC<BlogDetailsProps> = ({ setPublishStep }) => {
 
       <div className='mt-4 flex flex-col gap-2'>
         <div className='w-full sm:w-auto flex gap-2'>
-          <Button title='Save as Draft' variant='secondary' className='w-1/2' />
+          <Button variant='secondary'>Save as Draft</Button>
+
           <Button
-            title='Add Topics'
             variant='secondary'
-            className='w-1/2'
             onClick={() => setPublishStep(publishSteps[1])}
-          />
+          >
+            Add Topics
+          </Button>
         </div>
 
-        <Button
-          title='Publish Blog'
-          variant='primary'
-          className='w-full'
-          iconName='RiArrowRightUpLine'
-          endIcon
-        />
+        <Button>Publish Blog</Button>
       </div>
     </div>
   );

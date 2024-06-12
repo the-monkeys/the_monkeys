@@ -1,24 +1,41 @@
-import { FC, useState } from 'react';
-
-import Button from '@/components/button';
-import Input from '@/components/input';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { signupSteps } from '@/constants/modal';
+import { signupSchema } from '@/lib/schema/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 import ModalContent from '../layout/ModalContent';
 import { SignupStep } from './SignupModal';
 
-type Step2Props = {
-  setLoginStep: React.Dispatch<React.SetStateAction<SignupStep>>;
-};
-
-const Step2: FC<Step2Props> = ({ setLoginStep }) => {
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
+const SignupStep2 = ({
+  setSignupStep,
+}: {
+  setSignupStep: React.Dispatch<React.SetStateAction<SignupStep>>;
+}) => {
+  const form = useForm<z.infer<typeof signupSchema>>({
+    resolver: zodResolver(signupSchema),
+    defaultValues: {
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+    },
+  });
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
-    setLoginStep(signupSteps[2]);
+    setSignupStep(signupSteps[0]);
   };
 
   const handlePreviousStep = (
@@ -26,45 +43,107 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   ) => {
     e.preventDefault();
 
-    setLoginStep(signupSteps[0]);
+    setSignupStep(signupSteps[0]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center gap-2 px-4'>
-      <form className='flex flex-col gap-2'>
-        <Input
-          variant='border'
-          placeholderText='Enter first name'
-          label='First Name'
-          setInputText={setFirstName}
-          className='flex-1'
-        />
-
-        <Input
-          variant='border'
-          placeholderText='Enter last name'
-          label='Last Name'
-          setInputText={setLastName}
-          className='flex-1'
-        />
-
-        <div className='flex gap-2 items-center mt-4'>
-          <Button
-            className='w-full'
-            title='Previous'
-            variant='secondary'
-            onClick={(e) => handlePreviousStep(e)}
+    <ModalContent>
+      <Form {...form}>
+        <form className='space-y-2'>
+          <FormField
+            control={form.control}
+            name='first_name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <Input placeholder=' Enter first name' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-          <Button
-            className='w-full'
-            title='Next'
-            variant='primary'
-            onClick={(e) => handleSubmit(e)}
+
+          <FormField
+            control={form.control}
+            name='last_name'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <Input placeholder=' Enter last name' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-      </form>
+
+          <FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder=' Enter email address' {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder=' Enter Password'
+                    {...field}
+                    type='password'
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div>
+            <ul>
+              <li className='font-jost text-secondary-lightGrey text-sm list-disc list-inside'>
+                Must be at least 6 characters long.
+              </li>
+              <li className='font-jost text-secondary-lightGrey text-sm list-disc list-inside'>
+                Must contain at least one lowercase letter.
+              </li>
+              <li className='font-jost text-secondary-lightGrey text-sm list-disc list-inside'>
+                Must contain at least one uppercase letter.
+              </li>
+              <li className='font-jost text-secondary-lightGrey text-sm list-disc list-inside'>
+                Must contain at least one number.
+              </li>
+            </ul>
+          </div>
+
+          <div className='pt-6 flex gap-2 items-center'>
+            <Button
+              variant='secondary'
+              className='flex-1'
+              onClick={handlePreviousStep}
+            >
+              Previous
+            </Button>
+
+            <Button className='flex-1' onClick={handleSubmit}>
+              Sign Up
+            </Button>
+          </div>
+        </form>
+      </Form>
     </ModalContent>
   );
 };
 
-export default Step2;
+export default SignupStep2;

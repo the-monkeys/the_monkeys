@@ -10,6 +10,11 @@ type ModalProps = {
   setModal?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
+export type ModalComponentProps = {
+  className?: string;
+  children: React.ReactNode;
+};
+
 const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
   const router = useRouter();
   return (
@@ -19,6 +24,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           <Logo showMix />
 
           <div
+            className='cursor-pointer'
             onClick={() => {
               router.back();
               if (setModal) {
@@ -30,7 +36,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           </div>
         </div>
 
-        <div className='flex max-h-[60vh] sm:max-h-[80vh] w-full flex-col gap-10 overflow-auto rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>
+        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col overflow-auto rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>
           {children}
         </div>
       </div>

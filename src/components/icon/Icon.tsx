@@ -18,6 +18,7 @@ export type IconName =
   | 'RiDraft'
   | 'RiArrowRightUp'
   | 'RiArrowRight'
+  | 'RiArrowLeft'
   | 'RiMore'
   | 'RiClose'
   | 'RiAdd'
@@ -32,7 +33,7 @@ export type IconName =
   | 'RiTwitterX'
   | 'RiDiscord'
   | 'RiGoogle'
-  | 'RiInstagram'
+  | 'RiMeta'
   | 'RiCheck'
   | 'RiLoginBox'
   | 'RiLogoutBoxR';

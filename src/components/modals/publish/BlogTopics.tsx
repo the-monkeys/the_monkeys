@@ -2,9 +2,9 @@
 
 import { FC, useState } from 'react';
 
-import Button from '@/components/button';
 import TopicChip from '@/components/chip/TopicChip';
 import SearchBox from '@/components/searchBox';
+import { Button } from '@/components/ui/button';
 import { publishSteps } from '@/constants/modal';
 import { BlogTopic, dummyTopics } from '@/constants/topics';
 
@@ -47,33 +47,19 @@ const BlogTopics: FC<BlogTopicsProps> = ({ setPublishStep }) => {
         </div>
       )}
 
-      <SearchBox
-        placeholder='Add topics'
-        setSearchInput={setTopicInput}
-        className='flex-grow'
-        showIcon={false}
-        disabled={blogTopics.length >= 5}
-        disabledPlaceholder='At most 5 topics allowed'
-      />
-
       <div className='mt-4 flex flex-col gap-2'>
         <div className='w-full sm:w-auto flex gap-2'>
           <Button
-            title='Previous'
             variant='secondary'
-            className='w-1/2'
             onClick={() => setPublishStep(publishSteps[0])}
-          />
-          <Button title='Save as Draft' variant='secondary' className='w-1/2' />
+          >
+            Previous
+          </Button>
+
+          <Button variant='secondary'>Previous</Button>
         </div>
 
-        <Button
-          title='Publish Blog'
-          variant='primary'
-          className='w-full'
-          iconName='RiArrowRightUpLine'
-          endIcon
-        />
+        <Button>Publish Blog</Button>
       </div>
     </div>
   );

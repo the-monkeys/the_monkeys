@@ -95,13 +95,13 @@ const Footer = () => {
         </form>
       </Form>
 
-      <div className='w-full p-2 flex flex-wrap justify-between gap-8'>
+      <div className='w-full pt-4 flex flex-wrap justify-between gap-8'>
         {footerList.map((listItem, index) => {
           return <FooterList {...listItem} key={index} />;
         })}
       </div>
 
-      <div className='space-y-2'>
+      <div className='pb-8 space-y-2'>
         <div className='py-2 flex items-center justify-center gap-4'>
           <Link
             className='flex items-center hover:opacity-75'
