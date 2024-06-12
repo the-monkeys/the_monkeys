@@ -57,7 +57,7 @@ const SignupStep2 = ({
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder=' Enter first name' {...field} />
+                  <Input placeholder='Enter first name' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -71,7 +71,7 @@ const SignupStep2 = ({
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder=' Enter last name' {...field} />
+                  <Input placeholder='Enter last name' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -85,7 +85,7 @@ const SignupStep2 = ({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder=' Enter email address' {...field} />
+                  <Input placeholder='Enter email address' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -100,7 +100,7 @@ const SignupStep2 = ({
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder=' Enter Password'
+                    placeholder='Enter Password'
                     {...field}
                     type='password'
                   />

@@ -90,7 +90,7 @@ const LoginStep2 = ({
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder=' Enter email address' {...field} />
+                  <Input placeholder='Enter email address' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -105,7 +105,7 @@ const LoginStep2 = ({
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder=' Enter Password'
+                    placeholder='Enter Password'
                     {...field}
                     type='password'
                   />
