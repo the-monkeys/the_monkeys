@@ -36,13 +36,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
               <Icon name='RiUser' />
               <p className='font-josefin_Sans'>Profile</p>
             </Link>
-            <Link
-              href='/drafts'
-              className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
-            >
-              <Icon name='RiDraft' />
-              <p className='font-josefin_Sans'>Drafts</p>
-            </Link>
+
             <Link
               href='/settings'
               className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
@@ -50,6 +44,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
               <Icon name='RiSettings3' />
               <p className='font-josefin_Sans'>Settings</p>
             </Link>
+
             <Link
               href={`/activity`}
               className='flex w-full items-center justify-start gap-2 px-4 py-2 border-t-1 border-b-1 border-secondary-lightGrey/0 hover:border-secondary-lightGrey/25'
@@ -57,6 +52,7 @@ const UserOptions: FC<UserOptionsProps> = () => {
               <Icon name='RiHistory' />
               <p className='font-josefin_Sans'>Activity</p>
             </Link>
+
             <div
               onClick={() => {
                 signOut();

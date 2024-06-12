@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import Button from '@/components/button';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -30,50 +30,49 @@ const VerifyEmail = () => {
   }
 
   return (
-    <div className='w-full'>
-      <p className='font-josefin_Sans text-lg'>Update your Email</p>
+    <div className='flex flex-col items-start'>
+      <h4 className='font-josefin_Sans text-lg'>Verify Email</h4>
 
-      <p className='font-light font-jost opacity-75'>
+      <p className='font-jost text-sm opacity-75'>
+        Verify your email address to keep your account secure and stay updated.
+      </p>
+
+      <Button className='mt-4'>Verify Email</Button>
+
+      <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>
+
+      <p className='font-jost text-sm opacity-75'>
         Update your email for seamless communication and enhanced security.
       </p>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='mt-4 space-y-8'>
-          <FormField
-            control={form.control}
-            name='email'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='font-josefin_Sans text-sm'>
-                  Email Address
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className='w-1/2'
-                    variant='border'
-                    placeholder='Enter Email Address'
-                    {...field}
-                  />
-                </FormControl>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full mt-4'>
+          <div className='flex items-end flex-wrap gap-2'>
+            <div className='w-full sm:w-1/2'>
+              <FormField
+                control={form.control}
+                name='email'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-josefin_Sans text-sm'>
+                      Email Address
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder='Enter email address' {...field} />
+                    </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <Button size='lg' variant='secondary' type='submit'>
+              Update
+            </Button>
+          </div>
         </form>
       </Form>
-
-      <p className='mt-8 font-josefin_Sans text-lg'>Verify your Email</p>
-
-      <p className='font-light font-jost opacity-75'>
-        Verify your email address to keep your account secure and stay updated.
-      </p>
-
-      <Button
-        variant='shallow'
-        title='Verify Email'
-        className='mt-4 bg-primary-monkeyWhite text-primary-monkeyBlack hover:text-primary-monkeyBlack'
-      />
     </div>
   );
 };

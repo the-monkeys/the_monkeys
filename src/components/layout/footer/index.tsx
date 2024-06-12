@@ -64,7 +64,7 @@ const Footer = () => {
   }
 
   return (
-    <footer className='px-5 pt-10 pb-14 space-y-6'>
+    <footer className='px-5 pt-10 pb-14 space-y-6 border-t-1 border-secondary-lightGrey/15'>
       <Logo showSubHeading showMix />
 
       <Form {...form}>
@@ -95,7 +95,7 @@ const Footer = () => {
         </form>
       </Form>
 
-      <div className='w-full pt-4 flex flex-wrap justify-between gap-8'>
+      <div className='w-full pt-4 flex flex-col sm:flex-row justify-between gap-8'>
         {footerList.map((listItem, index) => {
           return <FooterList {...listItem} key={index} />;
         })}

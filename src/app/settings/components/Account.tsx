@@ -8,7 +8,7 @@ import VerifyEmail from './account/VerifyEmail';
 
 const Account = () => {
   return (
-    <div className='mt-12 px-4 sm:px-6 lg:px-8 flex flex-col gap-10'>
+    <div className='mt-5 p-5 space-y-10'>
       <Section sectionTitle='Username'>
         <UpdateUsername />
       </Section>
@@ -17,11 +17,11 @@ const Account = () => {
         <VerifyEmail />
       </Section>
 
-      <Section sectionTitle='Profile Visibility'>
+      <Section sectionTitle='Visibility'>
         <ProfileVisibility />
       </Section>
 
-      <Section sectionTitle='Delete Account'>
+      <Section sectionTitle='Danger'>
         <DeleteAccount />
       </Section>
     </div>

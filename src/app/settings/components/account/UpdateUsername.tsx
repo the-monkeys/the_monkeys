@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -30,39 +31,39 @@ const UpdateUsername = () => {
   }
 
   return (
-    <div className='w-full flex flex-col items-start'>
-      <p className='font-josefin_Sans text-lg'>Update your Username</p>
+    <div className='flex flex-col items-start'>
+      <h4 className='font-josefin_Sans text-lg'>Update Username</h4>
 
-      <p className='font-light font-jost opacity-75'>
+      <p className='font-jost text-sm opacity-75'>
         Change your username to something that reflects your individuality.
       </p>
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className='mt-4 w-full space-y-8'
-        >
-          <FormField
-            control={form.control}
-            name='username'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='font-josefin_Sans text-sm'>
-                  Username
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    className='w-1/2'
-                    variant='border'
-                    placeholder='Enter Username'
-                    {...field}
-                  />
-                </FormControl>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full mt-4'>
+          <div className='flex items-end flex-wrap gap-2'>
+            <div className='w-full sm:w-1/2'>
+              <FormField
+                control={form.control}
+                name='username'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-josefin_Sans text-sm'>
+                      Username
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder='Enter username' {...field} />
+                    </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <Button size='lg' variant='secondary' type='submit'>
+              Update
+            </Button>
+          </div>
         </form>
       </Form>
     </div>

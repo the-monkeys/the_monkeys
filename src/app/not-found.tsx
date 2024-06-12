@@ -6,8 +6,8 @@ import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 
 const NotFound = () => {
   return (
-    <Container className='pb-20 pt-5 flex flex-col items-center space-y-8'>
-      <div className='flex flex-wrap items-end justify-center gap-5'>
+    <Container className='flex flex-col items-center space-y-6'>
+      <div className='flex flex-wrap items-end justify-center gap-4'>
         <Image
           src={'/not-found.svg'}
           alt='Page not found'
@@ -16,23 +16,22 @@ const NotFound = () => {
           width={250}
         />
 
-        <div className='text-center sm:text-left'>
-          <p className='font-josefin_Sans font-semibold text-primary-monkeyOrange'>
+        <div>
+          <p className='font-josefin_Sans font-semibold text-center sm:text-left text-primary-monkeyOrange'>
             404: Page Not Found
           </p>
 
-          <p className='font-playfair_Display text-3xl font-semibold md:text-5xl text-secondary-darkGrey dark:text-secondary-white'>
+          <p className='font-playfair_Display text-3xl font-semibold md:text-5xl text-center sm:text-left text-secondary-darkGrey dark:text-secondary-white'>
             Lost your path?
           </p>
         </div>
       </div>
 
-      <div>
-        <LinksRedirectArrow target='/' title='Go back to home' />
-        <p className='mt-1 font-jost text-center'>or</p>
-      </div>
+      <LinksRedirectArrow link='/' title='Go back to home' position='Left' />
 
-      <div className='flex w-full flex-col items-start gap-4 sm:w-4/5 md:w-1/2'>
+      <p className='font-jost text-center'>Or</p>
+
+      <div className='w-full sm:w-4/5 md:w-1/2 space-y-2'>
         <SocialCard
           icon='RiDiscord'
           title='Join our Discord'

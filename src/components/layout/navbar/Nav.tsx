@@ -18,26 +18,27 @@ const Nav = () => {
   const notificationsRef = useRef<HTMLDivElement>(null);
   const userOptionsRef = useRef<HTMLDivElement>(null);
 
-  const [prevScrollpos, setPrevScrollpos] = useState(window.scrollY);
-  const [top, setTop] = useState(0);
+  // Code to make the header scrollable
+  // const [prevScrollpos, setPrevScrollpos] = useState(window.scrollY);
+  // const [top, setTop] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollPos = window.scrollY;
-      if (prevScrollpos > currentScrollPos) {
-        setTop(0);
-      } else {
-        setTop(-50);
-      }
-      setPrevScrollpos(currentScrollPos);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollPos = window.scrollY;
+  //     if (prevScrollpos > currentScrollPos) {
+  //       setTop(0);
+  //     } else {
+  //       setTop(-50);
+  //     }
+  //     setPrevScrollpos(currentScrollPos);
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
+  //   window.addEventListener('scroll', handleScroll);
 
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [prevScrollpos]);
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, [prevScrollpos]);
 
   const handleNotificationClick = () => {
     setShowUserOptions(false);
@@ -76,7 +77,7 @@ const Nav = () => {
 
   return (
     <header
-      className={`sticky left-0 top-${top} flex w-full p-5 items-center justify-between bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg  z-30`}
+      className={`sticky left-0 top-0 flex w-full p-5 items-center justify-between bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg  z-30`}
     >
       <div className='flex items-center gap-5'>
         <Link href='/'>

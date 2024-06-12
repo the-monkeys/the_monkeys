@@ -1,7 +1,6 @@
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 
 import NotificationContent from './NotificationContent';
-import NotificationTabs from './NotificationTabs';
 
 const NotificationsDialog = () => {
   return (
@@ -12,7 +11,7 @@ const NotificationsDialog = () => {
         <NotificationContent />
 
         <LinksRedirectArrow
-          target='/notifications'
+          link='/notifications'
           title='See all notifications'
           className='self-center py-2'
         />

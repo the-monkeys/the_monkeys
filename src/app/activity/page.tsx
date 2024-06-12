@@ -1,13 +1,11 @@
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
+import PageHeading from '@/components/pageHeading';
 
-const Page = () => {
+const ActivityPage = () => {
   return (
-    <div className='px-5 py-4'>
-      <div className='flex justify-end'>
-        <LinksRedirectArrow target='/profile' title='View Posts' />
-      </div>
+    <div className='mx-auto pb-16'>
+      <PageHeading heading='Activity' />
     </div>
   );
 };
 
-export default Page;
+export default ActivityPage;

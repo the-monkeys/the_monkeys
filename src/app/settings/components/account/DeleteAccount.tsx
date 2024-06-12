@@ -2,23 +2,21 @@
 
 import React from 'react';
 
-import Button from '@/components/button';
+import { Button } from '@/components/ui/button';
 
 const DeleteAccount = () => {
   return (
-    <div className='w-full'>
-      <p className='font-josefin_Sans text-lg'>Deactivate Your Account</p>
+    <div className='flex flex-col items-start'>
+      <h4 className='font-josefin_Sans text-lg'>Delete Account</h4>
 
-      <p className='font-light font-jost opacity-75'>
-        This action will erase all your personal data permanently and cannot be
-        undone.
+      <p className='font-jost text-sm opacity-75'>
+        When you delete your account on Monkeys, all your personal data will be
+        permanently erased. This action cannot be undone.
       </p>
 
-      <Button
-        variant='primary'
-        title='Delete your Account'
-        className='mt-4 bg-primary-monkeyWhite text-primary-monkeyBlack hover:text-primary-monkeyBlack'
-      />
+      <Button variant='destructive' className='mt-4'>
+        Delete Account
+      </Button>
     </div>
   );
 };

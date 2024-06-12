@@ -23,6 +23,8 @@ export type IconName =
   | 'RiClose'
   | 'RiAdd'
   | 'RiFileCopy'
+  | 'RiRefresh'
+  | 'RiDeleteBin'
   | 'RiSettings3'
   | 'RiHistory'
   | 'RiShare'

@@ -2,22 +2,24 @@
 
 import React from 'react';
 
-import Button from '@/components/button';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 const ProfileVisibility = () => {
   return (
-    <div className='w-full'>
-      <p className='font-josefin_Sans text-lg'>Update your Email</p>
+    <div className='flex flex-col items-start'>
+      <h4 className='font-josefin_Sans text-lg'>Change Profile Visibility</h4>
 
-      <p className='font-light font-jost opacity-75'>
-        Change your username to something that reflects your individuality.
+      <p className='font-jost text-sm opacity-75'>
+        If your make yourself anonymous, your profile information will remain
+        hidden from others during any activity.
       </p>
 
-      <Button
-        variant='secondary'
-        title='Be Anonymous'
-        className='mt-4 bg-primary-monkeyWhite text-primary-monkeyBlack hover:text-primary-monkeyBlack'
-      />
+      <div className='mt-4 flex items-center space-x-2'>
+        <Label htmlFor='anonymous'>Make yourself Anonymous</Label>
+        <Switch id='anonymous' />
+      </div>
     </div>
   );
 };
