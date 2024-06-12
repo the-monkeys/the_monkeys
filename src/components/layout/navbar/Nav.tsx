@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
-import ThemeSwitch from '@/components/basic/ThemeSwitch';
 import CreateButton from '@/components/buttons/createButton';
 import Icon from '@/components/icon/icon';
 import Logo from '@/components/logo';
+import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
 
 import UserOptions from './UserOptions';
@@ -93,12 +93,8 @@ const Nav = () => {
             onClick={handleNotificationClick}
             ref={notificationsRef}
           >
-            <div className='relative'>
-              <Icon
-                name='RiNotification3'
-                type={showNotifications ? 'Fill' : 'Line'}
-                size={24}
-              />
+            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+              <Icon name='RiNotification3' size={24} />
             </div>
 
             {showNotifications && <NotificationsDialog />}
@@ -109,11 +105,9 @@ const Nav = () => {
             onClick={handleUserOptionsClick}
             ref={userOptionsRef}
           >
-            <Icon
-              name='RiUser'
-              type={showUserOptions ? 'Fill' : 'Line'}
-              size={24}
-            />
+            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+              <Icon name='RiUser' size={24} />
+            </div>
 
             {showUserOptions && (
               <UserOptions setUserOptions={setShowUserOptions} />

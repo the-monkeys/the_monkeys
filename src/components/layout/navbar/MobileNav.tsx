@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import ThemeSwitch from '@/components/basic/ThemeSwitch';
 import CreateButton from '@/components/buttons/createButton';
 import Icon from '@/components/icon/icon';
 import Logo from '@/components/logo';
+import ThemeSwitch from '@/components/themeSwitch';
 
 import UserOptions from './UserOptions';
 
@@ -40,35 +40,36 @@ const MobileNav = () => {
   return (
     <>
       <header
-        className={`sticky left-0 top-${top} flex w-full px-5 py-4 items-center justify-between bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
+        className={`sticky left-0 top-${top} flex w-full p-5 items-center justify-between bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
       >
         <Link href='/'>
           <Logo showMobileLogo={true} />
         </Link>
 
         <div className='relative'>
-          {showUserOptions ? (
-            <div onClick={handleShowUserOptions}>
-              <Icon name='RiUser' type='Fill' size={24} />
-            </div>
-          ) : (
-            <div onClick={handleShowUserOptions}>
-              <Icon name='RiUser' size={24} />
-            </div>
-          )}
+          <div
+            className='hover:text-primary-monkeyOrange cursor-pointer'
+            onClick={handleShowUserOptions}
+          >
+            <Icon name='RiUser' size={24} />
+          </div>
+
           {showUserOptions && (
             <UserOptions setUserOptions={setShowUserOptions} />
           )}
         </div>
       </header>
 
-      <div className='fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>
+      <div className='fixed bottom-0 left-0 flex w-full px-5 py-4 items-center justify-evenly bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>
         <ThemeSwitch />
 
         <CreateButton />
 
-        <Link href='/notifications' className='relative'>
-          <Icon name='RiNotification3' />
+        <Link
+          href='/notifications'
+          className='hover:text-primary-monkeyOrange cursor-pointer'
+        >
+          <Icon name='RiNotification3' size={24} />
         </Link>
       </div>
     </>

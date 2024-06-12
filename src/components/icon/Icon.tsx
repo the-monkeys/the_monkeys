@@ -4,6 +4,8 @@ import * as RemixIcons from '@remixicon/react';
 
 export type IconName =
   | 'RiToggle'
+  | 'RiSun'
+  | 'RiMoon'
   | 'RiNotification3'
   | 'RiUser'
   | 'RiShakeHands'
