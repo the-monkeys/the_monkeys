@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -59,6 +58,9 @@ const Footer = () => {
     },
   });
 
+  /* Get the current year dynamically */
+  const currentYear = new Date().getFullYear();
+
   function onSubmit(values: z.infer<typeof contactFormSchema>) {
     console.log(values.email);
   }
@@ -97,8 +99,9 @@ const Footer = () => {
         })}
       </div>
 
-      <div className='pb-8 space-y-2'>
-        <div className='py-2 flex items-center justify-center gap-4'>
+      {/*Footer Icons*/}
+      <div className='mb-14 flex w-fit flex-col items-center gap-2 self-center'>
+        <div className='flex items-center justify-center gap-2'>
           <Link
             className='flex items-center hover:opacity-75'
             href='https://discord.gg/6fK9YuV8FV'
@@ -125,7 +128,7 @@ const Footer = () => {
         </div>
 
         <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
-          Monkeys, 2024, All Rights Reserved
+          Monkeys, {currentYear}, All Rights Reserved
         </p>
       </div>
     </footer>
