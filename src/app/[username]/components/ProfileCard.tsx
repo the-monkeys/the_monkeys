@@ -73,7 +73,9 @@ const ProfileCard: FC<ProfileCardProps> = ({
 
         <div className='flex items-center gap-2'>
           <p className='font-jost text-primary-monkeyOrange'>{`@${username}`}</p>
-          <Icon name='RiFileCopy' size={16} />
+          <div onClick={() => copyToClipboard(username || '')}>
+            <Icon name='RiFileCopy' size={16} />
+          </div>
         </div>
       </div>
 

@@ -75,14 +75,10 @@ const Footer = () => {
               name='email'
               render={({ field }) => (
                 <FormItem className='w-72 md:w-80'>
-                  <FormLabel htmlFor='contact_email'>Get in Touch</FormLabel>
+                  <FormLabel>Get in Touch</FormLabel>
                   <FormMessage />
                   <FormControl>
-                    <Input
-                      id='contact_email'
-                      placeholder='Enter email address'
-                      {...field}
-                    />
+                    <Input placeholder='Enter email address' {...field} />
                   </FormControl>
                 </FormItem>
               )}
@@ -128,7 +124,7 @@ const Footer = () => {
           </Link>
         </div>
 
-        <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center'>
+        <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
           Monkeys, 2024, All Rights Reserved
         </p>
       </div>

@@ -58,18 +58,11 @@ const Profile = () => {
                 <div className='rounded-lg h-32 w-32 flex border-1 border-secondary-lightGrey/25 bg-secondary-lightGrey/15 items-center justify-center'></div>
 
                 <div className='space-x-2'>
-                  <Button
-                    size='icon'
-                    variant='destructive'
-                    className='rounded-full'
-                  >
+                  <Button size='icon' variant='destructive'>
                     <Icon name='RiDeleteBin' />
                   </Button>
-                  <Button
-                    size='icon'
-                    variant='secondary'
-                    className='rounded-full'
-                  >
+
+                  <Button size='icon' variant='secondary'>
                     <Icon name='RiRefresh' />
                   </Button>
                 </div>
@@ -201,7 +194,7 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      Twitter Profile
+                      Twitter
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -222,7 +215,7 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      LinkedIn Profile
+                      LinkedIn
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -243,7 +236,7 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      Instagram Profile
+                      Instagram
                     </FormLabel>
                     <FormControl>
                       <Input
@@ -264,7 +257,7 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      GitHub Profile
+                      GitHub
                     </FormLabel>
                     <FormControl>
                       <Input

@@ -36,12 +36,12 @@ export const signupSteps: SignupStep[] = [
 export const publishSteps: PublishStep[] = [
   {
     id: 1,
-    heading: 'Blog Details',
+    heading: 'Preview Details',
     subHeading: 'Add preview details to your blog',
   },
   {
     id: 2,
-    heading: 'Blog Topics',
+    heading: 'Topics',
     subHeading: 'Select suitable topics for your blog',
   },
 ];

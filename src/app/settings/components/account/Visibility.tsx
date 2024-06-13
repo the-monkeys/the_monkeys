@@ -2,11 +2,10 @@
 
 import React from 'react';
 
-import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 
-const ProfileVisibility = () => {
+const Visibility = () => {
   return (
     <div className='flex flex-col items-start'>
       <h4 className='font-josefin_Sans text-lg'>Change Profile Visibility</h4>
@@ -24,4 +23,4 @@ const ProfileVisibility = () => {
   );
 };
 
-export default ProfileVisibility;
+export default Visibility;

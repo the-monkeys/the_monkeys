@@ -32,11 +32,9 @@ const SignupStep2 = ({
     },
   });
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-
-    setSignupStep(signupSteps[0]);
-  };
+  function onSubmit(values: z.infer<typeof signupSchema>) {
+    console.log(values);
+  }
 
   const handlePreviousStep = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -49,7 +47,7 @@ const SignupStep2 = ({
   return (
     <ModalContent>
       <Form {...form}>
-        <form className='space-y-2'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
           <FormField
             control={form.control}
             name='first_name'
@@ -136,9 +134,7 @@ const SignupStep2 = ({
               Previous
             </Button>
 
-            <Button className='flex-1' onClick={handleSubmit}>
-              Sign Up
-            </Button>
+            <Button className='flex-1'>Sign Up</Button>
           </div>
         </form>
       </Form>

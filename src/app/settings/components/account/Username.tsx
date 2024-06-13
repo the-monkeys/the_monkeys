@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const UpdateUsername = () => {
+const Username = () => {
   const form = useForm<z.infer<typeof updateUsername>>({
     resolver: zodResolver(updateUsername),
     defaultValues: {
@@ -50,11 +50,10 @@ const UpdateUsername = () => {
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Username
                     </FormLabel>
+                    <FormMessage />
                     <FormControl>
                       <Input placeholder='Enter username' {...field} />
                     </FormControl>
-
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -70,4 +69,4 @@ const UpdateUsername = () => {
   );
 };
 
-export default UpdateUsername;
+export default Username;

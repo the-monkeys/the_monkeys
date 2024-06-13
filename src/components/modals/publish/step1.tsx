@@ -41,13 +41,9 @@ const PublishStep1 = ({
             name='title'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Preview Title</FormLabel>
+                <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='Add preview title'
-                    {...field}
-                    className='text-xl'
-                  />
+                  <Input placeholder='Add preview title' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -59,7 +55,7 @@ const PublishStep1 = ({
             name='subheading'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Preview Subheading</FormLabel>
+                <FormLabel>Subheading</FormLabel>
                 <FormControl>
                   <Input placeholder='Add preview subheading' {...field} />
                 </FormControl>

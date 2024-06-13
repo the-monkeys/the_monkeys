@@ -4,7 +4,7 @@ import React from 'react';
 
 import { Button } from '@/components/ui/button';
 
-const DeleteAccount = () => {
+const Danger = () => {
   return (
     <div className='flex flex-col items-start'>
       <h4 className='font-josefin_Sans text-lg'>Delete Account</h4>
@@ -21,4 +21,4 @@ const DeleteAccount = () => {
   );
 };
 
-export default DeleteAccount;
+export default Danger;

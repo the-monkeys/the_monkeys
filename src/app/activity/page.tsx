@@ -2,7 +2,7 @@ import PageHeading from '@/components/pageHeading';
 
 const ActivityPage = () => {
   return (
-    <div className='mx-auto pb-16'>
+    <div className='pb-12'>
       <PageHeading heading='Activity' />
     </div>
   );

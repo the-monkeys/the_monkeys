@@ -17,7 +17,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const VerifyEmail = () => {
+const Email = () => {
   const form = useForm<z.infer<typeof updateEmailSchema>>({
     resolver: zodResolver(updateEmailSchema),
     defaultValues: {
@@ -37,7 +37,9 @@ const VerifyEmail = () => {
         Verify your email address to keep your account secure and stay updated.
       </p>
 
-      <Button className='mt-4'>Verify Email</Button>
+      <Button variant='secondary' className='mt-4'>
+        Verify Email
+      </Button>
 
       <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>
 
@@ -57,11 +59,10 @@ const VerifyEmail = () => {
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Email Address
                     </FormLabel>
+                    <FormMessage />
                     <FormControl>
                       <Input placeholder='Enter email address' {...field} />
                     </FormControl>
-
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -77,4 +78,4 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;
+export default Email;

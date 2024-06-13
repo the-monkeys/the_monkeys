@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const NotificationsPage = () => {
   return (
-    <div className='mx-auto pb-16'>
+    <div className='pb-12'>
       <PageHeading heading='Notifications' />
 
       <Tabs defaultValue='all'>

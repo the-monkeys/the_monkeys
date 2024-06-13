@@ -6,7 +6,7 @@ import Profile from './components/Profile';
 
 const SettingsPage = () => {
   return (
-    <div className='mx-auto pb-16'>
+    <div className='pb-12'>
       <PageHeading heading='Settings' />
 
       <Tabs defaultValue='profile'>

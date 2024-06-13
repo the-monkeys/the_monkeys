@@ -1,12 +1,11 @@
 import Image from 'next/image';
 
 import SocialCard from '@/components/cards/SocialCard';
-import Container from '@/components/layout/container';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 
 const NotFound = () => {
   return (
-    <Container className='flex flex-col items-center space-y-6'>
+    <div className='pb-12 min-h-screen flex flex-col items-center space-y-6'>
       <div className='flex flex-wrap items-end justify-center gap-4'>
         <Image
           src={'/not-found.svg'}
@@ -53,7 +52,7 @@ const NotFound = () => {
           link='https://twitter.com/TheMonkeysLife'
         />
       </div>
-    </Container>
+    </div>
   );
 };
 

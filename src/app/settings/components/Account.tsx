@@ -1,28 +1,33 @@
 import React from 'react';
 
 import Section from './Section';
-import DeleteAccount from './account/DeleteAccount';
-import ProfileVisibility from './account/ProfileVisibility';
-import UpdateUsername from './account/UpdateUsername';
-import VerifyEmail from './account/VerifyEmail';
+import Danger from './account/Danger';
+import Email from './account/Email';
+import Password from './account/Password';
+import Username from './account/Username';
+import Visibility from './account/Visibility';
 
 const Account = () => {
   return (
     <div className='mt-5 p-5 space-y-10'>
       <Section sectionTitle='Username'>
-        <UpdateUsername />
+        <Username />
+      </Section>
+
+      <Section sectionTitle='Password'>
+        <Password />
       </Section>
 
       <Section sectionTitle='Email'>
-        <VerifyEmail />
+        <Email />
       </Section>
 
       <Section sectionTitle='Visibility'>
-        <ProfileVisibility />
+        <Visibility />
       </Section>
 
       <Section sectionTitle='Danger'>
-        <DeleteAccount />
+        <Danger />
       </Section>
     </div>
   );
