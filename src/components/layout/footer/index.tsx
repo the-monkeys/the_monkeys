@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
 import {

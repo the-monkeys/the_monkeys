@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import HomeBanner from '@/components/branding/HomeBanner';
 import BentoGrid from '@/components/branding/grid';
 import MobileGrid from '@/components/branding/grid/MobileGrid';
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 
 const LandingPage = () => {
   const router = useRouter();

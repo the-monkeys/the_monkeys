@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { twMerge } from 'tailwind-merge';
 
-import Icon from '../icon/icon';
+import Icon from '../icon';
 
 type LinksRedirectProps = {
   title: string;

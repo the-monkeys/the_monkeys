@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 import { useParams, useRouter } from 'next/navigation';
 
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { useSession } from 'next-auth/react';
 

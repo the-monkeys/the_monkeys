@@ -1,6 +1,6 @@
 'use client';
 
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { publishSteps } from '@/constants/modal';
 

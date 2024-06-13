@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { loginSteps } from '@/constants/modal';
 

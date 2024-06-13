@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import CreateButton from '@/components/buttons/createButton';
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 

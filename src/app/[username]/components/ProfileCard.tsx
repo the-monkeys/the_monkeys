@@ -2,7 +2,7 @@
 
 import { FC } from 'react';
 
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 
 import { useToast } from '../../../components/ui/use-toast';
 

@@ -1,4 +1,4 @@
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { signupSteps } from '@/constants/modal';
 

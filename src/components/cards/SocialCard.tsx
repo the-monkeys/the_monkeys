@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Icon, { IconName } from '../icon/icon';
+import Icon, { IconName } from '../icon';
 
 const SocialCard = ({
   icon,

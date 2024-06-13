@@ -3,7 +3,7 @@ import React, { FC, SetStateAction } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import Icon from '@/components/icon/icon';
+import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { signOut, useSession } from 'next-auth/react';
 

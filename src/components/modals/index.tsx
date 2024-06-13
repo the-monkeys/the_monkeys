@@ -2,7 +2,7 @@ import React, { FC, PropsWithChildren } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import Icon from '../icon/icon';
+import Icon from '../icon';
 import Logo from '../logo';
 
 type ModalProps = {

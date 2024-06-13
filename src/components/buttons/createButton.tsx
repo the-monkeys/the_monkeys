@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import Icon from '../icon/icon';
+import Icon from '../icon';
 import { Button } from '../ui/button';
 
 const CreateButton = () => {

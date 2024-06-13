@@ -6,7 +6,7 @@ import Image from 'next/image';
 
 import { useTheme } from 'next-themes';
 
-import Icon from '../icon/icon';
+import Icon from '../icon';
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
