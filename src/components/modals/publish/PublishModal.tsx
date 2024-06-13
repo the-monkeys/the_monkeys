@@ -7,8 +7,8 @@ import { publishSteps } from '@/constants/modal';
 import Modal from '..';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
-import PublishStep1 from './step1';
-import PublishStep2 from './step2';
+import Step1 from './step1';
+import Step2 from './step2';
 
 export type PublishStep = {
   id: number;
@@ -24,9 +24,8 @@ const PublishModal = ({
   const [publishStep, setPublishStep] = useState<PublishStep>(publishSteps[0]);
 
   const handlePublishStep = () => {
-    if (publishStep.id === 1)
-      return <PublishStep1 setPublishStep={setPublishStep} />;
-    else return <PublishStep2 setPublishStep={setPublishStep} />;
+    if (publishStep.id === 1) return <Step1 setPublishStep={setPublishStep} />;
+    else return <Step2 setPublishStep={setPublishStep} />;
   };
 
   return (

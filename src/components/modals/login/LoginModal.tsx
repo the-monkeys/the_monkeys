@@ -7,9 +7,9 @@ import { loginSteps } from '@/constants/modal';
 import Modal from '..';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
-import LoginStep1 from './step1';
-import LoginStep2 from './step2';
-import LoginStep3 from './step3';
+import Step1 from './step1';
+import Step2 from './step2';
+import Step3 from './step3';
 
 export type LoginStep = {
   id: number;
@@ -25,10 +25,9 @@ const LoginModal = ({
   const [loginStep, setLoginStep] = useState<LoginStep>(loginSteps[0]);
 
   const handleLoginStep = () => {
-    if (loginStep.id === 1) return <LoginStep1 setLoginStep={setLoginStep} />;
-    else if (loginStep.id === 2)
-      return <LoginStep2 setLoginStep={setLoginStep} />;
-    else return <LoginStep3 setLoginStep={setLoginStep} />;
+    if (loginStep.id === 1) return <Step1 setLoginStep={setLoginStep} />;
+    else if (loginStep.id === 2) return <Step2 setLoginStep={setLoginStep} />;
+    else return <Step3 setLoginStep={setLoginStep} />;
   };
 
   return (

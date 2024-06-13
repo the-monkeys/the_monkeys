@@ -5,8 +5,8 @@ import { signupSteps } from '@/constants/modal';
 import Modal from '..';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
-import SignupStep1 from './Step1';
-import SignupStep2 from './Step2';
+import Step1 from './Step1';
+import Step2 from './Step2';
 
 export type SignupStep = {
   id: number;
@@ -22,9 +22,8 @@ const SignupModal = ({
   const [signupStep, setSignupStep] = useState<SignupStep>(signupSteps[0]);
 
   const handleSignupStep = () => {
-    if (signupStep.id === 1)
-      return <SignupStep1 setSignupStep={setSignupStep} />;
-    else return <SignupStep2 setSignupStep={setSignupStep} />;
+    if (signupStep.id === 1) return <Step1 setSignupStep={setSignupStep} />;
+    else return <Step2 setSignupStep={setSignupStep} />;
   };
 
   return (
