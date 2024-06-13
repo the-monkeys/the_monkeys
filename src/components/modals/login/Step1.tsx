@@ -7,7 +7,7 @@ import { loginSteps } from '@/constants/modal';
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
 
-const LoginStep1 = ({
+const Step1 = ({
   setLoginStep,
 }: {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
@@ -46,4 +46,4 @@ const LoginStep1 = ({
   );
 };
 
-export default LoginStep1;
+export default Step1;

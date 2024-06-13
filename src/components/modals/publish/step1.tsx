@@ -19,7 +19,7 @@ import { z } from 'zod';
 import ModalContent from '../layout/ModalContent';
 import { PublishStep } from './PublishModal';
 
-const PublishStep1 = ({
+const Step1 = ({
   setPublishStep,
 }: {
   setPublishStep: React.Dispatch<React.SetStateAction<PublishStep>>;
@@ -82,4 +82,4 @@ const PublishStep1 = ({
   );
 };
 
-export default PublishStep1;
+export default Step1;

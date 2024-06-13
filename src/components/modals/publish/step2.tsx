@@ -7,7 +7,7 @@ import { publishSteps } from '@/constants/modal';
 import ModalContent from '../layout/ModalContent';
 import { PublishStep } from './PublishModal';
 
-const PublishStep2 = ({
+const Step2 = ({
   setPublishStep,
 }: {
   setPublishStep: React.Dispatch<React.SetStateAction<PublishStep>>;
@@ -57,4 +57,4 @@ const PublishStep2 = ({
   );
 };
 
-export default PublishStep2;
+export default Step2;

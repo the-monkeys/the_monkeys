@@ -22,7 +22,7 @@ import { z } from 'zod';
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
 
-const LoginStep2 = ({
+const Step2 = ({
   setLoginStep,
 }: {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
@@ -142,4 +142,4 @@ const LoginStep2 = ({
   );
 };
 
-export default LoginStep2;
+export default Step2;
