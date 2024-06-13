@@ -7,9 +7,9 @@ import { loginSteps } from '@/constants/modal';
 import Modal from '..';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
-import Step1 from './step1';
-import Step2 from './step2';
-import Step3 from './step3';
+import Step1 from './Step1';
+import Step2 from './Step2';
+import Step3 from './Step3';
 
 export type LoginStep = {
   id: number;
