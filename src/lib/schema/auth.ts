@@ -11,6 +11,31 @@ export const loginSchema = z.object({
     .min(1, 'Password is required'),
 });
 
+// New Password Criteria
+const passwordCriteria = z
+  .string({ required_error: 'Password is required' })
+  .min(6, 'Password must be at least 6 characters long')
+  .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+  .regex(/\d/, 'Password must contain at least one number')
+  .regex(/[A-Z]/, 'Password must contain at least one uppercase letter');
+
+// Sign Up Schema for validation
+export const signupSchema = z.object({
+  first_name: z
+    .string({ required_error: 'First Name is required' })
+    .min(1, 'First Name is required'),
+  last_name: z
+    .string({ required_error: 'Last Name is required' })
+    .min(1, 'Last Name is required')
+    .optional(),
+  email: z
+    .string({ required_error: 'Email is required' })
+    .min(1, 'Email is required')
+    .email('Invalid email'),
+  password: passwordCriteria,
+});
+
+// Forgot Passowrd Schema for validation
 export const forgotPasswordSchema = z.object({
   email: z
     .string({ required_error: 'Email is required' })

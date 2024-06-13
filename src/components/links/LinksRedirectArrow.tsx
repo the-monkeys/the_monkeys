@@ -4,31 +4,40 @@ import Link from 'next/link';
 
 import { twMerge } from 'tailwind-merge';
 
-import Icon from '../icon/Icon';
+import Icon from '../icon';
 
 type LinksRedirectProps = {
-  target: string;
   title: string;
+  position?: 'Left' | 'Right';
+  link: string;
   className?: string;
 };
 
 const LinksRedirectArrow: FC<LinksRedirectProps> = ({
-  target,
   title,
+  position = 'Right',
+  link,
   className,
 }) => {
   return (
-    <Link
-      href={target}
-      className={twMerge(className, 'group flex items-center')}
-    >
-      <p className='font-josefin_Sans'>{title}</p>
+    <Link href={link} className={twMerge(className, 'group flex items-center')}>
+      {position === 'Left' && (
+        <Icon
+          name='RiArrowLeft'
+          size={16}
+          className='mx-2 transition-all group-hover:ml-1 group-hover:mr-3 group-hover:text-primary-monkeyOrange'
+        />
+      )}
 
-      <Icon
-        name='RiArrowRightLine'
-        size={16}
-        className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1 group-hover:text-primary-monkeyOrange'
-      />
+      <p className='font-jost'>{title}</p>
+
+      {position === 'Right' && (
+        <Icon
+          name='RiArrowRight'
+          size={16}
+          className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1 group-hover:text-primary-monkeyOrange'
+        />
+      )}
     </Link>
   );
 };

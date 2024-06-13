@@ -2,16 +2,13 @@ import React, { FC, PropsWithChildren } from 'react';
 
 import { twMerge } from 'tailwind-merge';
 
-type ModalContentProps = {
-  className?: string;
-  children: React.ReactNode;
-};
+import { ModalComponentProps } from '..';
 
-const ModalContent: FC<PropsWithChildren<ModalContentProps>> = ({
+const ModalContent: FC<PropsWithChildren<ModalComponentProps>> = ({
   children,
   className,
 }) => {
-  return <div className={twMerge(className, 'flex-1')}>{children}</div>;
+  return <div className={twMerge(className, 'p-4')}>{children}</div>;
 };
 
 export default ModalContent;

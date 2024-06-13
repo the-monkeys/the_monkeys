@@ -1,6 +1,4 @@
-import React, { FC, useState } from 'react';
-
-import Button from '@/components/button';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -22,11 +20,11 @@ import { z } from 'zod';
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
 
-type Step3Props = {
+const Step3 = ({
+  setLoginStep,
+}: {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
-};
-
-const Step3: FC<Step3Props> = ({ setLoginStep }) => {
+}) => {
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -46,7 +44,7 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
           title: 'Success',
           description: response.data.message,
         });
-        setLoginStep(loginSteps[0]); // Redirect to the first step or login step
+        setLoginStep(loginSteps[0]);
       }
     } catch (error) {
       toast({
@@ -62,13 +60,13 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
   ) => {
     e.preventDefault();
 
-    setLoginStep(loginSteps[0]);
+    setLoginStep(loginSteps[1]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center px-4'>
+    <ModalContent>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
           <FormField
             control={form.control}
             name='email'
@@ -76,31 +74,22 @@ const Step3: FC<Step3Props> = ({ setLoginStep }) => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    className=''
-                    placeholder='Enter Your Email'
-                    {...field}
-                    variant='border'
-                  />
+                  <Input placeholder='Enter email address' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className='flex flex-row-reverse gap-2 items-center mt-4'>
+
+          <div className='pt-6 flex gap-2 items-center'>
             <Button
-              className='w-full order-1'
-              title='Send Reset Link'
-              variant='primary'
-              type='submit'
-            />
-            <Button
-              className='w-full order-2'
-              title='Previous'
               variant='secondary'
-              type='button'
+              className='flex-1'
               onClick={handlePreviousStep}
-            />
+            >
+              Previous
+            </Button>
+            <Button className='flex-1'>Send Link</Button>
           </div>
         </form>
       </Form>

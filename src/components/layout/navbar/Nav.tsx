@@ -2,22 +2,43 @@ import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
-import ThemeSwitch from '@/components/basic/ThemeSwitch';
-import IconContainer from '@/components/icon';
+import CreateButton from '@/components/buttons/createButton';
+import Icon from '@/components/icon';
 import Logo from '@/components/logo';
-import SearchBox from '@/components/searchBox';
+import ThemeSwitch from '@/components/themeSwitch';
+import { Separator } from '@/components/ui/separator';
 
-import CreateButton from '../../button/CreateButton';
 import UserOptions from './UserOptions';
 import NotificationsDialog from './notifications/NotificationsDialog';
 
 const Nav = () => {
-  const [searchInput, setSearchInput] = useState<string>('');
   const [showNotifications, setShowNotifications] = useState<boolean>(false);
   const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
 
   const notificationsRef = useRef<HTMLDivElement>(null);
   const userOptionsRef = useRef<HTMLDivElement>(null);
+
+  // Code to make the header scrollable
+  // const [prevScrollpos, setPrevScrollpos] = useState(window.scrollY);
+  // const [top, setTop] = useState(0);
+
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollPos = window.scrollY;
+  //     if (prevScrollpos > currentScrollPos) {
+  //       setTop(0);
+  //     } else {
+  //       setTop(-50);
+  //     }
+  //     setPrevScrollpos(currentScrollPos);
+  //   };
+
+  //   window.addEventListener('scroll', handleScroll);
+
+  //   return () => {
+  //     window.removeEventListener('scroll', handleScroll);
+  //   };
+  // }, [prevScrollpos]);
 
   const handleNotificationClick = () => {
     setShowUserOptions(false);
@@ -55,19 +76,16 @@ const Nav = () => {
   }, []);
 
   return (
-    <div className='sticky left-0 top-0 flex w-full items-center justify-between bg-primary-monkeyWhite/75 px-5 py-2 backdrop-blur-sm dark:bg-primary-monkeyBlack/75 z-30'>
+    <header
+      className={`sticky left-0 top-0 flex w-full p-5 items-center justify-between bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg  z-30`}
+    >
       <div className='flex items-center gap-5'>
         <Link href='/'>
           <Logo showMobileLogo={true} />
         </Link>
-
-        <SearchBox
-          setSearchInput={setSearchInput}
-          className='w-32 md:w-64 text-sm sm:text-base'
-        />
       </div>
 
-      <div className='flex items-center gap-5'>
+      <div className='flex items-center space-x-4'>
         <div className='flex items-center gap-5'>
           <ThemeSwitch />
 
@@ -76,15 +94,8 @@ const Nav = () => {
             onClick={handleNotificationClick}
             ref={notificationsRef}
           >
-            <div className='relative'>
-              <IconContainer
-                name={
-                  showNotifications
-                    ? 'RiNotification3Fill'
-                    : 'RiNotification3Line'
-                }
-                hasHover={false}
-              />
+            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+              <Icon name='RiNotification3' size={24} />
             </div>
 
             {showNotifications && <NotificationsDialog />}
@@ -95,10 +106,9 @@ const Nav = () => {
             onClick={handleUserOptionsClick}
             ref={userOptionsRef}
           >
-            <IconContainer
-              name={showUserOptions ? 'RiUserFill' : 'RiUserLine'}
-              hasHover={false}
-            />
+            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+              <Icon name='RiUser' size={24} />
+            </div>
 
             {showUserOptions && (
               <UserOptions setUserOptions={setShowUserOptions} />
@@ -106,11 +116,11 @@ const Nav = () => {
           </div>
         </div>
 
-        <div className='h-8 border-l-1 border-secondary-lightGrey/25'></div>
+        <Separator orientation='vertical' className='h-8' />
 
-        <CreateButton showTitle />
+        <CreateButton />
       </div>
-    </div>
+    </header>
   );
 };
 
