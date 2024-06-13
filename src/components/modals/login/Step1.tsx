@@ -1,18 +1,17 @@
-import { FC } from 'react';
-
 import Link from 'next/link';
 
-import Button from '@/components/button';
+import Icon from '@/components/icon';
+import { Button } from '@/components/ui/button';
 import { loginSteps } from '@/constants/modal';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
 
-type Step1Props = {
+const Step1 = ({
+  setLoginStep,
+}: {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
-};
-
-const Step1: FC<Step1Props> = ({ setLoginStep }) => {
+}) => {
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
@@ -20,39 +19,21 @@ const Step1: FC<Step1Props> = ({ setLoginStep }) => {
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center gap-2 px-4'>
-      <Button
-        className='w-full'
-        title='Login with Email'
-        variant='primary'
-        startIcon
-        iconName='RiMailFill'
-        onClick={(e) => handleSubmit(e)}
-      />
+    <ModalContent className='space-y-4'>
+      <Button className='w-full flex' onClick={(e) => handleSubmit(e)}>
+        <Icon name='RiMail' type='Fill' />
+        <p className='flex-1'>Login with Email</p>
+      </Button>
 
-      <div className='flex items-center justify-center py-2'>
-        <div className='w-12 border-b-1 border-secondary-lightGrey/25'></div>
-        <p className='px-2 text-center font-josefin_Sans text-sm'>Or</p>
-        <div className='w-12 border-b-1 border-secondary-lightGrey/25'></div>
-      </div>
+      <Button variant='outline' disabled className='w-full flex'>
+        <Icon name='RiGoogle' type='Fill' />
+        <p className='flex-1'>Coming Soon</p>
+      </Button>
 
-      <Button
-        className='w-full'
-        title='Coming soon'
-        variant='shallow'
-        startIcon
-        iconName='RiGoogleFill'
-        disabled
-      />
-
-      <Button
-        className='w-full'
-        title='Coming soon'
-        variant='shallow'
-        startIcon
-        iconName='RiInstagramFill'
-        disabled
-      />
+      <Button variant='outline' disabled className='w-full flex'>
+        <Icon name='RiMeta' type='Fill' />
+        <p className='flex-1'>Coming Soon</p>
+      </Button>
 
       <p className='text-center font-jost text-sm'>
         Don't have an account?

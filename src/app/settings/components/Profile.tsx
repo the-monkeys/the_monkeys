@@ -2,7 +2,8 @@
 
 import React from 'react';
 
-import Button from '@/components/button';
+import Icon from '@/components/icon';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -41,20 +42,32 @@ const Profile = () => {
   }
 
   return (
-    <div className='mt-12 px-4 sm:px-6 lg:px-8'>
+    <div className='mt-5 p-5'>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className='mx-auto space-y-10'
         >
           <Section sectionTitle='Basic'>
-            <div className='mb-4'>
-              <p className='font-josefin_Sans text-sm'>Profile Image</p>
-
-              <div className='mt-2 rounded-lg h-32 w-32 flex bg-secondary-lightGrey/15' />
-            </div>
-
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+              <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
+                <p className='w-full col-span-1 sm:col-span-2 font-josefin_Sans text-sm'>
+                  Profile Image
+                </p>
+
+                <div className='rounded-lg h-32 w-32 flex border-1 border-secondary-lightGrey/25 bg-secondary-lightGrey/15 items-center justify-center'></div>
+
+                <div className='space-x-2'>
+                  <Button size='icon' variant='destructive'>
+                    <Icon name='RiDeleteBin' />
+                  </Button>
+
+                  <Button size='icon' variant='secondary'>
+                    <Icon name='RiRefresh' />
+                  </Button>
+                </div>
+              </div>
+
               <FormField
                 control={form.control}
                 name='firstName'
@@ -66,9 +79,8 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        variant='border'
                         {...field}
-                        placeholder='Enter First Name'
+                        placeholder='Enter first name'
                       />
                     </FormControl>
                     <FormMessage />
@@ -87,9 +99,8 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        variant='border'
                         {...field}
-                        placeholder='Enter Last name'
+                        placeholder='Enter last name'
                       />
                     </FormControl>
                     <FormMessage />
@@ -108,9 +119,8 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        variant='border'
                         {...field}
-                        placeholder='Enter Location'
+                        placeholder='Enter location'
                       />
                     </FormControl>
                     <FormMessage />
@@ -129,9 +139,8 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        variant='border'
                         {...field}
-                        placeholder='Enter Contact Number'
+                        placeholder='Enter contact number'
                       />
                     </FormControl>
                     <FormMessage />
@@ -150,9 +159,8 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        variant='border'
                         {...field}
-                        placeholder='Enter Bio'
+                        placeholder='Enter bio'
                       />
                     </FormControl>
                     <FormMessage />
@@ -166,15 +174,10 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      Date of Birth
+                      Birth Date
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        className='w-full'
-                        type='date'
-                        variant='border'
-                        {...field}
-                      />
+                      <Input className='w-full' type='date' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -191,15 +194,14 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      Twitter Profile
+                      Twitter
                     </FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
                         type='url'
-                        variant='border'
                         {...field}
-                        placeholder='Enter Twitter Profile'
+                        placeholder='Enter Twitter profile'
                       />
                     </FormControl>
                     <FormMessage />
@@ -213,15 +215,14 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      LinkedIn Profile
+                      LinkedIn
                     </FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
                         type='url'
-                        variant='border'
                         {...field}
-                        placeholder='Enter LinkedIn Profile'
+                        placeholder='Enter LinkedIn profile'
                       />
                     </FormControl>
                     <FormMessage />
@@ -235,15 +236,14 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      Instagram Profile
+                      Instagram
                     </FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
                         type='url'
-                        variant='border'
                         {...field}
-                        placeholder='Enter Instagram Profile'
+                        placeholder='Enter Instagram profile'
                       />
                     </FormControl>
                     <FormMessage />
@@ -257,15 +257,14 @@ const Profile = () => {
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      GitHub Profile
+                      GitHub
                     </FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
                         type='url'
-                        variant='border'
                         {...field}
-                        placeholder='Enter GitHub Profile'
+                        placeholder='Enter GitHub profile'
                       />
                     </FormControl>
                     <FormMessage />
@@ -277,12 +276,14 @@ const Profile = () => {
 
           <Section sectionTitle='Topics'>
             <div>
-              <Button title='Add Topics' variant='secondary' />
+              <Button variant='secondary'>Add Topic</Button>
             </div>
           </Section>
 
           <div className='pt-8 flex justify-center items-center'>
-            <Button title='Update Profile' variant='primary' type='submit' />
+            <Button size='lg' type='submit'>
+              Save Changes
+            </Button>
           </div>
         </form>
       </Form>

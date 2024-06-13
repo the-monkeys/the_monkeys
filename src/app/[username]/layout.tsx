@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='mb-20 min-h-screen mx-auto w-full'>
+    <div className='mb-20 min-h-screen'>
       <div className='flex flex-col lg:flex-row'>
         <div className='lg:w-2/6 w-full'>
           <ProfileSection />

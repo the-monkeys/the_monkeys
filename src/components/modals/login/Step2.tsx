@@ -1,8 +1,7 @@
-import React, { FC } from 'react';
-
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import Button from '@/components/button';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -22,13 +21,12 @@ import { z } from 'zod';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-import Link from 'next/link';
 
-type Step2Props = {
+const Step2 = ({
+  setLoginStep,
+}: {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
-};
-
-const Step2: FC<Step2Props> = ({ setLoginStep }) => {
+}) => {
   const router = useRouter();
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -78,13 +76,13 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
   ) => {
     e.preventDefault();
 
-    setLoginStep(loginSteps[2]); // Navigate to Step3 for forgot password
+    setLoginStep(loginSteps[2]);
   };
 
   return (
-    <ModalContent className='flex flex-col justify-center px-4'>
+    <ModalContent>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
           <FormField
             control={form.control}
             name='email'
@@ -92,17 +90,13 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    className=''
-                    placeholder=' Enter Your Email'
-                    {...field}
-                    variant='border'
-                  />
+                  <Input placeholder='Enter email address' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name='password'
@@ -111,9 +105,8 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
                 <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder=' Enter Your Password'
+                    placeholder='Enter Password'
                     {...field}
-                    variant='border'
                     type='password'
                   />
                 </FormControl>
@@ -121,25 +114,23 @@ const Step2: FC<Step2Props> = ({ setLoginStep }) => {
               </FormItem>
             )}
           />
-          <div className='flex flex-row-reverse gap-2 items-center mt-4'>
+
+          <div className='pt-6 flex gap-2 items-center'>
             <Button
-              className='w-full order-1'
-              title='Login'
-              variant='primary'
-              type='submit'
-            />
-            <Button
-              className='w-full order-2'
-              title='Previous'
               variant='secondary'
-              type='button'
+              className='flex-1'
               onClick={handlePreviousStep}
-            />
+            >
+              Previous
+            </Button>
+
+            <Button className='flex-1'>Login</Button>
           </div>
         </form>
-        <div className='text-right font-jost text-sm mt-2'>
+
+        <div className='pt-2 text-right font-jost text-sm'>
           <Link
-            href="#"
+            href='#'
             className='text-primary-monkeyOrange'
             onClick={handleForgotPassword}
           >

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import HomeBanner from '@/components/branding/HomeBanner';
 import BentoGrid from '@/components/branding/grid';
 import MobileGrid from '@/components/branding/grid/MobileGrid';
-import Icon from '@/components/icon/Icon';
+import Icon from '@/components/icon';
 
 const LandingPage = () => {
   const router = useRouter();
@@ -31,7 +31,7 @@ const LandingPage = () => {
           <p className='mx-1 font-josefin_Sans'>Join Monkeys</p>
 
           <Icon
-            name='RiArrowRightLine'
+            name='RiArrowRight'
             size={16}
             className='mx-1 transition-all group-hover:ml-2 group-hover:mr-0'
           />

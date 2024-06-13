@@ -2,8 +2,8 @@
 
 import { FC } from 'react';
 
-import IconContainer from '../../../components/icon';
-import Icon from '../../../components/icon/Icon';
+import Icon from '@/components/icon';
+
 import { useToast } from '../../../components/ui/use-toast';
 
 type ProfileCardProps = {
@@ -61,7 +61,7 @@ const ProfileCard: FC<ProfileCardProps> = ({
         </div>
 
         <div className='flex items-center'>
-          <Icon name='RiCalendar2Line' size={16} className='mx-1' />
+          <Icon name='RiCalendar2' size={16} className='mx-1' />
           <p className='font-josefin_Sans text-sm sm:text-base'>
             Joined July, 2023
           </p>
@@ -73,11 +73,9 @@ const ProfileCard: FC<ProfileCardProps> = ({
 
         <div className='flex items-center gap-2'>
           <p className='font-jost text-primary-monkeyOrange'>{`@${username}`}</p>
-          <IconContainer
-            name='RiFileCopyLine'
-            size={16}
-            onClick={() => copyToClipboard(username || '')}
-          />
+          <div onClick={() => copyToClipboard(username || '')}>
+            <Icon name='RiFileCopy' size={16} />
+          </div>
         </div>
       </div>
 

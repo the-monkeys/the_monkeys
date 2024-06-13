@@ -1,6 +1,4 @@
-import Icon from '@/components/icon/Icon';
-
-import GridTag from './GridTag';
+import Icon from '@/components/icon';
 
 const MobileGrid = () => {
   return (
@@ -11,7 +9,7 @@ const MobileGrid = () => {
 
         <div className='mb-2 p-4 self-center flex items-center bg-primary-monkeyWhite/25 dark:bg-primary-monkeyBlack/25 rounded-full'>
           <Icon
-            name='RiShakeHandsLine'
+            name='RiShakeHands'
             size={40}
             className='self-center text-primary-monkeyOrange'
           />
@@ -33,7 +31,7 @@ const MobileGrid = () => {
 
         <div className='mb-2 p-4 self-center flex items-center bg-primary-monkeyWhite/25 dark:bg-primary-monkeyBlack/25 rounded-full'>
           <Icon
-            name='RiArchiveStackLine'
+            name='RiArchiveStack'
             size={40}
             className='self-center text-primary-monkeyOrange'
           />
@@ -54,7 +52,7 @@ const MobileGrid = () => {
 
         <div className='mb-2 p-4 self-center flex items-center bg-primary-monkeyWhite/25 dark:bg-primary-monkeyBlack/25 rounded-full'>
           <Icon
-            name='RiCompass3Line'
+            name='RiCompass3'
             size={40}
             className='self-center text-primary-monkeyOrange'
           />
