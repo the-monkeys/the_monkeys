@@ -45,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body
-        className={`${jost.variable} ${josefin_Sans.variable} bg-primary-monkeyWhite dark:bg-primary-monkeyBlack  ${playfair_Display.variable} mx-auto max-w-7xl`}
+        className={`${jost.variable} ${josefin_Sans.variable} bg-primary-monkeyWhite dark:bg-primary-monkeyBlack ${playfair_Display.variable}`}
       >
         <Toaster />
         <Providers>

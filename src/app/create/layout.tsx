@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+import Container from '@/components/layout/Container';
+
 const title = 'Monkeys | Create';
 const description = 'We are The Monkeys! A blogging and educational platform.';
 
@@ -14,6 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='mb-20 min-h-screen sm:w-4/5 mx-auto w-full'>{children}</div>
+    <Container className='pt-4 mb-20 min-h-screen sm:w-4/5 mx-auto w-full'>
+      {children}
+    </Container>
   );
 }

@@ -1,3 +1,4 @@
+import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -6,7 +7,7 @@ import Profile from './components/Profile';
 
 const SettingsPage = () => {
   return (
-    <div className='pb-12'>
+    <Container className='pb-12'>
       <PageHeading heading='Settings' />
 
       <Tabs defaultValue='profile'>
@@ -35,7 +36,7 @@ const SettingsPage = () => {
           </TabsContent>
         </div>
       </Tabs>
-    </div>
+    </Container>
   );
 };
 

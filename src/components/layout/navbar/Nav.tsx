@@ -1,23 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-
 import Link from 'next/link';
 
 import CreateButton from '@/components/buttons/createButton';
-import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
 
-import UserOptions from './UserOptions';
-import NotificationsDialog from './notifications/NotificationsDialog';
+import Container from '../Container';
+import NotificationDropdown from './notificationDropdown';
+import ProfileDropdown from './profileDropdown';
 
 const Nav = () => {
-  const [showNotifications, setShowNotifications] = useState<boolean>(false);
-  const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
-
-  const notificationsRef = useRef<HTMLDivElement>(null);
-  const userOptionsRef = useRef<HTMLDivElement>(null);
-
   // Code to make the header scrollable
   // const [prevScrollpos, setPrevScrollpos] = useState(window.scrollY);
   // const [top, setTop] = useState(0);
@@ -40,86 +32,31 @@ const Nav = () => {
   //   };
   // }, [prevScrollpos]);
 
-  const handleNotificationClick = () => {
-    setShowUserOptions(false);
-
-    setShowNotifications((prevVal) => !prevVal);
-  };
-
-  const handleUserOptionsClick = () => {
-    setShowNotifications(false);
-
-    setShowUserOptions((prevVal) => !prevVal);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      notificationsRef.current &&
-      !notificationsRef.current.contains(event.target as Node)
-    ) {
-      setShowNotifications(false);
-    }
-
-    if (
-      userOptionsRef.current &&
-      !userOptionsRef.current.contains(event.target as Node)
-    ) {
-      setShowUserOptions(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   return (
     <header
-      className={`sticky left-0 top-0 flex w-full p-5 items-center justify-between bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg  z-30`}
+      className={`sticky left-0 top-0 bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
     >
-      <div className='flex items-center gap-5'>
-        <Link href='/'>
-          <Logo showMobileLogo={true} />
-        </Link>
-      </div>
-
-      <div className='flex items-center space-x-4'>
+      <Container className='w-full p-5 flex items-center justify-between'>
         <div className='flex items-center gap-5'>
-          <ThemeSwitch />
-
-          <div
-            className='relative'
-            onClick={handleNotificationClick}
-            ref={notificationsRef}
-          >
-            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
-              <Icon name='RiNotification3' size={24} />
-            </div>
-
-            {showNotifications && <NotificationsDialog />}
-          </div>
-
-          <div
-            className='relative'
-            onClick={handleUserOptionsClick}
-            ref={userOptionsRef}
-          >
-            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
-              <Icon name='RiUser' size={24} />
-            </div>
-
-            {showUserOptions && (
-              <UserOptions setUserOptions={setShowUserOptions} />
-            )}
-          </div>
+          <Link href='/'>
+            <Logo showMobileLogo={true} />
+          </Link>
         </div>
 
-        <Separator orientation='vertical' className='h-8' />
+        <div className='flex items-center space-x-4'>
+          <div className='flex items-center gap-5'>
+            <ThemeSwitch />
 
-        <CreateButton />
-      </div>
+            <NotificationDropdown />
+
+            <ProfileDropdown />
+          </div>
+
+          <Separator orientation='vertical' className='h-8' />
+
+          <CreateButton />
+        </div>
+      </Container>
     </header>
   );
 };

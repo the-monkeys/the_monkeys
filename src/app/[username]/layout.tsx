@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 
+import Container from '@/components/layout/Container';
+
 import ProfileSection from './components/ProfileSection';
 
 const title = 'Profile';
@@ -16,13 +18,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='mb-20 min-h-screen'>
+    <Container className='mb-20 min-h-screen'>
       <div className='flex flex-col lg:flex-row'>
         <div className='lg:w-2/6 w-full'>
           <ProfileSection />
         </div>
         <div className='lg:w-4/6 w-full'>{children}</div>
       </div>
-    </div>
+    </Container>
   );
 }

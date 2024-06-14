@@ -1,9 +1,10 @@
+import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const NotificationsPage = () => {
   return (
-    <div className='pb-12'>
+    <Container className='pb-12'>
       <PageHeading heading='Notifications' />
 
       <Tabs defaultValue='all'>
@@ -29,7 +30,7 @@ const NotificationsPage = () => {
           </TabsList>
         </div>
       </Tabs>
-    </div>
+    </Container>
   );
 };
 
