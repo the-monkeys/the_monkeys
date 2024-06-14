@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import Link from 'next/link';
 
 import CreateButton from '@/components/buttons/createButton';
@@ -6,35 +8,34 @@ import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 
 import Container from '../Container';
-import ProfileDropdown from './profileDropdown';
+import ProfileDropdown from './ProfileDropdown';
 
 const MobileNav = () => {
-  // Code to make the header scrollable
-  // const [prevScrollpos, setPrevScrollpos] = useState(window.scrollY);
-  // const [top, setTop] = useState(0);
+  const [prevScrollpos, setPrevScrollpos] = useState(0);
+  const [top, setTop] = useState(0);
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const currentScrollPos = window.scrollY;
-  //     if (prevScrollpos > currentScrollPos) {
-  //       setTop(0);
-  //     } else {
-  //       setTop(-50);
-  //     }
-  //     setPrevScrollpos(currentScrollPos);
-  //   };
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      if (prevScrollpos > currentScrollPos) {
+        setTop(0);
+      } else {
+        setTop(-50);
+      }
+      setPrevScrollpos(currentScrollPos);
+    };
 
-  //   window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll);
 
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, [prevScrollpos]);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [prevScrollpos]);
 
   return (
     <>
       <header
-        className={`sticky left-0 top-0 bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
+        className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
       >
         <Container className='w-full p-5 flex items-center justify-between'>
           <Link href='/'>
