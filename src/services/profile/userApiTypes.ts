@@ -1,4 +1,4 @@
-interface GetPublicUserApiResponse {
+export interface GetPublicUserApiResponse {
   username: string;
   first_name: string;
   last_name: string;

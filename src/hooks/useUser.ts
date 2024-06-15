@@ -1,9 +1,10 @@
 import fetcher from '@/services/fetcher';
+import { GetPublicUserApiResponse } from '@/services/profile/userApiTypes';
 import useSWR from 'swr';
 
-function useUser(username: string) {
-  const { data, error, isLoading } = useSWR(
-    `/api/user/public/${username}`,
+function useUser(username: string | undefined) {
+  const { data, error, isLoading } = useSWR<GetPublicUserApiResponse>(
+    `/user/public/${username}`,
     fetcher
   );
 
@@ -13,3 +14,5 @@ function useUser(username: string) {
     isError: error,
   };
 }
+
+export default useUser;

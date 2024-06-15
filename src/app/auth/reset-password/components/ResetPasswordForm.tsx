@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Button from '@/components/button';
 import {
@@ -24,6 +24,7 @@ import { z } from 'zod';
 
 const ResetPasswordForm = () => {
   const searchParams = useSearchParams();
+  const navigate = useRouter();
   const username = searchParams.get('user');
   const evpw = searchParams.get('evpw');
   const [userToken, setuserToken] = useState<string | undefined>('');
@@ -54,9 +55,6 @@ const ResetPasswordForm = () => {
   });
 
   function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
-    console.log(values);
-    console.log(userToken);
-
     axiosInstance
       .post(
         '/auth/update-password',
@@ -75,6 +73,7 @@ const ResetPasswordForm = () => {
           title: 'Success',
           description: 'Your password has been updated successfully',
         });
+        navigate.push('/api/auth/signin');
       })
       .catch((err) => {
         toast({
