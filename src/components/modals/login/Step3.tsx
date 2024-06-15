@@ -41,16 +41,17 @@ const Step3 = ({
       if (response.status === 200) {
         toast({
           variant: 'success',
-          title: 'Success',
-          description: response.data.message,
+          title: 'Reset Link Sent',
+          description: `Message: ${response.data.message}`,
         });
         setLoginStep(loginSteps[0]);
       }
     } catch (error) {
       toast({
         variant: 'error',
-        title: 'Error',
-        description: 'Failed to send password reset email. Please try again.',
+        title: 'Password Reset Error',
+        description:
+          'There was an error sending the password reset link. Please try again.',
       });
     }
   }

@@ -76,8 +76,9 @@ const ProfileDropdown = () => {
                 signOut();
                 toast({
                   variant: 'success',
-                  title: 'Success',
-                  description: 'User logout in successfully.',
+                  title: ' Logout Successful',
+                  description:
+                    'You have successfully logged out. See you next time!',
                 });
               }}
               className='flex w-full items-center gap-2'

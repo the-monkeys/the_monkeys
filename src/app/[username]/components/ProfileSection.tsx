@@ -21,33 +21,27 @@ const ProfileSection = () => {
   }, [status]);
 
   return (
-    <div className='px-5 py-4 flex flex-col sm:flex-row lg:flex-col gap-4'>
-      <div className='flex flex-col gap-2'>
-        <div className='flex gap-2 items-center justify-center'>
-          <Button size='icon'>
-            <Icon name='RiShare' />
+    <div className='space-y-2'>
+      <div className='flex space-x-2 justify-end'>
+        <Button variant='secondary' size='icon'>
+          <Icon name='RiShare' />
+        </Button>
+
+        {data?.user.user_name === params.username &&
+        status === 'authenticated' ? (
+          <Button variant='destructive' size='icon'>
+            <Icon name='RiEdit' />
           </Button>
-          {data?.user.user_name === params.username &&
-          status === 'authenticated' ? (
-            <Button size='icon'>
-              <Icon name='RiEdit' />
-            </Button>
-          ) : (
-            ''
-          )}
-        </div>
-
-        <ProfileCard
-          firstName={data?.user.first_name}
-          lastName={data?.user.last_name}
-          username={data?.user.user_name}
-        />
+        ) : (
+          ''
+        )}
       </div>
 
-      <div>
-        <p className='font-josefin_Sans text-lg'>My topics</p>
-        <p className='font-josefin_Sans text-lg'>Explore more topics</p>
-      </div>
+      <ProfileCard
+        firstName={data?.user.first_name}
+        lastName={data?.user.last_name}
+        username={data?.user.user_name}
+      />
     </div>
   );
 };
