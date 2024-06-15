@@ -8,7 +8,7 @@ import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 
 import Container from '../Container';
-import ProfileDropdown from './ProfileDropdown';
+import ProfileDropdown from './profileDropdown';
 
 const MobileNav = () => {
   const [prevScrollpos, setPrevScrollpos] = useState(0);

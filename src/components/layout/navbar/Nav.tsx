@@ -10,8 +10,8 @@ import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
 
 import Container from '../Container';
-import NotificationDropdown from './NotificationDropdown';
-import ProfileDropdown from './ProfileDropdown';
+import NotificationDropdown from './notificationDropdown';
+import ProfileDropdown from './profileDropdown';
 
 const Nav = () => {
   const [prevScrollpos, setPrevScrollpos] = useState(0);
