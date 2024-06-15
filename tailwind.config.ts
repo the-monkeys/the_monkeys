@@ -17,22 +17,7 @@ const config = {
         '2xl': '1400px',
       },
     },
-    colors: {
-      primary: {
-        monkeyOrange: '#ff462e',
-        monkeyBlack: '#101010',
-        monkeyWhite: '#FFF4ed',
-      },
-      secondary: {
-        darkGrey: '#2b2b2b',
-        lightGrey: '#4f4f4f',
-        white: '#f2f2f3',
-      },
-      alert: {
-        red: '#ED3232',
-        green: '#34A853',
-      },
-    },
+
     fontFamily: {
       jost: ['var(--font-jost)'],
       josefin_Sans: ['var(--font-josefin_Sans)'],
@@ -42,6 +27,22 @@ const config = {
       shake: 'shake 600ms ease-in-out',
     },
     extend: {
+      colors: {
+        primary: {
+          monkeyOrange: '#ff462e',
+          monkeyBlack: '#101010',
+          monkeyWhite: '#FFF4ed',
+        },
+        secondary: {
+          darkGrey: '#2b2b2b',
+          lightGrey: '#4f4f4f',
+          white: '#f2f2f3',
+        },
+        alert: {
+          red: '#ED3232',
+          green: '#34A853',
+        },
+      },
       borderWidth: {
         '1': '1px',
       },
