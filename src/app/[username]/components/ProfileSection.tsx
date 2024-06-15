@@ -37,11 +37,7 @@ const ProfileSection = () => {
           )}
         </div>
 
-        <ProfileCard
-          firstName={data?.user.first_name}
-          lastName={data?.user.last_name}
-          username={data?.user.user_name}
-        />
+        <ProfileCard />
       </div>
 
       <div>
