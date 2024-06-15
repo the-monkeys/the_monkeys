@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -61,6 +60,9 @@ const Footer = () => {
     },
   });
 
+  /* Get the current year dynamically */
+  const currentYear = new Date().getFullYear();
+
   function onSubmit(values: z.infer<typeof contactFormSchema>) {
     console.log(values.email);
   }
@@ -94,45 +96,45 @@ const Footer = () => {
           </form>
         </Form>
 
-        <div className='w-full pt-4 flex flex-col sm:flex-row justify-between gap-8'>
-          {footerList.map((listItem, index) => {
-            return <FooterList {...listItem} key={index} />;
-          })}
+      <div className='w-full pt-4 flex flex-col sm:flex-row justify-between gap-8'>
+        {footerList.map((listItem, index) => {
+          return <FooterList {...listItem} key={index} />;
+        })}
+      </div>
+
+      {/*Footer Icons*/}
+      <div className='pb-8 space-y-2'>
+        <div className='py-2 flex items-center justify-center gap-4'>
+          <Link
+            className='flex items-center hover:opacity-75'
+            href='https://discord.gg/6fK9YuV8FV'
+            target='_blank'
+          >
+            <Icon name='RiDiscord' type='Fill' />
+          </Link>
+
+          <Link
+            className='flex items-center hover:opacity-75'
+            href='https://github.com/the-monkeys'
+            target='_blank'
+          >
+            <Icon name='RiGithub' type='Fill' />
+          </Link>
+
+          <Link
+            className='flex items-center hover:opacity-75'
+            href='https://twitter.com/TheMonkeysLife'
+            target='_blank'
+          >
+            <Icon name='RiTwitterX' type='Fill' />
+          </Link>
         </div>
 
-        <div className='pb-8 space-y-2'>
-          <div className='py-2 flex items-center justify-center gap-4'>
-            <Link
-              className='flex items-center hover:opacity-75'
-              href='https://discord.gg/6fK9YuV8FV'
-              target='_blank'
-            >
-              <Icon name='RiDiscord' type='Fill' />
-            </Link>
-
-            <Link
-              className='flex items-center hover:opacity-75'
-              href='https://github.com/the-monkeys'
-              target='_blank'
-            >
-              <Icon name='RiGithub' type='Fill' />
-            </Link>
-
-            <Link
-              className='flex items-center hover:opacity-75'
-              href='https://twitter.com/TheMonkeysLife'
-              target='_blank'
-            >
-              <Icon name='RiTwitterX' type='Fill' />
-            </Link>
-          </div>
-
-          <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
-            Monkeys, 2024, All Rights Reserved
-          </p>
-        </div>
-      </footer>
-    </Container>
+        <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
+          Monkeys, {currentYear}, All Rights Reserved
+        </p>
+      </div>
+    </footer>
   );
 };
 
