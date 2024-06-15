@@ -3,7 +3,9 @@
 import { FC } from 'react';
 
 import Icon from '@/components/icon';
+import { Skeleton } from '@/components/ui/skeleton';
 import useUser from '@/hooks/useUser';
+import moment from 'moment';
 import { useSession } from 'next-auth/react';
 
 import { useToast } from '../../../components/ui/use-toast';
@@ -66,9 +68,13 @@ const ProfileCard: FC = () => {
 
         <div className='flex items-center'>
           <Icon name='RiCalendar2' size={16} className='mx-1' />
-          <p className='font-josefin_Sans text-sm sm:text-base'>
-            Joined July, 2023
-          </p>
+          {isLoading ? (
+            <Skeleton className='h-4 w-[250px] ' />
+          ) : (
+            <p className='font-josefin_Sans text-sm sm:text-base'>
+              Joined {joinedDate}
+            </p>
+          )}
         </div>
       </div>
 
@@ -80,8 +86,12 @@ const ProfileCard: FC = () => {
         )}
 
         <div className='flex items-center gap-2'>
-          <p className='font-jost text-primary-monkeyOrange'>{`@${username}`}</p>
-          <div onClick={() => copyToClipboard(username || '')}>
+          {isLoading ? (
+            <Skeleton className='h-4 w-[250px] mt-2' />
+          ) : (
+            <p className='font-jost text-primary-monkeyOrange'>{`@${user?.username}`}</p>
+          )}
+          <div onClick={() => copyToClipboard(user?.username || '')}>
             <Icon name='RiFileCopy' size={16} />
           </div>
         </div>

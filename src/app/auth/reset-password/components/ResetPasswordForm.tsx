@@ -5,7 +5,8 @@ import { Suspense } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import Button from '@/components/button';
+import PageHeading from '@/components/pageHeading';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -102,9 +103,7 @@ const ResetPasswordForm: React.FC = () => {
       </Suspense>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-          <h1 className='text-4xl font-playfair_Display mb-10 text-center'>
-            Reset Password
-          </h1>
+          <PageHeading heading='Reset Password' />
           <FormField
             control={form.control}
             name='password'
@@ -114,7 +113,7 @@ const ResetPasswordForm: React.FC = () => {
                 <FormControl>
                   <Input
                     className='min-w-[303px]'
-                    variant='border'
+                    variant='default'
                     placeholder='Enter new password'
                     type='password'
                     {...field}
@@ -134,7 +133,7 @@ const ResetPasswordForm: React.FC = () => {
                   <Input
                     className='min-w-[303px]'
                     placeholder='Enter new password'
-                    variant='border'
+                    variant='default'
                     type='password'
                     {...field}
                   />
@@ -144,11 +143,12 @@ const ResetPasswordForm: React.FC = () => {
             )}
           />
           <Button
-            variant='primary'
-            className='ml-auto mt-[26px]'
+            variant='default'
+            className='float-right mt-[26px]'
             type='submit'
-            title='Reset Password'
-          />
+          >
+            Reset Password
+          </Button>
         </form>
       </Form>
     </div>
