@@ -6,16 +6,16 @@ import Collab from './components/Collab';
 const UserPosts = () => {
   return (
     <Tabs defaultValue='all' className='space-y-2'>
-      <div className='flex justify-start lg:justify-end'>
+      <div className='flex justify-start md:justify-end'>
         <TabsList>
           <TabsTrigger value='all'>
-            <p className='font-josefin_Sans'>All</p>
+            <p className='font-josefin_Sans text-lg'>All</p>
 
             <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
           </TabsTrigger>
 
           <TabsTrigger value='collab'>
-            <p className='font-josefin_Sans'>Collab</p>
+            <p className='font-josefin_Sans text-lg'>Collab</p>
 
             <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
           </TabsTrigger>
