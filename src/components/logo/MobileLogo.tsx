@@ -8,7 +8,7 @@ const MobileLogo = () => {
         src={'/logo-dark.svg'}
         alt='TheMonkeys'
         title='TheMonkeys'
-        height={10}
+        height={30}
         width={30}
       />
       <Image
@@ -16,7 +16,7 @@ const MobileLogo = () => {
         src={'/logo-light.svg'}
         alt='TheMonkeys'
         title='TheMonkeys'
-        height={10}
+        height={30}
         width={30}
       />
     </>

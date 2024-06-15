@@ -4,7 +4,8 @@ import { useEffect } from 'react';
 
 import { useParams, useRouter } from 'next/navigation';
 
-import CircularButton from '@/components/button/CircularButton';
+import Icon from '@/components/icon';
+import { Button } from '@/components/ui/button';
 import { useSession } from 'next-auth/react';
 
 import ProfileCard from './ProfileCard';
@@ -23,10 +24,14 @@ const ProfileSection = () => {
     <div className='px-5 py-4 flex flex-col sm:flex-row lg:flex-col gap-4'>
       <div className='flex flex-col gap-2'>
         <div className='flex gap-2 items-center justify-center'>
-          <CircularButton title='Share Profile' iconName='RiShareLine' />
+          <Button size='icon'>
+            <Icon name='RiShare' />
+          </Button>
           {data?.user.user_name === params.username &&
           status === 'authenticated' ? (
-            <CircularButton title='Edit Profile' iconName='RiEditLine' />
+            <Button size='icon'>
+              <Icon name='RiEdit' />
+            </Button>
           ) : (
             ''
           )}

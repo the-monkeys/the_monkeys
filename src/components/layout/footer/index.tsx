@@ -1,71 +1,134 @@
 'use client';
 
-import { useState } from 'react';
-
 import Link from 'next/link';
-
-import Button from '@/components/button';
 import Icon from '@/components/icon';
-import Input from '@/components/input';
 import Logo from '@/components/logo';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { footerList } from '@/constants/footer';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-import { footerList } from './footerList';
-import List from './list';
+const contactFormSchema = z.object({
+  email: z
+    .string({ required_error: 'Email is required' })
+    .min(1, 'Email is required')
+    .email('Invalid email'),
+});
+
+const FooterList = ({
+  heading,
+  items,
+}: {
+  heading: string;
+  items: {
+    text: string;
+    link: string;
+  }[];
+}) => {
+  return (
+    <div className='space-y-2'>
+      <h4 className='font-josefin_Sans font-semibold uppercase'>{heading}</h4>
+
+      <ul className='font-jost space-y-2'>
+        {items.map((item, index) => (
+          <li className='opacity-75 hover:opacity-100' key={index}>
+            <Link href={item.link}>{item.text}</Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const Footer = () => {
-  const [userMail, setUserMail] = useState<string>('');
+  const form = useForm<z.infer<typeof contactFormSchema>>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  /* Get the current year dynamically */
+  const currentYear = new Date().getFullYear();
+
+  function onSubmit(values: z.infer<typeof contactFormSchema>) {
+    console.log(values.email);
+  }
 
   return (
-    <footer className='flex flex-col gap-10 border-t-1 border-secondary-lightGrey/25 px-5 pb-4 pt-10'>
-      <div className='item-start flex flex-col justify-between gap-10 md:flex-row md:items-end'>
-        <div>
-          <Logo showSubHeading showMix />
-          <form className='mt-5 flex flex-wrap items-end gap-2 md:mt-10'>
-            <Input
-              className='w-full sm:w-60 md:w-64 text-sm sm:text-base'
-              type='email'
-              placeholderText='Your email address'
-              setInputText={setUserMail}
-              label='Get in Touch'
-              variant='border'
-            />
-            <Button variant='primary' title='Subscribe' />
-          </form>
-        </div>
+    <footer className='px-5 pt-10 pb-14 space-y-6 border-t-1 border-secondary-lightGrey/15'>
+      <Logo showSubHeading showMix />
 
-        <div className='flex flex-wrap justify-between gap-5'>
-          {footerList.map((listItem, index) => {
-            return <List listData={listItem} key={index} />;
-          })}
-        </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className='flex items-end gap-2'>
+            <FormField
+              control={form.control}
+              name='email'
+              render={({ field }) => (
+                <FormItem className='w-72 md:w-80'>
+                  <FormLabel>Get in Touch</FormLabel>
+                  <FormMessage />
+                  <FormControl>
+                    <Input placeholder='Enter email address' {...field} />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <Button size='lg' type='submit'>
+              Subscribe
+            </Button>
+          </div>
+        </form>
+      </Form>
+
+      <div className='w-full pt-4 flex flex-col sm:flex-row justify-between gap-8'>
+        {footerList.map((listItem, index) => {
+          return <FooterList {...listItem} key={index} />;
+        })}
       </div>
 
-      <div className='mb-14 flex w-fit flex-col items-center gap-2 self-center'>
-        <div className='flex items-center justify-center gap-2'>
+      {/*Footer Icons*/}
+      <div className='pb-8 space-y-2'>
+        <div className='py-2 flex items-center justify-center gap-4'>
           <Link
-            className='flex items-center gap-2'
+            className='flex items-center hover:opacity-75'
             href='https://discord.gg/6fK9YuV8FV'
             target='_blank'
           >
-            <Icon name='RiDiscordFill' size={20} />
+            <Icon name='RiDiscord' type='Fill' />
           </Link>
+
           <Link
-            className='flex items-center gap-2'
+            className='flex items-center hover:opacity-75'
             href='https://github.com/the-monkeys'
             target='_blank'
           >
-            <Icon name='RiGithubFill' size={20} />
+            <Icon name='RiGithub' type='Fill' />
           </Link>
+
           <Link
-            className='flex items-center gap-2'
+            className='flex items-center hover:opacity-75'
             href='https://twitter.com/TheMonkeysLife'
             target='_blank'
           >
-            <Icon name='RiTwitterXFill' size={20} />
+            <Icon name='RiTwitterX' type='Fill' />
           </Link>
         </div>
-        <p className='w-fit font-josefin_Sans text-xs text-secondary-lightGrey'>
-          Monkeys, 2024, All Rights Reserved
+
+        <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
+          Monkeys, {currentYear}, All Rights Reserved
         </p>
       </div>
     </footer>

@@ -1,26 +1,35 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { VariantProps, cva } from 'class-variance-authority';
 
-import { InputVariantStyles } from '../input';
-import { inputVariantStyles } from '../variantStyles';
+const inputVariants = cva(
+  'h-10 flex w-full px-4 text-sm rounded-lg file:border-0 file:rounded-sm file:mr-4 file:text-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 font-jost bg-primary-monkeyWhite dark:bg-primary-monkeyBlack',
+  {
+    variants: {
+      variant: {
+        default:
+          'border-1 border-secondary-lightGrey/25 focus-visible:border-secondary-lightGrey/75',
+        ghost: 'border-none',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  variant?: keyof InputVariantStyles;
+  extends React.InputHTMLAttributes<HTMLInputElement>,
+    VariantProps<typeof inputVariants> {
+  asChild?: boolean;
 }
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, variant = 'base', ...props }, ref) => {
-    const variantStyles = inputVariantStyles[variant];
-
+  ({ className, type, variant = 'default', ...props }, ref) => {
     return (
       <input
         type={type}
-        className={cn(
-          'flex h-9 w-full px-3 py-1 text-sm shadow-sm rounded-lg transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300 font-jost bg-primary-monkeyWhite/0 dark:bg-primary-monkeyBlack/0',
-          variantStyles,
-          className
-        )}
+        className={cn(inputVariants({ variant, className }))}
         ref={ref}
         {...props}
       />
