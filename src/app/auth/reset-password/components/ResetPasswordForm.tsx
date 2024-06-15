@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -86,57 +86,59 @@ const ResetPasswordForm = () => {
 
   return (
     <div className='grid place-items-center h-screen'>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-          <h1 className='text-4xl font-playfair_Display mb-10 text-center'>
-            Reset Password
-          </h1>
-          <FormField
-            control={form.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>New Password</FormLabel>
-                <FormControl>
-                  <Input
-                    className='min-w-[303px]'
-                    variant='border'
-                    placeholder='Enter new password'
-                    type='password'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name='confirmPassword'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input
-                    className='min-w-[303px]'
-                    placeholder='Enter new password'
-                    variant='border'
-                    type='password'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button
-            variant='primary'
-            className='ml-auto mt-[26px]'
-            type='submit'
-            title='Reset Password'
-          />
-        </form>
-      </Form>
+      <Suspense>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+            <h1 className='text-4xl font-playfair_Display mb-10 text-center'>
+              Reset Password
+            </h1>
+            <FormField
+              control={form.control}
+              name='password'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      className='min-w-[303px]'
+                      variant='border'
+                      placeholder='Enter new password'
+                      type='password'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name='confirmPassword'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      className='min-w-[303px]'
+                      placeholder='Enter new password'
+                      variant='border'
+                      type='password'
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              variant='primary'
+              className='ml-auto mt-[26px]'
+              type='submit'
+              title='Reset Password'
+            />
+          </form>
+        </Form>
+      </Suspense>
     </div>
   );
 };
