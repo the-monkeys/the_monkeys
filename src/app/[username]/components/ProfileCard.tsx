@@ -2,22 +2,24 @@
 
 import { FC } from 'react';
 
+import { notFound, useParams } from 'next/navigation';
+
 import Icon from '@/components/icon';
 import { Skeleton } from '@/components/ui/skeleton';
 import useUser from '@/hooks/useUser';
 import moment from 'moment';
-import { useSession } from 'next-auth/react';
 
 import { useToast } from '../../../components/ui/use-toast';
 
 const ProfileCard: FC = () => {
-  const { data: sessionData } = useSession();
   const { toast } = useToast();
 
-  const username = sessionData?.user?.user_name;
+  const params = useParams<{ username: string }>();
 
-  const { user, isLoading, isError } = useUser(username);
-
+  const { user, isLoading, isError } = useUser(params.username);
+  if (isError) {
+    notFound();
+  }
   const copyToClipboard = (text: string) => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(text).then(
