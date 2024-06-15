@@ -1,8 +1,9 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import Button from '@/components/button';
 import {
@@ -22,29 +23,39 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const ResetPasswordForm = () => {
-  const searchParams = useSearchParams();
+import SearchParamsComponent from './SearchParams';
+
+const ResetPasswordForm: React.FC = () => {
+  const [searchParams, setSearchParams] = useState<{
+    username: string;
+    evpw: string;
+  }>({ username: '', evpw: '' });
   const navigate = useRouter();
-  const username = searchParams.get('user');
-  const evpw = searchParams.get('evpw');
-  const [userToken, setuserToken] = useState<string | undefined>('');
-  console.log(username);
-  console.log(evpw);
+  const [userToken, setUserToken] = useState<string | undefined>('');
+
+  const updateSearchParams = useCallback(
+    (params: { username: string; evpw: string }) => {
+      setSearchParams(params);
+    },
+    []
+  );
 
   useEffect(() => {
-    getResetPasswordToken(username, evpw)
-      .then((res) => {
-        console.log(res);
-        setuserToken(res?.response.token);
-      })
-      .catch((err) => {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message,
+    if (searchParams.username && searchParams.evpw) {
+      getResetPasswordToken(searchParams.username, searchParams.evpw)
+        .then((res) => {
+          console.log(res);
+          setUserToken(res?.response.token);
+        })
+        .catch((err) => {
+          toast({
+            variant: 'error',
+            title: 'Error',
+            description: err.message,
+          });
         });
-      });
-  }, [username, evpw]);
+    }
+  }, [searchParams]);
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
@@ -86,59 +97,60 @@ const ResetPasswordForm = () => {
 
   return (
     <div className='grid place-items-center h-screen'>
-      <Suspense>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-            <h1 className='text-4xl font-playfair_Display mb-10 text-center'>
-              Reset Password
-            </h1>
-            <FormField
-              control={form.control}
-              name='password'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='min-w-[303px]'
-                      variant='border'
-                      placeholder='Enter new password'
-                      type='password'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='confirmPassword'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='min-w-[303px]'
-                      placeholder='Enter new password'
-                      variant='border'
-                      type='password'
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              variant='primary'
-              className='ml-auto mt-[26px]'
-              type='submit'
-              title='Reset Password'
-            />
-          </form>
-        </Form>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SearchParamsComponent setSearchParams={updateSearchParams} />
       </Suspense>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+          <h1 className='text-4xl font-playfair_Display mb-10 text-center'>
+            Reset Password
+          </h1>
+          <FormField
+            control={form.control}
+            name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Password</FormLabel>
+                <FormControl>
+                  <Input
+                    className='min-w-[303px]'
+                    variant='border'
+                    placeholder='Enter new password'
+                    type='password'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='confirmPassword'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input
+                    className='min-w-[303px]'
+                    placeholder='Enter new password'
+                    variant='border'
+                    type='password'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            variant='primary'
+            className='ml-auto mt-[26px]'
+            type='submit'
+            title='Reset Password'
+          />
+        </form>
+      </Form>
     </div>
   );
 };
