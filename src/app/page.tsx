@@ -6,12 +6,13 @@ import HomeBanner from '@/components/branding/HomeBanner';
 import BentoGrid from '@/components/branding/grid';
 import MobileGrid from '@/components/branding/grid/MobileGrid';
 import Icon from '@/components/icon';
+import Container from '@/components/layout/Container';
 
 const LandingPage = () => {
   const router = useRouter();
 
   return (
-    <div className='mb-8 min-h-screen flex flex-col'>
+    <Container className='mb-8 min-h-screen flex flex-col'>
       <HomeBanner>
         <p className='font-playfair_Display font-semibold text-5xl sm:text-7xl md:text-8xl text-primary-monkeyBlack dark:text-primary-monkeyWhite'>
           Create. Collaborate.
@@ -41,7 +42,7 @@ const LandingPage = () => {
       <BentoGrid />
 
       <MobileGrid />
-    </div>
+    </Container>
   );
 };
 

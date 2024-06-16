@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 
-const title = 'Monkeys | Cookie Policy';
+import Container from '@/components/layout/Container';
+
+const title = 'Monkeys | Auth';
 const description = 'We are The Monkeys! A blogging and educational platform.';
 
 export const metadata: Metadata = {
@@ -8,12 +10,10 @@ export const metadata: Metadata = {
   description,
 };
 
-export default function RootLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div className='mb-20 min-h-screen sm:w-4/5 mx-auto w-full'>{children}</div>
-  );
+  return <Container className='mb-20 min-h-screen'>{children}</Container>;
 }

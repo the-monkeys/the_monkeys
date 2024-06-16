@@ -45,12 +45,8 @@ export const forgotPasswordSchema = z.object({
 
 export const resetPasswordSchema = z
   .object({
-    password: z
-      .string({ required_error: 'Password is required' })
-      .min(1, 'Password is required'),
-    confirmPassword: z
-      .string({ required_error: 'Confirm Password is required' })
-      .min(1, 'Confirm Password is required'),
+    password: passwordCriteria,
+    confirmPassword: passwordCriteria,
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: 'Passwords do not match',

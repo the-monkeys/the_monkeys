@@ -1,12 +1,16 @@
 import React from 'react';
 
+import PageHeading from '@/components/pageHeading';
+
 import ResetPasswordForm from './components/ResetPasswordForm';
 
 const page = () => {
   return (
-    <div>
+    <>
+      <PageHeading heading='Reset Password' />
+
       <ResetPasswordForm />
-    </div>
+    </>
   );
 };
 
