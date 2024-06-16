@@ -201,7 +201,7 @@ const Profile = () => {
                         className='w-full'
                         type='url'
                         {...field}
-                        placeholder='Enter Twitter profile'
+                        placeholder='Enter username'
                       />
                     </FormControl>
                     <FormMessage />
@@ -222,7 +222,7 @@ const Profile = () => {
                         className='w-full'
                         type='url'
                         {...field}
-                        placeholder='Enter LinkedIn profile'
+                        placeholder='Enter username'
                       />
                     </FormControl>
                     <FormMessage />
@@ -243,7 +243,7 @@ const Profile = () => {
                         className='w-full'
                         type='url'
                         {...field}
-                        placeholder='Enter Instagram profile'
+                        placeholder='Enter username'
                       />
                     </FormControl>
                     <FormMessage />
@@ -264,7 +264,7 @@ const Profile = () => {
                         className='w-full'
                         type='url'
                         {...field}
-                        placeholder='Enter GitHub profile'
+                        placeholder='Enter username'
                       />
                     </FormControl>
                     <FormMessage />

@@ -4,6 +4,10 @@ export interface GetPublicUserApiResponse {
   last_name: string;
   bio: string;
   address: string;
+  twitter: string;
+  github: string;
+  linkedin: string;
+  instagram: string;
   created_at: Timestamp;
 }
 
