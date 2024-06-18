@@ -2,24 +2,21 @@ import { Skeleton } from '../ui/skeleton';
 
 export const ProfileCardSkeleton = () => {
   return (
-    <div className='space-y-3'>
-      <div className='flex flex-wrap items-end gap-2'>
-        <Skeleton className='size-32' />
+    <div>
+      <div className='mb-2 flex flex-wrap items-end gap-2'>
+        <Skeleton className='size-32 rounded-full' />
 
-        <div className='space-y-2'>
-          <Skeleton className='h-6 w-44' />
-          <Skeleton className='h-4 w-36' />
+        <div className='py-1 space-y-2'>
+          <Skeleton className='h-5 w-44 rounded-full' />
+          <Skeleton className='h-4 w-36 rounded-full' />
         </div>
       </div>
 
-      <Skeleton className='my-2 h-4 w-full' />
+      <Skeleton className='my-4 h-4 w-full rounded-full' />
 
-      <div className='flex items-center gap-2'>
-        <Skeleton className='size-5 rounded-full' />
-        <Skeleton className='h-4 w-28' />
-      </div>
+      <Skeleton className='my-2 h-4 w-32 rounded-full' />
 
-      <div className='flex gap-4'>
+      <div className='mt-2 flex gap-4'>
         <Skeleton className='size-6 rounded-full' />
         <Skeleton className='size-6 rounded-full' />
         <Skeleton className='size-6 rounded-full' />

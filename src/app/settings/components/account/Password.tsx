@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Button } from '@/components/ui/button';
 
 const Password = () => {
@@ -9,8 +11,8 @@ const Password = () => {
         Update your password to restore access and protect your account.
       </p>
 
-      <Button variant='secondary' className='mt-4'>
-        Reset Password
+      <Button size='lg' variant='secondary' className='mt-4' asChild>
+        <Link href='/auth/reset-password'>Reset Password</Link>
       </Button>
     </div>
   );
