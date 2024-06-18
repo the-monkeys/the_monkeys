@@ -7,58 +7,43 @@ import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 
-import UserOptions from './UserOptions';
+import Container from '../Container';
+import ProfileDropdown from './profileDropdown';
 
 const MobileNav = () => {
-  const [showUserOptions, setShowUserOptions] = useState<boolean>(false);
+  const [prevScrollpos, setPrevScrollpos] = useState(0);
+  const [top, setTop] = useState(0);
 
-  // Code to make the header scrollable
-  // const [prevScrollpos, setPrevScrollpos] = useState(window.scrollY);
-  // const [top, setTop] = useState(0);
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.scrollY;
+      if (prevScrollpos > currentScrollPos) {
+        setTop(0);
+      } else {
+        setTop(-50);
+      }
+      setPrevScrollpos(currentScrollPos);
+    };
 
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     const currentScrollPos = window.scrollY;
-  //     if (prevScrollpos > currentScrollPos) {
-  //       setTop(0);
-  //     } else {
-  //       setTop(-50);
-  //     }
-  //     setPrevScrollpos(currentScrollPos);
-  //   };
+    window.addEventListener('scroll', handleScroll);
 
-  //   window.addEventListener('scroll', handleScroll);
-
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, [prevScrollpos]);
-
-  const handleShowUserOptions = () => {
-    setShowUserOptions((prevVal) => !prevVal);
-  };
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [prevScrollpos]);
 
   return (
     <>
       <header
-        className={`sticky left-0 top-0 flex w-full p-5 items-center justify-between bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
+        className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
       >
-        <Link href='/'>
-          <Logo showMobileLogo={true} />
-        </Link>
+        <Container className='w-full p-5 flex items-center justify-between'>
+          <Link href='/'>
+            <Logo showMobileLogo={true} />
+          </Link>
 
-        <div className='relative'>
-          <div
-            className='hover:text-primary-monkeyOrange cursor-pointer'
-            onClick={handleShowUserOptions}
-          >
-            <Icon name='RiUser' size={24} />
-          </div>
-
-          {showUserOptions && (
-            <UserOptions setUserOptions={setShowUserOptions} />
-          )}
-        </div>
+          <ProfileDropdown />
+        </Container>
       </header>
 
       <div className='fixed bottom-0 left-0 flex w-full px-5 py-4 items-center justify-evenly bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>

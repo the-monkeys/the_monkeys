@@ -1,9 +1,7 @@
-import React from 'react';
-
 const Collab = () => {
   return (
-    <div className='flex justify-center items-center h-[70vh]'>
-      <p className='font-jost italic text-2xl '>List is currently empty.</p>
+    <div className='flex items-start justify-center p-4 min-h-screen'>
+      <p className='font-jost italic opacity-75'>No posts available.</p>
     </div>
   );
 };

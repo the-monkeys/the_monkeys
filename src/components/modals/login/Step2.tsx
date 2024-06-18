@@ -49,16 +49,17 @@ const Step2 = ({
       router.back();
       toast({
         variant: 'success',
-        title: 'Success',
-        description: 'User logged in successfully.',
+        title: 'Login Successful',
+        description: 'You have successfully logged in. Welcome back!',
       });
     }
 
     if (res?.error) {
       toast({
         variant: 'error',
-        title: 'Error',
-        description: 'Failed to log in. Please try again.',
+        title: 'Login Error',
+        description:
+          'There was an error logging in. Please check your credentials and try again.',
       });
     }
   }
