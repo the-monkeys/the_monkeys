@@ -15,6 +15,7 @@ import {
 import { toast } from '@/components/ui/use-toast';
 import { useSession } from 'next-auth/react';
 
+import EditDialog from './EditDialog';
 import ProfileCard from './ProfileCard';
 
 const ProfileSection = () => {
@@ -85,13 +86,7 @@ const ProfileSection = () => {
             {data?.user.user_name === params.username &&
             status === 'authenticated' ? (
               <>
-                <DropdownMenuItem>
-                  <div className='flex w-full items-center gap-2'>
-                    <Icon name='RiEdit' />
-
-                    <p className='font-josefin_Sans text-base'>Edit</p>
-                  </div>
-                </DropdownMenuItem>
+                <EditDialog />
 
                 <DropdownMenuSeparator />
               </>

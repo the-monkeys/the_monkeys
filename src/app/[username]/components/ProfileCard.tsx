@@ -74,10 +74,10 @@ const ProfileCard: FC = () => {
                 className='text-primary-monkeyOrange hover:opacity-75'
                 onClick={() => copyToClipboard(user?.username || '')}
               >
-                <p className='font-jost text-base'>{`@${user?.username}`}</p>
+                <p className='font-jost'>{`@${user?.username}`}</p>
               </TooltipTrigger>
 
-              <TooltipContent>Copy Username</TooltipContent>
+              <TooltipContent className='text-sm'>Copy Username</TooltipContent>
             </Tooltip>
           </TooltipProvider>
         </div>
