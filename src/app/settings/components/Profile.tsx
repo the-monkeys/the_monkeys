@@ -1,6 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
@@ -13,32 +15,73 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
+import useGetAuthUserProfile from '@/hooks/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
+import { axiosInstance } from '@/services/fetcher';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Section from './Section';
 
 const Profile = () => {
+  const { data } = useSession();
+  const { user, isLoading, isError } = useGetAuthUserProfile(
+    data?.user.user_name
+  );
+
+  useEffect(() => {
+    console.log('User:', user);
+    console.log('Loading:', isLoading);
+    console.log('Error:', isError);
+  }, [user, isLoading, isError]);
+  const navigate = useRouter();
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      location: '',
-      contactNumber: '',
-      bio: '',
-      dateOfBirth: '',
-      twitterProfile: '',
-      linkedin: '',
-      instagram: '',
-      github: '',
+      first_name: user?.first_name,
+      last_name: user?.last_name,
+      address: user?.address,
+      contact_number: user?.contact_number,
+      bio: user?.bio,
+      date_of_birth: user?.date_of_birth,
+      twitter: user?.twitter,
+      linkedin: user?.linkedin,
+      instagram: user?.instagram,
+      github: user?.github,
     },
   });
 
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
     console.log(values);
+    axiosInstance
+      .patch(
+        `/user/${data?.user.user_name}`,
+        { values },
+        {
+          headers: {
+            Authorization: `Bearer ${data?.user.token}`,
+          },
+        }
+      )
+      .then((res) => {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your profile has been updated successfully',
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message,
+        });
+      });
   }
 
   return (
@@ -58,11 +101,11 @@ const Profile = () => {
                 <div className='rounded-lg size-32 flex border-1 border-secondary-lightGrey/25 bg-secondary-lightGrey/15 items-center justify-center'></div>
 
                 <div className='space-x-2'>
-                  <Button size='icon' variant='destructive'>
+                  <Button size='icon' type='button' variant='destructive'>
                     <Icon name='RiDeleteBin' />
                   </Button>
 
-                  <Button size='icon' variant='secondary'>
+                  <Button size='icon' type='button' variant='secondary'>
                     <Icon name='RiRefresh' />
                   </Button>
                 </div>
@@ -70,7 +113,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='firstName'
+                name='first_name'
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -90,7 +133,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='lastName'
+                name='last_name'
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -110,7 +153,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='location'
+                name='address'
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -130,7 +173,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='contactNumber'
+                name='contact_number'
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -170,7 +213,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='dateOfBirth'
+                name='date_of_birth'
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -190,7 +233,7 @@ const Profile = () => {
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name='twitterProfile'
+                name='twitter'
                 render={({ field }) => (
                   <FormItem className='mr-4'>
                     <FormLabel className='font-josefin_Sans text-sm'>

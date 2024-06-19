@@ -1,9 +1,9 @@
-import fetcher from '@/services/fetcher';
-import { GetPublicUserApiResponse } from '@/services/profile/userApiTypes';
+import { fetcher } from '@/services/fetcher';
+import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import useSWR from 'swr';
 
 function useUser(username: string | undefined) {
-  const { data, error, isLoading } = useSWR<GetPublicUserApiResponse>(
+  const { data, error, isLoading } = useSWR<GetPublicUserProfileApiResponse>(
     `/user/public/${username}`,
     fetcher
   );

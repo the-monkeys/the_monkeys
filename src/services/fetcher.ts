@@ -1,6 +1,7 @@
 import { API_URL } from '@/constants/api';
-import axios from 'axios';
+import axios, { Axios, AxiosInstance } from 'axios';
 
+// Create axios instance for public API requests
 export const axiosInstance = axios.create({
   baseURL: API_URL,
   headers: {
@@ -8,7 +9,27 @@ export const axiosInstance = axios.create({
   },
 });
 
-const fetcher = (url: string) =>
-  axiosInstance.get(url).then((response) => response.data);
+// Fetcher function for authenticated API requests
+export const authFetcher = async (
+  url: string,
+  axiosAuthInstance: AxiosInstance
+) => {
+  try {
+    const response = await axiosAuthInstance.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching authenticated data:', error);
+    throw error;
+  }
+};
 
-export default fetcher;
+// Fetcher function for public API requests
+export const fetcher = async (url: string) => {
+  try {
+    const response = await axiosInstance.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
