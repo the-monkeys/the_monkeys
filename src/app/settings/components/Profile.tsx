@@ -59,14 +59,18 @@ const Profile = () => {
                   Profile Image
                 </p>
 
-                <div className='rounded-full size-32 flex items-center justify-center overflow-hidden'>
+                <div className='rounded-full size-32 ring-2 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
                   <ProfileImage username={data?.user?.user_name || ''} />
                 </div>
 
                 <div className='space-x-2'>
-                  <Button variant='destructive'>Remove</Button>
+                  <Button type='button' variant='destructive'>
+                    Remove
+                  </Button>
 
-                  <Button variant='secondary'>Update</Button>
+                  <Button type='button' variant='secondary'>
+                    Update
+                  </Button>
                 </div>
               </div>
 
@@ -278,7 +282,12 @@ const Profile = () => {
 
           <Section sectionTitle='Topics'>
             <div>
-              <Button size='icon' variant='outline' className='rounded-full'>
+              <Button
+                type='button'
+                size='icon'
+                variant='outline'
+                className='rounded-full'
+              >
                 <Icon name='RiAdd' size={16} />
               </Button>
             </div>

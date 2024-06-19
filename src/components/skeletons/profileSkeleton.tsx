@@ -12,7 +12,11 @@ export const ProfileCardSkeleton = () => {
         </div>
       </div>
 
-      <Skeleton className='my-4 h-4 w-full rounded-full' />
+      <div className='py-2 space-y-2'>
+        <Skeleton className='h-4 w-full rounded-full' />
+
+        <Skeleton className='h-4 w-full rounded-full' />
+      </div>
 
       <Skeleton className='my-2 h-4 w-32 rounded-full' />
 
