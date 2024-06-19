@@ -56,7 +56,7 @@ const ProfileSection = () => {
       <div className='flex gap-4 justify-end'>
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+            <div className='hover:opacity-75 cursor-pointer'>
               <Icon name='RiShareForward' size={24} />
             </div>
           </DropdownMenuTrigger>
@@ -77,7 +77,7 @@ const ProfileSection = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+            <div className='hover:opacity-75 cursor-pointer'>
               <Icon name='RiMore' size={24} />
             </div>
           </DropdownMenuTrigger>

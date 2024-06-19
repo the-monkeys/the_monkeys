@@ -43,7 +43,7 @@ const EditDialog = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className='p-2 flex w-full items-center gap-2'>
+      <DialogTrigger className='p-2 flex w-full items-center gap-2 hover:opacity-75'>
         <Icon name='RiEdit' />
 
         <p className='font-josefin_Sans text-base'>Edit Details</p>
