@@ -2,8 +2,6 @@
 
 import Link from 'next/link';
 
-
-
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
@@ -52,14 +50,15 @@ const FooterList = ({
 };
 
 const Footer = () => {
-   const form = useForm<z.infer<typeof contactFormSchema>>({
-     resolver: zodResolver(contactFormSchema),
-     defaultValues: {
-       email: '',
-     },
-   });
+  const form = useForm<z.infer<typeof contactFormSchema>>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
 
-   const currentYear = new Date().getFullYear();
+  /* Get the current year dynamically */
+  const currentYear = new Date().getFullYear();
 
   function onSubmit(values: z.infer<typeof contactFormSchema>) {
     console.log(values.email);
