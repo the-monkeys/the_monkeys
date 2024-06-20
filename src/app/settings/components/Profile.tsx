@@ -21,6 +21,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Section from './Section';
+import ProfileDeleteDialog from './profile/ProfileDeleteDialog';
+import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
 
 const Profile = () => {
   const { data, status } = useSession();
@@ -59,18 +61,14 @@ const Profile = () => {
                   Profile Image
                 </p>
 
-                <div className='rounded-full size-32 ring-2 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
+                <div className='rounded-full size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
                   <ProfileImage username={data?.user?.user_name || ''} />
                 </div>
 
                 <div className='space-x-2'>
-                  <Button type='button' variant='destructive'>
-                    Remove
-                  </Button>
+                  <ProfileDeleteDialog />
 
-                  <Button type='button' variant='secondary'>
-                    Update
-                  </Button>
+                  <ProfileUpdateDialog />
                 </div>
               </div>
 

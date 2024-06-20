@@ -69,7 +69,7 @@ const ProfileSection = () => {
               >
                 <Icon name='RiFileCopy' />
 
-                <p className='font-josefin_Sans text-base'>Copy link</p>
+                <p className='font-josefin_Sans text-base'>Copy Link</p>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -98,9 +98,7 @@ const ProfileSection = () => {
               <div className='flex w-full items-center gap-2'>
                 <Icon name='RiErrorWarning' className='text-alert-red' />
 
-                <p className='font-josefin_Sans text-base'>
-                  Report this profile
-                </p>
+                <p className='font-josefin_Sans text-base'>Report Profile</p>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
