@@ -1,4 +1,3 @@
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import All from './components/All';
@@ -24,17 +23,16 @@ const UserPosts = () => {
           </TabsList>
         </div>
 
-        <div className='mx-auto w-full md:w-4/5'>
-          <TabsContent className='w-full' value='all'>
-            <All />
-          </TabsContent>
+      <div className='w-full'>
+        <TabsContent className='w-full' value='all'>
+          <All />
+        </TabsContent>
 
-          <TabsContent className='w-full' value='collab'>
-            <Collab />
-          </TabsContent>
-        </div>
-      </Tabs>
-    </div>
+        <TabsContent className='w-full' value='collab'>
+          <Collab />
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 };
 

@@ -49,16 +49,17 @@ const Step2 = ({
       router.back();
       toast({
         variant: 'success',
-        title: 'Success',
-        description: 'User logged in successfully.',
+        title: 'Login Successful',
+        description: 'You have successfully logged in. Welcome back!',
       });
     }
 
     if (res?.error) {
       toast({
         variant: 'error',
-        title: 'Error',
-        description: 'Failed to log in. Please try again.',
+        title: 'Login Error',
+        description:
+          'There was an error logging in. Please check your credentials and try again.',
       });
     }
   }
@@ -115,16 +116,15 @@ const Step2 = ({
             )}
           />
 
-          <div className='pt-6 flex gap-2 items-center'>
+          <div className='pt-6 flex flex-row-reverse  gap-2 items-center'>
+            <Button className='flex-1 order-1'>Login</Button>
             <Button
               variant='secondary'
-              className='flex-1'
+              className='flex-1 order-2'
               onClick={handlePreviousStep}
             >
               Previous
             </Button>
-
-            <Button className='flex-1'>Login</Button>
           </div>
         </form>
 
