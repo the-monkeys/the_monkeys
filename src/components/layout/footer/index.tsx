@@ -2,24 +2,22 @@
 
 import Link from 'next/link';
 
+
+
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { footerList } from '@/constants/footer';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+
+
 import Container from '../Container';
+
 
 const contactFormSchema = z.object({
   email: z
@@ -54,9 +52,14 @@ const FooterList = ({
 };
 
 const Footer = () => {
-  const [userMail, setUserMail] = useState<string>('');
+   const form = useForm<z.infer<typeof contactFormSchema>>({
+     resolver: zodResolver(contactFormSchema),
+     defaultValues: {
+       email: '',
+     },
+   });
 
-  const currentYear = new Date().getFullYear();
+   const currentYear = new Date().getFullYear();
 
   function onSubmit(values: z.infer<typeof contactFormSchema>) {
     console.log(values.email);
