@@ -32,7 +32,8 @@ const UserPosts = () => {
           <Collab />
         </TabsContent>
       </div>
-    </Tabs>
+      </Tabs>
+      </div>
   );
 };
 
