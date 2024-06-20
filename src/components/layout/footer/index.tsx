@@ -65,9 +65,6 @@ const Footer = () => {
     console.log(values.email);
   }
 
-  /* Get the current year dynamically */
-  const currentYear = new Date().getFullYear() 
-
   return (
     <footer className='px-5 pt-10 pb-14 space-y-6 border-t-1 border-secondary-lightGrey/15'>
       <Logo showSubHeading showMix />
