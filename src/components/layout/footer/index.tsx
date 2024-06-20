@@ -54,12 +54,7 @@ const FooterList = ({
 };
 
 const Footer = () => {
-  const form = useForm<z.infer<typeof contactFormSchema>>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      email: '',
-    },
-  });
+  const [userMail, setUserMail] = useState<string>('');
 
   const currentYear = new Date().getFullYear();
 
