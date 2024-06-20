@@ -9,7 +9,7 @@ const UserPosts = () => {
       {/*Remove this 
         <LinksRedirectArrow target='/activity' title='View Activity' />*/}
       {/*Add tabs to switch between Posts and Drafts */}
-      <Tabs >
+      <Tabs defaultValue='all'>
         <div className='flex justify-end'>
           <TabsList>
             <TabsTrigger className='text-xl' value='all'>
