@@ -65,6 +65,9 @@ const Footer = () => {
     console.log(values.email);
   }
 
+  /* Get the current year dynamically */
+  const currentYear = new Date().getFullYear() 
+
   return (
     <footer className='px-5 pt-10 pb-14 space-y-6 border-t-1 border-secondary-lightGrey/15'>
       <Logo showSubHeading showMix />
@@ -100,8 +103,8 @@ const Footer = () => {
       </div>
 
       {/*Footer Icons*/}
-      <div className='pb-8 space-y-2'>
-        <div className='py-2 flex items-center justify-center gap-4'>
+      <div className='mb-14 flex w-fit flex-col items-center gap-2 self-center'>
+        <div className='flex items-center justify-center gap-2'>
           <Link
             className='flex items-center hover:opacity-75'
             href='https://discord.gg/6fK9YuV8FV'
@@ -126,8 +129,7 @@ const Footer = () => {
             <Icon name='RiTwitterX' type='Fill' />
           </Link>
         </div>
-
-        <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
+        <p className='w-fit font-josefin_Sans text-xs text-secondary-lightGrey'>
           Monkeys, {currentYear}, All Rights Reserved
         </p>
       </div>
