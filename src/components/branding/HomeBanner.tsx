@@ -1,36 +1,30 @@
-import { FC, ReactNode } from 'react';
+import { Button } from '../ui/button';
+import BackgroundBranding from './BackgroundBranding';
 
-import Image from 'next/image';
-
-import Styles from './styles/homeBannerStyles.module.css';
-
-type HomeBannerProps = {
-  children?: ReactNode;
-};
-
-const HomeBanner: FC<HomeBannerProps> = ({ children }) => {
+const HomeBanner = () => {
   return (
-    <div className='mb-12 w-full h-[28rem] relative flex flex-col justify-end items-center overflow-hidden'>
-      <Image
-        src='./background_banner.svg'
-        alt=''
-        width={300}
-        height={300}
-        className={Styles.screen_image}
-      />
+    <div className='relative h-80'>
+      <div className='flex justify-end opacity-75 sm:opacity-100'>
+        <BackgroundBranding />
+      </div>
 
-      <div className={Styles.screen_overlay_linear}></div>
+      <div className='absolute bottom-0 left-0 space-y-2'>
+        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl drop-shadow-md'>
+          Seamless <span className='text-primary-monkeyOrange'>Creation</span>
+        </h1>
 
-      <div
-        className={`${Styles.screen_overlay_radial_dark} opacity-0 dark:opacity-100`}
-      ></div>
+        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl drop-shadow-md'>
+          Effortless{' '}
+          <span className='text-primary-monkeyOrange'>Collaboration</span>
+        </h1>
 
-      <div
-        className={`${Styles.screen_overlay_radial_light} opacity-100 dark:opacity-0`}
-      ></div>
+        <p className='pt-6 font-josefin_Sans text-base sm:text-lg'>
+          Unleash Your Creativity and Influence: Blog Together, Write Better
+        </p>
 
-      <div className='flex flex-col items-center px-5 py-4 z-10 cursor-default'>
-        {children}
+        <Button size='lg' className='px-8'>
+          <p className='font-jost'>Join Monkeys</p>
+        </Button>
       </div>
     </div>
   );
