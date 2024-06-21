@@ -17,22 +17,6 @@ const config = {
         '2xl': '1400px',
       },
     },
-    colors: {
-      primary: {
-        monkeyOrange: '#ff462e',
-        monkeyBlack: '#101010',
-        monkeyWhite: '#FFF4ed',
-      },
-      secondary: {
-        darkGrey: '#2b2b2b',
-        lightGrey: '#4f4f4f',
-        white: '#f2f2f3',
-      },
-      alert: {
-        red: '#ED3232',
-        green: '#34A853',
-      },
-    },
     fontFamily: {
       jost: ['var(--font-jost)'],
       josefin_Sans: ['var(--font-josefin_Sans)'],
@@ -40,8 +24,25 @@ const config = {
     },
     animation: {
       shake: 'shake 600ms ease-in-out',
+      pulse: 'pulse 1000ms ease-in-out infinite',
     },
     extend: {
+      colors: {
+        primary: {
+          monkeyOrange: '#ff462e',
+          monkeyBlack: '#101010',
+          monkeyWhite: '#FFF4ed',
+        },
+        secondary: {
+          darkGrey: '#2b2b2b',
+          lightGrey: '#4f4f4f',
+          white: '#f2f2f3',
+        },
+        alert: {
+          red: '#ED3232',
+          green: '#34A853',
+        },
+      },
       borderWidth: {
         '1': '1px',
       },
@@ -54,6 +55,17 @@ const config = {
           'linear-gradient(221.33deg, rgba(255, 70, 46, 0) 1.43%, rgba(255, 70, 46, 0.15) 65.81%, rgba(255, 70, 46, 0) 101.98%)',
       },
       keyframes: {
+        pulse: {
+          '0%': {
+            opacity: '0.25',
+          },
+          '50%': {
+            opacity: '0.5',
+          },
+          '100%': {
+            opacity: '0.25',
+          },
+        },
         shake: {
           '0%': {
             transform: 'rotate(0deg)',

@@ -55,7 +55,7 @@ const Profile = () => {
                   Profile Image
                 </p>
 
-                <div className='rounded-lg h-32 w-32 flex border-1 border-secondary-lightGrey/25 bg-secondary-lightGrey/15 items-center justify-center'></div>
+                <div className='rounded-lg size-32 flex border-1 border-secondary-lightGrey/25 bg-secondary-lightGrey/15 items-center justify-center'></div>
 
                 <div className='space-x-2'>
                   <Button size='icon' variant='destructive'>
@@ -201,7 +201,7 @@ const Profile = () => {
                         className='w-full'
                         type='url'
                         {...field}
-                        placeholder='Enter Twitter profile'
+                        placeholder='Enter username'
                       />
                     </FormControl>
                     <FormMessage />
@@ -222,7 +222,7 @@ const Profile = () => {
                         className='w-full'
                         type='url'
                         {...field}
-                        placeholder='Enter LinkedIn profile'
+                        placeholder='Enter username'
                       />
                     </FormControl>
                     <FormMessage />
@@ -243,7 +243,7 @@ const Profile = () => {
                         className='w-full'
                         type='url'
                         {...field}
-                        placeholder='Enter Instagram profile'
+                        placeholder='Enter username'
                       />
                     </FormControl>
                     <FormMessage />
@@ -264,7 +264,7 @@ const Profile = () => {
                         className='w-full'
                         type='url'
                         {...field}
-                        placeholder='Enter GitHub profile'
+                        placeholder='Enter username'
                       />
                     </FormControl>
                     <FormMessage />

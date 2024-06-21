@@ -1,3 +1,4 @@
+import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -6,18 +7,18 @@ import Profile from './components/Profile';
 
 const SettingsPage = () => {
   return (
-    <div className='pb-12'>
+    <Container className='pb-12'>
       <PageHeading heading='Settings' />
 
       <Tabs defaultValue='profile'>
         <div className='mt-6 flex flex-col justify-center items-center'>
           <TabsList className='font-josefin_Sans'>
-            <TabsTrigger className='text-xl' value='profile'>
+            <TabsTrigger value='profile'>
               <p className='font-josefin_Sans text-base sm:text-xl'>Profile</p>
               <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
             </TabsTrigger>
 
-            <TabsTrigger className='text-xl' value='account'>
+            <TabsTrigger value='account'>
               <p className='font-josefin_Sans text-base sm:text-xl'>Account</p>
 
               <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
@@ -35,7 +36,7 @@ const SettingsPage = () => {
           </TabsContent>
         </div>
       </Tabs>
-    </div>
+    </Container>
   );
 };
 
