@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { FC, PropsWithChildren, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -17,6 +17,17 @@ export type ModalComponentProps = {
 
 const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
   const router = useRouter();
+
+  //remove the scrollbar
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    //cleanup
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  });
+
   return (
     <div className='fixed left-0 top-0 flex h-full w-full justify-center bg-secondary-white/60 backdrop-blur-sm dark:bg-secondary-darkGrey/60 z-50'>
       <div className='flex w-full flex-col items-start gap-1 self-end sm:max-w-md sm:self-center drop-shadow-xl'>
