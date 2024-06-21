@@ -61,11 +61,13 @@ const Footer = () => {
     },
   });
 
-  const currentYear = new Date().getFullYear();
-
+  
   function onSubmit(values: z.infer<typeof contactFormSchema>) {
     console.log(values.email);
   }
+
+  /* Get the current year dynamically */
+  const currentYear = new Date().getFullYear() 
 
   return (
     <Container className='px-5 pt-10 pb-14 border-t-1 border-secondary-lightGrey/15'>
