@@ -10,7 +10,7 @@ const BackgroundBranding = () => {
         alt='The Monkeys'
         width={300}
         height={300}
-        className='h-full w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-50'
+        className='h-full w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-25'
       />
 
       <div className={Styles.screen_overlay_linear}></div>

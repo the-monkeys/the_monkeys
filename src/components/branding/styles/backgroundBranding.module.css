@@ -11,7 +11,7 @@
     rgba(255, 70, 46, 0.15) 20px
   );
   background-size: 100% 20px;
-  animation: pan-overlay 42s infinite linear alternate-reverse;
+  animation: pan-overlay 25s infinite linear alternate-reverse;
 }
 
 .radial_light {
