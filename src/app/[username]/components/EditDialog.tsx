@@ -133,10 +133,8 @@ const EditDialog = () => {
               )}
             />
 
-            <div className='pt-6 flex justify-center'>
-              <Button disabled={status === 'unauthenticated'}>
-                Save Changes
-              </Button>
+            <div className='pt-6 flex justify-end'>
+              <Button>Save Changes</Button>
             </div>
           </form>
         </Form>

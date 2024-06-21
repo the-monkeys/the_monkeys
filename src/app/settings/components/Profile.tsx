@@ -58,7 +58,7 @@ const Profile = () => {
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
                 <p className='w-full col-span-1 sm:col-span-2 font-josefin_Sans text-sm'>
-                  Profile Image
+                  Profile Photo
                 </p>
 
                 <div className='rounded-full size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>

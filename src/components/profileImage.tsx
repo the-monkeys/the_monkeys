@@ -16,7 +16,7 @@ export const ProfileImage = ({ username }: { username: string }) => {
   return (
     <Image
       src={imageUrl}
-      alt={`Profile Image: ${username}`}
+      alt={`Profile Photo: ${username}`}
       width={32}
       height={32}
       className='w-full h-full'

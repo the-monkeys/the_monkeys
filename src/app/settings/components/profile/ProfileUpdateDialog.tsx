@@ -47,7 +47,7 @@ const ProfileUpdateDialog = () => {
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle>Update Profile Image</DialogTitle>
+        <DialogTitle>Update Profile Photo</DialogTitle>
 
         {uploadError && (
           <p className='font-jost text-sm text-alert-red'>{uploadError}</p>

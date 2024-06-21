@@ -17,7 +17,7 @@ const ProfileDeleteDialog = () => {
 
       <DialogContent>
         <DialogTitle className='text-alert-red'>
-          Delete Profile Image
+          Delete Profile Photo
         </DialogTitle>
 
         <p className='py-2 font-jost'>
@@ -27,7 +27,7 @@ const ProfileDeleteDialog = () => {
 
         <div className='flex justify-end'>
           <Button type='button' variant='destructive' className='w-fit'>
-            Delete Profile
+            Delete
           </Button>
         </div>
       </DialogContent>
