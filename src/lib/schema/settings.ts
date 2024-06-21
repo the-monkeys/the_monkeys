@@ -9,14 +9,12 @@ export const updateProfileSchema = z.object({
     .regex(/^[0-9]+$/, 'Contact number must be digits only')
     .min(10)
     .max(15),
-  bio: z.string().max(500),
-  date_of_birth: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date of birth must be in YYYY-MM-DD format'),
-  twitter: z.string().url().optional(),
-  linkedin: z.string().url().optional(),
-  instagram: z.string().url().optional(),
-  github: z.string().url().optional(),
+  bio: z.string().max(500).optional(),
+  date_of_birth: z.string().optional(),
+  twitter: z.string().max(50).optional(),
+  linkedin: z.string().max(50).optional(),
+  instagram: z.string().max(50).optional(),
+  github: z.string().max(50).optional(),
 });
 
 export const updateEmailSchema = z.object({

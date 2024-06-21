@@ -57,7 +57,7 @@ const Profile = () => {
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
     console.log(values);
     axiosInstance
-      .patch(
+      .put(
         `/user/${data?.user.user_name}`,
         { values },
         {
@@ -242,7 +242,6 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        type='url'
                         {...field}
                         placeholder='Enter username'
                       />
@@ -263,7 +262,6 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        type='url'
                         {...field}
                         placeholder='Enter username'
                       />
@@ -284,7 +282,6 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        type='url'
                         {...field}
                         placeholder='Enter username'
                       />
@@ -305,7 +302,6 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        type='url'
                         {...field}
                         placeholder='Enter username'
                       />
