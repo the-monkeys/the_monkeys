@@ -19,6 +19,13 @@ export const updateProfileSchema = z.object({
   github: z.string().url().optional(),
 });
 
+export const updateProfileDetailsSchema = z.object({
+  firstName: z.string().min(1, 'First name is required').max(50),
+  lastName: z.string().min(1, 'Last name is required').max(50),
+  location: z.string().max(100),
+  bio: z.string().max(500),
+});
+
 export const updateEmailSchema = z.object({
   email: z
     .string({ required_error: 'Email is required' })

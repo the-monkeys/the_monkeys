@@ -35,7 +35,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           <Logo showMix />
 
           <div
-            className='cursor-pointer'
+            className='hover:opacity-75 cursor-pointer'
             onClick={() => {
               router.back();
               if (setModal) {

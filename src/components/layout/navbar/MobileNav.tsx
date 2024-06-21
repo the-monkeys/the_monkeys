@@ -51,10 +51,7 @@ const MobileNav = () => {
 
         <CreateButton />
 
-        <Link
-          href='/notifications'
-          className='hover:text-primary-monkeyOrange cursor-pointer'
-        >
+        <Link href='/notifications' className='hover:opacity-75 cursor-pointer'>
           <Icon name='RiNotification3' size={24} />
         </Link>
       </div>

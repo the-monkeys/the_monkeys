@@ -1,21 +1,30 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import All from './components/All';
-import Collab from './components/Collab';
+import Blogs from './components/Blogs';
+import Collabs from './components/Collabs';
+import Drafts from './components/Drafts';
 
 const UserPosts = () => {
   return (
-    <Tabs defaultValue='all' className='space-y-2'>
-      <div className='flex justify-start md:justify-end'>
+    <Tabs defaultValue='blogs' className='space-y-2'>
+      <div className='flex justify-center md:justify-end'>
         <TabsList>
-          <TabsTrigger value='all'>
-            <p className='font-josefin_Sans text-lg'>All</p>
+          <TabsTrigger value='blogs'>
+            <p className='font-josefin_Sans text-base sm:text-lg'>Blogs</p>
 
             <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
           </TabsTrigger>
 
-          <TabsTrigger value='collab'>
-            <p className='font-josefin_Sans text-lg'>Collab</p>
+          <TabsTrigger value='collabs'>
+            <p className='font-josefin_Sans text-base sm:text-lg'>
+              Collaborations
+            </p>
+
+            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
+          </TabsTrigger>
+
+          <TabsTrigger value='drafts'>
+            <p className='font-josefin_Sans text-base sm:text-lg'>Drafts</p>
 
             <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
           </TabsTrigger>
@@ -23,12 +32,16 @@ const UserPosts = () => {
       </div>
 
       <div className='w-full'>
-        <TabsContent className='w-full' value='all'>
-          <All />
+        <TabsContent className='w-full' value='blogs'>
+          <Blogs />
         </TabsContent>
 
-        <TabsContent className='w-full' value='collab'>
-          <Collab />
+        <TabsContent className='w-full' value='collabs'>
+          <Collabs />
+        </TabsContent>
+
+        <TabsContent className='w-full' value='drafts'>
+          <Drafts />
         </TabsContent>
       </div>
     </Tabs>

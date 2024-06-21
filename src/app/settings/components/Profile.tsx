@@ -3,6 +3,7 @@
 import React from 'react';
 
 import Icon from '@/components/icon';
+import ProfileImage from '@/components/profileImage';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -15,12 +16,17 @@ import {
 import { Input } from '@/components/ui/input';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Section from './Section';
+import ProfileDeleteDialog from './profile/ProfileDeleteDialog';
+import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
 
 const Profile = () => {
+  const { data, status } = useSession();
+
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
@@ -52,19 +58,17 @@ const Profile = () => {
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
                 <p className='w-full col-span-1 sm:col-span-2 font-josefin_Sans text-sm'>
-                  Profile Image
+                  Profile Photo
                 </p>
 
-                <div className='rounded-lg size-32 flex border-1 border-secondary-lightGrey/25 bg-secondary-lightGrey/15 items-center justify-center'></div>
+                <div className='rounded-full size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
+                  <ProfileImage username={data?.user?.user_name || ''} />
+                </div>
 
                 <div className='space-x-2'>
-                  <Button size='icon' variant='destructive'>
-                    <Icon name='RiDeleteBin' />
-                  </Button>
+                  <ProfileDeleteDialog />
 
-                  <Button size='icon' variant='secondary'>
-                    <Icon name='RiRefresh' />
-                  </Button>
+                  <ProfileUpdateDialog />
                 </div>
               </div>
 
@@ -276,7 +280,14 @@ const Profile = () => {
 
           <Section sectionTitle='Topics'>
             <div>
-              <Button variant='secondary'>Add Topic</Button>
+              <Button
+                type='button'
+                size='icon'
+                variant='outline'
+                className='rounded-full'
+              >
+                <Icon name='RiAdd' size={16} />
+              </Button>
             </div>
           </Section>
 
