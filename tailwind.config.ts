@@ -46,14 +46,6 @@ const config = {
       borderWidth: {
         '1': '1px',
       },
-      backgroundImage: {
-        'custom-gradient1':
-          'linear-gradient(237.34deg, rgba(255, 70, 46, 0) 5.59%, rgba(255, 70, 46, 0.15) 53.05%, rgba(255, 70, 46, 0) 79.73%)',
-        'custom-gradient2':
-          'linear-gradient(304.84deg, rgba(255, 70, 46, 0) 1.8%, rgba(255, 70, 46, 0.15) 47.81%, rgba(255, 70, 46, 0) 73.66%)',
-        'custom-gradient3':
-          'linear-gradient(221.33deg, rgba(255, 70, 46, 0) 1.43%, rgba(255, 70, 46, 0.15) 65.81%, rgba(255, 70, 46, 0) 101.98%)',
-      },
       keyframes: {
         pulse: {
           '0%': {

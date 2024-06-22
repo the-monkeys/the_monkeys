@@ -21,7 +21,7 @@ const CollaborativeWriting = () => {
       </GridSubHeading>
 
       <div className='mt-4 flex flex-col gap-4 sm:gap-6 overflow-hidden'>
-        <div className='h-10 sm:h-12 self-start'>
+        <div className='pb-0 h-10 sm:h-12 self-start'>
           <Image
             src='./users.svg'
             width='80'
@@ -39,14 +39,14 @@ const CollaborativeWriting = () => {
             <Icon
               name='RiNavigation'
               type='Fill'
-              className='absolute top-full right-0 text-primary-monkeyOrange scale-x-[-1]'
+              className='absolute top-full right-0 text-primary-monkeyOrange scale-x-[-1] group-hover:animate-pulse'
             />
           </div>
           <div className='relative mb-3 h-2 sm:h-3 w-1/4 rounded-full bg-secondary-darkGrey/10 dark:bg-secondary-white/10'>
             <Icon
               name='RiNavigation'
               type='Fill'
-              className='absolute top-full left-full text-primary-monkeyOrange'
+              className='absolute top-full left-full text-primary-monkeyOrange group-hover:animate-pulse'
             />
           </div>
 
@@ -56,7 +56,7 @@ const CollaborativeWriting = () => {
             <Icon
               name='RiNavigation'
               type='Fill'
-              className='absolute top-full left-full text-primary-monkeyOrange'
+              className='absolute top-full left-full text-primary-monkeyOrange group-hover:animate-pulse'
             />
           </div>
 

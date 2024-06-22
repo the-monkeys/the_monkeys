@@ -49,7 +49,7 @@ export const GridContainer = ({
     <div
       className={twMerge(
         className,
-        'group flex-1 p-4 border-1 border-secondary-lightGrey/15 rounded-lg'
+        'group flex-1 p-4 pb-0 border-1 border-secondary-lightGrey/15 rounded-lg'
       )}
     >
       {children}
