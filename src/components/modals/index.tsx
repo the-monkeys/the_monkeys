@@ -21,7 +21,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
     <div className='fixed left-0 top-0 flex h-full w-full justify-center bg-secondary-white/60 backdrop-blur-sm dark:bg-secondary-darkGrey/60 z-50'>
       <div className='flex w-full flex-col items-start gap-1 self-end sm:max-w-md sm:self-center drop-shadow-xl'>
         <div className='w-full flex justify-between items-center px-2'>
-          <Logo showMix />
+          <Logo />
 
           <div
             className='cursor-pointer'

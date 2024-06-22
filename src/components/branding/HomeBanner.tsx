@@ -13,11 +13,11 @@ const HomeBanner = () => {
       </div>
 
       <div className='absolute bottom-0 left-0 space-y-2'>
-        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl drop-shadow-sm'>
+        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm'>
           Seamless <span className='text-primary-monkeyOrange'>Creation</span>
         </h1>
 
-        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl drop-shadow-sm'>
+        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm'>
           Effortless{' '}
           <span className='text-primary-monkeyOrange'>Collaboration</span>
         </h1>

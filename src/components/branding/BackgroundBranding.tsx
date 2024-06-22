@@ -6,7 +6,7 @@ const BackgroundBranding = () => {
   return (
     <div className='w-full sm:w-4/5 md:w-1/2 h-52 sm:h-80 relative flex flex-col justify-end items-center overflow-hidden'>
       <Image
-        src='./background_banner.svg'
+        src='./logo-branding.svg'
         alt='The Monkeys'
         width={300}
         height={300}
