@@ -37,7 +37,7 @@ const Email = () => {
         Verify your email address to keep your account secure and stay updated.
       </p>
 
-      <Button variant='secondary' className='mt-4'>
+      <Button size='lg' variant='secondary' className='mt-4'>
         Verify Email
       </Button>
 

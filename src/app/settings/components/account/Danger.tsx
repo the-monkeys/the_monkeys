@@ -14,7 +14,7 @@ const Danger = () => {
         permanently erased. This action cannot be undone.
       </p>
 
-      <Button variant='destructive' className='mt-4'>
+      <Button size='lg' variant='destructive' className='mt-4'>
         Delete Account
       </Button>
     </div>
