@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import Styles from './styles/backgroundBranding.module.css';
+import Styles from './styles/backgroundStyles.module.css';
 
 const BackgroundBranding = () => {
   return (
