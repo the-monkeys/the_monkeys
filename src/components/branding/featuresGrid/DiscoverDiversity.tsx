@@ -23,11 +23,11 @@ const DiscoverDiversity = () => {
       <div className='mt-4 flex justify-center gap-1 h-44 overflow-hidden'>
         <div className='-mt-2 group-hover:-mt-16 w-fit space-y-2 transition-all hidden sm:block'>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full'>
+          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
             Technology
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full'>
+          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
             Music
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
@@ -36,11 +36,11 @@ const DiscoverDiversity = () => {
 
         <div className='-mt-16 group-hover:-mt-2 mr-4 w-fit space-y-2 transition-all hidden sm:block'>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full'>
+          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
             Science
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full'>
+          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
             Health
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />

@@ -22,13 +22,13 @@ const HomeBanner = () => {
           <span className='text-primary-monkeyOrange'>Collaboration</span>
         </h1>
 
-        <p className='pt-6 font-jost text-base sm:text-lg'>
+        <p className='pt-6 font-jost text-sm sm:text-base md:text-lg'>
           Unleash Your Creativity and Influence: Blog Together, Write Better
         </p>
 
         <Button
           size='lg'
-          className='px-8 hover:shadow-lg hover:shadow-primary-monkeyOrange/50'
+          className='px-4 sm:px-8 hover:shadow-lg hover:shadow-primary-monkeyOrange/50'
           onClick={() => {
             router.push('api/auth/signin');
           }}
