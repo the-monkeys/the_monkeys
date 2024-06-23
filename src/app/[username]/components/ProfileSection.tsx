@@ -15,6 +15,7 @@ import {
 import { toast } from '@/components/ui/use-toast';
 import { useSession } from 'next-auth/react';
 
+import EditDialog from './EditDialog';
 import ProfileCard from './ProfileCard';
 
 const ProfileSection = () => {
@@ -55,7 +56,7 @@ const ProfileSection = () => {
       <div className='flex gap-4 justify-end'>
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+            <div className='hover:opacity-75 cursor-pointer'>
               <Icon name='RiShareForward' size={24} />
             </div>
           </DropdownMenuTrigger>
@@ -68,7 +69,7 @@ const ProfileSection = () => {
               >
                 <Icon name='RiFileCopy' />
 
-                <p className='font-josefin_Sans text-base'>Copy link</p>
+                <p className='font-josefin_Sans text-base'>Copy Link</p>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -76,7 +77,7 @@ const ProfileSection = () => {
 
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+            <div className='hover:opacity-75 cursor-pointer'>
               <Icon name='RiMore' size={24} />
             </div>
           </DropdownMenuTrigger>
@@ -85,13 +86,7 @@ const ProfileSection = () => {
             {data?.user.user_name === params.username &&
             status === 'authenticated' ? (
               <>
-                <DropdownMenuItem>
-                  <div className='flex w-full items-center gap-2'>
-                    <Icon name='RiEdit' />
-
-                    <p className='font-josefin_Sans text-base'>Edit</p>
-                  </div>
-                </DropdownMenuItem>
+                <EditDialog />
 
                 <DropdownMenuSeparator />
               </>
@@ -103,9 +98,7 @@ const ProfileSection = () => {
               <div className='flex w-full items-center gap-2'>
                 <Icon name='RiErrorWarning' className='text-alert-red' />
 
-                <p className='font-josefin_Sans text-base'>
-                  Report this profile
-                </p>
+                <p className='font-josefin_Sans text-base'>Report Profile</p>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>

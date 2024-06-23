@@ -32,7 +32,7 @@ const Step2 = ({
       <div className='flex items-center gap-2 flex-wrap'>
         {/* Added topics will show here */}
 
-        <Button size='icon' variant='outline'>
+        <Button size='icon' variant='outline' className='rounded-full'>
           <Icon name='RiAdd' size={16} />
         </Button>
       </div>

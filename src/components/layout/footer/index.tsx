@@ -61,11 +61,13 @@ const Footer = () => {
     },
   });
 
-  const currentYear = new Date().getFullYear();
-
+  
   function onSubmit(values: z.infer<typeof contactFormSchema>) {
     console.log(values.email);
   }
+
+  /* Get the current year dynamically */
+  const currentYear = new Date().getFullYear() 
 
   return (
     <Container className='px-5 pt-10 pb-14 border-t-1 border-secondary-lightGrey/15'>
@@ -105,7 +107,7 @@ const Footer = () => {
         <div className='pb-8 space-y-2'>
           <div className='py-2 flex items-center justify-center gap-4'>
             <Link
-              className='flex items-center hover:opacity-75'
+              className='opacity-75 hover:opacity-100'
               href='https://discord.gg/6fK9YuV8FV'
               target='_blank'
             >
@@ -113,7 +115,7 @@ const Footer = () => {
             </Link>
 
             <Link
-              className='flex items-center hover:opacity-75'
+              className='opacity-75 hover:opacity-100'
               href='https://github.com/the-monkeys'
               target='_blank'
             >
@@ -121,7 +123,7 @@ const Footer = () => {
             </Link>
 
             <Link
-              className='flex items-center hover:opacity-75'
+              className='opacity-75 hover:opacity-100'
               href='https://twitter.com/TheMonkeysLife'
               target='_blank'
             >

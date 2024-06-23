@@ -19,7 +19,7 @@ const ProfileDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+        <div className='hover:opacity-75 cursor-pointer'>
           <Icon name='RiUser' size={24} />
         </div>
       </DropdownMenuTrigger>
