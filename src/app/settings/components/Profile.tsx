@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { useSearchParams } from 'next/navigation';
+
 import Icon from '@/components/icon';
 import ProfileImage from '@/components/profileImage';
 import { Button } from '@/components/ui/button';

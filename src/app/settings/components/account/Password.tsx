@@ -34,7 +34,7 @@ const Password = () => {
 
   return (
     <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Reset Password</h4>
+      <h4 className='font-josefin_Sans text-lg'>Update Password</h4>
 
       <p className='font-jost text-sm opacity-75'>
         Update your password to restore access and protect your account.
@@ -43,15 +43,33 @@ const Password = () => {
       <Dialog>
         <DialogTrigger asChild>
           <Button size='lg' variant='secondary' className='mt-4'>
-            Reset Password
+            Update Password
           </Button>
         </DialogTrigger>
 
         <DialogContent>
-          <DialogTitle>Reset Password</DialogTitle>
+          <DialogTitle>Update Password</DialogTitle>
 
           <Form {...form}>
             <form className='space-y-2'>
+              <FormField
+                control={form.control}
+                name='password'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Current Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder='Enter current password'
+                        type='password'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name='password'
@@ -69,23 +87,6 @@ const Password = () => {
                   </FormItem>
                 )}
               />
-
-              <div>
-                <ul>
-                  <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                    Must be at least 6 characters long.
-                  </li>
-                  <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                    Must contain at least one lowercase letter.
-                  </li>
-                  <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                    Must contain at least one uppercase letter.
-                  </li>
-                  <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                    Must contain at least one number.
-                  </li>
-                </ul>
-              </div>
 
               <FormField
                 control={form.control}
@@ -105,8 +106,23 @@ const Password = () => {
                 )}
               />
 
+              <ul>
+                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                  Must be at least 6 characters long.
+                </li>
+                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                  Must contain at least one lowercase letter.
+                </li>
+                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                  Must contain at least one uppercase letter.
+                </li>
+                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                  Must contain at least one number.
+                </li>
+              </ul>
+
               <div className='pt-6 flex justify-end'>
-                <Button>Reset</Button>
+                <Button>Update Password</Button>
               </div>
             </form>
           </Form>

@@ -89,7 +89,7 @@ const ProfileCard: FC = () => {
         </p>
       )}
 
-      <div>
+      <div className='cursor-default'>
         {user?.address && (
           <p className='font-jost'>
             <span>

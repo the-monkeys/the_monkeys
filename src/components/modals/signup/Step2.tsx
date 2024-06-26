@@ -108,22 +108,20 @@ const Step2 = ({
             )}
           />
 
-          <div>
-            <ul>
-              <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                Must be at least 6 characters long.
-              </li>
-              <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                Must contain at least one lowercase letter.
-              </li>
-              <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                Must contain at least one uppercase letter.
-              </li>
-              <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                Must contain at least one number.
-              </li>
-            </ul>
-          </div>
+          <ul>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must be at least 6 characters long.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one lowercase letter.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one uppercase letter.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one number.
+            </li>
+          </ul>
 
           <div className='pt-6 flex gap-2 items-center'>
             <Button

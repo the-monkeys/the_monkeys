@@ -90,7 +90,7 @@ const ResetPasswordForm: React.FC = () => {
         toast({
           variant: 'error',
           title: 'Error',
-          description: err.message,
+          description: err.message || 'Failed to update the password',
         });
       });
   }
@@ -124,23 +124,6 @@ const ResetPasswordForm: React.FC = () => {
             )}
           />
 
-          <div>
-            <ul>
-              <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                Must be at least 6 characters long.
-              </li>
-              <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                Must contain at least one lowercase letter.
-              </li>
-              <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                Must contain at least one uppercase letter.
-              </li>
-              <li className='font-jost text-sm list-disc list-inside opacity-75'>
-                Must contain at least one number.
-              </li>
-            </ul>
-          </div>
-
           <FormField
             control={form.control}
             name='confirmPassword'
@@ -159,9 +142,24 @@ const ResetPasswordForm: React.FC = () => {
             )}
           />
 
-          <div className='pt-2'>
+          <ul>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must be at least 6 characters long.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one lowercase letter.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one uppercase letter.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one number.
+            </li>
+          </ul>
+
+          <div className='pt-4'>
             <Button variant='default' className='float-right' type='submit'>
-              Reset
+              Reset Password
             </Button>
           </div>
         </form>

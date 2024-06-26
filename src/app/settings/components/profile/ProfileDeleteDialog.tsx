@@ -1,4 +1,9 @@
+import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/use-toast';
+import { axiosInstance } from '@/services/fetcher';
+import { useSession } from 'next-auth/react';
 
 import Icon from '../../../../components/icon';
 import {
@@ -9,8 +14,38 @@ import {
 } from '../../../../components/ui/dialog';
 
 const ProfileDeleteDialog = () => {
+  const { data, status } = useSession();
+
+  const [open, setOpen] = useState<boolean>();
+
+  const onProfileDelete = () => {
+    axiosInstance
+      .delete(`/files/profile/${data?.user.user_name}/profile`, {
+        headers: {
+          Authorization: `Bearer ${data?.user.token}`,
+        },
+      })
+      .then((res) => {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your profile photo has been deleted successfully',
+        });
+
+        setOpen(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to delete profile photo',
+        });
+      });
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className='h-9 w-9 inline-flex items-center justify-center whitespace-nowrap font-jost transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-base rounded-full bg-alert-red text-secondary-white border-2 border-alert-red hover:text-alert-red hover:bg-opacity-0'>
         <Icon name='RiDeleteBin' />
       </DialogTrigger>
@@ -21,12 +56,17 @@ const ProfileDeleteDialog = () => {
         </DialogTitle>
 
         <p className='py-2 font-jost'>
-          Are you sure you want to delete your profile picture? It will be
+          Are you sure you want to delete your profile photo? It will be
           replaced with the default profile.
         </p>
 
-        <div className='flex justify-end'>
-          <Button type='button' variant='destructive' className='w-fit'>
+        <div>
+          <Button
+            type='button'
+            variant='destructive'
+            className='w-fit float-right'
+            onClick={onProfileDelete}
+          >
             Delete
           </Button>
         </div>
