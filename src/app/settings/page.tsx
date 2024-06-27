@@ -3,6 +3,7 @@ import PageHeading from '@/components/pageHeading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import Account from './components/Account';
+import Post from './components/Post';
 import Profile from './components/Profile';
 
 const SettingsPage = () => {
@@ -23,6 +24,12 @@ const SettingsPage = () => {
 
               <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
             </TabsTrigger>
+
+            <TabsTrigger value='post'>
+              <p className='font-josefin_Sans text-base sm:text-lg'>Post</p>
+
+              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
+            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -33,6 +40,10 @@ const SettingsPage = () => {
 
           <TabsContent className='w-full' value='account'>
             <Account />
+          </TabsContent>
+
+          <TabsContent className='w-full' value='post'>
+            <Post />
           </TabsContent>
         </div>
       </Tabs>

@@ -16,9 +16,7 @@ const UserPosts = () => {
           </TabsTrigger>
 
           <TabsTrigger value='collabs'>
-            <p className='font-josefin_Sans text-base sm:text-lg'>
-              Collaborations
-            </p>
+            <p className='font-josefin_Sans text-base sm:text-lg'>Collabs</p>
 
             <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
           </TabsTrigger>

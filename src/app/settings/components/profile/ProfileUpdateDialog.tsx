@@ -28,6 +28,7 @@ const ProfileUpdateDialog = () => {
     undefined
   );
   const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setUploadError('');
@@ -41,7 +42,7 @@ const ProfileUpdateDialog = () => {
     }
 
     if (acceptedFiles.length > 1) {
-      setUploadError('Error: Please upload a single file at a time');
+      setUploadError('Error: Please upload a single file at a time.');
       return;
     }
 
@@ -51,9 +52,10 @@ const ProfileUpdateDialog = () => {
     }
 
     setSelectedImage(acceptedFiles[0]);
+    console.log(acceptedFiles);
   }, []);
 
-  const onProfileUpload = () => {
+  const onProfileUpload = async () => {
     if (!selectedImage) {
       return;
     }
@@ -61,30 +63,44 @@ const ProfileUpdateDialog = () => {
     const formData = new FormData();
     formData.append('profile_pic', selectedImage);
 
-    axiosFileInstance
-      .post(`/files/profile/${data?.user.user_name}/profile`, formData, {
-        headers: {
-          Authorization: `Bearer ${data?.user.token}`,
-        },
-      })
-      .then((res) => {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Your profile photo has been updated successfully',
-        });
-        setSelectedImage(undefined);
+    setLoading(true);
 
-        setOpen(false);
-      })
-      .catch((err) => {
-        console.log(err);
+    try {
+      await axiosFileInstance.post(
+        `/files/profile/${data?.user.user_name}/profile`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${data?.user.token}`,
+          },
+        }
+      );
+
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your profile photo has been updated successfully',
+      });
+      setSelectedImage(undefined);
+
+      setOpen(false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
         toast({
           variant: 'error',
           title: 'Error',
-          description: err.message || 'Failed to update the profile photo',
+          description: err.message || 'Failed to update the profile photo.',
         });
-      });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occured.',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -105,16 +121,19 @@ const ProfileUpdateDialog = () => {
         <DialogTitle>Update Profile Photo</DialogTitle>
 
         {!selectedImage && (
-          <div>
-            <p className='pb-2 font-jost text-sm text-secondary-darkGrey dark:text-secondary-white'>
-              {uploadError}
-            </p>
+          <div className='space-y-2'>
+            {uploadError && (
+              <p className='font-jost font-medium text-sm text-alert-red'>
+                {uploadError}
+              </p>
+            )}
 
             <div
               {...getRootProps()}
               className={twMerge(
                 'h-44 sm:h-52 rounded-lg flex flex-col items-center justify-center gap-2 border-2 border-dashed border-secondary-lightGrey/25',
-                isDragActive && 'border-primary-monkeyOrange'
+                isDragActive &&
+                  'border-secondary-darkGrey dark:border-secondary-white'
               )}
             >
               <Icon name='RiUpload2' size={32} />
@@ -127,8 +146,8 @@ const ProfileUpdateDialog = () => {
 
               <p className='font-jost text-sm sm:text-base text-center'>
                 {isDragActive
-                  ? 'Drop the files here ...'
-                  : 'Drag n drop some files here, or click to select files'}
+                  ? 'Drop the file here ...'
+                  : 'Drop a file here, or click to select files'}
               </p>
 
               <p className='font-jost text-xs sm:text-sm text-center opacity-75'>
@@ -139,7 +158,7 @@ const ProfileUpdateDialog = () => {
         )}
 
         {selectedImage && (
-          <div className='overflow-hidden'>
+          <div className='overflow-hidden space-y-4'>
             <div className='mx-auto w-fit h-44 sm:h-52 rounded-md overflow-hidden'>
               <Image
                 src={URL.createObjectURL(selectedImage)}
@@ -150,30 +169,34 @@ const ProfileUpdateDialog = () => {
               />
             </div>
 
-            <p className='pt-2 font-jost truncate'>
-              {selectedImage.name}
-              <span className='block text-sm opacity-75'>
-                {(selectedImage.size / 1024).toFixed(1)} KB
-              </span>
-            </p>
+            <div className='flex justify-between items-center gap-2'>
+              <p className='flex-1 font-jost truncate'>
+                {selectedImage.name}
+                <span className='block text-sm opacity-75'>
+                  {(selectedImage.size / 1024).toFixed(1)} KB
+                </span>
+              </p>
 
-            <div className='mt-6 flex justify-end gap-2'>
               <Button
-                className='w-fit'
+                className='rounded-full'
                 variant='destructive'
+                size='icon'
                 type='button'
                 onClick={removeImage}
+                disabled={loading}
               >
-                Discard
+                <Icon name='RiClose' />
               </Button>
 
               <Button
-                className='w-fit'
+                className='rounded-full'
                 variant='secondary'
+                size='icon'
                 type='button'
                 onClick={onProfileUpload}
+                disabled={loading || status === 'unauthenticated'}
               >
-                Update
+                <Icon name='RiCheck' />
               </Button>
             </div>
           </div>

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-// Login Schema for validation
+// Login Schema For Validation
 export const loginSchema = z.object({
   email: z
     .string({ required_error: 'Email is required' })
@@ -19,7 +19,7 @@ const passwordCriteria = z
   .regex(/\d/, 'Password must contain at least one number')
   .regex(/[A-Z]/, 'Password must contain at least one uppercase letter');
 
-// Sign Up Schema for validation
+// Sign Up Schema For Validation
 export const signupSchema = z.object({
   first_name: z
     .string({ required_error: 'First Name is required' })
@@ -35,7 +35,7 @@ export const signupSchema = z.object({
   password: passwordCriteria,
 });
 
-// Forgot Passowrd Schema for validation
+// Forgot Passowrd Schema For Validation
 export const forgotPasswordSchema = z.object({
   email: z
     .string({ required_error: 'Email is required' })
@@ -53,7 +53,25 @@ export const resetPasswordSchema = z
     path: ['confirmPassword'],
   });
 
-// Registration Schema for validation
+// Update Password Schema For Validation
+export const updatePasswordSchema = z
+  .object({
+    currentPassword: z
+      .string({ required_error: 'Current Password is required' })
+      .min(1, 'Current Password is required'),
+    password: passwordCriteria,
+    confirmPassword: passwordCriteria,
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Passwords do not match',
+    path: ['confirmPassword'],
+  })
+  .refine((data) => data.password !== data.currentPassword, {
+    message: 'New password must be different from the current password',
+    path: ['password'],
+  });
+
+// Registration Schema For Validation
 export const registrationSchema = z.object({
   first_name: z
     .string()

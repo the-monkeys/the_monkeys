@@ -1,6 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+import { useState } from 'react';
+
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -18,19 +20,71 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { resetPasswordSchema } from '@/lib/schema/auth';
+import { toast } from '@/components/ui/use-toast';
+import { updatePasswordSchema } from '@/lib/schema/auth';
+import { axiosInstance } from '@/services/fetcher';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signOut, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const Password = () => {
-  const form = useForm<z.infer<typeof resetPasswordSchema>>({
-    resolver: zodResolver(resetPasswordSchema),
+  const { data } = useSession();
+  const router = useRouter();
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const form = useForm<z.infer<typeof updatePasswordSchema>>({
+    resolver: zodResolver(updatePasswordSchema),
     defaultValues: {
       password: '',
       confirmPassword: '',
     },
   });
+
+  const onSubmit = async (values: z.infer<typeof updatePasswordSchema>) => {
+    setLoading(true);
+
+    try {
+      await axiosInstance.put(
+        `/auth/settings/password/${data?.user.user_name}`,
+        {
+          current_password: values.currentPassword,
+          new_password: values.password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${data?.user.token}`,
+          },
+        }
+      );
+
+      signOut();
+      router.push('/');
+
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your password has been updated successfully.',
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to update your password.',
+        });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occured.',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className='flex flex-col items-start'>
@@ -51,10 +105,10 @@ const Password = () => {
           <DialogTitle>Update Password</DialogTitle>
 
           <Form {...form}>
-            <form className='space-y-2'>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
               <FormField
                 control={form.control}
-                name='password'
+                name='currentPassword'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Current Password</FormLabel>
@@ -121,8 +175,14 @@ const Password = () => {
                 </li>
               </ul>
 
-              <div className='pt-6 flex justify-end'>
-                <Button>Update Password</Button>
+              <div className='pt-6'>
+                <Button
+                  variant='secondary'
+                  className='float-right'
+                  disabled={loading}
+                >
+                  Update
+                </Button>
               </div>
             </form>
           </Form>

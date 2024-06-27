@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import ProfileImage from '@/components/profileImage';
+import { ProfilePhotoSkeleton } from '@/components/skeletons/profileSkeleton';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -50,11 +51,11 @@ const Profile = () => {
   }
 
   return (
-    <div className='mt-5 p-5'>
+    <div className='min-h-screen mt-5 p-5'>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='mx-auto space-y-10'
+          className='mx-auto space-y-8'
         >
           <Section sectionTitle='Basic'>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
@@ -63,8 +64,12 @@ const Profile = () => {
                   Profile Photo
                 </p>
 
-                <div className='rounded-full size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
-                  <ProfileImage username={data?.user?.user_name || ''} />
+                <div className='rounded-lg size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
+                  {data?.user ? (
+                    <ProfileImage username={data.user.user_name} />
+                  ) : (
+                    <ProfilePhotoSkeleton />
+                  )}
                 </div>
 
                 <div className='space-x-2'>
@@ -78,7 +83,7 @@ const Profile = () => {
                 control={form.control}
                 name='firstName'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       First Name
                     </FormLabel>
@@ -98,7 +103,7 @@ const Profile = () => {
                 control={form.control}
                 name='lastName'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Last Name
                     </FormLabel>
@@ -118,7 +123,7 @@ const Profile = () => {
                 control={form.control}
                 name='location'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Location
                     </FormLabel>
@@ -138,7 +143,7 @@ const Profile = () => {
                 control={form.control}
                 name='contactNumber'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Contact Number
                     </FormLabel>
@@ -158,7 +163,7 @@ const Profile = () => {
                 control={form.control}
                 name='bio'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Bio
                     </FormLabel>
@@ -178,7 +183,7 @@ const Profile = () => {
                 control={form.control}
                 name='dateOfBirth'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Birth Date
                     </FormLabel>
@@ -198,7 +203,7 @@ const Profile = () => {
                 control={form.control}
                 name='twitterProfile'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Twitter
                     </FormLabel>
@@ -219,7 +224,7 @@ const Profile = () => {
                 control={form.control}
                 name='linkedin'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       LinkedIn
                     </FormLabel>
@@ -240,7 +245,7 @@ const Profile = () => {
                 control={form.control}
                 name='instagram'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Instagram
                     </FormLabel>
@@ -261,7 +266,7 @@ const Profile = () => {
                 control={form.control}
                 name='github'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       GitHub
                     </FormLabel>
@@ -280,21 +285,8 @@ const Profile = () => {
             </div>
           </Section>
 
-          <Section sectionTitle='Topics'>
-            <div>
-              <Button
-                type='button'
-                size='icon'
-                variant='outline'
-                className='rounded-full'
-              >
-                <Icon name='RiAdd' size={16} />
-              </Button>
-            </div>
-          </Section>
-
-          <div className='pt-8 flex justify-center items-center'>
-            <Button size='lg' type='submit'>
+          <div className='pt-4 flex justify-center'>
+            <Button variant='secondary' size='lg' type='submit'>
               Save Changes
             </Button>
           </div>
