@@ -31,7 +31,7 @@ const ProfileDeleteDialog = () => {
         }
       );
 
-      if (response.status === 200) {
+      if (response.status === 202) {
         toast({
           variant: 'success',
           title: 'Success',
