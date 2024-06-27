@@ -1,10 +1,23 @@
+import type { Metadata, ResolvingMetadata } from 'next';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import Blogs from './components/Blogs';
 import Collabs from './components/Collabs';
 import Drafts from './components/Drafts';
 
-const UserPosts = () => {
+export async function generateMetadata(
+  { params }: { params: { username: string } },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const username = params.username;
+
+  return {
+    title: `${username} / Monkeys`,
+  };
+}
+
+export default function () {
   return (
     <Tabs defaultValue='blogs' className='space-y-2'>
       <div className='flex justify-center md:justify-end'>
@@ -12,19 +25,19 @@ const UserPosts = () => {
           <TabsTrigger value='blogs'>
             <p className='font-josefin_Sans text-base sm:text-lg'>Blogs</p>
 
-            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
+            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
           </TabsTrigger>
 
           <TabsTrigger value='collabs'>
             <p className='font-josefin_Sans text-base sm:text-lg'>Collabs</p>
 
-            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
+            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
           </TabsTrigger>
 
           <TabsTrigger value='drafts'>
             <p className='font-josefin_Sans text-base sm:text-lg'>Drafts</p>
 
-            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
+            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
           </TabsTrigger>
         </TabsList>
       </div>
@@ -44,6 +57,4 @@ const UserPosts = () => {
       </div>
     </Tabs>
   );
-};
-
-export default UserPosts;
+}

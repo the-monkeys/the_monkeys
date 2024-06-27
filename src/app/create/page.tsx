@@ -26,7 +26,7 @@ type BlockChange = {
 
 export type BlockChanges = Map<string, BlockChange>;
 
-function App() {
+export default function () {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData>(initial_data);
   const [blockChanges, setBlockChanges] = useState<BlockChanges>(new Map());
@@ -65,5 +65,3 @@ function App() {
     </>
   );
 }
-
-export default App;

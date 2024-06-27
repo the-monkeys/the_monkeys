@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -28,20 +28,25 @@ const Danger = () => {
     setLoading(true);
 
     try {
-      await axiosInstance.delete(`/user/${data?.user.user_name}`, {
-        headers: {
-          Authorization: `Bearer ${data?.user.token}`,
-        },
-      });
+      const response = await axiosInstance.delete(
+        `/user/${data?.user.user_name}`,
+        {
+          headers: {
+            Authorization: `Bearer ${data?.user.token}`,
+          },
+        }
+      );
 
-      signOut();
-      router.push('/');
+      if (response.status === 200) {
+        signOut();
+        router.push('/');
 
-      toast({
-        variant: 'success',
-        title: 'Success',
-        description: 'Your account has been deleted successfully.',
-      });
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your account has been deleted successfully.',
+        });
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

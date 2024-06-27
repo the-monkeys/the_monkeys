@@ -13,6 +13,8 @@ const buttonVariants = cva(
           'bg-primary-monkeyOrange text-secondary-white border-2 border-primary-monkeyOrange hover:text-primary-monkeyOrange hover:bg-opacity-0',
         destructive:
           'bg-alert-red text-secondary-white border-2 border-alert-red hover:text-alert-red hover:bg-opacity-0',
+        constructive:
+          'bg-alert-green text-secondary-white border-2 border-alert-green hover:text-alert-green hover:bg-opacity-0',
         outline:
           'border-2 border-secondary-darkGrey dark:border-secondary-white hover:bg-secondary-darkGrey dark:hover:bg-secondary-white hover:text-secondary-white dark:hover:text-secondary-darkGrey',
         secondary:

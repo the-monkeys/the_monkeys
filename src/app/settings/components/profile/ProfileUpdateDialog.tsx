@@ -4,21 +4,20 @@ import { useCallback, useState } from 'react';
 
 import Image from 'next/image';
 
+import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
-import { axiosFileInstance } from '@/services/fetcher';
-import { useSession } from 'next-auth/react';
-import { useDropzone } from 'react-dropzone';
-import { twMerge } from 'tailwind-merge';
-
-import Icon from '../../../../components/icon';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from '../../../../components/ui/dialog';
-import { Input } from '../../../../components/ui/input';
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
+import { axiosFileInstance } from '@/services/fetcher';
+import { useSession } from 'next-auth/react';
+import { useDropzone } from 'react-dropzone';
+import { twMerge } from 'tailwind-merge';
 
 const ProfileUpdateDialog = () => {
   const { data, status } = useSession();
@@ -52,7 +51,6 @@ const ProfileUpdateDialog = () => {
     }
 
     setSelectedImage(acceptedFiles[0]);
-    console.log(acceptedFiles);
   }, []);
 
   const onProfileUpload = async () => {
@@ -66,7 +64,7 @@ const ProfileUpdateDialog = () => {
     setLoading(true);
 
     try {
-      await axiosFileInstance.post(
+      const response = await axiosFileInstance.post(
         `/files/profile/${data?.user.user_name}/profile`,
         formData,
         {
@@ -76,14 +74,16 @@ const ProfileUpdateDialog = () => {
         }
       );
 
-      toast({
-        variant: 'success',
-        title: 'Success',
-        description: 'Your profile photo has been updated successfully',
-      });
-      setSelectedImage(undefined);
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your profile photo has been updated successfully.',
+        });
+        setSelectedImage(undefined);
 
-      setOpen(false);
+        setOpen(false);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
@@ -190,7 +190,7 @@ const ProfileUpdateDialog = () => {
 
               <Button
                 className='rounded-full'
-                variant='secondary'
+                variant='constructive'
                 size='icon'
                 type='button'
                 onClick={onProfileUpload}

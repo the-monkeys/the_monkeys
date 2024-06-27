@@ -14,7 +14,7 @@ const Post = () => {
 
           <p className='font-jost text-sm opacity-75'>
             You can choose and add topics from different categories to your
-            profile as per your interests.
+            profile according to your interests.
           </p>
 
           <div className='mt-4'>

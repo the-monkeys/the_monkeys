@@ -1,15 +1,14 @@
 import PageHeading from '@/components/pageHeading';
 
 import PolicySection from '../components/PolicySection';
+import PolicyUpdate from '../components/PolicyUpdate';
 
 const Privacy = () => {
   return (
     <div className='px-5'>
       <PageHeading heading='Privacy Policy' />
 
-      <p className='py-4 font-jost text-right text-sm'>
-        Effective date: 06/15/2024
-      </p>
+      <PolicyUpdate />
 
       <div className='mt-10 space-y-6'>
         <PolicySection title='Introduction'>

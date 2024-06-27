@@ -82,7 +82,7 @@ const ResetPasswordForm: React.FC = () => {
         toast({
           variant: 'success',
           title: 'Success',
-          description: 'Your password has been updated successfully',
+          description: 'Your password has been updated successfully.',
         });
         navigate.push('/api/auth/signin');
       })
@@ -90,7 +90,7 @@ const ResetPasswordForm: React.FC = () => {
         toast({
           variant: 'error',
           title: 'Error',
-          description: err.message || 'Failed to update the password',
+          description: err.message || 'Failed to update the password.',
         });
       });
   }

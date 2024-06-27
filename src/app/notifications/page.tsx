@@ -13,19 +13,19 @@ const NotificationsPage = () => {
             <TabsTrigger value='all'>
               <p className='font-josefin_Sans text-base sm:text-lg'>All</p>
 
-              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
-            </TabsTrigger>
-
-            <TabsTrigger className='text-xl' value='post'>
-              <p className='font-josefin_Sans text-base sm:text-lg'>Post</p>
-
-              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
+              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
             </TabsTrigger>
 
             <TabsTrigger className='text-xl' value='account'>
               <p className='font-josefin_Sans text-base sm:text-lg'>Account</p>
 
-              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-hover:w-full group-data-[state=active]:w-full transition-all rounded-full' />
+              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
+            </TabsTrigger>
+
+            <TabsTrigger className='text-xl' value='post'>
+              <p className='font-josefin_Sans text-base sm:text-lg'>Post</p>
+
+              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
             </TabsTrigger>
           </TabsList>
         </div>

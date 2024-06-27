@@ -46,7 +46,7 @@ const Password = () => {
     setLoading(true);
 
     try {
-      await axiosInstance.put(
+      const response = await axiosInstance.put(
         `/auth/settings/password/${data?.user.user_name}`,
         {
           current_password: values.currentPassword,
@@ -59,14 +59,16 @@ const Password = () => {
         }
       );
 
-      signOut();
-      router.push('/');
+      if (response.status === 200) {
+        signOut();
+        router.push('/');
 
-      toast({
-        variant: 'success',
-        title: 'Success',
-        description: 'Your password has been updated successfully.',
-      });
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your password has been updated successfully.',
+        });
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

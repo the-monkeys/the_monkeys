@@ -1,17 +1,16 @@
 import { useState } from 'react';
 
+import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
-import { axiosInstance } from '@/services/fetcher';
-import { useSession } from 'next-auth/react';
-
-import Icon from '../../../../components/icon';
 import {
   Dialog,
   DialogContent,
   DialogTitle,
   DialogTrigger,
-} from '../../../../components/ui/dialog';
+} from '@/components/ui/dialog';
+import { toast } from '@/components/ui/use-toast';
+import { axiosInstance } from '@/services/fetcher';
+import { useSession } from 'next-auth/react';
 
 const ProfileDeleteDialog = () => {
   const { data } = useSession();
@@ -23,7 +22,7 @@ const ProfileDeleteDialog = () => {
     setLoading(true);
 
     try {
-      await axiosInstance.delete(
+      const response = await axiosInstance.delete(
         `/files/profile/${data?.user.user_name}/profile`,
         {
           headers: {
@@ -32,19 +31,21 @@ const ProfileDeleteDialog = () => {
         }
       );
 
-      toast({
-        variant: 'success',
-        title: 'Success',
-        description: 'Your profile photo has been deleted successfully',
-      });
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your profile photo has been deleted successfully',
+        });
 
-      setOpen(false);
+        setOpen(false);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
           variant: 'error',
           title: 'Error',
-          description: err.message || 'Failed to delete profile photo',
+          description: err.message || 'Failed to delete profile photo.',
         });
       } else {
         toast({

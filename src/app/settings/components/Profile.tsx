@@ -285,7 +285,7 @@ const Profile = () => {
             </div>
           </Section>
 
-          <div className='pt-4 flex justify-center'>
+          <div className='pt-4 flex justify-end'>
             <Button variant='secondary' size='lg' type='submit'>
               Save Changes
             </Button>
