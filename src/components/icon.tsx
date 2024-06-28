@@ -21,6 +21,8 @@ export type IconName =
   | 'RiArrowRight'
   | 'RiArrowLeft'
   | 'RiMore'
+  | 'RiLoader'
+  | 'RiLoader4'
   | 'RiRadioButton'
   | 'RiClose'
   | 'RiAdd'
