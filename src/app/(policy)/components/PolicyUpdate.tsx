@@ -1,6 +1,6 @@
 const PolicyUpdate = () => {
   return (
-    <p className='py-4 font-jost text-right text-sm'>
+    <p className='py-2 font-jost text-sm text-right cursor-default'>
       Effective date: 06/15/2024
     </p>
   );

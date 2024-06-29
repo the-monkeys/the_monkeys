@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,8 +17,6 @@ import { signOut, useSession } from 'next-auth/react';
 
 const Danger = () => {
   const { data } = useSession();
-
-  const router = useRouter();
 
   const [deleteMessage, setDeleteMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,7 +36,6 @@ const Danger = () => {
 
       if (response.status === 200) {
         signOut();
-        router.push('/');
 
         toast({
           variant: 'success',

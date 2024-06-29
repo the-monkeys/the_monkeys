@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,7 +29,6 @@ import { z } from 'zod';
 
 const Password = () => {
   const { data } = useSession();
-  const router = useRouter();
 
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -62,7 +59,6 @@ const Password = () => {
 
       if (response.status === 200) {
         signOut();
-        router.push('/');
 
         toast({
           variant: 'success',

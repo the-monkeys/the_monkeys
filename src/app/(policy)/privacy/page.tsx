@@ -1,11 +1,26 @@
+import { Metadata, ResolvingMetadata } from 'next';
+
+import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
 
 import PolicySection from '../components/PolicySection';
 import PolicyUpdate from '../components/PolicyUpdate';
 
-const Privacy = () => {
+export async function generateMetadata(
+  { params }: { params: { username: string } },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const username = params.username;
+
+  return {
+    title: `Monkeys - Privacy Policy`,
+    description: 'Understand our privacy policy at Monkeys.',
+  };
+}
+
+const PrivacyPage = () => {
   return (
-    <div className='px-5'>
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full'>
       <PageHeading heading='Privacy Policy' />
 
       <PolicyUpdate />
@@ -131,12 +146,15 @@ const Privacy = () => {
           <p>
             If you have any questions about these policies, please contact us:
             <br />
-            By mail: mail.themonkeys.life@gmail.com
+            By mail:{' '}
+            <span className='text-secondary-darkGrey dark:text-secondary-white'>
+              mail.themonkeys.life@gmail.com
+            </span>
           </p>
         </PolicySection>
       </div>
-    </div>
+    </Container>
   );
 };
 
-export default Privacy;
+export default PrivacyPage;

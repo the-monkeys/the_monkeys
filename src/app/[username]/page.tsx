@@ -13,11 +13,12 @@ export async function generateMetadata(
   const username = params.username;
 
   return {
-    title: `${username} / Monkeys`,
+    title: `Monkeys - @${username}`,
+    description: 'Manage and view your profile on Monkeys.',
   };
 }
 
-export default function () {
+const ProfilePage = () => {
   return (
     <Tabs defaultValue='blogs' className='space-y-2'>
       <div className='flex justify-center md:justify-end'>
@@ -57,4 +58,6 @@ export default function () {
       </div>
     </Tabs>
   );
-}
+};
+
+export default ProfilePage;
