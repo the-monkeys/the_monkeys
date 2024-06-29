@@ -1,10 +1,14 @@
 import { Skeleton } from '../ui/skeleton';
 
+export const ProfilePhotoSkeleton = () => {
+  return <Skeleton className='size-32 rounded-lg' />;
+};
+
 export const ProfileCardSkeleton = () => {
   return (
     <div>
       <div className='mb-2 flex flex-wrap items-end gap-2'>
-        <Skeleton className='size-32 rounded-full' />
+        <ProfilePhotoSkeleton />
 
         <div className='py-1 space-y-2'>
           <Skeleton className='h-5 w-44 rounded-full' />

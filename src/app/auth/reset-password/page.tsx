@@ -4,7 +4,7 @@ import PageHeading from '@/components/pageHeading';
 
 import ResetPasswordForm from './components/ResetPasswordForm';
 
-const page = () => {
+const ResetPasswordPage = () => {
   return (
     <>
       <PageHeading heading='Reset Password' />
@@ -14,4 +14,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ResetPasswordPage;

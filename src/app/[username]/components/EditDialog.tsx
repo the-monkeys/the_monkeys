@@ -52,7 +52,7 @@ const EditDialog = () => {
         <DialogTitle>Edit Details</DialogTitle>
 
         <Form {...form}>
-          <form className='space-y-2'>
+          <form className='space-y-4'>
             <FormField
               control={form.control}
               name='firstName'
@@ -133,8 +133,8 @@ const EditDialog = () => {
               )}
             />
 
-            <div className='pt-6 flex justify-end'>
-              <Button>Save Changes</Button>
+            <div className='pt-4'>
+              <Button className='float-right'>Update Details</Button>
             </div>
           </form>
         </Form>

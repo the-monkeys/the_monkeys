@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
 
-const title = 'Monkeys | Auth';
+const title = 'Monkeys - Authentication';
 const description = 'We are The Monkeys! A blogging and educational platform.';
 
 export const metadata: Metadata = {
