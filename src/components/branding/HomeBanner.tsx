@@ -13,16 +13,16 @@ const HomeBanner = () => {
       </div>
 
       <div className='absolute bottom-0 left-0 space-y-2'>
-        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm'>
+        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm cursor-default'>
           Seamless <span className='text-primary-monkeyOrange'>Creation</span>
         </h1>
 
-        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm'>
+        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm cursor-default'>
           Effortless{' '}
           <span className='text-primary-monkeyOrange'>Collaboration</span>
         </h1>
 
-        <p className='pt-6 font-jost text-sm sm:text-base md:text-lg'>
+        <p className='pt-6 font-jost text-sm sm:text-base md:text-lg cursor-default'>
           Unleash Your Creativity and Influence: Blog Together, Write Better
         </p>
 
