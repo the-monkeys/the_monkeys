@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -183,6 +184,7 @@ const Password = () => {
                   className='float-right'
                   disabled={loading}
                 >
+                  {loading && <Loader />}
                   Update
                 </Button>
               </div>

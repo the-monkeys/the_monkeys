@@ -25,7 +25,7 @@ const config = {
     animation: {
       shake: 'shake 600ms ease-in-out',
       pulse: 'pulse 1000ms ease-in-out infinite',
-      rotate: 'rotate 1000ms linear infinite',
+      rotate: 'rotate 800ms linear infinite',
     },
     extend: {
       colors: {

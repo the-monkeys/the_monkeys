@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react';
 import Image from 'next/image';
 
 import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -158,7 +159,7 @@ const ProfileUpdateDialog = () => {
         )}
 
         {selectedImage && (
-          <div className='overflow-hidden space-y-4'>
+          <div className='overflow-hidden'>
             <div className='mx-auto w-fit h-44 sm:h-52 rounded-md overflow-hidden'>
               <Image
                 src={URL.createObjectURL(selectedImage)}
@@ -169,34 +170,31 @@ const ProfileUpdateDialog = () => {
               />
             </div>
 
-            <div className='flex justify-between items-center gap-2'>
-              <p className='flex-1 font-jost truncate'>
-                {selectedImage.name}
-                <span className='block text-sm opacity-75'>
-                  {(selectedImage.size / 1024).toFixed(1)} KB
-                </span>
-              </p>
+            <p className='font-jost truncate cursor-default'>
+              {selectedImage.name}
+              <span className='block text-sm opacity-75'>
+                {(selectedImage.size / 1024).toFixed(1)} KB
+              </span>
+            </p>
 
+            <div className='mt-4 flex justify-end gap-2'>
               <Button
-                className='rounded-full'
                 variant='destructive'
-                size='icon'
                 type='button'
                 onClick={removeImage}
                 disabled={loading}
               >
-                <Icon name='RiClose' />
+                Discard
               </Button>
 
               <Button
-                className='rounded-full'
-                variant='constructive'
-                size='icon'
+                variant='secondary'
                 type='button'
                 onClick={onProfileUpload}
                 disabled={loading || status === 'unauthenticated'}
               >
-                <Icon name='RiCheck' />
+                {loading && <Loader />}
+                Update
               </Button>
             </div>
           </div>

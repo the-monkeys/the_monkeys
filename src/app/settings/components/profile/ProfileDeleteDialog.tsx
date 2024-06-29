@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -83,6 +84,7 @@ const ProfileDeleteDialog = () => {
             onClick={onProfileDelete}
             disabled={loading}
           >
+            {loading && <Loader />}
             Yes, Delete
           </Button>
         </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -112,7 +113,7 @@ const Danger = () => {
               onClick={onAccountDelete}
               disabled={deleteMessage !== 'delete my account' || loading}
             >
-              I Agree, Delete
+              {loading && <Loader />}I Agree, Delete
             </Button>
           </div>
         </DialogContent>

@@ -2,7 +2,7 @@ import { twMerge } from 'tailwind-merge';
 
 import Icon from './icon';
 
-export const Loader1 = ({
+export const Loader = ({
   size = 20,
   className,
 }: {
@@ -10,22 +10,13 @@ export const Loader1 = ({
   className?: string;
 }) => {
   return (
-    <div className={twMerge(className, 'p-2')}>
-      <Icon name='RiLoader4' size={size} className='animate-rotate' />
-    </div>
-  );
-};
-
-export const Loader2 = ({
-  size = 20,
-  className,
-}: {
-  size?: number;
-  className?: string;
-}) => {
-  return (
-    <div className={twMerge(className, 'p-2')}>
-      <Icon name='RiLoader' size={size} className='animate-rotate' />
+    <div
+      className={twMerge(
+        className,
+        'p-1 w-fit flex justify-center items-center'
+      )}
+    >
+      <Icon name='RiLoader5' size={size} className='animate-rotate' />
     </div>
   );
 };
