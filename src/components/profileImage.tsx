@@ -2,7 +2,7 @@ import React from 'react';
 
 import Image from 'next/image';
 
-import useProfileImage from '@/hooks/useUserProfile';
+import useProfileImage from '@/hooks/useProfileImage';
 
 import { Skeleton } from './ui/skeleton';
 
@@ -11,7 +11,14 @@ export const ProfileImage = ({ username }: { username: string }) => {
 
   if (isLoading) return <Skeleton className='size-32' />;
 
-  if (isError) return <p className='font-jost text-sm'>Not Available</p>;
+  if (isError)
+    return (
+      <p className='font-jost text-sm text-center'>
+        Not
+        <br />
+        Available
+      </p>
+    );
 
   return (
     <Image

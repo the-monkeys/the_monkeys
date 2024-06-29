@@ -25,6 +25,7 @@ const config = {
     animation: {
       shake: 'shake 600ms ease-in-out',
       pulse: 'pulse 1000ms ease-in-out infinite',
+      rotate: 'rotate 800ms linear infinite',
     },
     extend: {
       colors: {
@@ -73,6 +74,14 @@ const config = {
           },
           '100%': {
             transform: 'rotate(0)',
+          },
+        },
+        rotate: {
+          '0%': {
+            transform: 'rotate(0deg)',
+          },
+          '100%': {
+            transform: 'rotate(360deg)',
           },
         },
         'accordion-down': {

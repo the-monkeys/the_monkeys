@@ -8,6 +8,13 @@ export const axiosInstance = axios.create({
   },
 });
 
+export const axiosFileInstance = axios.create({
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'multipart/form-data',
+  },
+});
+
 const fetcher = (url: string) =>
   axiosInstance.get(url).then((response) => response.data);
 

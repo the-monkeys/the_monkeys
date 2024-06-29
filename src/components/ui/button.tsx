@@ -13,10 +13,12 @@ const buttonVariants = cva(
           'bg-primary-monkeyOrange text-secondary-white border-2 border-primary-monkeyOrange hover:text-primary-monkeyOrange hover:bg-opacity-0',
         destructive:
           'bg-alert-red text-secondary-white border-2 border-alert-red hover:text-alert-red hover:bg-opacity-0',
+        constructive:
+          'bg-alert-green text-secondary-white border-2 border-alert-green hover:text-alert-green hover:bg-opacity-0',
         outline:
           'border-2 border-secondary-darkGrey dark:border-secondary-white hover:bg-secondary-darkGrey dark:hover:bg-secondary-white hover:text-secondary-white dark:hover:text-secondary-darkGrey',
         secondary:
-          'bg-secondary-darkGrey text-secondary-white dark:bg-secondary-white dark:text-secondary-darkGrey border-2 border-secondary-darkGrey dark:border-secondary-white hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0',
+          'bg-primary-monkeyBlack text-secondary-white dark:bg-primary-monkeyWhite dark:text-secondary-darkGrey border-2 border-primary-monkeyBlack dark:border-primary-monkeyWhite hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0',
         ghost:
           'hover:bg-secondary-darkGrey hover:text-secondary-white dark:hover:bg-secondary-white dark:hover:text-secondary-darkGrey',
         link: 'underline-offset-4 hover:underline',
