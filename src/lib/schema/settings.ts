@@ -3,12 +3,13 @@ import { z } from 'zod';
 export const updateProfileSchema = z.object({
   first_name: z.string().min(1, 'First name is required').max(50),
   last_name: z.string().min(1, 'Last name is required').max(50),
-  address: z.string().max(100),
+  address: z.string().max(100).optional(),
   contact_number: z
     .string()
     .regex(/^[0-9]+$/, 'Contact number must be digits only')
     .min(10)
-    .max(15),
+    .max(15)
+    .optional(),
   bio: z.string().max(500).optional(),
   date_of_birth: z.string().optional(),
   twitter: z.string().max(50).optional(),

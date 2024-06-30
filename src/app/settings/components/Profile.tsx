@@ -59,7 +59,18 @@ const Profile = () => {
     axiosInstance
       .put(
         `/user/${data?.user.user_name}`,
-        { values },
+        {
+          first_name: values.first_name,
+          last_name: values.last_name,
+          address: values.address,
+          contact_number: values.contact_number,
+          bio: values.bio,
+          date_of_birth: values.date_of_birth,
+          twitter: values.twitter,
+          linkedin: values.linkedin,
+          instagram: values.instagram,
+          github: values.github,
+        },
         {
           headers: {
             Authorization: `Bearer ${data?.user.token}`,
