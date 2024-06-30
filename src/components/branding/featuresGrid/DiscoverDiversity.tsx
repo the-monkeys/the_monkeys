@@ -6,10 +6,10 @@ import { GridContainer, GridHeading, GridSubHeading } from './gridLayout';
 
 const DiscoverDiversity = () => {
   return (
-    <GridContainer className='group'>
+    <GridContainer className='group hover:border-primary-monkeyOrange/25'>
       <Icon
         name='RiCompass3'
-        className='mb-2 text-secondary-darkGrey dark:text-secondary-white'
+        className='mb-2 text-secondary-darkGrey dark:text-secondary-white group-hover:text-primary-monkeyOrange'
         size={24}
       />
 
@@ -27,11 +27,11 @@ const DiscoverDiversity = () => {
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
           <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
-            Marketing
+            Markets
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
           <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
-            Nature
+            Business
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
@@ -39,7 +39,7 @@ const DiscoverDiversity = () => {
 
         <div className='group-hover:-mt-12 mr-4 w-fit space-y-2 transition-all hidden sm:block'>
           <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
-            Health
+            Crypto
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
           <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
@@ -47,7 +47,7 @@ const DiscoverDiversity = () => {
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
           <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
-            Science
+            Business
           </div>
           <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
         </div>

@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 
+import Icon from '../icon';
 import { Button } from '../ui/button';
 import BackgroundBranding from './BackgroundBranding';
 
@@ -28,12 +29,18 @@ const HomeBanner = () => {
 
         <Button
           size='lg'
-          className='px-4 sm:px-8 hover:shadow-lg hover:shadow-primary-monkeyOrange/50'
+          className='group px-4 sm:px-6 hover:shadow-lg hover:shadow-primary-monkeyOrange/50 rounded-full'
           onClick={() => {
             router.push('api/auth/signin');
           }}
         >
-          <p className='font-jost'>Join Monkeys</p>
+          <Icon
+            name='RiPencil'
+            className='mr-2 group-hover:animate-shake'
+            type='Fill'
+          />
+
+          <p className='font-jost'>Start Writing</p>
         </Button>
       </div>
     </div>

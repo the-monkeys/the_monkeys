@@ -28,7 +28,8 @@ const playfair_Display = Playfair_Display({
   display: 'swap',
 });
 
-const title = 'Monkeys';
+const title =
+  'Monkeys - Unleash Your Creativity and Influence: Blog Together, Write Better';
 const description = 'We are The Monkeys! A blogging and educational platform.';
 
 export const metadata: Metadata = {

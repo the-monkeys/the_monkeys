@@ -4,10 +4,10 @@ import { GridContainer, GridHeading, GridSubHeading } from './gridLayout';
 
 const VersionControl = () => {
   return (
-    <GridContainer className='flex flex-col'>
+    <GridContainer className='flex flex-col hover:border-primary-monkeyOrange/25'>
       <Icon
         name='RiArchiveStack'
-        className='mb-2 self-end text-secondary-darkGrey dark:text-secondary-white'
+        className='mb-2 self-end text-secondary-darkGrey dark:text-secondary-white group-hover:text-primary-monkeyOrange'
         size={24}
       />
 
@@ -35,12 +35,14 @@ const VersionControl = () => {
           <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10 group-hover:opacity-100 transition-all' />
 
           <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10' />
           <div className='mb-1 h-2 sm:h-3 w-full group-hover:w-0 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10 transition-all' />
           <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10 group-hover:opacity-100 transition-all' />
           <div className='mb-3 h-2 sm:h-3 w-1/4 group-hover:w-3/5 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10 group-hover:opacity-100 transition-all' />
 
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10' />
           <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10 group-hover:opacity-100 transition-all' />
-          <div className='mb-1 h-2 sm:h-3 w-1/2 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10' />
+          <div className='mb-3 h-2 sm:h-3 w-4/5 group-hover:w-1/4 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10 group-hover:opacity-100 transition-all' />
         </div>
 
         <div className='w-full px-4 py-3 hover:pb-6 border-t-2 border-secondary-lightGrey/25 hover:border-secondary-lightGrey/75 rounded-t-2xl transition-all'>
@@ -67,7 +69,7 @@ const VersionControl = () => {
           </div>
         </div>
 
-        <div className='w-full px-4 py-3 hover:pb-6 border-t-2 border-secondary-lightGrey/25 hover:border-secondary-lightGrey/75 rounded-t-2xl transition-all'>
+        <div className='w-full px-4 py-3 hover:pb-6 border-t-2 border-secondary-lightGrey/25 hover:border-secondary-lightGrey/75 rounded-t-2xl transition-all hidden sm:block'>
           <p className='font-josefin_Sans text-sm sm:text-base cursor-default'>
             Blog Update: v2.0
           </p>
