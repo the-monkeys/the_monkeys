@@ -20,12 +20,12 @@ export async function generateMetadata(
 
 const PrivacyPage = () => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full'>
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-4'>
       <PageHeading heading='Privacy Policy' />
 
       <PolicyUpdate />
 
-      <div className='mt-10 space-y-6'>
+      <div className='space-y-8'>
         <PolicySection title='Introduction'>
           <p>
             Welcome to The Monkeys! We are dedicated to fostering a secure and

@@ -20,12 +20,12 @@ export async function generateMetadata(
 
 const CookiePage = () => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full'>
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-4'>
       <PageHeading heading='Cookie Policy' />
 
       <PolicyUpdate />
 
-      <div className='mt-10 space-y-6'>
+      <div className='space-y-8'>
         <PolicySection title='Introduction'>
           <p>
             Welcome to The Monkeys! We are dedicated to fostering a secure and
@@ -51,21 +51,21 @@ const CookiePage = () => {
         <PolicySection title='How do we use cookies?'>
           <p>We use cookies for the following purposes:</p>
 
-          <ul className='list-inside space-y-1'>
-            <li className='ml-8 list-disc'>
+          <ul className='list-inside space-y-2'>
+            <li className='ml-4 list-disc'>
               Essential Cookies: These cookies are necessary for the website to
               function properly. They enable basic functions like page
               navigation and access to secure areas of the website. Our website
               cannot function properly without these cookies.
             </li>
 
-            <li className='ml-8 list-disc'>
+            <li className='ml-4 list-disc'>
               Analytics Cookies: These cookies allow us to analyze how visitors
               use our website, so we can measure and improve the performance of
               our site.
             </li>
 
-            <li className='ml-8 list-disc'>
+            <li className='ml-4 list-disc'>
               Advertising Cookies: These cookies are used to personalize the
               advertising content that you see on our website. We may use
               third-party advertising companies to serve ads when you visit our

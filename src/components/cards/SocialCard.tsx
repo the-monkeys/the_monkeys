@@ -14,7 +14,7 @@ const SocialCard = ({
   link: string;
 }) => {
   return (
-    <div className='w-full flex items-center border-1 border-secondary-lightGrey/25 p-4 rounded-lg space-x-4 hover:bg-secondary-lightGrey/15 cursor-default'>
+    <div className='w-full flex items-center border-1 border-secondary-lightGrey/25 p-4 rounded-lg space-x-4 hover:bg-secondary-lightGrey/10 cursor-default'>
       <div>
         <Icon name={icon} type='Fill' size={24} />
       </div>
