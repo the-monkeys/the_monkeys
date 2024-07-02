@@ -21,7 +21,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { updatePasswordSchema } from '@/lib/schema/auth';
-import { axiosInstance } from '@/services/fetcher';
+import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signOut, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -49,11 +49,6 @@ const Password = () => {
         {
           current_password: values.currentPassword,
           new_password: values.password,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${data?.user.token}`,
-          },
         }
       );
 

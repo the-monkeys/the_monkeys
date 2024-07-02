@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import { axiosFileInstance } from '@/services/fetcher';
+import axiosFileInstance from '@/services/api/axiosFileInstance';
 import { useSession } from 'next-auth/react';
 import { useDropzone } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
