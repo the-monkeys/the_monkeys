@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { updateEmailSchema } from '@/lib/schema/settings';
-import { axiosInstance } from '@/services/fetcher';
+import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -36,11 +36,6 @@ const Email = () => {
         `/auth/req-email-verification`,
         {
           email: data?.user?.email,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${data?.user.token}`,
-          },
         }
       );
 

@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
-import { axiosInstance } from '@/services/fetcher';
+import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 
 const ProfileDeleteDialog = () => {
