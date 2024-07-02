@@ -5,6 +5,8 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import ProfileImage from '@/components/profileImage';
+import { ProfilePhotoSkeleton } from '@/components/skeletons/profileSkeleton';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -25,6 +27,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Section from './Section';
+import ProfileDeleteDialog from './profile/ProfileDeleteDialog';
+import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
 
 const Profile = () => {
   const { data } = useSession();
@@ -74,29 +78,31 @@ const Profile = () => {
   }
 
   return (
-    <div className='mt-5 p-5'>
+    <div className='min-h-screen mt-5 p-5'>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='mx-auto space-y-10'
+          className='mx-auto space-y-8'
         >
           <Section sectionTitle='Basic'>
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
                 <p className='w-full col-span-1 sm:col-span-2 font-josefin_Sans text-sm'>
-                  Profile Image
+                  Profile Photo
                 </p>
 
-                <div className='rounded-lg size-32 flex border-1 border-secondary-lightGrey/25 bg-secondary-lightGrey/15 items-center justify-center'></div>
+                <div className='rounded-lg size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
+                  {data?.user ? (
+                    <ProfileImage username={data.user.user_name} />
+                  ) : (
+                    <ProfilePhotoSkeleton />
+                  )}
+                </div>
 
                 <div className='space-x-2'>
-                  <Button size='icon' type='button' variant='destructive'>
-                    <Icon name='RiDeleteBin' />
-                  </Button>
+                  <ProfileDeleteDialog />
 
-                  <Button size='icon' type='button' variant='secondary'>
-                    <Icon name='RiRefresh' />
-                  </Button>
+                  <ProfileUpdateDialog />
                 </div>
               </div>
 
@@ -104,7 +110,7 @@ const Profile = () => {
                 control={form.control}
                 name='first_name'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       First Name
                     </FormLabel>
@@ -124,7 +130,7 @@ const Profile = () => {
                 control={form.control}
                 name='last_name'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Last Name
                     </FormLabel>
@@ -144,7 +150,7 @@ const Profile = () => {
                 control={form.control}
                 name='address'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Location
                     </FormLabel>
@@ -164,7 +170,7 @@ const Profile = () => {
                 control={form.control}
                 name='contact_number'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Contact Number
                     </FormLabel>
@@ -184,7 +190,7 @@ const Profile = () => {
                 control={form.control}
                 name='bio'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Bio
                     </FormLabel>
@@ -204,7 +210,7 @@ const Profile = () => {
                 control={form.control}
                 name='date_of_birth'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Birth Date
                     </FormLabel>
@@ -224,7 +230,7 @@ const Profile = () => {
                 control={form.control}
                 name='twitter'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Twitter
                     </FormLabel>
@@ -244,7 +250,7 @@ const Profile = () => {
                 control={form.control}
                 name='linkedin'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       LinkedIn
                     </FormLabel>
@@ -264,7 +270,7 @@ const Profile = () => {
                 control={form.control}
                 name='instagram'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Instagram
                     </FormLabel>
@@ -284,7 +290,7 @@ const Profile = () => {
                 control={form.control}
                 name='github'
                 render={({ field }) => (
-                  <FormItem className='mr-4'>
+                  <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
                       GitHub
                     </FormLabel>
@@ -302,14 +308,8 @@ const Profile = () => {
             </div>
           </Section>
 
-          <Section sectionTitle='Topics'>
-            <div>
-              <Button variant='secondary'>Add Topic</Button>
-            </div>
-          </Section>
-
-          <div className='pt-8 flex justify-center items-center'>
-            <Button size='lg' type='submit'>
+          <div className='pt-4 flex justify-end'>
+            <Button variant='secondary' size='lg' type='submit'>
               Save Changes
             </Button>
           </div>

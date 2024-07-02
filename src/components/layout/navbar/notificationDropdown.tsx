@@ -14,7 +14,7 @@ const NotificationDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div className='hover:text-primary-monkeyOrange cursor-pointer'>
+        <div className='hover:opacity-75 cursor-pointer'>
           <Icon name='RiNotification3' size={24} />
         </div>
       </DropdownMenuTrigger>

@@ -26,7 +26,7 @@ type BlockChange = {
 
 export type BlockChanges = Map<string, BlockChange>;
 
-function App() {
+const CreatePage = () => {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData>(initial_data);
   const [blockChanges, setBlockChanges] = useState<BlockChanges>(new Map());
@@ -64,6 +64,6 @@ function App() {
       {showModal && <PublishModal setModal={setShowModal} />}
     </>
   );
-}
+};
 
-export default App;
+export default CreatePage;

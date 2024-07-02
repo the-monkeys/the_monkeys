@@ -6,11 +6,17 @@ import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import ProfileImage from '@/components/profileImage';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/useUser';
 import moment from 'moment';
-import { twMerge } from 'tailwind-merge';
 
 const ProfileCard: FC = () => {
   const { toast } = useToast();
@@ -48,16 +54,6 @@ const ProfileCard: FC = () => {
     return <ProfileCardSkeleton />;
   }
 
-  // if (isError) {
-  //   return <div>Error loading user data</div>;
-  // }
-
-  // if (!user) {
-  //   return <div>No user data available</div>;
-  // }
-
-  // const { first_name, last_name, created_at } = user;
-
   const joinedDate = user?.created_at
     ? moment.unix(user?.created_at.seconds).format('MMMM, YYYY')
     : 'Date not available';
@@ -65,48 +61,53 @@ const ProfileCard: FC = () => {
   return (
     <div className='space-y-2'>
       <div className='flex items-end gap-2 flex-wrap'>
-        <div className='rounded-lg size-32 flex border-1 border-secondary-lightGrey/25 bg-secondary-lightGrey/15 items-center justify-center'></div>
+        <div className='rounded-lg size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
+          {user?.username && <ProfileImage username={user.username} />}
+        </div>
 
         <div>
-          <h3 className='pb-2 font-playfair_Display font-semibold text-2xl sm:text-3xl capitalize'>{`${user?.first_name} ${user?.last_name}`}</h3>
+          <h3 className='font-playfair_Display font-semibold text-2xl capitalize cursor-default'>{`${user?.first_name} ${user?.last_name}`}</h3>
 
-          <div
-            className='text-primary-monkeyOrange hover:opacity-75 cursor-pointer'
-            onClick={() => copyToClipboard(user?.username || '')}
-          >
-            <p className='font-jost text-sm sm:text-base'>{`@${user?.username}`}</p>
-          </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger
+                className='text-primary-monkeyOrange hover:opacity-75'
+                onClick={() => copyToClipboard(user?.username || '')}
+              >
+                <p className='font-jost'>{`@${user?.username}`}</p>
+              </TooltipTrigger>
+
+              <TooltipContent className='text-sm'>Copy Username</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 
-      <p
-        className={twMerge(
-          'font-jost text-lg leading-tight',
-          !user?.bio && 'italic'
-        )}
-      >
-        {!user?.bio
-          ? 'Your bio is empty. Write a short description to tell the world about yourself.'
-          : user?.bio}
-      </p>
-
-      {user?.address && (
-        <p className='flex items-center gap-2 font-jost text-secondary-darkGrey dark:text-secondary-white'>
-          <span>
-            <Icon name='RiMapPin' />
-          </span>
-          {user.address}
+      {user?.bio && (
+        <p className='font-jost text-lg leading-tight cursor-default break-words'>
+          {user.bio}
         </p>
       )}
 
-      <p className='flex items-center gap-2 font-jost text-secondary-darkGrey dark:text-secondary-white'>
-        <span>
-          <Icon name='RiCalendar' />
-        </span>
-        Joined {joinedDate}
-      </p>
+      <div className='cursor-default'>
+        {user?.address && (
+          <p className='font-jost'>
+            <span>
+              <Icon name='RiMapPin' size={18} className='inline-block mr-2' />
+            </span>
+            {user.address}
+          </p>
+        )}
 
-      <div className='flex gap-4'>
+        <p className='font-jost'>
+          <span>
+            <Icon name='RiCalendar' size={18} className='inline-block mr-2' />
+          </span>
+          Joined {joinedDate}
+        </p>
+      </div>
+
+      <div className='py-1 flex gap-4'>
         {user?.twitter && (
           <Link
             target='_blank'

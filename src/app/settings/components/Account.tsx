@@ -9,7 +9,7 @@ import Visibility from './account/Visibility';
 
 const Account = () => {
   return (
-    <div className='mt-5 p-5 space-y-10'>
+    <div className='mt-5 p-5 space-y-8'>
       <Section sectionTitle='Username'>
         <Username />
       </Section>
