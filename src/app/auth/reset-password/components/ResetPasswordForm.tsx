@@ -17,8 +17,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { resetPasswordSchema } from '@/lib/schema/auth';
+import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import { getResetPasswordToken } from '@/services/auth/auth';
-import { axiosInstance } from '@/services/fetcher';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -42,8 +42,13 @@ const ResetPasswordForm: React.FC = () => {
 
   useEffect(() => {
     if (searchParams.username && searchParams.evpw) {
-      getResetPasswordToken(searchParams.username, searchParams.evpw)
+      getResetPasswordToken({
+        user: searchParams.username,
+        evpw: searchParams.evpw,
+      })
         .then((res) => {
+          console.log('hello');
+
           console.log(res);
           setUserToken(res?.response.token);
         })
@@ -66,7 +71,7 @@ const ResetPasswordForm: React.FC = () => {
   });
 
   function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
-    axiosInstance
+    axiosInstanceNoAuth
       .post(
         '/auth/update-password',
         {

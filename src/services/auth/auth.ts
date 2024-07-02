@@ -1,22 +1,21 @@
-import { axiosInstance } from '../fetcher';
+import { AxiosRequestConfig } from 'axios';
 
-export const getResetPasswordToken = async (
-  username: string | null,
-  evpw: string | null
-): Promise<getResetPasswordTokenApiResponse | null> => {
-  try {
-    const response = await axiosInstance.get<getResetPasswordTokenApiResponse>(
-      '/auth/reset-password',
-      {
-        params: {
-          user: username,
-          evpw: evpw,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching reset password token:', error);
-    return null;
-  }
-};
+import axiosInstanceNoAuth from '../api/axiosInstanceNoAuth';
+
+const getResetPasswordTokenAPIEndpoint = '/auth/reset-password';
+
+export async function getResetPasswordToken(
+  req: getResetPasswordTokenRequest,
+  config?: AxiosRequestConfig
+): Promise<getResetPasswordTokenApiResponse> {
+  const response = await axiosInstanceNoAuth<getResetPasswordTokenApiResponse>(
+    getResetPasswordTokenAPIEndpoint,
+    {
+      params: {
+        ...req,
+      },
+      ...config,
+    }
+  );
+  return response.data;
+}

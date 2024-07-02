@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import useGetAuthUserProfile from '@/hooks/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
-import { axiosInstance } from '@/services/fetcher';
+import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -32,11 +32,6 @@ const Profile = () => {
     data?.user.user_name
   );
 
-  useEffect(() => {
-    console.log('User:', user);
-    console.log('Loading:', isLoading);
-    console.log('Error:', isError);
-  }, [user, isLoading, isError]);
   const navigate = useRouter();
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -57,26 +52,9 @@ const Profile = () => {
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
     console.log(values);
     axiosInstance
-      .put(
-        `/user/${data?.user.user_name}`,
-        {
-          first_name: values.first_name,
-          last_name: values.last_name,
-          address: values.address,
-          contact_number: values.contact_number,
-          bio: values.bio,
-          date_of_birth: values.date_of_birth,
-          twitter: values.twitter,
-          linkedin: values.linkedin,
-          instagram: values.instagram,
-          github: values.github,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${data?.user.token}`,
-          },
-        }
-      )
+      .put(`/user/${data?.user.user_name}`, {
+        values,
+      })
       .then((res) => {
         toast({
           variant: 'success',
