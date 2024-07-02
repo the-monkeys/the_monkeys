@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -32,7 +33,7 @@ const ResetPasswordForm: React.FC = () => {
   }>({ username: '', evpw: '' });
   const navigate = useRouter();
   const [userToken, setUserToken] = useState<string | undefined>('');
-
+  const [loading, setLoading] = useState<boolean>(false);
   const updateSearchParams = useCallback(
     (params: { username: string; evpw: string }) => {
       setSearchParams(params);
@@ -71,6 +72,7 @@ const ResetPasswordForm: React.FC = () => {
   });
 
   function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
+    setLoading(true);
     axiosInstanceNoAuth
       .post(
         '/auth/update-password',
@@ -97,6 +99,9 @@ const ResetPasswordForm: React.FC = () => {
           title: 'Error',
           description: err.message || 'Failed to update the password.',
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
@@ -163,7 +168,13 @@ const ResetPasswordForm: React.FC = () => {
           </ul>
 
           <div className='pt-4'>
-            <Button variant='default' className='float-right' type='submit'>
+            <Button
+              variant='default'
+              disabled={loading ? true : false}
+              className='float-right'
+              type='submit'
+            >
+              {loading && <Loader />}
               Reset Password
             </Button>
           </div>

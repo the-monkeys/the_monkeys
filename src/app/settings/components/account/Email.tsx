@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -22,7 +23,7 @@ import { z } from 'zod';
 
 const Email = () => {
   const { data } = useSession();
-
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof updateEmailSchema>>({
     resolver: zodResolver(updateEmailSchema),
     defaultValues: {
@@ -31,6 +32,7 @@ const Email = () => {
   });
 
   async function reqVerification() {
+    setLoading(true);
     try {
       const response = await axiosInstance.post(
         `/auth/req-email-verification`,
@@ -60,6 +62,8 @@ const Email = () => {
           description: 'An unknown error occured.',
         });
       }
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -81,8 +85,9 @@ const Email = () => {
         variant='secondary'
         className='mt-4'
         onClick={reqVerification}
+        disabled={loading ? true : false}
       >
-        Verify Email
+        {loading && <Loader />} Verify Email
       </Button>
 
       <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>

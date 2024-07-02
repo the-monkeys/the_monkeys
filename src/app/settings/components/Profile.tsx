@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import ProfileImage from '@/components/profileImage';
 import { ProfilePhotoSkeleton } from '@/components/skeletons/profileSkeleton';
 import { Button } from '@/components/ui/button';
@@ -35,7 +35,7 @@ const Profile = () => {
   const { user, isLoading, isError } = useGetAuthUserProfile(
     data?.user.user_name
   );
-
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useRouter();
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -54,6 +54,7 @@ const Profile = () => {
   });
 
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
+    setLoading(true);
     console.log(values);
     axiosInstance
       .put(`/user/${data?.user.user_name}`, {
@@ -74,6 +75,9 @@ const Profile = () => {
           title: 'Error',
           description: err.message,
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
@@ -309,8 +313,13 @@ const Profile = () => {
           </Section>
 
           <div className='pt-4 flex justify-end'>
-            <Button variant='secondary' size='lg' type='submit'>
-              Save Changes
+            <Button
+              variant='secondary'
+              disabled={loading ? true : false}
+              size='lg'
+              type='submit'
+            >
+              {loading && <Loader />} Save Changes
             </Button>
           </div>
         </form>
