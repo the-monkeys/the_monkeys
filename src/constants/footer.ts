@@ -42,15 +42,15 @@ export const footerList = [
     items: [
       {
         text: 'Terms of Use',
-        link: '/policy/terms',
+        link: '/terms',
       },
       {
         text: 'Privacy Policy',
-        link: '/policy/privacy',
+        link: '/privacy',
       },
       {
         text: 'Cookie Policy',
-        link: '/policy/cookies',
+        link: '/cookies',
       },
     ],
   },

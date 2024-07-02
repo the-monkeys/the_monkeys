@@ -1,7 +1,7 @@
 import fetcher from '@/services/fileFetcher';
 import useSWR from 'swr';
 
-function useProfileImage(username: string | undefined) {
+function useProfileImage(username: string) {
   const { data, error, isLoading } = useSWR<Blob>(
     `/files/profile/${username}/profile`,
     fetcher

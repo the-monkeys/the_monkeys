@@ -12,18 +12,61 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
 import { updateEmailSchema } from '@/lib/schema/settings';
+import { axiosInstance } from '@/services/fetcher';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const Email = () => {
+  const { data } = useSession();
+
   const form = useForm<z.infer<typeof updateEmailSchema>>({
     resolver: zodResolver(updateEmailSchema),
     defaultValues: {
       email: '',
     },
   });
+
+  async function reqVerification() {
+    try {
+      const response = await axiosInstance.post(
+        `/auth/req-email-verification`,
+        {
+          email: data?.user?.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${data?.user.token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Email verification request has been sent successfully.',
+        });
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to send verification request.',
+        });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occured.',
+        });
+      }
+    }
+  }
 
   function onSubmit(values: z.infer<typeof updateEmailSchema>) {
     console.log(values);
@@ -37,7 +80,13 @@ const Email = () => {
         Verify your email address to keep your account secure and stay updated.
       </p>
 
-      <Button size='lg' variant='secondary' className='mt-4'>
+      <Button
+        type='button'
+        size='lg'
+        variant='secondary'
+        className='mt-4'
+        onClick={reqVerification}
+      >
         Verify Email
       </Button>
 
