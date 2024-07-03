@@ -2,7 +2,7 @@
 
 import { ReactNode } from 'react';
 
-import fetcher from '@/services/fetcher';
+import { fetcher } from '@/services/fetcher';
 import { SWRConfig } from 'swr';
 
 export default function SWRProvider({ children }: { children: ReactNode }) {

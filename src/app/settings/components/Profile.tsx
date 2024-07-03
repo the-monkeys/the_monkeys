@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import ProfileImage from '@/components/profileImage';
 import { ProfilePhotoSkeleton } from '@/components/skeletons/profileSkeleton';
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
+import useGetAuthUserProfile from '@/hooks/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
+import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
@@ -28,26 +31,54 @@ import ProfileDeleteDialog from './profile/ProfileDeleteDialog';
 import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
 
 const Profile = () => {
-  const { data, status } = useSession();
-
+  const { data } = useSession();
+  const { user, isLoading, isError } = useGetAuthUserProfile(
+    data?.user.user_name
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useRouter();
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
-      location: '',
-      contactNumber: '',
-      bio: '',
-      dateOfBirth: '',
-      twitterProfile: '',
-      linkedin: '',
-      instagram: '',
-      github: '',
+      first_name: user?.first_name,
+      last_name: user?.last_name,
+      address: user?.address,
+      contact_number: user?.contact_number,
+      bio: user?.bio,
+      date_of_birth: user?.date_of_birth,
+      twitter: user?.twitter,
+      linkedin: user?.linkedin,
+      instagram: user?.instagram,
+      github: user?.github,
     },
   });
 
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
+    setLoading(true);
     console.log(values);
+    axiosInstance
+      .put(`/user/${data?.user.user_name}`, {
+        values,
+      })
+      .then((res) => {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your profile has been updated successfully',
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message,
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   return (
@@ -81,7 +112,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='firstName'
+                name='first_name'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -101,7 +132,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='lastName'
+                name='last_name'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -121,7 +152,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='location'
+                name='address'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -141,7 +172,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='contactNumber'
+                name='contact_number'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -181,7 +212,7 @@ const Profile = () => {
 
               <FormField
                 control={form.control}
-                name='dateOfBirth'
+                name='date_of_birth'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -201,7 +232,7 @@ const Profile = () => {
             <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
               <FormField
                 control={form.control}
-                name='twitterProfile'
+                name='twitter'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -210,7 +241,6 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        type='url'
                         {...field}
                         placeholder='Enter username'
                       />
@@ -231,7 +261,6 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        type='url'
                         {...field}
                         placeholder='Enter username'
                       />
@@ -252,7 +281,6 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        type='url'
                         {...field}
                         placeholder='Enter username'
                       />
@@ -273,7 +301,6 @@ const Profile = () => {
                     <FormControl>
                       <Input
                         className='w-full'
-                        type='url'
                         {...field}
                         placeholder='Enter username'
                       />
@@ -286,8 +313,13 @@ const Profile = () => {
           </Section>
 
           <div className='pt-4 flex justify-end'>
-            <Button variant='secondary' size='lg' type='submit'>
-              Save Changes
+            <Button
+              variant='secondary'
+              disabled={loading ? true : false}
+              size='lg'
+              type='submit'
+            >
+              {loading && <Loader />} Save Changes
             </Button>
           </div>
         </form>

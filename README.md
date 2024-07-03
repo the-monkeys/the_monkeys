@@ -1,25 +1,102 @@
-# The Monkeys
+<img src="./public/logo-full-light.svg" alt="Alt text" style="filter: drop-shadow(0 0 0.5rem #ff462e)">
 
-Welcome to The Monkeys, an educational and informational blogging platform!
+# The Monkeys: Seamless Creation, Effortless Collaboration
 
-We are dedicated to providing a space for individuals to share their knowledge and experiences on a variety of topics. Our platform is designed to be a resource for people looking to learn new things and expand their understanding of the world.
+#### Unleash Your Creativity and Influence: Blog Together, Write Better
 
-We invite readers/writers/experts to bring a diverse range of perspectives to the table, share their insights on everything from science and technology to personal development and self-improvement, psychology, philosophy, fashion, health and lifestyle etc.
+Welcome to The Monkeys, your go-to educational and informational blogging platform!
 
-We believe that learning should be accessible to everyone, and that's why we offer our content. Our platform is open to anyone who wants to read, learn, and grow.
+At The Monkeys, we provide a dynamic space for individuals to share their knowledge and experiences across a wide array of topics. Whether you're passionate about science, technology, personal development, self-improvement, psychology, philosophy, fashion, health, or lifestyle, you'll find a place here to both learn and contribute.
 
-We also believe in the power of community. Our platform encourages engagement and conversation, and we welcome feedback and suggestions from our readers.
+Our platform is designed with the belief that learning should be accessible to everyone. Dive into our diverse range of perspectives and insights, and expand your understanding of the world.
 
-Thank you for visiting our platform. We hope you find it informative and educational, and that you come back often to learn and grow with us.
+We also believe in the power of community. Engage with fellow readers, writers, and experts. Share your thoughts, offer feedback, and join the conversation. Your voice matters here, and together, we can create a vibrant and enriching environment for growth and learning.
 
+Explore, learn, and grow with The Monkeys. We're excited to have you on this journey with us!
 
-For contribution fork the branch
+## Project Roadmap
 
-## Running in the system
-To install the package and the dependencies do,
-``` yarn install ```
+- [x] Shift the codebase from React.js to Next.
+- [x] Initial setup.
+- [x] Initial UI design.
+- [ ] Landing page design.
+- [ ] Auth service.
+- [ ] User service.
+- [ ] File service.
+- [ ] Blog service.
 
-Then, ``` npm install``` and ``` npm start```
-(if the server is taking too much time to load, then try ``` npm install --force```)
+## Installation
 
-Do, a git checkout for working in another branch
+1. Clone & create this repo locally with the following command:
+
+```sh
+git clone https://github.com/the-monkeys/the_monkeys.git
+```
+
+2. Install dependencies using npm:
+
+```sh
+npm install
+# or npm install --force
+```
+
+3. Copy `.env.example` to `.env` and update the variables.
+
+```
+cp .env.example .env.local
+```
+
+4. Input all the required enviroment variables in .env file.
+
+5. Start the development server:
+
+```sh
+# At the root of the repo
+npm run dev
+```
+
+## Tech Stack & Features
+
+- [Next.js](https://nextjs.org/) – The React Framework for the Web.
+- [Netlify](https://www.netlify.com/) – Netlify is the essential platform for the delivery of exceptional and dynamic web experiences, without limitations.
+- [Next Auth](https://next-auth.js.org/) – Add authentication to your next app in minutes.
+- [Zod](https://zod.dev/) – TypeScript-first schema validation with static type inference.
+- [Tailwind CSS](https://tailwindcss.com/) – A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
+- [Shadcn/ui](https://ui.shadcn.com/) – Beautifully designed components that you can copy and paste into your apps.
+- [Remix Icons](https://remixicon.com/) – Open-source neutral-style system symbols elaborately crafted for designers and developers.
+
+## Backend
+
+The backbone of The Monkeys platform is powered by a robust backend written in Go, housed in our dedicated repository.
+
+For those interested in exploring the architecture of our backend, or looking to contribute, we invite you to visit the repository. Dive into the code, understand the intricacies, and join our community of developers in enhancing the platform. Your contributions are invaluable in making The Monkeys a richer, more dynamic space for everyone.
+
+Backend repo: [The Monkeys Backend](https://github.com/the-monkeys/the_monkeys_engine)
+
+## Guidelines
+
+To ensure smooth collaboration and maintain the quality of contributions, we have established some guidelines for raising issues and submitting pull requests (PRs). Please adhere to the given formats to help us address and integrate your contributions more efficiently.
+
+#### Raising an Issue
+
+When raising an issue, please follow the specified format provided in our repository. This helps us understand and resolve the problem quickly.
+
+#### Submitting a Pull Request (PR)
+
+When submitting a pull request, ensure you follow the provided format outlined in our repository. This helps us review and merge your changes effectively.
+
+By following these guidelines, you help maintain a high standard of collaboration and development on The Monkeys platform. We appreciate your cooperation and contributions!
+
+## Contributing
+
+We are thrilled to have you consider contributing to The Monkeys! Our platform thrives on the diverse knowledge and skills of our community.
+
+Whether you're an experienced developer, a tech enthusiast, a writer, or someone passionate about sharing insights, there's a place for you here. Here are a few ways you can contribute:
+
+1. **Code Contributions**: Help us improve and expand our platform. From fixing bugs to adding new features, your code is valuable.
+2. **Documentation**: Good documentation helps everyone. Contribute by improving our existing docs or adding new ones.
+3. **Community Engagement**: Participate in discussions, offer feedback, and help fellow contributors with their queries.
+4. **Content Creation**: Share your expertise by writing articles, tutorials, or creating video content about various topics covered on The Monkeys platform.
+5. **Feature Suggestions**: Have an idea for a new feature or an improvement? Share it with us and collaborate on bringing it to life.
+
+Every contribution, big or small, makes a difference. Join us in making The Monkeys an even better resource for everyone. We look forward to collaborating with you!

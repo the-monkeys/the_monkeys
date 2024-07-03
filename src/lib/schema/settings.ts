@@ -1,22 +1,21 @@
 import { z } from 'zod';
 
 export const updateProfileSchema = z.object({
-  firstName: z.string().min(1, 'First name is required').max(50),
-  lastName: z.string().min(1, 'Last name is required').max(50),
-  location: z.string().max(100),
-  contactNumber: z
+  first_name: z.string().min(1, 'First name is required').max(50),
+  last_name: z.string().min(1, 'Last name is required').max(50),
+  address: z.string().max(100).optional(),
+  contact_number: z
     .string()
     .regex(/^[0-9]+$/, 'Contact number must be digits only')
     .min(10)
-    .max(15),
-  bio: z.string().max(500),
-  dateOfBirth: z
-    .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Date of birth must be in YYYY-MM-DD format'),
-  twitterProfile: z.string().url().optional(),
-  linkedin: z.string().url().optional(),
-  instagram: z.string().url().optional(),
-  github: z.string().url().optional(),
+    .max(15)
+    .optional(),
+  bio: z.string().max(500).optional(),
+  date_of_birth: z.string().optional(),
+  twitter: z.string().max(50).optional(),
+  linkedin: z.string().max(50).optional(),
+  instagram: z.string().max(50).optional(),
+  github: z.string().max(50).optional(),
 });
 
 export const updateProfileDetailsSchema = z.object({
