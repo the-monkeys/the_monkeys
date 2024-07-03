@@ -9,6 +9,7 @@ const useGetAuthUserProfile = (username: string | undefined) => {
 
   return {
     user: data,
+
     isLoading: !error && !data,
     isError: error,
   };
