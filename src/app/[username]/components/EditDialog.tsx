@@ -31,7 +31,7 @@ import { z } from 'zod';
 const formschema = z.object({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().min(1, 'Last name is required'),
-  address: z.string().min(1, 'Location is required'),
+  address: z.string().optional(),
   bio: z.string().optional(),
 });
 
@@ -85,7 +85,7 @@ const EditDialog = () => {
     }
   };
 
-  if (isLoading) return <p className='font-jost'>Fetching Details</p>;
+  if (isLoading) return <Loader />;
   if (isError) return null;
 
   return (
