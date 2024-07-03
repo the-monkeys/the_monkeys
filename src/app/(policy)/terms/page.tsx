@@ -20,7 +20,7 @@ export async function generateMetadata(
 
 const TermsPage = () => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-4'>
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeading heading='Terms of Use' />
 
       <PolicyUpdate />

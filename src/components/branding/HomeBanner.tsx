@@ -23,7 +23,7 @@ const HomeBanner = () => {
           <span className='text-primary-monkeyOrange'>Collaboration</span>
         </h1>
 
-        <p className='pt-6 font-jost text-sm sm:text-base md:text-lg cursor-default'>
+        <p className='pt-6 font-jost font-light text-base md:text-lg cursor-default'>
           Unleash Your Creativity and Influence: Blog Together, Write Better
         </p>
 

@@ -6,7 +6,7 @@ import { GridContainer, GridHeading, GridSubHeading } from './gridLayout';
 
 const CollaborativeWriting = () => {
   return (
-    <GridContainer className='group hover:border-primary-monkeyOrange/25'>
+    <GridContainer className='group hover:border-primary-monkeyOrange/25 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack'>
       <Icon
         name='RiGroup'
         className='mb-2 text-secondary-darkGrey dark:text-secondary-white group-hover:text-primary-monkeyOrange'
@@ -20,7 +20,7 @@ const CollaborativeWriting = () => {
         and engage your audience.
       </GridSubHeading>
 
-      <div className='mt-4 flex flex-col gap-4 sm:gap-6 overflow-hidden'>
+      <div className='mt-6 flex flex-col gap-4 sm:gap-6 overflow-hidden'>
         <div>
           <div className='w-fit h-8 sm:h-10 self-start'>
             <Image
@@ -80,7 +80,7 @@ const CollaborativeWriting = () => {
             </p>
           </div>
           <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/10 dark:bg-secondary-white/10' />
-          <div className='h-2 sm:h-3 w-full opacity-0' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/10 dark:bg-secondary-white/10' />
         </div>
       </div>
     </GridContainer>
