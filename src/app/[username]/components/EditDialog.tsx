@@ -1,7 +1,10 @@
-import { useState } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { EditDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -27,7 +30,6 @@ import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
 import { z } from 'zod';
 
-// Define your schemas here
 const formschema = z.object({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().min(1, 'Last name is required'),
@@ -42,6 +44,7 @@ const EditDialog = () => {
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof formschema>>({
     resolver: zodResolver(formschema),
     defaultValues: {
@@ -85,8 +88,19 @@ const EditDialog = () => {
     }
   };
 
-  if (isLoading) return <Loader />;
+  // if (isLoading) return <Loader />;
   if (isError) return null;
+
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        first_name: user.first_name || '',
+        last_name: user.last_name || '',
+        address: user.address || '',
+        bio: user.bio || '',
+      });
+    }
+  }, [user, form]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -96,96 +110,100 @@ const EditDialog = () => {
       </DialogTrigger>
       <DialogContent>
         <DialogTitle>Edit Details</DialogTitle>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-            <FormField
-              control={form.control}
-              name='first_name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
-                    First Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter first name'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='last_name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
-                    Last Name
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter last name'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='address'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
-                    Location
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter location'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name='bio'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
-                    Bio
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter bio'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className='pt-4'>
-              <Button
-                variant='secondary'
-                disabled={loading}
-                type='submit'
-                className='float-right'
-              >
-                {loading && <Loader />} Update Details
-              </Button>
-            </div>
-          </form>
-        </Form>
+        {isLoading ? (
+          <EditDetailsFormSkeleton />
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+              <FormField
+                control={form.control}
+                name='first_name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-josefin_Sans text-sm'>
+                      First Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter first name'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='last_name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-josefin_Sans text-sm'>
+                      Last Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter last name'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='address'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-josefin_Sans text-sm'>
+                      Location
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter location'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='bio'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='font-josefin_Sans text-sm'>
+                      Bio
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter bio'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className='pt-4'>
+                <Button
+                  variant='secondary'
+                  disabled={loading}
+                  type='submit'
+                  className='float-right'
+                >
+                  {loading && <Loader />} Update Details
+                </Button>
+              </div>
+            </form>
+          </Form>
+        )}
       </DialogContent>
     </Dialog>
   );

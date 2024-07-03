@@ -19,14 +19,14 @@ const VersionControl = () => {
         Make your blog uniquely yours with multiple personalized versions.
       </GridSubHeading>
 
-      <div className='mt-8 flex-1 flex flex-col items-center justify-end overflow-hidden'>
+      <div className='mt-8 flex-1 flex flex-col items-center justify-end overflow-hidden animate-appear-up'>
         <div className='flex-1 w-full p-2 border-t-2 border-secondary-lightGrey/75 rounded-t-2xl transition-all'>
           <p className='px-2 font-josefin_Sans text-lg sm:text-xl text-primary-monkeyOrange cursor-default'>
             Blog Title: v2.0.2
           </p>
 
           <p className='px-2 font-jost text-xs sm:text-sm opacity-75 cursor-default'>
-            by Ashley, Phil & Rahul
+            by Ashley, Phil, & Rahul
           </p>
 
           <p className='mt-4 px-1 py-2 font-jost text-xs sm:text-sm text-right cursor-default'>

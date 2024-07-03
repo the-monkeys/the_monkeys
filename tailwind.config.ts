@@ -22,11 +22,6 @@ const config = {
       josefin_Sans: ['var(--font-josefin_Sans)'],
       playfair_Display: ['var(--font-playfair_Display)'],
     },
-    animation: {
-      shake: 'shake 600ms ease-in-out',
-      pulse: 'pulse 1000ms ease-in-out infinite',
-      rotate: 'rotate 800ms linear infinite',
-    },
     extend: {
       colors: {
         primary: {
@@ -48,7 +43,7 @@ const config = {
         '1': '1px',
       },
       keyframes: {
-        pulse: {
+        'opacity-pulse': {
           '0%': {
             opacity: '0.25',
           },
@@ -59,7 +54,7 @@ const config = {
             opacity: '0.25',
           },
         },
-        shake: {
+        'icon-shake': {
           '0%': {
             transform: 'rotate(0deg)',
           },
@@ -76,12 +71,22 @@ const config = {
             transform: 'rotate(0)',
           },
         },
-        rotate: {
+        'loader-rotate': {
           '0%': {
             transform: 'rotate(0deg)',
           },
           '100%': {
             transform: 'rotate(360deg)',
+          },
+        },
+        'appear-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(10px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
           },
         },
         'accordion-down': {
@@ -94,6 +99,10 @@ const config = {
         },
       },
       animation: {
+        'icon-shake': 'icon-shake 0.6s ease-in-out',
+        'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
+        'loader-rotate': 'loader-rotate 0.6s linear infinite',
+        'appear-up': 'appear-up .8s ease-out',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
