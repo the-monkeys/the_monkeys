@@ -13,7 +13,7 @@ const CreateButton = () => {
       <Link href='/create' className='flex flex-col items-center'>
         <Icon
           name='RiPencil'
-          className='group-hover:animate-shake text-secondary-white'
+          className='group-hover:animate-icon-shake text-secondary-white'
         />
       </Link>
     </Button>
