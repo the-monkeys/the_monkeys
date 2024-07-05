@@ -1,4 +1,4 @@
-<img src="./public/logo-full-light.svg" alt="Alt text" style="filter: drop-shadow(0 0 0.5rem #ff462e)">
+<img src="./public/logo-full-light.svg" alt="The Monkeys">
 
 # The Monkeys: Seamless Creation, Effortless Collaboration
 
@@ -17,12 +17,11 @@ Explore, learn, and grow with The Monkeys. We're excited to have you on this jou
 ## Project Roadmap
 
 - [x] Shift the codebase from React.js to Next.
-- [x] Initial setup.
-- [x] Initial UI design.
-- [ ] Landing page design.
-- [ ] Auth service.
+- [x] Initial project setup.
+- [x] UI/UX design (v1).
+- [ ] Landing page.
+- [ ] Authentication service.
 - [ ] User service.
-- [ ] File service.
 - [ ] Blog service.
 
 ## Installation
@@ -40,7 +39,7 @@ npm install
 # or npm install --force
 ```
 
-3. Copy `.env.example` to `.env` and update the variables.
+3. Copy `.env.example` to `.env.local` and update the variables.
 
 ```
 cp .env.example .env.local
@@ -77,13 +76,17 @@ Backend repo: [The Monkeys Backend](https://github.com/the-monkeys/the_monkeys_e
 
 To ensure smooth collaboration and maintain the quality of contributions, we have established some guidelines for raising issues and submitting pull requests (PRs). Please adhere to the given formats to help us address and integrate your contributions more efficiently.
 
-#### Raising an Issue
+#### 1. Raising an Issue
 
 When raising an issue, please follow the specified format provided in our repository. This helps us understand and resolve the problem quickly.
 
-#### Submitting a Pull Request (PR)
+#### 2. Submitting a Pull Request (PR)
 
 When submitting a pull request, ensure you follow the provided format outlined in our repository. This helps us review and merge your changes effectively.
+
+#### 3. Taking an Issue
+
+To claim ownership of an issue, comment `.take` on the issue thread. This will assign the issue to you, allowing you to work on it. Please ensure that the issue is not already assigned or in progress before claiming it.
 
 By following these guidelines, you help maintain a high standard of collaboration and development on The Monkeys platform. We appreciate your cooperation and contributions!
 
@@ -100,3 +103,5 @@ Whether you're an experienced developer, a tech enthusiast, a writer, or someone
 5. **Feature Suggestions**: Have an idea for a new feature or an improvement? Share it with us and collaborate on bringing it to life.
 
 Every contribution, big or small, makes a difference. Join us in making The Monkeys an even better resource for everyone. We look forward to collaborating with you!
+
+<a href="https://github.com/the-monkeys/the_monkeys/graphs/contributors"> <img src="https://contrib.rocks/image?repo=the-monkeys/the_monkeys" /> </a>
