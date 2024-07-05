@@ -1,4 +1,8 @@
-<img src="./public/logo-full-light.svg" alt="The Monkeys">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./public/logo-full-light.svg" alt="The Monkeys">
+  <source media="(prefers-color-scheme: light)" srcset="./public/logo-full-dark.svg" alt="The Monkeys">
+  <img src="./public/logo-full-light.svg" alt="The Monkeys">
+</picture>
 
 # The Monkeys: Seamless Creation, Effortless Collaboration
 
