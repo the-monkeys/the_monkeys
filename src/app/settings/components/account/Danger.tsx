@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import { axiosInstance } from '@/services/fetcher';
+import axiosInstance from '@/services/api/axiosInstance';
 import { signOut, useSession } from 'next-auth/react';
 
 const Danger = () => {
@@ -26,12 +26,7 @@ const Danger = () => {
 
     try {
       const response = await axiosInstance.delete(
-        `/user/${data?.user.user_name}`,
-        {
-          headers: {
-            Authorization: `Bearer ${data?.user.token}`,
-          },
-        }
+        `/user/${data?.user.user_name}`
       );
 
       if (response.status === 200) {

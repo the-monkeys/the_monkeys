@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -17,8 +18,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { resetPasswordSchema } from '@/lib/schema/auth';
+import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import { getResetPasswordToken } from '@/services/auth/auth';
-import { axiosInstance } from '@/services/fetcher';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -32,7 +33,7 @@ const ResetPasswordForm: React.FC = () => {
   }>({ username: '', evpw: '' });
   const navigate = useRouter();
   const [userToken, setUserToken] = useState<string | undefined>('');
-
+  const [loading, setLoading] = useState<boolean>(false);
   const updateSearchParams = useCallback(
     (params: { username: string; evpw: string }) => {
       setSearchParams(params);
@@ -42,8 +43,13 @@ const ResetPasswordForm: React.FC = () => {
 
   useEffect(() => {
     if (searchParams.username && searchParams.evpw) {
-      getResetPasswordToken(searchParams.username, searchParams.evpw)
+      getResetPasswordToken({
+        user: searchParams.username,
+        evpw: searchParams.evpw,
+      })
         .then((res) => {
+          console.log('hello');
+
           console.log(res);
           setUserToken(res?.response.token);
         })
@@ -66,7 +72,8 @@ const ResetPasswordForm: React.FC = () => {
   });
 
   function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
-    axiosInstance
+    setLoading(true);
+    axiosInstanceNoAuth
       .post(
         '/auth/update-password',
         {
@@ -92,6 +99,9 @@ const ResetPasswordForm: React.FC = () => {
           title: 'Error',
           description: err.message || 'Failed to update the password.',
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   }
 
@@ -158,7 +168,13 @@ const ResetPasswordForm: React.FC = () => {
           </ul>
 
           <div className='pt-4'>
-            <Button variant='default' className='float-right' type='submit'>
+            <Button
+              variant='default'
+              disabled={loading ? true : false}
+              className='float-right'
+              type='submit'
+            >
+              {loading && <Loader />}
               Reset Password
             </Button>
           </div>

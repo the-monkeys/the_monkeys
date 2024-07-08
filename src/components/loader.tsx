@@ -16,7 +16,7 @@ export const Loader = ({
         'p-1 w-fit flex justify-center items-center'
       )}
     >
-      <Icon name='RiLoader5' size={size} className='animate-rotate' />
+      <Icon name='RiLoader5' size={size} className='animate-loader-rotate' />
     </div>
   );
 };

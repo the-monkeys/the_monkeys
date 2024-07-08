@@ -2,20 +2,17 @@
 
 import { useEffect, useState } from 'react';
 
-import MixLogo from './MixLogo';
 import MobileLogo from './MobileLogo';
 import WebLogo from './WebLogo';
 
 interface LogoProps {
   showMobileLogo?: boolean;
   showSubHeading?: boolean;
-  showMix?: boolean;
 }
 
 const Logo: React.FC<LogoProps> = ({
   showMobileLogo = false,
   showSubHeading = false,
-  showMix = false,
 }) => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -35,13 +32,7 @@ const Logo: React.FC<LogoProps> = ({
 
   return (
     <div className='flex flex-col items-start'>
-      {showMobileLogo && isMobile ? (
-        <MobileLogo />
-      ) : showMix ? (
-        <MixLogo />
-      ) : (
-        <WebLogo />
-      )}
+      {showMobileLogo && isMobile ? <MobileLogo /> : <WebLogo />}
       {showSubHeading && (
         <p className='font-josefin_Sans'>A Jungle of Insights and Clarity</p>
       )}

@@ -72,7 +72,7 @@ const Footer = () => {
   return (
     <Container className='px-5 pt-10 pb-14 border-t-1 border-secondary-lightGrey/15'>
       <footer className='space-y-6'>
-        <Logo showSubHeading showMix />
+        <Logo showSubHeading />
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
