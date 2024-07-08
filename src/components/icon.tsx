@@ -46,7 +46,9 @@ export type IconName =
   | 'RiCheck'
   | 'RiLoginBox'
   | 'RiLogoutBoxR'
-  | 'RiErrorWarning';
+  | 'RiErrorWarning'
+  | 'RiEye'
+  | 'RiEyeClose';
 
 export type IconProps = {
   name: IconName;
