@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import Icon from '../icon';
@@ -27,18 +28,18 @@ const HomeBanner = () => {
 
         <Button
           size='lg'
-          className='group px-4 sm:px-6 hover:shadow-lg hover:shadow-primary-monkeyOrange/50 rounded-full'
-          onClick={() => {
-            router.push('api/auth/signin');
-          }}
+          className='group px-4 sm:px-6 hover:shadow-lg hover:shadow-primary-monkeyOrange/50 hover:text-primary-monkeyBlack dark:hover:text-primary-monkeyWhite rounded-full'
+          asChild
         >
-          <Icon
-            name='RiPencil'
-            className='mr-2 group-hover:animate-icon-shake'
-            type='Fill'
-          />
+          <Link href='/create'>
+            <Icon
+              name='RiPencil'
+              className='mr-2 group-hover:animate-icon-shake'
+              type='Fill'
+            />
 
-          <p className='font-jost'>Start Writing</p>
+            <p className='font-jost'>Start Writing</p>
+          </Link>
         </Button>
       </div>
     </div>
