@@ -21,7 +21,7 @@ import { z } from 'zod';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-import PasswordInput from './PasswordInput'; 
+import PasswordInput from '@/components/input/PasswordInput';
 
 const Step2 = ({
   setLoginStep,
