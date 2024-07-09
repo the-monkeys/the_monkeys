@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
 
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import Icon from '@/components/icon';
 
 type PasswordInputProps = {
   placeholder?: string;
@@ -33,7 +33,7 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         onClick={togglePasswordVisibility}
         className='absolute inset-y-0 right-0 pr-3'
       >
-        {showPassword ? <FaEyeSlash /> : <FaEye />}
+        <Icon name={showPassword ? 'RiEyeClose' : 'RiEye'} />
       </button>
     </div>
   );
