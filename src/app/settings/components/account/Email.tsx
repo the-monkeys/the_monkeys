@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const Email = () => {
-  const { data, update } = useSession();
+  const { data: session, update } = useSession();
   const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
   const [updateLoading, setUpdateLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof updateEmailSchema>>({
@@ -31,7 +31,16 @@ const Email = () => {
       email: '',
     },
   });
-
+  const updateUserSession = async (token: string) => {
+    await update({
+      ...session,
+      user: {
+        ...session?.user,
+        token: token,
+        email: form.getValues('email'),
+      },
+    });
+  };
   async function reqVerification() {
     setVerifyLoading(true);
 
@@ -39,7 +48,7 @@ const Email = () => {
       const response = await axiosInstance.post(
         `/auth/req-email-verification`,
         {
-          email: data?.user?.email,
+          email: session?.user?.email,
         }
       );
 
@@ -74,13 +83,16 @@ const Email = () => {
 
     try {
       const response = await axiosInstance.put(
-        `/auth/settings/email/${data?.user.user_name}`,
+        `/auth/settings/email/${session?.user.user_name}`,
         {
           email: values.email,
         }
       );
 
       if (response.status === 200) {
+        console.log(response, 'this api');
+
+        updateUserSession(response.data.token);
         toast({
           variant: 'success',
           title: 'Success',
@@ -130,7 +142,7 @@ const Email = () => {
       <p className='font-jost text-sm opacity-75'>
         Update your email for seamless communication and enhanced security.
         <br />
-        Email: {data?.user?.email}
+        Email: {session?.user?.email}
       </p>
 
       <Form {...form}>
