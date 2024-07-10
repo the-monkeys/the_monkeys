@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
@@ -6,12 +6,11 @@ import PageHeading from '@/components/pageHeading';
 import PolicySection from '../components/PolicySection';
 import PolicyUpdate from '../components/PolicyUpdate';
 
-export async function generateMetadata(
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Cookie Policy',
-    description: 'Learn about our cookie policy at Monkeys.',
+    description:
+      'Discover how Monkeys uses cookies to enhance your experience on our website. Read our detailed Cookie Policy to learn about the types of cookies we use, their purpose, and your rights regarding cookie usage.',
   };
 }
 

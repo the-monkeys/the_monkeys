@@ -1,12 +1,12 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
+import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
+import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-export async function generateMetadata(
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Notifications',
     description: 'Stay updated with the latest notifications on Monkeys.',
@@ -16,7 +16,15 @@ export async function generateMetadata(
 const NotificationsPage = () => {
   return (
     <Container className='pb-12 min-h-screen'>
-      <PageHeading heading='Notifications' />
+      <PageHeading
+        heading='Notifications'
+        badge={
+          <Badge variant='secondary'>
+            <Icon name='RiCodeSSlash' size={18} className='mr-2' />
+            Feature in Development
+          </Badge>
+        }
+      />
 
       <Tabs defaultValue='all'>
         <div className='mt-6 flex flex-col justify-center items-center'>

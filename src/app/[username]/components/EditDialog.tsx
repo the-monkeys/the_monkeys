@@ -105,7 +105,7 @@ const EditDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className='p-2 flex w-full items-center gap-2 hover:opacity-75'>
-        <Icon name='RiEdit' />
+        <Icon name='RiEditBox' />
         <p className='font-josefin_Sans text-base'>Edit Details</p>
       </DialogTrigger>
       <DialogContent>

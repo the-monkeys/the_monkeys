@@ -23,14 +23,17 @@ import { z } from 'zod';
 
 const Email = () => {
   const { data: session, update } = useSession();
+
   const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
   const [updateLoading, setUpdateLoading] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof updateEmailSchema>>({
     resolver: zodResolver(updateEmailSchema),
     defaultValues: {
       email: '',
     },
   });
+
   const updateUserSession = async (token: string) => {
     await update({
       ...session,
@@ -41,6 +44,7 @@ const Email = () => {
       },
     });
   };
+
   async function reqVerification() {
     setVerifyLoading(true);
 
