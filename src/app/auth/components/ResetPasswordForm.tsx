@@ -5,7 +5,10 @@ import { Suspense } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import Icon from '@/components/icon';
+import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -34,6 +37,15 @@ const ResetPasswordForm: React.FC = () => {
   const navigate = useRouter();
   const [userToken, setUserToken] = useState<string | undefined>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [resetTokenStatus, setResetTokenStatus] = useState<{
+    loading: boolean;
+    status: boolean;
+    message: string;
+  }>({
+    loading: true,
+    status: false,
+    message: '',
+  });
 
   const updateSearchParams = useCallback(
     (params: { username: string; evpw: string }) => {
@@ -50,12 +62,24 @@ const ResetPasswordForm: React.FC = () => {
       })
         .then((res) => {
           setUserToken(res?.response.token);
+
+          setResetTokenStatus({
+            loading: false,
+            status: true,
+            message: 'Reset token valid. You can proceed.',
+          });
         })
         .catch((err) => {
           toast({
             variant: 'error',
             title: 'Error',
             description: err.message,
+          });
+
+          setResetTokenStatus({
+            loading: false,
+            status: false,
+            message: 'Reset token invalid. Please try again.',
           });
         });
     }
@@ -115,10 +139,27 @@ const ResetPasswordForm: React.FC = () => {
         <SearchParamsComponent setSearchParams={updateSearchParams} />
       </Suspense>
 
+      {resetTokenStatus.loading ? (
+        <Loader size={32} />
+      ) : (
+        <Alert
+          variant={resetTokenStatus.status ? 'constructive' : 'destructive'}
+          className='w-full sm:w-1/2'
+        >
+          <Icon name='RiErrorWarning' />
+          <AlertTitle>
+            {resetTokenStatus.status ? 'Success' : 'Error'}
+          </AlertTitle>
+          <AlertDescription className='text-base'>
+            {resetTokenStatus.message}
+          </AlertDescription>
+        </Alert>
+      )}
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='w-full sm:w-96 space-y-4'
+          className='mt-4 w-full sm:w-96 space-y-4'
         >
           <FormField
             control={form.control}
@@ -127,10 +168,10 @@ const ResetPasswordForm: React.FC = () => {
               <FormItem>
                 <FormLabel>New Password</FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     placeholder='Enter new password'
-                    type='password'
-                    {...field}
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -145,10 +186,10 @@ const ResetPasswordForm: React.FC = () => {
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     placeholder='Enter new password'
-                    type='password'
-                    {...field}
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -174,7 +215,7 @@ const ResetPasswordForm: React.FC = () => {
           <div className='pt-4'>
             <Button
               variant='default'
-              disabled={loading ? true : false}
+              disabled={!resetTokenStatus.status || loading ? true : false}
               className='float-right'
               type='submit'
             >
