@@ -7,13 +7,10 @@ import PolicySection from '../components/PolicySection';
 import PolicyUpdate from '../components/PolicyUpdate';
 
 export async function generateMetadata(
-  { params }: { params: { username: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const username = params.username;
-
   return {
-    title: `Monkeys - Cookie Policy`,
+    title: 'Cookie Policy',
     description: 'Learn about our cookie policy at Monkeys.',
   };
 }

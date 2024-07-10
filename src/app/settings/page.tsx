@@ -9,13 +9,10 @@ import Post from './components/Post';
 import Profile from './components/Profile';
 
 export async function generateMetadata(
-  { params }: { params: { username: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const username = params.username;
-
   return {
-    title: `Monkeys - Settings`,
+    title: 'Settings',
     description: 'Adjust your preferences and settings on Monkeys.',
   };
 }

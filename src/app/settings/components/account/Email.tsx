@@ -22,8 +22,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const Email = () => {
-  const { data } = useSession();
-  const [loading, setLoading] = useState<boolean>(false);
+  const { data, update } = useSession();
+  const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
+  const [updateLoading, setUpdateLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof updateEmailSchema>>({
     resolver: zodResolver(updateEmailSchema),
     defaultValues: {
@@ -32,7 +33,8 @@ const Email = () => {
   });
 
   async function reqVerification() {
-    setLoading(true);
+    setVerifyLoading(true);
+
     try {
       const response = await axiosInstance.post(
         `/auth/req-email-verification`,
@@ -63,13 +65,46 @@ const Email = () => {
         });
       }
     } finally {
-      setLoading(false);
+      setVerifyLoading(false);
     }
   }
 
-  function onSubmit(values: z.infer<typeof updateEmailSchema>) {
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof updateEmailSchema>) => {
+    setUpdateLoading(true);
+
+    try {
+      const response = await axiosInstance.put(
+        `/auth/settings/email/${data?.user.user_name}`,
+        {
+          email: values.email,
+        }
+      );
+
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Your email address has been updated successfully.',
+        });
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to update your email address.',
+        });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occured.',
+        });
+      }
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
 
   return (
     <div className='flex flex-col items-start'>
@@ -85,15 +120,17 @@ const Email = () => {
         variant='secondary'
         className='mt-4'
         onClick={reqVerification}
-        disabled={loading ? true : false}
+        disabled={verifyLoading ? true : false}
       >
-        {loading && <Loader />} Verify Email
+        {verifyLoading && <Loader />} Verify Email
       </Button>
 
       <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>
 
       <p className='font-jost text-sm opacity-75'>
         Update your email for seamless communication and enhanced security.
+        <br />
+        Email: {data?.user?.email}
       </p>
 
       <Form {...form}>
@@ -117,8 +154,13 @@ const Email = () => {
               />
             </div>
 
-            <Button size='lg' variant='secondary' type='submit'>
-              Update
+            <Button
+              size='lg'
+              variant='secondary'
+              type='submit'
+              disabled={updateLoading ? true : false}
+            >
+              {updateLoading && <Loader />} Update
             </Button>
           </div>
         </form>

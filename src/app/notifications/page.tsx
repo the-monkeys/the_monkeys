@@ -5,13 +5,10 @@ import PageHeading from '@/components/pageHeading';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export async function generateMetadata(
-  { params }: { params: { username: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const username = params.username;
-
   return {
-    title: `Monkeys - Notifications`,
+    title: 'Notifications',
     description: 'Stay updated with the latest notifications on Monkeys.',
   };
 }

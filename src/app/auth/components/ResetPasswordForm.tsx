@@ -34,6 +34,7 @@ const ResetPasswordForm: React.FC = () => {
   const navigate = useRouter();
   const [userToken, setUserToken] = useState<string | undefined>('');
   const [loading, setLoading] = useState<boolean>(false);
+
   const updateSearchParams = useCallback(
     (params: { username: string; evpw: string }) => {
       setSearchParams(params);
@@ -48,9 +49,6 @@ const ResetPasswordForm: React.FC = () => {
         evpw: searchParams.evpw,
       })
         .then((res) => {
-          console.log('hello');
-
-          console.log(res);
           setUserToken(res?.response.token);
         })
         .catch((err) => {
@@ -107,7 +105,13 @@ const ResetPasswordForm: React.FC = () => {
 
   return (
     <div className='flex flex-col items-center px-5 py-4'>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense
+        fallback={
+          <div>
+            <Loader />
+          </div>
+        }
+      >
         <SearchParamsComponent setSearchParams={updateSearchParams} />
       </Suspense>
 

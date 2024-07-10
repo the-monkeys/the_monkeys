@@ -13,7 +13,7 @@ export async function generateMetadata(
   const username = params.username;
 
   return {
-    title: `Monkeys - @${username}`,
+    title: `@${username}`,
     description: 'Manage and view your profile on Monkeys.',
   };
 }

@@ -7,13 +7,10 @@ import PolicySection from '../components/PolicySection';
 import PolicyUpdate from '../components/PolicyUpdate';
 
 export async function generateMetadata(
-  { params }: { params: { username: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const username = params.username;
-
   return {
-    title: `Monkeys - Terms of Use`,
+    title: 'Terms of Use',
     description: 'Read the terms of use for Monkeys.',
   };
 }

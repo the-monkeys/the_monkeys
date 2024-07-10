@@ -4,13 +4,10 @@ import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
 
 export async function generateMetadata(
-  { params }: { params: { username: string } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const username = params.username;
-
   return {
-    title: `Monkeys - Activity`,
+    title: 'Activity',
     description: 'Track your recent activities on Monkeys.',
   };
 }
