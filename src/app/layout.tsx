@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Josefin_Sans, Jost, Playfair_Display } from 'next/font/google';
 
+import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
@@ -28,13 +29,27 @@ const playfair_Display = Playfair_Display({
   display: 'swap',
 });
 
-const title =
-  'Monkeys - Unleash Your Creativity and Influence: Blog Together, Write Better';
-const description = 'We are The Monkeys! A blogging and educational platform.';
-
 export const metadata: Metadata = {
-  title: title,
-  description: description,
+  metadataBase: new URL('https://themonkeys.live/'),
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-US': '/en-US',
+      'de-DE': '/de-DE',
+    },
+  },
+  title: {
+    template: '%s | Monkeys',
+    default:
+      'Unleash Your Creativity and Influence: Blog Together, Write Better',
+  },
+  description: 'We are The Monkeys! A blogging and educational platform.',
+  twitter: {
+    card: 'summary_large_image',
+  },
+  verification: {
+    google: '-aw7tEMRsboqWp8YhQwHAT2tEddw1uk_FPS3F3hvRic',
+  },
 };
 
 export default function RootLayout({
@@ -46,6 +61,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en' suppressHydrationWarning>
+      <head>
+        <AdSense pId='4687427997504601' />
+      </head>
       <body
         className={`${jost.variable} ${josefin_Sans.variable} bg-primary-monkeyWhite dark:bg-primary-monkeyBlack ${playfair_Display.variable}`}
       >

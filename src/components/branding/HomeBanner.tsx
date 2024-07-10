@@ -15,10 +15,8 @@ const HomeBanner = () => {
 
       <div className='absolute bottom-0 left-0 space-y-2'>
         <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm cursor-default animate-appear-up'>
-          Seamless <span className='text-primary-monkeyOrange'>Creation</span>
-        </h1>
-
-        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm cursor-default animate-appear-up'>
+          Seamless <span className='text-primary-monkeyOrange'>Creation</span>{' '}
+          <br />
           Effortless{' '}
           <span className='text-primary-monkeyOrange'>Collaboration</span>
         </h1>

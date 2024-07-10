@@ -66,7 +66,7 @@ const ProfileCard: FC = () => {
         </div>
 
         <div>
-          <h3 className='font-playfair_Display font-semibold text-2xl capitalize cursor-default'>{`${user?.first_name} ${user?.last_name}`}</h3>
+          <h1 className='font-playfair_Display font-semibold text-2xl capitalize cursor-default'>{`${user?.first_name} ${user?.last_name}`}</h1>
 
           <TooltipProvider>
             <Tooltip>

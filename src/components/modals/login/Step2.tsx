@@ -21,6 +21,7 @@ import { z } from 'zod';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
+import PasswordInput from '@/components/input/PasswordInput';
 
 const Step2 = ({
   setLoginStep,
@@ -105,10 +106,10 @@ const Step2 = ({
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput 
                     placeholder='Enter Password'
-                    {...field}
-                    type='password'
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

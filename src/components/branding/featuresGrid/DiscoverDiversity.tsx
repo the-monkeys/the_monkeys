@@ -57,7 +57,7 @@ const DiscoverDiversity = () => {
             src='./topics.svg'
             width='300'
             height='300'
-            alt='Topics'
+            alt='Blog Topics'
             className='mx-auto object-fill'
           />
         </div>
