@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
@@ -8,14 +8,9 @@ import Account from './components/Account';
 import Post from './components/Post';
 import Profile from './components/Profile';
 
-export async function generateMetadata(
-  { params }: { params: { username: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const username = params.username;
-
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `Monkeys - Settings`,
+    title: 'Settings',
     description: 'Adjust your preferences and settings on Monkeys.',
   };
 }

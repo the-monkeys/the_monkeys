@@ -1,4 +1,4 @@
-import type { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata } from 'next';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -6,14 +6,15 @@ import Blogs from './components/Blogs';
 import Collabs from './components/Collabs';
 import Drafts from './components/Drafts';
 
-export async function generateMetadata(
-  { params }: { params: { username: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { username: string };
+}): Promise<Metadata> {
   const username = params.username;
 
   return {
-    title: `Monkeys - @${username}`,
+    title: `${username}`,
     description: 'Manage and view your profile on Monkeys.',
   };
 }

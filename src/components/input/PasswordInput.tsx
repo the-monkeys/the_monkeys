@@ -1,7 +1,7 @@
-
 import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
+
 import Icon from '@/components/icon';
+import { Input } from '@/components/ui/input';
 
 type PasswordInputProps = {
   placeholder?: string;
@@ -27,13 +27,14 @@ const PasswordInput: React.FC<PasswordInputProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        className='peer'
       />
       <button
         type='button'
         onClick={togglePasswordVisibility}
-        className='absolute inset-y-0 right-0 pr-3'
+        className='absolute inset-y-0 right-0 pr-3 opacity-25 peer-focus:opacity-100'
       >
-        <Icon name={showPassword ? 'RiEyeClose' : 'RiEye'} />
+        <Icon name={showPassword ? 'RiEyeClose' : 'RiEye'} size={16} />
       </button>
     </div>
   );

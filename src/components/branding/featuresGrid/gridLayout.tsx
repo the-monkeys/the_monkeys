@@ -8,14 +8,14 @@ export const GridHeading = ({
   className?: string;
 }) => {
   return (
-    <p
+    <h4
       className={twMerge(
         className,
         'font-josefin_Sans font-semibold text-lg cursor-default'
       )}
     >
       {children}
-    </p>
+    </h4>
   );
 };
 export const GridSubHeading = ({

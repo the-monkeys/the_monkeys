@@ -22,9 +22,6 @@ const ProfileSection = () => {
   const params = useParams<{ username: string }>();
 
   const { data, status } = useSession();
-  // if (status === 'unauthenticated') {
-  //   router.push('/login');
-  // }
 
   useEffect(() => {
     // console.log(data);

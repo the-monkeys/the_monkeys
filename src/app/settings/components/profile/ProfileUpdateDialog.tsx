@@ -170,31 +170,34 @@ const ProfileUpdateDialog = () => {
               />
             </div>
 
-            <p className='font-jost truncate cursor-default'>
-              {selectedImage.name}
-              <span className='block text-sm opacity-75'>
-                {(selectedImage.size / 1024).toFixed(1)} KB
-              </span>
-            </p>
+            <div className='flex items-center gap-2'>
+              <p className='py-1 flex-1 font-jost truncate'>
+                {selectedImage.name}
+                <span className='block text-sm opacity-75'>
+                  {(selectedImage.size / 1024).toFixed(1)} KB
+                </span>
+              </p>
 
-            <div className='mt-4 flex justify-end gap-2'>
               <Button
+                size='icon'
                 variant='destructive'
                 type='button'
                 onClick={removeImage}
                 disabled={loading}
+                className='rounded-full'
               >
-                Discard
+                <Icon name='RiDeleteBin' />
               </Button>
 
               <Button
-                variant='secondary'
+                size='icon'
+                variant='constructive'
                 type='button'
                 onClick={onProfileUpload}
                 disabled={loading || status === 'unauthenticated'}
+                className='rounded-full'
               >
-                {loading && <Loader />}
-                Update
+                {loading ? <Loader /> : <Icon name='RiCheck' />}
               </Button>
             </div>
           </div>

@@ -20,8 +20,8 @@ const NotificationDropdown = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className='m-2 w-96'>
-        <DropdownMenuLabel className='p-4 pb-2 flex justify-between items-end font-normal'>
-          <p className='font-josefin_Sans text-xl'>Notifications</p>
+        <DropdownMenuLabel className='p-4 pb-2 font-josefin_Sans text-xl'>
+          Notifications
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />

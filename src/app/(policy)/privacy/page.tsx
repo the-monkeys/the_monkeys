@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
@@ -6,15 +6,11 @@ import PageHeading from '@/components/pageHeading';
 import PolicySection from '../components/PolicySection';
 import PolicyUpdate from '../components/PolicyUpdate';
 
-export async function generateMetadata(
-  { params }: { params: { username: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const username = params.username;
-
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `Monkeys - Privacy Policy`,
-    description: 'Understand our privacy policy at Monkeys.',
+    title: 'Privacy Policy',
+    description:
+      'Explore our privacy policy to understand how we collect, use, and protect your personal information. Read about our commitment to data security and your rights regarding your data.',
   };
 }
 

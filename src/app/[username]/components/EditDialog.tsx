@@ -75,6 +75,7 @@ const EditDialog = () => {
         title: 'Success',
         description: 'Your profile has been updated successfully',
       });
+
       setOpen(false);
       mutate(`/user/public/${data?.user.user_name}`);
       mutate(`/user/${data?.user.user_name}`);
@@ -88,7 +89,6 @@ const EditDialog = () => {
     }
   };
 
-  // if (isLoading) return <Loader />;
   if (isError) return null;
 
   useEffect(() => {
@@ -105,7 +105,7 @@ const EditDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className='p-2 flex w-full items-center gap-2 hover:opacity-75'>
-        <Icon name='RiEdit' />
+        <Icon name='RiEditBox' />
         <p className='font-josefin_Sans text-base'>Edit Details</p>
       </DialogTrigger>
       <DialogContent>

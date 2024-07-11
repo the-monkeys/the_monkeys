@@ -20,7 +20,10 @@ const CollaborativeWriting = () => {
         and engage your audience.
       </GridSubHeading>
 
-      <div className='mt-6 flex flex-col gap-4 sm:gap-6 overflow-hidden animate-appear-up'>
+      <div
+        className='mt-6 flex flex-col gap-4 sm:gap-6 overflow-hidden animate-appear-up'
+        aria-disabled='true'
+      >
         <div>
           <div className='w-fit h-8 sm:h-10 self-start'>
             <Image
