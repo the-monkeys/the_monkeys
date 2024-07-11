@@ -52,9 +52,12 @@ const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    jwt({ token, user, trigger, session }) {
       if (user) token.user = user as unknown as User;
-
+      if (trigger === 'update') {
+        token.user = session.user;
+        return token;
+      }
       return token;
     },
     async session({ token, session, trigger }) {

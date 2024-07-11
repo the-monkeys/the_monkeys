@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import PasswordInput from '@/components/input/PasswordInput';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -21,7 +22,6 @@ import { z } from 'zod';
 
 import ModalContent from '../layout/ModalContent';
 import { LoginStep } from './LoginModal';
-import PasswordInput from '@/components/input/PasswordInput';
 
 const Step2 = ({
   setLoginStep,
@@ -43,11 +43,10 @@ const Step2 = ({
       password: values.password,
       redirect: false,
     });
-    console.log(res, 'res');
 
     if (res?.ok) {
-      console.log('OK');
       router.back();
+
       toast({
         variant: 'success',
         title: 'Login Successful',
@@ -106,8 +105,8 @@ const Step2 = ({
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <PasswordInput 
-                    placeholder='Enter Password'
+                  <PasswordInput
+                    placeholder='Enter password'
                     value={field.value}
                     onChange={field.onChange}
                   />

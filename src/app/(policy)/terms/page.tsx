@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
@@ -6,15 +6,11 @@ import PageHeading from '@/components/pageHeading';
 import PolicySection from '../components/PolicySection';
 import PolicyUpdate from '../components/PolicyUpdate';
 
-export async function generateMetadata(
-  { params }: { params: { username: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const username = params.username;
-
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `Monkeys - Terms of Use`,
-    description: 'Read the terms of use for Monkeys.',
+    title: 'Terms of Use',
+    description:
+      'Read the terms of use for Monkeys to understand the rules and guidelines for using our website and services. Learn about acceptance of terms, user responsibilities, prohibited uses etc.',
   };
 }
 

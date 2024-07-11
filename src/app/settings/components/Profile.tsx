@@ -2,8 +2,6 @@
 
 import React, { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { Loader } from '@/components/loader';
 import ProfileImage from '@/components/profileImage';
 import { ProfilePhotoSkeleton } from '@/components/skeletons/profileSkeleton';
@@ -36,7 +34,7 @@ const Profile = () => {
     data?.user.user_name
   );
   const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useRouter();
+
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {

@@ -16,7 +16,7 @@ const Visibility = () => {
       </p>
 
       <div className='mt-4 flex items-center space-x-2'>
-        <Switch id='anonymous' />
+        <Switch id='anonymous' disabled />
         <Label htmlFor='anonymous'>Make yourself Anonymous</Label>
       </div>
     </div>
