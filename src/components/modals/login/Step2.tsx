@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import PasswordInput from '@/components/input/PasswordInput';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -42,11 +43,10 @@ const Step2 = ({
       password: values.password,
       redirect: false,
     });
-    console.log(res, 'res');
 
     if (res?.ok) {
-      console.log('OK');
       router.back();
+
       toast({
         variant: 'success',
         title: 'Login Successful',
@@ -105,10 +105,10 @@ const Step2 = ({
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='Enter Password'
-                    {...field}
-                    type='password'
+                  <PasswordInput
+                    placeholder='Enter password'
+                    value={field.value}
+                    onChange={field.onChange}
                   />
                 </FormControl>
                 <FormMessage />

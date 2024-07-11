@@ -3,20 +3,17 @@
 import * as RemixIcons from '@remixicon/react';
 
 export type IconName =
-  | 'RiToggle'
   | 'RiSun'
   | 'RiMoon'
   | 'RiNotification3'
   | 'RiUser'
-  | 'RiShakeHands'
-  | 'RiTeam'
+  | 'RiGroup'
   | 'RiArchiveStack'
   | 'RiCompass3'
   | 'RiPencil'
   | 'RiSearch'
   | 'RiMapPin'
   | 'RiBookmark'
-  | 'RiDraft'
   | 'RiArrowRightUp'
   | 'RiArrowRight'
   | 'RiArrowLeft'
@@ -28,12 +25,13 @@ export type IconName =
   | 'RiFileCopy'
   | 'RiUpload2'
   | 'RiDeleteBin'
+  | 'RiQuillPen'
   | 'RiSettings3'
   | 'RiHistory'
   | 'RiShareForward'
-  | 'RiEdit'
+  | 'RiEditBox'
+  | 'RiCodeSSlash'
   | 'RiCalendar'
-  | 'RiCake2'
   | 'RiMail'
   | 'RiGithub'
   | 'RiTwitterX'
@@ -45,7 +43,9 @@ export type IconName =
   | 'RiCheck'
   | 'RiLoginBox'
   | 'RiLogoutBoxR'
-  | 'RiErrorWarning';
+  | 'RiErrorWarning'
+  | 'RiEye'
+  | 'RiEyeClose';
 
 export type IconProps = {
   name: IconName;

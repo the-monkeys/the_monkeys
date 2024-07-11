@@ -61,21 +61,15 @@ const Footer = () => {
     },
   });
 
-  
-  function onSubmit(values: z.infer<typeof contactFormSchema>) {
-    console.log(values.email);
-  }
-
-  /* Get the current year dynamically */
-  const currentYear = new Date().getFullYear() 
+  const currentYear = new Date().getFullYear();
 
   return (
     <Container className='px-5 pt-10 pb-14 border-t-1 border-secondary-lightGrey/15'>
       <footer className='space-y-6'>
-        <Logo showSubHeading showMix />
+        <Logo showSubHeading />
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form>
             <div className='flex items-end gap-2'>
               <FormField
                 control={form.control}
@@ -91,7 +85,7 @@ const Footer = () => {
                 )}
               />
 
-              <Button size='lg' type='submit'>
+              <Button size='lg' disabled>
                 Subscribe
               </Button>
             </div>

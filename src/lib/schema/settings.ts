@@ -31,6 +31,7 @@ export const updateEmailSchema = z.object({
     .min(1, 'Email is required')
     .email('Invalid email'),
 });
+
 export const updateUsername = z.object({
   user_name: z.string().min(2).max(50),
 });

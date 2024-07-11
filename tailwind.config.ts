@@ -22,11 +22,6 @@ const config = {
       josefin_Sans: ['var(--font-josefin_Sans)'],
       playfair_Display: ['var(--font-playfair_Display)'],
     },
-    animation: {
-      shake: 'shake 600ms ease-in-out',
-      pulse: 'pulse 1000ms ease-in-out infinite',
-      rotate: 'rotate 800ms linear infinite',
-    },
     extend: {
       colors: {
         primary: {
@@ -47,16 +42,8 @@ const config = {
       borderWidth: {
         '1': '1px',
       },
-      backgroundImage: {
-        'custom-gradient1':
-          'linear-gradient(237.34deg, rgba(255, 70, 46, 0) 5.59%, rgba(255, 70, 46, 0.15) 53.05%, rgba(255, 70, 46, 0) 79.73%)',
-        'custom-gradient2':
-          'linear-gradient(304.84deg, rgba(255, 70, 46, 0) 1.8%, rgba(255, 70, 46, 0.15) 47.81%, rgba(255, 70, 46, 0) 73.66%)',
-        'custom-gradient3':
-          'linear-gradient(221.33deg, rgba(255, 70, 46, 0) 1.43%, rgba(255, 70, 46, 0.15) 65.81%, rgba(255, 70, 46, 0) 101.98%)',
-      },
       keyframes: {
-        pulse: {
+        'opacity-pulse': {
           '0%': {
             opacity: '0.25',
           },
@@ -67,7 +54,7 @@ const config = {
             opacity: '0.25',
           },
         },
-        shake: {
+        'icon-shake': {
           '0%': {
             transform: 'rotate(0deg)',
           },
@@ -84,12 +71,22 @@ const config = {
             transform: 'rotate(0)',
           },
         },
-        rotate: {
+        'loader-rotate': {
           '0%': {
             transform: 'rotate(0deg)',
           },
           '100%': {
             transform: 'rotate(360deg)',
+          },
+        },
+        'appear-up': {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(10px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
           },
         },
         'accordion-down': {
@@ -102,6 +99,10 @@ const config = {
         },
       },
       animation: {
+        'icon-shake': 'icon-shake 0.6s ease-in-out',
+        'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
+        'loader-rotate': 'loader-rotate 0.6s linear infinite',
+        'appear-up': 'appear-up .8s ease-out',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },

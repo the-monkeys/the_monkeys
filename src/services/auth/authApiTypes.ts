@@ -3,8 +3,20 @@ interface getResetPasswordTokenRequest {
   evpw: string;
 }
 
+interface verifyEmailVerificationTokenRequest {
+  user: string;
+  evpw: string;
+}
+
 interface getResetPasswordTokenApiResponse {
   response: UserInfo;
+}
+
+interface verifyEmailVerificationTokenApiResponse {
+  response: {
+    status_code: number;
+    token: string;
+  };
 }
 
 interface UserInfo {

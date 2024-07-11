@@ -9,7 +9,7 @@ const NotFound = () => {
     <Container className='pb-12 min-h-screen flex flex-col items-center space-y-6'>
       <div className='flex flex-wrap items-end justify-center gap-4'>
         <Image
-          src={'/not-found.svg'}
+          src={'/page-not-found.svg'}
           alt='Page not found'
           title='Page not found'
           height={250}
@@ -18,7 +18,7 @@ const NotFound = () => {
 
         <div>
           <p className='font-josefin_Sans font-semibold text-center sm:text-left text-primary-monkeyOrange'>
-            404: Page Not Found
+            Page Not Found
           </p>
 
           <p className='font-playfair_Display text-3xl font-semibold md:text-5xl text-center sm:text-left text-secondary-darkGrey dark:text-secondary-white'>
@@ -31,7 +31,7 @@ const NotFound = () => {
 
       <p className='font-jost text-center'>Or</p>
 
-      <div className='w-full sm:w-4/5 md:w-1/2 space-y-2'>
+      <div className='w-full sm:w-4/5 md:w-1/2 space-y-2 px-5'>
         <SocialCard
           icon='RiDiscord'
           title='Join our Discord'

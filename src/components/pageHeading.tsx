@@ -1,18 +1,22 @@
 const PageHeading = ({
-  children,
   heading,
+  subheading,
+  badge,
 }: {
   heading: string;
-  children?: React.ReactNode;
+  subheading?: string;
+  badge?: JSX.Element;
 }) => {
   return (
-    <>
-      <h1 className='py-5 font-playfair_Display font-semibold text-3xl sm:text-4xl text-center cursor-default'>
+    <div className='px-4 py-2 flex flex-col items-center gap-2'>
+      {badge}
+
+      <h1 className='py-2 font-playfair_Display font-semibold text-3xl sm:text-4xl text-center cursor-default'>
         {heading}
       </h1>
 
-      {children}
-    </>
+      {subheading && <h4 className='font-jost text-lg'>{subheading}</h4>}
+    </div>
   );
 };
 

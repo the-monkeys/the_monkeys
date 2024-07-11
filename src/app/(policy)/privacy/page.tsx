@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
@@ -6,26 +6,22 @@ import PageHeading from '@/components/pageHeading';
 import PolicySection from '../components/PolicySection';
 import PolicyUpdate from '../components/PolicyUpdate';
 
-export async function generateMetadata(
-  { params }: { params: { username: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const username = params.username;
-
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `Monkeys - Privacy Policy`,
-    description: 'Understand our privacy policy at Monkeys.',
+    title: 'Privacy Policy',
+    description:
+      'Explore our privacy policy to understand how we collect, use, and protect your personal information. Read about our commitment to data security and your rights regarding your data.',
   };
 }
 
 const PrivacyPage = () => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full'>
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeading heading='Privacy Policy' />
 
       <PolicyUpdate />
 
-      <div className='mt-10 space-y-6'>
+      <div className='space-y-8'>
         <PolicySection title='Introduction'>
           <p>
             Welcome to The Monkeys! We are dedicated to fostering a secure and

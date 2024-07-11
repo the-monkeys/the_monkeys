@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
@@ -6,42 +6,38 @@ import PageHeading from '@/components/pageHeading';
 import PolicySection from '../components/PolicySection';
 import PolicyUpdate from '../components/PolicyUpdate';
 
-export async function generateMetadata(
-  { params }: { params: { username: string } },
-  parent: ResolvingMetadata
-): Promise<Metadata> {
-  const username = params.username;
-
+export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `Monkeys - Terms of Use`,
-    description: 'Read the terms of use for Monkeys.',
+    title: 'Terms of Use',
+    description:
+      'Read the terms of use for Monkeys to understand the rules and guidelines for using our website and services. Learn about acceptance of terms, user responsibilities, prohibited uses etc.',
   };
 }
 
 const TermsPage = () => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full'>
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeading heading='Terms of Use' />
 
       <PolicyUpdate />
 
-      <div className='mt-10 space-y-6'>
+      <div className='space-y-8'>
         <PolicySection title='Introduction'>
-          <p className='font-jost'>
+          <p>
             Welcome to themonkeys.live (“Company”, “we”, “our”, “us”)! As you
             have just clicked our Terms of Use, please pause, grab a cup of
             coffee and carefully read the following points. It will take you
             approximately 15 minutes.
           </p>
 
-          <p className='font-jost text-justify'>
+          <p>
             Our Privacy Policy also governs your use of our Service and explains
             how we collect, safeguard and disclose information that results from
             your use of our web pages. Please read it here
             https://themonkeys.live/privacy.
           </p>
 
-          <p className='font-jost text-justify'>
+          <p>
             Your agreement with us includes these Terms and our Privacy Policy
             (“Agreements”). You acknowledge that you have read and understood
             Agreements, and agree to be bound of them.
@@ -121,26 +117,26 @@ const TermsPage = () => {
             Terms. You agree not to use Service:
           </p>
 
-          <ul className='list-inside space-y-1'>
-            <li className='ml-8 list-disc'>
+          <ul className='list-inside space-y-2'>
+            <li className='ml-4 list-disc'>
               In any way that violates any applicable national or international
               law or regulation.
             </li>
 
-            <li className='ml-8 list-disc'>
+            <li className='ml-4 list-disc'>
               For the purpose of exploiting, harming, or attempting to exploit
               or harm minors in any way by exposing them to inappropriate
               content or otherwise.
             </li>
 
-            <li className='ml-8 list-disc'>
+            <li className='ml-4 list-disc'>
               In any way that infringes upon the rights of others, or in any way
               is illegal, threatening, fraudulent, or harmful, or in connection
               with any unlawful, illegal, fraudulent, or harmful purpose or
               activity.
             </li>
 
-            <li className='ml-8 list-disc'>
+            <li className='ml-4 list-disc'>
               To engage in any other conduct that restricts or inhibits anyone’s
               use or enjoyment of Service, or which, as determined by us, may
               harm or offend Company or users of Service or expose them to
