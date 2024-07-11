@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -17,18 +18,18 @@ import { API_URL } from '@/constants/api';
 import { updateUsername } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const Username = () => {
   const { data: session, update } = useSession();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof updateUsername>>({
     resolver: zodResolver(updateUsername),
     defaultValues: {
-      username: '',
+      user_name: '',
     },
   });
 
@@ -38,19 +39,22 @@ const Username = () => {
       user: {
         ...session?.user,
         token: token,
-        username: form.getValues('username'),
+        user_name: form.getValues('user_name'),
       },
     });
   };
 
   const onSubmit = async (values: z.infer<typeof updateUsername>) => {
+    setLoading(true);
+
     axiosInstance
       .put(`${API_URL}/auth/settings/username/${session?.user?.user_name}`, {
-        username: values.username,
+        username: values.user_name,
       })
       .then((res) => {
         console.log(res);
         updateUserSession(res.data.token);
+        form.reset();
         toast({
           variant: 'success',
           title: 'Success',
@@ -63,6 +67,9 @@ const Username = () => {
           title: 'Error',
           description: err.message || 'Failed to update username.',
         });
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -80,7 +87,7 @@ const Username = () => {
             <div className='w-full sm:w-1/2'>
               <FormField
                 control={form.control}
-                name='username'
+                name='user_name'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
@@ -95,8 +102,13 @@ const Username = () => {
               />
             </div>
 
-            <Button size='lg' variant='secondary' type='submit'>
-              Update
+            <Button
+              size='lg'
+              variant='secondary'
+              disabled={loading ? true : false}
+              type='submit'
+            >
+              {loading && <Loader />} Update
             </Button>
           </div>
         </form>
