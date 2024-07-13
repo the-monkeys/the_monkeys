@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 import Styles from './styles/backgroundStyles.module.css';
 
-const BackgroundBranding = () => {
+const MonkeysBranding = () => {
   return (
     <div className='w-full sm:w-4/5 md:w-1/2 h-80 relative flex flex-col justify-end items-center overflow-hidden'>
       <Image
@@ -26,4 +26,4 @@ const BackgroundBranding = () => {
   );
 };
 
-export default BackgroundBranding;
+export default MonkeysBranding;

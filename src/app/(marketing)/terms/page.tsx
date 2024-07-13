@@ -3,8 +3,7 @@ import { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
 
-import PolicySection from '../components/PolicySection';
-import PolicyUpdate from '../components/PolicyUpdate';
+import Section from '../components/Section';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -19,10 +18,12 @@ const TermsPage = () => {
     <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeading heading='Terms of Use' />
 
-      <PolicyUpdate />
+      <p className='font-jost text-sm cursor-default'>
+        Effective date: 06/15/2024
+      </p>
 
       <div className='space-y-8'>
-        <PolicySection title='Introduction'>
+        <Section title='Introduction'>
           <p>
             Welcome to themonkeys.live (“Company”, “we”, “our”, “us”)! As you
             have just clicked our Terms of Use, please pause, grab a cup of
@@ -44,18 +45,18 @@ const TermsPage = () => {
           </p>
 
           <p>Thank you for being responsible.</p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Acceptance of Terms'>
+        <Section title='Acceptance of Terms'>
           <p>
             By using our website, you agree to the Terms of Use. If you do not
             agree to these terms, you should not use this site. Your continued
             use of the site after any modifications to these terms constitutes
             acceptance of those changes.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='License to Use Site'>
+        <Section title='License to Use Site'>
           <p>
             The Monkeys grants you a limited, revocable, non-exclusive license
             to access and make personal use of this site.
@@ -76,9 +77,9 @@ const TermsPage = () => {
             consent. Any unauthorized use terminates the permission or license
             granted by The Monkeys.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='User Responsibilities'>
+        <Section title='User Responsibilities'>
           <p>
             Users are solely responsible for any content they post on The
             Monkeys. By posting content, you warrant and represent that you own
@@ -92,9 +93,9 @@ const TermsPage = () => {
             these Terms of Use or is otherwise objectionable, without prior
             notice and at our sole discretion.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Intellectual Property'>
+        <Section title='Intellectual Property'>
           <p>
             All content on this site, including text, graphics, logos, images,
             audio clips, video clips, digital downloads, data compilations, and
@@ -109,9 +110,9 @@ const TermsPage = () => {
             or its software suppliers and is protected by international
             copyright laws.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Prohibited Uses'>
+        <Section title='Prohibited Uses'>
           <p>
             You may use Service only for lawful purposes and in accordance with
             Terms. You agree not to use Service:
@@ -143,9 +144,9 @@ const TermsPage = () => {
               liability.
             </li>
           </ul>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Termination'>
+        <Section title='Termination'>
           <p>
             We may terminate or suspend your account and bar access to Service
             immediately, without prior notice or liability, under our sole
@@ -164,9 +165,9 @@ const TermsPage = () => {
             limitation, ownership provisions, warranty disclaimers, indemnity
             and limitations of liability.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Changes to Terms of Use'>
+        <Section title='Changes to Terms of Use'>
           <p>
             We reserve the right to update or modify these Terms of Use at any
             time without prior notice. It is your responsibility to review these
@@ -177,9 +178,9 @@ const TermsPage = () => {
             Your continued use of the site following the posting of any changes
             to these Terms of Use constitutes acceptance of those changes.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Contact Us'>
+        <Section title='Contact Us'>
           <p>We welcome your questions and feedback.</p>
 
           <p>
@@ -190,7 +191,7 @@ const TermsPage = () => {
               mail.themonkeys.life@gmail.com
             </span>
           </p>
-        </PolicySection>
+        </Section>
       </div>
     </Container>
   );

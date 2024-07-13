@@ -18,7 +18,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { resetPasswordSchema } from '@/lib/schema/auth';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';

@@ -1,17 +1,14 @@
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import Icon from '../icon';
 import { Button } from '../ui/button';
-import BackgroundBranding from './BackgroundBranding';
+import MonkeysBranding from './MonkeysBranding';
 
 const HomeBanner = () => {
-  const router = useRouter();
-
   return (
     <div className='relative h-80'>
       <div className='flex justify-end opacity-75 sm:opacity-100'>
-        <BackgroundBranding />
+        <MonkeysBranding />
       </div>
 
       <div className='absolute bottom-0 left-0 space-y-2'>

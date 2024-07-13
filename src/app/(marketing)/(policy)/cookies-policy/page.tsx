@@ -3,8 +3,7 @@ import { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
 
-import PolicySection from '../components/PolicySection';
-import PolicyUpdate from '../components/PolicyUpdate';
+import Section from '../../components/Section';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -19,10 +18,12 @@ const CookiePage = () => {
     <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeading heading='Cookie Policy' />
 
-      <PolicyUpdate />
+      <p className='font-jost text-sm cursor-default'>
+        Effective date: 06/15/2024
+      </p>
 
       <div className='space-y-8'>
-        <PolicySection title='Introduction'>
+        <Section title='Introduction'>
           <p>
             Welcome to The Monkeys! We are dedicated to fostering a secure and
             transparent environment for our users.
@@ -33,18 +34,18 @@ const CookiePage = () => {
             uses cookies and similar tracking technologies when you visit our
             website.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='What are cookies?'>
+        <Section title='What are cookies?'>
           <p>
             Cookies are small text files that are stored on your device when you
             visit a website. They are widely used to make websites work more
             efficiently, as well as to provide information to the owners of the
             site.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='How do we use cookies?'>
+        <Section title='How do we use cookies?'>
           <p>We use cookies for the following purposes:</p>
 
           <ul className='list-inside space-y-2'>
@@ -71,9 +72,9 @@ const CookiePage = () => {
               you.
             </li>
           </ul>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Your Choices Regarding Cookies'>
+        <Section title='Your Choices Regarding Cookies'>
           <p>
             You can control and/or delete cookies as you wish. You can delete
             all cookies that are already on your computer, and you can set most
@@ -81,9 +82,9 @@ const CookiePage = () => {
             you may have to manually adjust some preferences every time you
             visit a site, and some services and functionalities may not work.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Changes to This Cookie Policy'>
+        <Section title='Changes to This Cookie Policy'>
           <p>
             In our commitment to transparency, any revisions to our Privacy
             Policy will be promptly communicated.
@@ -98,9 +99,9 @@ const CookiePage = () => {
             Any alterations will be duly reflected on this page, providing
             clarity and accountability to our valued community.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Contact Us'>
+        <Section title='Contact Us'>
           <p>We welcome your questions and feedback.</p>
 
           <p>
@@ -111,7 +112,7 @@ const CookiePage = () => {
               mail.themonkeys.life@gmail.com
             </span>
           </p>
-        </PolicySection>
+        </Section>
       </div>
     </Container>
   );

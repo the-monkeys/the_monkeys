@@ -3,8 +3,7 @@ import { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 import PageHeading from '@/components/pageHeading';
 
-import PolicySection from '../components/PolicySection';
-import PolicyUpdate from '../components/PolicyUpdate';
+import Section from '../../components/Section';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -19,10 +18,12 @@ const PrivacyPage = () => {
     <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeading heading='Privacy Policy' />
 
-      <PolicyUpdate />
+      <p className='font-jost text-sm cursor-default'>
+        Effective date: 06/15/2024
+      </p>
 
       <div className='space-y-8'>
-        <PolicySection title='Introduction'>
+        <Section title='Introduction'>
           <p>
             Welcome to The Monkeys! We are dedicated to fostering a secure and
             transparent environment for our users.
@@ -39,9 +40,9 @@ const PrivacyPage = () => {
             together with the Privacy Policy constitutes your agreement with us
             (“agreement”).
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Information Collection and Use'>
+        <Section title='Information Collection and Use'>
           <p>
             In our pursuit of providing optimal services, we gather various
             types of data to enhance user experience.
@@ -58,9 +59,9 @@ const PrivacyPage = () => {
             services, including device details and browsing preferences, to
             refine our offerings.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='How We Use Your Information'>
+        <Section title='How We Use Your Information'>
           <p>
             The information we gather serves multifaceted purposes aimed at
             bolstering our service provisions.
@@ -73,9 +74,9 @@ const PrivacyPage = () => {
             personalized content delivery such as customized search results and
             relevant articles.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Information Sharing'>
+        <Section title='Information Sharing'>
           <p>At The Monkeys, preserving your privacy is paramount.</p>
 
           <p>
@@ -84,9 +85,9 @@ const PrivacyPage = () => {
             entities except under explicit user consent or in compliance with
             legal obligations.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Security'>
+        <Section title='Security'>
           <p>
             Safeguarding the integrity and confidentiality of user data is
             central to our operational ethos. We maintain robust security
@@ -98,9 +99,9 @@ const PrivacyPage = () => {
             Our unwavering commitment extends to fortifying both The Monkeys'
             infrastructure and the privacy rights of our esteemed users.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Retention of Data'>
+        <Section title='Retention of Data'>
           <p>
             We will retain your Personal Data only for as long as is necessary
             for the purposes set out in this Privacy Policy. We will retain and
@@ -117,9 +118,9 @@ const PrivacyPage = () => {
             functionality of our Service, or we are legally obligated to retain
             this data for longer time periods.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Changes to This Privacy Policy'>
+        <Section title='Changes to This Privacy Policy'>
           <p>
             In our commitment to transparency, any revisions to our Privacy
             Policy will be promptly communicated.
@@ -134,9 +135,9 @@ const PrivacyPage = () => {
             Any alterations will be duly reflected on this page, providing
             clarity and accountability to our valued community.
           </p>
-        </PolicySection>
+        </Section>
 
-        <PolicySection title='Contact Us'>
+        <Section title='Contact Us'>
           <p>We welcome your questions and feedback.</p>
 
           <p>
@@ -147,7 +148,7 @@ const PrivacyPage = () => {
               mail.themonkeys.life@gmail.com
             </span>
           </p>
-        </PolicySection>
+        </Section>
       </div>
     </Container>
   );
