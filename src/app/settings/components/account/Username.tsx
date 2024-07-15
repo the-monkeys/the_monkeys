@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -23,7 +24,8 @@ import { z } from 'zod';
 
 const Username = () => {
   const { data: session, update } = useSession();
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof updateUsername>>({
     resolver: zodResolver(updateUsername),
     defaultValues: {
@@ -100,8 +102,13 @@ const Username = () => {
               />
             </div>
 
-            <Button size='lg' variant='secondary' type='submit'>
-              Update
+            <Button
+              size='lg'
+              variant='secondary'
+              disabled={loading ? true : false}
+              type='submit'
+            >
+              {loading && <Loader />} Update
             </Button>
           </div>
         </form>
