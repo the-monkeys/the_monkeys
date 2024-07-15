@@ -66,7 +66,7 @@ const ProfileUpdateDialog = () => {
 
     try {
       const response = await axiosFileInstance.post(
-        `/files/profile/${data?.user.user_name}/profile`,
+        `/files/profile/${data?.user.username}/profile`,
         formData,
         {
           headers: {

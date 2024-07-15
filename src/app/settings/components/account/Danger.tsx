@@ -26,7 +26,7 @@ const Danger = () => {
 
     try {
       const response = await axiosInstance.delete(
-        `/user/${data?.user.user_name}`
+        `/user/${data?.user.username}`
       );
 
       if (response.status === 200) {

@@ -40,7 +40,7 @@ const formschema = z.object({
 const EditDialog = () => {
   const { data } = useSession();
   const { user, isLoading, isError } = useGetAuthUserProfile(
-    data?.user.user_name
+    data?.user.username
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -67,7 +67,7 @@ const EditDialog = () => {
     };
     setLoading(true);
     try {
-      await axiosInstance.put(`/user/${data?.user.user_name}`, {
+      await axiosInstance.put(`/user/${data?.user.username}`, {
         values,
       });
       toast({
@@ -77,8 +77,8 @@ const EditDialog = () => {
       });
 
       setOpen(false);
-      mutate(`/user/public/${data?.user.user_name}`);
-      mutate(`/user/${data?.user.user_name}`);
+      mutate(`/user/public/${data?.user.username}`);
+      mutate(`/user/${data?.user.username}`);
     } catch (err) {
       toast({
         variant: 'error',

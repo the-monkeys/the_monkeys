@@ -31,7 +31,7 @@ import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
 const Profile = () => {
   const { data } = useSession();
   const { user, isLoading, isError } = useGetAuthUserProfile(
-    data?.user.user_name
+    data?.user.username
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -55,7 +55,7 @@ const Profile = () => {
     setLoading(true);
     console.log(values);
     axiosInstance
-      .put(`/user/${data?.user.user_name}`, {
+      .put(`/user/${data?.user.username}`, {
         values,
       })
       .then((res) => {
@@ -95,7 +95,7 @@ const Profile = () => {
 
                 <div className='rounded-lg size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
                   {data?.user ? (
-                    <ProfileImage username={data.user.user_name} />
+                    <ProfileImage username={data.user.username} />
                   ) : (
                     <ProfilePhotoSkeleton />
                   )}

@@ -12,12 +12,18 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { toast } from '@/components/ui/use-toast';
+import { API_URL } from '@/constants/api';
 import { updateUsername } from '@/lib/schema/settings';
+import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 const Username = () => {
+  const { data: session, update } = useSession();
+  const [loading, setLoading] = React.useState<boolean>(false);
   const form = useForm<z.infer<typeof updateUsername>>({
     resolver: zodResolver(updateUsername),
     defaultValues: {
@@ -25,9 +31,45 @@ const Username = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof updateUsername>) {
-    console.log(values);
-  }
+  const updateUserSession = async (token: string) => {
+    await update({
+      ...session,
+      user: {
+        ...session?.user,
+        token: token,
+        username: form.getValues('username'),
+      },
+    });
+  };
+
+  const onSubmit = async (values: z.infer<typeof updateUsername>) => {
+    setLoading(true);
+
+    axiosInstance
+      .put(`${API_URL}/auth/settings/username/${session?.user?.username}`, {
+        username: values.username,
+      })
+      .then((res) => {
+        console.log(res);
+        updateUserSession(res.data.token);
+        form.reset();
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Username updated successfully.',
+        });
+      })
+      .catch((err) => {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to update username.',
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <div className='flex flex-col items-start'>
