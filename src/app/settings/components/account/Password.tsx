@@ -45,7 +45,7 @@ const Password = () => {
 
     try {
       const response = await axiosInstance.put(
-        `/auth/settings/password/${data?.user.user_name}`,
+        `/auth/settings/password/${data?.user.username}`,
         {
           current_password: values.currentPassword,
           new_password: values.password,

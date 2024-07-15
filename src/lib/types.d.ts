@@ -8,7 +8,7 @@ export interface User {
   account_id: string;
   token: string;
   user_id: number;
-  user_name: string;
+  username: string;
   first_name: string;
   last_name: string;
   email: string;

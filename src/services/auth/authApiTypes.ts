@@ -23,7 +23,7 @@ interface UserInfo {
   status_code: number;
   token: string;
   user_id: number;
-  user_name: string;
+  username: string;
   first_name: string;
   last_name: string;
   email: string;

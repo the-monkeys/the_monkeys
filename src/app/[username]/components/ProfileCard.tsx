@@ -111,6 +111,7 @@ const ProfileCard: FC = () => {
         {user?.twitter && (
           <Link
             target='_blank'
+            title='Twitter'
             href={`https://x.com/${user.twitter}`}
             className='opacity-75 hover:opacity-100'
           >
@@ -121,6 +122,7 @@ const ProfileCard: FC = () => {
         {user?.github && (
           <Link
             target='_blank'
+            title='Github'
             href={`https://github.com/${user.github}/`}
             className='opacity-75 hover:opacity-100'
           >
@@ -131,6 +133,7 @@ const ProfileCard: FC = () => {
         {user?.linkedin && (
           <Link
             target='_blank'
+            title='Linkedin'
             href={`https://www.linkedin.com/in/${user.linkedin}`}
             className='opacity-75 hover:opacity-100'
           >
@@ -141,6 +144,7 @@ const ProfileCard: FC = () => {
         {user?.instagram && (
           <Link
             target='_blank'
+            title='Instagram'
             href={`https://www.instagram.com/${user.instagram}/`}
             className='opacity-75 hover:opacity-100'
           >

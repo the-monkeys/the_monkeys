@@ -29,24 +29,51 @@ const authOptions: AuthOptions = {
         },
       },
       async authorize(credentials) {
-        try {
-          const authResponse = await axios.post(
-            `${API_URL}/auth/login`,
-            { email: credentials?.email, password: credentials?.password },
-            {
-              headers: {
-                'Content-Type': 'application/json',
+        if (credentials?.first_name) {
+          try {
+            const authResponse = await axios.post(
+              `${API_URL}/auth/register`,
+              {
+                first_name: credentials.first_name,
+                last_name: credentials.last_name,
+                email: credentials?.email,
+                password: credentials?.password,
               },
-            }
-          );
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
 
-          if (authResponse.data && authResponse.data.token) {
-            return authResponse.data; // Assuming authResponse.data contains the user info
+            if (authResponse.data && authResponse.data.token) {
+              return authResponse.data; // Assuming authResponse.data contains the user info
+            }
+            return null;
+          } catch (error) {
+            console.error('Error during authentication', error);
+            return null;
           }
-          return null;
-        } catch (error) {
-          console.error('Error during authentication', error);
-          return null;
+        } else {
+          try {
+            const authResponse = await axios.post(
+              `${API_URL}/auth/login`,
+              { email: credentials?.email, password: credentials?.password },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              }
+            );
+
+            if (authResponse.data && authResponse.data.token) {
+              return authResponse.data; // Assuming authResponse.data contains the user info
+            }
+            return null;
+          } catch (error) {
+            console.error('Error during authentication', error);
+            return null;
+          }
         }
       },
     }),

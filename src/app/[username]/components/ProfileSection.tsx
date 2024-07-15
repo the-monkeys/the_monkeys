@@ -62,7 +62,7 @@ const ProfileSection = () => {
             <DropdownMenuItem>
               <div
                 className='flex w-full items-center gap-2'
-                onClick={() => copyToClipboard(data?.user.user_name || '')}
+                onClick={() => copyToClipboard(data?.user.username || '')}
               >
                 <Icon name='RiFileCopy' />
 
@@ -80,7 +80,7 @@ const ProfileSection = () => {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className='m-2'>
-            {data?.user.user_name === params.username &&
+            {data?.user.username === params.username &&
             status === 'authenticated' ? (
               <>
                 <EditDialog />

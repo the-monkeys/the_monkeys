@@ -33,5 +33,5 @@ export const updateEmailSchema = z.object({
 });
 
 export const updateUsername = z.object({
-  user_name: z.string().min(2).max(50),
+  username: z.string().min(2).max(50),
 });
