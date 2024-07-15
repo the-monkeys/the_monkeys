@@ -47,11 +47,11 @@ const authOptions: AuthOptions = {
             );
 
             if (authResponse.data && authResponse.data.token) {
-              return authResponse.data; // Assuming authResponse.data contains the user info
+              return authResponse.data;
             }
             return null;
           } catch (error) {
-            console.error('Error during authentication', error);
+            console.log('Error during authentication', error);
             return null;
           }
         } else {
@@ -67,7 +67,7 @@ const authOptions: AuthOptions = {
             );
 
             if (authResponse.data && authResponse.data.token) {
-              return authResponse.data; // Assuming authResponse.data contains the user info
+              return authResponse.data;
             }
             return null;
           } catch (error) {

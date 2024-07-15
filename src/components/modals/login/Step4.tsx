@@ -1,7 +1,10 @@
+import { useState } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import PasswordInput from '@/components/input/PasswordInput';
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -29,6 +32,7 @@ const Step4 = ({
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
 }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof signupSchema>>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -38,6 +42,7 @@ const Step4 = ({
   });
 
   async function onSubmit(values: z.infer<typeof signupSchema>) {
+    setLoading(true);
     const res = await signIn('credentials', {
       first_name: values.first_name,
       last_name: values.last_name,
@@ -54,15 +59,19 @@ const Step4 = ({
         title: 'Login Successful',
         description: 'You have successfully logged in. Welcome back!',
       });
+      setLoading(false);
     }
 
     if (res?.error) {
+      console.log(res, 'res');
+
       toast({
         variant: 'error',
         title: 'Login Error',
         description:
-          'There was an error logging in. Please check your credentials and try again.',
+          'There was an error registring in. Please check your credentials and try again.',
       });
+      setLoading(false);
     }
   }
 
@@ -73,14 +82,6 @@ const Step4 = ({
 
     setLoginStep(loginSteps[0]);
   };
-
-  //   const handleForgotPassword = (
-  //     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  //   ) => {
-  //     e.preventDefault();
-
-  //     setLoginStep(loginSteps[2]);
-  //   };
 
   return (
     <ModalContent>
@@ -93,7 +94,7 @@ const Step4 = ({
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter First Name' {...field} />
+                  <Input placeholder='Enter first Name' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -106,7 +107,7 @@ const Step4 = ({
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter Last Name' {...field} />
+                  <Input placeholder='Enter last Name' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -145,9 +146,15 @@ const Step4 = ({
           />
 
           <div className='pt-6 flex flex-row-reverse  gap-2 items-center'>
-            <Button className='flex-1 order-1'>Register</Button>
+            <Button
+              disabled={loading ? true : false}
+              className='flex-1 order-1'
+            >
+              {loading && <Loader />} Register
+            </Button>
             <Button
               variant='secondary'
+              disabled={loading ? true : false}
               className='flex-1 order-2'
               onClick={handlePreviousStep}
             >
@@ -155,16 +162,6 @@ const Step4 = ({
             </Button>
           </div>
         </form>
-
-        {/* <div className='pt-2 text-right font-jost text-sm'>
-          <Link
-            href='#'
-            className='text-primary-monkeyOrange'
-            onClick={handleForgotPassword}
-          >
-            Forgot Password
-          </Link>
-        </div> */}
       </Form>
     </ModalContent>
   );

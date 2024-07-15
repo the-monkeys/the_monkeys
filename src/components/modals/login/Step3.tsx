@@ -1,3 +1,6 @@
+import { useState } from 'react';
+
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -25,6 +28,7 @@ const Step3 = ({
 }: {
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
 }) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -33,6 +37,7 @@ const Step3 = ({
   });
 
   async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
+    setLoading(true);
     try {
       const response = await axios.post(`${API_URL}/auth/forgot-pass`, {
         email: values.email,
@@ -53,6 +58,8 @@ const Step3 = ({
         description:
           'There was an error sending the password reset link. Please try again.',
       });
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -87,10 +94,13 @@ const Step3 = ({
               variant='secondary'
               className='flex-1'
               onClick={handlePreviousStep}
+              disabled={loading ? true : false}
             >
               Previous
             </Button>
-            <Button className='flex-1'>Send Link</Button>
+            <Button className='flex-1' disabled={loading ? true : false}>
+              {loading && <Loader />} Send Link
+            </Button>
           </div>
         </form>
       </Form>

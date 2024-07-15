@@ -12,7 +12,7 @@ const CreateButton = () => {
     >
       <Link
         href='/create'
-        title='Write Blogs Here'
+        title='Create Blogs Here'
         className='flex flex-col items-center'
       >
         <Icon

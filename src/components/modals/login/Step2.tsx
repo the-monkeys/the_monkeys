@@ -1,7 +1,10 @@
+import { useState } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import PasswordInput from '@/components/input/PasswordInput';
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -29,6 +32,7 @@ const Step2 = ({
   setLoginStep: React.Dispatch<React.SetStateAction<LoginStep>>;
 }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -38,6 +42,7 @@ const Step2 = ({
   });
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
+    setLoading(true);
     const res = await signIn('credentials', {
       email: values.email,
       password: values.password,
@@ -52,6 +57,7 @@ const Step2 = ({
         title: 'Login Successful',
         description: 'You have successfully logged in. Welcome back!',
       });
+      setLoading(false);
     }
 
     if (res?.error) {
@@ -61,6 +67,7 @@ const Step2 = ({
         description:
           'There was an error logging in. Please check your credentials and try again.',
       });
+      setLoading(false);
     }
   }
 
@@ -117,10 +124,17 @@ const Step2 = ({
           />
 
           <div className='pt-6 flex flex-row-reverse  gap-2 items-center'>
-            <Button className='flex-1 order-1'>Login</Button>
+            <Button
+              className='flex-1 order-1'
+              disabled={loading ? true : false}
+            >
+              {' '}
+              {loading && <Loader />}Login
+            </Button>
             <Button
               variant='secondary'
               className='flex-1 order-2'
+              disabled={loading ? true : false}
               onClick={handlePreviousStep}
             >
               Previous
