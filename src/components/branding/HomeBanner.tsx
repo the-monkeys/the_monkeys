@@ -31,7 +31,7 @@ const HomeBanner = () => {
           className='group px-4 sm:px-6 hover:shadow-lg hover:shadow-primary-monkeyOrange/50 hover:text-primary-monkeyBlack dark:hover:text-primary-monkeyWhite rounded-full'
           asChild
         >
-          <Link href='/create' title='Write Blogs Here'>
+          <Link href='/create' title='Create Blogs Here'>
             <Icon
               name='RiPencil'
               className='mr-2 group-hover:animate-icon-shake'

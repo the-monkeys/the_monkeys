@@ -20,8 +20,8 @@ export const loginSteps: LoginStep[] = [
   },
   {
     id: 4,
-    heading: 'Register Here',
-    subHeading: 'Enter your email to reset your password',
+    heading: 'Join Monkeys',
+    subHeading: 'Create your Monkeys account',
   },
 ];
 
