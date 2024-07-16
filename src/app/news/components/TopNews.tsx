@@ -1,6 +1,6 @@
 'use client';
 
-import { Loader } from '@/components/loader';
+import { TopHeadlinesSkeleton } from '@/components/skeletons/newsSkeleton';
 import useGetTopHeadlines from '@/hooks/useGetTopHeadlines';
 
 const TopNews = () => {
@@ -8,13 +8,7 @@ const TopNews = () => {
 
   const newsData = data as string[];
 
-  if (isLoading)
-    return (
-      <div className='p-2 flex justify-center items-center gap-2'>
-        <Loader size={16} />
-        <p className='font-jost text-sm opacity-75'>Fetching headlines</p>
-      </div>
-    );
+  if (isLoading) return <TopHeadlinesSkeleton />;
 
   if (error)
     return (
@@ -24,18 +18,18 @@ const TopNews = () => {
     );
 
   return (
-    <>
+    <div>
       {newsData &&
         newsData.slice(0, 15).map((newsItem, index) => (
           <div key={index}>
             <p className='mb-1 font-playfair_Display font-medium text-3xl text-secondary-darkGrey/25 dark:text-secondary-white/25'>
-              {index + 1}
+              {index + 1}.
             </p>
 
             <p className='pb-2 w-fit font-jost cursor-default'>{newsItem}</p>
           </div>
         ))}
-    </>
+    </div>
   );
 };
 

@@ -46,7 +46,7 @@ const MobileNav = () => {
         </Container>
       </header>
 
-      <div className='fixed bottom-0 left-0 flex w-full px-5 py-4 items-center justify-evenly bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>
+      <div className='fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>
         <ThemeSwitch />
 
         <CreateButton />

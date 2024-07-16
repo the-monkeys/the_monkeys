@@ -3,60 +3,74 @@ import { FC } from 'react';
 import Link from 'next/link';
 
 import { NewsItem } from '@/lib/types';
-import moment from 'moment';
+import { newsDateFormatter } from '@/utils/dateFormatter';
+import { twMerge } from 'tailwind-merge';
+
+const NewsTitle = ({ title }: { title: string }) => (
+  <h2 className='font-playfair_Display font-medium text-xl sm:text-2xl leading-tight group-hover:underline group-hover:underline-offset-4'>
+    {title}
+  </h2>
+);
 
 const NewsCard: FC<NewsItem> = (props) => {
   const { title, description, image, source, url, published_at } = props;
 
-  const formattedDate = moment(published_at).format('MMMM DD, YYYY');
-  const timeAgo = moment(published_at).fromNow();
-
-  if (title === description)
+  if (title === description) {
     return (
-      <div className='mx-auto h-fit w-fit my-2 p-4'>
-        <p className='w-fit mb-1 font-jost text-xs opacity-75 cursor-default'>
-          Source: {source}
-        </p>
+      <div className='col-span-2 mx-auto my-2 w-full sm:w-4/5 p-4 border-1 border-secondary-lightGrey/25'>
+        <Link
+          target='_blank'
+          href={`/news/read?url=${url}`}
+          className='group space-y-4'
+        >
+          <NewsTitle title={title} />
 
-        <Link href={url} className='hover:opacity-75'>
-          <h1 className='font-josefin_Sans font-medium text-2xl leading-tight'>
-            {title}
-          </h1>
+          <div className='mt-1 flex items-center space-x-2 font-jost text-xs text-secondary-darkGrey dark:text-secondary-white'>
+            <p>{source}</p>
+            <p>|</p>
+            <p>{newsDateFormatter(published_at)}</p>
+          </div>
         </Link>
-
-        <p className='mt-2 font-jost text-xs opacity-75 text-right cursor-default'>
-          {formattedDate} | {timeAgo}
-        </p>
       </div>
     );
+  }
 
   return (
-    <div className='w-full px-0 md:px-4 py-4 md:py-6 flex flex-col sm:flex-row flex-wrap gap-4'>
+    <div
+      className={twMerge(
+        'px-0 py-4 md:p-6 space-y-4',
+        image ? 'col-span-2 md:col-span-1' : 'col-span-2'
+      )}
+    >
       {image && (
-        <Link href={url} className='hover:opacity-75'>
-          <img
-            alt={source}
-            src={image || ''}
-            className='w-full h-full object-cover'
-          />
+        <Link
+          target='_blank'
+          href={`/news/read?url=${url}`}
+          className='w-fit hover:opacity-75'
+        >
+          <img src={image || ''} alt={title} className='object-contain' />
         </Link>
       )}
 
-      <Link href={url} className='flex-1 group'>
-        <p className='w-fit mb-1 font-jost text-xs opacity-75 cursor-default'>
-          Source: {source}
-        </p>
+      <div>
+        <Link
+          target='_blank'
+          href={`/news/read?url=${url}`}
+          className='group space-y-4'
+        >
+          <NewsTitle title={title} />
 
-        <h1 className='font-josefin_Sans text-2xl group-hover:opacity-75 leading-tight'>
-          {title}
-        </h1>
+          <p className='font-jost text-sm sm:text-base text-secondary-darkGrey dark:text-secondary-white leading-tight line-clamp-2'>
+            {description}
+          </p>
 
-        <p className='font-jost text-justified line-clamp-2'>{description}</p>
-
-        <p className='mt-2 font-jost text-xs opacity-75 text-right cursor-default'>
-          {formattedDate} | {timeAgo}
-        </p>
-      </Link>
+          <div className='w-fit flex items-center space-x-2 font-jost text-xs'>
+            <p>{source}</p>
+            <p>|</p>
+            <p>{newsDateFormatter(published_at)}</p>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 };

@@ -1,1128 +1,1381 @@
 export const newsData = [
   {
-    author: null,
-    title: 'Celebrity sex therapist Dr Ruth Westheimer dies at 96',
+    author: 'AP News',
+    title:
+      'Vikings receiver Jordan Addison arrested in California on suspicion of DUI',
     description:
-      'Known as Dr Ruth, she advocated for open conversations about sex and intimate topics.',
-    url: 'https://www.bbc.com/news/articles/c4ngqy1vxyeo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4e0c/live/15139280-412e-11ef-9ec4-61ff4fe5e3d3.jpg',
+      "Minnesota Vikings wide receiver Jordan Addison has been arrested in California on suspicion of driving under the influence. This is the second straight year he has found trouble behind the wheel right before the beginning of training camp. The Vikings said they're gathering more information but had no further comment. The California Highway Patrol reported that an officer found Addison asleep in the driver’s seat of his white Rolls-Royce that was blocking a lane on a highway near Los Angeles International Airport. He was arrested after a DUI investigation. Addison was arrested in Minnesota...",
+    url: 'https://www.mymotherlode.com/news/state/3392326/vikings-receiver-jordan-addison-arrested-in-california-on-suspicion-of-dui.html',
+    source: 'mymotherlode',
+    image: null,
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T16:06:26+00:00',
+    country: 'us',
+    published_at: '2024-07-16T08:26:52+00:00',
   },
   {
-    author: null,
-    title: 'Large fire breaks out at boatyard',
+    author: 'John Guinn and Local Democracy Reporter',
+    title:
+      'Taxi drivers "disappointed" they weren\'t included in Bedford River Festival travel plans as they raise concerns over illegal touting',
     description:
-      'The blaze happened on a yacht moored at Porth Penrhyn and emergency services were called to attend.',
-    url: 'https://www.bbc.com/news/articles/cmj2krnkv81o',
-    source: 'BBC',
+      'Bedford’s taxi drivers are disappointed that they weren’t included in Bedford Borough Council’s river festival travel options.',
+    url: 'https://www.bedfordtoday.co.uk/news/politics/council/taxi-drivers-disappointed-they-werent-included-in-bedford-river-festival-travel-plans-as-they-raise-concerns-over-illegal-touting-4704024',
+    source: 'bedfordtoday',
     image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/b675/live/f1f05ae0-411e-11ef-a5dd-ef58b404afb5.jpg',
+      'https://www.bedfordtoday.co.uk/webimg/b25lY21zOmFhMTJjNDkwLTE1YzktNDM2Ny04ODExLTdlZTI5N2U4NDZhZToyNDBhNDE3MS04NTUyLTQ4M2MtYmJjNi1lNDU0ZmJjMGU5MGM=.jpg?width=1200&auto=webp',
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T16:03:26+00:00',
+    country: 'uk',
+    published_at: '2024-07-16T08:26:52+00:00',
+  },
+  {
+    author: 'Vjekoslav Keskic',
+    title:
+      'Jetzt doch alles anders? Skurrile Wendung bei de Ligt, Tah und dem FC Bayern',
+    description:
+      'Droht der Wechsel von Matthijs de Ligt zu Manchester United auf der Zielgeraden zu platzen? Aktuellen Meldungen zufolge beschäftigt sich ausgerechnet United mit dem deutschen Nationalspieler Jonathan Tah.',
+    url: 'https://www.kreiszeitung.de/sport/fussball/platzt-der-de-ligt-transfer-auf-der-zielgeraden-manunited-erkundigt-sich-nach-jonathan-tah-zr-93189538.html',
+    source: 'kreiszeitung',
+    image:
+      'https://www.kreiszeitung.de/assets/images/35/94/35094478-jonathan-tah-auf-dem-spielfeld-1Yxxzg2M7b01.jpg',
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:51+00:00',
+  },
+  {
+    author: 'Vjekoslav Keskic',
+    title:
+      'Jetzt doch alles anders? Skurrile Wendung bei de Ligt, Tah und dem FC Bayern',
+    description:
+      'Droht der Wechsel von Matthijs de Ligt zu Manchester United auf der Zielgeraden zu platzen? Aktuellen Meldungen zufolge beschäftigt sich ausgerechnet United mit dem deutschen Nationalspieler Jonathan Tah.',
+    url: 'https://www.tz.de/sport/fc-bayern/platzt-der-de-ligt-transfer-auf-der-zielgeraden-manunited-erkundigt-sich-nach-jonathan-tah-zr-93189538.html',
+    source: 'tz-online',
+    image:
+      'https://www.tz.de/assets/images/35/94/35094478-jonathan-tah-auf-dem-spielfeld-1Yxxzg2M7b01.jpg',
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:51+00:00',
+  },
+  {
+    author: 'Vjekoslav Keskic',
+    title:
+      'Jetzt doch alles anders? Skurrile Wendung bei de Ligt, Tah und dem FC Bayern',
+    description:
+      'Droht der Wechsel von Matthijs de Ligt zu Manchester United auf der Zielgeraden zu platzen? Aktuellen Meldungen zufolge beschäftigt sich ausgerechnet United mit dem deutschen Nationalspieler Jonathan Tah.',
+    url: 'https://www.merkur.de/sport/fc-bayern/platzt-der-de-ligt-transfer-auf-der-zielgeraden-manunited-erkundigt-sich-nach-jonathan-tah-zr-93189538.html',
+    source: 'merkur-online',
+    image:
+      'https://www.merkur.de/assets/images/35/94/35094478-jonathan-tah-auf-dem-spielfeld-1Yxxzg2M7b01.jpg',
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:51+00:00',
   },
   {
     author: null,
-    title: 'Child dies and five hospitalised in house fire',
-    description: 'About 40 firefighters responded to the blaze in east London.',
-    url: 'https://www.bbc.com/news/articles/cd19j5nn7pzo',
-    source: 'BBC News - UK',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/7baa/live/2d45f3a0-4121-11ef-a5dd-ef58b404afb5.png',
+    title: 'Klimawandel: Die Tage werden länger',
+    description:
+      'Weil durch den Klimawandel das Eis schmilzt, verteilt sich die Masse auf der Erde anders. Dadurch wird die Rotation gebremst, die Tage werden länger – minimal, aber messbar.',
+    url: 'https://www.mdr.de/wissen/umwelt-klima/klimawandel-tage-werden-laenger-erde-rotiert-langsamer--100.html',
+    source: 'mdr',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:48+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Purchases Shares of 1,588 RenaissanceRe Holdings Ltd. (NYSE:RNR)',
+    description:
+      'Private Advisor Group LLC acquired a new position in shares of RenaissanceRe Holdings Ltd. (NYSE:RNR &#8211; Free Report) during the 1st quarter, according to its most recent 13F filing with the Securities and Exchange Commission. The fund acquired 1,588 shares of the insurance provider&#8217;s stock, valued at approximately $373,000. Other hedge funds have also bought [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-purchases-shares-of-1588-renaissancere-holdings-ltd-nysernr/',
+    source: 'etfdailynews',
+    image: null,
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T15:56:58+00:00',
+    country: 'us',
+    published_at: '2024-07-16T08:26:48+00:00',
   },
   {
-    author: null,
-    title: 'TRNSMT travel warning after train services cut',
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Buys 5,205 Shares of Brookfield Renewable Co. (NYSE:BEPC)',
     description:
-      'ScotRail introduced a temporary timetable this week in a bid to avert disruption after short-notice cancellations.',
-    url: 'https://www.bbc.com/news/articles/cz9xpqg6nw7o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/c756/live/a3c9b510-4127-11ef-b74c-bb483a802c97.jpg',
+      'Private Advisor Group LLC lifted its position in Brookfield Renewable Co. (NYSE:BEPC &#8211; Free Report) by 51.7% during the 1st quarter, Holdings Channel reports. The firm owned 15,270 shares of the company&#8217;s stock after buying an additional 5,205 shares during the quarter. Private Advisor Group LLC&#8217;s holdings in Brookfield Renewable were worth $375,000 at the [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-buys-5205-shares-of-brookfield-renewable-co-nysebepc/',
+    source: 'etfdailynews',
+    image: null,
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T15:56:06+00:00',
+    country: 'us',
+    published_at: '2024-07-16T08:26:48+00:00',
   },
   {
-    author: null,
-    title: "We are devastated after crossbow attack, says BBC's John Hunt",
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Boosts Stock Holdings in RiverNorth Opportunities Fund, Inc. (NYSE:RIV)',
     description:
-      'John Hunt and his daughter, Amy, talk of their devastation as they struggle to take in what happened.',
-    url: 'https://www.bbc.com/news/articles/c72vlq5l6n4o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/fef2/live/87a6e810-4101-11ef-96a8-e710c6bfc866.jpg',
+      'Private Advisor Group LLC grew its holdings in shares of RiverNorth Opportunities Fund, Inc. (NYSE:RIV &#8211; Free Report) by 6.9% in the first quarter, according to its most recent disclosure with the Securities & Exchange Commission. The firm owned 31,450 shares of the company&#8217;s stock after purchasing an additional 2,034 shares during the quarter. Private [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-boosts-stock-holdings-in-rivernorth-opportunities-fund-inc-nyseriv/',
+    source: 'etfdailynews',
+    image: null,
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T15:51:23+00:00',
+    country: 'us',
+    published_at: '2024-07-16T08:26:47+00:00',
   },
   {
-    author: null,
-    title: 'Man arrested after human remains found in suitcases',
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Has $387,000 Stock Position in Honda Motor Co., Ltd. (NYSE:HMC)',
     description:
-      'The 34-year-old was held on suspicion of murder by armed officers in Bristol.',
-    url: 'https://www.bbc.com/news/articles/c0xj9vlg763o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/5811/live/726e4520-40f1-11ef-a3fa-97de5940e82e.jpg',
+      'Private Advisor Group LLC raised its position in Honda Motor Co., Ltd. (NYSE:HMC &#8211; Free Report) by 9.3% during the first quarter, according to its most recent Form 13F filing with the Securities and Exchange Commission (SEC). The institutional investor owned 10,389 shares of the company&#8217;s stock after purchasing an additional 883 shares during the [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-has-387000-stock-position-in-honda-motor-co-ltd-nysehmc/',
+    source: 'etfdailynews',
+    image: null,
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T15:04:46+00:00',
+    country: 'us',
+    published_at: '2024-07-16T08:26:47+00:00',
   },
   {
-    author: null,
-    title: 'O que é o ecoísmo, oposto do narcisismo que poucos conhecem',
-    description: 'O que é o ecoísmo, oposto do narcisismo que poucos conhecem',
-    url: 'https://www.bbc.com/portuguese/articles/cnl0gr0djqgo',
-    source: 'BBC Brasil',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/7207/live/1fb0ac20-3e07-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'pt',
-    country: 'br',
-    published_at: '2024-07-13T13:58:23+00:00',
-  },
-  {
-    author: null,
-    title: 'High on Yamal fever, Spaniards think Euros victory is theirs',
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Acquires 4,996 Shares of Ecopetrol S.A. (NYSE:EC)',
     description:
-      "The team's teenage prodigy took Spanish fans by surprise, but his success has helped unite a divided country in confidence.",
-    url: 'https://www.bbc.com/news/articles/c3gv36yq4p1o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/b4a9/live/9aae0f90-4112-11ef-b504-0fda67cb3b60.jpg',
+      'Private Advisor Group LLC grew its holdings in Ecopetrol S.A. (NYSE:EC &#8211; Free Report) by 18.6% in the 1st quarter, according to the company in its most recent 13F filing with the SEC. The institutional investor owned 31,872 shares of the oil and gas company&#8217;s stock after purchasing an additional 4,996 shares during the quarter. [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-acquires-4996-shares-of-ecopetrol-s-a-nyseec/',
+    source: 'etfdailynews',
+    image: null,
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T13:56:59+00:00',
+    country: 'us',
+    published_at: '2024-07-16T08:26:47+00:00',
   },
   {
-    author: null,
-    title: 'Police search river for missing fisherman',
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Takes Position in Capital Group Dividend Growers ETF (NYSEARCA:CGDG)',
     description:
-      'Nathan Stanley was fishing with a friend before entering the river at Knottingley, police say.',
-    url: 'https://www.bbc.com/news/articles/c6p27x40q54o',
-    source: 'BBC News',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/f29d/live/423ac6e0-411d-11ef-a5dd-ef58b404afb5.jpg',
+      'Private Advisor Group LLC purchased a new position in shares of Capital Group Dividend Growers ETF (NYSEARCA:CGDG &#8211; Free Report) in the 1st quarter, HoldingsChannel.com reports. The institutional investor purchased 13,388 shares of the company&#8217;s stock, valued at approximately $383,000. A number of other institutional investors and hedge funds have also modified their holdings of [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-takes-position-in-capital-group-dividend-growers-etf-nysearcacgdg/',
+    source: 'etfdailynews',
+    image: null,
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T13:51:38+00:00',
+    country: 'us',
+    published_at: '2024-07-16T08:26:47+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'iShares U.S. Pharmaceuticals ETF (NYSEARCA:IHE) Shares Purchased by Private Advisor Group LLC',
+    description:
+      'Private Advisor Group LLC raised its stake in iShares U.S. Pharmaceuticals ETF (NYSEARCA:IHE &#8211; Free Report) by 311.3% during the first quarter, according to the company in its most recent 13F filing with the Securities & Exchange Commission. The fund owned 5,602 shares of the company&#8217;s stock after purchasing an additional 4,240 shares during the [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/ishares-u-s-pharmaceuticals-etf-nysearcaihe-shares-purchased-by-private-advisor-group-llc/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:47+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Vanguard Global ex-U.S. Real Estate ETF (NASDAQ:VNQI) Stock Holdings Lessened by Private Advisor Group LLC',
+    description:
+      'Vanguard Global ex-U.S. Real Estate ETF (NASDAQ:VNQI) Stock Holdings Lessened by Private Advisor Group LLC',
+    url: 'https://www.americanbankingnews.com/2024/07/16/vanguard-global-ex-u-s-real-estate-etf-nasdaqvnqi-stock-holdings-lessened-by-private-advisor-group-llc.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Insider Selling: Accenture plc (NYSE:ACN) CFO Sells 3,000 Shares of Stock',
+    description:
+      'Insider Selling: Accenture plc (NYSE:ACN) CFO Sells 3,000 Shares of Stock',
+    url: 'https://www.americanbankingnews.com/2024/07/16/insider-selling-accenture-plc-nyseacn-cfo-sells-3000-shares-of-stock.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Takes Position in RenaissanceRe Holdings Ltd. (NYSE:RNR)',
+    description:
+      'Private Advisor Group LLC Takes Position in RenaissanceRe Holdings Ltd. (NYSE:RNR)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-takes-position-in-renaissancere-holdings-ltd-nysernr.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Acquires 8,291 Shares of Virtus Convertible &#038; Income Fund II (NYSE:NCZ)',
+    description:
+      'Private Advisor Group LLC Acquires 8,291 Shares of Virtus Convertible &#038; Income Fund II (NYSE:NCZ)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-acquires-8291-shares-of-virtus-convertible-income-fund-ii-nysencz.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Insider Selling: Atlassian Co. (NASDAQ:TEAM) CEO Sells 7,948 Shares of Stock',
+    description:
+      'Insider Selling: Atlassian Co. (NASDAQ:TEAM) CEO Sells 7,948 Shares of Stock',
+    url: 'https://www.americanbankingnews.com/2024/07/16/insider-selling-atlassian-co-nasdaqteam-ceo-sells-7948-shares-of-stock.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Sells 123 Shares of Allegion plc (NYSE:ALLE)',
+    description:
+      'Private Advisor Group LLC reduced its position in Allegion plc (NYSE:ALLE &#8211; Free Report) by 4.0% during the first quarter, according to its most recent 13F filing with the SEC. The institutional investor owned 2,921 shares of the scientific and technical instruments company&#8217;s stock after selling 123 shares during the period. Private Advisor Group LLC&#8217;s [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-sells-123-shares-of-allegion-plc-nysealle/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title: 'Nordson Co. (NASDAQ:NDSN) Shares Sold by Private Advisor Group LLC',
+    description:
+      'Private Advisor Group LLC lowered its position in shares of Nordson Co. (NASDAQ:NDSN &#8211; Free Report) by 7.1% in the first quarter, according to the company in its most recent filing with the SEC. The firm owned 1,410 shares of the industrial products company&#8217;s stock after selling 108 shares during the quarter. Private Advisor Group [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/nordson-co-nasdaqndsn-shares-sold-by-private-advisor-group-llc/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Invests $402,000 in iShares MSCI ACWI ex U.S. ETF (NASDAQ:ACWX)',
+    description:
+      'Private Advisor Group LLC purchased a new stake in shares of iShares MSCI ACWI ex U.S. ETF (NASDAQ:ACWX &#8211; Free Report) during the first quarter, according to its most recent Form 13F filing with the Securities & Exchange Commission. The firm purchased 7,526 shares of the company&#8217;s stock, valued at approximately $402,000. Other hedge funds [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-invests-402000-in-ishares-msci-acwi-ex-u-s-etf-nasdaqacwx/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Sells 105 Shares of American Financial Group, Inc. (NYSE:AFG)',
+    description:
+      'Private Advisor Group LLC cut its position in shares of American Financial Group, Inc. (NYSE:AFG &#8211; Free Report) by 3.6% during the 1st quarter, according to its most recent disclosure with the Securities & Exchange Commission. The institutional investor owned 2,849 shares of the insurance provider&#8217;s stock after selling 105 shares during the quarter. Private [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-sells-105-shares-of-american-financial-group-inc-nyseafg/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'National Beverage Corp. (NASDAQ:FIZZ) Director Cecil D. Conlee Sells 10,000 Shares',
+    description:
+      'National Beverage Corp. (NASDAQ:FIZZ) Director Cecil D. Conlee Sells 10,000 Shares',
+    url: 'https://www.americanbankingnews.com/2024/07/16/national-beverage-corp-nasdaqfizz-director-cecil-d-conlee-sells-10000-shares.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Honda Motor Co., Ltd. (NYSE:HMC) Shares Purchased by Private Advisor Group LLC',
+    description:
+      'Honda Motor Co., Ltd. (NYSE:HMC) Shares Purchased by Private Advisor Group LLC',
+    url: 'https://www.americanbankingnews.com/2024/07/16/honda-motor-co-ltd-nysehmc-shares-purchased-by-private-advisor-group-llc.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Has $373,000 Holdings in iShares Government/Credit Bond ETF (NYSEARCA:GBF)',
+    description:
+      'Private Advisor Group LLC Has $373,000 Holdings in iShares Government/Credit Bond ETF (NYSEARCA:GBF)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-has-373000-holdings-in-ishares-government-credit-bond-etf-nysearcagbf.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Buys 192 Shares of Jazz Pharmaceuticals plc (NASDAQ:JAZZ)',
+    description:
+      'Private Advisor Group LLC Buys 192 Shares of Jazz Pharmaceuticals plc (NASDAQ:JAZZ)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-buys-192-shares-of-jazz-pharmaceuticals-plc-nasdaqjazz.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Sells 99 Shares of Mid-America Apartment Communities, Inc. (NYSE:MAA)',
+    description:
+      'Private Advisor Group LLC reduced its position in Mid-America Apartment Communities, Inc. (NYSE:MAA &#8211; Free Report) by 3.2% during the first quarter, Holdings Channel reports. The institutional investor owned 2,973 shares of the real estate investment trust&#8217;s stock after selling 99 shares during the quarter. Private Advisor Group LLC&#8217;s holdings in Mid-America Apartment Communities were [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-sells-99-shares-of-mid-america-apartment-communities-inc-nysemaa/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'United Therapeutics Co. (NASDAQ:UTHR) CEO Sells $1,169,892.00 in Stock',
+    description:
+      'United Therapeutics Co. (NASDAQ:UTHR) CEO Sells $1,169,892.00 in Stock',
+    url: 'https://www.americanbankingnews.com/2024/07/16/united-therapeutics-co-nasdaquthr-ceo-sells-1169892-00-in-stock.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Buys 751 Shares of SPDR S&#038;P Fossil Fuel Reserves Free ETF (NYSEARCA:SPYX)',
+    description:
+      'Private Advisor Group LLC Buys 751 Shares of SPDR S&#038;P Fossil Fuel Reserves Free ETF (NYSEARCA:SPYX)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-buys-751-shares-of-spdr-sp-fossil-fuel-reserves-free-etf-nysearcaspyx.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:46+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'National Beverage Corp. (NASDAQ:FIZZ) Director Sells $501,100.00 in Stock',
+    description:
+      'National Beverage Corp. (NASDAQ:FIZZ &#8211; Get Free Report) Director Cecil D. Conlee sold 10,000 shares of the business&#8217;s stock in a transaction that occurred on Thursday, July 11th. The stock was sold at an average price of $50.11, for a total transaction of $501,100.00. Following the completion of the transaction, the director now directly owns [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/national-beverage-corp-nasdaqfizz-director-sells-501100-00-in-stock/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'Private Advisor Group LLC Sells 2,473 Shares of VanEck Morningstar SMID Moat ETF (BATS:SMOT)',
+    description:
+      'Private Advisor Group LLC trimmed its position in VanEck Morningstar SMID Moat ETF (BATS:SMOT &#8211; Free Report) by 17.4% during the first quarter, according to its most recent disclosure with the Securities and Exchange Commission (SEC). The fund owned 11,744 shares of the company&#8217;s stock after selling 2,473 shares during the quarter. Private Advisor Group [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/private-advisor-group-llc-sells-2473-shares-of-vaneck-morningstar-smid-moat-etf-batssmot/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Jennifer Tejada Sells 25,892 Shares of PagerDuty, Inc. (NYSE:PD) Stock',
+    description:
+      'Jennifer Tejada Sells 25,892 Shares of PagerDuty, Inc. (NYSE:PD) Stock',
+    url: 'https://www.americanbankingnews.com/2024/07/16/jennifer-tejada-sells-25892-shares-of-pagerduty-inc-nysepd-stock.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Brookfield Renewable Co. (NYSE:BEPC) Shares Bought by Private Advisor Group LLC',
+    description:
+      'Brookfield Renewable Co. (NYSE:BEPC) Shares Bought by Private Advisor Group LLC',
+    url: 'https://www.americanbankingnews.com/2024/07/16/brookfield-renewable-co-nysebepc-shares-bought-by-private-advisor-group-llc.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Invests $405,000 in Dimensional International Sustainability Core 1 ETF (NYSEARCA:DFSI)',
+    description:
+      'Private Advisor Group LLC Invests $405,000 in Dimensional International Sustainability Core 1 ETF (NYSEARCA:DFSI)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-invests-405000-in-dimensional-international-sustainability-core-1-etf-nysearcadfsi.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title: 'Zuora, Inc. (NYSE:ZUO) CEO Tien Tzuo Sells 81,731 Shares',
+    description:
+      'Zuora, Inc. (NYSE:ZUO &#8211; Get Free Report) CEO Tien Tzuo sold 81,731 shares of the stock in a transaction on Monday, July 15th. The stock was sold at an average price of $9.05, for a total value of $739,665.55. Following the completion of the transaction, the chief executive officer now directly owns 6,352 shares of [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/zuora-inc-nysezuo-ceo-tien-tzuo-sells-81731-shares/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'PTC Inc. (NASDAQ:PTC) Director Janice Chaffin Sells 4,000 Shares of Stock',
+    description:
+      'PTC Inc. (NASDAQ:PTC &#8211; Get Free Report) Director Janice Chaffin sold 4,000 shares of PTC stock in a transaction dated Friday, July 12th. The shares were sold at an average price of $179.33, for a total transaction of $717,320.00. Following the transaction, the director now directly owns 48,137 shares of the company&#8217;s stock, valued at [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/ptc-inc-nasdaqptc-director-janice-chaffin-sells-4000-shares-of-stock/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title: 'Zuora, Inc. (NYSE:ZUO) CEO Tien Tzuo Sells 81,731 Shares of Stock',
+    description:
+      'Zuora, Inc. (NYSE:ZUO) CEO Tien Tzuo Sells 81,731 Shares of Stock',
+    url: 'https://www.americanbankingnews.com/2024/07/16/zuora-inc-nysezuo-ceo-tien-tzuo-sells-81731-shares-of-stock.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      '13,388 Shares in Capital Group Dividend Growers ETF (NYSEARCA:CGDG) Bought by Private Advisor Group LLC',
+    description:
+      '13,388 Shares in Capital Group Dividend Growers ETF (NYSEARCA:CGDG) Bought by Private Advisor Group LLC',
+    url: 'https://www.americanbankingnews.com/2024/07/16/13388-shares-in-capital-group-dividend-growers-etf-nysearcacgdg-bought-by-private-advisor-group-llc.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Takes $402,000 Position in iShares MSCI ACWI ex U.S. ETF (NASDAQ:ACWX)',
+    description:
+      'Private Advisor Group LLC Takes $402,000 Position in iShares MSCI ACWI ex U.S. ETF (NASDAQ:ACWX)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-takes-402000-position-in-ishares-msci-acwi-ex-u-s-etf-nasdaqacwx.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title: 'Ventas, Inc. (NYSE:VTR) Shares Sold by Private Advisor Group LLC',
+    description:
+      'Private Advisor Group LLC lessened its position in Ventas, Inc. (NYSE:VTR &#8211; Free Report) by 6.8% in the first quarter, HoldingsChannel.com reports. The institutional investor owned 9,074 shares of the real estate investment trust&#8217;s stock after selling 665 shares during the period. Private Advisor Group LLC&#8217;s holdings in Ventas were worth $395,000 at the end [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/ventas-inc-nysevtr-shares-sold-by-private-advisor-group-llc/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Has $379,000 Stake in RiverNorth Opportunities Fund, Inc. (NYSE:RIV)',
+    description:
+      'Private Advisor Group LLC Has $379,000 Stake in RiverNorth Opportunities Fund, Inc. (NYSE:RIV)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-has-379000-stake-in-rivernorth-opportunities-fund-inc-nyseriv.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'eXp World Holdings, Inc. (NASDAQ:EXPI) CEO Glenn Darrel Sanford Sells 83,240 Shares of Stock',
+    description:
+      'eXp World Holdings, Inc. (NASDAQ:EXPI) CEO Glenn Darrel Sanford Sells 83,240 Shares of Stock',
+    url: 'https://www.americanbankingnews.com/2024/07/16/exp-world-holdings-inc-nasdaqexpi-ceo-glenn-darrel-sanford-sells-83240-shares-of-stock.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Decreases Stock Holdings in Ventas, Inc. (NYSE:VTR)',
+    description:
+      'Private Advisor Group LLC Decreases Stock Holdings in Ventas, Inc. (NYSE:VTR)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-decreases-stock-holdings-in-ventas-inc-nysevtr.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Has $391,000 Position in Mid-America Apartment Communities, Inc. (NYSE:MAA)',
+    description:
+      'Private Advisor Group LLC Has $391,000 Position in Mid-America Apartment Communities, Inc. (NYSE:MAA)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-has-391000-position-in-mid-america-apartment-communities-inc-nysemaa.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:45+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'The Ensign Group, Inc. (NASDAQ:ENSG) COO Spencer Burton Sells 7,519 Shares of Stock',
+    description:
+      'The Ensign Group, Inc. (NASDAQ:ENSG &#8211; Get Free Report) COO Spencer Burton sold 7,519 shares of the company&#8217;s stock in a transaction on Friday, July 12th. The shares were sold at an average price of $135.04, for a total transaction of $1,015,365.76. Following the completion of the sale, the chief operating officer now directly owns [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/the-ensign-group-inc-nasdaqensg-coo-spencer-burton-sells-7519-shares-of-stock/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:44+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'Accenture plc (NYSE:ACN) CFO Kathleen R. Mcclure Sells 1,500 Shares',
+    description:
+      'Accenture plc (NYSE:ACN &#8211; Get Free Report) CFO Kathleen R. Mcclure sold 1,500 shares of the stock in a transaction that occurred on Monday, July 15th. The shares were sold at an average price of $315.00, for a total transaction of $472,500.00. Following the sale, the chief financial officer now directly owns 38,570 shares of [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/accenture-plc-nyseacn-cfo-kathleen-r-mcclure-sells-1500-shares/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:44+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'Choice Hotels International, Inc. (NYSE:CHH) EVP Dominic Dragisich Sells 13,117 Shares',
+    description:
+      'Choice Hotels International, Inc. (NYSE:CHH &#8211; Get Free Report) EVP Dominic Dragisich sold 13,117 shares of the company&#8217;s stock in a transaction on Friday, July 12th. The stock was sold at an average price of $124.45, for a total transaction of $1,632,410.65. Following the completion of the sale, the executive vice president now owns 69,171 [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/choice-hotels-international-inc-nysechh-evp-dominic-dragisich-sells-13117-shares/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:44+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'eXp World Holdings, Inc. (NASDAQ:EXPI) CEO Sells $1,065,472.00 in Stock',
+    description:
+      'eXp World Holdings, Inc. (NASDAQ:EXPI &#8211; Get Free Report) CEO Glenn Darrel Sanford sold 83,240 shares of eXp World stock in a transaction that occurred on Monday, July 15th. The stock was sold at an average price of $12.80, for a total transaction of $1,065,472.00. Following the completion of the transaction, the chief executive officer [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/exp-world-holdings-inc-nasdaqexpi-ceo-sells-1065472-00-in-stock/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:44+00:00',
+  },
+  {
+    author: 'MarketBeat News',
+    title:
+      'SoundHound AI, Inc. (NASDAQ:SOUN) CTO Timothy Stonehocker Sells 208,000 Shares',
+    description:
+      'SoundHound AI, Inc. (NASDAQ:SOUN &#8211; Get Free Report) CTO Timothy Stonehocker sold 208,000 shares of the firm&#8217;s stock in a transaction on Thursday, July 11th. The stock was sold at an average price of $5.75, for a total transaction of $1,196,000.00. Following the completion of the sale, the chief technology officer now owns 659,531 shares [&#8230;]',
+    url: 'https://www.etfdailynews.com/2024/07/16/soundhound-ai-inc-nasdaqsoun-cto-timothy-stonehocker-sells-208000-shares/',
+    source: 'etfdailynews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:44+00:00',
+  },
+  {
+    author: 'ABMN Staff',
+    title:
+      'Private Advisor Group LLC Sells 1,615 Shares of Vornado Realty Trust (NYSE:VNO)',
+    description:
+      'Private Advisor Group LLC Sells 1,615 Shares of Vornado Realty Trust (NYSE:VNO)',
+    url: 'https://www.americanbankingnews.com/2024/07/16/private-advisor-group-llc-sells-1615-shares-of-vornado-realty-trust-nysevno.html',
+    source: 'americanbankingnews',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:44+00:00',
+  },
+  {
+    author: 'Luna De Massis',
+    title: 'Eros Ramazzotti beccato con un’ex UeD: e la smentita su Dalila?',
+    description:
+      "Dopo aver smentito la rottura con Dalila Gelsomino, Eros Ramazzotti è stato visto in compagnia di un'altra donna: tutti i dettagliL'articolo Eros Ramazzotti beccato con un&#8217;ex UeD: e la smentita su Dalila? proviene da Gossip e Tv.",
+    url: 'https://www.gossipetv.com/eros-ramazzotti-beccato-con-unex-ued-e-la-smentita-su-dalila-673346',
+    source: 'gossipetv',
+    image: null,
+    category: 'general',
+    language: 'it',
+    country: 'it',
+    published_at: '2024-07-16T08:26:41+00:00',
+  },
+  {
+    author: 'Tamina Porada',
+    title:
+      'Naunhof bei Leipzig: Radfahrer nach Kollision mit Auto schwer verletzt',
+    description:
+      'Leipzig - Ein 84-jähriger Fahrradfahrer ist beim Zusammenstoß mit einem Auto schwer verletzt worden. Die Polizei hat eine Vermutung zur Unfallursache.Ein 84-jähriger Fahrradfahrer ist in Naunhof (Landkreis Leipzig) mit einem Auto zusammengestoßen und dabei schwer verletzt worden. Der Fahrradfahrer sei am Montag gegen Mittag auf der Langen Straße unterwegs gewesen, als er beim Linksabbiegen in die Zwirnereistraße ein entgegenkommendes Auto nach ersten Erkenntnissen der Polizei nicht beachtete. Der 79-jährige Autofahrer habe nicht rechtzeitig bremsen können, hieß es weiter, sodass es...',
+    url: 'https://www.sachsen-fernsehen.de/naunhof-bei-leipzig-radfahrer-nach-kollision-mit-auto-schwer-verletzt-1762848/',
+    source: 'leipzig-fernsehen',
+    image:
+      'https://www.sachsen-fernsehen.de/storage/thumbs/r:1704717147/1566777.jpg',
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:40+00:00',
+  },
+  {
+    author: 'AP News',
+    title:
+      'A journey through the films of Powell and Pressburger, courtesy of Scorsese and Schoonmaker',
+    description:
+      '“Made in England: The Films of Michael Powell and Emeric Pressburger" is a poignant crescendo in one of the great love affairs in movies. The films of Powell and Pressburger, the directing-screenwriting duo known as the Archers, has been an abiding polestar for Martin Scorsese, who befriended Powell late in life. Thelma Schoonmaker, Scorsese’s longtime editor, married him, and since his death in 1990 has worked tirelessly to celebrate his legacy. “Made in England” is their ode to films that have profoundly influenced everything from “Raging Bull" to “GoodFellas.” The film rolls...',
+    url: 'https://www.mymotherlode.com/entertainment/movie-news/3392325/a-journey-through-the-films-of-powell-and-pressburger-courtesy-of-scorsese-and-schoonmaker.html',
+    source: 'mymotherlode',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:27+00:00',
   },
   {
     author: null,
-    title: 'Ipswich sign Delap from Man City in £20m deal',
+    title:
+      'A missionary in war-torn Chechnya: a powerful story of how God shows up when the world falls apart',
     description:
-      'Ipswich sign forward Liam Delap from Manchester City in a deal which could be worth up to £20m.',
-    url: 'https://www.bbc.com/sport/football/articles/c880dme9x1eo',
-    source: 'BBC News',
+      "Paula O'Keefe's early life was perhaps a foreshadow of what it was to become as an adult: demonstrations of God's love and power amidst great difficulties and trauma.",
+    url: 'https://www.christiantoday.com/article/a.missionary.in.war.torn.chechnya.a.powerful.story.of.how.god.shows.up.when.the.world.falls.apart/141937.htm',
+    source: 'in',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:25+00:00',
+  },
+  {
+    author: null,
+    title: 'Verkehr: Unfall auf der A12: Fünf Schwerverletzte bei Müllrose',
+    description:
+      'Ein Kleintransporter und ein Pkw prallen auf der A12 zusammen. Es gibt mehrere Verletzte.',
+    url: 'https://www.stern.de/gesellschaft/regional/berlin-brandenburg/verkehr--unfall-auf-der-a12--fuenf-schwerverletzte-bei-muellrose-34886158.html?utm_campaign=tag-im-ueberblick&utm_medium=rssfeed&utm_source=standard',
+    source: 'stern',
+    image:
+      'https://image.stern.de/34886160/t/i-/v1/w1440/r1.7778/-/16--2saz3ebjpuv12axw800h600jpeg---e47b8ef22b8f6fdf.jpg',
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:24+00:00',
+  },
+  {
+    author: 'SDA',
+    title: 'Zement-Recycling kann CO2-Ausstoss um 15 Prozent reduzieren',
+    description:
+      'Forschende der Empa nennen Recycling von Zementstein als effiziente Möglichkeit zur Senkung des CO2-Ausstosses. Eine Studie habe gezeigt, dass die CO2-Mineralisierung die Emissionen um 15 Prozent senken könnte.',
+    url: 'https://www.handelszeitung.ch/newsticker/zement-recycling-kann-co2-ausstoss-um-15-prozent-reduzieren-730528',
+    source: 'handelszeitung',
+    image:
+      'https://www.handelszeitung.ch/fp/1200/675/512/384/sites/default/files/handelszeitung/newsImport/2024-07-16/20240716102630713.jpg',
+    category: 'general',
+    language: 'de',
+    country: 'ch',
+    published_at: '2024-07-16T08:26:23+00:00',
+  },
+  {
+    author: null,
+    title: 'Worauf Unverheiratete beim Hauskauf achten müssen',
+    description:
+      'Wenn unverheiratete sich Paare gemeinsam eine Immobilie zulegen, ist das mit vielen Fallstricken verbunden. Wie sie sich umgehen lassen, erklärt Inka-Marie Storm von Haus & Grund.',
+    url: 'https://www.faz.net/aktuell/wirtschaft/wohnen/haus/worauf-unverheiratete-beim-hauskauf-achten-muessen-19836300.html',
+    source: 'Frankfurter Allgemeine',
+    image:
+      'https://media0.faz.net/ppmedia/aktuell/2107027974/1.9836298/article_teaser/mein-dein-oder-unser-haus-fuer.jpg',
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:21+00:00',
+  },
+  {
+    author: null,
+    title: "ÖSYM'den emsal niteliğinde karar",
+    description:
+      "8 Haziran'da ÖSYM tarafından gerçekleştirilen Yükseköğretim Kurumları Sınavı'nın ilk oturumu olan Temel Yeterlilik Sına...",
+    url: 'https://www.yenisafak.com/gundem/osymden-emsal-niteliginde-karar-4633326',
+    source: 'Yeni Safak',
+    image:
+      "https://img.piri.net/mnresize/500/-/piri/upload/3/2024/7/16/b08d9d47-0y3w1qx0qd5ki2p1gu7bf.jpeg ÖSYM'den emsal niteliğinde karar https://www.yenisafak.com/gundem/osymden-emsal-niteliginde-karar-4633326",
+    category: 'general',
+    language: 'en',
+    country: 'tr',
+    published_at: '2024-07-16T08:26:21+00:00',
+  },
+  {
+    author: 'Redazione CT',
+    title:
+      'Carceri, visita di Rita Bernardini a Trapani: “Condizioni invivibili”',
+    description:
+      'La presidente di Nessuno tocchi Caino denuncia lo stato di sovraffolamento Articolo Carceri, visita di Rita Bernardini a Trapani: &#8220;Condizioni invivibili&#8221; su Live Sicilia.',
+    url: 'https://livesicilia.it/carceri-visita-di-rita-bernardini-a-trapani-condizioni-invivibili/',
+    source: 'livesicilia',
+    image: null,
+    category: 'general',
+    language: 'it',
+    country: 'it',
+    published_at: '2024-07-16T08:26:20+00:00',
+  },
+  {
+    author: null,
+    title: '10:18: Grund für Magnificent 7 Erdrutsch: Rückläufige Marktzinsen',
+    description:
+      'Letzte Woche brachen die Aktien der Glorreichen 7 überraschend ein. Aktien kleiner Unternehmen stiegen ordentlich an. Ich zeige ich auf, was genau hinter dieser Rotati.',
+    url: 'https://www.stock-world.de/analysen/nc17239880-Grund_fuer_Magnificent_7_Erdrutsch_Ruecklaeufige_Marktzinsen.html',
+    source: 'stock-world',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:10+00:00',
+  },
+  {
+    author: null,
+    title:
+      "Zangeres Teske de Schepper: 'Wie ben je als onbeschreven blad, zonder ervaringen van het echte leven?'",
+    description:
+      "Sommige boeken vergeet je nooit. Teske de Schepper (28), zangeres en YouTuber, over I Who Have Never Known Men van Jacqueline Harpman: 'Ik kon er niet van slapen, zo ingrijpend was het.'",
+    url: 'https://www.nd.nl/cultuur/boeken/1231993/zangeres-teske-de-schepper-wie-ben-je-als-onbeschreven-blad-z',
+    source: 'nd',
+    image:
+      'https://storage.pubble.nl/9ed0159c/content/2024/7/b0fa8bbf-1430-4228-9872-e6363a7a0965.jpg',
+    category: 'general',
+    language: 'nl',
+    country: 'nl',
+    published_at: '2024-07-16T08:26:10+00:00',
+  },
+  {
+    author: 'Stadt Wien - Kommunikation und Medien (KOM)',
+    title: 'Gleisbettsauger umgekippt, Bergung im Gang',
+    description:
+      'Heute Nacht, gegen 2 Uhr früh, kam es auf der Linie U6 zu einem mehrere Stunden andauernden Vorfall.',
+    url: 'https://www.ots.at/presseaussendung/OTS_20240716_OTS0046/gleisbettsauger-umgekippt-bergung-im-gang',
+    source: 'ots',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'at',
+    published_at: '2024-07-16T08:26:08+00:00',
+  },
+  {
+    author: null,
+    title:
+      'Capital Bank of Jordan : Improves Website Accessibility with ReadSpeaker',
+    description:
+      "(marketscreener.com) Capital Bank of Jordan has introduced ReadSpeaker technology on its website to support individuals with visual impairments. This initiative aims to facilitate access to the bank's online services, enabling easier and more independent navigation and confident management of financial affairs. ReadSpeaker...https://www.marketscreener.com/quote/stock/CAPITAL-BANK-OF-JORDAN-20700206/news/Capital-Bank-of-Jordan-Improves-Website-Accessibility-with-ReadSpeaker-47389139/?utm_medium=RSS&utm_content=20240716",
+    url: 'https://www.marketscreener.com/quote/stock/CAPITAL-BANK-OF-JORDAN-20700206/news/Capital-Bank-of-Jordan-Improves-Website-Accessibility-with-ReadSpeaker-47389139/?utm_medium=RSS&utm_content=20240716',
+    source: '4-traders',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:06+00:00',
+  },
+  {
+    author: null,
+    title:
+      '16 July 2024 &ndash; 10H00 CET: SpineGuard note by BioStrategic Research (in english) (Donwload PDF)',
+    description:
+      '(marketscreener.com) Morning Note - 16th July 2024 SPINEGUARD France -...https://www.marketscreener.com/quote/stock/SPINEGUARD-13074246/news/16-July-2024-10H00-CET-SpineGuard-note-by-BioStrategic-Research-in-english-Donwload-PDF-47389138/?utm_medium=RSS&utm_content=20240716',
+    url: 'https://www.marketscreener.com/quote/stock/SPINEGUARD-13074246/news/16-July-2024-10H00-CET-SpineGuard-note-by-BioStrategic-Research-in-english-Donwload-PDF-47389138/?utm_medium=RSS&utm_content=20240716',
+    source: '4-traders',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:06+00:00',
+  },
+  {
+    author: null,
+    title: 'Vanquis Banking : Market Update Ahead of Interim Results',
+    description:
+      '(marketscreener.com) Update ahead of Interim Results for the six months ended 30 June 2024 This announcement contains inside information. London - 16 July 2024 - Vanquis Banking Group plc , the specialist bank, makes the following market update ahead of its Interim Results on 1 August 2024. ...https://www.marketscreener.com/quote/stock/VANQUIS-BANKING-GROUP-PLC-9590111/news/Vanquis-Banking-Market-Update-Ahead-of-Interim-Results-47389137/?utm_medium=RSS&utm_content=20240716',
+    url: 'https://www.marketscreener.com/quote/stock/VANQUIS-BANKING-GROUP-PLC-9590111/news/Vanquis-Banking-Market-Update-Ahead-of-Interim-Results-47389137/?utm_medium=RSS&utm_content=20240716',
+    source: '4-traders',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:26:06+00:00',
+  },
+  {
+    author: null,
+    title:
+      'Nuria Montes: En 2025 vamos a cambiar el Bono Viaje hacia un formato más especializado',
+    description:
+      'La consellera de Turismo aboga por modificar uno de los planes más populares de la Generalitat, nacido tras la pandemia, hacía un sistema más restringido en productos y colectivos',
+    url: 'https://www.elperiodicodeaqui.com/epda-noticias/nuria-montes-en-2025-vamos-a-cambiar-el-bono-viaje-hacia-un-formato-mas-especializado/346055',
+    source: 'elperiodicodeaqui',
+    image: null,
+    category: 'general',
+    language: 'es',
+    country: 'es',
+    published_at: '2024-07-16T08:26:06+00:00',
+  },
+  {
+    author: 'gehl',
+    title: 'Temu hat immer mehr US-Händler - und bald wohl auch deutsche',
+    description: 'Temu hat immer mehr US-Händler - und bald wohl auch deutsche',
+    url: 'http://www.ibusiness.de/aktuell/db/056765gehl.html',
+    source: 'ibusiness',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:04+00:00',
+  },
+  {
+    author: 'jg',
+    title: 'Weitere Weltbild-Töchter sind insolvent',
+    description: 'Weitere Weltbild-Töchter sind insolvent',
+    url: 'http://www.ibusiness.de/beitraege/db/104490jg.html',
+    source: 'ibusiness',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:04+00:00',
+  },
+  {
+    author: null,
+    title: 'Unzulässige Videoüberwachung schon bei schwenkbarer Kamera',
+    description:
+      'Niemand möchte sich von seinem Nachbarn überwacht fühlen. Deshalb ist es verboten, eine Überwachungskamera auf einem Grundstück aufzustellen, wenn der Nachbar sich nachvollziehbar beobachtet fühlt....',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738896-unzulaessige-videoueberwachung-schon-bei-schwenkbarer-kamera-031.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title:
+      'Neuer Bitcoin Crash am Horizont? Erste Mt. Gox Auszahlungen gestartet',
+    description:
+      'Anzeige / Werbung Viele Anleger konnten in den letzten Tagen ein wenig aufatmen, nachdem Bitcoin wieder erste signifikante Gewinne verzeichnen konnte. In den Wochen zuvor zeigte sich der BTC-Token ...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738898-neuer-bitcoin-crash-am-horizont-erste-mt-gox-auszahlungen-gestartet-303.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title: 'Aktie der Nordea Bank Oyj: Kurs heute nahezu konstant (10,55 €)',
+    description:
+      'Wenig Kursbewegung derzeit bei der Nordea Bank Oyj-Aktie . Das Papier kostete zuletzt 10,55 Euro. Kaum verändert im Vergleich zu der letzten Notierung des vorigen Handelstages zeigt sich zur Stunde...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738901-aktie-der-nordea-bank-oyj-kurs-heute-nahezu-konstant-10-55-euro-013.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title: 'Aktienmarkt: Ferrari NV-Aktie kann sich nicht behaupten (386,50 €)',
+    description:
+      'An der Börse liegt die Ferrari NV-Aktie aktuell im Minus. Die Aktie kostete zuletzt 386,50 Euro. Die Aktie von Ferrari NV verzeichnet gegenwärtig ein Minus von 1,75 Prozent. Sie hat sich um 6,90 Eu...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738902-aktienmarkt-ferrari-nv-aktie-kann-sich-nicht-behaupten-386-50-euro-013.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title: 'Zalando nach Hugo-Boss-Schock - sollten Anleger Abstand nehmen?',
+    description:
+      'Nach dem zuletzt starken Comeback startet die Zalando-Aktie am Dienstag mit einem Minus in den Handel, was insbesondere auf die Prognosesenkung des Modeunternehmens Hugo Boss zurückzuführen ist. Za...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738899-zalando-nach-hugo-boss-schock-sollten-anleger-abstand-nehmen-124.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title: 'Gold: Die Nachfrage bleibt hoch',
+    description:
+      'Der Goldpreis ist aus seiner wochenlangen Konsolidierung ausgebrochen und befindet sich auf dem Weg in Richtung Allzeithoch. Und das, obwohl die chinesische Zentralbank (PBoC) auch im abgelaufenen ...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738900-gold-die-nachfrage-bleibt-hoch-124.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title: 'Wo Preisaufschläge für Neubauwohnungen am größten sind',
+    description:
+      'Wer sich für eine Neubauwohnung anstelle eines Altbaus entscheidet, muss in fast allen Regionen hierzulande einen Aufpreis einkalkulieren. Im Rahmen des Postbank Wohnatlas wurde analysiert, wo die ...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738895-wo-preisaufschlaege-fuer-neubauwohnungen-am-groessten-sind-031.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title:
+      'Ethereum ETF Gerüchte: Gibt es endlich ein Startdatum für die ETH-ETFs?',
+    description:
+      'Anzeige / Werbung Nachdem bereits im Januar 2024 die ersten Bitcoin-Spot-ETFs zugelassen wurden und auf dem US-amerikanischen Börsenmarkt Milliarden an Zuflüssen erhalten hatten, warten nun viele A...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738897-ethereum-etf-geruechte-gibt-es-endlich-ein-startdatum-fuer-die-eth-etfs-303.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title: 'Aktie der ING Groep: Kurs heute nahezu konstant (16,586 €)',
+    description:
+      'Der Kurs der dem Anteilsschein der ING Groep kommt kaum von der Stelle. Das Papier notiert derzeit bei 16,59 Euro. Die Wertschätzung der Investoren für die Aktie der ING Groep hat sich heute kaum v...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738903-aktie-der-ing-groep-kurs-heute-nahezu-konstant-16-586-euro-013.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title: 'XFRA IW7: AUSSETZUNG/SUSPENSION',
+    description:
+      'DAS/ DIE FOLGENDE(N) INSTRUMENT(E) IST/ SIND AB SOFORT AUSGESETZT:THE FOLLOWING INSTRUMENT(S) IS/ ARE SUSPENDED WITH IMMEDIATE EFFECT:INSTRUMENT NAME KUERZEL/SHORTCODE ISIN BIS/UNTILEXPRIVIA SPA EO...',
+    url: 'https://www.finanznachrichten.de/nachrichten-2024-07/62738929-xfra-iw7-aussetzung-suspension-029.htm',
+    source: 'finanznachrichten',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: 'Wolfgang Horch',
+    title: 'Sommerferien beginnen: Was sich am Flughafen Hamburg jetzt ändert',
+    description:
+      'Neue Automaten, mehr Slot-&-Fly-Tickets, Wasserspender und 60 kostenlose Massagesessel. Und was ist mit der Sicherheitskontrolle?',
+    url: 'https://www.abendblatt.de/hamburg/wirtschaft/article406753867/ferienstart-am-flughafen-hamburg-dies-erwartet-passagiere.html',
+    source: 'Hamburger Abendblatt',
+    image:
+      'https://img.sparknews.funkemedien.de/406807968/406807968_1721118399_v16_9_600.jpeg',
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:26:00+00:00',
+  },
+  {
+    author: null,
+    title: 'Ölpreise gefallen - Sorgen um Chinas Wirtschaft belasten',
+    description:
+      'LONDON/NEW YORK (dpa-AFX) - Die Ölpreise sind am Dienstag gefallen. Am Vormittag kostete ein Barrel (159 Liter) der Nordseesorte Brent zur Lieferung im September 84,22 US-Dollar. Das waren 63 Cent weniger als am Montag. Der Preis für ein Fass der US-Sorte West Texas Intermediate (WTI) zur Lieferung im August fiel um 66 Cent auf 81,24 Dollar. [mehr]',
+    url: 'https://www.aktiencheck.de/news/Artikel-Oelpreise_gefallen_Sorgen_um_Chinas_Wirtschaft_belasten-17239864',
+    source: 'aktiencheck',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:25:57+00:00',
+  },
+  {
+    author: null,
+    title:
+      'APA ots news: Vienna Insurance Group mit Toprating "A+" und stabilem Ausblick',
+    description:
+      'Wien (APA-ots) - Die internationale Ratingagentur Standard & Poors (S&P) hat die Vienna Insurance Group (VIG) mit einem hervorragenden Rating von "A+" und stabilem Ausblick bewertet. Damit zählt die VIG zu den Unternehmen mit dem besten Rating im Leitindex der Wiener Börse. [mehr]',
+    url: 'https://www.aktiencheck.de/news/Artikel-APA_ots_news_Vienna_Insurance_Group_Toprating_A_und_stabilem_Ausblick-17239862',
+    source: 'aktiencheck',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:25:57+00:00',
+  },
+  {
+    author: null,
+    title: 'Kiesewetter sieht Vance als Kopie von Trump',
+    description:
+      'BERLIN (dts Nachrichtenagentur) - Der CDU-Bundestagsabgeordnete Roderich Kiesewetter hält Trumps Vize-Kandidat J.D. Vance für eine "Kopie" des Ex-Präsidenten. "Er akzeptiert auch nicht das Ergebnis der US-Präsidentschaftswahlen von 2020", sagte Kiesewetter am Dienstag den Sendern RTL und ntv."Entscheidend ist, wie wir uns aufstellen. [mehr]',
+    url: 'https://www.aktiencheck.de/news/Artikel-Kiesewetter_sieht_Vance_als_Kopie_von_Trump-17239866',
+    source: 'aktiencheck',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:25:57+00:00',
+  },
+  {
+    author: null,
+    title: 'EQS-Stimmrechte: Nordex SE (deutsch)',
+    description:
+      'Nordex SE: Veröffentlichung gemäß § 40 Abs. 1 WpHG mit dem Ziel der europaweiten Verbreitung ^ EQS Stimmrechtsmitteilung: Nordex SE Nordex SE: Veröffentlichung gemäß § 40 Abs. 1 WpHG mit dem Ziel der europaweiten Verbreitung 16.07.2024 / 10:15 CET/CEST Veröffentlichung einer Stimmrechtsmitteilung übermittelt durch EQS News - ein Service der EQS Group AG. [mehr]',
+    url: 'https://www.aktiencheck.de/news/Artikel-EQS_Stimmrechte_Nordex_SE_deutsch-17239860',
+    source: 'aktiencheck',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:25:57+00:00',
+  },
+  {
+    author: 'James Goldman',
+    title:
+      'Arsenal face three problems in bid to sign Spain Euro 2024 star Nico Williams',
+    description: 'The competition for the Athletic Bilbao winger is intense.',
+    url: 'https://metro.co.uk/2024/07/16/arsenal-face-three-problems-bid-sign-spain-euro-2024-star-nico-williams-21235173/',
+    source: 'Metro',
     image: null,
     category: 'general',
     language: 'en',
     country: 'gb',
-    published_at: '2024-07-13T13:46:38+00:00',
+    published_at: '2024-07-16T08:25:48+00:00',
   },
   {
-    author: null,
-    title: 'Lengthy delays at Eurotunnel LeShuttle',
+    author: 'AP News',
+    title: 'Celebrity birthdays for the week of July 21-27',
     description:
-      'Eurotunnel apologises over "extended wait" for passengers at the Folkestone terminal.',
-    url: 'https://www.bbc.com/news/articles/cevwy8rv1lko',
-    source: 'BBC News - UK',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/3420/live/eaeb2d90-40ee-11ef-a8b7-8d8151a48cdf.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T12:23:14+00:00',
-  },
-  {
-    author: null,
-    title: 'Firefighters tackle large blaze in Newry',
-    description:
-      'Video footage shows large black plumes of smoke near the Greenbank industrial estate in the city.',
-    url: 'https://www.bbc.com/news/articles/cleyd6yznqlo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/ab35/live/09d32750-4110-11ef-b504-0fda67cb3b60.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T12:07:26+00:00',
-  },
-  {
-    author: null,
-    title:
-      'A inspiradora história dos filhos de imigrantes que se tornaram estrelas da seleção da Espanha na Eurocopa',
-    description:
-      'Lamine Yamal e Nico Williams são estrelas do Eurocopa 2024. Os jogadores, ambos de origem africana, tornaram-se uma inspiração para muitos. Conheça detalhes sobre a amizade da dupla, além da jornada das famílias deles.',
-    url: 'https://www.bbc.com/portuguese/articles/c0dmljzxjwvo',
-    source: 'BBC Brasil',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/d9d4/live/22f6e9a0-3fcc-11ef-be79-d562af6660dd.jpg',
-    category: 'general',
-    language: 'pt',
-    country: 'br',
-    published_at: '2024-07-13T11:32:18+00:00',
-  },
-  {
-    author: null,
-    title: "'One last push, finish the job', Prince William encourages England",
-    description:
-      'The Prince of Wales will be attending the Euro 2024 final as England take on Spain in Berlin.',
-    url: 'https://www.bbc.com/news/articles/cljy60y9yj7o',
-    source: 'BBC News - UK',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/25c2/live/09759140-4100-11ef-895e-1f5d1f8fa637.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T11:16:16+00:00',
-  },
-  {
-    author: null,
-    title:
-      'At least 20 killed in air strike on Gaza humanitarian zone, Hamas says',
-    description:
-      'An air strike hit a densely populated area of displaced people in the al-Mawasi area of Khan Younis.',
-    url: 'https://www.bbc.com/news/articles/cyx0qdkn45eo',
-    source: 'BBC',
+      'Celebrity birthdays for the week of July 21-27: July 21: Actor Leigh Lawson (“Tess”) is 81. Singer Yusuf Islam (Cat Stevens) is 76. Cartoonist Garry Trudeau (“Doonesbury”) is 76. Actor Jamey Sheridan (“Homeland”) is 73. Singer-guitarist Eric Bazilian of The Hooters is 71. Comedian Jon Lovitz is 67. Actor Lance Guest (“Lou Grant”) is 64. [&#8230;]',
+    url: 'https://www.mymotherlode.com/entertainment/3392323/celebrity-birthdays-for-the-week-of-july-21-27.html',
+    source: 'mymotherlode',
     image: null,
     category: 'general',
     language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T09:58:57+00:00',
+    country: 'us',
+    published_at: '2024-07-16T08:25:47+00:00',
   },
   {
     author: null,
-    title: 'June 1, 2024 - Israel-Gaza news',
+    title: 'Militaire attaqué à Paris : le suspect interné en psychiatrie',
     description:
-      "President Joe Biden has laid out a three-phase proposal to end the conflict in Gaza, as global condemnation of Israel's offensive in Rafah grows.",
-    url: 'https://www.cnn.com/middleeast/live-news/israel-hamas-war-gaza-news-06-01-24/index.html',
-    source: 'CNN Middle East',
+      'Militaire attaqué à Paris : le suspect interné en psychiatrie',
+    url: 'https://www.leparisien.fr/faits-divers/militaire-attaque-a-paris-le-suspect-interne-en-psychiatrie-16-07-2024-LA347HVRBRHTNPUB5JSAJCPTSM.php',
+    source: 'le Parisien',
+    image: null,
+    category: 'general',
+    language: 'fr',
+    country: 'fr',
+    published_at: '2024-07-16T08:25:45+00:00',
+  },
+  {
+    author: 'Staff Reporter',
+    title: 'Guyana could supply region’s sugar needs by 2027',
+    description:
+      '-President Ali says, emphasises government’s efforts to make sector viable BY 2027, Guyana could produce and supply enough sugar to meet the demands of the Caribbean region, the country’s President, Dr Irfaan Ali has said. “We are ensuring that we build the viability of the sugar sector which require tremendous investment, but we are very [&#8230;]',
+    url: 'https://guyanachronicle.com/2024/07/16/guyana-could-supply-regions-sugar-needs-by-2027/',
+    source: 'Guyana Chronicle',
+    image: null,
+    category: 'general',
+    language: 'en',
+    country: 'gy',
+    published_at: '2024-07-16T08:25:43+00:00',
+  },
+  {
+    author: 'reporters@dailyrecord.co.uk (Kirsten McStay, Zoe Delaney)',
+    title:
+      "Zara McDermott speaks out on Graziano Di Prima saying she 'wrestled with fear' about opening up",
+    description:
+      'Love Island star Zara McDermott, who was partnered with Graziano Di Prima on Strictly Come Dancing, has spoken out following his axing from the show.',
+    url: 'https://www.dailyrecord.co.uk/entertainment/zara-mcdermott-speaks-out-graziano-33252943',
+    source: 'Daily Record',
     image:
-      'https://cdn.cnn.com/cnnnext/dam/assets/240601052846-01-jabalya-refugee-camp-053124-super-169.jpg',
+      'https://i2-prod.mirror.co.uk/incoming/article33235510.ece/ALTERNATES/s98/2_Zara-McDermott.jpg',
+    category: 'general',
+    language: 'en',
+    country: 'gb',
+    published_at: '2024-07-16T08:25:42+00:00',
+  },
+  {
+    author: null,
+    title: 'Indian box-office nets ₹5,000 cr; Kalki pulls in 15%',
+    description:
+      'First half of 2024 sees fewer movie releases, sluggish collections amid elections, mega cricket events',
+    url: 'https://www.thehindubusinessline.com/news/indian-box-office-nets-5000-cr-kalki-pulls-in-15/article68409273.ece',
+    source: 'Business Line',
+    image:
+      'https://bl-i.thgim.com/public/incoming/pne5fl/article68409504.ece/alternates/LANDSCAPE_1200/IMG_Kalki_poster_6_1_3BD1J5LB.jpg',
+    category: 'business',
+    language: 'en',
+    country: 'us',
+    published_at: '2024-07-16T08:25:41+00:00',
+  },
+  {
+    author: 'Mariana Bandeira',
+    title:
+      '“IA impulsiona tantos os riscos como os lucros”, afirma Magda Cocco',
+    description:
+      'A advogada, sócia da VdA, considera que a empresas devem estar alerta em relação a "maus investimentos” na tecnologia e não a considerarem "o remédio para todos os males”.',
+    url: 'https://jornaleconomico.sapo.pt/noticias/ia-impulsiona-tantos-os-riscos-como-os-lucros-afirma-magda-cocco/',
+    source: 'economico',
+    image: null,
+    category: 'general',
+    language: 'pt',
+    country: 'pt',
+    published_at: '2024-07-16T08:25:37+00:00',
+  },
+  {
+    author: 'Luca Incoronato',
+    title:
+      'Decreto Salva casa 2024, cambio destinazione d’uso: i nuovi requisiti',
+    description:
+      'Decreto Salva casa 2024 voluto da Salvini: tante polemiche per nuova metratura di monolocali e bilocali, così come il cambio destinazione d’uso',
+    url: 'https://quifinanza.it/mercato-immobiliare/decreto-salva-casa-2024-nuovi-requisiti/834312/',
+    source: 'economia',
+    image:
+      'https://quifinanza.it/wp-content/uploads/sites/5/2024/07/Decreto-Salva-casa-2024-cambio-destinazione-duso-i-nuovi-requisiti.jpg',
+    category: 'general',
+    language: 'it',
+    country: 'it',
+    published_at: '2024-07-16T08:25:34+00:00',
+  },
+  {
+    author: 'Sávio Benevides',
+    title:
+      'Não Trump, Biden ligou para a viúva da vítima do tiroteio no comício. Ela não atendeu',
+    description:
+      'Helen disse que embora Trump não a tivesse contatado, a ligação de Biden não foi bem-vinda. (Arquivo) A esposa do bombeiro, que morreu durante um ataque num comício de Donald Trump, recebeu um telefonema do presidente Joe Biden depois que a tragédia atingiu sua família no sábado. Helen Compatore, no entanto, não conversou com Biden [&#8230;]The post Não Trump, Biden ligou para a viúva da vítima do tiroteio no comício. Ela não atendeu appeared first on Jornal Espalha Fato.',
+    url: 'https://jornalespalhafato.com/2024/07/16/nao-trump-biden-ligou-para-a-viuva-da-vitima-do-tiroteio-no-comicio-ela-nao-atendeu/',
+    source: 'jornalespalhafato',
+    image: null,
+    category: 'entertainment',
+    language: 'pt',
+    country: 'br',
+    published_at: '2024-07-16T08:25:31+00:00',
+  },
+  {
+    author: 'Arik Mirovsky',
+    title: 'Luxury homes: Jerusalem booms, Herzliya slumps',
+    description:
+      'Tel Aviv still leads the market for homes costing NIS 10 million or more, while Jerusalem has pushed Herzliya firmly into third place.',
+    url: 'https://en.globes.co.il/en/article-1001484455#utm_source=RSS',
+    source: 'Globes English | Israel Business Arena',
+    image:
+      'https://res.cloudinary.com/globes/image/upload/t_800X392/v1721043705/direct/%D7%94%D7%A0%D7%91%D7%99%D7%90%D7%99%D7%9D_27_%D7%99%D7%A8%D7%95%D7%A9%D7%9C%D7%99%D7%9D_%D7%90%D7%96%D7%95%D7%A8%D7%99%D7%9D_nqsnsv.jpg',
+    category: 'business',
+    language: 'en',
+    country: 'il',
+    published_at: '2024-07-16T08:25:29+00:00',
+  },
+  {
+    author: 'Redazione',
+    title: 'Palermo, spaccio di droga in zona Università: arrestato un 30enne',
+    description:
+      "L'operazione dei poliziotti del commissariato Porta NuovaArticolo Palermo, spaccio di droga in zona Università: arrestato un 30enne su Live Sicilia.",
+    url: 'https://livesicilia.it/palermo-spaccio-di-droga-in-zona-universita-arrestato-un-30enne/',
+    source: 'livesicilia',
+    image: null,
+    category: 'general',
+    language: 'it',
+    country: 'it',
+    published_at: '2024-07-16T08:25:28+00:00',
+  },
+  {
+    author: null,
+    title: 'Nordex: Wichtiger Meilenstein - Aktienanalyse',
+    description:
+      'Kulmbach (www.aktiencheck.de) - Nordex-Aktienanalyse von "Der Aktionär":Maximilian Völkl vom Anlegermagazin "Der Aktionär" nimmt in einer aktuellen Aktienanalyse die Aktie des Turbinenbauers Nordex SE (ISIN: DE000A0D6554, WKN: A0D655, Ticker-Symbol: NDX1, NASDAQ OTC-Symbol: NRDXF) unter die Lupe. [mehr]',
+    url: 'https://www.aktiencheck.de/exklusiv/Artikel-Nordex_Wichtiger_Meilenstein_Aktienanalyse-17239858',
+    source: 'aktiencheck',
+    image: null,
+    category: 'general',
+    language: 'de',
+    country: 'de',
+    published_at: '2024-07-16T08:25:14+00:00',
+  },
+  {
+    author: 'AP News',
+    title:
+      'Judge removed from long-running gang and racketeering case against rapper Young Thug and others',
+    description:
+      'The judge who has been overseeing the long-running racketeering and gang prosecution against Young Thug and others in Atlanta has been removed from the case after two defendants filed motions seeking his recusal citing a meeting the judge held with prosecutors and a state witness. Fulton County Superior Court Chief Judge Ural Glanville had put the case on hold two weeks ago to give another judge a chance to review the recusal motions. Judge Rachel Krause on Monday granted those motions and ordered the clerk of court to assign the case to a different judge.',
+    url: 'https://www.mymotherlode.com/entertainment/3392321/judge-removed-from-long-running-gang-and-racketeering-case-against-rapper-young-thug-and-others.html',
+    source: 'mymotherlode',
+    image: null,
     category: 'general',
     language: 'en',
     country: 'us',
-    published_at: '2024-07-13T09:50:11+00:00',
+    published_at: '2024-07-16T08:25:13+00:00',
   },
   {
-    author: null,
-    title: "MPs' safety 'keeps me awake at night,' says Speaker",
-    description: "MPs' safety 'keeps me awake at night,' says Speaker",
-    url: 'https://www.bbc.com/news/articles/cl5yj83jq2no',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/0e2a/live/38e7b9c0-4070-11ef-a0c6-051e9798b019.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T09:27:08+00:00',
-  },
-  {
-    author: null,
-    title: 'Teenager charged after Gurdwara attack',
+    author: 'Anthony Garreffa',
+    title:
+      'AMD confirms next-gen Zen 6 CPU cores are coming to desktops, laptops, servers in the future',
     description:
-      'A boy, 17, is charged with multiple offences after a disturbance at a place of worship in Kent.',
-    url: 'https://www.bbc.com/news/articles/cd17y0ye5p0o',
-    source: 'BBC',
+      'AMD officially confirms its next-generation Zen 6 and Zen 6C CPU cores: codenamed Morpheus, ready for next-gen EPYC, Ryzen AI APUs, and Ryzen CPUs. Continue reading at TweakTown >',
+    url: 'https://www.tweaktown.com/news/99362/amd-confirms-next-gen-zen-6-cpu-cores-are-coming-to-desktops-laptops-servers-in-the-future/index.html',
+    source: 'tweaktown',
     image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/0d3f/live/cd4cb1b0-40f7-11ef-9e1c-3b4a473456a6.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T09:21:24+00:00',
-  },
-  {
-    author: null,
-    title: 'June 8, 2024 - Israel-Gaza news',
-    description:
-      'The Israeli military says it rescued four hostages from central Gaza on Saturday. Palestinians report scenes of horror on the ground, and Gaza hospital officials say more than 200 people were killed.',
-    url: 'https://www.cnn.com/middleeast/live-news/israel-hamas-war-gaza-news-06-08-24/index.html',
-    source: 'CNN Middle East',
-    image:
-      'https://cdn.cnn.com/cnnnext/dam/assets/200601162107-benny-gantz-file-super-169.jpg',
+      'https://www.tweaktown.com/images/news/9/9/99362_06_amd-confirms-future-gen-zen-6-cpu-cores-are-coming-to-desktops-laptops-servers.jpg',
     category: 'general',
     language: 'en',
     country: 'us',
-    published_at: '2024-07-13T08:55:13+00:00',
+    published_at: '2024-07-16T08:25:09+00:00',
   },
   {
-    author: null,
-    title: "How Banksy sparked a steel town's love for colour",
+    author: 'Marisa de Dios',
+    title: "'HIT' y otras series malditas de TVE",
     description:
-      'More than five years after a Banksy appeared in Port Talbot its street art community is thriving.',
-    url: 'https://www.bbc.com/news/articles/cerrz8edyd0o',
-    source: 'BBC',
+      'En el verano de 2022 se iniciaba el rodaje de la tercera temporada de &#039;HIT&#039;, la serie juvenil de TVE protagonizada por un excéntrico profesor (Daniel Grao) con métodos educativos poco ortodoxos. Nadie podía imaginar entonces que los capítulos no se estrenarían hasta dos años después y, encima, en &#039;late night&#039;: llegan este martes 16 de julio a las 23.55 horas, dejándole el &#039;prime time&#039; a &#039;Los Iglesias. Hermanos a la obra&#039;, con Chabeli y Julio José de interioristas de casas de famosos.',
+    url: 'https://www.laopiniondezamora.es/ocio/tv/series/2024/07/16/series-malditas-tve-105703721.html',
+    source: 'ocio',
     image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/f8fe/live/de0ad900-4057-11ef-96a8-e710c6bfc866.jpg',
+      'https://estaticos-cdn.prensaiberica.es/clip/7d630e81-3556-4eb7-959b-0e9c6560d42d_16-9-aspect-ratio_default_0.jpg',
     category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T06:37:44+00:00',
+    language: 'es',
+    country: 'es',
+    published_at: '2024-07-16T08:24:56+00:00',
   },
   {
-    author: null,
-    title: "Low turnout as voters feel 'forgotten' by election",
-    description:
-      'Abertillery sits in the constituency which saw just 42.7% of eligible people turn up to vote.',
-    url: 'https://www.bbc.com/news/articles/cv2gwl2e314o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/bc64/live/9ecb44e0-3ee1-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T06:34:13+00:00',
-  },
-  {
-    author: null,
+    author: 'ABMN Staff',
     title:
-      'More human remains found in London as Bristol suitcase suspect named',
+      'BMO Capital Markets Increases NextEra Energy (NYSE:NEE) Price Target to $83.00',
     description:
-      'Police say the remains discovered in a west London flat and Bristol belong to the same two men.',
-    url: 'https://www.bbc.com/news/articles/c3gr49e5908o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/0cc8/live/d2de2800-40a9-11ef-ab5d-4170bbd48817.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T03:43:46+00:00',
-  },
-  {
-    author: null,
-    title: "We're the Wimbledon ball girls who took on the pros",
-    description:
-      'Two teenagers tell BBC Newsbeat what it was like to face the pros on court in SW19.',
-    url: 'https://www.bbc.com/news/articles/cg64re46vk1o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4ec8/live/1beab930-4025-11ef-8b20-87ec2d8dde03.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T03:31:09+00:00',
-  },
-  {
-    author: null,
-    title: 'Drums, fire and ice: Photos of the week',
-    description:
-      'A selection of striking news photographs taken around the world this week.',
-    url: 'https://www.bbc.com/news/articles/ckrg3ym1n7ko',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/cd64/live/3b260780-3fa0-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T03:28:07+00:00',
-  },
-  {
-    author: null,
-    title: "What next for MPs who lost their jobs? - ‘I'm not sure what to do’",
-    description:
-      'The challenges facing former MPs as they move on from a £91,000 salary and life in the public eye.',
-    url: 'https://www.bbc.com/news/articles/cv2g9v9zeyjo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/bf1e/live/7455b1f0-3e00-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T03:15:31+00:00',
-  },
-  {
-    author: null,
-    title: 'Mortgage competition hots up as rates decision looms',
-    description:
-      'Lenders cut the cost of new mortgages, with hopes of further falls, but many homeowners are still stretched.',
-    url: 'https://www.bbc.com/news/articles/c51yp51z00do',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/0ef1/live/c3ba6490-403d-11ef-8b5e-efed939c2019.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T02:42:25+00:00',
-  },
-  {
-    author: null,
-    title: "Biden is teetering. Trump's plan? Let it happen",
-    description:
-      "Strategists say Trump is showing uncharacteristic discipline, and that it's working.",
-    url: 'https://www.bbc.com/news/articles/cd17yd3jq4ro',
-    source: 'BBC News - US & Canada',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/b1f9/live/b1092ad0-4064-11ef-b74c-bb483a802c97.jpg',
+      'BMO Capital Markets Increases NextEra Energy (NYSE:NEE) Price Target to $83.00',
+    url: 'https://www.americanbankingnews.com/2024/07/16/bmo-capital-markets-increases-nextera-energy-nysenee-price-target-to-83-00.html',
+    source: 'americanbankingnews',
+    image: null,
     category: 'general',
     language: 'en',
     country: 'us',
-    published_at: '2024-07-13T02:28:39+00:00',
+    published_at: '2024-07-16T08:24:47+00:00',
   },
   {
-    author: null,
-    title: 'Labour’s first week: Eight key plans, and the challenges ahead',
-    description:
-      'What has Labour announced in its first week since sweeping to power?',
-    url: 'https://www.bbc.com/news/articles/cqql0zlxkk6o',
-    source: 'BBC News - UK',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4d2f/live/c6a43ce0-4023-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T02:27:56+00:00',
-  },
-  {
-    author: null,
+    author: 'ABMN Staff',
     title:
-      'Police knew suspect in unsolved 1959 murder intended to kill black man',
+      'Macfarlane Group (LON:MACF) Given House Stock Rating at Shore Capital',
     description:
-      'A newly released police file reveals that officers knew a key suspect was a violent racist.',
-    url: 'https://www.bbc.com/news/articles/c2q0x76e4ppo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/b8ce/live/ca3cbb50-3ec2-11ef-b74c-bb483a802c97.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T01:43:29+00:00',
-  },
-  {
-    author: null,
-    title: "The Papers: 'Arise Sir Gareth' and minister's prison announcement",
-    description:
-      "Saturdays' front pages look ahead to the Euros final and some of Labour's new policies.",
-    url: 'https://www.bbc.com/news/articles/cxe2xrrzx45o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/cd68/live/28b999b0-409d-11ef-96a8-e710c6bfc866.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T01:28:29+00:00',
-  },
-  {
-    author: null,
-    title: 'Meet the tycoons behind the grand Indian wedding',
-    description:
-      "For Mukesh Ambani, his son's wedding is not just a wedding - it's a display of his clout and power.",
-    url: 'https://www.bbc.com/news/articles/c51yp353g0ro',
-    source: 'BBC News - World',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/126c/live/99194730-4040-11ef-96a8-e710c6bfc866.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-13T01:07:24+00:00',
-  },
-  {
-    author: null,
-    title: "Many Democrats are sticking with Biden. Here's why",
-    description:
-      'Scores of Democrats have publicly backed Biden - citing his record, his principles and his 2020 win against Trump.',
-    url: 'https://www.bbc.com/news/articles/cw4y3xd4r1po',
-    source: 'BBC News - US & Canada',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/9401/live/4d46d420-4055-11ef-9909-c12337993a63.jpg',
+      'Macfarlane Group (LON:MACF) Given House Stock Rating at Shore Capital',
+    url: 'https://www.americanbankingnews.com/2024/07/16/macfarlane-group-lonmacf-given-house-stock-rating-at-shore-capital.html',
+    source: 'americanbankingnews',
+    image: null,
     category: 'general',
     language: 'en',
     country: 'us',
-    published_at: '2024-07-13T00:37:57+00:00',
-  },
-  {
-    author: null,
-    title: 'Rookie Eckersley earns Wigan derby win over Saints',
-    description:
-      "Wigan's Zach Eckersley scores the match-winning try against St Helens in his first senior Super League start at full-back.",
-    url: 'https://www.bbc.com/sport/rugby-league/articles/crgmky0xy20o',
-    source: 'BBC News',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/88bf/live/0ce32e40-4093-11ef-b00c-3b5e78b1e0f4.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T21:29:28+00:00',
-  },
-  {
-    author: null,
-    title: 'Delays warning as M25 stretch closes',
-    description:
-      'The road is set to close between junctions 10 and 11 in Surrey from 21:00 Friday to 06:00 Monday.',
-    url: 'https://www.bbc.com/news/articles/c1dmp9e2vyeo',
-    source: 'BBC News - UK',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/0e57/live/bcfe6380-4034-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T20:09:19+00:00',
-  },
-  {
-    author: null,
-    title: 'Prince William to attend Euro 2024 final in Berlin',
-    description:
-      "The Prince of Wales will heading to Germany to watch the England men's team play Spain on Sunday.",
-    url: 'https://www.bbc.com/news/articles/cw5ypd3v7ngo',
-    source: 'BBC News - UK',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/56cb/live/89dc16d0-406d-11ef-a0c6-051e9798b019.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T17:52:04+00:00',
-  },
-  {
-    author: null,
-    title: "Djokovic applauds Musetti's 'ridiculous' shot",
-    description:
-      "Watch the moment Novak Djokovic applauds Lorenzo Musetti's 'ridiculous' passing shot in the semi-final at Wimbledon.",
-    url: 'https://www.bbc.com/sport/tennis/videos/cv2gnp5dyn4o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/d716/live/914b3b40-4076-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T17:48:38+00:00',
-  },
-  {
-    author: null,
-    title: 'Children killed in Nigeria school collapse',
-    description:
-      'Emergency services say rescuers are working through the rubble of the school in central Plateau state.',
-    url: 'https://www.bbc.com/news/articles/cw0y1jl95rdo',
-    source: 'BBC News - World',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/676e/live/1d829f00-406c-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T17:32:02+00:00',
-  },
-  {
-    author: null,
-    title: 'Alcaraz clinches comeback victory over Medvedev to reach final',
-    description:
-      'Watch highlights as Carlos Alcaraz comes back to beat Daniil Medvedev and secure a place in the Wimbledon final.',
-    url: 'https://www.bbc.com/sport/tennis/videos/c3g9dvv31nvo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/1fb3/live/abd2e4c0-406e-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T16:53:37+00:00',
-  },
-  {
-    author: null,
-    title: 'Killer sent father phone picture of murdered friend',
-    description:
-      'Christopher Howe also sent a text to his partner after the assault which read "I have murdered someone."',
-    url: 'https://www.bbc.com/news/articles/c19kzmvmdv1o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4bb7/live/a1b97a20-4060-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T16:26:24+00:00',
-  },
-  {
-    author: null,
-    title: 'Gazans flee renewed Israeli offensives as rescuers struggle',
-    description:
-      'It can take emergency teams days to reach casualties, as air strikes hit from north to south.',
-    url: 'https://www.bbc.com/news/articles/cjjw6dz8w2eo',
-    source: 'BBC News - Middle East',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4273/live/7dfb59b0-405f-11ef-90b6-2f824548dda4.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T16:01:00+00:00',
-  },
-  {
-    author: null,
-    title: 'Man arrested in crossbow murders investigation',
-    description:
-      'Kyle Clifford is arrested on suspicion of murdering Carol Hunt and two of her daughters.',
-    url: 'https://www.bbc.com/news/articles/ckrg38vpzkxo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/168f/live/281c7320-404c-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T15:06:59+00:00',
-  },
-  {
-    author: null,
-    title: 'Hewett fights back to beat Fernandez in thrilling semi-final',
-    description:
-      "Watch highlights as Britain's Alfie Hewett fights back to beat Gusto Fernandez in a thrilling semi-final at Wimbledon.",
-    url: 'https://www.bbc.com/sport/tennis/videos/c4ngjx7ljr9o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4dfe/live/ed95c880-405c-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T14:45:19+00:00',
-  },
-  {
-    author: null,
-    title: 'Russia passenger jet crashes near Moscow during test flight',
-    description:
-      'Three crew members on the Sukhoi Superjet 100 are thought to have died. The jet was not carrying passengers.',
-    url: 'https://www.bbc.com/news/articles/c90398g7y8go',
-    source: 'BBC News - World',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/aae9/live/f52fa110-4052-11ef-9909-c12337993a63.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T14:26:40+00:00',
-  },
-  {
-    author: null,
-    title: "Kenya's police chief resigns after deadly anti-tax protests",
-    description:
-      'His resignation comes a day after the Kenyan president sacked most of his cabinet.',
-    url: 'https://www.bbc.com/news/articles/c978l3rlymvo',
-    source: 'BBC Africa',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/7748/live/a55d7580-4058-11ef-9909-c12337993a63.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T14:25:47+00:00',
-  },
-  {
-    author: null,
-    title: 'Hewett beats Fernandez to reach wheelchair singles final',
-    description:
-      "Watch the moment Great Britain's Alfie Hewett beats Gusto Fernandez to reach the wheelchair singles final at Wimbledon.",
-    url: 'https://www.bbc.com/sport/tennis/videos/cz9d042997vo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/417c/live/2174fef0-4058-11ef-96a8-e710c6bfc866.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T14:08:31+00:00',
-  },
-  {
-    author: null,
-    title: 'Colleagues helped nurses move after racist attacks',
-    description:
-      "The health trust's chief executive hopes international workers won't be deterred from coming to Antrim.",
-    url: 'https://www.bbc.com/news/articles/cql8z2k9ndko',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/3524/live/acd5fbd0-3ecc-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T13:58:18+00:00',
-  },
-  {
-    author: null,
-    title:
-      'Nitazeno, o opioide mais potente que heroína e fentanil que se espalha por Europa e EUA',
-    description:
-      'Droga está por trás do aumento das mortes por overdose, segundo a ONU, e suscita alertas por parte de agências de saúde em todo o mundo.',
-    url: 'https://www.bbc.com/portuguese/articles/cv2gnlyvjr5o',
-    source: 'BBC Brasil',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/9b19/live/f094dab0-403b-11ef-8b5e-efed939c2019.jpg',
-    category: 'general',
-    language: 'pt',
-    country: 'br',
-    published_at: '2024-07-12T13:55:37+00:00',
-  },
-  {
-    author: null,
-    title: 'Which prisoners will be released from jail early?',
-    description:
-      'Emergency measures to deal with prison overcrowding are due to be announced on Friday.',
-    url: 'https://www.bbc.com/news/articles/cd1jxmrk11yo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/1acc/live/8b8eb040-3fa6-11ef-96a8-e710c6bfc866.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T13:53:40+00:00',
-  },
-  {
-    author: null,
-    title: "England make short work of Windies in Anderson's final Test",
-    description:
-      "Watch highlights as James Anderson's legendary international career comes to an end in England’s crushing victory over West Indies in the first Test at Lord’s.",
-    url: 'https://www.bbc.com/sport/cricket/videos/c51ypd889j0o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/a63d/live/49df11b0-404d-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T13:41:03+00:00',
-  },
-  {
-    author: null,
-    title: 'Top snooker player jailed for assaulting partner',
-    description:
-      'Michael White is jailed for three years and removed from the World Snooker Tour and rankings list.',
-    url: 'https://www.bbc.com/news/articles/c72546evnpxo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/3dd9/live/545d8a10-4037-11ef-96a8-e710c6bfc866.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T13:35:56+00:00',
-  },
-  {
-    author: null,
-    title: 'Carpetright close to collapse with 1,800 jobs at risk',
-    description:
-      'The retailer says it intends to appoint administrators while it works to secure extra funding.',
-    url: 'https://www.bbc.com/news/articles/ckkgl3zz1v6o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/8759/live/edb33c90-4051-11ef-9909-c12337993a63.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T13:29:15+00:00',
-  },
-  {
-    author: null,
-    title:
-      'A esquecida República do Acre, proclamada há 125 anos nos confins da selva em meio à corrida pela borracha',
-    description:
-      'Estado, que fazia parte do território boliviano, foi declarado república independente em 14 de julho de 1899; Brasil comprou o território em 1903.',
-    url: 'https://www.bbc.com/portuguese/articles/cj7dy535m82o',
-    source: 'BBC Brasil',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/9f55/live/603ac9f0-4033-11ef-be4d-43e487b32d29.jpg',
-    category: 'general',
-    language: 'pt',
-    country: 'br',
-    published_at: '2024-07-12T13:25:49+00:00',
-  },
-  {
-    author: null,
-    title: "Victim's family angry over killer's prison move",
-    description:
-      'Charlotte Hope, 19, died in the crash on the A53 at Astley, near Shrewsbury, on 9 April 2022.',
-    url: 'https://www.bbc.com/news/articles/cv2g8r2jqdzo',
-    source: 'BBC News',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/e0cc/live/23a7e9f0-3fa7-11ef-ac18-e9e918866dc8.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T12:02:08+00:00',
-  },
-  {
-    author: null,
-    title: 'Man who plotted to rape and murder Willoughby jailed',
-    description:
-      'Gavin Plumb plotted to abduct, rape and kill the ITV presenter and shared his "dark fantasy" in chats.',
-    url: 'https://www.bbc.com/news/articles/c19k874r0m2o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/53dd/live/1c450940-3f98-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T11:59:03+00:00',
-  },
-  {
-    author: null,
-    title: 'Whale experts arrive in Orkney to examine deaths of stranded pod',
-    description:
-      'Experts from across the UK are due to arrive in Orkney to begin examinations of the whale carcasses.',
-    url: 'https://www.bbc.com/news/articles/c2q0w0vp17no',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/e47c/live/1a1ab850-401e-11ef-8b20-87ec2d8dde03.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T11:53:51+00:00',
-  },
-  {
-    author: null,
-    title: 'What world leaders thought of Biden’s Nato summit performance',
-    description:
-      "Western allies defend the US president's performance, while media in Russia ridicules his gaffes.",
-    url: 'https://www.bbc.com/news/articles/cn4v7ylj80lo',
-    source: 'BBC News - World',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/d801/live/c4e9cb90-4037-11ef-96a8-e710c6bfc866.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T11:14:50+00:00',
-  },
-  {
-    author: null,
-    title: "'Oh Jimmy!' - Anderson drops easy chance for final Test wicket",
-    description:
-      "Watch the moment James Anderson drops an easy caught and bowled for the chance to take his final Test wicket and wrap up the match for England on day three of the first Test against the West Indies at Lord's.",
-    url: 'https://www.bbc.com/sport/cricket/videos/cx029kjx575o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/63b7/live/b8798890-403d-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T11:03:02+00:00',
-  },
-  {
-    author: null,
-    title: "'Macho' school judgements criticised after head's death",
-    description:
-      'Ruth Perry took her own life after an Ofsted inspection downgraded her school to "inadequate".',
-    url: 'https://www.bbc.com/news/articles/c880p45lm73o',
-    source: 'BBC News - Family & Education',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/9236/live/5b251820-4025-11ef-8b20-87ec2d8dde03.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T10:31:11+00:00',
-  },
-  {
-    author: null,
-    title:
-      'In photos: Kim Kardashian, Bieber and Rihanna at grand India wedding',
-    description:
-      'Photos from the months-long wedding celebrations of Anant Ambani, son of Asia richest man Mukesh Ambani.',
-    url: 'https://www.bbc.com/news/articles/c4ng8z8mj12o',
-    source: 'BBC News - World',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/19b5/live/d8a62c90-4038-11ef-b74c-bb483a802c97.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T10:28:38+00:00',
-  },
-  {
-    author: null,
-    title:
-      'O ‘acampamento de verão’ para bilionários que reúne as pessoas mais influentes dos EUA',
-    description:
-      'Há quatro décadas, o encontro organizado pelo banco de investimento Allen & Company reúne alguns dos magnatas mais influentes do setor das comunicações e tecnologia.',
-    url: 'https://www.bbc.com/portuguese/articles/c51ygwpjv47o',
-    source: 'BBC Brasil',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/09e8/live/9dc407d0-3fc2-11ef-80e4-0583a6680f34.jpg',
-    category: 'general',
-    language: 'pt',
-    country: 'br',
-    published_at: '2024-07-12T10:05:21+00:00',
-  },
-  {
-    author: null,
-    title: "Teen held over 'religiously-aggravated' gurdwara attack",
-    description:
-      'A 17-year-old is arrested on suspicion of attempted murder and a religiously-aggravated offence.',
-    url: 'https://www.bbc.com/news/articles/c4ngkg2e4y2o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4fc4/live/e9fb0340-4014-11ef-8b20-87ec2d8dde03.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T09:56:57+00:00',
-  },
-  {
-    author: null,
-    title: 'Who could replace Biden as Democratic nominee?',
-    description:
-      'Several rising stars in the party could enter the 2024 fray if Joe Biden steps aside.',
-    url: 'https://www.bbc.com/news/articles/c80ekdwk9zro',
-    source: 'BBC News - World',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/fb28/live/88dab420-36f0-11ef-bbe0-29f79e992ddd.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T09:20:53+00:00',
-  },
-  {
-    author: null,
-    title:
-      "'Só pude enterrar um crânio': as feridas deixadas pelo massacre de Srebrenica, que matou 8 mil homens e meninos há quase 30 anos",
-    description:
-      'A cidade bósnia de Srebrenica carrega o peso de um passado brutal e enfrenta um futuro incerto, sendo abandonada por milhares de jovens. Este ano, pela primeira vez, o dia 11 de julho é marcado como o Dia Internacional de Reflexão e Celebração em homenagem aos 8 mil homens e rapazes mortos em 1995 na pior atrocidade ocorrida na Europa desde a Segunda Guerra Mundial.',
-    url: 'https://www.bbc.com/portuguese/articles/c25legrn1qjo',
-    source: 'BBC Brasil',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/00e5/live/985e6ba0-3f90-11ef-96a8-e710c6bfc866.jpg',
-    category: 'general',
-    language: 'pt',
-    country: 'br',
-    published_at: '2024-07-12T09:20:29+00:00',
-  },
-  {
-    author: null,
-    title: 'Biden makes the case for democracy after meeting with Zelensky',
-    description:
-      'President Joe Biden apologized to Volodymyr Zelensky on Friday for aid delays from the US, telling the Ukrainian leader "we\'re not going to walk away from you."',
-    url: 'https://www.cnn.com/europe/live-news/russia-ukraine-war-news-06-07-24-intl/index.html',
-    source: 'CNN Europe',
-    image:
-      'https://cdn.cnn.com/cnnnext/dam/assets/240607090822-zelensky-paris-060724-super-169.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'us',
-    published_at: '2024-07-12T08:35:22+00:00',
-  },
-  {
-    author: null,
-    title: 'Manhunt continues after body parts found in suitcases',
-    description:
-      "Bristol's Clifton Suspension Bridge reopens after two suitcases containing human remains were found.",
-    url: 'https://www.bbc.com/news/articles/c724w2p3921o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/f514/live/c1897ed0-4011-11ef-95e5-ad38990d3b61.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T08:07:51+00:00',
-  },
-  {
-    author: null,
-    title:
-      'Quem deve pagar por danos de inundação no aeroporto de Porto Alegre, fechado há 70 dias',
-    description:
-      'Aeroporto Salgado Filho está no centro de queda de braço entre governo federal e concessionária para decidir quem vai pagar por danos da enchente.',
-    url: 'https://www.bbc.com/portuguese/articles/cz7eyw7g314o',
-    source: 'BBC Brasil',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/2af9/live/18a72b20-401e-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'pt',
-    country: 'br',
-    published_at: '2024-07-12T07:17:23+00:00',
-  },
-  {
-    author: null,
-    title: 'China hits back at Nato over Russia accusations',
-    description:
-      'The West has called Beijing a "decisive enabler" of Russia\'s war on Ukraine.',
-    url: 'https://www.bbc.com/news/articles/cxx24850k8yo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/9f88/live/8f585da0-4002-11ef-8b06-b50f10697f57.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T07:05:11+00:00',
-  },
-  {
-    author: null,
-    title: 'Four migrants die in English Channel crossing attempt',
-    description:
-      "A navy patrol boat went to rescue migrants who fell into water off of France's northern coast.",
-    url: 'https://www.bbc.com/news/articles/cn08685l2q8o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/0ce1/live/303bddf0-4017-11ef-8b20-87ec2d8dde03.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T07:00:47+00:00',
-  },
-  {
-    author: null,
-    title: 'India tycoon’s son to marry after months of festivities',
-    description:
-      "Anant Ambani, son of Asia's richest man Mukesh Ambani, will tie the knot with Radhika Merchant in Mumbai.",
-    url: 'https://www.bbc.com/news/articles/cq5x22w0xl0o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/b6ad/live/c08ede50-3f65-11ef-b6a8-b5e67d88a2ed.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T06:18:17+00:00',
-  },
-  {
-    author: null,
-    title: 'Bonfire effigy and threats, police investigate hate crime',
-    description:
-      'Sectarian signs, election posters and an effigy appear on several bonfires in parts of Northern Ireland.',
-    url: 'https://www.bbc.com/news/articles/cn381p87vylo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/9326/live/a3818f30-3fcc-11ef-be79-d562af6660dd.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T06:17:51+00:00',
-  },
-  {
-    author: null,
-    title: "'The piano doesn't laugh at me when I cry'",
-    description:
-      "Rhys Wynn-Jones's piano skills amazed people at a Penzance church where he went seeking food.",
-    url: 'https://www.bbc.com/news/articles/c72vr0drm41o',
-    source: 'BBC News',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/ba3f/live/701da510-3f96-11ef-96a8-e710c6bfc866.png',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T05:47:26+00:00',
-  },
-  {
-    author: null,
-    title:
-      "No 10 behind bloodiest day of miners' strike - Welsh government lawyer",
-    description:
-      'The Welsh government\'s top lawyer says Downing Street wanted the miners to get "a good beating".',
-    url: 'https://www.bbc.com/news/articles/cpv316l2lypo',
-    source: 'BBC News - UK',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/1f81/live/77114e80-3e0b-11ef-a6f9-5757fdf98709.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T05:09:58+00:00',
-  },
-  {
-    author: null,
-    title: "I don't know how much time Garbage has left - Shirley Manson",
-    description:
-      'The frontwoman is about to play TRNSMT before her 58th birthday - and is "enjoying every moment".',
-    url: 'https://www.bbc.com/news/articles/c9x8pz1g2p4o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/250a/live/1b5ebb60-3fad-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T05:06:10+00:00',
-  },
-  {
-    author: null,
-    title: 'Titanic mission to map wreck in greatest ever detail',
-    description:
-      "A new expedition aims to document the world's most famous shipwreck in unprecedented detail.",
-    url: 'https://www.bbc.com/news/articles/c1we095wzv1o',
-    source: 'BBC News - World',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/b656/live/7a4eb990-3fa8-11ef-b74c-bb483a802c97.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T04:51:36+00:00',
-  },
-  {
-    author: null,
-    title: 'The Papers: Prison release scheme and the pound surges',
-    description:
-      'Plans to free prisoners early to ease chronic overcrowding in jails is the focus for several front pages.',
-    url: 'https://www.bbc.com/news/articles/c978jrzmz6do',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4fa0/live/17ac5ec0-3fce-11ef-96a8-e710c6bfc866.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T04:41:11+00:00',
-  },
-  {
-    author: null,
-    title: 'Australian soldier charged with spying for Russia',
-    description:
-      'Kira Korolev and her husband, both Russian-born Australian citizens, allegedly stole military secrets.',
-    url: 'https://www.bbc.com/news/articles/c51yl3pvl1xo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/0994/live/4ac5d030-3ff5-11ef-9100-f539aed2b3cb.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T03:52:49+00:00',
-  },
-  {
-    author: null,
-    title: 'Biden stands defiant on critical night - but gaffes mar fightback',
-    description:
-      'The question for his campaign is whether the floodgates of opposition will now open, or if the tide will hold.',
-    url: 'https://www.bbc.com/news/articles/cgl75kdm420o',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/86de/live/a55891f0-3ff4-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T02:31:06+00:00',
-  },
-  {
-    author: null,
-    title: 'Moment plane tyre explodes during take-off in Tampa',
-    description:
-      'No injuries were reported, and all passengers were placed on replacement flights.',
-    url: 'https://www.bbc.com/news/videos/ce98z77yr3ro',
-    source: 'BBC News - World',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/788c/live/a97a24f0-3ff0-11ef-96a8-e710c6bfc866.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T02:12:26+00:00',
-  },
-  {
-    author: null,
-    title: "Rural domestic abuse convictions still 'woeful'",
-    description:
-      'The BBC finds reports of domestic abuse in the countryside have gone up but convictions remain low.',
-    url: 'https://www.bbc.com/news/articles/cd19001kxelo',
-    source: 'BBC',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/8c68/live/3b420f60-3dfd-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T01:42:36+00:00',
-  },
-  {
-    author: null,
-    title: "Fancy fascinators and prickly pears: Africa's top shots",
-    description:
-      "A selection of the week's best photos from across the African continent.",
-    url: 'https://www.bbc.com/news/articles/c9wvrd2ere1o',
-    source: 'BBC Africa',
-    image:
-      'https://ichef.bbci.co.uk/news/240/cpsprodpb/4338/live/cf1609e0-3fa0-11ef-9e1c-3b4a473456a6.jpg',
-    category: 'general',
-    language: 'en',
-    country: 'gb',
-    published_at: '2024-07-12T00:51:51+00:00',
+    published_at: '2024-07-16T08:24:47+00:00',
   },
 ];

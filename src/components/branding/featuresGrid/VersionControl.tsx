@@ -39,17 +39,17 @@ const VersionControl = () => {
           </div>
 
           <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10' />
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 group-hover:bg-alert-red/25 transition-all' />
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 group-hover:bg-alert-green/25 transition-all' />
-          <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 group-hover:bg-alert-green/25 transition-all' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
+          <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
 
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 opacity-10' />
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 group-hover:bg-alert-green/25 transition-all' />
-          <div className='mb-3 h-2 sm:h-3 w-3/5 rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 group-hover:bg-alert-red/25 transition-all' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
+          <div className='mb-3 h-2 sm:h-3 w-3/5 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
 
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 opacity-10 hidden sm:block' />
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 group-hover:bg-alert-green/25 transition-all hidden sm:block' />
-          <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/50 group-hover:bg-alert-red/25 transition-all hidden sm:block' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10 hidden sm:block' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all hidden sm:block' />
+          <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all hidden sm:block' />
         </div>
 
         <div className='w-full px-4 py-2 hover:pb-4 border-t-2 border-secondary-lightGrey/25 hover:border-secondary-lightGrey/75 rounded-t-2xl transition-all'>

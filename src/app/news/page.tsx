@@ -22,23 +22,19 @@ const NewsPage = () => {
         <NewsBanner />
       </div>
 
-      <h3 className='mt-8 sm:mt-12 md:mt-16 font-josefin_Sans font-semibold text-2xl'>
-        News
-      </h3>
-
-      <div className='grid grid-cols-4 gap-6'>
-        <div className='col-span-4 md:col-span-3'>
+      <div className='mt-10 grid grid-cols-4 gap-4'>
+        <div className='col-span-4 lg:col-span-3'>
           <NewsSection />
         </div>
 
-        <div className='hidden md:block md:col-span-1 py-2'>
+        <div className='hidden lg:block lg:col-span-1 py-2s'>
           <h4 className='w-fit font-josefin_Sans font-semibold text-xl'>
             Top <span className='text-primary-monkeyOrange'>Global</span>{' '}
             Headlines
           </h4>
 
           <p className='w-fit font-jost text-sm opacity-75'>
-            Catch Up on the Latest Worldwide News
+            Catch up on the latest worldwide news
           </p>
 
           <Separator className='my-2' />
