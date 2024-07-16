@@ -6,9 +6,9 @@ const FeaturesGrid = () => {
   return (
     <div className='mt-20 grid grid-cols-5 gap-4 md:gap-2'>
       <div className='row-span-2 col-span-5 md:col-span-3 flex flex-col'>
-        <h3 className='mb-1 px-1 font-playfair_Display font-semibold text-xl sm:text-2xl'>
+        <h2 className='px-1 font-playfair_Display font-semibold text-xl sm:text-2xl'>
           Collaborative Writing
-        </h3>
+        </h2>
 
         <CollaborativeWriting />
       </div>

@@ -31,7 +31,8 @@ const CollaborativeWriting = () => {
               width='80'
               height='30'
               className='w-full h-full'
-              alt='Users'
+              alt='Monkeys Users'
+              title='Monkeys Users'
             />
           </div>
 

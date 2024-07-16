@@ -26,7 +26,7 @@ const ProfileDeleteDialog = () => {
 
     try {
       const response = await axiosInstance.delete(
-        `/files/profile/${data?.user.user_name}/profile`,
+        `/files/profile/${data?.user.username}/profile`,
         {
           headers: {
             Authorization: `Bearer ${data?.user.token}`,

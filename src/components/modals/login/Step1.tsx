@@ -17,6 +17,11 @@ const Step1 = ({
 
     setLoginStep(loginSteps[1]);
   };
+  const handleRegister = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    e.preventDefault();
+
+    setLoginStep(loginSteps[3]);
+  };
 
   return (
     <ModalContent className='space-y-4'>
@@ -37,10 +42,13 @@ const Step1 = ({
 
       <p className='text-center font-jost text-sm'>
         Don't have an account?
-        <Link className='text-primary-monkeyOrange' href='#'>
+        <span
+          className='text-primary-monkeyOrange cursor-pointer'
+          onClick={(e) => handleRegister(e)}
+        >
           {' '}
           Join Monkeys
-        </Link>
+        </span>
       </p>
     </ModalContent>
   );

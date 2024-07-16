@@ -29,7 +29,7 @@ const Username = () => {
   const form = useForm<z.infer<typeof updateUsername>>({
     resolver: zodResolver(updateUsername),
     defaultValues: {
-      user_name: '',
+      username: '',
     },
   });
 
@@ -39,7 +39,7 @@ const Username = () => {
       user: {
         ...session?.user,
         token: token,
-        user_name: form.getValues('user_name'),
+        username: form.getValues('username'),
       },
     });
   };
@@ -48,8 +48,8 @@ const Username = () => {
     setLoading(true);
 
     axiosInstance
-      .put(`${API_URL}/auth/settings/username/${session?.user?.user_name}`, {
-        username: values.user_name,
+      .put(`${API_URL}/auth/settings/username/${session?.user?.username}`, {
+        username: values.username,
       })
       .then((res) => {
         console.log(res);
@@ -87,7 +87,7 @@ const Username = () => {
             <div className='w-full sm:w-1/2'>
               <FormField
                 control={form.control}
-                name='user_name'
+                name='username'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>

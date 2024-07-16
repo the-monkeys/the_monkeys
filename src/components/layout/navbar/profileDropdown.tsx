@@ -42,7 +42,7 @@ const ProfileDropdown = () => {
         <DropdownMenuContent className='m-2 w-44'>
           <DropdownMenuItem asChild>
             <Link
-              href={`/${data?.user?.user_name}`}
+              href={`/${data?.user?.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiUser' />

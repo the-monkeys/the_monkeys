@@ -40,7 +40,7 @@ const FooterList = ({
 }) => {
   return (
     <div className='space-y-2'>
-      <h4 className='font-josefin_Sans font-semibold uppercase'>{heading}</h4>
+      <h2 className='font-josefin_Sans font-semibold uppercase'>{heading}</h2>
 
       <ul className='font-jost space-y-2'>
         {items.map((item, index) => (

@@ -87,7 +87,7 @@ const Email = () => {
 
     try {
       const response = await axiosInstance.put(
-        `/auth/settings/email/${session?.user.user_name}`,
+        `/auth/settings/email/${session?.user.username}`,
         {
           email: values.email,
         }

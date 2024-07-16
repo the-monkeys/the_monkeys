@@ -10,7 +10,11 @@ const CreateButton = () => {
       asChild
       className='group rounded-full hover:bg-opacity-100'
     >
-      <Link href='/create' className='flex flex-col items-center'>
+      <Link
+        href='/create'
+        title='Create Blogs Here'
+        className='flex flex-col items-center'
+      >
         <Icon
           name='RiPencil'
           className='group-hover:animate-icon-shake text-secondary-white'

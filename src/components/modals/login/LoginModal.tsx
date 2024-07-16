@@ -10,6 +10,7 @@ import ModalHeader from '../layout/ModalHeader';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
+import Step4 from './Step4';
 
 export type LoginStep = {
   id: number;
@@ -27,7 +28,8 @@ const LoginModal = ({
   const handleLoginStep = () => {
     if (loginStep.id === 1) return <Step1 setLoginStep={setLoginStep} />;
     else if (loginStep.id === 2) return <Step2 setLoginStep={setLoginStep} />;
-    else return <Step3 setLoginStep={setLoginStep} />;
+    else if (loginStep.id === 3) return <Step3 setLoginStep={setLoginStep} />;
+    else return <Step4 setLoginStep={setLoginStep} />;
   };
 
   return (
