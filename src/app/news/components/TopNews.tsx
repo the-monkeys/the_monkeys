@@ -1,24 +1,34 @@
 'use client';
 
-import { TopHeadlinesSkeleton } from '@/components/skeletons/newsSkeleton';
+import { Loader } from '@/components/loader';
 import useGetTopHeadlines from '@/hooks/useGetTopHeadlines';
+import { NewsSource3 } from '@/lib/types';
 
-const TopNews = () => {
-  const { data, isLoading, error } = useGetTopHeadlines();
+export const TopNews = () => {
+  const { topHeadlines, isLoading, error } = useGetTopHeadlines();
 
-  const newsData = data as string[];
+  const newsData = topHeadlines as NewsSource3;
 
-  if (isLoading) return <TopHeadlinesSkeleton />;
+  if (isLoading)
+    return (
+      <div className='mt-4 space-y-2'>
+        <Loader className='mx-auto' />
+
+        <p className='font-jost text-sm text-center'>
+          Fetching latest headlines for you
+        </p>
+      </div>
+    );
 
   if (error)
     return (
       <p className='py-4 font-jost text-sm text-alert-red text-center'>
-        Error fetching global headlines.
+        Error fetching global headlines. Try again.
       </p>
     );
 
   return (
-    <div>
+    <div className='sticky top-0 hidden md:block'>
       {newsData &&
         newsData.slice(0, 15).map((newsItem, index) => (
           <div key={index}>
@@ -32,5 +42,3 @@ const TopNews = () => {
     </div>
   );
 };
-
-export default TopNews;

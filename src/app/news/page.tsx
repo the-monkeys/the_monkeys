@@ -1,11 +1,12 @@
 import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Separator } from '@/components/ui/separator';
 
-import NewsBanner from './components/NewsBanner';
+import NewsBanner from '../../components/branding/NewsBanner';
 import NewsSection from './components/NewsSection';
-import TopNews from './components/TopNews';
+import { TopNews } from './components/TopNews';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -22,7 +23,13 @@ const NewsPage = () => {
         <NewsBanner />
       </div>
 
-      <div className='mt-10 grid grid-cols-4 gap-4'>
+      <div className='mt-10 md:mt-16 mb-4 flex justify-center sm:justify-start'>
+        <LinksRedirectArrow link='/' position='Left'>
+          <p className='font-josefin_Sans font-semibold'>Monkeys</p>
+        </LinksRedirectArrow>
+      </div>
+
+      <div className='grid grid-cols-4 gap-4'>
         <div className='col-span-4 lg:col-span-3'>
           <NewsSection />
         </div>

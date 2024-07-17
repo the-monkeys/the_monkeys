@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -130,16 +131,28 @@ const Email = () => {
         Verify your email address to keep your account secure and stay updated.
       </p>
 
-      <Button
-        type='button'
-        size='lg'
-        variant='secondary'
-        className='mt-4'
-        onClick={reqVerification}
-        disabled={verifyLoading ? true : false}
-      >
-        {verifyLoading && <Loader />} Verify Email
-      </Button>
+      {session?.user?.email_verification_status === 'Unverified' ? (
+        <Button
+          type='button'
+          size='lg'
+          variant='secondary'
+          className='mt-4'
+          onClick={reqVerification}
+          disabled={verifyLoading ? true : false}
+        >
+          {verifyLoading && <Loader />} Verify Email
+        </Button>
+      ) : (
+        <div className='mt-4 flex items-center gap-2'>
+          <Icon
+            name='RiVerifiedBadge'
+            type='Fill'
+            className='text-primary-monkeyOrange'
+          />
+
+          <p className='font-jost'>Email Verified</p>
+        </div>
+      )}
 
       <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>
 
@@ -163,7 +176,12 @@ const Email = () => {
                     </FormLabel>
                     <FormMessage />
                     <FormControl>
-                      <Input placeholder='Enter email address' {...field} />
+                      <Input
+                        placeholder={
+                          session?.user?.email || 'Enter email address'
+                        }
+                        {...field}
+                      />
                     </FormControl>
                   </FormItem>
                 )}

@@ -27,7 +27,9 @@ const NotFound = () => {
         </div>
       </div>
 
-      <LinksRedirectArrow link='/' title='Go back to home' position='Left' />
+      <LinksRedirectArrow link='/' position='Left'>
+        <p className='font-jost'>Go back to home</p>
+      </LinksRedirectArrow>
 
       <p className='font-jost text-center'>Or</p>
 

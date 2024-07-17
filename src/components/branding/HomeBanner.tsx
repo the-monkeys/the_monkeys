@@ -11,7 +11,7 @@ const HomeBanner = () => {
         <MonkeysBranding />
       </div>
 
-      <div className='absolute bottom-0 left-0 space-y-2'>
+      <div className='absolute bottom-0 left-0'>
         <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm cursor-default animate-appear-up'>
           Seamless <span className='text-primary-monkeyOrange'>Creation</span>{' '}
           <br />
@@ -19,12 +19,11 @@ const HomeBanner = () => {
           <span className='text-primary-monkeyOrange'>Collaboration</span>
         </h1>
 
-        <p className='pt-6 font-jost text-base md:text-lg cursor-default'>
+        <p className='mt-4 mb-6 font-josefin_Sans text-base md:text-lg cursor-default'>
           Unleash Your Creativity and Influence: Blog Together, Write Better
         </p>
 
         <Button
-          size='lg'
           className='group px-4 sm:px-6 hover:shadow-lg hover:shadow-primary-monkeyOrange/50 hover:text-primary-monkeyBlack dark:hover:text-primary-monkeyWhite rounded-full'
           asChild
         >

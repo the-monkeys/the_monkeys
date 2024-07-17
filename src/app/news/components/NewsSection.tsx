@@ -1,27 +1,27 @@
 'use client';
 
-import { newsData } from '@/constants/news';
+import { NewsSectionSkeleton } from '@/components/skeletons/newsSkeleton';
 import useGetAllNews from '@/hooks/useGetAllNews';
-import { NewsItem } from '@/lib/types';
+import { NewsSource2 } from '@/lib/types';
 
 import NewsCard from './NewsCard';
 
 const NewsSection = () => {
-  // const { data, isLoading, error } = useGetAllNews();
+  const { news, isLoading, error } = useGetAllNews();
 
-  // const newsData = data as NewsItem[];
+  const newsData = news?.articles as NewsSource2[];
 
-  // if (isLoading) return <p>loading...</p>;
+  if (isLoading) return <NewsSectionSkeleton />;
 
-  // if (error)
-  //   return (
-  //     <p className='py-4 font-jost text-sm text-alert-red text-center'>
-  //       Error fetching global headlines.
-  //     </p>
-  //   );
+  if (error)
+    return (
+      <p className='py-4 font-jost text-sm text-alert-red text-center'>
+        Error fetching news. Try again.
+      </p>
+    );
 
   return (
-    <div className='grid grid-cols-2'>
+    <div className='grid grid-cols-2 gap-4 md:gap-0'>
       {newsData.map((newsItem, index) => {
         return <NewsCard key={index} {...newsItem} />;
       })}

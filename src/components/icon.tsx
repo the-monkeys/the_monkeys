@@ -44,6 +44,7 @@ export type IconName =
   | 'RiLoginBox'
   | 'RiLogoutBoxR'
   | 'RiErrorWarning'
+  | 'RiVerifiedBadge'
   | 'RiEye'
   | 'RiEyeClose';
 

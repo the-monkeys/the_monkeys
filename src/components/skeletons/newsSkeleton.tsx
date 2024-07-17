@@ -1,17 +1,14 @@
 import { Skeleton } from '../ui/skeleton';
 
-export const TopHeadlinesSkeleton = () => {
+export const NewsSectionSkeleton = () => {
   return (
-    <div className='mt-2 space-y-2'>
-      <Skeleton className='h-20 rounded-none' />
-
-      <Skeleton className='h-20 rounded-none' />
-
-      <Skeleton className='h-20 rounded-none' />
-
-      <Skeleton className='h-20 rounded-none' />
-
-      <Skeleton className='h-20 rounded-none' />
+    <div className='grid grid-cols-2 gap-4'>
+      <Skeleton className='h-60 sm:h-40 md:h-80 col-span-2 md:col-span-1 md:p-6 rounded-none'></Skeleton>
+      <Skeleton className='h-60 sm:h-40 md:h-80 col-span-2 md:col-span-1 md:p-6 rounded-none'></Skeleton>
+      <Skeleton className='h-60 sm:h-40 md:h-80 col-span-2 md:col-span-1 md:p-6 rounded-none'></Skeleton>
+      <Skeleton className='h-60 sm:h-40 md:h-80 col-span-2 md:col-span-1 md:p-6 rounded-none'></Skeleton>
+      <Skeleton className='h-60 sm:h-40 md:h-80 col-span-2 md:col-span-1 md:p-6 rounded-none'></Skeleton>
+      <Skeleton className='h-60 sm:h-40 md:h-80 col-span-2 md:col-span-1 md:p-6 rounded-none'></Skeleton>
     </div>
   );
 };
