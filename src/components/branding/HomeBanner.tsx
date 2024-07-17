@@ -1,33 +1,39 @@
 import Link from 'next/link';
 
 import Icon from '../icon';
+import LinksRedirectArrow from '../links/LinksRedirectArrow';
 import { Button } from '../ui/button';
 import MonkeysBranding from './MonkeysBranding';
 
 const HomeBanner = () => {
   return (
-    <div className='relative h-80'>
-      <div className='flex justify-end opacity-75 sm:opacity-100'>
+    <div className='relative flex flex-col justify-end gap-4 min-h-80'>
+      <div className='absolute top-0 right-0 w-full sm:w-4/5 md:w-1/2 opacity-75 sm:opacity-100 -z-10 '>
         <MonkeysBranding />
       </div>
 
-      <div className='absolute bottom-0 left-0'>
-        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm cursor-default animate-appear-up'>
-          Seamless <span className='text-primary-monkeyOrange'>Creation</span>{' '}
-          <br />
-          Effortless{' '}
-          <span className='text-primary-monkeyOrange'>Collaboration</span>
-        </h1>
-
-        <p className='mt-4 mb-6 font-josefin_Sans text-base md:text-lg cursor-default'>
-          Unleash Your Creativity and Influence: Blog Together, Write Better
+      <LinksRedirectArrow
+        link='/news'
+        position='Right'
+        className='mx-auto md:m-0 w-fit'
+      >
+        <p className='font-josefin_Sans font-medium text-base sm:text-lg'>
+          <span className='text-primary-monkeyOrange'>News</span> by Monkeys
         </p>
+      </LinksRedirectArrow>
 
-        <Button
-          size='lg'
-          className='group px-4 sm:px-6 hover:shadow-lg hover:shadow-primary-monkeyOrange/50 hover:text-primary-monkeyBlack dark:hover:text-primary-monkeyWhite rounded-full'
-          asChild
-        >
+      <h1 className='w-full md:w-4/5 font-playfair_Display font-medium text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm text-center md:text-left animate-appear-up'>
+        Blog <span className='text-primary-monkeyOrange'>Together</span> Write{' '}
+        <span className='text-primary-monkeyOrange'>Better</span>
+      </h1>
+
+      <p className='font-jost text-base md:text-lg text-secondary-darkGrey dark:text-secondary-white text-center md:text-left'>
+        Don't let outdated blogs overshadow your ideas. Create together and
+        showcase your best work.
+      </p>
+
+      <div className='mt-8 flex justify-center md:justify-start'>
+        <Button size='lg' className='group px-4 sm:px-6 rounded-full' asChild>
           <Link href='/create' title='Create Blogs Here'>
             <Icon
               name='RiPencil'

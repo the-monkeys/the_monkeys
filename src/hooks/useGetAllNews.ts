@@ -1,12 +1,8 @@
-import { API_URL } from '@/constants/api';
-import axios from 'axios';
+import { fetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 
-const fetcher = () =>
-  axios.get(`${API_URL}/blog/news2`).then((res) => res.data);
-
 const useGetAllNews = () => {
-  const { data, error } = useSWR('/news/all', fetcher);
+  const { data, error } = useSWR('/blog/news2', fetcher);
 
   return {
     news: data,

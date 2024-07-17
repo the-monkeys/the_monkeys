@@ -145,6 +145,21 @@ const Step4 = ({
             )}
           />
 
+          <ul>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must be at least 6 characters long.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one lowercase letter.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one uppercase letter.
+            </li>
+            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              Must contain at least one number.
+            </li>
+          </ul>
+
           <div className='pt-6 flex flex-row-reverse  gap-2 items-center'>
             <Button
               disabled={loading ? true : false}
@@ -152,6 +167,7 @@ const Step4 = ({
             >
               {loading && <Loader />} Register
             </Button>
+
             <Button
               variant='secondary'
               disabled={loading ? true : false}

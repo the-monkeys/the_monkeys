@@ -1,12 +1,8 @@
-import { API_URL } from '@/constants/api';
-import axios from 'axios';
+import { fetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 
-const fetcher = () =>
-  axios.get(`${API_URL}/blog/news3`).then((res) => res.data);
-
 const useGetTopHeadlines = () => {
-  const { data, error } = useSWR('/news/top-headlines', fetcher);
+  const { data, error } = useSWR('/blog/news3', fetcher);
 
   return {
     topHeadlines: data,

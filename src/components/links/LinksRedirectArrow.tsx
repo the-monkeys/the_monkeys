@@ -25,7 +25,7 @@ const LinksRedirectArrow: FC<LinksRedirectProps> = ({
         <Icon
           name='RiArrowLeft'
           size={16}
-          className='mx-2 transition-all group-hover:ml-1 group-hover:mr-3 group-hover:text-primary-monkeyOrange'
+          className='mx-2 transition-all group-hover:ml-1 group-hover:mr-3'
         />
       )}
 
@@ -35,7 +35,7 @@ const LinksRedirectArrow: FC<LinksRedirectProps> = ({
         <Icon
           name='RiArrowRight'
           size={16}
-          className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1 group-hover:text-primary-monkeyOrange'
+          className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1'
         />
       )}
     </Link>

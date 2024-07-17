@@ -4,7 +4,7 @@ import Styles from './styles/backgroundStyles.module.css';
 
 const MonkeysBranding = () => {
   return (
-    <div className='w-full sm:w-4/5 md:w-1/2 h-80 relative flex flex-col justify-end items-center overflow-hidden'>
+    <div className='w-full h-80 relative flex flex-col justify-end items-center overflow-hidden'>
       <Image
         src='./logo-branding.svg'
         alt='Monkeys Logo'

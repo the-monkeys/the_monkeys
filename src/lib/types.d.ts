@@ -15,35 +15,6 @@ export interface User {
   email_verification_status: string;
 }
 
-export interface NewsSource1 {
-  author: string | null;
-  title: string;
-  description: string;
-  url: string;
-  source: string;
-  image: string | null;
-  category: string;
-  language: string;
-  country: string;
-  published_at: string;
-}
-
-export interface NewsSource2 {
-  source?: {
-    id?: string;
-    name?: string;
-  };
-  author?: string;
-  title?: string;
-  description?: string;
-  url?: string;
-  urlToImage?: string;
-  publishedAt?: string;
-  content?: string;
-}
-
-export type NewsSource3 = string[];
-
 declare module 'next-auth' {
   interface Session {
     user: User & DefaultSession['user'];

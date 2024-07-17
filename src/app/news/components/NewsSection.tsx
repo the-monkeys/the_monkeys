@@ -2,7 +2,7 @@
 
 import { NewsSectionSkeleton } from '@/components/skeletons/newsSkeleton';
 import useGetAllNews from '@/hooks/useGetAllNews';
-import { NewsSource2 } from '@/lib/types';
+import { NewsSource2 } from '@/services/news/newsTypes';
 
 import NewsCard from './NewsCard';
 

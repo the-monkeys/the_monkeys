@@ -39,11 +39,11 @@ export const metadata: Metadata = {
     },
   },
   title: {
-    template: '%s | Monkeys',
-    default:
-      'Unleash Your Creativity and Influence: Blog Together, Write Better',
+    template: '%s - Monkeys',
+    default: 'Collaborate on Blogs and Showcase Your Thoughts - Monkeys',
   },
-  description: 'We are The Monkeys! A blogging and educational platform.',
+  description:
+    'Join Monkeys for collaborative blog writing, blog version control, diverse topics and staying updated with ongoing global headlines.',
   twitter: {
     card: 'summary_large_image',
   },

@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
-import { NewsSource2 } from '@/lib/types';
+import { NewsSource2 } from '@/services/news/newsTypes';
 import { newsDateFormatter } from '@/utils/dateFormatter';
 
 const NewsCard: FC<NewsSource2> = (props) => {
@@ -37,7 +37,7 @@ const NewsCard: FC<NewsSource2> = (props) => {
         </div>
 
         <div className='flex-1 space-y-1'>
-          <p className='font-jost text-sm opacity-75'>
+          <p className='font-jost text-sm'>
             {author} - {source?.name}
           </p>
 
@@ -45,11 +45,11 @@ const NewsCard: FC<NewsSource2> = (props) => {
             {title}
           </h2>
 
-          <p className='font-jost text-sm sm:text-base text-secondary-darkGrey dark:text-secondary-white leading-tight line-clamp-2'>
+          <p className='font-jost text-sm sm:text-base text-secondary-darkGrey/75 dark:text-secondary-white/75 leading-tight line-clamp-2'>
             {description}
           </p>
 
-          <p className='pt-4 font-jost text-xs sm:text-sm text-right opacity-75'>
+          <p className='pt-4 font-jost text-xs text-right opacity-75'>
             {newsDateFormatter(publishedAt)}
           </p>
         </div>

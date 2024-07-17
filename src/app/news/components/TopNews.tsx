@@ -2,9 +2,9 @@
 
 import { Loader } from '@/components/loader';
 import useGetTopHeadlines from '@/hooks/useGetTopHeadlines';
-import { NewsSource3 } from '@/lib/types';
+import { NewsSource3 } from '@/services/news/newsTypes';
 
-export const TopNews = () => {
+const TopNews = () => {
   const { topHeadlines, isLoading, error } = useGetTopHeadlines();
 
   const newsData = topHeadlines as NewsSource3;
@@ -28,10 +28,10 @@ export const TopNews = () => {
     );
 
   return (
-    <div className='sticky top-0 hidden md:block'>
+    <div className='hidden md:block'>
       {newsData &&
         newsData.slice(0, 15).map((newsItem, index) => (
-          <div key={index}>
+          <div key={index} className='hover:pl-1 transition-all'>
             <p className='mb-1 font-playfair_Display font-medium text-3xl text-secondary-darkGrey/25 dark:text-secondary-white/25'>
               {index + 1}.
             </p>
@@ -42,3 +42,5 @@ export const TopNews = () => {
     </div>
   );
 };
+
+export default TopNews;

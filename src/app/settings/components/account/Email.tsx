@@ -131,6 +131,10 @@ const Email = () => {
         Verify your email address to keep your account secure and stay updated.
       </p>
 
+      <p className='font-jost text-sm'>
+        Registered Email: {session?.user?.email}
+      </p>
+
       {session?.user?.email_verification_status === 'Unverified' ? (
         <Button
           type='button'
@@ -158,8 +162,6 @@ const Email = () => {
 
       <p className='font-jost text-sm opacity-75'>
         Update your email for seamless communication and enhanced security.
-        <br />
-        Email: {session?.user?.email}
       </p>
 
       <Form {...form}>
