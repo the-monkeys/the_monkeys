@@ -24,6 +24,7 @@ const HomeBanner = () => {
         </p>
 
         <Button
+          size='lg'
           className='group px-4 sm:px-6 hover:shadow-lg hover:shadow-primary-monkeyOrange/50 hover:text-primary-monkeyBlack dark:hover:text-primary-monkeyWhite rounded-full'
           asChild
         >

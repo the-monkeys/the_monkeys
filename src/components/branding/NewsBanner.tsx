@@ -25,7 +25,7 @@ const NewsBanner = () => {
           News by Monkeys
         </Badge>
 
-        <h1 className='font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm cursor-default animate-appear-up'>
+        <h1 className='mt-2 font-playfair_Display text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm cursor-default animate-appear-up'>
           Stay <span className='text-primary-monkeyOrange'>Informed</span>{' '}
           <br />
           Stay <span className='text-primary-monkeyOrange'>Ahead</span>
