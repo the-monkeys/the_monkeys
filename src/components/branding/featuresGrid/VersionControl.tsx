@@ -4,15 +4,9 @@ import { GridContainer, GridHeading, GridSubHeading } from './gridLayout';
 
 const VersionControl = () => {
   return (
-    <GridContainer className='flex flex-col hover:border-primary-monkeyOrange/25'>
-      <Icon
-        name='RiArchiveStack'
-        className='mb-2 self-start md:self-end text-secondary-darkGrey dark:text-secondary-white group-hover:text-primary-monkeyOrange'
-        size={24}
-      />
-
+    <GridContainer className='group flex flex-col hover:border-primary-monkeyOrange/25'>
       <GridHeading className='text-left md:text-right'>
-        Tailor your content, your way
+        Version Control
       </GridHeading>
 
       <GridSubHeading className='text-left md:text-right'>
@@ -35,21 +29,19 @@ const VersionControl = () => {
           <div className='mt-4 p-1   flex justify-between flex-wrap gap-1 cursor-default'>
             <p className='font-jost text-xs sm:text-sm'>Blocks changed: 15</p>
 
-            <p className='font-jost text-xs sm:text-sm'>0 mins ago</p>
+            <p className='font-jost text-xs sm:text-sm'>5 mins ago</p>
           </div>
 
           <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10' />
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 group-hover:bg-alert-red/25 transition-all' />
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 group-hover:bg-alert-green/25 transition-all' />
-          <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 group-hover:bg-alert-green/25 transition-all' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
+          <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
 
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 opacity-10' />
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 group-hover:bg-alert-green/25 transition-all' />
-          <div className='mb-3 h-2 sm:h-3 w-3/5 rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 group-hover:bg-alert-red/25 transition-all' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
+          <div className='mb-3 h-2 sm:h-3 w-3/5 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all' />
 
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 opacity-10 hidden sm:block' />
-          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 group-hover:bg-alert-green/25 transition-all hidden sm:block' />
-          <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey/75 dark:bg-secondary-white/75 group-hover:bg-alert-red/25 transition-all hidden sm:block' />
+          <div className='mb-1 h-2 sm:h-3 w-full rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-10 hidden sm:block' />
+          <div className='mb-3 h-2 sm:h-3 w-4/5 rounded-full bg-secondary-darkGrey dark:bg-secondary-white opacity-25 group-hover:opacity-10 transition-all hidden sm:block' />
         </div>
 
         <div className='w-full px-4 py-2 hover:pb-4 border-t-2 border-secondary-lightGrey/25 hover:border-secondary-lightGrey/75 rounded-t-2xl transition-all'>

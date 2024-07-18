@@ -11,7 +11,7 @@ export const GridHeading = ({
     <h2
       className={twMerge(
         className,
-        'font-josefin_Sans font-semibold text-lg cursor-default'
+        'font-playfair_Display font-medium text-xl sm:text-2xl cursor-default'
       )}
     >
       {children}
@@ -30,7 +30,7 @@ export const GridSubHeading = ({
       className={twMerge(
         className,
         (className =
-          'font-jost text-secondary-darkGrey/75 dark:text-secondary-white/75 cursor-default')
+          'my-2 font-jost text-secondary-darkGrey/75 dark:text-secondary-white/75 cursor-default')
       )}
     >
       {children}

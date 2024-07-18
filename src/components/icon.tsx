@@ -7,9 +7,6 @@ export type IconName =
   | 'RiMoon'
   | 'RiNotification3'
   | 'RiUser'
-  | 'RiGroup'
-  | 'RiArchiveStack'
-  | 'RiCompass3'
   | 'RiPencil'
   | 'RiSearch'
   | 'RiMapPin'
@@ -25,7 +22,7 @@ export type IconName =
   | 'RiFileCopy'
   | 'RiUpload2'
   | 'RiDeleteBin'
-  | 'RiQuillPen'
+  | 'RiCursor'
   | 'RiSettings3'
   | 'RiHistory'
   | 'RiShareForward'
@@ -44,6 +41,7 @@ export type IconName =
   | 'RiLoginBox'
   | 'RiLogoutBoxR'
   | 'RiErrorWarning'
+  | 'RiVerifiedBadge'
   | 'RiEye'
   | 'RiEyeClose';
 

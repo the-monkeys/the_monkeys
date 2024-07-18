@@ -128,9 +128,9 @@ const Step2 = ({
               className='flex-1 order-1'
               disabled={loading ? true : false}
             >
-              {' '}
-              {loading && <Loader />}Login
+              {loading && <Loader />} Login
             </Button>
+
             <Button
               variant='secondary'
               className='flex-1 order-2'

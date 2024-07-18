@@ -7,17 +7,17 @@ import { twMerge } from 'tailwind-merge';
 import Icon from '../icon';
 
 type LinksRedirectProps = {
-  title: string;
   position?: 'Left' | 'Right';
   link: string;
   className?: string;
+  children?: React.ReactNode;
 };
 
 const LinksRedirectArrow: FC<LinksRedirectProps> = ({
-  title,
   position = 'Right',
   link,
   className,
+  children,
 }) => {
   return (
     <Link href={link} className={twMerge(className, 'group flex items-center')}>
@@ -25,17 +25,17 @@ const LinksRedirectArrow: FC<LinksRedirectProps> = ({
         <Icon
           name='RiArrowLeft'
           size={16}
-          className='mx-2 transition-all group-hover:ml-1 group-hover:mr-3 group-hover:text-primary-monkeyOrange'
+          className='mx-2 transition-all group-hover:ml-1 group-hover:mr-3'
         />
       )}
 
-      <p className='font-jost'>{title}</p>
+      {children}
 
       {position === 'Right' && (
         <Icon
           name='RiArrowRight'
           size={16}
-          className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1 group-hover:text-primary-monkeyOrange'
+          className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1'
         />
       )}
     </Link>

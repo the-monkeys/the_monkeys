@@ -7,5 +7,10 @@ export default async function sitemap() {
       changeFrequency: 'monthly',
       priority: 1,
     },
+    {
+      url: `${baseUrl}/news`,
+      changeFrequency: 'weekly',
+      priority: 1,
+    },
   ];
 }

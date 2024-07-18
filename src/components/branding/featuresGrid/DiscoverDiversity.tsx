@@ -6,14 +6,8 @@ import { GridContainer, GridHeading, GridSubHeading } from './gridLayout';
 
 const DiscoverDiversity = () => {
   return (
-    <GridContainer className='group hover:border-primary-monkeyOrange/25'>
-      <Icon
-        name='RiCompass3'
-        className='mb-2 text-secondary-darkGrey dark:text-secondary-white group-hover:text-primary-monkeyOrange'
-        size={24}
-      />
-
-      <GridHeading>Discover your interests with confidence</GridHeading>
+    <GridContainer className='group flex flex-col hover:border-primary-monkeyOrange/25'>
+      <GridHeading>Discover Diversity</GridHeading>
 
       <GridSubHeading>
         Navigate through a diverse array of categories tailored to your
@@ -21,7 +15,7 @@ const DiscoverDiversity = () => {
       </GridSubHeading>
 
       <div
-        className='mt-6 flex justify-center gap-1 h-44 overflow-hidden animate-appear-up'
+        className='mt-6 flex justify-center gap-1 h-36 sm:h-44 overflow-hidden animate-appear-up'
         aria-disabled='true'
       >
         <div className='-mt-12 group-hover:mt-0 w-fit space-y-2 transition-all hidden sm:block'>

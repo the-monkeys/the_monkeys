@@ -1,4 +1,4 @@
-const PolicySection = ({
+const Section = ({
   title,
   children,
 }: {
@@ -16,4 +16,4 @@ const PolicySection = ({
   );
 };
 
-export default PolicySection;
+export default Section;
