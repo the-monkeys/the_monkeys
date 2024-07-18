@@ -16,9 +16,9 @@ const NewsBanner = () => {
 
   return (
     <div className='relative flex flex-col justify-end gap-4 min-h-80'>
-      <div className='w-full absolute top-0 left-0 bg-secondary-lightGrey/15'>
+      <div className='w-full absolute top-0 left-0'>
         <p className='px-2 py-1 font-jost text-sm text-center'>
-          Stay tuned for upcoming stock market updates.
+          Stock Market Updates - Coming Soon
         </p>
       </div>
 

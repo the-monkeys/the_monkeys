@@ -31,7 +31,7 @@ const TopNews = () => {
     <div className='hidden md:block'>
       {newsData &&
         newsData.slice(0, 15).map((newsItem, index) => (
-          <div key={index} className='hover:pl-1 transition-all'>
+          <div key={index}>
             <p className='mb-1 font-playfair_Display font-medium text-3xl text-secondary-darkGrey/25 dark:text-secondary-white/25'>
               {index + 1}.
             </p>

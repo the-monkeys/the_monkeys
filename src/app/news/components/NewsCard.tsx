@@ -27,8 +27,9 @@ const NewsCard: FC<NewsSource2> = (props) => {
         <div className='relative group-hover:opacity-80'>
           <img
             src={urlToImage || ''}
-            alt={source?.name}
+            alt={title}
             className='w-full sm:w-52 md:w-full h-40 sm:h-full md:h-52 object-cover'
+            loading='lazy'
           />
 
           <p className='absolute bottom-0 right-0 p-1 font-jost text-xs drop-shadow-sm text-secondary-lightGrey'>
