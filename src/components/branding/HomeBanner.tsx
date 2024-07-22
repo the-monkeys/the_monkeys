@@ -7,7 +7,7 @@ import MonkeysBranding from './MonkeysBranding';
 
 const HomeBanner = () => {
   return (
-    <div className='relative flex flex-col justify-end gap-4 min-h-80'>
+    <div className='relative flex flex-col justify-end gap-4 min-h-60 md:min-h-80'>
       <div className='absolute top-0 right-0 w-full sm:w-4/5 md:w-1/2 opacity-75 sm:opacity-100 -z-10 '>
         <MonkeysBranding />
       </div>
@@ -32,7 +32,7 @@ const HomeBanner = () => {
         showcase your best work.
       </p>
 
-      <div className='mt-8 flex justify-center md:justify-start'>
+      <div className='flex justify-center md:justify-start'>
         <Button size='lg' className='group px-4 sm:px-6 rounded-full' asChild>
           <Link href='/create' title='Create Blogs Here'>
             <Icon

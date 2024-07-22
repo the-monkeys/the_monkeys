@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import CreateButton from '@/components/buttons/createButton';
+import CreateButton from '@/components/buttons/CreateButton';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';

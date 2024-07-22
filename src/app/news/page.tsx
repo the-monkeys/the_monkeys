@@ -22,7 +22,7 @@ const NewsPage = () => {
         <NewsBanner />
       </div>
 
-      <div className='mt-12 sm:mt-16 grid grid-cols-4 gap-4'>
+      <div className='mt-12 sm:mt-16 grid grid-cols-4 gap-2'>
         <div className='col-span-4 lg:col-span-3'>
           <NewsSection />
         </div>

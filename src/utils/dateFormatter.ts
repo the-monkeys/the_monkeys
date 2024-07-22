@@ -6,8 +6,10 @@ export const newsDateFormatter = (date?: string) => {
   const timeDiffHours = moment().diff(publishedDate, 'hours');
   const timeDiffDays = moment().diff(publishedDate, 'days');
 
-  if (timeDiffDays >= 1) {
+  if (timeDiffDays > 1) {
     return `${timeDiffDays} days ago`;
+  } else if (timeDiffDays === 1) {
+    return `${timeDiffDays} day ago`;
   } else {
     return `${timeDiffHours} hours ago`;
   }

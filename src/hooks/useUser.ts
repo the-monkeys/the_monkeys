@@ -2,7 +2,7 @@ import { fetcher } from '@/services/fetcher';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import useSWR from 'swr';
 
-function useUser(username: string | undefined) {
+const useUser = (username: string | undefined) => {
   const { data, error, isLoading } = useSWR<GetPublicUserProfileApiResponse>(
     `/user/public/${username}`,
     fetcher
@@ -13,6 +13,6 @@ function useUser(username: string | undefined) {
     isLoading,
     isError: error,
   };
-}
+};
 
 export default useUser;

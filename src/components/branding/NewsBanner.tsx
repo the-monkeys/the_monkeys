@@ -15,13 +15,7 @@ const NewsBanner = () => {
   };
 
   return (
-    <div className='relative flex flex-col justify-end gap-4 min-h-80'>
-      <div className='w-full absolute top-0 left-0'>
-        <p className='px-2 py-1 font-jost text-sm text-center'>
-          Stock Market Updates - Coming Soon
-        </p>
-      </div>
-
+    <div className='relative flex flex-col justify-end gap-4 min-h-60 md:min-h-80'>
       <div className='absolute top-0 right-0 w-full sm:w-4/5 md:w-1/2 opacity-75 sm:opacity-100 -z-10 '>
         <MonkeysBranding />
       </div>

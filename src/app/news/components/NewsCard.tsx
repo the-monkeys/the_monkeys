@@ -32,7 +32,7 @@ const NewsCard: FC<NewsSource2> = (props) => {
             loading='lazy'
           />
 
-          <p className='absolute bottom-0 right-0 p-1 font-jost text-xs drop-shadow-sm text-secondary-lightGrey'>
+          <p className='absolute bottom-0 right-0 p-1 font-jost text-xs drop-shadow-sm text-secondary-lightGrey/75'>
             source/{source?.id}
           </p>
         </div>
@@ -42,15 +42,15 @@ const NewsCard: FC<NewsSource2> = (props) => {
             {author} - {source?.name}
           </p>
 
-          <h2 className='font-playfair_Display font-medium text-xl sm:text-2xl leading-tight'>
+          <h2 className='font-playfair_Display font-medium text-xl sm:text-2xl leading-tight line-clamp-2'>
             {title}
           </h2>
 
-          <p className='font-jost text-sm sm:text-base text-secondary-darkGrey/75 dark:text-secondary-white/75 leading-tight line-clamp-2'>
+          <p className='font-jost text-sm sm:text-base text-secondary-darkGrey dark:text-secondary-white leading-tight line-clamp-2'>
             {description}
           </p>
 
-          <p className='pt-4 font-jost text-xs text-right opacity-75'>
+          <p className='pt-2 font-jost text-xs text-right'>
             {newsDateFormatter(publishedAt)}
           </p>
         </div>
