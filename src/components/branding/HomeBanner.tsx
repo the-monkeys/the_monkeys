@@ -18,7 +18,7 @@ const HomeBanner = () => {
         className='mx-auto md:m-0 w-fit'
       >
         <p className='font-josefin_Sans font-medium text-base sm:text-lg'>
-          <span className='text-primary-monkeyOrange'>News</span> by Monkeys
+          News by Monkeys
         </p>
       </LinksRedirectArrow>
 
@@ -28,8 +28,8 @@ const HomeBanner = () => {
       </h1>
 
       <p className='font-jost text-base md:text-lg text-secondary-darkGrey dark:text-secondary-white text-center md:text-left'>
-        Don't let outdated blogs overshadow your ideas. Create together and
-        showcase your best work.
+        Don't let outdated content overshadow your creation. Your Hub for
+        Insightful Content.
       </p>
 
       <div className='flex justify-center md:justify-start'>

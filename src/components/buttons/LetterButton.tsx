@@ -1,5 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 
+import { Button } from '../ui/button';
+
 const LetterButton = ({
   letter,
   className,
@@ -10,17 +12,13 @@ const LetterButton = ({
   onClick: () => void;
 }) => {
   return (
-    <button
+    <Button
+      variant='ghost'
       onClick={onClick}
-      className={twMerge(
-        className,
-        'group size-8 sm:size-10 flex items-center justify-center rounded-full'
-      )}
+      className='size-8 sm:size-10 rounded-full'
     >
-      <p className='font-jost text-sm sm:text-base font-medium text-secondary-darkGrey dark:text-secondary-white group-hover:text-primary-monkeyOrange'>
-        {letter}
-      </p>
-    </button>
+      <p className='font-jost text-sm sm:text-base font-medium'>{letter}</p>
+    </Button>
   );
 };
 

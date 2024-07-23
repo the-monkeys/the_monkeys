@@ -9,9 +9,9 @@ import TopNews from './components/TopNews';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: 'Latest Headlines with Stock Market Updates',
+    title: 'Latest News Updates and Trending Headlines',
     description:
-      'Stay informed with the latest global news, insightful articles and real-time stock market updates on Monkeys.',
+      'Stay in the loop with the latest headlines and breaking news on business, sports, politics, technology and stock market from around the world on Monkeys.',
   };
 }
 
@@ -29,12 +29,11 @@ const NewsPage = () => {
 
         <div className='hidden lg:block lg:col-span-1 py-2s'>
           <h3 className='w-fit font-josefin_Sans font-semibold text-xl'>
-            Top <span className='text-primary-monkeyOrange'>Global</span>{' '}
-            Headlines
+            Top Headlines
           </h3>
 
           <p className='w-fit font-jost text-sm opacity-75'>
-            Catch up on the latest worldwide news
+            See what&apos;s happening around the world
           </p>
 
           <Separator className='my-2' />

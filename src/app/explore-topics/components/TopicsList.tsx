@@ -9,7 +9,7 @@ const TopicsList = ({ topics }: { topics?: string[] }) => {
   const totalTopics = topics?.length || 0;
 
   return (
-    <div className='flex flex-col space-y-2'>
+    <div>
       <ul className='pl-2 space-y-2'>
         {displayedTopics?.map((topic) => (
           <li key={topic} className='font-jost text-sm sm:text-base opacity-75'>
@@ -23,6 +23,7 @@ const TopicsList = ({ topics }: { topics?: string[] }) => {
           size='sm'
           variant='link'
           onClick={() => setShowAll((prev) => !prev)}
+          className='w-full'
         >
           {showAll ? 'Show Less' : `Show All (${totalTopics})`}
         </Button>

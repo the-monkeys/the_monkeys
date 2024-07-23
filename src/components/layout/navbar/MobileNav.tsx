@@ -35,7 +35,7 @@ const MobileNav = () => {
   return (
     <>
       <header
-        className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-lg z-30`}
+        className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-md z-30`}
       >
         <Container className='w-full p-5 flex items-center justify-between'>
           <Link href='/'>

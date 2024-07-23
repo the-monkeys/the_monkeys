@@ -7,10 +7,16 @@ export const newsDateFormatter = (date?: string) => {
   const timeDiffDays = moment().diff(publishedDate, 'days');
 
   if (timeDiffDays > 1) {
-    return `${timeDiffDays} days ago`;
+    return `${timeDiffDays} days`;
   } else if (timeDiffDays === 1) {
-    return `${timeDiffDays} day ago`;
+    return `${timeDiffDays} day`;
   } else {
-    return `${timeDiffHours} hours ago`;
+    return `${timeDiffHours} hours`;
   }
+};
+
+export const activityDateFormatter = (date?: string) => {
+  const activityTimestamp = moment(date);
+
+  return activityTimestamp.format('MMMM D, YYYY');
 };

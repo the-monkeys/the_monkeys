@@ -1,7 +1,7 @@
 'use client';
 
 import { Loader } from '@/components/loader';
-import useGetTopHeadlines from '@/hooks/useGetTopHeadlines';
+import { useGetTopHeadlines } from '@/hooks/useGetAllNews';
 import { NewsSource3 } from '@/services/news/newsTypes';
 
 const TopNews = () => {
@@ -15,7 +15,7 @@ const TopNews = () => {
         <Loader className='mx-auto' />
 
         <p className='font-jost text-sm text-center'>
-          Fetching latest headlines for you
+          Fetching latest headlines
         </p>
       </div>
     );
