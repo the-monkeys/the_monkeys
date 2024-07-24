@@ -33,32 +33,37 @@ const News1Card: FC<NewsSource1> = (props) => {
             <img
               src={image || ''}
               alt={title}
-              className='w-full sm:w-52 md:w-full h-40 sm:h-full md:h-52 object-cover'
+              className='w-full md:w-full h-40 md:h-52 object-cover'
               loading='lazy'
             />
           </div>
         )}
 
-        <p className='font-jost text-sm text-right truncate'>
-          {newsDateFormatter(published_at)}
-          {' | '}
+        <p className='font-josefin_Sans text-sm truncate opacity-75'>
           {source}
         </p>
 
-        <h2 className='mt-1 font-josefin_Sans font-medium text-xl sm:text-2xl leading-tight line-clamp-2 group-hover:underline'>
+        <h2 className='mt-1 font-josefin_Sans font-medium text-xl sm:text-2xl leading-tight line-clamp-2 group-hover:opacity-80'>
           {title}
         </h2>
 
         <p
           dangerouslySetInnerHTML={{ __html: purifyHTMLString(description) }}
           className='mt-1 font-jost text-sm sm:text-base leading-tight line-clamp-2 opacity-75'
-        >
-          {/* {description} */}
-        </p>
+        ></p>
 
-        <p className='mt-2 font-josefin_Sans text-xs sm:text-sm text-primary-monkeyOrange'>
-          &#35;{category}
-        </p>
+        <div className='mt-2 flex justify-between'>
+          <Badge
+            variant='secondary'
+            className='font-jost text-xs sm:text-sm capitalize'
+          >
+            {category}
+          </Badge>
+
+          <p className='font-jost text-xs sm:text-sm'>
+            {newsDateFormatter(published_at)}
+          </p>
+        </div>
       </Link>
     </div>
   );

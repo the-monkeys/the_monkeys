@@ -29,7 +29,7 @@ const News2Card: FC<NewsSource2> = (props) => {
           {author} - {source?.name}
         </p>
 
-        <h2 className='mt-1 font-playfair_Display font-medium text-xl sm:text-2xl leading-tight line-clamp-2 group-hover:underline'>
+        <h2 className='mt-1 font-playfair_Display font-medium text-xl sm:text-2xl leading-tight line-clamp-2 group-hover:opacity-80'>
           {title}
         </h2>
 

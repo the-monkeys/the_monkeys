@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Loader } from '@/components/loader';
 import ProfileImage from '@/components/profileImage';
@@ -38,16 +38,16 @@ const Profile = () => {
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      first_name: user?.first_name,
-      last_name: user?.last_name,
-      address: user?.address,
-      contact_number: user?.contact_number,
-      bio: user?.bio,
-      date_of_birth: user?.date_of_birth,
-      twitter: user?.twitter,
-      linkedin: user?.linkedin,
-      instagram: user?.instagram,
-      github: user?.github,
+      first_name: '',
+      last_name: '',
+      address: '',
+      contact_number: undefined,
+      bio: '',
+      date_of_birth: '',
+      twitter: '',
+      linkedin: '',
+      instagram: '',
+      github: '',
     },
   });
 
@@ -78,6 +78,23 @@ const Profile = () => {
         setLoading(false);
       });
   }
+
+  useEffect(() => {
+    if (user) {
+      form.reset({
+        first_name: user.first_name,
+        last_name: user.last_name,
+        address: user.address,
+        contact_number: user.contact_number,
+        bio: user.bio,
+        date_of_birth: user.date_of_birth,
+        twitter: user.twitter,
+        linkedin: user.linkedin,
+        instagram: user.instagram,
+        github: user.github,
+      });
+    }
+  }, [user, form]);
 
   return (
     <div className='min-h-screen mt-5 p-5'>
