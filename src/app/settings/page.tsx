@@ -17,11 +17,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const SettingsPage = () => {
   return (
-    <Container className='pb-12'>
+    <Container className='pb-12 space-y-6'>
       <PageHeading heading='Settings' />
 
       <Tabs defaultValue='profile'>
-        <div className='mt-6 flex flex-col justify-center items-center'>
+        <div className='flex flex-col justify-center items-center'>
           <TabsList className='font-josefin_Sans'>
             <TabsTrigger value='profile'>
               <p className='font-josefin_Sans text-base sm:text-lg'>Profile</p>

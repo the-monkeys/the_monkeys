@@ -1,17 +1,21 @@
 const PageHeading = ({
   heading,
+  subHeading,
   badge,
 }: {
   heading: string;
-  subheading?: string;
+  subHeading?: JSX.Element;
   badge?: JSX.Element;
 }) => {
   return (
-    <div className='px-4 py-2 flex flex-col items-center space-y-1'>
+    <div className='px-4 py-2 flex flex-col items-center'>
       {badge}
-      <h1 className='py-2 font-playfair_Display font-semibold text-3xl sm:text-4xl text-center cursor-default'>
+
+      <h1 className='mt-2 font-playfair_Display font-semibold text-3xl sm:text-4xl text-center cursor-default'>
         {heading}
       </h1>
+
+      {subHeading}
     </div>
   );
 };

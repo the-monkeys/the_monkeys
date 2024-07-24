@@ -1,7 +1,7 @@
 import fetcher from '@/services/fileFetcher';
 import useSWR from 'swr';
 
-function useProfileImage(username: string) {
+const useProfileImage = (username: string) => {
   const { data, error, isLoading } = useSWR<Blob>(
     `/files/profile/${username}/profile`,
     fetcher
@@ -18,6 +18,6 @@ function useProfileImage(username: string) {
     isLoading,
     isError: error,
   };
-}
+};
 
 export default useProfileImage;

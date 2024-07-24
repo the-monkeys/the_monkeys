@@ -62,7 +62,10 @@ const ProfileDropdown = () => {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem asChild>
-            <Link href='/activity' className='flex w-full items-center gap-2'>
+            <Link
+              href={`/activity?user=${data?.user?.username}`}
+              className='flex w-full items-center gap-2'
+            >
               <Icon name='RiHistory' />
               <p className='font-josefin_Sans text-base'>Activity</p>
             </Link>
