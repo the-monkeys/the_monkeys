@@ -2,13 +2,11 @@ import { twMerge } from 'tailwind-merge';
 
 import { Button } from '../ui/button';
 
-const LetterButton = ({
+const TopicButton = ({
   letter,
-  className,
   onClick,
 }: {
   letter: string;
-  className?: string;
   onClick: () => void;
 }) => {
   return (
@@ -22,4 +20,4 @@ const LetterButton = ({
   );
 };
 
-export default LetterButton;
+export default TopicButton;

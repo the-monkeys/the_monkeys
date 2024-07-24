@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { notFound } from 'next/navigation';
 
-import LetterButton from '@/components/buttons/LetterButton';
+import TopicButton from '@/components/buttons/topicButton';
 import { Loader } from '@/components/loader';
 import { Separator } from '@/components/ui/separator';
 import { letters } from '@/constants/topics';
@@ -31,7 +31,7 @@ const ExploreTopicsPage = () => {
     <>
       <div className='w-full md:w-4/5 mx-auto px-4 flex justify-center flex-wrap gap-1'>
         {letters.map((letter) => (
-          <LetterButton
+          <TopicButton
             key={letter}
             letter={letter}
             onClick={() => setSelectedLetter(letter)}
