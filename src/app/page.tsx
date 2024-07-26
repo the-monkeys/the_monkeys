@@ -15,6 +15,12 @@ const LandingPage = () => {
       </h2>
 
       <FeaturesGrid />
+
+      <p className='my-16 sm:my-20 px-4 font-playfair_Display font-medium text-2xl sm:text-3xl text-center'>
+        Coming Soon !!
+        <br />
+        Get Ready to Discover, Write & Inspire
+      </p>
     </Container>
   );
 };

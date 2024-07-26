@@ -15,7 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { OutputData } from '@editorjs/editorjs';
 
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -44,16 +43,13 @@ const CreatePage = () => {
   return (
     <div className='space-y-2'>
       <div className='flex justify-end gap-2'>
-        <Button variant='ghost' onClick={() => console.log(data)}>
+        <Button variant='secondary' onClick={() => console.log(data)}>
           Save Draft
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Icon
-              name='RiMore'
-              className='hover:opacity-75 cursor-pointer rotate-90'
-            />
+            <Icon name='RiMore' className='hover:opacity-75 cursor-pointer' />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className='m-2'>

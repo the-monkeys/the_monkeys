@@ -24,7 +24,7 @@ const StayUpdated = () => {
             <div className='w-1/2 sm:w-1/4 h-2 bg-primary-monkeyOrange rounded-full' />
             <div className='w-full h-1 bg-secondary-darkGrey/15 dark:bg-secondary-white/15' />
             <div className='w-full h-1 bg-secondary-darkGrey/15 dark:bg-secondary-white/15' />
-            <div className='w-3/5 h-1 bg-secondary-darkGrey/15 dark:bg-secondary-white/15' />
+            <div className='w-1/2 h-1 bg-secondary-darkGrey/15 dark:bg-secondary-white/15' />
           </div>
         </div>
 
@@ -44,7 +44,7 @@ const StayUpdated = () => {
             <div className='w-1/2 sm:w-1/4 h-2 bg-primary-monkeyOrange rounded-full' />
             <div className='w-full h-1 bg-secondary-darkGrey/15 dark:bg-secondary-white/15' />
             <div className='w-full h-1 bg-secondary-darkGrey/15 dark:bg-secondary-white/15' />
-            <div className='w-full h-1 bg-secondary-darkGrey/15 dark:bg-secondary-white/15' />
+            <div className='w-4/5 h-1 bg-secondary-darkGrey/15 dark:bg-secondary-white/15' />
           </div>
         </div>
 
