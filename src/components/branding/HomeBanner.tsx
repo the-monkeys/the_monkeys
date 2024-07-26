@@ -28,8 +28,7 @@ const HomeBanner = () => {
       </h1>
 
       <p className='font-jost text-base md:text-lg text-secondary-darkGrey dark:text-secondary-white text-center md:text-left'>
-        Don't let outdated content overshadow your creation. Your Hub for
-        Insightful Content.
+        Don't let outdated content overshadow your creation.
       </p>
 
       <div className='flex justify-center md:justify-start'>
