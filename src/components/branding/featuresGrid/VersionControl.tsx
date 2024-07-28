@@ -58,12 +58,16 @@ const VersionControl = () => {
           <div className='mb-1 h-2 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/25' />
           <div className='mb-1 h-2 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/25' />
           <div className='mb-1 h-2 w-full rounded-full bg-primary-monkeyOrange transition-colors' />
-          <div className='mb-3 h-2 w-1/4 rounded-full bg-primary-monkeyOrange transition-all' />
+          <div className='mb-3 h-2 w-3/5 rounded-full bg-primary-monkeyOrange transition-all' />
 
           <div className='mb-1 h-2 w-full rounded-full bg-primary-monkeyOrange transition-colors hidden lg:block' />
           <div className='mb-1 h-2 w-full rounded-full bg-primary-monkeyOrange transition-colors hidden lg:block' />
-          <div className='mb-3 h-2 w-3/5 rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/25 hidden lg:block' />
+          <div className='mb-3 h-2 w-1/5 rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/25 hidden lg:block' />
 
+          <div className='mb-1 h-2 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/25 hidden lg:block' />
+          <div className='mb-1 h-2 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/25 hidden lg:block' />
+          <div className='mb-1 h-2 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/25 hidden lg:block' />
+          <div className='mb-1 h-2 w-full rounded-full bg-primary-monkeyOrange transition-colors hidden lg:block' />
           <div className='mb-1 h-2 w-full rounded-full bg-secondary-darkGrey/25 dark:bg-secondary-white/25 hidden lg:block' />
           <div className='mb-1 h-2 w-full rounded-full bg-primary-monkeyOrange transition-colors hidden lg:block' />
           <div className='mb-1 h-2 w-1/2 rounded-full bg-primary-monkeyOrange transition-colors hidden lg:block' />

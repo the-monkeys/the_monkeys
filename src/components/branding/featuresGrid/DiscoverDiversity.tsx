@@ -11,7 +11,7 @@ const DiscoverDiversity = () => {
         </GridSubHeading>
       </div>
 
-      <div className='h-40 space-y-2 overflow-hidden' aria-disabled='true'>
+      <div className='mx-4 h-40 space-y-2 overflow-hidden' aria-disabled='true'>
         <div className='-ml-1 group-hover:-ml-10 flex gap-1 overflow-hidden transition-all'>
           <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
             Business
