@@ -1,63 +1,120 @@
-import Image from 'next/image';
-
-import Icon from '@/components/icon';
-
 import { GridContainer, GridHeading, GridSubHeading } from './gridLayout';
 
 const DiscoverDiversity = () => {
   return (
-    <GridContainer className='group flex flex-col hover:border-primary-monkeyOrange/25'>
-      <GridHeading>Discover Diversity</GridHeading>
+    <GridContainer className='h-full group col-span-2 sm:col-span-1 space-y-4'>
+      <div className='py-4 px-4'>
+        <GridHeading>Discover Diversity</GridHeading>
 
-      <GridSubHeading>
-        Navigate through a diverse array of categories tailored to your
-        interests.
-      </GridSubHeading>
+        <GridSubHeading>
+          Explore categories tailored to your interests.
+        </GridSubHeading>
+      </div>
 
-      <div
-        className='mt-6 flex justify-center gap-1 h-36 sm:h-44 overflow-hidden animate-appear-up'
-        aria-disabled='true'
-      >
-        <div className='-mt-12 group-hover:mt-0 w-fit space-y-2 transition-all hidden sm:block'>
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
-            Technology
-          </div>
-          <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
-            Marketing
-          </div>
-          <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
+      <div className='mx-4 h-40 space-y-2 overflow-hidden' aria-disabled='true'>
+        <div className='-ml-1 group-hover:-ml-10 flex gap-1 overflow-hidden transition-all'>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
             Business
-          </div>
-          <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-        </div>
-
-        <div className='group-hover:-mt-12 mr-4 w-fit space-y-2 transition-all hidden sm:block'>
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
-            Crypto
-          </div>
-          <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Science
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Nature
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
             Relationship
-          </div>
-          <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
-          <div className='w-32 sm:w-36 h-10 flex items-center justify-center font-jost text-sm sm:text-base text-secondary-white dark:text-secondary-darkGrey bg-primary-monkeyBlack dark:bg-primary-monkeyWhite rounded-full cursor-default'>
-            Business
-          </div>
-          <div className='w-32 sm:w-36 h-10 bg-secondary-darkGrey/10 dark:bg-secondary-white/10 rounded-full' />
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Cooking
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Writing
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Sexuality
+          </p>
         </div>
 
-        <div className='flex-1 block md:hidden lg:block'>
-          <Image
-            src='./topics.svg'
-            width='300'
-            height='300'
-            alt='Monkeys Blog Topics'
-            title='Monkeys Blog Topics'
-            className='mx-auto object-fill'
-          />
+        <div className='-ml-14 group-hover:-ml-4 flex gap-1 overflow-hidden transition-all'>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Finance
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Design
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Health
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Humor
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Gaming
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Hobbies
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Animation
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Podcasts
+          </p>
+        </div>
+
+        <div className='-ml-4 group-hover:-ml-16 flex gap-1 overflow-hidden transition-all'>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Crypto
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Sports
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Law
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Technology
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Religion
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Movies
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Crypto
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Leadership
+          </p>
+        </div>
+
+        <div className='-ml-16 group-hover:-ml-2 flex gap-1 overflow-hidden transition-all'>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Reading
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Programming
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Photography
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Music
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Art
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Spirituality
+          </p>
+          <p className='px-4 py-1 font-jost bg-secondary-lightGrey/15 rounded-full'>
+            Language
+          </p>
+          <p className='px-4 py-1 font-jost bg-primary-monkeyOrange text-secondary-white rounded-full'>
+            Lifestyle
+          </p>
         </div>
       </div>
     </GridContainer>

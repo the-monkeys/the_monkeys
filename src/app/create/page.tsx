@@ -18,18 +18,9 @@ const initial_data = {
   blocks: [],
 };
 
-type BlockChange = {
-  id: string;
-  type: string;
-  time: number;
-};
-
-export type BlockChanges = Map<string, BlockChange>;
-
 const CreatePage = () => {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData>(initial_data);
-  const [blockChanges, setBlockChanges] = useState<BlockChanges>(new Map());
   const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
@@ -42,27 +33,21 @@ const CreatePage = () => {
   }, []);
 
   return (
-    <>
-      <div className='px-5 sm:px-4 flex gap-2 items-end justify-end'>
-        <Button size='lg' onClick={() => setShowModal(true)}>
-          Publish
+    <div className='space-y-2'>
+      <div className='flex justify-end gap-2'>
+        <Button variant='ghost' onClick={() => console.log(data)}>
+          Preview
         </Button>
+
+        <Button onClick={() => setShowModal(true)}>Publish</Button>
       </div>
 
-      <p className='my-2 px-5 sm:px-4 font-jost text-sm'>Saved in Drafts</p>
-
       <Suspense fallback={<p>Loading...</p>}>
-        {editor && (
-          <Editor
-            data={data}
-            onChange={setData}
-            setBlockChanges={setBlockChanges}
-          />
-        )}
+        {editor && <Editor data={data} onChange={setData} />}
       </Suspense>
 
       {showModal && <PublishModal setModal={setShowModal} />}
-    </>
+    </div>
   );
 };
 

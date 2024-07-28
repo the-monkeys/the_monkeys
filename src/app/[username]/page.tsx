@@ -21,7 +21,7 @@ export async function generateMetadata({
 
 const ProfilePage = () => {
   return (
-    <Tabs defaultValue='blogs' className='space-y-2'>
+    <Tabs defaultValue='blogs' className='space-y-4'>
       <div className='flex justify-center md:justify-end'>
         <TabsList>
           <TabsTrigger value='blogs'>

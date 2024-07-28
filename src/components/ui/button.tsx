@@ -20,7 +20,7 @@ const buttonVariants = cva(
         secondary:
           'bg-primary-monkeyBlack text-secondary-white dark:bg-primary-monkeyWhite dark:text-secondary-darkGrey border-2 border-primary-monkeyBlack dark:border-primary-monkeyWhite hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0',
         ghost:
-          'hover:bg-secondary-darkGrey hover:text-secondary-white dark:hover:bg-secondary-white dark:hover:text-secondary-darkGrey',
+          'hover:bg-primary-monkeyBlack hover:text-secondary-white dark:hover:bg-primary-monkeyWhite dark:hover:text-secondary-darkGrey',
         link: 'underline-offset-4 hover:underline',
       },
       size: {

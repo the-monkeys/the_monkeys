@@ -302,6 +302,10 @@ h2.ce-header {
   color: #101010;
 }
 
+#editorjs_editor-container {
+  padding: 0;
+}
+
 @media (max-width: 650px) {
   .ce-popover {
     --offset: 5px;

@@ -1,20 +1,19 @@
 import CollaborativeWriting from './CollaborativeWriting';
 import DiscoverDiversity from './DiscoverDiversity';
+import StayUpdated from './StayUpdated';
 import VersionControl from './VersionControl';
 
 const FeaturesGrid = () => {
   return (
-    <div className='mt-12 sm:mt-16 grid grid-cols-5 gap-4 md:gap-2'>
-      <div className='row-span-2 col-span-5 md:col-span-3 flex flex-col'>
-        <CollaborativeWriting />
-      </div>
+    <div className='grid grid-cols-5 gap-4'>
+      <CollaborativeWriting />
 
-      <div className='row-span-4 col-span-5 md:col-span-2 flex flex-col'>
-        <VersionControl />
-      </div>
+      <VersionControl />
 
-      <div className='row-span-2 col-span-5 md:col-span-3 flex flex-col'>
+      <div className='row-span-2 col-span-5 lg:col-span-3 grid grid-cols-2 gap-2 md:gap-4'>
         <DiscoverDiversity />
+
+        <StayUpdated />
       </div>
     </div>
   );

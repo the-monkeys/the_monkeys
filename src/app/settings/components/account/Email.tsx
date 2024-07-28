@@ -123,6 +123,13 @@ const Email = () => {
     }
   };
 
+  let verificationStatus = '';
+
+  if (session?.user?.email_verification_status) {
+  } else {
+    verificationStatus = '';
+  }
+
   return (
     <div className='flex flex-col items-start'>
       <h4 className='font-josefin_Sans text-lg'>Verify Email</h4>
@@ -135,28 +142,30 @@ const Email = () => {
         Registered Email: {session?.user?.email}
       </p>
 
-      {session?.user?.email_verification_status === 'Unverified' ? (
-        <Button
-          type='button'
-          size='lg'
-          variant='secondary'
-          className='mt-4'
-          onClick={reqVerification}
-          disabled={verifyLoading ? true : false}
-        >
-          {verifyLoading && <Loader />} Verify Email
-        </Button>
-      ) : (
-        <div className='mt-4 flex items-center gap-2'>
-          <Icon
-            name='RiVerifiedBadge'
-            type='Fill'
-            className='text-primary-monkeyOrange'
-          />
+      {session?.user?.email_verification_status ? (
+        session?.user?.email_verification_status === 'Unverified' ? (
+          <Button
+            type='button'
+            size='lg'
+            variant='secondary'
+            className='mt-4'
+            onClick={reqVerification}
+            disabled={verifyLoading ? true : false}
+          >
+            {verifyLoading && <Loader />} Verify Email
+          </Button>
+        ) : (
+          <div className='mt-4 flex items-center gap-2'>
+            <Icon
+              name='RiVerifiedBadge'
+              type='Fill'
+              className='text-primary-monkeyOrange'
+            />
 
-          <p className='font-jost'>Email Verified</p>
-        </div>
-      )}
+            <p className='font-jost'>Email Verified</p>
+          </div>
+        )
+      ) : null}
 
       <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>
 
