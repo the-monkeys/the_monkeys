@@ -37,7 +37,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           <div
             className='hover:opacity-75 cursor-pointer'
             onClick={() => {
-              router.back();
+              router.back(); //this cause the redirect error
               if (setModal) {
                 setModal(false);
               }
