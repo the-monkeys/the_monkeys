@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useEffect } from 'react';
+import { Dispatch, FC, PropsWithChildren, ReactNode, SetStateAction, useEffect } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -6,8 +6,8 @@ import Icon from '../icon';
 import Logo from '../logo';
 
 type ModalProps = {
-  children?: React.ReactNode;
-  setModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  children?: ReactNode;
+  setModal?: Dispatch<SetStateAction<boolean>>;
 };
 
 export type ModalComponentProps = {
@@ -18,15 +18,13 @@ export type ModalComponentProps = {
 const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
   const router = useRouter();
 
-  //remove the scrollbar
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-
-    //cleanup
+    
     return () => {
       document.body.style.overflow = 'auto';
     };
-  });
+  },[]);
 
   return (
     <div className='fixed left-0 top-0 flex h-full w-full justify-center bg-secondary-white/60 backdrop-blur-sm dark:bg-secondary-darkGrey/60 z-50'>
@@ -37,7 +35,6 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           <div
             className='hover:opacity-75 cursor-pointer'
             onClick={() => {
-              router.back();
               if (setModal) {
                 setModal(false);
               }
