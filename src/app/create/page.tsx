@@ -1,28 +1,16 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import dynamic from 'next/dynamic';
-
-import { EditorProps } from '@/components/editor';
-import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
-import { OutputData } from '@editorjs/editorjs';
+import { useSession } from 'next-auth/react';
 
-const Editor = dynamic(() => import('@/components/editor'), {
-  ssr: false,
-});
+const Page = () => {
+  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+  const { data: session } = useSession();
+  const authToken = session?.user.token;
 
-const initial_data = {
-  time: new Date().getTime(),
-  blocks: [],
-};
-
-const CreatePage = () => {
-  const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
-  const [data, setData] = useState<OutputData>(initial_data);
-  const [showModal, setShowModal] = useState<boolean>(false);
-
+  const [editor, setEditor] = useState<React.FC<any> | null>(null);
   useEffect(() => {
     const loadEditor = async () => {
       const module = await import('@/components/editor');
@@ -31,24 +19,46 @@ const CreatePage = () => {
 
     loadEditor();
   }, []);
+  //generate random blog id
+  const blogId = Math.random().toString(36).substring(7);
+  useEffect(() => {
+    if (authToken) {
+      createWebSocket(blogId, authToken);
+    }
+  }, [authToken]);
+
+  const createWebSocket = (blogId: string, token: string) => {
+    const ws = new WebSocket(
+      `wss://dev.themonkeys.site/api/v1/blog/draft/${blogId}?token=${token}`
+    );
+
+    ws.onopen = () => {
+      console.log('WebSocket connection opened');
+    };
+
+    ws.onmessage = (event) => {
+      console.log('WebSocket message received:', event.data);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+    setWebSocket(ws);
+  };
 
   return (
     <div className='space-y-2'>
       <div className='flex justify-end gap-2'>
-        <Button variant='ghost' onClick={() => console.log(data)}>
+        <Button variant='ghost' onClick={() => console.log('data')}>
           Preview
         </Button>
-
-        <Button onClick={() => setShowModal(true)}>Publish</Button>
       </div>
-
-      <Suspense fallback={<p>Loading...</p>}>
-        {editor && <Editor data={data} onChange={setData} />}
-      </Suspense>
-
-      {showModal && <PublishModal setModal={setShowModal} />}
     </div>
   );
 };
 
-export default CreatePage;
+export default Page;
