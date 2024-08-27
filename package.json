@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@editorjs/code": "^2.9.0",
     "@editorjs/editorjs": "^2.29.1",
     "@editorjs/header": "^2.8.1",
     "@editorjs/image": "^2.9.0",
+    "@editorjs/list": "^1.10.0",
+    "@editorjs/nested-list": "^1.4.3",
     "@editorjs/paragraph": "^2.11.4",
+    "@editorjs/quote": "^2.7.2",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
