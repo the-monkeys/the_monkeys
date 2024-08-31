@@ -1,26 +1,36 @@
+'use client';
+
+import { Loader } from '@/components/loader';
 import useGetDraftBlog from '@/hooks/useGetDraftBlog';
 import { useSession } from 'next-auth/react';
 
+import BloggCard from './BlogCard';
+
 const Drafts = () => {
   const { data: session } = useSession();
-  const { activities, isLoading } = useGetDraftBlog(session?.user.account_id);
+  const { blogs, isLoading } = useGetDraftBlog(session?.user.account_id);
   return (
-    <div className='flex items-start justify-center p-4 min-h-screen'>
-      <p className='font-jost italic opacity-75'>No drafts available.</p>
-      {/* {
-        isLoading ? (
-          <p>Loading...</p>
+    <div className='flex items-start max-h-[500px] scrollbar  overflow-y-scroll  justify-center p-4 min-h-screen'>
+      <div className='flex flex-col gap-4'>
+        {isLoading ? (
+          <Loader />
+        ) : blogs?.blogs?.length === 0 ? (
+          <p className='font-jost italic opacity-75'>No drafts available.</p>
         ) : (
-          <div className='grid grid-cols-1 gap-4 mt-4'>
-            {data?.activities.map((activity) => (
-              <div key={activity.id} className='p-4 bg-gray-100 rounded-md'>
-                <h3 className='text-lg font-semibold'>{data.title}</h3>
-                <p className='text-sm text-gray-500'>{activity.content}</p>
-              </div>
-            ))}
-          </div>
-        )
-      } */}
+          blogs?.blogs.map((blog) => {
+            return (
+              <BloggCard
+                key={blog.blog_id}
+                title={blog.blog.blocks[0].data.text}
+                description={blog.blog.blocks[0].data.text}
+                author={session?.user.name as string}
+                date={blog.blog.time}
+                tags={blog.tags}
+              />
+            );
+          })
+        )}
+      </div>
     </div>
   );
 };

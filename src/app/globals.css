@@ -324,3 +324,12 @@ h2.ce-header {
     font-size: 1rem !important;
   }
 }
+
+.scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
