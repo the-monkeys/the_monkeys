@@ -20,12 +20,12 @@ const Drafts = () => {
           blogs?.blogs.map((blog) => {
             return (
               <BloggCard
-                key={blog.blog_id}
-                title={blog.blog.blocks[0].data.text}
-                description={blog.blog.blocks[0].data.text}
+                key={blog?.blog_id}
+                title={blog?.blog?.blocks[0]?.data?.text}
+                description={blog?.blog?.blocks[0]?.data?.text}
                 author={session?.user.name as string}
-                date={blog.blog.time}
-                tags={blog.tags}
+                date={blog?.blog?.time}
+                tags={blog?.tags}
               />
             );
           })

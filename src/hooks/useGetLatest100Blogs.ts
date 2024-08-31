@@ -2,7 +2,7 @@ import { GetLatest100BlogsResponse } from '@/services/Blogs/BlogTyptes';
 import { authFetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 
-const useGetDraftBlog = () => {
+const useGetLatest100Blogs = () => {
   const { data, error, isLoading } = useSWR<GetLatest100BlogsResponse>(
     `/blog/latest`,
     authFetcher
@@ -15,4 +15,4 @@ const useGetDraftBlog = () => {
   };
 };
 
-export default useGetDraftBlog;
+export default useGetLatest100Blogs;

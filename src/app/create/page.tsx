@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
+import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
@@ -27,9 +29,11 @@ const CreatePage = () => {
   const [data, setData] = useState<OutputData>(initial_data);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const { data: session } = useSession();
   const authToken = session?.user.token;
   const router = useRouter();
+
   // Use useRef to store the blog ID
   const blogIdRef = useRef<string>(Math.random().toString(36).substring(7));
   const blogId = blogIdRef.current;
@@ -46,6 +50,7 @@ const CreatePage = () => {
 
     ws.onmessage = (event) => {
       console.log('WebSocket message received:', event.data);
+      setIsSaving(false); // Reset saving status when message is received
     };
 
     ws.onclose = () => {
@@ -74,7 +79,7 @@ const CreatePage = () => {
           time: new Date().getTime(),
         })),
       },
-      tags: ['first', 'last', 'middle'],
+      tags: ['tech', 'nextjs', 'ui'],
     };
   };
 
@@ -97,7 +102,7 @@ const CreatePage = () => {
     const formattedData = formatData(data, session?.user.account_id);
 
     axiosInstance
-      .post(`/blog/publish/${blogId}`)
+      .post(`/blog/publish/${blogId}`, formattedData)
       .then((res) => {
         console.log(res);
         toast({
@@ -121,6 +126,7 @@ const CreatePage = () => {
     if (webSocket && webSocket.readyState === WebSocket.OPEN) {
       const formattedData = formatData(data, session?.user.account_id);
       webSocket.send(JSON.stringify(formattedData));
+      setIsSaving(true); // Set saving status when data is sent
     }
   }, [data, webSocket, session?.user.account_id]);
 
@@ -133,11 +139,12 @@ const CreatePage = () => {
 
         <Button onClick={() => handlePublishStep()}>Publish</Button>
       </div>
-
-      <Suspense fallback={<p>Loading...</p>}>
+      <div className='flex items-center gap-2'>
+        Saving draft {isSaving ? <Loader /> : <Icon name='RiCheck' size={20} />}{' '}
+      </div>
+      <Suspense fallback={<Loader />}>
         {editor && <Editor data={data} onChange={setData} />}
       </Suspense>
-
       {showModal && <PublishModal setModal={setShowModal} />}
     </div>
   );
