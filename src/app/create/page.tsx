@@ -7,6 +7,8 @@ import dynamic from 'next/dynamic';
 import { EditorProps } from '@/components/editor';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/use-toast';
+import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
 
@@ -26,10 +28,8 @@ const CreatePage = () => {
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const { data: session } = useSession();
   const authToken = session?.user.token;
-
   // Generate random blog ID
   const blogId = Math.random().toString(36).substring(7);
-
   // Function to create and manage WebSocket connection
   const createWebSocket = (blogId: string, token: string) => {
     const ws = new WebSocket(
@@ -89,6 +89,29 @@ const CreatePage = () => {
     }
   }, [authToken]);
 
+  const handlePublishStep = () => {
+    const formattedData = formatData(data, session?.user.account_id);
+
+    axiosInstance
+      .post(`/blog/publish/${blogId}`)
+      .then((res) => {
+        console.log(res);
+        toast({
+          variant: 'success',
+          title: 'Blog Published successfully',
+          description: 'success',
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          variant: 'destructive',
+          title: 'Error publishing blog',
+          description: 'error',
+        });
+      });
+  };
+
   useEffect(() => {
     if (webSocket && webSocket.readyState === WebSocket.OPEN) {
       const formattedData = formatData(data, session?.user.account_id);
@@ -103,7 +126,7 @@ const CreatePage = () => {
           Preview
         </Button>
 
-        <Button onClick={() => setShowModal(true)}>Publish</Button>
+        <Button onClick={() => handlePublishStep()}>Publish</Button>
       </div>
 
       <Suspense fallback={<p>Loading...</p>}>
