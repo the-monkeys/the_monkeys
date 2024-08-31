@@ -1,8 +1,9 @@
 'use client';
 
-import React, { Suspense, useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
 import PublishModal from '@/components/modals/publish/PublishModal';
@@ -28,8 +29,11 @@ const CreatePage = () => {
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const { data: session } = useSession();
   const authToken = session?.user.token;
-  // Generate random blog ID
-  const blogId = Math.random().toString(36).substring(7);
+  const router = useRouter();
+  // Use useRef to store the blog ID
+  const blogIdRef = useRef<string>(Math.random().toString(36).substring(7));
+  const blogId = blogIdRef.current;
+
   // Function to create and manage WebSocket connection
   const createWebSocket = (blogId: string, token: string) => {
     const ws = new WebSocket(
@@ -101,6 +105,7 @@ const CreatePage = () => {
           title: 'Blog Published successfully',
           description: 'success',
         });
+        router.push(`/`);
       })
       .catch((err) => {
         console.log(err);
