@@ -2,22 +2,25 @@
 
 import { Loader } from '@/components/loader';
 import useGetLatest100Blogs from '@/hooks/useGetLatest100Blogs';
+import useGetPublishedBlogByAccountId from '@/hooks/useGetPublishedBlogByAccountId';
 import { useSession } from 'next-auth/react';
 
 import BlogCard from './BlogCard';
 
 const Blogs = () => {
-  const { blogs, isLoading } = useGetLatest100Blogs();
   const { data: session } = useSession();
+  const { blogs, isLoading } = useGetPublishedBlogByAccountId(
+    session?.user.account_id
+  );
   return (
     <div className='flex items-start max-h-[500px] scrollbar  overflow-y-scroll  justify-center p-4 min-h-screen'>
       <div className='flex flex-col gap-4'>
         {isLoading ? (
           <Loader />
-        ) : blogs?.the_blogs?.length === 0 ? (
+        ) : blogs?.blogs?.length === 0 ? (
           <p className='font-jost italic opacity-75'>No drafts available.</p>
         ) : (
-          blogs?.the_blogs.map((blog) => {
+          blogs?.blogs.map((blog) => {
             return (
               <BlogCard
                 key={blog?.blog_id}
