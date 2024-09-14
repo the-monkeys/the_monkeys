@@ -30,11 +30,11 @@ const ProfilePage = () => {
             <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
           </TabsTrigger>
 
-          <TabsTrigger value='collabs'>
+          {/* <TabsTrigger value='collabs'>
             <p className='font-josefin_Sans text-base sm:text-lg'>Collabs</p>
 
             <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
-          </TabsTrigger>
+          </TabsTrigger> */}
 
           <TabsTrigger value='drafts'>
             <p className='font-josefin_Sans text-base sm:text-lg'>Drafts</p>

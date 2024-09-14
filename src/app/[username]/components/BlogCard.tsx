@@ -1,5 +1,14 @@
 import React, { FC } from 'react';
 
+import Icon from '@/components/icon';
+import { Badge } from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import moment from 'moment';
 
 interface BlogCardProps {
@@ -17,24 +26,71 @@ const BlogCard: FC<BlogCardProps> = ({
   tags,
 }) => {
   return (
-    <div className='  border rounded p-6'>
-      <div className='flex justify-between items-center'>
-        <h1 className='text-2xl font-bold'>{title}</h1>
-        <button className='text-sm text-blue-500'>Edit</button>
+    <div className='w-full sm:px-6 first:pt-2 pt-4 pb-6 border-b-1 border-secondary-lightGrey/25'>
+      <div className='space-y-4'>
+        <div className='flex justify-between'>
+          <p className='font-josefin_Sans text-xs sm:text-sm opacity-85'>
+            <span className='italic font-light opacity-75'>written by</span>{' '}
+            {author}
+          </p>
+
+          <p className='font-josefin_Sans text-xs sm:text-sm opacity-85'>
+            <span className='italic font-light opacity-75'>on</span>{' '}
+            {moment(date).format('DD MMM, YYYY')}
+          </p>
+        </div>
+
+        <div className='space-y-2'>
+          <h2 className='font-playfair_Display font-semibold text-xl sm:text-2xl capitalize line-clamp-2'>
+            {title}
+          </h2>
+
+          <p className='font-jost text-base sm:text-lg opacity-75 line-clamp-3'>
+            {description}
+          </p>
+        </div>
       </div>
-      <p className='text-sm text-gray-500'>{description}</p>
-      <div className='flex justify-between items-center'>
-        <div className='flex items-center gap-2'>
-          Tags:{' '}
+
+      <div className='py-3 flex justify-between'>
+        <div className='space-x-1'>
           {tags?.map((tag) => (
-            <span key={tag} className='text-sm text-gray-500'>
+            <Badge
+              variant='secondary'
+              key={tag}
+              className='py-[1px] text-xs sm:text-sm'
+            >
               {tag}
-            </span>
+            </Badge>
           ))}
         </div>
-        <p className='text-sm text-gray-500'>
-          {moment(date).format('DD MMM, YYYY')}
-        </p>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <div className='hover:opacity-75 cursor-pointer'>
+              <Icon name='RiMore' size={24} />
+            </div>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent className='m-2'>
+            <DropdownMenuItem>
+              <div className='flex w-full items-center gap-2'>
+                <Icon name='RiPencil' />
+
+                <p className='font-josefin_Sans text-base'>Edit</p>
+              </div>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuItem>
+              <div className='flex w-full items-center gap-2'>
+                <Icon name='RiShareForward' />
+
+                <p className='font-josefin_Sans text-base'>Share</p>
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
