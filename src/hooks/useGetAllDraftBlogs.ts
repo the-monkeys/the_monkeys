@@ -2,7 +2,7 @@ import { GetDraftBlogResponse } from '@/services/Blogs/BlogTyptes';
 import { authFetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 
-const useGetDraftBlog = (accountId: string | undefined) => {
+const useGetAllDraftBlogs = (accountId: string | undefined) => {
   const { data, error, isLoading } = useSWR<GetDraftBlogResponse>(
     `/blog/all/drafts/${accountId}`,
     authFetcher
@@ -15,4 +15,4 @@ const useGetDraftBlog = (accountId: string | undefined) => {
   };
 };
 
-export default useGetDraftBlog;
+export default useGetAllDraftBlogs;

@@ -1,14 +1,21 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Loader } from '@/components/loader';
-import useGetDraftBlog from '@/hooks/useGetDraftBlog';
+import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
 
 import BlogCard from './BlogCard';
 
 const Drafts = () => {
   const { data: session } = useSession();
-  const { blogs, isLoading } = useGetDraftBlog(session?.user.account_id);
+  const { blogs, isLoading } = useGetAllDraftBlogs(session?.user.account_id);
+  const router = useRouter();
+
+  const handleEdit = (blogId: string) => {
+    router.push(`/create?blogId=${blogId}`);
+  };
 
   return (
     <div className='min-h-screen'>
@@ -28,6 +35,8 @@ const Drafts = () => {
                 author={session?.user.username as string}
                 date={blog?.blog?.time}
                 tags={blog?.tags}
+                blogId={blog?.blog_id}
+                onEdit={handleEdit}
               />
             );
           })

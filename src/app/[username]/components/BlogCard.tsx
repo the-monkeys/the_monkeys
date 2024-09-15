@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import Icon from '@/components/icon';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -17,13 +19,18 @@ interface BlogCardProps {
   author: string;
   date: number;
   tags?: string[];
+  blogId: string;
+  onEdit: (blogId: string) => void;
 }
+
 const BlogCard: FC<BlogCardProps> = ({
   title,
   description,
   author,
   date,
   tags,
+  blogId,
+  onEdit,
 }) => {
   return (
     <div className='w-full sm:px-6 first:pt-2 pt-4 pb-6 border-b-1 border-secondary-lightGrey/25'>
@@ -72,10 +79,9 @@ const BlogCard: FC<BlogCardProps> = ({
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className='m-2'>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onEdit(blogId)}>
               <div className='flex w-full items-center gap-2'>
                 <Icon name='RiPencil' />
-
                 <p className='font-josefin_Sans text-base'>Edit</p>
               </div>
             </DropdownMenuItem>
@@ -85,7 +91,6 @@ const BlogCard: FC<BlogCardProps> = ({
             <DropdownMenuItem>
               <div className='flex w-full items-center gap-2'>
                 <Icon name='RiShareForward' />
-
                 <p className='font-josefin_Sans text-base'>Share</p>
               </div>
             </DropdownMenuItem>
