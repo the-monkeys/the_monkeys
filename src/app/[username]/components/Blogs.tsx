@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 import { Loader } from '@/components/loader';
 import useGetLatest100Blogs from '@/hooks/useGetLatest100Blogs';
 import useGetPublishedBlogByAccountId from '@/hooks/useGetPublishedBlogByAccountId';
@@ -12,7 +14,10 @@ const Blogs = () => {
   const { blogs, isLoading } = useGetPublishedBlogByAccountId(
     session?.user.account_id
   );
-
+  const router = useRouter();
+  const handleEdit = (blogId: string) => {
+    router.push(`/create?blogId=${blogId}`);
+  };
   return (
     <div className='min-h-screen'>
       <div className='flex flex-col items-center'>
@@ -31,6 +36,8 @@ const Blogs = () => {
                 author={session?.user.username as string}
                 date={blog?.blog?.time}
                 tags={blog?.tags}
+                blogId={blog?.blog_id}
+                onEdit={handleEdit}
               />
             );
           })
