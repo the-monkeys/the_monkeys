@@ -17,7 +17,7 @@ export interface NewsSource2 {
     name?: string;
   };
   author?: string;
-  title?: string;
+  title: string;
   description?: string;
   url?: string;
   urlToImage?: string;

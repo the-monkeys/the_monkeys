@@ -2,7 +2,10 @@ import { fetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 
 export const useGetAllNews1 = () => {
-  const { data, error } = useSWR('/blog/news1', fetcher);
+  const { data, error } = useSWR(
+    process.env.NEXT_PUBLIC_API_URL + '/blog/news1',
+    fetcher
+  );
 
   return {
     news: data,
