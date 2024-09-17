@@ -56,13 +56,19 @@ const NewsSection = () => {
     });
 
     const newsWithNoImage = uniqueNewsData.filter((item) => item.image == null);
+
     return (
       <div className='grid grid-cols-2 gap-4 md:gap-0'>
         {newsDataWithUniqueTitleAndImage.map((newsItem, index) => {
           // for news source 1
           if (newsItem?.language !== 'en') return null;
-          return <News1Card key={index} {...newsItem} />;
-
+          return (
+            <>
+              <div className='border dark:border-gray-800'>
+                <News1Card key={index} {...newsItem} />
+              </div>
+            </>
+          );
           // for news source 2
           // return <News2Card key={index} {...newsItem} />;
         })}

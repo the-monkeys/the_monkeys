@@ -32,11 +32,15 @@ const TopNews = () => {
       {newsData &&
         newsData.slice(0, 15).map((newsItem, index) => (
           <div key={index}>
-            <p className='mb-1 font-playfair_Display font-medium text-3xl text-secondary-darkGrey/25 dark:text-secondary-white/25'>
-              {index + 1}.
-            </p>
+            <div>
+              <span className='mb-1 font-playfair_Display font-medium text-3xl text-secondary-darkGrey/25 dark:text-secondary-white/25'>
+                {index + 1}.{' '}
+              </span>
 
-            <p className='pb-2 w-fit font-jost cursor-default'>{newsItem}</p>
+              <span className='pb-2 w-fit font-jost cursor-default'>
+                {newsItem}
+              </span>
+            </div>
           </div>
         ))}
     </div>
