@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import Link from 'next/link';
 
+import Icon from '@/components/icon';
 import { NewsSource2 } from '@/services/news/newsTypes';
 import { newsDateFormatter } from '@/utils/dateFormatter';
 
@@ -10,7 +11,7 @@ const News2Card: FC<NewsSource2> = (props) => {
     props;
 
   return (
-    <div className='group col-span-2 md:col-span-1 pb-2 md:p-6 border-b-1 border-secondary-lightGrey/25 sm:border-none'>
+    <div className='group col-span-2 md:col-span-1 pb-2 md:p-6 border border-b-1 border-secondary-lightGrey/25 sm:border-none'>
       <Link target='_blank' href={url || '#'} className='group'>
         <div className='mb-4 relative group-hover:opacity-80'>
           <img
@@ -20,15 +21,21 @@ const News2Card: FC<NewsSource2> = (props) => {
             loading='lazy'
           />
 
-          <p className='absolute bottom-0 right-0 p-1 font-jost text-xs drop-shadow-sm text-secondary-lightGrey/75'>
-            source/{source?.id}
-          </p>
+          <div className='flex justify-between align-center pt-3'>
+            {' '}
+            <p className='font-jost text-sm'>
+              {author} - {source?.name}
+            </p>
+            <div className='flex justify-center items-center opacity-60'>
+              <Icon
+                name='RiTime'
+                size={16}
+                className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1 '
+              />{' '}
+              {Math.ceil(description.length / 100) + ' min'}
+            </div>
+          </div>
         </div>
-
-        <p className='font-jost text-sm'>
-          {author} - {source?.name}
-        </p>
-
         <h2 className='mt-1 font-playfair_Display font-medium text-xl sm:text-2xl leading-tight line-clamp-2 group-hover:opacity-80'>
           {title}
         </h2>

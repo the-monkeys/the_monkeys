@@ -29,16 +29,37 @@ const TopNews = () => {
 
   return (
     <div className='hidden md:block'>
-      {newsData &&
-        newsData.slice(0, 15).map((newsItem, index) => (
-          <div key={index}>
-            <p className='mb-1 font-playfair_Display font-medium text-3xl text-secondary-darkGrey/25 dark:text-secondary-white/25'>
-              {index + 1}.
-            </p>
-
-            <p className='pb-2 w-fit font-jost cursor-default'>{newsItem}</p>
-          </div>
-        ))}
+      <div className='bg-white p-4 shadow-sm max-w-md mx-auto'>
+        <div className='flex justify-between items-center mb-4'>
+          <h2 className='text-red-600 font-bold text-lg'>Latest</h2>
+          <button className='bg-gray-100 border border-gray-300 text-gray-700 py-1 px-3 rounded'>
+            All categories
+          </button>
+        </div>
+        {newsData &&
+          newsData.slice(0, 15).map((newsItem: any, index: number) => (
+            <div key={index}>
+              <ul>
+                <li className='flex justify-between py-2 border-b last:border-none'>
+                  <span className='text-gray-500 text-sm pr-3'>
+                    {index + 1}
+                  </span>
+                  <a
+                    href='#'
+                    className='text-gray-800 hover:text-red-600 transition'
+                  >
+                    {newsItem}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          ))}{' '}
+        <div className='text-right mt-4'>
+          <a href='#' className='text-gray-600 hover:text-red-600 transition'>
+            See all latest &gt;
+          </a>
+        </div>
+      </div>
     </div>
   );
 };
