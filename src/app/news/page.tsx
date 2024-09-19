@@ -4,7 +4,7 @@ import Container from '@/components/layout/Container';
 import { Separator } from '@/components/ui/separator';
 
 import NewsBanner from '../../components/branding/NewsBanner';
-import NewsSection from './components/NewsSection';
+import NewsSection2 from './components/NewsSection2';
 import TopNews from './components/TopNews';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,12 +19,15 @@ const NewsPage = () => {
   return (
     <Container className='pb-20 min-h-screen px-5 py-4'>
       <div>
+        {' '}
         <NewsBanner />
       </div>
 
       <div className='mt-12 sm:mt-16 grid grid-cols-4 gap-2'>
         <div className='col-span-4 lg:col-span-3'>
-          <NewsSection />
+          {/* <NewsSection /> */}
+
+          <NewsSection2 />
         </div>
 
         <div className='hidden lg:block lg:col-span-1 py-2s'>

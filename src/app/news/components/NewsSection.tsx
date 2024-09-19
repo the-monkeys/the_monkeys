@@ -1,9 +1,12 @@
 'use client';
 
+import Image from 'next/image';
+
 import { NewsSectionSkeleton } from '@/components/skeletons/newsSkeleton';
 import { useGetAllNews1, useGetAllNews2 } from '@/hooks/useGetAllNews';
 import { NewsSource1, NewsSource2 } from '@/services/news/newsTypes';
 
+import CollageHomepage from './CollageCard';
 // for news source 1
 import News1Card from './News1Card';
 
@@ -64,13 +67,22 @@ const NewsSection = () => {
           if (newsItem?.language !== 'en') return null;
           return (
             <>
-              <div className='border dark:border-gray-800'>
+              <div className=' flex flex-col'>
                 <News1Card key={index} {...newsItem} />
+                <div className='border p-3'>
+                  {
+                    newsWithNoImage[
+                      Math.floor(Math.random() * newsWithNoImage.length)
+                    ].title
+                  }
+                </div>
               </div>
             </>
           );
           // for news source 2
-          // return <News2Card key={index} {...newsItem} />;
+          {
+            /* // return <News2Card key={index} {...newsItem} />; */
+          }
         })}
       </div>
     );
