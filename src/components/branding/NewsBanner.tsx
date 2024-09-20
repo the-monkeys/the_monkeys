@@ -5,7 +5,7 @@ const NewsBanner = () => {
   return (
     <div className='relative flex flex-col justify-end gap-4 min-h-60 md:min-h-80'>
       <div className='absolute top-0 right-0 w-full sm:w-4/5 md:w-1/2 opacity-75 sm:opacity-100 -z-10 '>
-        <MonkeysBranding />
+        {/* <MonkeysBranding /> */}
       </div>
 
       <LinksRedirectArrow
