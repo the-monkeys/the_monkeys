@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 
 import { Loader } from '@/components/loader';
-import useGetLatest100Blogs from '@/hooks/useGetLatest100Blogs';
 import useGetPublishedBlogByAccountId from '@/hooks/useGetPublishedBlogByAccountId';
 import { useSession } from 'next-auth/react';
 
@@ -16,7 +15,7 @@ const Blogs = () => {
   );
   const router = useRouter();
   const handleEdit = (blogId: string) => {
-    router.push(`/create?blogId=${blogId}`);
+    // router.push(`/edit/${blogId}`);
   };
   return (
     <div className='min-h-screen'>
