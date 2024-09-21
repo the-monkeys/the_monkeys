@@ -1,7 +1,5 @@
 import React, { FC } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import Icon from '@/components/icon';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -11,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 
 interface BlogCardProps {
@@ -48,13 +47,15 @@ const BlogCard: FC<BlogCardProps> = ({
         </div>
 
         <div className='space-y-2'>
-          <h2 className='font-playfair_Display font-semibold text-xl sm:text-2xl capitalize line-clamp-2'>
-            {title}
-          </h2>
+          <h2
+            dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
+            className='font-playfair_Display font-semibold text-xl sm:text-2xl capitalize line-clamp-2'
+          ></h2>
 
-          <p className='font-jost text-base sm:text-lg opacity-75 line-clamp-3'>
-            {description}
-          </p>
+          <p
+            dangerouslySetInnerHTML={{ __html: purifyHTMLString(description) }}
+            className='font-jost text-base sm:text-lg opacity-75 line-clamp-3'
+          ></p>
         </div>
       </div>
 
