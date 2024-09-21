@@ -10,6 +10,7 @@ import { NewsSource2 } from '@/services/news/newsTypes';
 import NewsCarousel from './news/NewsCarousel';
 import Section1 from './news/Section1';
 import Section2 from './news/Section2';
+import TopSection from './news/TopSection';
 
 // for news source 2
 // import News2Card from './News2Card';
@@ -39,7 +40,7 @@ const NewsSection = () => {
   if (newsData.length >= 20) {
     return (
       <div>
-        <div className='max-w-7xl mx-auto p-4 border'>
+        <div className='max-w-7xl mx-auto p-4 dark:border-gray-600 border border-b-0'>
           <div className='flex flex-wrap items-center gap-2 text-sm mb-4 overflow-x-auto'>
             <Button
               variant='outline'
@@ -118,7 +119,7 @@ const NewsSection = () => {
             ]}
           />
           <hr className='border-t border-gray-300 my-4' />
-          <div className=' flex md:flex-row rounded-lg overflow-hidden shadow-lg max-w-full w-full'>
+          <div className=' flex md:flex-row overflow-hidden  max-w-full w-full'>
             <div className='w-full  hidden md:block'>
               {' '}
               <Link href={newsData[4].url} target='_blank'>
@@ -168,145 +169,6 @@ const NewsSection = () => {
               </div>
             </div>
           </div>{' '}
-          <hr className='border-t border-gray-300 my-4' />
-          <div className='container mx-auto p-4'>
-            {/* Tag Section */}
-            <div className='flex space-x-4 text-sm text-gray-600'>
-              <span className='font-bold'>{newsData[8].source.name}</span>
-              <span>{newsData[9].source.name}</span>
-            </div>
-
-            {/* Main Content */}
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-4'>
-              <div>
-                <h2 className='text-xl md:text-2xl font-bold'>
-                  {newsData[12].title}
-                </h2>
-                <div className='space-y-2 mt-4'>
-                  <p className='text-gray-600 hover:underline cursor-pointer'>
-                    {newsData[12].description.slice(0, 300)}...
-                  </p>
-                </div>
-              </div>
-              <div className='relative'>
-                <img
-                  src={newsData[12].urlToImage}
-                  alt='Video Thumbnail'
-                  className='w-full h-auto rounded'
-                />
-                <div className='absolute bottom-2 left-2 bg-black text-white text-xs px-2 py-1 rounded'>
-                  6:00
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr className='border-t border-gray-300 my-4' />
-          <div className='container mx-auto p-4'>
-            {/* Main Content */}
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-              {/* Left Article */}
-              <div className='border-b md:border-b-0 md:border-r pr-4'>
-                <img
-                  src={newsData[13].urlToImage}
-                  alt='Apple EU Warning'
-                  className='w-full h-auto'
-                />
-                <p className='text-xs mt-1 text-gray-500'>
-                  {newsData[13].source.name}
-                </p>
-                <h3 className='text-red-600 font-bold mt-2'>EXCLUSIVE</h3>
-                <h2 className='text-xl md:text-2xl font-bold mt-2'>
-                  {newsData[13].title}
-                </h2>
-                <div className='border rounded-md mt-4 p-2 bg-gray-100'>
-                  <p className='text-sm font-bold dark:text-black'>ANALYSIS</p>
-                  <p className='text-sm dark:text-black'>
-                    {newsData[13].description}
-                  </p>
-                </div>
-              </div>
-
-              <div className='pl-4'>
-                <img
-                  src={newsData[14].urlToImage}
-                  alt='Sri Lanka Restructuring Deal'
-                  className='w-full h-auto'
-                />
-                <h2 className='text-xl md:text-2xl font-bold mt-2'>
-                  {newsData[14].title}
-                </h2>
-                <p className='text-xs text-gray-500 mt-2'>about 3 hours ago</p>
-                <div className='border rounded-md mt-4 p-2 bg-gray-100'>
-                  <p className='text-sm dark:text-black'>
-                    {newsData[14].description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-4'>
-            <Section1
-              urlToImage={newsData[15].urlToImage}
-              title={newsData[15].title}
-            />
-
-            <Section1
-              urlToImage={newsData[16].urlToImage}
-              title={newsData[16].title}
-            />
-
-            <Section1
-              urlToImage={newsData[17].urlToImage}
-              title={newsData[17].title}
-            />
-
-            <Section1
-              urlToImage={newsData[18].urlToImage}
-              title={newsData[18].title}
-            />
-          </div>
-          <Section2
-            newsArray={[newsData[19], newsData[20], newsData[21], newsData[24]]}
-          />{' '}
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-            {/* Left Article */}
-            <div className='border-b md:border-b-0 md:border-r pr-4'>
-              <div className='pl-4'>
-                <img
-                  src={newsData[25].urlToImage}
-                  alt='Sri Lanka Restructuring Deal'
-                  className='w-full h-auto'
-                />
-                <h2 className='text-xl md:text-2xl font-bold mt-2'>
-                  {newsData[25].title}
-                </h2>
-                <p className='text-xs text-gray-500 mt-2'>about 3 hours ago</p>
-                <div className='border rounded-md mt-4 p-2 bg-gray-100'>
-                  <p className='text-sm dark:text-black'>
-                    {newsData[25].description}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className='border-b md:border-b-0 md:border-r pr-4'>
-              <div className='pl-4'>
-                <img
-                  src={newsData[26].urlToImage}
-                  alt='Sri Lanka Restructuring Deal'
-                  className='w-full h-auto'
-                />
-                <h2 className='text-xl md:text-2xl font-bold mt-2'>
-                  {newsData[26].title}
-                </h2>
-                <p className='text-xs text-gray-500 mt-2'>about 3 hours ago</p>
-                <div className='border rounded-md mt-4 p-2 bg-gray-100'>
-                  <p className='text-sm dark:text-black'>
-                    {newsData[26].description}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     );
@@ -314,7 +176,7 @@ const NewsSection = () => {
 };
 
 function randomNumber(length: number) {
-  return Math.floor(Math.random() * length) + 1;
+  return Math.floor((Math.random() * length) % length);
 }
 
 export default NewsSection;

@@ -25,4 +25,8 @@ export interface NewsSource2 {
   content: string;
 }
 
+export interface NewsCarouselProps {
+  newsArray: NewsSource2[];
+}
+
 export type NewsSource3 = string[];

@@ -7,11 +7,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import { NewsSource2 } from '@/services/news/newsTypes';
+import { NewsCarouselProps, NewsSource2 } from '@/services/news/newsTypes';
 
-interface NewsCarouselProps {
-  newsArray: NewsSource2[];
-}
 export default function NewsCarousel({ newsArray }: NewsCarouselProps) {
   return (
     <Carousel
@@ -30,7 +27,7 @@ export default function NewsCarousel({ newsArray }: NewsCarouselProps) {
                 alt={news.title}
                 width='600'
                 height='400'
-                className='rounded-lg object-cover aspect-video'
+                className=' object-cover aspect-video'
               />
               <div className='space-y-2'>
                 <h3 className='text-2xl font-semibold'>{news.title}</h3>
