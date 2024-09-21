@@ -68,10 +68,7 @@ const CreatePage = () => {
     };
 
     ws.onclose = () => {
-      console.log('WebSocket connection closed, attempting to reconnect...');
-      setTimeout(() => {
-        createWebSocket(blogId, token);
-      }, 1000); // Reconnect after 1 second
+      console.log('WebSocket connection closed');
     };
 
     ws.onerror = (error) => {
@@ -119,7 +116,18 @@ const CreatePage = () => {
   useEffect(() => {
     if (authToken) {
       const cleanup = createWebSocket(blogId, authToken);
-      return cleanup;
+
+      // Listen for beforeunload event to close the WebSocket connection
+      const handleBeforeUnload = () => {
+        cleanup();
+      };
+
+      window.addEventListener('beforeunload', handleBeforeUnload);
+
+      return () => {
+        cleanup();
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
     }
   }, [authToken, blogId, createWebSocket]);
 
