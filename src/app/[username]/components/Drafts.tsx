@@ -15,7 +15,6 @@ const Drafts = () => {
   const router = useRouter();
 
   const handleEdit = (blogId: string) => {
-    mutate(`/blog/my-drafts/${blogId}`);
     router.push(`/edit/${blogId}`);
   };
 

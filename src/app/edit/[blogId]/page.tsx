@@ -36,7 +36,7 @@ export default function Page({ params }: { params: { blogId: string } }) {
   const router = useRouter();
   const blogId = params.blogId;
 
-  const { blogs, isLoading } = useGetDraftBlogDetail(blogId);
+  const { blog, isLoading, mutate } = useGetDraftBlogDetail(blogId);
 
   const authToken = session?.user.token;
 
@@ -76,6 +76,8 @@ export default function Page({ params }: { params: { blogId: string } }) {
     (data: OutputData, accountId: string | undefined) => {
       return {
         owner_account_id: accountId,
+        author_list: [accountId],
+        content_type: 'editorjs',
         blog: {
           time: data.time,
           blocks: data.blocks.map((block) => ({
@@ -100,11 +102,16 @@ export default function Page({ params }: { params: { blogId: string } }) {
     loadEditor();
   }, []);
 
+  // Fetch draft blog data every time the page loads
+  useEffect(() => {
+    mutate();
+  }, [mutate]);
+
   // Create WebSocket connection when authToken is available and blog data is loaded
   useEffect(() => {
-    if (session?.user.token && blogs) {
+    if (session?.user.token && blog) {
       const cleanup = createWebSocket(blogId, session.user.token);
-      setData(blogs.blog); // Set the editor data with the fetched blog data
+      setData(blog.blog); // Set the editor data with the fetched blog data
 
       // Listen for beforeunload event to close the WebSocket connection
       const handleBeforeUnload = () => {
@@ -118,7 +125,7 @@ export default function Page({ params }: { params: { blogId: string } }) {
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }
-  }, [session?.user.token, blogId, createWebSocket, blogs]);
+  }, [session?.user.token, blogId, createWebSocket, blog]);
 
   // Send data to WebSocket when data changes
   useEffect(() => {

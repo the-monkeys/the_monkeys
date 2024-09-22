@@ -3,13 +3,14 @@ import { authFetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 
 const useGetDraftBlogDetail = (blogId: string | null) => {
-  const { data, error, isLoading } = useSWR<Blog>(
-    `/blog/my-drafts/${blogId}`,
+  const { data, error, isLoading, mutate } = useSWR<Blog>(
+    blogId ? `/blog/my-drafts/${blogId}` : null,
     authFetcher
   );
 
   return {
-    blogs: data,
+    mutate,
+    blog: data,
     isError: error,
     isLoading,
   };
