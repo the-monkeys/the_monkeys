@@ -6,6 +6,8 @@ import { Separator } from '@/components/ui/separator';
 import NewsBanner from '../../components/branding/NewsBanner';
 import NewsSection2 from './components/NewsSection2';
 import TopNews from './components/TopNews';
+import StockMarquee from './components/news/Marquee';
+import TopNewsHeadingMobileView from './components/news/TopNewsHeadingMobilView';
 import FooterSection from './components/news/TopSection';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -18,7 +20,8 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const NewsPage = () => {
   return (
-    <Container className='pb-20 min-h-screen px-5 py-4 '>
+    <Container className='pb-20 min-h-screen px-5 dark:text-white'>
+      <StockMarquee />
       <div>
         {' '}
         <NewsBanner />
@@ -26,12 +29,11 @@ const NewsPage = () => {
 
       <div className='mt-12 sm:mt-16 grid grid-cols-4 gap-2'>
         <div className='col-span-4 lg:col-span-3'>
-          {/* <NewsSection /> */}
-
+          <TopNewsHeadingMobileView />
           <NewsSection2 />
         </div>
 
-        <div className='hidden lg:block lg:col-span-1 py-2s'>
+        <div className='hidden lg:block lg:col-span-1 py-2s pt-3'>
           <h3 className='w-fit font-josefin_Sans font-semibold text-xl'>
             Top Headlines
           </h3>
