@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Loader } from '@/components/loader';
 import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
+import { mutate } from 'swr';
 
 import BlogCard from './BlogCard';
 
@@ -14,6 +15,7 @@ const Drafts = () => {
   const router = useRouter();
 
   const handleEdit = (blogId: string) => {
+    mutate(`/blog/my-drafts/${blogId}`);
     router.push(`/edit/${blogId}`);
   };
 
