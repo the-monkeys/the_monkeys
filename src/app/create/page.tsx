@@ -88,6 +88,8 @@ const CreatePage = () => {
     (data: OutputData, accountId: string | undefined) => {
       return {
         owner_account_id: accountId,
+        author_list: [accountId],
+        content_type: 'editorjs',
         blog: {
           time: data.time,
           blocks: data.blocks.map((block) => ({

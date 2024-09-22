@@ -21,20 +21,24 @@ const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
 });
 
+const initial_data = {
+  time: new Date().getTime(),
+  blocks: [],
+};
+
 export default function Page({ params }: { params: { blogId: string } }) {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const { data: session } = useSession();
-  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const router = useRouter();
   const blogId = params.blogId;
 
-  // Fetch the blog data using the blogId
-  const { blogs, isLoading } = useGetDraftBlogDetail(
-    session?.user.account_id,
-    blogId
-  );
+  const { blogs, isLoading } = useGetDraftBlogDetail(blogId);
+
+  const authToken = session?.user.token;
 
   // Function to create and manage WebSocket connection
   const createWebSocket = useCallback((blogId: string, token: string) => {
@@ -86,32 +90,6 @@ export default function Page({ params }: { params: { blogId: string } }) {
     []
   );
 
-  // Handle the publish action
-  const handlePublishStep = useCallback(() => {
-    if (!data) return; // Ensure data is not null
-
-    const formattedData = formatData(data, session?.user.account_id);
-    axiosInstance
-      .post(`/blog/publish/${blogId}`, formattedData)
-      .then((res) => {
-        console.log(res);
-        toast({
-          variant: 'success',
-          title: 'Blog Published successfully',
-          description: 'success',
-        });
-        router.push(`/`);
-      })
-      .catch((err) => {
-        console.log(err);
-        toast({
-          variant: 'destructive',
-          title: 'Error publishing blog',
-          description: 'error',
-        });
-      });
-  }, [data, session?.user.account_id, blogId, formatData, router]);
-
   // Load the Editor component dynamically
   useEffect(() => {
     const loadEditor = async () => {
@@ -151,6 +129,32 @@ export default function Page({ params }: { params: { blogId: string } }) {
     }
   }, [data, webSocket, session?.user.account_id, formatData]);
 
+  // Handle the publish action
+  const handlePublishStep = useCallback(() => {
+    if (!data) return; // Ensure data is not null
+
+    const formattedData = formatData(data, session?.user.account_id);
+    axiosInstance
+      .post(`/blog/publish/${blogId}`, formattedData)
+      .then((res) => {
+        console.log(res);
+        toast({
+          variant: 'success',
+          title: 'Blog Published successfully',
+          description: 'success',
+        });
+        router.push(`/`);
+      })
+      .catch((err) => {
+        console.log(err);
+        toast({
+          variant: 'destructive',
+          title: 'Error publishing blog',
+          description: 'error',
+        });
+      });
+  }, [data, session?.user.account_id, blogId, formatData, router]);
+
   if (isLoading) {
     return <Loader />;
   }
@@ -162,7 +166,6 @@ export default function Page({ params }: { params: { blogId: string } }) {
           <Button variant='ghost' onClick={() => console.log(data)}>
             Preview
           </Button>
-
           <Button onClick={handlePublishStep}>Publish</Button>
         </div>
         <div className='flex items-center gap-2'>
