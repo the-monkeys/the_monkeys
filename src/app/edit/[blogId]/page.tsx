@@ -12,6 +12,7 @@ import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import useGetDraftBlogDetail from '@/hooks/useGetDraftBlogDetail';
+import useGetPublishedBlogDetailByBlogId from '@/hooks/useGetPublishedBlogDetailByBlogId';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
@@ -37,7 +38,8 @@ export default function Page({ params }: { params: { blogId: string } }) {
   const blogId = params.blogId;
 
   const { blog, isLoading, mutate } = useGetDraftBlogDetail(blogId);
-
+  // const { blog: publishedBlogDetail, isLoading: publishedblogLoading } =
+  //   useGetPublishedBlogDetailByBlogId(blogId);
   const authToken = session?.user.token;
 
   // Function to create and manage WebSocket connection
@@ -138,7 +140,14 @@ export default function Page({ params }: { params: { blogId: string } }) {
 
   // Handle the publish action
   const handlePublishStep = useCallback(() => {
-    if (!data) return; // Ensure data is not null
+    if (!data || data.blocks.length === 0) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Blog content cannot be empty.',
+      });
+      return; // Ensure data is not null and not empty
+    }
 
     const formattedData = formatData(data, session?.user.account_id);
     axiosInstance
@@ -162,27 +171,27 @@ export default function Page({ params }: { params: { blogId: string } }) {
       });
   }, [data, session?.user.account_id, blogId, formatData, router]);
 
-  if (isLoading) {
-    return <Loader />;
-  }
-
   return (
     <Container className='min-h-screen px-5 py-4 pb-12'>
-      <div className='space-y-2'>
-        <div className='flex justify-end gap-2'>
-          <Button variant='ghost' onClick={() => console.log(data)}>
-            Preview
-          </Button>
-          <Button onClick={handlePublishStep}>Publish</Button>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className='space-y-2'>
+          <div className='flex justify-end gap-2'>
+            <Button variant='ghost' onClick={() => console.log(data)}>
+              Preview
+            </Button>
+            <Button onClick={handlePublishStep}>Publish</Button>
+          </div>
+          <div className='flex items-center gap-2'>
+            Saving draft{' '}
+            {isSaving ? <Loader /> : <Icon name='RiCheck' size={20} />}{' '}
+          </div>
+          <Suspense fallback={<Loader />}>
+            {editor && data && <Editor data={data} onChange={setData} />}
+          </Suspense>
         </div>
-        <div className='flex items-center gap-2'>
-          Saving draft{' '}
-          {isSaving ? <Loader /> : <Icon name='RiCheck' size={20} />}{' '}
-        </div>
-        <Suspense fallback={<Loader />}>
-          {editor && data && <Editor data={data} onChange={setData} />}
-        </Suspense>
-      </div>
+      )}
     </Container>
   );
 }

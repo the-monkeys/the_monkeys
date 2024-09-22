@@ -1,16 +1,24 @@
 import React, { FC } from 'react';
 
 import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { toast } from '@/components/ui/use-toast';
+import axiosInstance from '@/services/api/axiosInstance';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
+import { useSession } from 'next-auth/react';
+import { mutate } from 'swr';
 
 interface BlogCardProps {
   title: string;
@@ -19,6 +27,7 @@ interface BlogCardProps {
   date: number;
   tags?: string[];
   blogId: string;
+  isDraft?: boolean;
   onEdit: (blogId: string) => void;
 }
 
@@ -29,8 +38,36 @@ const BlogCard: FC<BlogCardProps> = ({
   date,
   tags,
   blogId,
+  isDraft = false,
   onEdit,
 }) => {
+  const { data: session } = useSession();
+  const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const deleteBlogById = async (blogId: string) => {
+    setIsDeleteLoading(true);
+    await axiosInstance
+      .delete(`/blog/${blogId}`)
+      .then(() => {
+        setIsDeleteLoading(false);
+        mutate(`/blog/all/drafts/${session?.user.account_id}`);
+        toast({
+          title: 'Success',
+          description: 'Blog deleted successfully',
+          duration: 3000,
+        });
+        setOpen(false);
+      })
+      .catch(() => {
+        setIsDeleteLoading(false);
+        toast({
+          title: 'Error',
+          description: 'Error deleting blog',
+          duration: 3000,
+        });
+        setOpen(false);
+      });
+  };
   return (
     <div className='w-full sm:px-6 first:pt-2 pt-4 pb-6 border-b-1 border-secondary-lightGrey/25'>
       <div className='space-y-4'>
@@ -72,31 +109,49 @@ const BlogCard: FC<BlogCardProps> = ({
           ))}
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className='hover:opacity-75 cursor-pointer'>
-              <Icon name='RiMore' size={24} />
+        <div className='flex gap-3 items-center justify-center'>
+          <div
+            className='flex w-full items-center gap-2 cursor-pointer'
+            onClick={() => onEdit(blogId)}
+          >
+            <Icon name='RiPencil' />
+          </div>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Are you absolutely sure?</DialogTitle>
+                <DialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your account and remove your data from our servers.
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button
+                  className='btn btn-primary'
+                  onClick={() => deleteBlogById(blogId)}
+                  disabled={isDeleteLoading}
+                >
+                  Delete {isDeleteLoading ? <Loader /> : ''}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+
+            <div
+              className='flex w-full items-center gap-2 cursor-pointer'
+              onClick={() => setOpen(true)}
+            >
+              <Icon name='RiDeleteBin' />
             </div>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent className='m-2'>
-            <DropdownMenuItem onClick={() => onEdit(blogId)}>
-              <div className='flex w-full items-center gap-2'>
-                <Icon name='RiPencil' />
-                <p className='font-josefin_Sans text-base'>Edit</p>
-              </div>
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-
-            <DropdownMenuItem>
-              <div className='flex w-full items-center gap-2'>
-                <Icon name='RiShareForward' />
-                <p className='font-josefin_Sans text-base'>Share</p>
-              </div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </Dialog>
+          {!isDraft ? (
+            <div className='flex w-full items-center gap-2 cursor-pointer'>
+              <Icon name='RiShareForward' />
+              <p className='font-josefin_Sans text-base'>Share</p>
+            </div>
+          ) : (
+            ''
+          )}
+        </div>
       </div>
     </div>
   );

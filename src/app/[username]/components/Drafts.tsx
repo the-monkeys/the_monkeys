@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Loader } from '@/components/loader';
 import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
-import { mutate } from 'swr';
 
 import BlogCard from './BlogCard';
 
@@ -37,6 +36,7 @@ const Drafts = () => {
                 date={blog?.blog?.time}
                 tags={blog?.tags}
                 blogId={blog?.blog_id}
+                isDraft={true}
                 onEdit={handleEdit}
               />
             );

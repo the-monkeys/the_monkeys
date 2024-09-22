@@ -26,10 +26,22 @@ const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
 });
 
-// Initial data structure for the editor
+// Initial data structure for the editor with a title block by default
 const initial_data = {
   time: new Date().getTime(),
-  blocks: [],
+  blocks: [
+    {
+      id: 'title',
+      type: 'header',
+      data: {
+        text: 'ADD YOUR TITLE HERE',
+        level: 1,
+        config: {
+          placeholder: 'Pen your thoughts ...',
+        },
+      },
+    },
+  ],
 };
 
 const CreatePage = () => {
@@ -135,6 +147,15 @@ const CreatePage = () => {
 
   // Handle the publish action
   const handlePublishStep = useCallback(() => {
+    if (!data || data.blocks.length === 0 || data.blocks[0].type !== 'header') {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Blog must have a title.',
+      });
+      return; // Ensure data is not null and has a title block
+    }
+
     const formattedData = formatData(data, session?.user.account_id);
 
     axiosInstance
