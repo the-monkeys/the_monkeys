@@ -12,17 +12,21 @@ export interface NewsSource1 {
 }
 
 export interface NewsSource2 {
-  source?: {
-    id?: string;
-    name?: string;
+  source: {
+    id: string;
+    name: string;
   };
-  author?: string;
-  title?: string;
-  description?: string;
-  url?: string;
-  urlToImage?: string;
-  publishedAt?: string;
-  content?: string;
+  author: string;
+  title: string;
+  description: string;
+  url: string;
+  urlToImage: string;
+  publishedAt: string;
+  content: string;
+}
+
+export interface NewsCarouselProps {
+  newsArray: NewsSource2[];
 }
 
 export type NewsSource3 = string[];
