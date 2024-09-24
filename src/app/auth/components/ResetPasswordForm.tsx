@@ -128,13 +128,7 @@ const ResetPasswordForm: React.FC = () => {
 
   return (
     <div className='flex flex-col items-center px-5 py-4'>
-      <Suspense
-        fallback={
-          <div>
-            <Loader />
-          </div>
-        }
-      >
+      <Suspense fallback={<Loader />}>
         <SearchParamsComponent setSearchParams={updateSearchParams} />
       </Suspense>
 
@@ -214,7 +208,7 @@ const ResetPasswordForm: React.FC = () => {
           <div className='pt-4'>
             <Button
               variant='default'
-              disabled={!resetTokenStatus.status || loading ? true : false}
+              disabled={!resetTokenStatus.status || loading}
               className='float-right'
               type='submit'
             >

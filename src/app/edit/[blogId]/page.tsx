@@ -1,22 +1,18 @@
 'use client';
 
-import React, {
-  Suspense,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { Suspense, useCallback, useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
+import Container from '@/components/layout/Container';
 import { Loader } from '@/components/loader';
-import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+import useGetDraftBlogDetail from '@/hooks/useGetDraftBlogDetail';
+import useGetPublishedBlogDetailByBlogId from '@/hooks/useGetPublishedBlogDetailByBlogId';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
@@ -26,43 +22,30 @@ const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
 });
 
-// Initial data structure for the editor with a title block by default
 const initial_data = {
   time: new Date().getTime(),
-  blocks: [
-    {
-      id: 'title',
-      type: 'header',
-      data: {
-        text: 'ADD YOUR TITLE HERE',
-        level: 1,
-        config: {
-          placeholder: 'Pen your thoughts ...',
-        },
-      },
-    },
-  ],
+  blocks: [],
 };
 
-const CreatePage = () => {
-  // State to manage the editor component
+export default function Page({ params }: { params: { blogId: string } }) {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
-  // State to manage the editor data
-  const [data, setData] = useState<OutputData>(initial_data);
-  // State to manage the visibility of the publish modal
+  const [data, setData] = useState<OutputData | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
-  // State to manage the WebSocket connection
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
-  // State to manage the saving status
   const [isSaving, setIsSaving] = useState<boolean>(false);
-  // Get the session data
   const { data: session } = useSession();
-  const authToken = session?.user.token;
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const blogId = params.blogId;
+  const source = searchParams.get('source');
 
-  // Use useRef to store the blog ID
-  const blogIdRef = useRef<string>(Math.random().toString(36).substring(7));
-  const blogId = blogIdRef.current;
+  // if user comes from draft blog card this api should get use
+  const { blog, isLoading, mutate } = useGetDraftBlogDetail(blogId);
+
+  // if user comes from published blog card this api should get use
+  const { blog: publishedBlogDetail, isLoading: publishedBlogLoading } =
+    useGetPublishedBlogDetailByBlogId(blogId);
+  const authToken = session?.user.token;
 
   // Function to create and manage WebSocket connection
   const createWebSocket = useCallback((blogId: string, token: string) => {
@@ -126,10 +109,17 @@ const CreatePage = () => {
     loadEditor();
   }, []);
 
+  // Fetch draft blog data every time the page loads
+  useEffect(() => {
+    if (source === 'draft') {
+      mutate();
+    }
+  }, [mutate, source]);
+
   // Create WebSocket connection when authToken is available
   useEffect(() => {
-    if (authToken) {
-      const cleanup = createWebSocket(blogId, authToken);
+    if (session?.user.token) {
+      const cleanup = createWebSocket(blogId, session.user.token);
 
       // Listen for beforeunload event to close the WebSocket connection
       const handleBeforeUnload = () => {
@@ -143,21 +133,38 @@ const CreatePage = () => {
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }
-  }, [authToken, blogId, createWebSocket]);
+  }, [session?.user.token, blogId, createWebSocket]);
+
+  // Set editor data based on the source
+  useEffect(() => {
+    if (source === 'draft' && blog) {
+      setData(blog.blog); // Set the editor data with the fetched draft blog data
+    } else if (source === 'published' && publishedBlogDetail) {
+      setData(publishedBlogDetail.blog); // Set the editor data with the fetched published blog data
+    }
+  }, [blog, publishedBlogDetail, source]);
+
+  // Send data to WebSocket when data changes
+  useEffect(() => {
+    if (webSocket && webSocket.readyState === WebSocket.OPEN && data) {
+      const formattedData = formatData(data, session?.user.account_id);
+      webSocket.send(JSON.stringify(formattedData));
+      setIsSaving(true); // Set saving status when data is sent
+    }
+  }, [data, webSocket, session?.user.account_id, formatData]);
 
   // Handle the publish action
   const handlePublishStep = useCallback(() => {
-    if (!data || data.blocks.length === 0 || data.blocks[0].type !== 'header') {
+    if (!data || data.blocks.length === 0) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Blog must have a title.',
+        description: 'Blog content cannot be empty.',
       });
-      return; // Ensure data is not null and has a title block
+      return; // Ensure data is not null and not empty
     }
 
     const formattedData = formatData(data, session?.user.account_id);
-
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
       .then((res) => {
@@ -179,33 +186,27 @@ const CreatePage = () => {
       });
   }, [data, session?.user.account_id, blogId, formatData, router]);
 
-  // Send data to WebSocket when data changes
-  useEffect(() => {
-    if (webSocket && webSocket.readyState === WebSocket.OPEN) {
-      const formattedData = formatData(data, session?.user.account_id);
-      webSocket.send(JSON.stringify(formattedData));
-      setIsSaving(true); // Set saving status when data is sent
-    }
-  }, [data, webSocket, session?.user.account_id, formatData]);
-
   return (
-    <div className='space-y-2'>
-      <div className='flex justify-end gap-2'>
-        <Button variant='ghost' onClick={() => console.log(data)}>
-          Preview
-        </Button>
-
-        <Button onClick={handlePublishStep}>Publish</Button>
-      </div>
-      <div className='flex items-center gap-2'>
-        Saving draft {isSaving ? <Loader /> : <Icon name='RiCheck' size={20} />}{' '}
-      </div>
-      <Suspense fallback={<Loader />}>
-        {editor && <Editor data={data} onChange={setData} />}
-      </Suspense>
-      {showModal && <PublishModal setModal={setShowModal} />}
-    </div>
+    <Container className='min-h-screen px-5 py-4 pb-12'>
+      {isLoading || publishedBlogLoading ? (
+        <Loader />
+      ) : (
+        <div className='space-y-2'>
+          <div className='flex justify-end gap-2'>
+            <Button variant='ghost' onClick={() => console.log(data)}>
+              Preview
+            </Button>
+            <Button onClick={handlePublishStep}>Publish</Button>
+          </div>
+          <div className='flex items-center gap-2'>
+            Saving draft{' '}
+            {isSaving ? <Loader /> : <Icon name='RiCheck' size={20} />}{' '}
+          </div>
+          <Suspense fallback={<Loader />}>
+            {editor && data && <Editor data={data} onChange={setData} />}
+          </Suspense>
+        </div>
+      )}
+    </Container>
   );
-};
-
-export default CreatePage;
+}

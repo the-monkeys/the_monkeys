@@ -97,7 +97,7 @@ By following these guidelines, you help maintain a high standard of collaboratio
 ## Contributing
 
 We are thrilled to have you consider contributing to The Monkeys! Our platform thrives on the diverse knowledge and skills of our community.
-
+ 
 Whether you're an experienced developer, a tech enthusiast, a writer, or someone passionate about sharing insights, there's a place for you here. Here are a few ways you can contribute:
 
 1. **Code Contributions**: Help us improve and expand our platform. From fixing bugs to adding new features, your code is valuable.

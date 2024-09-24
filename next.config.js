@@ -1,3 +1,5 @@
 module.exports = {
-  // other configurations...
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
 };
