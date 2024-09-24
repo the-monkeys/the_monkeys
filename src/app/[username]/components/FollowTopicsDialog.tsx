@@ -119,6 +119,7 @@ export default function TopicSelector() {
       });
       setOpen(false);
       mutate(`/user/public/${username}`);
+      window.location.reload();
     } catch (error) {
       toast({
         variant: 'error',
