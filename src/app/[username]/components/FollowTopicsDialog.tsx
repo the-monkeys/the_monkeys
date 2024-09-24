@@ -29,6 +29,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
+import { RxCross2 } from 'react-icons/rx';
 import { mutate } from 'swr';
 import { z } from 'zod';
 
@@ -130,12 +131,11 @@ export default function TopicSelector() {
   };
 
   return (
-    <div className='p-4 space-y-4'>
+    <div className='p-4 pl-0 space-y-4'>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant='outline' className='flex items-center gap-2'>
-            {/* <Icon name="RiAddCircleLine" /> */}
-            <span className='font-josefin_Sans text-base'>Select Topics</span>
+            <span className='font-josefin_Sans text-base'>Add Topics</span>
           </Button>
         </DialogTrigger>
         <DialogContent className='sm:max-w-[425px]'>
@@ -201,7 +201,7 @@ export default function TopicSelector() {
               Selected Topics:
             </h3>
             {selectedTopics.length === 0 ? (
-              <p className='text-muted-foreground'>No topics selected</p>
+              <p className='text-secondary-lightGrey'>No topics selected</p>
             ) : (
               <ul className='space-y-2'>
                 {selectedTopics.map((topic, index) => (
@@ -218,7 +218,7 @@ export default function TopicSelector() {
                       onClick={() => handleRemoveTopic(topic.topic)}
                       aria-label={`Remove ${topic.topic}`}
                     >
-                      x
+                      <RxCross2 size={14} />
                     </Button>
                   </li>
                 ))}

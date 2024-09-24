@@ -155,7 +155,14 @@ const ProfileCard: FC = () => {
           </Link>
         )}
       </div>
-
+      <div className='flex flex-wrap w-full gap-1'>
+        {user?.topics &&
+          user?.topics.map((Item, index) => (
+            <span className='rounded-xl border font-jost border-primary-monkeyOrange text-primary-monkeyOrange p-2 mr-1'>
+              {Item}
+            </span>
+          ))}{' '}
+      </div>
       <TopicSelector />
     </div>
   );
