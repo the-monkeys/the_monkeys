@@ -1,4 +1,3 @@
-// src/api/axiosInstance.ts
 import { API_URL } from '@/constants/api';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
@@ -27,9 +26,9 @@ axiosInstance.interceptors.response.use(
     // Handle common errors
     if (error.response) {
       // For example, redirect to login if 401
-      if (error.response.status === 401) {
-        window.location.href = '/login';
-      }
+      // if (error.response.status === 401) {
+      //   window.location.href = '/login';
+      // }
     }
     return Promise.reject(error);
   }

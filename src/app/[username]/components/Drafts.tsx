@@ -1,7 +1,48 @@
+'use client';
+
+import { useRouter } from 'next/navigation';
+
+import { Loader } from '@/components/loader';
+import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
+import { useSession } from 'next-auth/react';
+
+import BlogCard from './BlogCard';
+
 const Drafts = () => {
+  const { data: session } = useSession();
+  const { blogs, isLoading } = useGetAllDraftBlogs(session?.user.account_id);
+  const router = useRouter();
+
+  const handleEdit = (blogId: string) => {
+    router.push(`/edit/${blogId}?source=draft`);
+  };
+
   return (
-    <div className='flex items-start justify-center p-4 min-h-screen'>
-      <p className='font-jost italic opacity-75'>No drafts available.</p>
+    <div className='min-h-screen'>
+      <div className='flex flex-col items-center'>
+        {isLoading ? (
+          <Loader />
+        ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
+          <p className='font-jost italic opacity-75'>No drafts available</p>
+        ) : (
+          blogs?.blogs &&
+          blogs?.blogs.map((blog) => {
+            return (
+              <BlogCard
+                key={blog?.blog_id}
+                title={blog?.blog?.blocks[0]?.data?.text}
+                description={blog?.blog?.blocks[0]?.data?.text}
+                author={session?.user.username as string}
+                date={blog?.blog?.time}
+                tags={blog?.tags}
+                blogId={blog?.blog_id}
+                isDraft={true}
+                onEdit={handleEdit}
+              />
+            );
+          })
+        )}
+      </div>
     </div>
   );
 };

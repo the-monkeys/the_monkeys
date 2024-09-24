@@ -11,69 +11,35 @@ const authOptions: AuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: {
-          label: 'email',
-          type: 'text',
-        },
-        first_name: {
-          label: 'first_name',
-          type: 'text',
-        },
-        last_name: {
-          label: 'last_name',
-          type: 'text',
-        },
-        password: {
-          label: 'password',
-          type: 'password',
-        },
+        email: { label: 'email', type: 'text' },
+        first_name: { label: 'first_name', type: 'text' },
+        last_name: { label: 'last_name', type: 'text' },
+        password: { label: 'password', type: 'password' },
       },
       async authorize(credentials) {
-        if (credentials?.first_name) {
-          try {
-            const authResponse = await axios.post(
-              `${API_URL}/auth/register`,
-              {
-                first_name: credentials.first_name,
-                last_name: credentials.last_name,
-                email: credentials?.email,
-                password: credentials?.password,
+        try {
+          const authResponse = await axios.post(
+            `${API_URL}/auth/${credentials?.first_name ? 'register' : 'login'}`,
+            {
+              first_name: credentials?.first_name,
+              last_name: credentials?.last_name,
+              email: credentials?.email,
+              password: credentials?.password,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
               },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }
-            );
-
-            if (authResponse.data && authResponse.data.token) {
-              return authResponse.data;
             }
-            return null;
-          } catch (error) {
-            console.log('Error during authentication', error);
-            return null;
-          }
-        } else {
-          try {
-            const authResponse = await axios.post(
-              `${API_URL}/auth/login`,
-              { email: credentials?.email, password: credentials?.password },
-              {
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-              }
-            );
+          );
 
-            if (authResponse.data && authResponse.data.token) {
-              return authResponse.data;
-            }
-            return null;
-          } catch (error) {
-            console.error('Error during authentication', error);
-            return null;
+          if (authResponse.data && authResponse.data.token) {
+            return authResponse.data;
           }
+          return null;
+        } catch (error) {
+          console.error('Error during authentication', error);
+          return null;
         }
       },
     }),
@@ -83,18 +49,13 @@ const authOptions: AuthOptions = {
       if (user) token.user = user as unknown as User;
       if (trigger === 'update') {
         token.user = session.user;
-        return token;
       }
       return token;
     },
     async session({ token, session, trigger }) {
       session.user = token.user;
       if (trigger === 'update') {
-        console.log(session);
-
-        return {
-          ...session,
-        };
+        return { ...session };
       }
       return session;
     },
