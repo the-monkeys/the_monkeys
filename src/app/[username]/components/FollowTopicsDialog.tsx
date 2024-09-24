@@ -29,13 +29,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
+import { IoAddOutline } from 'react-icons/io5';
 import { RxCross2 } from 'react-icons/rx';
 import { mutate } from 'swr';
 import { z } from 'zod';
 
 type Topic = {
   topic: string;
-  category: string;
+  category?: string;
 };
 
 const formSchema = z.object({
@@ -117,9 +118,8 @@ export default function TopicSelector() {
         description: 'Topics have been saved successfully',
       });
       setOpen(false);
-      // mutate('/api/topics');
+      mutate(`/user/public/${username}`);
     } catch (error) {
-      console.log(error);
       toast({
         variant: 'error',
         title: 'Error',
@@ -135,6 +135,7 @@ export default function TopicSelector() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button variant='outline' className='flex items-center gap-2'>
+            <IoAddOutline />
             <span className='font-josefin_Sans text-base'>Add Topics</span>
           </Button>
         </DialogTrigger>

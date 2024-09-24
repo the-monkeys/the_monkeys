@@ -19,6 +19,7 @@ import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/useUser';
 import moment from 'moment';
 
+import EditTopics from './EditTopics';
 import TopicSelector from './FollowTopicsDialog';
 
 const ProfileCard: FC = () => {
@@ -155,14 +156,12 @@ const ProfileCard: FC = () => {
           </Link>
         )}
       </div>
-      <div className='flex flex-wrap w-full gap-1'>
-        {user?.topics &&
-          user?.topics.map((Item, index) => (
-            <span className='rounded-xl border font-jost border-primary-monkeyOrange text-primary-monkeyOrange p-2 mr-1'>
-              {Item}
-            </span>
-          ))}{' '}
-      </div>
+      <EditTopics
+        user={{
+          topics: user?.topics || [],
+        }}
+      />
+
       <TopicSelector />
     </div>
   );
