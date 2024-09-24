@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import Icon from '@/components/icon';
+import { useParams } from 'next/navigation';
+
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -25,6 +26,8 @@ import { toast } from '@/components/ui/use-toast';
 import { useGetProfileTopics } from '@/hooks/useGetProfileTopics';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
 import { z } from 'zod';
@@ -39,13 +42,14 @@ const formSchema = z.object({
 });
 
 export default function TopicSelector() {
+  const { username } = useParams();
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const { avaliableTopics, isTopicsLoading, error } = useGetProfileTopics();
   const [selectedTopics, setSelectedTopics] = useState<Topic[]>([]);
   const [filteredTopics, setFilteredTopics] = useState<Topic[]>([]);
   const [inputValue, setInputValue] = useState('');
-
+  const { data: session, status } = useSession();
   const sampleTopics: Topic[] = !isTopicsLoading && avaliableTopics.topics;
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -91,8 +95,21 @@ export default function TopicSelector() {
 
   const handleSave = async () => {
     setLoading(true);
+    const token = session?.user?.token || '';
+    const topics = selectedTopics.map((item) => item.topic);
     try {
-      // await axiosInstance.post('/api/save-topics', { topics: selectedTopics });
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/follow-topics/${username}`,
+        {
+          topics,
+        },
+        {
+          headers: {
+            Authorization: token && `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       toast({
         variant: 'success',
         title: 'Success',
@@ -101,6 +118,7 @@ export default function TopicSelector() {
       setOpen(false);
       // mutate('/api/topics');
     } catch (error) {
+      console.log(error);
       toast({
         variant: 'error',
         title: 'Error',

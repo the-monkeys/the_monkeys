@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
