@@ -15,7 +15,7 @@ const Blogs = () => {
   );
   const router = useRouter();
   const handleEdit = (blogId: string) => {
-    // router.push(`/edit/${blogId}`);
+    router.push(`/edit/${blogId}?source=published`);
   };
   return (
     <div className='min-h-screen'>

@@ -3,7 +3,7 @@
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
@@ -35,11 +35,16 @@ export default function Page({ params }: { params: { blogId: string } }) {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const { data: session } = useSession();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const blogId = params.blogId;
+  const source = searchParams.get('source');
 
+  // if user comes from draft blog card this api should get use
   const { blog, isLoading, mutate } = useGetDraftBlogDetail(blogId);
-  // const { blog: publishedBlogDetail, isLoading: publishedblogLoading } =
-  //   useGetPublishedBlogDetailByBlogId(blogId);
+
+  // if user comes from published blog card this api should get use
+  const { blog: publishedBlogDetail, isLoading: publishedBlogLoading } =
+    useGetPublishedBlogDetailByBlogId(blogId);
   const authToken = session?.user.token;
 
   // Function to create and manage WebSocket connection
@@ -106,14 +111,15 @@ export default function Page({ params }: { params: { blogId: string } }) {
 
   // Fetch draft blog data every time the page loads
   useEffect(() => {
-    mutate();
-  }, [mutate]);
+    if (source === 'draft') {
+      mutate();
+    }
+  }, [mutate, source]);
 
-  // Create WebSocket connection when authToken is available and blog data is loaded
+  // Create WebSocket connection when authToken is available
   useEffect(() => {
-    if (session?.user.token && blog) {
+    if (session?.user.token) {
       const cleanup = createWebSocket(blogId, session.user.token);
-      setData(blog.blog); // Set the editor data with the fetched blog data
 
       // Listen for beforeunload event to close the WebSocket connection
       const handleBeforeUnload = () => {
@@ -127,7 +133,16 @@ export default function Page({ params }: { params: { blogId: string } }) {
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }
-  }, [session?.user.token, blogId, createWebSocket, blog]);
+  }, [session?.user.token, blogId, createWebSocket]);
+
+  // Set editor data based on the source
+  useEffect(() => {
+    if (source === 'draft' && blog) {
+      setData(blog.blog); // Set the editor data with the fetched draft blog data
+    } else if (source === 'published' && publishedBlogDetail) {
+      setData(publishedBlogDetail.blog); // Set the editor data with the fetched published blog data
+    }
+  }, [blog, publishedBlogDetail, source]);
 
   // Send data to WebSocket when data changes
   useEffect(() => {
@@ -159,7 +174,7 @@ export default function Page({ params }: { params: { blogId: string } }) {
           title: 'Blog Published successfully',
           description: 'success',
         });
-        router.push(`/`);
+        router.push(`/${session?.user?.username}`);
       })
       .catch((err) => {
         console.log(err);
@@ -173,7 +188,7 @@ export default function Page({ params }: { params: { blogId: string } }) {
 
   return (
     <Container className='min-h-screen px-5 py-4 pb-12'>
-      {isLoading ? (
+      {isLoading || publishedBlogLoading ? (
         <Loader />
       ) : (
         <div className='space-y-2'>

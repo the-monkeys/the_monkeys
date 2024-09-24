@@ -14,7 +14,7 @@ const Drafts = () => {
   const router = useRouter();
 
   const handleEdit = (blogId: string) => {
-    router.push(`/edit/${blogId}`);
+    router.push(`/edit/${blogId}?source=draft`);
   };
 
   return (

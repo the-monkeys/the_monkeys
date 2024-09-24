@@ -167,7 +167,7 @@ const CreatePage = () => {
           title: 'Blog Published successfully',
           description: 'success',
         });
-        router.push(`/`);
+        router.push(`/${session?.user?.username}`);
       })
       .catch((err) => {
         console.log(err);
