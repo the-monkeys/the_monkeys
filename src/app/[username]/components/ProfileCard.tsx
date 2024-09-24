@@ -8,6 +8,7 @@ import { notFound, useParams } from 'next/navigation';
 import Icon from '@/components/icon';
 import ProfileImage from '@/components/profileImage';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
@@ -17,6 +18,8 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/useUser';
 import moment from 'moment';
+
+import TopicSelector from './FollowTopicsDialog';
 
 const ProfileCard: FC = () => {
   const { toast } = useToast();
@@ -152,6 +155,8 @@ const ProfileCard: FC = () => {
           </Link>
         )}
       </div>
+
+      <TopicSelector />
     </div>
   );
 };
