@@ -20,6 +20,7 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { CiEdit } from 'react-icons/ci';
 import { RxCross2 } from 'react-icons/rx';
+import { mutate } from 'swr';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -28,13 +29,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function EditTopics({
-  user,
-  mutate,
-}: {
-  user: { topics: string[] };
-  mutate: any;
-}) {
+export default function EditTopics({ user }: { user: { topics: string[] } }) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [topics, setTopics] = useState<string[]>(user?.topics || []);
@@ -73,7 +68,7 @@ export default function EditTopics({
         prevTopics.filter((topic) => !removedTopics.includes(topic))
       );
       setRemovedTopics([]);
-      // mutate(`/user/public/${username}`);
+      mutate(`/user/public/${username}`);
       toast({
         variant: 'success',
         title: 'Success',

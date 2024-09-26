@@ -130,6 +130,9 @@ export default function TopicSelector() {
       setLoading(false);
     }
   };
+  const handleClearAll = () => {
+    setSelectedTopics([]);
+  };
 
   return (
     <div className='p-4 pl-0 space-y-4'>
@@ -199,9 +202,20 @@ export default function TopicSelector() {
             </form>
           </Form>
           <div className='space-y-2'>
-            <h3 className='text-lg font-semibold font-josefin_Sans'>
-              Selected Topics:
-            </h3>
+            <div className='flex justify-between items-center'>
+              <h3 className='text-lg font-semibold font-josefin_Sans'>
+                Selected Topics:
+              </h3>
+              {selectedTopics.length > 0 && (
+                <Button
+                  variant='outline'
+                  onClick={handleClearAll}
+                  className='mt-2'
+                >
+                  Clear All
+                </Button>
+              )}
+            </div>
             {selectedTopics.length === 0 ? (
               <p className='text-secondary-lightGrey'>No topics selected</p>
             ) : (
@@ -219,7 +233,7 @@ export default function TopicSelector() {
                       <RxCross2 size={14} />
                     </button>
                   </div>
-                ))}
+                ))}{' '}
               </div>
             )}
           </div>

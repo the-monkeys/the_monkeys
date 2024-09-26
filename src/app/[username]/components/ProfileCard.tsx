@@ -160,7 +160,6 @@ const ProfileCard: FC = () => {
         user={{
           topics: user?.topics || [],
         }}
-        mutate={mutate}
       />
 
       <TopicSelector />
