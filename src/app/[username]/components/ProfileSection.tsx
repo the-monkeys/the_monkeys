@@ -85,7 +85,6 @@ const ProfileSection = () => {
             status === 'authenticated' ? (
               <>
                 <EditDialog />
-
                 <DropdownMenuSeparator />
               </>
             ) : (

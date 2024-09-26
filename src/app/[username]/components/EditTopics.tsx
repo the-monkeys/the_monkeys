@@ -20,7 +20,6 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { CiEdit } from 'react-icons/ci';
 import { RxCross2 } from 'react-icons/rx';
-import { mutate } from 'swr';
 import { z } from 'zod';
 
 const formSchema = z.object({
@@ -29,10 +28,16 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function EditTopics({ user }: { user: { topics: string[] } }) {
+export default function EditTopics({
+  user,
+  mutate,
+}: {
+  user: { topics: string[] };
+  mutate: any;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [topics, setTopics] = useState<string[]>(user?.topics || []); // local state to manage topics
+  const [topics, setTopics] = useState<string[]>(user?.topics || []);
   const [removedTopics, setRemovedTopics] = useState<string[]>([]);
   const { data: session } = useSession();
   const form = useForm<FormValues>({
@@ -42,7 +47,6 @@ export default function EditTopics({ user }: { user: { topics: string[] } }) {
     },
   });
   const { username } = useParams();
-
   const handleRemoveTopic = (topicToRemove: string) => {
     setTopics((prev) => prev.filter((t) => t !== topicToRemove));
     setRemovedTopics((prev) => [...prev, topicToRemove]);
@@ -69,7 +73,7 @@ export default function EditTopics({ user }: { user: { topics: string[] } }) {
         prevTopics.filter((topic) => !removedTopics.includes(topic))
       );
       setRemovedTopics([]);
-      mutate(`/user/public/${username}`);
+      // mutate(`/user/public/${username}`);
       toast({
         variant: 'success',
         title: 'Success',
@@ -114,7 +118,7 @@ export default function EditTopics({ user }: { user: { topics: string[] } }) {
                       key={index}
                       className='rounded-xl border font-jost border-primary-monkeyOrange text-primary-monkeyOrange p-2 flex items-center'
                     >
-                      {topic}
+                      #{topic}
                       <Button
                         variant='ghost'
                         size='sm'
@@ -146,7 +150,7 @@ export default function EditTopics({ user }: { user: { topics: string[] } }) {
             key={index}
             className='rounded-xl border font-jost border-primary-monkeyOrange text-primary-monkeyOrange p-2'
           >
-            {topic}
+            #{topic}
           </span>
         ))}
       </div>

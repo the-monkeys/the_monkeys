@@ -27,7 +27,7 @@ const ProfileCard: FC = () => {
 
   const params = useParams<{ username: string }>();
 
-  const { user, isLoading, isError } = useUser(params.username);
+  const { user, isLoading, isError, mutate } = useUser(params.username);
 
   if (isError) {
     notFound();
@@ -160,6 +160,7 @@ const ProfileCard: FC = () => {
         user={{
           topics: user?.topics || [],
         }}
+        mutate={mutate}
       />
 
       <TopicSelector />

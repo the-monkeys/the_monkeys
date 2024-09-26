@@ -182,7 +182,7 @@ export default function TopicSelector() {
                                     setFilteredTopics([]);
                                   }}
                                 >
-                                  {topic.topic}
+                                  #{topic.topic}
                                 </li>
                               ))}
                             </ul>
@@ -205,26 +205,22 @@ export default function TopicSelector() {
             {selectedTopics.length === 0 ? (
               <p className='text-secondary-lightGrey'>No topics selected</p>
             ) : (
-              <ul className='space-y-2'>
+              <div className='flex flex-wrap gap-2  '>
                 {selectedTopics.map((topic, index) => (
-                  <li
+                  <div
                     key={index}
-                    className='flex items-center justify-between p-2 rounded-md'
+                    className='flex items-center space-x-2 border border-primary-monkeyOrange px-2 py-1 rounded-full'
                   >
-                    <span className='font-josefin_Sans'>
-                      {topic.topic} ({topic.category})
-                    </span>
-                    <Button
-                      variant='ghost'
-                      size='sm'
+                    <span className='font-josefin_Sans'>#{topic.topic}</span>
+                    <button
                       onClick={() => handleRemoveTopic(topic.topic)}
-                      aria-label={`Remove ${topic.topic}`}
+                      className='text-red-500 hover'
                     >
                       <RxCross2 size={14} />
-                    </Button>
-                  </li>
+                    </button>
+                  </div>
                 ))}
-              </ul>
+              </div>
             )}
           </div>
           <Button
