@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import Link from 'next/link';
+
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Badge } from '@/components/ui/badge';
@@ -44,8 +46,10 @@ const BlogCard: FC<BlogCardProps> = ({
   const { data: session } = useSession();
   const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
-  const deleteBlogById = async (blogId: string) => {
+
+  async function deleteBlogById(blogId: string) {
     setIsDeleteLoading(true);
+
     await axiosInstance
       .delete(`/blog/${blogId}`)
       .then(() => {
@@ -67,9 +71,13 @@ const BlogCard: FC<BlogCardProps> = ({
         });
         setOpen(false);
       });
-  };
+  }
+
   return (
-    <div className='w-full sm:px-6 first:pt-2 pt-4 pb-6 border-b-1 border-secondary-lightGrey/25'>
+    <Link
+      href={`/blog/${blogId}`}
+      className='w-full sm:px-6 first:pt-2 pt-4 pb-6 border-b-1 border-secondary-lightGrey/25'
+    >
       <div className='space-y-4'>
         <div className='flex justify-between'>
           <p className='font-josefin_Sans text-xs sm:text-sm opacity-85'>
@@ -153,7 +161,7 @@ const BlogCard: FC<BlogCardProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
