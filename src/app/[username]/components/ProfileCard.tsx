@@ -18,6 +18,7 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/useUser';
 import moment from 'moment';
+import { useSession } from 'next-auth/react';
 
 import EditTopics from './EditTopics';
 import TopicSelector from './FollowTopicsDialog';
@@ -26,6 +27,8 @@ const ProfileCard: FC = () => {
   const { toast } = useToast();
 
   const params = useParams<{ username: string }>();
+
+  const { data, status } = useSession();
 
   const { user, isLoading, isError, mutate } = useUser(params.username);
 
@@ -156,13 +159,29 @@ const ProfileCard: FC = () => {
           </Link>
         )}
       </div>
-      <EditTopics
-        user={{
-          topics: user?.topics || [],
-        }}
-      />
 
-      <TopicSelector />
+      <div className='my-4'>
+        <h2 className='text-lg font-semibold  mb-4'>My Topics</h2>
+        <div className='flex flex-wrap gap-2 mb-4'>
+          {user &&
+            user.topics?.map((topic: string, index: number) => (
+              <span
+                key={index}
+                className='bg-secondary-lightGrey  rounded-xl px-3 py-1 text-sm font-medium'
+              >
+                {topic}
+              </span>
+            ))}
+        </div>
+        {data?.user.username === params.username &&
+          status === 'authenticated' && (
+            <>
+              <button className='text-red-500 hover:underline'>
+                Add More topics
+              </button>
+            </>
+          )}
+      </div>
     </div>
   );
 };
