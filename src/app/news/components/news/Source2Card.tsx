@@ -1,14 +1,12 @@
 import React, { FC } from 'react';
 
-import Link from 'next/link';
-
 import { NewsSource2 } from '@/services/news/newsTypes';
 
 const Source2Card: FC<NewsSource2> = (props) => {
-  const { source, author, title, description, urlToImage, url } = props;
+  const { source, author, title, description, urlToImage } = props;
 
   return (
-    <Link href={url} className='group col-span-2 sm:col-span-1'>
+    <div className='group col-span-2 sm:col-span-1'>
       <div className='bg-secondary-lightGrey/10 overflow-hidden'>
         <img
           src={urlToImage}
@@ -18,7 +16,7 @@ const Source2Card: FC<NewsSource2> = (props) => {
         />
       </div>
 
-      <p className='mt-1 mb-2 font-jost text-xs sm:text-sm opacity-75'>
+      <p className='mt-2 mb-1 font-jost text-xs sm:text-sm opacity-75'>
         {source.name} | {author}
       </p>
 
@@ -29,7 +27,7 @@ const Source2Card: FC<NewsSource2> = (props) => {
       <p className='show sm:hidden font-jost font-light line-clamp-3 opacity-75'>
         {description}
       </p>
-    </Link>
+    </div>
   );
 };
 

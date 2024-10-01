@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef } from 'react';
 
 import { editorConfig } from '@/config/editor/editorjs_readonly.config';
 import { Block } from '@/services/Blogs/BlogTyptes';
-import EditorJS, { OutputData } from '@editorjs/editorjs';
+import EditorJS from '@editorjs/editorjs';
 
 export type EditorProps = {
   data?: { time: number; blocks: Block[] };

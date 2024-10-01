@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import { NewsSource1 } from '@/services/news/newsTypes';
 import { twMerge } from 'tailwind-merge';
 
@@ -23,19 +24,21 @@ export const Source1NewsCard1 = ({
   className?: string;
 }) => {
   return (
-    <div className={twMerge(className)}>
+    <div className={twMerge(className, 'group')}>
       <img
         src={newsItem.image || ''}
         alt={newsItem.source || ''}
         loading='lazy'
-        className='h-[200px] w-full object-cover'
+        className='h-[200px] w-full object-cover group-hover:opacity-75'
       />
 
-      <p className='mt-1 mb-2 font-jost text-xs sm:text-sm'>
+      <p className='mt-2 mb-1 font-jost text-xs sm:text-sm opacity-75'>
         {newsItem.source}
       </p>
 
-      <h2 className='font-josefin_Sans font-semibold'>{newsItem.title}</h2>
+      <h2 className='font-josefin_Sans font-semibold line-clamp-2'>
+        {newsItem.title}
+      </h2>
     </div>
   );
 };
@@ -51,29 +54,47 @@ export const Source1NewsCard2 = ({
     <div
       className={twMerge(
         className,
-        (className = 'py-6 flex flex-col sm:flex-row gap-4')
+        (className = 'group py-6 flex flex-col sm:flex-row gap-4')
       )}
     >
       <img
         src={newsItem.image || ''}
         alt={newsItem.source || ''}
         loading='lazy'
-        className='w-full h-[250px] sm:w-1/2 object-cover'
+        className='sm:w-60 h-[200px] object-cover group-hover:opacity-75'
       />
 
       <div className='flex-1'>
-        <p className='mt-1 mb-2 font-jost text-xs sm:text-sm'>
+        <p className='mb-2 font-jost text-xs sm:text-sm opacity-75'>
           {newsItem.source}
         </p>
 
-        <h2 className='font-josefin_Sans font-semibold line-clamp-2'>
+        <h2 className='font-josefin_Sans font-semibold text-lg line-clamp-2'>
           {newsItem.title}
         </h2>
 
-        <p className='mt-2 font-jost font-light line-clamp-2'>
+        <p className='mt-1 font-jost font-light line-clamp-2'>
           {newsItem.description}
         </p>
       </div>
     </div>
+  );
+};
+
+export const Source1NewsCard3 = ({ newsItem }: { newsItem: NewsSource1 }) => {
+  return (
+    <>
+      <Badge variant='secondary' className='mb-4 capitalize'>
+        {newsItem.category}
+      </Badge>
+
+      <h2 className='font-josefin_Sans font-semibold text-lg sm:text-xl line-clamp-2'>
+        {newsItem.title}
+      </h2>
+
+      <p className='mt-1 font-jost font-light line-clamp-2'>
+        {newsItem.description}
+      </p>
+    </>
   );
 };

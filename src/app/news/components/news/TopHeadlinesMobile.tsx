@@ -1,6 +1,5 @@
 'use client';
 
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import {
   Carousel,
@@ -12,7 +11,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useGetTopHeadlines } from '@/hooks/useGetAllNews';
 import { NewsSource3 } from '@/services/news/newsTypes';
-import { RiDoubleQuotesL, RiDoubleQuotesR } from '@remixicon/react';
+import { RiDoubleQuotesL } from '@remixicon/react';
 
 export default function TopHeadlinesMobile() {
   const { topHeadlines, isLoading, error } = useGetTopHeadlines();

@@ -6,7 +6,7 @@ import { Loader } from '@/components/loader';
 import useGetPublishedBlogByAccountId from '@/hooks/useGetPublishedBlogByAccountId';
 import { useSession } from 'next-auth/react';
 
-import BlogCard from './BlogCard';
+import BlogCard from './blog/BlogCard';
 
 const Blogs = () => {
   const { data: session } = useSession();
@@ -27,11 +27,15 @@ const Blogs = () => {
         ) : (
           blogs?.blogs &&
           blogs?.blogs.map((blog) => {
+            const description = blog?.blog?.blocks[1]
+              ? blog?.blog?.blocks[1]?.data?.text
+              : blog?.blog?.blocks[0]?.data?.text;
+
             return (
               <BlogCard
                 key={blog?.blog_id}
                 title={blog?.blog?.blocks[0]?.data?.text}
-                description={blog?.blog?.blocks[0]?.data?.text}
+                description={description}
                 author={session?.user.username as string}
                 date={blog?.blog?.time}
                 tags={blog?.tags}

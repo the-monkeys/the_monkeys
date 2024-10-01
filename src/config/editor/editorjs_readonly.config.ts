@@ -9,27 +9,15 @@ export const editorConfig: EditorConfig = {
   tools: {
     header: {
       class: Header,
-      inlineToolbar: true,
       config: {
         levels: [1, 2],
-        defaultLevel: 1,
       },
     },
     paragraph: {
       class: Paragraph,
-      inlineToolbar: true,
-      config: {
-        placeholder: 'Pen your thoughts ...',
-      },
     },
     image: {
       class: Image,
-      config: {
-        endpoints: {
-          byFile: '',
-          byUrl: '',
-        },
-      },
     },
   },
 };

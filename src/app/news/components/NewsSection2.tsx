@@ -32,7 +32,7 @@ const NewsSection2 = () => {
 
   return (
     <div className='space-y-8'>
-      <div className='px-0 md:px-2 lg:px-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
         {newsData
           ?.slice(0, visibleCount)
           .map((newsItem) => (
