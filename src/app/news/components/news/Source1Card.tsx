@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { NewsSource1 } from '@/services/news/newsTypes';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 import { twMerge } from 'tailwind-merge';
 
 export const Source1TitleCard = ({
@@ -73,9 +74,12 @@ export const Source1NewsCard2 = ({
           {newsItem.title}
         </h2>
 
-        <p className='mt-1 font-jost font-light line-clamp-2'>
-          {newsItem.description}
-        </p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: purifyHTMLString(newsItem.description),
+          }}
+          className='mt-1 font-jost font-light line-clamp-2'
+        ></p>
       </div>
     </div>
   );
@@ -92,9 +96,12 @@ export const Source1NewsCard3 = ({ newsItem }: { newsItem: NewsSource1 }) => {
         {newsItem.title}
       </h2>
 
-      <p className='mt-1 font-jost font-light line-clamp-2'>
-        {newsItem.description}
-      </p>
+      <p
+        dangerouslySetInnerHTML={{
+          __html: purifyHTMLString(newsItem.description),
+        }}
+        className='mt-1 font-jost font-light line-clamp-2'
+      ></p>
     </>
   );
 };

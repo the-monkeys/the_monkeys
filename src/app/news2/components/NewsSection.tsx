@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import { NewsSectionSkeleton } from '@/components/skeletons/newsSkeleton';
+import { NewsSection1Skeleton } from '@/components/skeletons/newsSkeleton';
 import { useGetAllNews1, useGetAllNews2 } from '@/hooks/useGetAllNews';
 import { NewsSource1, NewsSource2 } from '@/services/news/newsTypes';
 
@@ -25,7 +25,7 @@ const NewsSection = () => {
   // for news source 2
   // const newsData = news?.articles as NewsSource2[];
 
-  if (isLoading) return <NewsSectionSkeleton />;
+  if (isLoading) return <NewsSection1Skeleton />;
 
   if (error)
     return (
