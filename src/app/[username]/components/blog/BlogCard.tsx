@@ -5,11 +5,8 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
-import axiosInstance from '@/services/api/axiosInstance';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
-import { useSession } from 'next-auth/react';
-import { mutate } from 'swr';
 
 import BlogDeleteDialog from './BlogDeleteDialog';
 
@@ -34,35 +31,28 @@ const BlogCard: FC<BlogCardProps> = ({
   isDraft = false,
   onEdit,
 }) => {
-  // const { data: session } = useSession();
-  // const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
-  // const [open, setOpen] = React.useState<boolean>(false);
-
-  // async function deleteBlogById(blogId: string) {
-  //   setIsDeleteLoading(true);
-
-  //   await axiosInstance
-  //     .delete(`/blog/${blogId}`)
-  //     .then(() => {
-  //       setIsDeleteLoading(false);
-  //       mutate(`/blog/all/drafts/${session?.user.account_id}`);
-  //       toast({
-  //         title: 'Success',
-  //         description: 'Blog deleted successfully',
-  //         duration: 3000,
-  //       });
-  //       setOpen(false);
-  //     })
-  //     .catch(() => {
-  //       setIsDeleteLoading(false);
-  //       toast({
-  //         title: 'Error',
-  //         description: 'Error deleting blog',
-  //         duration: 3000,
-  //       });
-  //       setOpen(false);
-  //     });
-  // }
+  const copyToClipboard = (text: string) => {
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(`https://themonkeys.live/blog/${text}`)
+        .then(
+          () => {
+            toast({
+              variant: 'default',
+              title: 'Blog Link Copied',
+              description: 'The blog link has been copied to the clipboard.',
+            });
+          },
+          () => {
+            toast({
+              variant: 'error',
+              title: 'Copy Failed',
+              description: 'Unable to copy blog link.',
+            });
+          }
+        );
+    }
+  };
 
   return (
     <div className='w-full md:px-6 first:pt-0 py-6 space-y-6 border-b-1 border-secondary-lightGrey/15'>
@@ -88,10 +78,7 @@ const BlogCard: FC<BlogCardProps> = ({
             ></p>
           </div>
         ) : (
-          <Link
-            href={`/blogs/${blogId}`}
-            className='space-y-1 hover:opacity-75'
-          >
+          <Link href={`/blog/${blogId}`} className='space-y-1 hover:opacity-75'>
             <h2
               dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
               className='font-josefin_Sans font-semibold text-xl sm:text-2xl capitalize line-clamp-2'
@@ -127,7 +114,10 @@ const BlogCard: FC<BlogCardProps> = ({
           <BlogDeleteDialog blogId={blogId} title={title} />
 
           {!isDraft ? (
-            <div className='p-1 flex items-center justify-center cursor-pointer hover:opacity-75'>
+            <div
+              onClick={() => copyToClipboard(blogId)}
+              className='p-1 flex items-center justify-center cursor-pointer hover:opacity-75'
+            >
               <Icon name='RiShareForward' />
             </div>
           ) : (

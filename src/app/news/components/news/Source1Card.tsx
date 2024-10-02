@@ -78,7 +78,7 @@ export const Source1NewsCard2 = ({
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(newsItem.description),
           }}
-          className='mt-1 font-jost font-light line-clamp-2'
+          className='mt-1 font-jost font-light line-clamp-3'
         ></p>
       </div>
     </div>
@@ -100,7 +100,7 @@ export const Source1NewsCard3 = ({ newsItem }: { newsItem: NewsSource1 }) => {
         dangerouslySetInnerHTML={{
           __html: purifyHTMLString(newsItem.description),
         }}
-        className='mt-1 font-jost font-light line-clamp-2'
+        className='mt-1 font-jost font-light line-clamp-2 text-sm sm:text-base'
       ></p>
     </>
   );

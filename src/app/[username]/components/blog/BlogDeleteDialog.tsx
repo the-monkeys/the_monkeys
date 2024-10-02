@@ -8,12 +8,12 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
@@ -61,7 +61,9 @@ const BlogDeleteDialog = ({
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle className='truncate'>Delete Blog: {title}</DialogTitle>
+        <DialogTitle className='truncate'>
+          Delete Blog: {purifyHTMLString(title)}
+        </DialogTitle>
 
         <p className='font-jost text-secondary-darkGrey dark:text-secondary-white'>
           Are you sure you want to delete this blog? This action cannot be

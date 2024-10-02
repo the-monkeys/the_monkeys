@@ -11,6 +11,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useGetAllNews1 } from '@/hooks/useGetAllNews';
 import { NewsSource1 } from '@/services/news/newsTypes';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 
 import {
   Source1NewsCard1,
@@ -80,13 +81,18 @@ export default function NewsSection1() {
             {newsDataWithImagesAndUniqueDesc[0].source}
           </p>
 
-          <h2 className='font-josefin_Sans font-semibold text-2xl'>
+          <h2 className='font-josefin_Sans font-semibold text-lg md:text-2xl line-clamp-2 md:line-clamp-none'>
             {newsDataWithImagesAndUniqueDesc[0].title}
           </h2>
 
-          <p className='font-jost font-light line-clamp-2'>
-            {newsDataWithImagesAndUniqueDesc[0].description}
-          </p>
+          <p
+            dangerouslySetInnerHTML={{
+              __html: purifyHTMLString(
+                newsDataWithImagesAndUniqueDesc[0].description
+              ),
+            }}
+            className='font-jost font-light line-clamp-2 sm:line-clamp-4'
+          ></p>
         </div>
 
         <div className='col-span-3 sm:col-span-1'>
@@ -98,7 +104,7 @@ export default function NewsSection1() {
               className='group-hover:opacity-75'
             />
 
-            <h2 className='mt-1 font-josefin_Sans font-semibold'>
+            <h2 className='mt-1 font-josefin_Sans font-semibold text-lg sm:text-xl line-clamp-2 md:line-clamp-none'>
               {newsDataWithImagesAndUniqueDesc[1].title}
             </h2>
           </div>
@@ -162,7 +168,7 @@ export default function NewsSection1() {
             .slice(3, newsDataWithoutImages.length)
             .map((newsItem) => (
               <CarouselItem
-                key={newsItem.published_at}
+                key={`${newsItem.published_at}_${newsItem.author}`}
                 className='max-h-fit  p-0'
               >
                 <Source1NewsCard3 newsItem={newsItem} />
@@ -178,7 +184,10 @@ export default function NewsSection1() {
       <Separator className='my-4' />
 
       {newsDataWithImagesAndUniqueDesc.slice(6, 10).map((newsItem) => (
-        <Source1NewsCard2 key={newsItem.published_at} newsItem={newsItem} />
+        <Source1NewsCard2
+          key={`${newsItem.published_at}_${newsItem.author}`}
+          newsItem={newsItem}
+        />
       ))}
     </>
   );

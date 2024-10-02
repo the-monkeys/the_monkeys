@@ -9,14 +9,16 @@ import { useSession } from 'next-auth/react';
 import BlogCard from './blog/BlogCard';
 
 const Blogs = () => {
+  const router = useRouter();
   const { data: session } = useSession();
   const { blogs, isLoading } = useGetPublishedBlogByAccountId(
     session?.user.account_id
   );
-  const router = useRouter();
+
   const handleEdit = (blogId: string) => {
     router.push(`/edit/${blogId}?source=published`);
   };
+
   return (
     <div className='min-h-screen'>
       <div className='flex flex-col items-center'>

@@ -194,11 +194,13 @@ export default function Page({ params }: { params: { blogId: string } }) {
         <div className='space-y-2'>
           <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
             {isSaving ? (
-              <p className='font-josefin_Sans text-sm sm:text-base'>
+              <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
                 Saving ...
               </p>
             ) : (
-              <p className='font-josefin_Sans text-sm sm:text-base'>Saved</p>
+              <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
+                Saved
+              </p>
             )}
 
             <Button
@@ -226,20 +228,4 @@ export default function Page({ params }: { params: { blogId: string } }) {
       )}
     </Container>
   );
-}
-
-{
-  /* <div className='flex items-center gap-2'>
-            {isSaving ? (
-              <p>Saving draft ...</p>
-            ) : (
-              <p>
-                Draft saved{' '}
-                <span>
-                  <Icon name='RiCheck' />
-                </span>
-              </p>
-            )}
-            {isSaving ? <Loader /> : <Icon name='RiCheck' size={20} />}
-          </div> */
 }
