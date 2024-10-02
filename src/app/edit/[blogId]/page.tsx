@@ -192,16 +192,35 @@ export default function Page({ params }: { params: { blogId: string } }) {
         <Loader />
       ) : (
         <div className='space-y-2'>
-          <div className='flex justify-end gap-2'>
-            <Button variant='ghost' onClick={() => console.log(data)}>
-              Preview
+          <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
+            {isSaving ? (
+              <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
+                Saving ...
+              </p>
+            ) : (
+              <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
+                Saved
+              </p>
+            )}
+
+            <Button
+              variant='secondary'
+              onClick={handlePublishStep}
+              className='hidden sm:inline-flex'
+            >
+              Publish
             </Button>
-            <Button onClick={handlePublishStep}>Publish</Button>
+
+            <Button
+              variant='secondary'
+              size='icon'
+              onClick={handlePublishStep}
+              className='show sm:hidden rounded-full'
+            >
+              <Icon name='RiArrowRight' />
+            </Button>
           </div>
-          <div className='flex items-center gap-2'>
-            Saving draft{' '}
-            {isSaving ? <Loader /> : <Icon name='RiCheck' size={20} />}{' '}
-          </div>
+
           <Suspense fallback={<Loader />}>
             {editor && data && <Editor data={data} onChange={setData} />}
           </Suspense>

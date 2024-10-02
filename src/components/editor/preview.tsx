@@ -1,15 +1,14 @@
 import React, { FC, useEffect, useRef } from 'react';
 
-import EditorJS, { OutputData } from '@editorjs/editorjs';
-
-import { editorConfig } from '../../config/editor/editorjs.config';
+import { editorConfig } from '@/config/editor/editorjs_readonly.config';
+import { Block } from '@/services/Blogs/BlogTyptes';
+import EditorJS from '@editorjs/editorjs';
 
 export type EditorProps = {
-  data: OutputData;
-  onChange: (data: OutputData) => void;
+  data?: { time: number; blocks: Block[] };
 };
 
-const Editor: FC<EditorProps> = ({ data, onChange }) => {
+const Editor: FC<EditorProps> = ({ data }) => {
   const editorInstance = useRef<EditorJS | null>(null);
 
   useEffect(() => {
@@ -17,13 +16,6 @@ const Editor: FC<EditorProps> = ({ data, onChange }) => {
       editorInstance.current = new EditorJS({
         ...editorConfig,
         data: data,
-        onChange: async (api, event: any) => {
-          if (onChange) {
-            const savedData = await api.saver.save();
-
-            onChange(savedData);
-          }
-        },
       });
     }
 
