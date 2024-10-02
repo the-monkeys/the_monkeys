@@ -1,6 +1,7 @@
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
+import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 
 export const editorConfig: EditorConfig = {
@@ -15,6 +16,12 @@ export const editorConfig: EditorConfig = {
     },
     paragraph: {
       class: Paragraph,
+    },
+    list: {
+      class: List,
+      config: {
+        defaultStyle: 'unordered',
+      },
     },
     image: {
       class: Image,
