@@ -21,9 +21,6 @@ import useUser from '@/hooks/useUser';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
 
-import EditTopics from './EditTopics';
-import TopicSelector from './FollowTopicsDialog';
-
 const ProfileCard: FC = () => {
   const { toast } = useToast();
 

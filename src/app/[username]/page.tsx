@@ -3,7 +3,6 @@ import type { Metadata } from 'next';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import Blogs from './components/Blogs';
-import Collabs from './components/Collabs';
 import Drafts from './components/Drafts';
 
 export async function generateMetadata({
@@ -21,36 +20,24 @@ export async function generateMetadata({
 
 const ProfilePage = () => {
   return (
-    <Tabs defaultValue='blogs' className='space-y-4'>
-      <div className='flex justify-center md:justify-end'>
-        <TabsList>
-          <TabsTrigger value='blogs'>
-            <p className='font-josefin_Sans text-base sm:text-lg'>Blogs</p>
+    <Tabs defaultValue='blogs' className='space-y-6'>
+      <TabsList className='flex justify-center md:justify-end'>
+        <TabsTrigger value='blogs'>
+          <p className='font-josefin_Sans text-base sm:text-lg'>Blogs</p>
 
-            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
-          </TabsTrigger>
+          <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
+        </TabsTrigger>
 
-          {/* <TabsTrigger value='collabs'>
-            <p className='font-josefin_Sans text-base sm:text-lg'>Collabs</p>
+        <TabsTrigger value='drafts'>
+          <p className='font-josefin_Sans text-base sm:text-lg'>Drafts</p>
 
-            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
-          </TabsTrigger> */}
-
-          <TabsTrigger value='drafts'>
-            <p className='font-josefin_Sans text-base sm:text-lg'>Drafts</p>
-
-            <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
-          </TabsTrigger>
-        </TabsList>
-      </div>
+          <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
+        </TabsTrigger>
+      </TabsList>
 
       <div className='w-full'>
         <TabsContent className='w-full' value='blogs'>
           <Blogs />
-        </TabsContent>
-
-        <TabsContent className='w-full' value='collabs'>
-          <Collabs />
         </TabsContent>
 
         <TabsContent className='w-full' value='drafts'>

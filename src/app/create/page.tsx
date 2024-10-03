@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
+import Container from '@/components/layout/Container';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
@@ -34,10 +35,10 @@ const initial_data = {
       id: 'title',
       type: 'header',
       data: {
-        text: 'ADD YOUR TITLE HERE',
+        text: 'Give your blog a title',
         level: 1,
         config: {
-          placeholder: 'Pen your thoughts ...',
+          placeholder: 'pen your thoughts ...',
         },
       },
     },
@@ -47,16 +48,22 @@ const initial_data = {
 const CreatePage = () => {
   // State to manage the editor component
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
+
   // State to manage the editor data
   const [data, setData] = useState<OutputData>(initial_data);
+
   // State to manage the visibility of the publish modal
   const [showModal, setShowModal] = useState<boolean>(false);
+
   // State to manage the WebSocket connection
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+
   // State to manage the saving status
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
   // Get the session data
   const { data: session } = useSession();
+
   const authToken = session?.user.token;
   const router = useRouter();
 
@@ -189,22 +196,44 @@ const CreatePage = () => {
   }, [data, webSocket, session?.user.account_id, formatData]);
 
   return (
-    <div className='space-y-2'>
-      <div className='flex justify-end gap-2'>
-        <Button variant='ghost' onClick={() => console.log(data)}>
-          Preview
-        </Button>
+    <>
+      <div className='space-y-2'>
+        <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
+          {isSaving ? (
+            <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
+              Saving ...
+            </p>
+          ) : (
+            <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
+              Saved
+            </p>
+          )}
 
-        <Button onClick={handlePublishStep}>Publish</Button>
+          <Button
+            variant='secondary'
+            onClick={handlePublishStep}
+            className='hidden sm:inline-flex'
+          >
+            Publish
+          </Button>
+
+          <Button
+            variant='secondary'
+            size='icon'
+            onClick={handlePublishStep}
+            className='show sm:hidden rounded-full'
+          >
+            <Icon name='RiArrowRight' />
+          </Button>
+        </div>
+
+        <Suspense fallback={<Loader />}>
+          {editor && data && <Editor data={data} onChange={setData} />}
+        </Suspense>
       </div>
-      <div className='flex items-center gap-2'>
-        Saving draft {isSaving ? <Loader /> : <Icon name='RiCheck' size={20} />}{' '}
-      </div>
-      <Suspense fallback={<Loader />}>
-        {editor && <Editor data={data} onChange={setData} />}
-      </Suspense>
+
       {showModal && <PublishModal setModal={setShowModal} />}
-    </div>
+    </>
   );
 };
 

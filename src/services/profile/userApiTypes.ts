@@ -11,6 +11,13 @@ export interface GetPublicUserProfileApiResponse {
   created_at: Timestamp;
   topics?: string[];
 }
+
+export interface GetProfileInfoByUserIdResponse {
+  account_id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+}
 export interface GetAuthUserProfileApiResponse {
   account_id: string;
   date_of_birth: string;

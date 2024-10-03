@@ -1,6 +1,6 @@
 import Container from '@/components/layout/Container';
 
-import ProfileSection from './components/ProfileSection';
+import ProfileSection from './components/profile/ProfileSection';
 
 export default function RootLayout({
   children,

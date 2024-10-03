@@ -3,12 +3,11 @@ import { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 import { Separator } from '@/components/ui/separator';
 
-import NewsBanner from '../../components/branding/NewsBanner';
+import NewsSection1 from './components/NewsSection1';
 import NewsSection2 from './components/NewsSection2';
-import TopNews from './components/TopNews';
-import StockMarquee from './components/news/Marquee';
-import TopNewsHeadingMobileView from './components/news/TopNewsHeadingMobilView';
-import FooterSection from './components/news/TopSection';
+import MarketData from './components/news/MarketData';
+import TopHeadlines from './components/news/TopHeadlines';
+import TopHeadlinesMobile from './components/news/TopHeadlinesMobile';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -18,38 +17,53 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const NewsPage = () => {
+export default function NewsPage() {
+  const currDate = new Date();
+  const formattedDate = currDate.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
   return (
-    <Container className='pb-20 min-h-screen px-5 dark:text-white'>
-      <StockMarquee />
-      <div>
-        {' '}
-        <NewsBanner />
+    <Container className='pb-20 min-h-screen px-5'>
+      <div className='flex justify-between flex-wrap'>
+        <p className='font-jost text-xs sm:text-sm opacity-75'>
+          {formattedDate}
+        </p>
+
+        <p className='font-jost text-xs sm:text-sm opacity-75'>
+          themonkeys.live
+        </p>
       </div>
 
-      <div className='mt-12 sm:mt-16 grid grid-cols-4 gap-2'>
-        <div className='col-span-4 lg:col-span-3'>
-          <TopNewsHeadingMobileView />
-          <NewsSection2 />
-        </div>
+      <div className='pt-6 sm:pt-8 pb-6 space-y-2 sm:space-y-4'>
+        <h1 className='font-playfair_Display font-bold text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm text-center animate-appear-up'>
+          Monkeys <span className='text-primary-monkeyOrange'>News</span>
+        </h1>
 
-        <div className='hidden lg:block lg:col-span-1 py-2s pt-3'>
-          <h3 className='w-fit font-josefin_Sans font-semibold text-xl'>
-            Top Headlines
-          </h3>
-
-          <p className='w-fit font-jost text-sm opacity-75'>
-            See what&apos;s happening around the world
-          </p>
-
-          <Separator className='my-2' />
-
-          <TopNews />
-        </div>
+        <p className='font-josefin_Sans text-sm sm:text-base text-secondary-darkGrey dark:text-secondary-white text-center animate-appear-up'>
+          Latest news and highlights in Business, Technology, Sports and many
+          more.
+        </p>
       </div>
-      <FooterSection />
+
+      <MarketData />
+
+      <TopHeadlinesMobile />
+
+      <div className='mt-8 grid grid-cols-3'>
+        <div className='col-span-3 lg:col-span-2'>
+          <NewsSection1 />
+        </div>
+
+        <TopHeadlines />
+      </div>
+
+      <Separator className='hidden sm:block my-4' />
+
+      <NewsSection2 />
     </Container>
   );
-};
-
-export default NewsPage;
+}

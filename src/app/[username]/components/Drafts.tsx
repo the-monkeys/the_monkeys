@@ -6,7 +6,7 @@ import { Loader } from '@/components/loader';
 import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
 
-import BlogCard from './BlogCard';
+import BlogCard from './blog/BlogCard';
 
 const Drafts = () => {
   const { data: session } = useSession();
