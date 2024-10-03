@@ -1,6 +1,7 @@
 'use client';
 
 import { FC } from 'react';
+import React from 'react';
 
 import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
@@ -164,10 +165,10 @@ const ProfileCard: FC = () => {
         <h2 className='text-lg font-semibold  mb-4'>My Topics</h2>
         <div className='flex flex-wrap gap-2 mb-4'>
           {user &&
-            user.topics?.map((topic: string, index: number) => (
+            user.topics?.slice(0, 8).map((topic: string, index: number) => (
               <span
                 key={index}
-                className='bg-secondary-lightGrey  rounded-xl px-3 py-1 text-sm font-medium'
+                className='bg-secondary-lightGrey text-white rounded-xl px-3 py-1 text-sm font-medium'
               >
                 {topic}
               </span>
@@ -176,9 +177,11 @@ const ProfileCard: FC = () => {
         {data?.user.username === params.username &&
           status === 'authenticated' && (
             <>
-              <button className='text-red-500 hover:underline'>
-                Add More topics
-              </button>
+              <Link href={'/explore-topics'}>
+                <button className='text-red-500 hover:underline'>
+                  Add More topics
+                </button>
+              </Link>
             </>
           )}
       </div>

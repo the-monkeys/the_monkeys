@@ -98,7 +98,7 @@ export default function TopicSelector() {
   const handleSave = async () => {
     setLoading(true);
     const token = session?.user?.token || '';
-    const topics = selectedTopics.map((item) => item.topic);
+    const topics = ['Emotion'];
     try {
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/user/follow-topics/${username}`,

@@ -1,19 +1,44 @@
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
+// Adjust the import path as needed
+import useUser from '@/hooks/useUser';
+import { useSession } from 'next-auth/react';
 
-const TopicsList = ({ topics }: { topics?: string[] }) => {
+import TopicButton from './TopicButton';
+
+const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
   const [showAll, setShowAll] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { data: session } = useSession();
+  const displayedTopics = showAll ? topics : topics.slice(0, 6);
+  const totalTopics = topics.length;
 
-  const displayedTopics = showAll ? topics : topics?.slice(0, 6);
-  const totalTopics = topics?.length || 0;
+  const { user, isLoading, isError } = useUser(session?.user?.username);
+  const followedTopics = user?.topics || [];
+
+  const handleSuccess = () => {
+    setLoading(false); // Reset loading state after a successful follow/unfollow
+    // Optionally, trigger any state updates or data refetching here
+  };
 
   return (
     <div>
       <ul className='pl-2 space-y-2'>
-        {displayedTopics?.map((topic) => (
-          <li key={topic} className='font-jost text-sm sm:text-base opacity-75'>
-            {topic}
+        {displayedTopics.map((topic) => (
+          <li
+            key={topic}
+            className='flex items-center font-jost text-sm sm:text-base opacity-75'
+          >
+            <div className='flex justify-between items-center'>
+              <span>{topic}</span>
+              <TopicButton
+                topic={topic}
+                isFollowed={followedTopics.includes(topic)}
+                loading={loading}
+                onSuccess={handleSuccess}
+              />
+            </div>
           </li>
         ))}
       </ul>
@@ -30,6 +55,8 @@ const TopicsList = ({ topics }: { topics?: string[] }) => {
       )}
     </div>
   );
+
+  return null; // Or a loading/error state if needed
 };
 
 export default TopicsList;
