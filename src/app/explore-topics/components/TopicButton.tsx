@@ -117,28 +117,34 @@ const TopicButton = ({
   };
 
   return (
-    <span className='flex items-center'>
+    <span>
       {status === 'authenticated' &&
         (isFollowed ? (
           <>
-            <MdCheck className='text-green-500 mr-1' />
             <Button
               size='sm'
               variant='link'
               onClick={handleUnfollowCategory}
               disabled={loading}
             >
-              Unfollow
+              <div className='flex items-center text-green-500'>
+                <MdCheck className=' mr-1' />
+                Unfollow
+              </div>
             </Button>
           </>
         ) : (
           <Button
             size='sm'
             variant='link'
+            className='opacity-30 hover:opacity-100'
             onClick={handleCategoryClick}
             disabled={loading}
           >
-            <MdAdd className='text-blue-500' />
+            <div className='flex gap-2 items-center'>
+              <MdAdd className='text-black dark:text-white' />
+              Follow
+            </div>
           </Button>
         ))}
     </span>

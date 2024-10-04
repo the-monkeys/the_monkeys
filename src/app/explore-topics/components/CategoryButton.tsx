@@ -7,7 +7,6 @@ import useUser from '@/hooks/useUser';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { AiOutlineLoading, AiOutlinePlus } from 'react-icons/ai';
-import { MdAdd, MdCheck, MdIndeterminateCheckBox } from 'react-icons/md';
 import { RxCross2 } from 'react-icons/rx';
 import { mutate } from 'swr';
 
@@ -159,17 +158,14 @@ const CategoryButton = ({ category, topics }: props) => {
         <Button
           onClick={handleCategoryClick}
           variant={'outline'}
+          className='bg-green-500'
           disabled={loading || isLoading}
         >
           <>
             {isAllTopicsFollowed ? null : isSomeTopicsFollowed ? (
-              <div className='flex items-center justify-center'>
-                <div className='h-5 flex items-center justify-center bg-yellow-500 '>
-                  <AiOutlinePlus className='text-black' />
-                </div>
-              </div>
+              <p className='text-opacity-5'>Follow all</p>
             ) : (
-              <MdAdd className='text-blue-500' />
+              <p className='text-opacity-5'>Follow all</p>
             )}
           </>
         </Button>
@@ -187,6 +183,7 @@ const CategoryButton = ({ category, topics }: props) => {
         <Button
           onClick={handleUnfollowCategory}
           variant={'outline'}
+          className='bg-primary-monkeyOrange '
           disabled={loading || isLoading}
         >
           Unfollow all

@@ -28,17 +28,15 @@ const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
         {displayedTopics.map((topic) => (
           <li
             key={topic}
-            className='flex items-center font-jost text-sm sm:text-base opacity-75'
+            className='flex items-center justify-between font-jost text-sm sm:text-base opacity-75'
           >
-            <div className='flex justify-between items-center'>
-              <span>{topic}</span>
-              <TopicButton
-                topic={topic}
-                isFollowed={followedTopics.includes(topic)}
-                loading={loading}
-                onSuccess={handleSuccess}
-              />
-            </div>
+            <div>{topic}</div>
+            <TopicButton
+              topic={topic}
+              isFollowed={followedTopics.includes(topic)}
+              loading={loading}
+              onSuccess={handleSuccess}
+            />
           </li>
         ))}
       </ul>
