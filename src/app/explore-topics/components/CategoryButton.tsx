@@ -153,42 +153,44 @@ const CategoryButton = ({ category, topics }: props) => {
   };
 
   return (
-    <div className='flex space-x-2'>
-      {!loading && !isAllTopicsFollowed && status === 'authenticated' && (
-        <Button
-          onClick={handleCategoryClick}
-          variant={'outline'}
-          className='bg-green-500'
-          disabled={loading || isLoading}
-        >
-          <>
-            {isAllTopicsFollowed ? null : isSomeTopicsFollowed ? (
-              <p className='text-opacity-5'>Follow all</p>
-            ) : (
-              <p className='text-opacity-5'>Follow all</p>
-            )}
-          </>
-        </Button>
-      )}
+    <div className='group relative'>
+      <div className='flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+        {!loading && !isAllTopicsFollowed && status === 'authenticated' && (
+          <Button
+            onClick={handleCategoryClick}
+            variant={'outline'}
+            className='bg-green-500'
+            disabled={loading || isLoading}
+          >
+            <>
+              {isAllTopicsFollowed ? null : isSomeTopicsFollowed ? (
+                <p className='text-opacity-5'>Follow all</p>
+              ) : (
+                <p className='text-opacity-5'>Follow all</p>
+              )}
+            </>
+          </Button>
+        )}
 
-      {loading && (
-        <span className='ml-2 animate-spin'>
-          <AiOutlineLoading />
-        </span>
-      )}
+        {loading && (
+          <span className='ml-2 animate-spin'>
+            <AiOutlineLoading />
+          </span>
+        )}
 
-      {statusTopic === 'error' && <RxCross2 className='ml-2 text-red-500' />}
+        {statusTopic === 'error' && <RxCross2 className='ml-2 text-red-500' />}
 
-      {(isAllTopicsFollowed || isSomeTopicsFollowed) && (
-        <Button
-          onClick={handleUnfollowCategory}
-          variant={'outline'}
-          className='bg-primary-monkeyOrange '
-          disabled={loading || isLoading}
-        >
-          Unfollow all
-        </Button>
-      )}
+        {(isAllTopicsFollowed || isSomeTopicsFollowed) && (
+          <Button
+            onClick={handleUnfollowCategory}
+            variant={'outline'}
+            className='bg-primary-monkeyOrange '
+            disabled={loading || isLoading}
+          >
+            Unfollow all
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
