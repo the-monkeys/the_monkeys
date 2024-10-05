@@ -56,20 +56,22 @@ const ExploreTopicsPage = () => {
               return (
                 <div
                   key={category}
-                  className='p-0 sm:p-2 col-span-2 sm:col-span-1 space-y-2'
+                  className='p-0 sm:p-2 col-span-2 sm:col-span-1'
                 >
-                  <div className='flex justify-between items-center'>
-                    <h2 className='p-1 font-josefin_Sans text-lg sm:text-xl truncate'>
+                  <div className='group flex justify-between items-start'>
+                    <h2 className='py-1 flex-1 font-josefin_Sans text-lg sm:text-xl text-primary-monkeyBlack dark:text-primary-monkeyWhite truncate'>
                       {category}
                     </h2>
+
                     <CategoryButton
                       category={category}
                       topics={uniqueTopics} // Use unique topics here
                     />
                   </div>
+
                   <Separator />
-                  <TopicsList topics={uniqueTopics} />{' '}
-                  {/* Pass unique topics to TopicsList */}
+
+                  <TopicsList topics={uniqueTopics} />
                 </div>
               );
             })

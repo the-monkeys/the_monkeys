@@ -1,11 +1,10 @@
 import React from 'react';
 
+import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import axios from 'axios';
-// Assuming you're using react-toastify for toasts
 import { useSession } from 'next-auth/react';
-import { MdAdd, MdCheck } from 'react-icons/md';
 import { mutate } from 'swr';
 
 interface TopicButtonProps {
@@ -59,7 +58,7 @@ const TopicButton = ({
 
       toast({
         title: 'Success',
-        description: 'Topic successfully added to your interests.',
+        description: 'Topic added to your interests.',
       });
       onSuccess();
       mutate('/user/topics');
@@ -101,7 +100,7 @@ const TopicButton = ({
 
       toast({
         title: 'Success',
-        description: 'Topic successfully removed from your interests.',
+        description: 'Topic removed from your interests.',
       });
       onSuccess();
 
@@ -117,30 +116,30 @@ const TopicButton = ({
   };
 
   return (
-    <span>
+    <>
       {status === 'authenticated' &&
         (isFollowed ? (
-          <>
-            <button onClick={handleUnfollowCategory} disabled={loading}>
-              <div className='flex items-center text-green-500'>
-                <MdCheck className=' mr-1' />
-                Unfollow
-              </div>
-            </button>
-          </>
+          <Button
+            size='icon'
+            variant='destructive'
+            onClick={handleUnfollowCategory}
+            disabled={loading}
+            className='rounded-full'
+          >
+            <Icon name='RiSubtract' size={18} />
+          </Button>
         ) : (
-          <button
-            className='opacity-30 hover:opacity-100'
+          <Button
+            size='icon'
+            variant='ghost'
             onClick={handleCategoryClick}
             disabled={loading}
+            className='rounded-full opacity-0 group-hover:opacity-100'
           >
-            <div className='flex gap-2 items-center'>
-              <MdAdd className='text-black dark:text-white' />
-              Follow
-            </div>
-          </button>
+            <Icon name='RiAdd' size={18} />
+          </Button>
         ))}
-    </span>
+    </>
   );
 };
 

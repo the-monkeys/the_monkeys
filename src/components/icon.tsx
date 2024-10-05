@@ -22,6 +22,7 @@ export type IconName =
   | 'RiRadioButton'
   | 'RiClose'
   | 'RiAdd'
+  | 'RiSubtract'
   | 'RiFileCopy'
   | 'RiDraft'
   | 'RiArticle'

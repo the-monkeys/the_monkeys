@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-// Adjust the import path as needed
 import useUser from '@/hooks/useUser';
 import { useSession } from 'next-auth/react';
 
@@ -18,21 +17,17 @@ const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
   const followedTopics = user?.topics || [];
 
   const handleSuccess = () => {
-    setLoading(false); // Reset loading state after a successful follow/unfollow
-    // Optionally, trigger any state updates or data refetching here
+    setLoading(false);
   };
 
   return (
-    <div>
-      <ul className='pl-2 space-y-2'>
+    <div className='pt-2 space-y-2'>
+      <ul className='px-1 space-y-1'>
         {displayedTopics.map((topic) => (
-          <li
-            key={topic}
-            className='flex items-center justify-between font-jost text-sm sm:text-base opacity-75 group'
-          >
-            <span className='truncate-none group-hover:truncate max-w-[calc(100%-100px)] transition-all duration-300'>
+          <li key={topic} className='group flex items-center justify-between'>
+            <p className='py-1 flex-1 font-jost group-hover:opacity-75'>
               {topic}
-            </span>
+            </p>
 
             <TopicButton
               topic={topic}
@@ -49,7 +44,7 @@ const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
           size='sm'
           variant='link'
           onClick={() => setShowAll((prev) => !prev)}
-          className='w-full'
+          className='w-full rounded-none'
         >
           {showAll ? 'Show Less' : `Show All (${totalTopics})`}
         </Button>
