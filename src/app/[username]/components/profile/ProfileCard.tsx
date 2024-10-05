@@ -7,9 +7,10 @@ import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import ProfileImage from '@/components/profileImage';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
   TooltipContent,
@@ -28,7 +29,7 @@ const ProfileCard: FC = () => {
 
   const { data, status } = useSession();
 
-  const { user, isLoading, isError, mutate } = useUser(params.username);
+  const { user, isLoading, isError } = useUser(params.username);
 
   if (isError) {
     notFound();
@@ -159,27 +160,31 @@ const ProfileCard: FC = () => {
       </div>
 
       <div className='my-4'>
-        <h2 className='text-lg font-semibold  mb-4'>My Topics</h2>
-        <div className='flex flex-wrap gap-2 mb-4'>
+        <h2 className='font-josefin_Sans font-semibold text-lg sm:text-xl'>
+          My Topics{' '}
+          <span className='font-medium font-text-xs sm:text-sm opacity-75'>
+            ({user && user.topics?.length})
+          </span>
+        </h2>
+
+        <div className='mb-2 py-2 flex flex-wrap gap-2'>
           {user &&
-            user.topics?.slice(0, 8).map((topic: string, index: number) => (
-              <span
-                key={index}
-                className='bg-secondary-lightGrey text-white rounded-xl px-3 py-1 text-sm font-medium'
-              >
+            user.topics?.slice(0, 10).map((topic, index) => (
+              <Badge variant='outline' key={index}>
                 {topic}
-              </span>
+              </Badge>
             ))}
         </div>
+
         {data?.user.username === params.username &&
           status === 'authenticated' && (
-            <>
-              <Link href={'/explore-topics'}>
-                <button className='text-red-500 hover:underline'>
-                  Add More topics
-                </button>
-              </Link>
-            </>
+            <LinksRedirectArrow
+              link='/explore-topics'
+              position='Right'
+              className='mx-auto md:m-0 w-fit float-right'
+            >
+              <p className='p-1 font-josefin_Sans'>Add/Explore Topics</p>
+            </LinksRedirectArrow>
           )}
       </div>
     </div>

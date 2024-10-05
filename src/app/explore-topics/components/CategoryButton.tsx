@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
 
+import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/useUser';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import {
-  AiOutlineLoading,
-  AiOutlineMinus,
-  AiOutlinePlus,
-} from 'react-icons/ai';
-import { RxCross2 } from 'react-icons/rx';
 import { mutate } from 'swr';
 
 type props = {
@@ -35,6 +31,7 @@ const CategoryButton = ({ category, topics }: props) => {
     const allTopicsFollowed = topics.every((topic) =>
       userTopics.includes(topic)
     );
+
     const someTopicsFollowed = topics.some((topic) =>
       userTopics.includes(topic)
     );
@@ -82,7 +79,7 @@ const CategoryButton = ({ category, topics }: props) => {
 
       toast({
         title: 'Success',
-        description: 'Category successfully added to your interests.',
+        description: 'Category added to your interests.',
       });
 
       setStatus('success');
@@ -157,40 +154,32 @@ const CategoryButton = ({ category, topics }: props) => {
   };
 
   return (
-    <div className='group relative'>
-      <div className='flex space-x-2 group-hover:visible group-hover:translate-y-0 transition-all duration-300 ease-in-out transform translate-x-2 invisible'>
-        {!loading && !isAllTopicsFollowed && status === 'authenticated' && (
-          <Button
-            onClick={handleCategoryClick}
-            variant={'outline'}
-            disabled={loading || isLoading}
-          >
-            {/* Show text on larger screens, icons on small screens */}
-            <span className='hidden sm:block'>Follow all</span>
-            <AiOutlinePlus className='block sm:hidden' />
-          </Button>
-        )}
+    <div className='hidden group-hover:flex gap-2'>
+      {!loading && !isAllTopicsFollowed && status === 'authenticated' && (
+        <Button
+          size='sm'
+          variant='secondary'
+          onClick={handleCategoryClick}
+          disabled={loading || isLoading}
+        >
+          Follow
+        </Button>
+      )}
 
-        {loading && (
-          <span className='ml-2 animate-spin'>
-            <AiOutlineLoading />
-          </span>
-        )}
+      {loading && <Loader />}
 
-        {statusTopic === 'error' && <RxCross2 className='ml-2 text-red-500' />}
+      {statusTopic === 'error' && <Icon name='RiClose' />}
 
-        {(isAllTopicsFollowed || isSomeTopicsFollowed) && (
-          <Button
-            onClick={handleUnfollowCategory}
-            variant={'outline'}
-            disabled={loading || isLoading}
-          >
-            {/* Show text on larger screens, icons on small screens */}
-            <span className='hidden sm:block'>Unfollow all</span>
-            <AiOutlineMinus className='block sm:hidden' />
-          </Button>
-        )}
-      </div>
+      {(isAllTopicsFollowed || isSomeTopicsFollowed) && (
+        <Button
+          size='sm'
+          variant='secondary'
+          onClick={handleUnfollowCategory}
+          disabled={loading || isLoading}
+        >
+          Unfollow
+        </Button>
+      )}
     </div>
   );
 };
