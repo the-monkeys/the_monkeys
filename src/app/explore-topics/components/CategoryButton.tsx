@@ -6,7 +6,11 @@ import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/useUser';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import { AiOutlineLoading, AiOutlinePlus } from 'react-icons/ai';
+import {
+  AiOutlineLoading,
+  AiOutlineMinus,
+  AiOutlinePlus,
+} from 'react-icons/ai';
 import { RxCross2 } from 'react-icons/rx';
 import { mutate } from 'swr';
 
@@ -22,7 +26,7 @@ const CategoryButton = ({ category, topics }: props) => {
   const [isAllTopicsFollowed, setIsAllTopicsFollowed] = useState(false);
   const [isSomeTopicsFollowed, setIsSomeTopicsFollowed] = useState(false);
   const { toast } = useToast();
-  const { user, isLoading, isError } = useUser(session?.user?.username);
+  const { user, isLoading } = useUser(session?.user?.username);
 
   // Update the state based on the user's topics
   useEffect(() => {
@@ -154,21 +158,16 @@ const CategoryButton = ({ category, topics }: props) => {
 
   return (
     <div className='group relative'>
-      <div className='flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
+      <div className='flex space-x-2 group-hover:visible group-hover:translate-y-0 transition-all duration-300 ease-in-out transform translate-x-2 invisible'>
         {!loading && !isAllTopicsFollowed && status === 'authenticated' && (
           <Button
             onClick={handleCategoryClick}
             variant={'outline'}
-            className='bg-green-500'
             disabled={loading || isLoading}
           >
-            <>
-              {isAllTopicsFollowed ? null : isSomeTopicsFollowed ? (
-                <p className='text-opacity-5'>Follow all</p>
-              ) : (
-                <p className='text-opacity-5'>Follow all</p>
-              )}
-            </>
+            {/* Show text on larger screens, icons on small screens */}
+            <span className='hidden sm:block'>Follow all</span>
+            <AiOutlinePlus className='block sm:hidden' />
           </Button>
         )}
 
@@ -184,10 +183,11 @@ const CategoryButton = ({ category, topics }: props) => {
           <Button
             onClick={handleUnfollowCategory}
             variant={'outline'}
-            className='bg-primary-monkeyOrange '
             disabled={loading || isLoading}
           >
-            Unfollow all
+            {/* Show text on larger screens, icons on small screens */}
+            <span className='hidden sm:block'>Unfollow all</span>
+            <AiOutlineMinus className='block sm:hidden' />
           </Button>
         )}
       </div>

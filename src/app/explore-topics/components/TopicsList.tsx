@@ -28,9 +28,12 @@ const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
         {displayedTopics.map((topic) => (
           <li
             key={topic}
-            className='flex items-center justify-between font-jost text-sm sm:text-base opacity-75'
+            className='flex items-center justify-between font-jost text-sm sm:text-base opacity-75 group'
           >
-            <div>{topic}</div>
+            <span className='truncate-none group-hover:truncate max-w-[calc(100%-100px)] transition-all duration-300'>
+              {topic}
+            </span>
+
             <TopicButton
               topic={topic}
               isFollowed={followedTopics.includes(topic)}

@@ -121,22 +121,15 @@ const TopicButton = ({
       {status === 'authenticated' &&
         (isFollowed ? (
           <>
-            <Button
-              size='sm'
-              variant='link'
-              onClick={handleUnfollowCategory}
-              disabled={loading}
-            >
+            <button onClick={handleUnfollowCategory} disabled={loading}>
               <div className='flex items-center text-green-500'>
                 <MdCheck className=' mr-1' />
                 Unfollow
               </div>
-            </Button>
+            </button>
           </>
         ) : (
-          <Button
-            size='sm'
-            variant='link'
+          <button
             className='opacity-30 hover:opacity-100'
             onClick={handleCategoryClick}
             disabled={loading}
@@ -145,7 +138,7 @@ const TopicButton = ({
               <MdAdd className='text-black dark:text-white' />
               Follow
             </div>
-          </Button>
+          </button>
         ))}
     </span>
   );
