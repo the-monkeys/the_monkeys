@@ -1,13 +1,16 @@
 'use client';
 
 import { FC } from 'react';
+import React from 'react';
 
 import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import ProfileImage from '@/components/profileImage';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
   TooltipContent,
@@ -17,11 +20,14 @@ import {
 import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/useUser';
 import moment from 'moment';
+import { useSession } from 'next-auth/react';
 
 const ProfileCard: FC = () => {
   const { toast } = useToast();
 
   const params = useParams<{ username: string }>();
+
+  const { data, status } = useSession();
 
   const { user, isLoading, isError } = useUser(params.username);
 
@@ -151,6 +157,35 @@ const ProfileCard: FC = () => {
             <Icon name='RiInstagram' type='Fill' />
           </Link>
         )}
+      </div>
+
+      <div className='my-4'>
+        <h2 className='font-josefin_Sans font-semibold text-lg sm:text-xl'>
+          My Topics{' '}
+          <span className='font-medium font-text-xs sm:text-sm opacity-75'>
+            ({user && user.topics?.length})
+          </span>
+        </h2>
+
+        <div className='mb-2 py-2 flex flex-wrap gap-2'>
+          {user &&
+            user.topics?.slice(0, 8).map((topic, index) => (
+              <Badge variant='outline' key={index}>
+                {topic}
+              </Badge>
+            ))}
+        </div>
+
+        {data?.user.username === params.username &&
+          status === 'authenticated' && (
+            <LinksRedirectArrow
+              link='/explore-topics'
+              position='Right'
+              className='mx-auto md:m-0 w-fit'
+            >
+              <p className='p-1 font-josefin_Sans'>Add or Explore Topics</p>
+            </LinksRedirectArrow>
+          )}
       </div>
     </div>
   );

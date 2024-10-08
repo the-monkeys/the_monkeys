@@ -9,6 +9,7 @@ export interface GetPublicUserProfileApiResponse {
   linkedin: string;
   instagram: string;
   created_at: Timestamp;
+  topics?: string[];
 }
 
 export interface GetProfileInfoByUserIdResponse {

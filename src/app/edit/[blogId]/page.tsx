@@ -30,7 +30,6 @@ const initial_data = {
 export default function Page({ params }: { params: { blogId: string } }) {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -189,7 +188,7 @@ export default function Page({ params }: { params: { blogId: string } }) {
   return (
     <Container className='min-h-screen px-5 py-4 pb-12'>
       {isLoading || publishedBlogLoading ? (
-        <Loader />
+        <Loader className='mx-auto' />
       ) : (
         <div className='space-y-2'>
           <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
