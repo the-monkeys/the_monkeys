@@ -74,33 +74,24 @@ const ProfileSection = () => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className='hover:opacity-75 cursor-pointer'>
-              <Icon name='RiMore' size={24} />
-            </div>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent className='m-2'>
-            {data?.user.username === params.username &&
-            status === 'authenticated' ? (
-              <>
-                <EditDialog />
-                <DropdownMenuSeparator />
-              </>
-            ) : (
-              ''
-            )}
-
-            <DropdownMenuItem>
-              <div className='flex w-full items-center gap-2'>
-                <Icon name='RiErrorWarning' className='text-alert-red' />
-
-                <p className='font-josefin_Sans text-base'>Report Profile</p>
-              </div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {data?.user.username === params.username &&
+          status === 'authenticated' && (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className='hover:opacity-75 cursor-pointer'>
+                  <Icon name='RiMore' size={24} />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className='m-2'>
+                {data?.user.username === params.username &&
+                status === 'authenticated' ? (
+                  <EditDialog />
+                ) : (
+                  ''
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
       </div>
 
       <ProfileCard />

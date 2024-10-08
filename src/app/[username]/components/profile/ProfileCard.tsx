@@ -169,7 +169,7 @@ const ProfileCard: FC = () => {
 
         <div className='mb-2 py-2 flex flex-wrap gap-2'>
           {user &&
-            user.topics?.slice(0, 10).map((topic, index) => (
+            user.topics?.slice(0, 8).map((topic, index) => (
               <Badge variant='outline' key={index}>
                 {topic}
               </Badge>
@@ -181,9 +181,9 @@ const ProfileCard: FC = () => {
             <LinksRedirectArrow
               link='/explore-topics'
               position='Right'
-              className='mx-auto md:m-0 w-fit float-right'
+              className='mx-auto md:m-0 w-fit'
             >
-              <p className='p-1 font-josefin_Sans'>Add/Explore Topics</p>
+              <p className='p-1 font-josefin_Sans'>Add or Explore Topics</p>
             </LinksRedirectArrow>
           )}
       </div>

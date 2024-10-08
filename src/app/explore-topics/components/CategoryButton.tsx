@@ -6,7 +6,7 @@ import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/useUser';
-import axios from 'axios';
+import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
@@ -64,7 +64,7 @@ const CategoryButton = ({ category, topics }: props) => {
       setLoading(true);
       setStatus(null);
 
-      await axios.put(
+      await axiosInstance.put(
         `${process.env.NEXT_PUBLIC_API_URL}/user/follow-topics/${username}`,
         {
           topics,
@@ -116,7 +116,7 @@ const CategoryButton = ({ category, topics }: props) => {
       setLoading(true);
       setStatus(null);
 
-      await axios.put(
+      await axiosInstance.put(
         `${process.env.NEXT_PUBLIC_API_URL}/user/un-follow-topics/${username}`,
         {
           topics,

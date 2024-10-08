@@ -3,7 +3,7 @@ import React from 'react';
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
-import axios from 'axios';
+import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
@@ -11,7 +11,7 @@ interface TopicButtonProps {
   topic: string;
   isFollowed: boolean;
   loading: boolean;
-  onSuccess: () => void; // Callback for when the follow/unfollow is successful
+  onSuccess: () => void;
 }
 
 const TopicButton = ({
@@ -43,10 +43,10 @@ const TopicButton = ({
     }
 
     try {
-      await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/follow-topics/${username}`, // Adjust the endpoint as needed
+      await axiosInstance.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/follow-topics/${username}`,
         {
-          topics: [topic], // Send the specific topic to follow
+          topics: [topic],
         },
         {
           headers: {
@@ -62,7 +62,7 @@ const TopicButton = ({
       });
       onSuccess();
       mutate('/user/topics');
-      mutate(`/user/public/${username}`); // Trigger the success callback to refresh state or data
+      mutate(`/user/public/${username}`);
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -85,10 +85,10 @@ const TopicButton = ({
     }
 
     try {
-      await axios.put(
+      await axiosInstance.put(
         `${process.env.NEXT_PUBLIC_API_URL}/user/un-follow-topics/${username}`,
         {
-          topics: [topic], // Send the specific topic to unfollow
+          topics: [topic],
         },
         {
           headers: {
@@ -105,7 +105,7 @@ const TopicButton = ({
       onSuccess();
 
       mutate('/user/topics');
-      mutate(`/user/public/${username}`); // Trigger the success callback to refresh state or data
+      mutate(`/user/public/${username}`);
     } catch (error: any) {
       toast({
         title: 'Error',
