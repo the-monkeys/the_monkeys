@@ -55,32 +55,28 @@ const PublishModal = ({
       topics: [],
     },
   });
-  // step 1:Call API to get all categories
-  // step 2:format the categories to be used in the select component
-  // step 3:Handle form with select upto 5 topics
-  // step 4:Handle the selected topics
-  // step 5:Handle the submit event
-  // step 6:Handle the topic change
-  // step 7:Handle the topic remove
-  // step 8:Format the categories
-  // step 9:Return the JSX
-  // step 10:Export the PublishModal component
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
 
-  const handleTopicChange = (selected: { value: string; label: string }) => {
-    setSelectedTopics((prev) => {
-      if (prev.find((topic) => topic.value === selected.value)) {
-        return prev;
-      }
-      return [...prev, selected];
-    });
+  const handleTopicChange = (selected: { value: string; label: string }[]) => {
+    setSelectedTopics(selected);
+    form.setValue(
+      'topics',
+      selected.map((topic) => topic.value)
+    );
   };
 
   const handleTopicRemove = (value: string) => {
-    setSelectedTopics((prev) => prev.filter((topic) => topic.value !== value));
+    const updatedTopics = selectedTopics.filter(
+      (topic) => topic.value !== value
+    );
+    setSelectedTopics(updatedTopics);
+    form.setValue(
+      'topics',
+      updatedTopics.map((topic) => topic.value)
+    );
   };
 
   const formatCategories = () => {
@@ -120,13 +116,13 @@ const PublishModal = ({
               className='flex items-center gap-1 bg-primary-monkeyOrange p-2 rounded-full'
             >
               <span>{topic.label}</span>
-              <button
+              {/* <button
                 type='button'
                 onClick={() => handleTopicRemove(topic.value)}
                 className='text-primary-monkeyWhite'
               >
                 &times;
-              </button>
+              </button> */}
             </div>
           ))}
         </div>
@@ -144,11 +140,8 @@ const PublishModal = ({
                     </p>
                     <FormControl>
                       <FormSearchSelect
-                        defaultSelected={undefined}
-                        onChange={(e) => {
-                          field.onChange(e.value);
-                          handleTopicChange(e);
-                        }}
+                        defaultSelected={selectedTopics}
+                        onChange={handleTopicChange}
                         onInputChange={(e) => {
                           if (e) {
                             setInstrumentSearch(e);

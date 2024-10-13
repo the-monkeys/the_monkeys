@@ -1,76 +1,39 @@
-import { FC } from 'react';
+'use client';
 
-import Select, { MenuPlacement } from 'react-select';
+import React from 'react';
 
-type FormSearchSelectProps = {
-  onChange: (e: {
-    value: string;
-    label: string;
-    code?: string;
-    ltp?: string;
-  }) => void;
-  options: any;
-  onMultiChange?: (e: { value: string; label: string }[]) => void;
-  onInputChange?: (e: string) => void;
-  defaultSelected?:
-    | { value: string; label: string }
-    | { value: string; label: string }[]
-    | null;
+import Select from 'react-select';
+
+interface FormSearchSelectProps {
+  defaultSelected?: { value: string; label: string }[];
+  onChange: (selected: { value: string; label: string }[]) => void;
+  onInputChange?: (inputValue: string) => void;
+  options: { value: string; label: string }[];
   placeholder?: string;
-  disabled?: boolean;
-  className?: string;
-  isMulti?: boolean;
-  direction?: MenuPlacement | undefined;
-};
+}
 
-const FormSearchSelect: FC<FormSearchSelectProps> = ({
-  onChange,
-  options,
+const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
   defaultSelected,
-  placeholder = 'Select an option',
-  className,
+  onChange,
   onInputChange,
-  onMultiChange,
-  disabled,
-  isMulti = false,
-  direction,
+  options,
+  placeholder,
 }) => {
   return (
     <Select
+      isMulti
       defaultValue={defaultSelected}
-      value={defaultSelected}
+      onChange={(selectedOptions) =>
+        onChange(selectedOptions as { value: string; label: string }[])
+      }
+      onInputChange={onInputChange}
       options={options}
-      isDisabled={disabled}
-      onChange={(e) => {
-        if (!isMulti) {
-          if (typeof e === 'object') {
-            // @ts-ignore
-            if (e) onChange(e);
-          }
-        } else {
-          // @ts-ignore
-          if (e) {
-            console.log(e);
-
-            // @ts-ignore
-            onMultiChange && onMultiChange(e);
-          }
-        }
-      }}
-      onInputChange={(e) => {
-        // setSearchText(e);
-        onInputChange && onInputChange(e);
-      }}
-      className={className ? className : 'mt-5 p-0'}
       placeholder={placeholder}
-      menuPosition='absolute'
-      menuPlacement={direction ? direction : 'bottom'}
-      isMulti={isMulti ? true : false}
-      menuShouldScrollIntoView={true}
+      classNamePrefix='react-select'
       styles={{
         control: (provided, state) => ({
           ...provided,
-          borderColor: state.isFocused ? '#ff462e' : '#d1d5db',
+          borderColor: state.isFocused ? '#ff462e' : '#d1d5db', // monkeyOrange for focus
           boxShadow: state.isFocused ? '0 0 0 1px #ff462e' : 'none', // monkeyOrange for focus
           '&:hover': {
             borderColor: state.isFocused ? '#ff462e' : '#d1d5db', // monkeyOrange for hover
