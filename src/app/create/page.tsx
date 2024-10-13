@@ -211,7 +211,7 @@ const CreatePage = () => {
 
           <Button
             variant='secondary'
-            onClick={handlePublishStep}
+            onClick={() => setShowModal(true)}
             className='hidden sm:inline-flex'
           >
             Publish
@@ -220,7 +220,7 @@ const CreatePage = () => {
           <Button
             variant='secondary'
             size='icon'
-            onClick={handlePublishStep}
+            onClick={() => setShowModal(true)}
             className='show sm:hidden rounded-full'
           >
             <Icon name='RiArrowRight' />
