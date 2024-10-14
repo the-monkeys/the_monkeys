@@ -14,6 +14,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import {
+  DatePicker
+} from "@/components/ui/datePicker"
+
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import useGetAuthUserProfile from '@/hooks/useGetAuthUserProfile';
@@ -28,12 +32,29 @@ import Section from './Section';
 import ProfileDeleteDialog from './profile/ProfileDeleteDialog';
 import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
 
+function formatDate(date: Date) {
+  var d = new Date(date),
+    month = '' + (d.getMonth() + 1),
+    day = '' + d.getDate(),
+    year = d.getFullYear();
+
+  if (month.length < 2)
+    month = '0' + month;
+  if (day.length < 2)
+    day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
+
 const Profile = () => {
   const { data } = useSession();
   const { user, isLoading, isError } = useGetAuthUserProfile(
     data?.user.username
   );
   const [loading, setLoading] = useState<boolean>(false);
+
+  const [date, setDate] = React.useState<Date>()
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -51,9 +72,11 @@ const Profile = () => {
     },
   });
 
+
+
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
     setLoading(true);
-    console.log(values);
+    values['date_of_birth'] = formatDate(date as Date);
     axiosInstance
       .put(`/user/${data?.user.username}`, {
         values,
@@ -233,8 +256,12 @@ const Profile = () => {
                     <FormLabel className='font-josefin_Sans text-sm'>
                       Birth Date
                     </FormLabel>
+                    <br></br>
+
                     <FormControl>
-                      <Input className='w-full' type='date' {...field} />
+                      <DatePicker date={date} setDate={setDate} />
+
+                      {/* <Input className='w-full' type='date' {...field} /> */}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
