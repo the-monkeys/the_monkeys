@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
 import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -39,8 +40,16 @@ const formSchema = z.object({
 
 const PublishModal = ({
   setModal,
+  setSelectedTags,
+  blogId,
+  handlePublishStep,
+  publishedBlogLoading,
 }: {
   setModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedTags: React.Dispatch<React.SetStateAction<string[]>>;
+  blogId: string;
+  handlePublishStep: () => void;
+  publishedBlogLoading: boolean;
 }) => {
   const [publishStep, setPublishStep] = useState<PublishStep>(publishSteps[0]);
   const { categories, isError, isLoading } = useGetAllCategories();
@@ -58,6 +67,8 @@ const PublishModal = ({
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
+    setSelectedTags(values.topics); // Update selected tags
+    handlePublishStep();
   }
 
   const handleTopicChange = (selected: { value: string; label: string }[]) => {
@@ -158,10 +169,11 @@ const PublishModal = ({
             />
             <div className='pt-6 flex gap-2 items-center'>
               <Button
+                type='submit'
+                disabled={publishedBlogLoading}
                 className='flex-1'
-                onClick={() => setPublishStep(publishSteps[0])}
               >
-                Publish
+                Publish {publishedBlogLoading && <Loader />}
               </Button>
             </div>
           </form>
