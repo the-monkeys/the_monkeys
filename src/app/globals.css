@@ -333,3 +333,7 @@ h2.ce-header {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+.rdp-vhidden {
+  @apply hidden;
+}
