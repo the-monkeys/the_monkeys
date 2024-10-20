@@ -26,7 +26,10 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn('p-3 dark:bg-black rounded-xl bg-white', className)}
+      className={cn(
+        'p-3 dark:bg-black rounded-xl bg-primary-monkeyWhite border border-secondary-lightGrey',
+        className
+      )}
       classNames={{
         months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-4',
@@ -79,11 +82,14 @@ function Calendar({
                 handleChange(value);
               }}
             >
-              <SelectTrigger className='pr-1.5 focus:ring-0 bg-white dark:bg-black'>
+              <SelectTrigger className='pr-1.5 focus:ring-0 bg-primary-monkeyWhite dark:bg-black'>
                 <SelectValue>{selected?.props?.children}</SelectValue>
               </SelectTrigger>
-              <SelectContent position='popper'>
-                <ScrollArea className='h-60'>
+              <SelectContent
+                position='popper'
+                className='bg-primary-monkeyWhite'
+              >
+                <ScrollArea className='h-60 bg-primary-monkeyWhite'>
                   {options.map((option, id: number) => (
                     <SelectItem
                       key={`${option.props.value}-${id}`}
