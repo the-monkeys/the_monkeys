@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
 import { Loader } from '@/components/loader';
 import useGetPublishedBlogByAccountId from '@/hooks/useGetPublishedBlogByAccountId';
@@ -10,10 +10,9 @@ import BlogCard from './blog/BlogCard';
 
 const Blogs = () => {
   const router = useRouter();
+  const params = useParams<{ username: string }>();
   const { data: session } = useSession();
-  const { blogs, isLoading } = useGetPublishedBlogByAccountId(
-    session?.user.account_id
-  );
+  const { blogs, isLoading } = useGetPublishedBlogByAccountId(params.username);
 
   const handleEdit = (blogId: string) => {
     router.push(`/edit/${blogId}?source=published`);
