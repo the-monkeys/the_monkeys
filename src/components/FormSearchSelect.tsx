@@ -33,26 +33,27 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
       styles={{
         control: (provided, state) => ({
           ...provided,
-          borderColor: state.isFocused ? '#ff462e' : '#d1d5db', // monkeyOrange for focus
-          boxShadow: state.isFocused ? '0 0 0 1px #ff462e' : 'none', // monkeyOrange for focus
-          '&:hover': {
-            borderColor: state.isFocused ? '#ff462e' : '#d1d5db', // monkeyOrange for hover
-          },
+          borderRadius: '10px',
+          borderColor: '#4f4f4f',
+          borderOpacity: state.isFocused ? '50%' : '25%',
+          background: 'transparent',
         }),
         option: (provided, state) => ({
           ...provided,
-          backgroundColor: state.isSelected
-            ? '#ff462e' // monkeyOrange for selected
-            : state.isFocused
-              ? '#FFF4ed' // monkeyWhite for focused
-              : 'white',
-          color: state.isSelected ? 'white' : 'black',
-          '&:hover': {
-            backgroundColor: state.isSelected ? '#ff462e' : '#FFF4ed', // monkeyOrange for selected, monkeyWhite for hover
-          },
+          // backgroundColor: state.isSelected
+          //   ? '#ff462e' // monkeyOrange for selected
+          //   : state.isFocused
+          //     ? '#FFF4ed' // monkeyWhite for focused
+          //     : 'white',
+          // color: state.isSelected ? 'white' : 'black',
+          // '&:hover': {
+          //   backgroundColor: state.isSelected ? '#ff462e' : '#FFF4ed', // monkeyOrange for selected, monkeyWhite for hover
+          // },
         }),
         menu: (provided) => ({
           ...provided,
+          height: '200px',
+          overflow: 'hidden',
           zIndex: 9999,
         }),
       }}

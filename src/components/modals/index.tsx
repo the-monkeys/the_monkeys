@@ -7,8 +7,6 @@ import {
   useEffect,
 } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import Icon from '../icon';
 import Logo from '../logo';
 
@@ -23,8 +21,6 @@ export type ModalComponentProps = {
 };
 
 const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
-  const router = useRouter();
-
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 

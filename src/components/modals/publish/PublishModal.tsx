@@ -5,6 +5,7 @@ import { useState } from 'react';
 import FormSearchSelect from '@/components/FormSearchSelect';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -120,23 +121,14 @@ const PublishModal = ({
           </span>
         </p>
 
-        <div className='flex items-center gap-2 flex-wrap'>
+        <div className='py-2 flex items-center gap-2 flex-wrap'>
           {selectedTopics.map((topic) => (
-            <div
-              key={topic.value}
-              className='flex items-center gap-1 bg-primary-monkeyOrange p-2 rounded-full'
-            >
-              <span>{topic.label}</span>
-              {/* <button
-                type='button'
-                onClick={() => handleTopicRemove(topic.value)}
-                className='text-primary-monkeyWhite'
-              >
-                &times;
-              </button> */}
-            </div>
+            <Badge variant='outline' key={topic.value} className='text-xl'>
+              {topic.label}
+            </Badge>
           ))}
         </div>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
             <FormField
@@ -144,11 +136,12 @@ const PublishModal = ({
               name='topics'
               render={({ field }) => {
                 return (
-                  <FormItem className='space-y-0 flex flex-col justify-start'>
-                    <p className='text-sm mt-2'>
+                  <FormItem className='space-y-1 flex flex-col justify-start'>
+                    <p className='font-jost text-sm'>
                       Select Topics
                       <span className='text-destructive'>*</span>
                     </p>
+
                     <FormControl>
                       <FormSearchSelect
                         defaultSelected={selectedTopics}
@@ -159,7 +152,7 @@ const PublishModal = ({
                           }
                         }}
                         options={formatCategories() || []}
-                        placeholder='Select Topics'
+                        placeholder='add suitable topics'
                       />
                     </FormControl>
                     <FormMessage />
@@ -167,6 +160,7 @@ const PublishModal = ({
                 );
               }}
             />
+
             <div className='pt-6 flex gap-2 items-center'>
               <Button
                 type='submit'
