@@ -1,6 +1,8 @@
 import { API_URL } from '@/constants/api';
 import axios from 'axios';
+import Bowser from 'bowser';
 import { getSession } from 'next-auth/react';
+import { publicIpv4 } from 'public-ip';
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -13,6 +15,18 @@ axiosInstance.interceptors.request.use(
     if (session && session.user && session.user.token) {
       config.headers['Authorization'] = `Bearer ${session.user.token}`;
     }
+
+    // Get public IP address
+    const ip = await publicIpv4();
+    config.headers['Ip'] = ip;
+
+    // Detect client browser and OS
+    const browser = Bowser.getParser(window.navigator.userAgent);
+    const client = browser.getBrowserName();
+    const os = browser.getOSName();
+    config.headers['Client'] = client;
+    config.headers['OS'] = os;
+
     return config;
   },
   (error) => {
