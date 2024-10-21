@@ -27,7 +27,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        'p-3 dark:bg-black rounded-xl bg-primary-monkeyWhite border border-secondary-lightGrey',
+        'p-3 dark:bg-black rounded-xl bg-primary-monkeyWhite border ',
         className
       )}
       classNames={{
@@ -54,7 +54,7 @@ function Calendar({
           'h-9 w-9 p-0 font-normal aria-selected:opacity-100'
         ),
         day_selected:
-          'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+          'bg-primay-monkeyOrange text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
         day_today: 'bg-accent text-accent-foreground',
         day_outside: 'text-muted-foreground opacity-50',
         day_disabled: 'text-muted-foreground opacity-50',
