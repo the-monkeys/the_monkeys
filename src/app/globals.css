@@ -294,7 +294,7 @@ h2.ce-header {
 /* selection styles */
 .light ::selection {
   background-color: #101010;
-  color: #101010;
+  color: #f2f2f3;
 }
 
 .dark ::selection {

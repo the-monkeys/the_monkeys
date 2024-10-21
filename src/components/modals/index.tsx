@@ -1,6 +1,11 @@
-import { Dispatch, FC, PropsWithChildren, ReactNode, SetStateAction, useEffect } from 'react';
-
-import { useRouter } from 'next/navigation';
+import {
+  Dispatch,
+  FC,
+  PropsWithChildren,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+} from 'react';
 
 import Icon from '../icon';
 import Logo from '../logo';
@@ -16,15 +21,13 @@ export type ModalComponentProps = {
 };
 
 const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
-  const router = useRouter();
-
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    
+
     return () => {
       document.body.style.overflow = 'auto';
     };
-  },[]);
+  }, []);
 
   return (
     <div className='fixed left-0 top-0 flex h-full w-full justify-center bg-secondary-white/60 backdrop-blur-sm dark:bg-secondary-darkGrey/60 z-50'>
@@ -44,7 +47,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           </div>
         </div>
 
-        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col overflow-auto rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>
+        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col  rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>
           {children}
         </div>
       </div>

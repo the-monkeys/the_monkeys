@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
 
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/components/ui/use-toast';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
+import { useSession } from 'next-auth/react';
 
 import BlogDeleteDialog from './BlogDeleteDialog';
 
@@ -18,6 +20,7 @@ interface BlogCardProps {
   tags?: string[];
   blogId: string;
   isDraft?: boolean;
+
   onEdit: (blogId: string) => void;
 }
 
@@ -53,7 +56,8 @@ const BlogCard: FC<BlogCardProps> = ({
         );
     }
   };
-
+  const params = useParams<{ username: string }>();
+  const { data: session } = useSession();
   return (
     <div className='w-full md:px-6 first:pt-0 py-6 space-y-6 border-b-1 border-secondary-lightGrey/15'>
       <div className='cursor-default'>
@@ -104,14 +108,21 @@ const BlogCard: FC<BlogCardProps> = ({
         </div>
 
         <div className='flex items-center justify-end gap-2'>
-          <div
-            onClick={() => onEdit(blogId)}
-            className='p-1 flex items-center justify-center cursor-pointer hover:opacity-75'
-          >
-            <Icon name='RiPencil' />
-          </div>
-
-          <BlogDeleteDialog blogId={blogId} title={title} />
+          {session?.user.username === params.username ? (
+            <div
+              onClick={() => onEdit(blogId)}
+              className='p-1 flex items-center justify-center cursor-pointer hover:opacity-75'
+            >
+              <Icon name='RiPencil' />
+            </div>
+          ) : (
+            ''
+          )}
+          {session?.user.username === params.username ? (
+            <BlogDeleteDialog blogId={blogId} title={title} />
+          ) : (
+            ''
+          )}
 
           {!isDraft ? (
             <div
