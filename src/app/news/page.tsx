@@ -25,12 +25,13 @@ export default function NewsPage() {
     month: 'long',
     day: 'numeric',
   });
+  const formattedTime = currDate.toUTCString().split(' ')[4]; // Extract the time part from the UTC string
 
   return (
     <Container className='pb-20 min-h-screen px-5'>
       <div className='flex justify-between flex-wrap'>
         <p className='font-jost text-xs sm:text-sm opacity-75'>
-          {formattedDate}
+          {formattedDate} {formattedTime} UTC
         </p>
 
         <p className='font-jost text-xs sm:text-sm opacity-75'>

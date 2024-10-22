@@ -9,6 +9,7 @@ import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { Loader } from '@/components/loader';
+import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import useGetDraftBlogDetail from '@/hooks/useGetDraftBlogDetail';
@@ -32,6 +33,8 @@ export default function Page({ params }: { params: { blogId: string } }) {
   const [data, setData] = useState<OutputData | null>(null);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { data: session } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -92,10 +95,10 @@ export default function Page({ params }: { params: { blogId: string } }) {
             time: new Date().getTime(),
           })),
         },
-        tags: ['tech', 'nextjs', 'ui'],
+        tags: selectedTags,
       };
     },
-    []
+    [selectedTags]
   );
 
   // Load the Editor component dynamically
@@ -204,7 +207,7 @@ export default function Page({ params }: { params: { blogId: string } }) {
 
             <Button
               variant='secondary'
-              onClick={handlePublishStep}
+              onClick={() => setShowModal(true)}
               className='hidden sm:inline-flex'
             >
               Publish
@@ -213,7 +216,7 @@ export default function Page({ params }: { params: { blogId: string } }) {
             <Button
               variant='secondary'
               size='icon'
-              onClick={handlePublishStep}
+              onClick={() => setShowModal(true)}
               className='show sm:hidden rounded-full'
             >
               <Icon name='RiArrowRight' />
@@ -223,6 +226,15 @@ export default function Page({ params }: { params: { blogId: string } }) {
           <Suspense fallback={<Loader />}>
             {editor && data && <Editor data={data} onChange={setData} />}
           </Suspense>
+          {showModal && (
+            <PublishModal
+              setModal={setShowModal}
+              setSelectedTags={setSelectedTags}
+              blogId={blogId}
+              handlePublishStep={handlePublishStep}
+              publishedBlogLoading={publishedBlogLoading}
+            />
+          )}
         </div>
       )}
     </Container>

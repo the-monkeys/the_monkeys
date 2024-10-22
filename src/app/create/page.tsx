@@ -1,3 +1,4 @@
+// CreatePage.tsx
 'use client';
 
 import React, {
@@ -21,6 +22,22 @@ import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
+
+// CreatePage.tsx
+
+// CreatePage.tsx
+
+// CreatePage.tsx
+
+// CreatePage.tsx
+
+// CreatePage.tsx
+
+// CreatePage.tsx
+
+// CreatePage.tsx
+
+// CreatePage.tsx
 
 // Dynamically import the Editor component to avoid server-side rendering issues
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -60,7 +77,10 @@ const CreatePage = () => {
 
   // State to manage the saving status
   const [isSaving, setIsSaving] = useState<boolean>(false);
-
+  // set selected tags topics
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [publishedBlogLoading, setPublishedBlogLoading] =
+    useState<boolean>(false);
   // Get the session data
   const { data: session } = useSession();
 
@@ -117,10 +137,10 @@ const CreatePage = () => {
             time: new Date().getTime(),
           })),
         },
-        tags: ['tech', 'nextjs', 'ui'],
+        tags: selectedTags,
       };
     },
-    []
+    [selectedTags]
   );
 
   // Load the Editor component dynamically
@@ -154,7 +174,9 @@ const CreatePage = () => {
 
   // Handle the publish action
   const handlePublishStep = useCallback(() => {
+    setPublishedBlogLoading(true);
     if (!data || data.blocks.length === 0 || data.blocks[0].type !== 'header') {
+      setPublishedBlogLoading(false);
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -166,7 +188,7 @@ const CreatePage = () => {
     const formattedData = formatData(data, session?.user.account_id);
 
     axiosInstance
-      .post(`/blog/publish/${blogId}`, formattedData)
+      .post(`/blog/publish/${blogId}`)
       .then((res) => {
         console.log(res);
         toast({
@@ -174,10 +196,12 @@ const CreatePage = () => {
           title: 'Blog Published successfully',
           description: 'success',
         });
+        setPublishedBlogLoading(false);
         router.push(`/${session?.user?.username}`);
       })
       .catch((err) => {
         console.log(err);
+        setPublishedBlogLoading(false);
         toast({
           variant: 'destructive',
           title: 'Error publishing blog',
@@ -211,7 +235,7 @@ const CreatePage = () => {
 
           <Button
             variant='secondary'
-            onClick={handlePublishStep}
+            onClick={() => setShowModal(true)}
             className='hidden sm:inline-flex'
           >
             Publish
@@ -220,7 +244,7 @@ const CreatePage = () => {
           <Button
             variant='secondary'
             size='icon'
-            onClick={handlePublishStep}
+            onClick={() => setShowModal(true)}
             className='show sm:hidden rounded-full'
           >
             <Icon name='RiArrowRight' />
@@ -232,7 +256,15 @@ const CreatePage = () => {
         </Suspense>
       </div>
 
-      {showModal && <PublishModal setModal={setShowModal} />}
+      {showModal && (
+        <PublishModal
+          setModal={setShowModal}
+          setSelectedTags={setSelectedTags}
+          blogId={blogId}
+          handlePublishStep={handlePublishStep}
+          publishedBlogLoading={publishedBlogLoading}
+        />
+      )}
     </>
   );
 };
