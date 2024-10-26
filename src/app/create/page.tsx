@@ -19,9 +19,12 @@ import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+import { getEditorConfig } from '@/config/editor/editorjs.config';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
+
+// CreatePage.tsx
 
 // CreatePage.tsx
 
@@ -252,7 +255,13 @@ const CreatePage = () => {
         </div>
 
         <Suspense fallback={<Loader />}>
-          {editor && data && <Editor data={data} onChange={setData} />}
+          {editor && data && (
+            <Editor
+              data={data}
+              onChange={setData}
+              config={getEditorConfig(blogId)}
+            />
+          )}
         </Suspense>
       </div>
 
