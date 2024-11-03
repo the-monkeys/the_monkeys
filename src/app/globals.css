@@ -337,3 +337,7 @@ h2.ce-header {
 .rdp-vhidden {
   @apply hidden;
 }
+
+.image-tool__caption {
+  display: none;
+}

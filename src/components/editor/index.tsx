@@ -1,21 +1,21 @@
 import React, { FC, useEffect, useRef } from 'react';
 
-import EditorJS, { OutputData } from '@editorjs/editorjs';
-
-import { editorConfig } from '../../config/editor/editorjs.config';
+import { editorConfig } from '@/config/editor/editorjs_readonly.config';
+import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
 
 export type EditorProps = {
   data: OutputData;
   onChange: (data: OutputData) => void;
+  config: EditorConfig;
 };
 
-const Editor: FC<EditorProps> = ({ data, onChange }) => {
+const Editor: FC<EditorProps> = ({ data, onChange, config }) => {
   const editorInstance = useRef<EditorJS | null>(null);
 
   useEffect(() => {
     if (!editorInstance.current) {
       editorInstance.current = new EditorJS({
-        ...editorConfig,
+        ...config,
         data: data,
         onChange: async (api, event: any) => {
           if (onChange) {
