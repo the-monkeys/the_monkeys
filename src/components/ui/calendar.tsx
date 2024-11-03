@@ -27,7 +27,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        'p-3 dark:bg-black rounded-xl bg-primary-monkeyWhite border ',
+        'p-3 dark:bg-black rounded-xl bg-primary-monkeyWhite ',
         className
       )}
       classNames={{
@@ -89,7 +89,7 @@ function Calendar({
                 position='popper'
                 className='bg-primary-monkeyWhite'
               >
-                <ScrollArea className='h-60 bg-primary-monkeyWhite'>
+                <ScrollArea className='h-60 dark:bg-black bg-primary-monkeyWhite'>
                   {options.map((option, id: number) => (
                     <SelectItem
                       key={`${option.props.value}-${id}`}

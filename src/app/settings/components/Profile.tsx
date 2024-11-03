@@ -29,7 +29,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Section from './Section';
-import { parseDateTime } from './parseDate';
+import { parseDateTime } from './format/parseDate';
 import ProfileDeleteDialog from './profile/ProfileDeleteDialog';
 import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
 
@@ -271,7 +271,7 @@ const Profile = () => {
                             }}
                             captionLayout='dropdown-buttons'
                             fromYear={1960}
-                            toYear={2030}
+                            toYear={new Date().getFullYear()}
                           />
                         </PopoverContent>
                       </Popover>
