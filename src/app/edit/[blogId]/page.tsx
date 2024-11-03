@@ -12,6 +12,7 @@ import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+import { getEditorConfig } from '@/config/editor/editorjs.config';
 import useGetDraftBlogDetail from '@/hooks/useGetDraftBlogDetail';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/useGetPublishedBlogDetailByBlogId';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -224,7 +225,13 @@ export default function Page({ params }: { params: { blogId: string } }) {
           </div>
 
           <Suspense fallback={<Loader />}>
-            {editor && data && <Editor data={data} onChange={setData} />}
+            {editor && data && (
+              <Editor
+                data={data}
+                onChange={setData}
+                config={getEditorConfig(blogId)}
+              />
+            )}
           </Suspense>
           {showModal && (
             <PublishModal

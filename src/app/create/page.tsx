@@ -1,4 +1,3 @@
-// CreatePage.tsx
 'use client';
 
 import React, {
@@ -20,24 +19,8 @@ import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
-import { OutputData } from '@editorjs/editorjs';
+import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
-
-// CreatePage.tsx
-
-// CreatePage.tsx
-
-// CreatePage.tsx
-
-// CreatePage.tsx
-
-// CreatePage.tsx
-
-// CreatePage.tsx
-
-// CreatePage.tsx
-
-// CreatePage.tsx
 
 // Dynamically import the Editor component to avoid server-side rendering issues
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -77,6 +60,10 @@ const CreatePage = () => {
 
   // State to manage the saving status
   const [isSaving, setIsSaving] = useState<boolean>(false);
+
+  // State to manage the editor configuration
+  const [editorConfig, setEditorConfig] = useState<EditorConfig | null>(null);
+
   // set selected tags topics
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [publishedBlogLoading, setPublishedBlogLoading] =
@@ -155,7 +142,7 @@ const CreatePage = () => {
 
   // Create WebSocket connection when authToken is available
   useEffect(() => {
-    if (authToken) {
+    if (typeof window !== 'undefined' && authToken) {
       const cleanup = createWebSocket(blogId, authToken);
 
       // Listen for beforeunload event to close the WebSocket connection
@@ -171,6 +158,20 @@ const CreatePage = () => {
       };
     }
   }, [authToken, blogId, createWebSocket]);
+
+  // Create editor configuration when blogId is available
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const getEditorConfig = async (blogId: string) => {
+        const { getEditorConfig } = await import(
+          '@/config/editor/editorjs.config'
+        );
+        setEditorConfig(getEditorConfig(blogId));
+      };
+
+      getEditorConfig(blogId);
+    }
+  }, [blogId]);
 
   // Handle the publish action
   const handlePublishStep = useCallback(() => {
@@ -188,7 +189,7 @@ const CreatePage = () => {
     const formattedData = formatData(data, session?.user.account_id);
 
     axiosInstance
-      .post(`/blog/publish/${blogId}`)
+      .post(`/blog/publish/${blogId}`, formattedData)
       .then((res) => {
         console.log(res);
         toast({
@@ -212,7 +213,11 @@ const CreatePage = () => {
 
   // Send data to WebSocket when data changes
   useEffect(() => {
-    if (webSocket && webSocket.readyState === WebSocket.OPEN) {
+    if (
+      typeof window !== 'undefined' &&
+      webSocket &&
+      webSocket.readyState === WebSocket.OPEN
+    ) {
       const formattedData = formatData(data, session?.user.account_id);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
@@ -252,7 +257,9 @@ const CreatePage = () => {
         </div>
 
         <Suspense fallback={<Loader />}>
-          {editor && data && <Editor data={data} onChange={setData} />}
+          {editor && data && editorConfig && (
+            <Editor data={data} onChange={setData} config={editorConfig} />
+          )}
         </Suspense>
       </div>
 
