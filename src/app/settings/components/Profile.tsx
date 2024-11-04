@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Loader } from '@/components/loader';
 import ProfileImage from '@/components/profileImage';
 import { ProfilePhotoSkeleton } from '@/components/skeletons/profileSkeleton';
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Form,
   FormControl,
@@ -15,16 +16,20 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Popover } from '@/components/ui/popover';
 import { toast } from '@/components/ui/use-toast';
 import useGetAuthUserProfile from '@/hooks/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
+import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import Section from './Section';
+import { parseDateTime } from './format/parseDate';
 import ProfileDeleteDialog from './profile/ProfileDeleteDialog';
 import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
 
@@ -234,7 +239,42 @@ const Profile = () => {
                       Birth Date
                     </FormLabel>
                     <FormControl>
-                      <Input className='w-full' type='date' {...field} />
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <div>
+                            <Input
+                              readOnly
+                              onChange={field.onChange}
+                              value={
+                                field.value
+                                  ? format(field.value, 'yyyy-MM-dd')
+                                  : 'Pick a date'
+                              }
+                              className='w-full'
+                              type='date'
+                            />
+                          </div>
+                        </PopoverTrigger>
+                        <PopoverContent className='w-auto p-0 pb-2'>
+                          <Calendar
+                            mode='single'
+                            selected={
+                              field.value ? new Date(field.value) : undefined
+                            }
+                            onSelect={(date) => {
+                              if (date) {
+                                const formatedDate = parseDateTime(
+                                  format(date, 'yyyy-MM-dd')
+                                );
+                                field.onChange(formatedDate);
+                              }
+                            }}
+                            captionLayout='dropdown-buttons'
+                            fromYear={1960}
+                            toYear={new Date().getFullYear()}
+                          />
+                        </PopoverContent>
+                      </Popover>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

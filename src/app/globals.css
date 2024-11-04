@@ -334,6 +334,10 @@ h2.ce-header {
   scrollbar-width: none; /* Firefox */
 }
 
+.rdp-vhidden {
+  @apply hidden;
+}
+
 .image-tool__caption {
   display: none;
 }
