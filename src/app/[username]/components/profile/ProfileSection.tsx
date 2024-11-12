@@ -1,33 +1,23 @@
 'use client';
 
-import { useEffect } from 'react';
 import React from 'react';
 
 import { useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
 import { useSession } from 'next-auth/react';
 
 import EditDialog from './EditDialog';
 import ProfileCard from './ProfileCard';
+import TopicsCard from './TopicsCard';
 
 const ProfileSection = () => {
   const params = useParams<{ username: string }>();
 
   const { data, status } = useSession();
-
-  useEffect(() => {
-    // console.log(data);
-  }, [status]);
 
   const copyToClipboard = (text: string) => {
     if (navigator.clipboard) {
@@ -51,50 +41,31 @@ const ProfileSection = () => {
   };
 
   return (
-    <div className='space-y-2'>
-      <div className='flex gap-4 justify-end'>
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className='hover:opacity-75 cursor-pointer'>
-              <Icon name='RiShareForward' size={24} />
-            </div>
-          </DropdownMenuTrigger>
-
-          <DropdownMenuContent className='m-2'>
-            <DropdownMenuItem>
-              <div
-                className='flex w-full items-center gap-2'
-                onClick={() => copyToClipboard(data?.user.username || '')}
-              >
-                <Icon name='RiFileCopy' />
-
-                <p className='font-josefin_Sans text-base'>Copy Link</p>
-              </div>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <div>
+      <div className='mb-2 flex gap-2 items-center justify-end'>
+        <Button
+          variant='ghost'
+          size='icon'
+          className='rounded-full'
+          onClick={() => copyToClipboard(data?.user.username || '')}
+        >
+          <Icon name='RiShareForward' />
+        </Button>
 
         {data?.user.username === params.username &&
+          status === 'authenticated' && <EditDialog />}
+
+        {data?.user.username !== params.username &&
           status === 'authenticated' && (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className='hover:opacity-75 cursor-pointer'>
-                  <Icon name='RiMore' size={24} />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className='m-2'>
-                {data?.user.username === params.username &&
-                status === 'authenticated' ? (
-                  <EditDialog />
-                ) : (
-                  ''
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button variant='secondary'>Follow</Button>
           )}
       </div>
 
       <ProfileCard />
+
+      <Separator className='my-4' />
+
+      <TopicsCard />
     </div>
   );
 };

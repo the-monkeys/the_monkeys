@@ -1,34 +1,23 @@
 import { Skeleton } from '../ui/skeleton';
 
-export const ProfilePhotoSkeleton = () => {
-  return <Skeleton className='size-32 rounded-lg' />;
-};
-
 export const ProfileCardSkeleton = () => {
   return (
-    <div>
-      <div className='mb-2 flex flex-wrap items-end gap-2'>
-        <ProfilePhotoSkeleton />
+    <div className='space-y-3'>
+      <Skeleton className='size-28 sm:size-32 rounded-full' />
 
-        <div className='py-1 space-y-2'>
-          <Skeleton className='h-5 w-44 rounded-full' />
-          <Skeleton className='h-4 w-36 rounded-full' />
-        </div>
+      <div className='space-y-1'>
+        <Skeleton className='h-6 w-44 rounded-full' />
+        <Skeleton className='h-3 w-36 rounded-full' />
       </div>
 
-      <div className='py-2 space-y-2'>
+      <div className='space-y-1'>
         <Skeleton className='h-4 w-full rounded-full' />
-
-        <Skeleton className='h-4 w-full rounded-full' />
+        <Skeleton className='h-4 w-4/5 rounded-full' />
       </div>
 
-      <Skeleton className='my-2 h-4 w-32 rounded-full' />
-
-      <div className='mt-2 flex gap-4'>
-        <Skeleton className='size-6 rounded-full' />
-        <Skeleton className='size-6 rounded-full' />
-        <Skeleton className='size-6 rounded-full' />
-        <Skeleton className='size-6 rounded-full' />
+      <div className='flex gap-2'>
+        <Skeleton className='h-4 w-28 rounded-full' />
+        <Skeleton className='h-4 w-28 rounded-full' />
       </div>
     </div>
   );

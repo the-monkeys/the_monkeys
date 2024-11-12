@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { Button } from '@/components/ui/button';
@@ -104,10 +103,10 @@ const EditDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className='p-2 flex w-full items-center gap-2 hover:opacity-75'>
-        <Icon name='RiEditBox' />
-        <p className='font-josefin_Sans text-base'>Edit Details</p>
+      <DialogTrigger>
+        <Button variant='secondary'>Edit</Button>
       </DialogTrigger>
+
       <DialogContent>
         <DialogTitle>Edit Details</DialogTitle>
         {isLoading ? (
