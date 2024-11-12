@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Loader } from '@/components/loader';
-import ProfileImage from '@/components/profileImage';
-import { ProfilePhotoSkeleton } from '@/components/skeletons/profileSkeleton';
+import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -115,13 +114,14 @@ const Profile = () => {
                   Profile Photo
                 </p>
 
-                <div className='rounded-lg size-32 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden'>
-                  {data?.user ? (
-                    <ProfileImage username={data.user.username} />
-                  ) : (
-                    <ProfilePhotoSkeleton />
+                <ProfileFrame>
+                  {data?.user && (
+                    <ProfileImage
+                      firstName={data.user.first_name}
+                      username={data.user.username}
+                    />
                   )}
-                </div>
+                </ProfileFrame>
 
                 <div className='space-x-2'>
                   <ProfileDeleteDialog />

@@ -6,17 +6,29 @@ import useProfileImage from '@/hooks/useProfileImage';
 
 import { Skeleton } from './ui/skeleton';
 
-export const ProfileImage = ({ username }: { username: string }) => {
+export const ProfileFrame = ({ children }: { children?: React.ReactNode }) => {
+  return (
+    <div className='size-28 sm:size-32 ring-2 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden rounded-full'>
+      {children}
+    </div>
+  );
+};
+
+export const ProfileImage = ({
+  firstName,
+  username,
+}: {
+  firstName: string;
+  username: string;
+}) => {
   const { imageUrl, isLoading, isError } = useProfileImage(username);
 
   if (isLoading) return <Skeleton className='size-32' />;
 
   if (isError)
     return (
-      <p className='font-jost text-sm text-center'>
-        Not
-        <br />
-        Available
+      <p className='font-jost text-3xl text-primary-monkeyBlack dark:text-primary-monkeyWhite'>
+        {firstName.slice(0, 2)}
       </p>
     );
 
