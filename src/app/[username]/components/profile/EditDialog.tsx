@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { Button } from '@/components/ui/button';
@@ -104,7 +105,10 @@ const EditDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button variant='secondary'>Edit</Button>
+        <Button variant='secondary'>
+          <Icon name='RiEditBox' size={18} className='mr-2' />
+          <p>Edit</p>
+        </Button>
       </DialogTrigger>
 
       <DialogContent>

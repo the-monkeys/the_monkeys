@@ -25,7 +25,7 @@ const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
       <ul className='px-1 space-y-1'>
         {displayedTopics.map((topic) => (
           <li key={topic} className='group flex items-center justify-between'>
-            <p className='py-1 flex-1 font-jost group-hover:opacity-75'>
+            <p className='py-1 flex-1 font-jost opacity-75 group-hover:opacity-100'>
               {topic}
             </p>
 
@@ -51,8 +51,6 @@ const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
       )}
     </div>
   );
-
-  return null; // Or a loading/error state if needed
 };
 
 export default TopicsList;

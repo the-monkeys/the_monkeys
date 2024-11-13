@@ -57,7 +57,10 @@ const ProfileSection = () => {
 
         {data?.user.username !== params.username &&
           status === 'authenticated' && (
-            <Button variant='secondary'>Follow</Button>
+            <Button variant='secondary'>
+              <Icon name='RiUserAdd' size={18} className='mr-2' />
+              <p>Follow</p>
+            </Button>
           )}
       </div>
 

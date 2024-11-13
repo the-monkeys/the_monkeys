@@ -131,8 +131,14 @@ const Email = () => {
   }
 
   return (
-    <div className='p-1 space-y-2'>
+    <div className='flex flex-col items-start'>
+      <h4 className='font-josefin_Sans text-lg'>Verify Email</h4>
+
       <p className='font-jost text-sm opacity-75'>
+        Verify your email address to keep your account secure and stay updated.
+      </p>
+
+      <p className='font-jost text-sm'>
         Registered Email: {session?.user?.email}
       </p>
 
@@ -161,8 +167,14 @@ const Email = () => {
         )
       ) : null}
 
+      <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>
+
+      <p className='font-jost text-sm opacity-75'>
+        Update your email for seamless communication and enhanced security.
+      </p>
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full mt-4'>
           <div className='flex items-end flex-wrap gap-2'>
             <div className='w-full sm:w-1/2'>
               <FormField

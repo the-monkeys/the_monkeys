@@ -1,29 +1,28 @@
 import { Metadata } from 'next';
 
-import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import PageHeading from '@/components/pageHeading';
-import { Badge } from '@/components/ui/badge';
+import {
+  PageHeader,
+  PageHeading,
+  PageSubheading,
+} from '@/components/pageHeading';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Notifications',
-    description: 'Stay updated with the latest notifications on Monkeys.',
   };
 }
 
 const NotificationsPage = () => {
   return (
     <Container className='pb-12 min-h-screen'>
-      <PageHeading
-        heading='Notifications'
-        badge={
-          <Badge variant='secondary'>
-            <Icon name='RiCodeSSlash' size={18} className='mr-2' />
-            Feature in Development
-          </Badge>
-        }
-      />
+      <PageHeader>
+        <PageHeading heading='Notifications' className='py-1 self-start' />
+        <PageSubheading
+          subheading='View all your notifications in one place.'
+          className='self-start opacity-75'
+        />
+      </PageHeader>
     </Container>
   );
 };

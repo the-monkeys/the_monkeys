@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description,
 };
 
-export default function RootLayout({
+export default function CreatePageLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

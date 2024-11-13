@@ -1,13 +1,15 @@
 import React from 'react';
 
-import PageHeading from '@/components/pageHeading';
+import { PageHeader, PageHeading } from '@/components/pageHeading';
 
 import ResetPasswordForm from '../components/ResetPasswordForm';
 
 const ResetPasswordPage = () => {
   return (
     <>
-      <PageHeading heading='Reset Password' />
+      <PageHeader>
+        <PageHeading heading='Reset Password' className='py-1' />
+      </PageHeader>
 
       <ResetPasswordForm />
     </>

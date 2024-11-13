@@ -2,7 +2,7 @@ import Container from '@/components/layout/Container';
 
 import ProfileSection from './components/profile/ProfileSection';
 
-export default function RootLayout({
+export default function ProfilePageLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

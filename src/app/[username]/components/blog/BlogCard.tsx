@@ -58,6 +58,7 @@ const BlogCard: FC<BlogCardProps> = ({
   };
   const params = useParams<{ username: string }>();
   const { data: session } = useSession();
+
   return (
     <div className='w-full md:px-6 first:pt-0 py-6 space-y-6 border-b-1 border-secondary-lightGrey/15'>
       <div className='cursor-default'>

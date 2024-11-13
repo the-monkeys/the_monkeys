@@ -13,7 +13,6 @@ import { useRouter } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
-import Container from '@/components/layout/Container';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';

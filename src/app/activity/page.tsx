@@ -19,24 +19,22 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
     );
 
   return (
-    <>
-      <div className='mx-auto w-full sm:w-4/5 md:w-3/5 px-4'>
-        {activities?.response.length ? (
-          activities?.response.slice(0, 15).map((activity) => {
-            return (
-              <ActivityCard
-                key={activity?.timestamp.toString()}
-                activity={activity}
-              />
-            );
-          })
-        ) : (
-          <p className='col-span-2 sm:col-span-3 font-jost text-center opacity-75'>
-            No activity available at this moment.
-          </p>
-        )}
-      </div>
-    </>
+    <div className='mx-auto w-full sm:w-4/5 md:w-3/5 px-4'>
+      {activities?.response.length ? (
+        activities?.response.slice(0, 15).map((activity) => {
+          return (
+            <ActivityCard
+              key={activity?.timestamp.toString()}
+              activity={activity}
+            />
+          );
+        })
+      ) : (
+        <p className='col-span-2 sm:col-span-3 font-jost text-center opacity-75'>
+          No activity available at this moment.
+        </p>
+      )}
+    </div>
   );
 };
 

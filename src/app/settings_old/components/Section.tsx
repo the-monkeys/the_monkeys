@@ -4,22 +4,21 @@ import { twMerge } from 'tailwind-merge';
 
 type SectionProps = {
   sectionTitle: string;
-  isDanger?: boolean;
   children: React.ReactNode;
 };
-const Section: FC<SectionProps> = ({ sectionTitle, isDanger, children }) => {
+const Section: FC<SectionProps> = ({ sectionTitle, children }) => {
   return (
-    <div>
+    <div className='flex flex-col sm:flex-row gap-4'>
       <h3
         className={twMerge(
-          isDanger && 'text-alert-red',
-          'p-1 w-full border-b-1 border-secondary-lightGrey/25 font-josefin_Sans text-lg md:text-xl'
+          sectionTitle === 'Danger' && 'text-alert-red',
+          'w-full sm:w-3/12 font-josefin_Sans text-lg'
         )}
       >
         {sectionTitle}
       </h3>
 
-      <div className='mt-4'>{children}</div>
+      <div className='flex-1'>{children}</div>
     </div>
   );
 };

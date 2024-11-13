@@ -1,7 +1,11 @@
 import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
-import PageHeading from '@/components/pageHeading';
+import {
+  PageHeader,
+  PageHeading,
+  PageSubheading,
+} from '@/components/pageHeading';
 
 import Section from '../../components/Section';
 
@@ -15,12 +19,11 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const PrivacyPage = () => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
-      <PageHeading heading='Privacy Policy' />
-
-      <p className='font-jost text-sm cursor-default'>
-        Effective date: 06/15/2024
-      </p>
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-4 md:space-y-6'>
+      <PageHeader>
+        <PageHeading heading='Privacy Policy' className='py-1' />
+        <PageSubheading subheading='08-15-2024' className='opacity-75' />
+      </PageHeader>
 
       <div className='space-y-8'>
         <Section title='Introduction'>

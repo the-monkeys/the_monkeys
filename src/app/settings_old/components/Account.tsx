@@ -9,24 +9,24 @@ import Visibility from './account/Visibility';
 
 const Account = () => {
   return (
-    <div className='space-y-8'>
-      <Section sectionTitle='Change Username'>
+    <div className='mt-5 p-5 space-y-8'>
+      <Section sectionTitle='Username'>
         <Username />
       </Section>
 
-      <Section sectionTitle='Update Password'>
+      <Section sectionTitle='Password'>
         <Password />
       </Section>
 
-      <Section sectionTitle='Manage Email'>
+      <Section sectionTitle='Email'>
         <Email />
       </Section>
 
-      {/* <Section sectionTitle='Profile Visibility'>
+      <Section sectionTitle='Visibility'>
         <Visibility />
-      </Section> */}
+      </Section>
 
-      <Section sectionTitle='Delete Account' isDanger={true}>
+      <Section sectionTitle='Danger'>
         <Danger />
       </Section>
     </div>

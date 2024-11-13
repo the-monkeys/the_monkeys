@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function NewsPage() {
+const NewsPage = () => {
   const currDate = new Date();
   const formattedDate = currDate.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -67,4 +67,6 @@ export default function NewsPage() {
       <NewsSection2 />
     </Container>
   );
-}
+};
+
+export default NewsPage;

@@ -81,9 +81,11 @@ const Password = () => {
   };
 
   return (
-    <div className='p-1 space-y-2'>
+    <div className='flex flex-col items-start'>
+      <h4 className='font-josefin_Sans text-lg'>Update Password</h4>
+
       <p className='font-jost text-sm opacity-75'>
-        Reset your password to regain access. Forgot it? Change it during login.
+        Update your password to restore access and protect your account.
       </p>
 
       <Dialog>
