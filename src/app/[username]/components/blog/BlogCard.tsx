@@ -43,7 +43,7 @@ const BlogCard: FC<BlogCardProps> = ({
             toast({
               variant: 'default',
               title: 'Blog Link Copied',
-              description: 'The blog link has been copied to the clipboard.',
+              description: 'The blog link has been copied.',
             });
           },
           () => {

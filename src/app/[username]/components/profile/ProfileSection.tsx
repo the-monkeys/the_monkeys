@@ -26,7 +26,7 @@ const ProfileSection = () => {
           toast({
             variant: 'default',
             title: 'Profile Link Copied',
-            description: 'The profile link has been copied to the clipboard.',
+            description: 'The profile link has been copied.',
           });
         },
         () => {
