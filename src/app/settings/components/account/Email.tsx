@@ -171,7 +171,7 @@ const Email = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      Email Address
+                      Change Email
                     </FormLabel>
                     <FormMessage />
                     <FormControl>

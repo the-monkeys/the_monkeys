@@ -41,7 +41,7 @@ const ProfileCard: FC = () => {
       </ProfileFrame>
 
       <div>
-        <h1 className='w-full font-josefin_Sans text-2xl capitalize cursor-default'>
+        <h1 className='w-full font-josefin_Sans text-xl md:text-2xl capitalize cursor-default'>
           {`${user?.first_name} ${user?.last_name}`}
         </h1>
 
