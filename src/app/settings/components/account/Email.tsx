@@ -22,7 +22,7 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const Email = () => {
+export const Email = () => {
   const { data: session, update } = useSession();
 
   const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
@@ -201,5 +201,3 @@ const Email = () => {
     </div>
   );
 };
-
-export default Email;

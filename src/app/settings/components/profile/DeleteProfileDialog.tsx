@@ -15,7 +15,7 @@ import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 
-const ProfileDeleteDialog = () => {
+export const DeleteProfileDialog = () => {
   const { data } = useSession();
 
   const [open, setOpen] = useState<boolean>();
@@ -94,5 +94,3 @@ const ProfileDeleteDialog = () => {
     </Dialog>
   );
 };
-
-export default ProfileDeleteDialog;

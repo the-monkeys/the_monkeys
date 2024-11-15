@@ -20,7 +20,7 @@ import { useSession } from 'next-auth/react';
 import { useDropzone } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 
-const ProfileUpdateDialog = () => {
+export const UpdateProfileDialog = () => {
   const { data, status } = useSession();
 
   const [uploadError, setUploadError] = useState<string>('');
@@ -206,5 +206,3 @@ const ProfileUpdateDialog = () => {
     </Dialog>
   );
 };
-
-export default ProfileUpdateDialog;

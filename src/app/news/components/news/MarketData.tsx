@@ -1,6 +1,6 @@
 import Marquee from 'react-fast-marquee';
 
-export default function MarketData() {
+export const MarketData = () => {
   return (
     <Marquee speed={25} pauseOnHover={true} className='py-2'>
       <div className='mx-4 flex gap-2 items-center'>
@@ -64,4 +64,4 @@ export default function MarketData() {
       </div>
     </Marquee>
   );
-}
+};

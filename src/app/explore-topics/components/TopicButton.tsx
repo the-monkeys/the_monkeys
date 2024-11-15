@@ -14,7 +14,7 @@ interface TopicButtonProps {
   onSuccess: () => void;
 }
 
-const TopicButton = ({
+export const TopicButton = ({
   topic,
   isFollowed,
   loading,
@@ -115,32 +115,31 @@ const TopicButton = ({
     }
   };
 
+  if (status === 'unauthenticated') return null;
+
   return (
     <>
-      {status === 'authenticated' &&
-        (isFollowed ? (
-          <Button
-            size='icon'
-            variant='destructive'
-            onClick={handleUnfollowCategory}
-            disabled={loading}
-            className='rounded-full'
-          >
-            <Icon name='RiSubtract' size={18} />
-          </Button>
-        ) : (
-          <Button
-            size='icon'
-            variant='ghost'
-            onClick={handleCategoryClick}
-            disabled={loading}
-            className='rounded-full opacity-0 group-hover:opacity-100'
-          >
-            <Icon name='RiAdd' size={18} />
-          </Button>
-        ))}
+      {isFollowed ? (
+        <Button
+          size='icon'
+          variant='destructive'
+          onClick={handleUnfollowCategory}
+          disabled={loading}
+          className='rounded-full'
+        >
+          <Icon name='RiSubtract' size={18} />
+        </Button>
+      ) : (
+        <Button
+          size='icon'
+          variant='ghost'
+          onClick={handleCategoryClick}
+          disabled={loading}
+          className='rounded-full opacity-0 group-hover:opacity-100'
+        >
+          <Icon name='RiAdd' size={18} />
+        </Button>
+      )}
     </>
   );
 };
-
-export default TopicButton;

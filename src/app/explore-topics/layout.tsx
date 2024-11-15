@@ -13,21 +13,24 @@ export const metadata: Metadata = {
     'Discover a range of topics, including Business, Technology, Arts, Travelling, Health, Humor, Entertainment and more. Stay informed and explore diverse categories that cater to your interests and curiosity.',
 };
 
-export default function ExploreTopicsPageLayout({
+const ExploreTopicsPageLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <Container className='pb-12 min-h-screen space-y-4 md:space-y-6'>
       <PageHeader>
         <PageHeading heading='Explore Topics' className='py-1' />
         <PageSubheading
           subheading='Explore wide variety of topics, from Business, Sports, Technology and much more.'
-          className='opacity-75'
+          className='text-center opacity-75'
         />
       </PageHeader>
+
       {children}
     </Container>
   );
-}
+};
+
+export default ExploreTopicsPageLayout;

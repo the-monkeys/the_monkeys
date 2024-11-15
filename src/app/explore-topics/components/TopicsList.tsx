@@ -4,9 +4,9 @@ import { Button } from '@/components/ui/button';
 import useUser from '@/hooks/useUser';
 import { useSession } from 'next-auth/react';
 
-import TopicButton from './TopicButton';
+import { TopicButton } from './TopicButton';
 
-const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
+export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
   const [showAll, setShowAll] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const { data: session } = useSession();
@@ -22,7 +22,7 @@ const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
 
   return (
     <div className='pt-2 space-y-2'>
-      <ul className='px-1 space-y-1'>
+      <ul className='pl-2 pr-1 space-y-1'>
         {displayedTopics.map((topic) => (
           <li key={topic} className='group flex items-center justify-between'>
             <p className='py-1 flex-1 font-jost opacity-75 group-hover:opacity-100'>
@@ -52,5 +52,3 @@ const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
     </div>
   );
 };
-
-export default TopicsList;

@@ -17,8 +17,8 @@ export const newsDateFormatter = (date?: string) => {
   }
 };
 
-export const activityDateFormatter = (date?: string) => {
-  const activityTimestamp = moment(date);
+export const DateFormatter = (date?: string) => {
+  const timestamp = moment(date);
 
-  return activityTimestamp.format('MMM D, YYYY');
+  return timestamp.format('MMM D, YYYY');
 };

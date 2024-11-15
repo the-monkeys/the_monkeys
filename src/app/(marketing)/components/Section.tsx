@@ -1,4 +1,4 @@
-const Section = ({
+export const Section = ({
   title,
   children,
 }: {
@@ -15,5 +15,3 @@ const Section = ({
     </div>
   );
 };
-
-export default Section;

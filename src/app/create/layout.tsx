@@ -10,12 +10,14 @@ export const metadata: Metadata = {
   description,
 };
 
-export default function CreatePageLayout({
+const CreatePageLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <Container className='min-h-screen px-5 py-4 pb-12'>{children}</Container>
   );
-}
+};
+
+export default CreatePageLayout;

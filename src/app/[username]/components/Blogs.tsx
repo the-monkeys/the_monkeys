@@ -6,9 +6,9 @@ import { Loader } from '@/components/loader';
 import useGetPublishedBlogByAccountId from '@/hooks/useGetPublishedBlogByAccountId';
 import { useSession } from 'next-auth/react';
 
-import BlogCard from './blog/BlogCard';
+import { BlogCard } from './blog/BlogCard';
 
-const Blogs = () => {
+export const Blogs = () => {
   const router = useRouter();
   const params = useParams<{ username: string }>();
   const { data: session } = useSession();
@@ -50,5 +50,3 @@ const Blogs = () => {
     </div>
   );
 };
-
-export default Blogs;

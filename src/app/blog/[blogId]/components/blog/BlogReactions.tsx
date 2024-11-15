@@ -2,7 +2,7 @@ import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { twMerge } from 'tailwind-merge';
 
-const BlogReactions = ({
+export const BlogReactions = ({
   className,
   blog_id,
 }: {
@@ -72,5 +72,3 @@ const BlogReactions = ({
     </div>
   );
 };
-
-export default BlogReactions;

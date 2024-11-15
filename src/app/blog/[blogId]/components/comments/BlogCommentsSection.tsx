@@ -1,4 +1,4 @@
-const BlogCommentsSection = () => {
+export const BlogCommentsSection = () => {
   return (
     <div className='mt-12 mx-auto w-full sm:w-4/5 space-y-4'>
       <h4 className='px-1 font-josefin_Sans font-medium text-xl sm:text-2xl'>
@@ -11,5 +11,3 @@ const BlogCommentsSection = () => {
     </div>
   );
 };
-
-export default BlogCommentsSection;

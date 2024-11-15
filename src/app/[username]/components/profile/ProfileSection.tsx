@@ -10,11 +10,11 @@ import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
 import { useSession } from 'next-auth/react';
 
-import EditDialog from './EditDialog';
-import ProfileCard from './ProfileCard';
-import TopicsCard from './TopicsCard';
+import { EditDialog } from './EditDialog';
+import { ProfileCard } from './ProfileCard';
+import { TopicsCard } from './TopicsCard';
 
-const ProfileSection = () => {
+export const ProfileSection = () => {
   const params = useParams<{ username: string }>();
 
   const { data, status } = useSession();
@@ -57,7 +57,7 @@ const ProfileSection = () => {
 
         {data?.user.username !== params.username &&
           status === 'authenticated' && (
-            <Button variant='secondary'>
+            <Button variant='outline' className='rounded-full'>
               <Icon name='RiUserAdd' size={18} className='mr-2' />
               <p>Follow</p>
             </Button>
@@ -72,5 +72,3 @@ const ProfileSection = () => {
     </div>
   );
 };
-
-export default ProfileSection;

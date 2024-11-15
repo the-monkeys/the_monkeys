@@ -15,7 +15,7 @@ import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
 import { signOut, useSession } from 'next-auth/react';
 
-const Danger = () => {
+export const Danger = () => {
   const { data } = useSession();
 
   const [deleteMessage, setDeleteMessage] = useState<string>('');
@@ -109,5 +109,3 @@ const Danger = () => {
     </div>
   );
 };
-
-export default Danger;

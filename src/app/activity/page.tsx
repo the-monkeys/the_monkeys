@@ -3,7 +3,7 @@
 import { Loader } from '@/components/loader';
 import useGetActivities from '@/hooks/useGetActivities';
 
-import ActivityCard from './components/ActivityCard';
+import { ActivityCard } from './components/ActivityCard';
 
 const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
   const { activities, isError, isLoading } = useGetActivities(

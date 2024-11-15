@@ -13,7 +13,7 @@ import { useGetTopHeadlines } from '@/hooks/useGetAllNews';
 import { NewsSource3 } from '@/services/news/newsTypes';
 import { RiDoubleQuotesL } from '@remixicon/react';
 
-export default function TopHeadlinesMobile() {
+export const TopHeadlinesMobile = () => {
   const { topHeadlines, isLoading, error } = useGetTopHeadlines();
 
   const newsData = topHeadlines as NewsSource3;
@@ -71,4 +71,4 @@ export default function TopHeadlinesMobile() {
       </div>
     </Carousel>
   );
-}
+};

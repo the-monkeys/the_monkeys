@@ -27,7 +27,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const Password = () => {
+export const Password = () => {
   const { data } = useSession();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -184,5 +184,3 @@ const Password = () => {
     </div>
   );
 };
-
-export default Password;

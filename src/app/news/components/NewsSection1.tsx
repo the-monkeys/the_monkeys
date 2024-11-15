@@ -20,7 +20,7 @@ import {
   Source1TitleCard,
 } from './news/Source1Card';
 
-export default function NewsSection1() {
+export const NewsSection1 = () => {
   const { news, isLoading, error } = useGetAllNews1();
 
   const newsData = news?.data as NewsSource1[];
@@ -191,4 +191,4 @@ export default function NewsSection1() {
       ))}
     </>
   );
-}
+};

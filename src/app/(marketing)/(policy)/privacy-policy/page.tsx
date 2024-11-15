@@ -7,7 +7,7 @@ import {
   PageSubheading,
 } from '@/components/pageHeading';
 
-import Section from '../../components/Section';
+import { Section } from '../../components/Section';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -17,12 +17,15 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const PrivacyPage = () => {
+const PrivacyPolicyPage = () => {
   return (
     <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-4 md:space-y-6'>
       <PageHeader>
         <PageHeading heading='Privacy Policy' className='py-1' />
-        <PageSubheading subheading='08-15-2024' className='opacity-75' />
+        <PageSubheading
+          subheading='08-15-2024'
+          className='text-center opacity-75'
+        />
       </PageHeader>
 
       <div className='space-y-8'>
@@ -157,4 +160,4 @@ const PrivacyPage = () => {
   );
 };
 
-export default PrivacyPage;
+export default PrivacyPolicyPage;

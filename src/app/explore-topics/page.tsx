@@ -5,22 +5,27 @@ import React from 'react';
 
 import { notFound } from 'next/navigation';
 
-import TopicButton from '@/components/buttons/topicButton';
 import { Loader } from '@/components/loader';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { letters } from '@/constants/topics';
 import useGetAllCategories from '@/hooks/usetGetAllCategories';
+import { useSession } from 'next-auth/react';
 
-import CategoryButton from './components/CategoryButton';
-import TopicsList from './components/TopicsList';
+import { AddTopicForm } from './components/AddTopicForm';
+import { CategoryButton } from './components/CategoryButton';
+import { TopicsList } from './components/TopicsList';
 
 const ExploreTopicsPage = () => {
+  const { data: session, status } = useSession();
   const { categories, isError, isLoading } = useGetAllCategories();
   const [selectedLetter, setSelectedLetter] = useState<string>('');
 
   if (isError) return notFound();
 
   const categoryData = categories?.category ?? {};
+
+  const categoryValues = Object.keys(categoryData);
 
   const filteredCategories =
     selectedLetter === '#'
@@ -30,21 +35,31 @@ const ExploreTopicsPage = () => {
         );
 
   return (
-    <>
-      <div className='w-full md:w-4/5 mx-auto px-4 flex justify-center flex-wrap gap-1'>
+    <div className='space-y-4'>
+      {status === 'authenticated' && (
+        <div className='px-4 pb-2 flex justify-center'>
+          <AddTopicForm />
+        </div>
+      )}
+
+      <div className='w-full md:w-4/5 mx-auto px-2 flex justify-center flex-wrap gap-1'>
         {letters.map((letter) => (
-          <TopicButton
-            key={letter}
-            letter={letter}
+          <Button
+            variant='ghost'
             onClick={() => setSelectedLetter(letter)}
-          />
+            className='size-8 sm:size-10 rounded-full'
+          >
+            <p className='font-jost text-sm sm:text-base font-medium'>
+              {letter}
+            </p>
+          </Button>
         ))}
       </div>
 
       {isLoading ? (
         <div className='flex flex-col items-center space-y-2'>
           <Loader />
-          <p className='font-jost'>Fetching all topics</p>
+          <p className='font-jost opacity-75'>Almost there, loading topics</p>
         </div>
       ) : (
         <div className='px-4 py-0 sm:py-4 grid grid-cols-2 md:grid-cols-3 gap-6'>
@@ -58,7 +73,7 @@ const ExploreTopicsPage = () => {
                   key={category}
                   className='p-0 sm:p-2 col-span-2 sm:col-span-1'
                 >
-                  <div className='group flex justify-between items-start'>
+                  <div className='p-1 group flex justify-between items-start'>
                     <h2 className='py-1 flex-1 font-josefin_Sans text-lg sm:text-xl text-primary-monkeyBlack dark:text-primary-monkeyWhite truncate'>
                       {category}
                     </h2>
@@ -82,7 +97,7 @@ const ExploreTopicsPage = () => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -10,7 +10,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
 
-import BlogDeleteDialog from './BlogDeleteDialog';
+import { DeleteBlogDialog } from './DeleteBlogDialog';
 
 interface BlogCardProps {
   title: string;
@@ -24,7 +24,7 @@ interface BlogCardProps {
   onEdit: (blogId: string) => void;
 }
 
-const BlogCard: FC<BlogCardProps> = ({
+export const BlogCard: FC<BlogCardProps> = ({
   title,
   description,
   author,
@@ -65,7 +65,7 @@ const BlogCard: FC<BlogCardProps> = ({
         <p className='mb-2 md:mb-4 font-josefin_Sans text-sm'>
           {author}
           <span className='px-2 font-light'>on</span>
-          {moment(date).format('DD MMM, YYYY')}
+          {moment(date).format('MMM DD, YYYY')}
         </p>
 
         {isDraft ? (
@@ -120,7 +120,7 @@ const BlogCard: FC<BlogCardProps> = ({
             ''
           )}
           {session?.user.username === params.username ? (
-            <BlogDeleteDialog blogId={blogId} title={title} />
+            <DeleteBlogDialog blogId={blogId} title={title} />
           ) : (
             ''
           )}
@@ -140,5 +140,3 @@ const BlogCard: FC<BlogCardProps> = ({
     </div>
   );
 };
-
-export default BlogCard;

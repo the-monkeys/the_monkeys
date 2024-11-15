@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 
-import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import {
   PageHeader,
@@ -9,8 +8,8 @@ import {
 } from '@/components/pageHeading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-import Account from './components/Account';
-import Profile from './components/Profile';
+import { Account } from './components/Account';
+import { Profile } from './components/Profile';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

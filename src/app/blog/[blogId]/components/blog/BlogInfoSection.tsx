@@ -2,9 +2,9 @@ import { Badge } from '@/components/ui/badge';
 import { Blog } from '@/services/Blogs/BlogTyptes';
 
 import { BlogOwnerCard } from './BlogOwnerCard';
-import BlogReactions from './BlogReactions';
+import { BlogReactions } from './BlogReactions';
 
-const BlogInfoSection = ({ blog }: { blog?: Blog }) => {
+export const BlogInfoSection = ({ blog }: { blog?: Blog }) => {
   return (
     <div className='py-4 mx-auto w-full sm:w-4/5 space-y-4 sm:space-y-6'>
       <BlogOwnerCard owner_id={blog?.owner_account_id} time={blog?.blog.time} />
@@ -31,5 +31,3 @@ const BlogInfoSection = ({ blog }: { blog?: Blog }) => {
     </div>
   );
 };
-
-export default BlogInfoSection;

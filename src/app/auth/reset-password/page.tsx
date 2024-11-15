@@ -2,7 +2,7 @@ import React from 'react';
 
 import { PageHeader, PageHeading } from '@/components/pageHeading';
 
-import ResetPasswordForm from '../components/ResetPasswordForm';
+import { ResetPasswordForm } from '../components/ResetPasswordForm';
 
 const ResetPasswordPage = () => {
   return (

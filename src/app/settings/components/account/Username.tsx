@@ -9,7 +9,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -22,7 +21,7 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const Username = () => {
+export const Username = () => {
   const { data: session, update } = useSession();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -88,9 +87,6 @@ const Username = () => {
                 name='username'
                 render={({ field }) => (
                   <FormItem>
-                    {/* <FormLabel className='font-josefin_Sans text-sm'>
-                      Username
-                    </FormLabel> */}
                     <FormMessage />
                     <FormControl>
                       <Input placeholder='Enter username' {...field} />
@@ -114,5 +110,3 @@ const Username = () => {
     </div>
   );
 };
-
-export default Username;

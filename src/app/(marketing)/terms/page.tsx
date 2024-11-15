@@ -7,7 +7,7 @@ import {
   PageSubheading,
 } from '@/components/pageHeading';
 
-import Section from '../components/Section';
+import { Section } from '../components/Section';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -22,7 +22,10 @@ const TermsPage = () => {
     <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-4 md:space-y-6'>
       <PageHeader>
         <PageHeading heading='Terms of Use' className='py-1' />
-        <PageSubheading subheading='08-15-2024' className='opacity-75' />
+        <PageSubheading
+          subheading='08-15-2024'
+          className='text-center opacity-75'
+        />
       </PageHeader>
 
       <div className='space-y-8'>

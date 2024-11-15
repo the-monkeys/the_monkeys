@@ -2,15 +2,14 @@
 
 import { useState } from 'react';
 
-import Icon from '@/components/icon';
 import { NewsSection2Skeleton } from '@/components/skeletons/newsSkeleton';
 import { Button } from '@/components/ui/button';
 import { useGetAllNews2 } from '@/hooks/useGetAllNews';
 import { NewsSource2 } from '@/services/news/newsTypes';
 
-import Source2Card from './news/Source2Card';
+import { Source2Card } from './news/Source2Card';
 
-const NewsSection2 = () => {
+export const NewsSection2 = () => {
   const { news, isLoading, error } = useGetAllNews2();
 
   const newsData = news?.articles as NewsSource2[];
@@ -52,5 +51,3 @@ const NewsSection2 = () => {
     </div>
   );
 };
-
-export default NewsSection2;

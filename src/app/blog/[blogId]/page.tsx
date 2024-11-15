@@ -6,9 +6,9 @@ import { PublishedBlogSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/useGetPublishedBlogDetailByBlogId';
 
-import BlogInfoSection from './components/blog/BlogInfoSection';
-import BlogReactions from './components/blog/BlogReactions';
-import BlogCommentsSection from './components/comments/BlogCommentsSection';
+import { BlogInfoSection } from './components/blog/BlogInfoSection';
+import { BlogReactions } from './components/blog/BlogReactions';
+import { BlogCommentsSection } from './components/comments/BlogCommentsSection';
 
 const BlogPage = ({
   params,

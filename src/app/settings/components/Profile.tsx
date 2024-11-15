@@ -27,12 +27,12 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import Section from './Section';
-import ProfileDeleteDialog from './profile/ProfileDeleteDialog';
-import ProfileUpdateDialog from './profile/ProfileUpdateDialog';
+import { Section } from './Section';
+import { DeleteProfileDialog } from './profile/DeleteProfileDialog';
+import { UpdateProfileDialog } from './profile/UpdateProfileDialog';
 import { parseDateTime } from './profile/parseDate';
 
-const Profile = () => {
+export const Profile = () => {
   const { data } = useSession();
   const { user, isLoading, isError } = useGetAuthUserProfile(
     data?.user.username
@@ -110,7 +110,7 @@ const Profile = () => {
                 Profile Photo
               </p>
 
-              <ProfileFrame>
+              <ProfileFrame className='size-28 sm:size-32'>
                 {data?.user && (
                   <ProfileImage
                     firstName={data.user.first_name}
@@ -120,9 +120,9 @@ const Profile = () => {
               </ProfileFrame>
 
               <div className='space-x-2'>
-                <ProfileDeleteDialog />
+                <DeleteProfileDialog />
 
-                <ProfileUpdateDialog />
+                <UpdateProfileDialog />
               </div>
             </div>
 
@@ -376,5 +376,3 @@ const Profile = () => {
     </Form>
   );
 };
-
-export default Profile;

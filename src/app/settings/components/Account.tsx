@@ -1,13 +1,13 @@
 import React from 'react';
 
-import Section from './Section';
-import Danger from './account/Danger';
-import Email from './account/Email';
-import Password from './account/Password';
-import Username from './account/Username';
-import Visibility from './account/Visibility';
+import { Section } from './Section';
+import { Danger } from './account/Danger';
+import { Email } from './account/Email';
+import { Password } from './account/Password';
+import { Username } from './account/Username';
+import { Visibility } from './account/Visibility';
 
-const Account = () => {
+export const Account = () => {
   return (
     <div className='space-y-8'>
       <Section sectionTitle='Change Username'>
@@ -22,9 +22,9 @@ const Account = () => {
         <Email />
       </Section>
 
-      {/* <Section sectionTitle='Profile Visibility'>
+      <Section sectionTitle='Change Visibility'>
         <Visibility />
-      </Section> */}
+      </Section>
 
       <Section sectionTitle='Delete Account' isDanger={true}>
         <Danger />
@@ -32,5 +32,3 @@ const Account = () => {
     </div>
   );
 };
-
-export default Account;

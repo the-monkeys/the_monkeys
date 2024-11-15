@@ -7,7 +7,12 @@ type SectionProps = {
   isDanger?: boolean;
   children: React.ReactNode;
 };
-const Section: FC<SectionProps> = ({ sectionTitle, isDanger, children }) => {
+
+export const Section: FC<SectionProps> = ({
+  sectionTitle,
+  isDanger,
+  children,
+}) => {
   return (
     <div>
       <h3
@@ -23,5 +28,3 @@ const Section: FC<SectionProps> = ({ sectionTitle, isDanger, children }) => {
     </div>
   );
 };
-
-export default Section;

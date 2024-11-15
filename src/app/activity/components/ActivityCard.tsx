@@ -1,9 +1,9 @@
 import Icon from '@/components/icon';
 import { activityIcon } from '@/constants/activity';
 import { Activity } from '@/services/activity/activityApiTypes';
-import { activityDateFormatter } from '@/utils/dateFormatter';
+import { DateFormatter } from '@/utils/dateFormatter';
 
-const ActivityCard = ({ activity }: { activity: Activity }) => {
+export const ActivityCard = ({ activity }: { activity: Activity }) => {
   const firstWord = activity.description.toLowerCase().split(' ')[0];
   const iconName =
     activityIcon[firstWord as keyof typeof activityIcon] || 'RiUser';
@@ -27,11 +27,9 @@ const ActivityCard = ({ activity }: { activity: Activity }) => {
         </p>
 
         <p className='font-jost text-xs sm:text-sm opacity-75'>
-          {activityDateFormatter(activity.timestamp.toString())}
+          {DateFormatter(activity.timestamp.toString())}
         </p>
       </div>
     </div>
   );
 };
-
-export default ActivityCard;
