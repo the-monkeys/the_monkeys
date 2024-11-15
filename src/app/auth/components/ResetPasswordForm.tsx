@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Suspense } from 'react';
 
 import { useRouter } from 'next/navigation';
@@ -26,9 +26,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import SearchParamsComponent from './SearchParams';
+import { SearchParamsComponent } from './SearchParams';
 
-const ResetPasswordForm: React.FC = () => {
+export const ResetPasswordForm = () => {
   const [searchParams, setSearchParams] = useState<{
     username: string;
     evpw: string;
@@ -221,5 +221,3 @@ const ResetPasswordForm: React.FC = () => {
     </div>
   );
 };
-
-export default ResetPasswordForm;

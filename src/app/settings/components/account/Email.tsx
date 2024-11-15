@@ -22,7 +22,7 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const Email = () => {
+export const Email = () => {
   const { data: session, update } = useSession();
 
   const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
@@ -131,14 +131,8 @@ const Email = () => {
   }
 
   return (
-    <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Verify Email</h4>
-
+    <div className='p-1 space-y-2'>
       <p className='font-jost text-sm opacity-75'>
-        Verify your email address to keep your account secure and stay updated.
-      </p>
-
-      <p className='font-jost text-sm'>
         Registered Email: {session?.user?.email}
       </p>
 
@@ -167,14 +161,8 @@ const Email = () => {
         )
       ) : null}
 
-      <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>
-
-      <p className='font-jost text-sm opacity-75'>
-        Update your email for seamless communication and enhanced security.
-      </p>
-
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full mt-4'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
           <div className='flex items-end flex-wrap gap-2'>
             <div className='w-full sm:w-1/2'>
               <FormField
@@ -183,7 +171,7 @@ const Email = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className='font-josefin_Sans text-sm'>
-                      Email Address
+                      Change Email
                     </FormLabel>
                     <FormMessage />
                     <FormControl>
@@ -213,5 +201,3 @@ const Email = () => {
     </div>
   );
 };
-
-export default Email;

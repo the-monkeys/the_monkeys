@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import useUser from '@/hooks/useUser';
 import { useSession } from 'next-auth/react';
 
-const TopicsCard = () => {
+export const TopicsCard = () => {
   const params = useParams<{ username: string }>();
 
   const { data, status } = useSession();
@@ -48,11 +48,9 @@ const TopicsCard = () => {
             position='Right'
             className='w-fit'
           >
-            <p className='font-jost'>Add Topics</p>
+            <p className='font-jost'>Add/Explore Topics</p>
           </LinksRedirectArrow>
         )}
     </div>
   );
 };
-
-export default TopicsCard;

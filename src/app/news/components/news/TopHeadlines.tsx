@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/separator';
 import { useGetTopHeadlines } from '@/hooks/useGetAllNews';
 import { NewsSource3 } from '@/services/news/newsTypes';
 
-function Headlines() {
+export const Headlines = () => {
   const { topHeadlines, isLoading, error } = useGetTopHeadlines();
 
   const newsData = topHeadlines as NewsSource3;
@@ -38,9 +38,9 @@ function Headlines() {
         ))}
     </div>
   );
-}
+};
 
-export default function TopHeadlines() {
+export const TopHeadlines = () => {
   return (
     <div className='sticky top-0 right-0 hidden lg:block lg:p-4 col-span-4 lg:col-span-1'>
       <h3 className='px-1 font-josefin_Sans font-semibold text-xl'>
@@ -56,4 +56,4 @@ export default function TopHeadlines() {
       <Headlines />
     </div>
   );
-}
+};

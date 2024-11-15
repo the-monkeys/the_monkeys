@@ -5,14 +5,11 @@ import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 
-const Visibility = () => {
+export const Visibility = () => {
   return (
-    <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Change Profile Visibility</h4>
-
+    <div className='p-1 space-y-2'>
       <p className='font-jost text-sm opacity-75'>
-        If your make yourself anonymous, your profile information will remain
-        hidden from others during any activity.
+        Stay anonymous—your profile remains hidden during activities.
       </p>
 
       <div className='mt-4 flex items-center space-x-2'>
@@ -22,5 +19,3 @@ const Visibility = () => {
     </div>
   );
 };
-
-export default Visibility;

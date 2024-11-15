@@ -8,7 +8,7 @@ interface SearchParamsComponentProps {
   setSearchParams: (params: { username: string; evpw: string }) => void;
 }
 
-const SearchParamsComponent: React.FC<SearchParamsComponentProps> = ({
+export const SearchParamsComponent: React.FC<SearchParamsComponentProps> = ({
   setSearchParams,
 }) => {
   const searchParams = useSearchParams();
@@ -21,5 +21,3 @@ const SearchParamsComponent: React.FC<SearchParamsComponentProps> = ({
 
   return null;
 };
-
-export default SearchParamsComponent;

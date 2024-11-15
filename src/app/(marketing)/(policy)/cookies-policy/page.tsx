@@ -1,9 +1,13 @@
 import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
-import PageHeading from '@/components/pageHeading';
+import {
+  PageHeader,
+  PageHeading,
+  PageSubheading,
+} from '@/components/pageHeading';
 
-import Section from '../../components/Section';
+import { Section } from '../../components/Section';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -13,16 +17,18 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const CookiePage = () => {
+const CookiesPolicyPage = () => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
-      <PageHeading heading='Cookie Policy' />
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-4 md:space-y-6'>
+      <PageHeader>
+        <PageHeading heading='Cookie Policy' className='py-1' />
+        <PageSubheading
+          subheading='08-15-2024'
+          className='text-center opacity-75'
+        />
+      </PageHeader>
 
-      <p className='font-jost text-sm cursor-default'>
-        Effective date: 06/15/2024
-      </p>
-
-      <div className='space-y-8'>
+      <div className='space-y-6 md:space-y-8'>
         <Section title='Introduction'>
           <p>
             Welcome to The Monkeys! We are dedicated to fostering a secure and
@@ -118,4 +124,4 @@ const CookiePage = () => {
   );
 };
 
-export default CookiePage;
+export default CookiesPolicyPage;

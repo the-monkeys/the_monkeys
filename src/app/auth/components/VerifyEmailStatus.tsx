@@ -8,9 +8,9 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from '@/components/ui/use-toast';
 import { verifyEmailVerificationToken } from '@/services/auth/auth';
 
-import SearchParamsComponent from './SearchParams';
+import { SearchParamsComponent } from './SearchParams';
 
-const VerifyEmailStatus = () => {
+export const VerifyEmailStatus = () => {
   const [searchParams, setSearchParams] = useState<{
     username: string;
     evpw: string;
@@ -100,5 +100,3 @@ const VerifyEmailStatus = () => {
     </div>
   );
 };
-
-export default VerifyEmailStatus;

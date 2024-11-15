@@ -27,7 +27,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const Password = () => {
+export const Password = () => {
   const { data } = useSession();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -81,11 +81,9 @@ const Password = () => {
   };
 
   return (
-    <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Update Password</h4>
-
+    <div className='p-1 space-y-2'>
       <p className='font-jost text-sm opacity-75'>
-        Update your password to restore access and protect your account.
+        Reset your password to regain access. Forgot it? Change it during login.
       </p>
 
       <Dialog>
@@ -186,5 +184,3 @@ const Password = () => {
     </div>
   );
 };
-
-export default Password;

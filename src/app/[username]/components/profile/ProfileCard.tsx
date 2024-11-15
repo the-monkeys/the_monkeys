@@ -1,6 +1,5 @@
 'use client';
 
-import { FC } from 'react';
 import React from 'react';
 
 import Link from 'next/link';
@@ -13,7 +12,7 @@ import useUser from '@/hooks/useUser';
 import moment from 'moment';
 import { useSession } from 'next-auth/react';
 
-const ProfileCard: FC = () => {
+export const ProfileCard = () => {
   const params = useParams<{ username: string }>();
 
   const { data, status } = useSession();
@@ -34,14 +33,14 @@ const ProfileCard: FC = () => {
 
   return (
     <div className='space-y-3'>
-      <ProfileFrame>
+      <ProfileFrame className='size-28 sm:size-32'>
         {user?.username && (
           <ProfileImage firstName={user.first_name} username={user.username} />
         )}
       </ProfileFrame>
 
       <div>
-        <h1 className='w-full font-josefin_Sans text-2xl capitalize cursor-default'>
+        <h1 className='w-full font-josefin_Sans text-xl md:text-2xl capitalize cursor-default'>
           {`${user?.first_name} ${user?.last_name}`}
         </h1>
 
@@ -150,5 +149,3 @@ const ProfileCard: FC = () => {
     </div>
   );
 };
-
-export default ProfileCard;

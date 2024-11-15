@@ -29,7 +29,7 @@ const initial_data = {
   blocks: [],
 };
 
-export default function Page({ params }: { params: { blogId: string } }) {
+const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData | null>(null);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
@@ -246,4 +246,6 @@ export default function Page({ params }: { params: { blogId: string } }) {
       )}
     </Container>
   );
-}
+};
+
+export default EditPage;

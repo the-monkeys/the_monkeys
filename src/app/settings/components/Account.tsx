@@ -1,36 +1,34 @@
 import React from 'react';
 
-import Section from './Section';
-import Danger from './account/Danger';
-import Email from './account/Email';
-import Password from './account/Password';
-import Username from './account/Username';
-import Visibility from './account/Visibility';
+import { Section } from './Section';
+import { Danger } from './account/Danger';
+import { Email } from './account/Email';
+import { Password } from './account/Password';
+import { Username } from './account/Username';
+import { Visibility } from './account/Visibility';
 
-const Account = () => {
+export const Account = () => {
   return (
-    <div className='mt-5 p-5 space-y-8'>
-      <Section sectionTitle='Username'>
+    <div className='space-y-8'>
+      <Section sectionTitle='Change Username'>
         <Username />
       </Section>
 
-      <Section sectionTitle='Password'>
+      <Section sectionTitle='Update Password'>
         <Password />
       </Section>
 
-      <Section sectionTitle='Email'>
+      <Section sectionTitle='Manage Email'>
         <Email />
       </Section>
 
-      <Section sectionTitle='Visibility'>
+      <Section sectionTitle='Change Visibility'>
         <Visibility />
       </Section>
 
-      <Section sectionTitle='Danger'>
+      <Section sectionTitle='Delete Account' isDanger={true}>
         <Danger />
       </Section>
     </div>
   );
 };
-
-export default Account;

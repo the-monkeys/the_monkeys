@@ -3,11 +3,11 @@ import { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 import { Separator } from '@/components/ui/separator';
 
-import NewsSection1 from './components/NewsSection1';
-import NewsSection2 from './components/NewsSection2';
-import MarketData from './components/news/MarketData';
-import TopHeadlines from './components/news/TopHeadlines';
-import TopHeadlinesMobile from './components/news/TopHeadlinesMobile';
+import { NewsSection1 } from './components/NewsSection1';
+import { NewsSection2 } from './components/NewsSection2';
+import { MarketData } from './components/news/MarketData';
+import { TopHeadlines } from './components/news/TopHeadlines';
+import { TopHeadlinesMobile } from './components/news/TopHeadlinesMobile';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -17,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function NewsPage() {
+const NewsPage = () => {
   const currDate = new Date();
   const formattedDate = currDate.toLocaleDateString('en-US', {
     weekday: 'long',
@@ -31,11 +31,11 @@ export default function NewsPage() {
     <Container className='pb-20 min-h-screen px-5'>
       <div className='flex justify-between flex-wrap'>
         <p className='font-jost text-xs sm:text-sm opacity-75'>
-          {formattedDate} {formattedTime} UTC
+          {formattedDate}
         </p>
 
         <p className='font-jost text-xs sm:text-sm opacity-75'>
-          themonkeys.live
+          {formattedTime} UTC
         </p>
       </div>
 
@@ -52,19 +52,21 @@ export default function NewsPage() {
 
       <MarketData />
 
-      <TopHeadlinesMobile />
+      {/* <TopHeadlinesMobile /> */}
 
-      <div className='mt-8 grid grid-cols-3'>
+      {/* <div className='mt-8 grid grid-cols-3'>
         <div className='col-span-3 lg:col-span-2'>
           <NewsSection1 />
         </div>
 
         <TopHeadlines />
-      </div>
+      </div> */}
 
       <Separator className='hidden sm:block my-4' />
 
       <NewsSection2 />
     </Container>
   );
-}
+};
+
+export default NewsPage;

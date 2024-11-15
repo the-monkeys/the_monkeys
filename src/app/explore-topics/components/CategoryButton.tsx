@@ -15,14 +15,15 @@ type props = {
   topics: string[];
 };
 
-const CategoryButton = ({ category, topics }: props) => {
+export const CategoryButton = ({ category, topics }: props) => {
   const { data: session, status } = useSession();
+  const { toast } = useToast();
+  const { user, isLoading } = useUser(session?.user?.username);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [statusTopic, setStatus] = useState<'success' | 'error' | null>(null);
   const [isAllTopicsFollowed, setIsAllTopicsFollowed] = useState(false);
   const [isSomeTopicsFollowed, setIsSomeTopicsFollowed] = useState(false);
-  const { toast } = useToast();
-  const { user, isLoading } = useUser(session?.user?.username);
 
   // Update the state based on the user's topics
   useEffect(() => {
@@ -153,16 +154,19 @@ const CategoryButton = ({ category, topics }: props) => {
     }
   };
 
+  if (status === 'unauthenticated') return null;
+
   return (
     <div className='hidden group-hover:flex gap-2'>
-      {!loading && !isAllTopicsFollowed && status === 'authenticated' && (
+      {!loading && !isAllTopicsFollowed && (
         <Button
-          size='sm'
+          size='icon'
           variant='secondary'
           onClick={handleCategoryClick}
           disabled={loading || isLoading}
+          className='rounded-full'
         >
-          Follow
+          <Icon name='RiAdd' />
         </Button>
       )}
 
@@ -172,16 +176,15 @@ const CategoryButton = ({ category, topics }: props) => {
 
       {(isAllTopicsFollowed || isSomeTopicsFollowed) && (
         <Button
-          size='sm'
-          variant='secondary'
+          size='icon'
+          variant='destructive'
           onClick={handleUnfollowCategory}
           disabled={loading || isLoading}
+          className='rounded-full'
         >
-          Unfollow
+          <Icon name='RiSubtract' />
         </Button>
       )}
     </div>
   );
 };
-
-export default CategoryButton;

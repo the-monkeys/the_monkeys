@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { NewsSource2 } from '@/services/news/newsTypes';
 
-const Source2Card: FC<NewsSource2> = (props) => {
+export const Source2Card: FC<NewsSource2> = React.memo((props) => {
   const { source, author, title, description, urlToImage } = props;
 
   return (
@@ -29,6 +29,4 @@ const Source2Card: FC<NewsSource2> = (props) => {
       </p>
     </div>
   );
-};
-
-export default React.memo(Source2Card);
+});

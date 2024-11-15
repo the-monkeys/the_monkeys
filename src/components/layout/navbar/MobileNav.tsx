@@ -37,7 +37,7 @@ const MobileNav = () => {
       <header
         className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-md z-30`}
       >
-        <Container className='w-full p-5 flex items-center justify-between'>
+        <Container className='w-full p-4 flex items-center justify-between'>
           <Link href='/'>
             <Logo showMobileLogo={true} />
           </Link>
@@ -46,7 +46,7 @@ const MobileNav = () => {
         </Container>
       </header>
 
-      <div className='fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>
+      <div className='fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly border-t-1 border-secondary-lightGrey/15 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>
         <ThemeSwitch />
 
         <CreateButton />

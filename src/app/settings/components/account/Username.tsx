@@ -9,7 +9,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -22,7 +21,7 @@ import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const Username = () => {
+export const Username = () => {
   const { data: session, update } = useSession();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -74,15 +73,13 @@ const Username = () => {
   };
 
   return (
-    <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Update Username</h4>
-
+    <div className='p-1 space-y-2'>
       <p className='font-jost text-sm opacity-75'>
         Change your username to something that reflects your individuality.
       </p>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full mt-4'>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
           <div className='flex items-end flex-wrap gap-2'>
             <div className='w-full sm:w-1/2'>
               <FormField
@@ -90,9 +87,6 @@ const Username = () => {
                 name='username'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-josefin_Sans text-sm'>
-                      Username
-                    </FormLabel>
                     <FormMessage />
                     <FormControl>
                       <Input placeholder='Enter username' {...field} />
@@ -116,5 +110,3 @@ const Username = () => {
     </div>
   );
 };
-
-export default Username;

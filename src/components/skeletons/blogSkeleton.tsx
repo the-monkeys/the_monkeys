@@ -1,37 +1,45 @@
 import Container from '../layout/Container';
+import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
+
+export const BlogOwnerInfoSkeleton = () => {
+  return (
+    <div className='flex items-center flex-wrap gap-2'>
+      <Skeleton className='size-12 rounded-full' />
+
+      <div className='flex-1 space-y-1'>
+        <Skeleton className='w-28 sm:w-44 h-8' />
+        <Skeleton className='w-4/5 sm:w-44 h-4' />
+      </div>
+    </div>
+  );
+};
 
 export const PublishedBlogSkeleton = () => {
   return (
-    <Container className='min-h-screen px-5 pb-12'>
-      <div className='px-1 py-4 mx-auto w-full sm:w-4/5 border-b-1 border-secondary-lightGrey/25 space-y-4 sm:space-y-6'>
-        <div className='flex flex-col sm:flex-row justify-between sm:items-end gap-1'>
-          <div className='w-full flex flex-col space-y-1'>
-            <Skeleton className='h-4 w-1/4 rounded-none' />
-            <Skeleton className='h-8 w-3/5 rounded-none' />
-          </div>
+    <Container className='min-h-screen px-5 pb-12 space-y-4'>
+      <div className='pt-4 mx-auto w-full sm:w-4/5 space-y-4'>
+        <BlogOwnerInfoSkeleton />
 
-          <div className='w-full flex flex-col sm:items-end space-y-1'>
-            <Skeleton className='h-4 w-1/4 rounded-none' />
-            <Skeleton className='h-8 w-1/2 rounded-none' />
-          </div>
+        <div className='flex items-center gap-1 flex-wrap'>
+          <Skeleton className='h-4 w-20' />
+          <Skeleton className='h-4 w-20' />
+          <Skeleton className='h-4 w-20' />
         </div>
 
-        <div className='flex gap-1 flex-wrap'>
-          <Skeleton className='h-6 w-28 rounded-full' />
-          <Skeleton className='h-6 w-28 rounded-full' />
-          <Skeleton className='h-6 w-28 rounded-full' />
-          <Skeleton className='h-6 w-28 rounded-full' />
+        <div className='flex justify-end items-center gap-3'>
+          <Skeleton className='size-8 rounded-full' />
+          <Skeleton className='size-8 rounded-full' />
+          <Skeleton className='size-8 rounded-full' />
         </div>
       </div>
 
-      <div className='mt-12 mx-auto w-full sm:w-4/5 space-y-2'>
-        <Skeleton className='w-1/4 h-10 rounded-none' />
-        <Skeleton className='w-full h-20 rounded-none' />
-        <Skeleton className='w-full h-28 rounded-none' />
-        <Skeleton className='w-1/2 h-8 rounded-none' />
-        <Skeleton className='w-full h-28 rounded-none' />
-        <Skeleton className='w-full h-20 rounded-none' />
+      <Separator />
+
+      <div className='mx-auto w-full sm:w-4/5 space-y-2'>
+        <Skeleton className='w-full h-10' />
+        <Skeleton className='w-full h-40' />
+        <Skeleton className='w-full h-40' />
       </div>
     </Container>
   );

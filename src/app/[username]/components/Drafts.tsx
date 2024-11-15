@@ -6,9 +6,9 @@ import { Loader } from '@/components/loader';
 import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
 
-import BlogCard from './blog/BlogCard';
+import { BlogCard } from './blog/BlogCard';
 
-const Drafts = () => {
+export const Drafts = () => {
   const { data: session } = useSession();
   const { blogs, isLoading } = useGetAllDraftBlogs(session?.user.account_id);
   const router = useRouter();
@@ -46,5 +46,3 @@ const Drafts = () => {
     </div>
   );
 };
-
-export default Drafts;

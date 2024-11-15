@@ -17,7 +17,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
-const BlogDeleteDialog = ({
+export const DeleteBlogDialog = ({
   blogId,
   title,
 }: {
@@ -86,5 +86,3 @@ const BlogDeleteDialog = ({
     </Dialog>
   );
 };
-
-export default BlogDeleteDialog;

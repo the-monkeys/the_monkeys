@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { Button } from '@/components/ui/button';
@@ -29,14 +30,14 @@ import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
 import { z } from 'zod';
 
-const formschema = z.object({
+const editProfileSchema = z.object({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().min(1, 'Last name is required'),
   address: z.string().optional(),
   bio: z.string().optional(),
 });
 
-const EditDialog = () => {
+export const EditDialog = () => {
   const { data } = useSession();
   const { user, isLoading, isError } = useGetAuthUserProfile(
     data?.user.username
@@ -44,8 +45,8 @@ const EditDialog = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
-  const form = useForm<z.infer<typeof formschema>>({
-    resolver: zodResolver(formschema),
+  const form = useForm<z.infer<typeof editProfileSchema>>({
+    resolver: zodResolver(editProfileSchema),
     defaultValues: {
       first_name: user?.first_name || '',
       last_name: user?.last_name || '',
@@ -54,7 +55,7 @@ const EditDialog = () => {
     },
   });
 
-  const onSubmit = async (updatedvalues: z.infer<typeof formschema>) => {
+  const onSubmit = async (updatedvalues: z.infer<typeof editProfileSchema>) => {
     const values = {
       ...updatedvalues,
       contact_number: user?.contact_number,
@@ -104,7 +105,10 @@ const EditDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <Button variant='secondary'>Edit</Button>
+        <Button variant='outline' className='rounded-full'>
+          <Icon name='RiEditBox' size={18} className='mr-2' />
+          <p>Edit</p>
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
@@ -207,5 +211,3 @@ const EditDialog = () => {
     </Dialog>
   );
 };
-
-export default EditDialog;
