@@ -46,13 +46,12 @@ export const footerList = [
       },
       {
         text: 'Privacy Policy',
-        link: '/privacy-policy',
+        link: '/privacy',
       },
       {
         text: 'Cookie Policy',
-        link: '/cookies-policy',
+        link: '/cookies',
       },
     ],
   },
 ];
- 
