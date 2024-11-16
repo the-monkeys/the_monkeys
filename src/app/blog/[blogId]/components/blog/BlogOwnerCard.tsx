@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import ProfileImage from '@/components/profileImage';
+import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { BlogOwnerInfoSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetProfileInfoById from '@/hooks/useGetProfileInfoByUserId';
 import moment from 'moment';
@@ -30,9 +30,9 @@ export const BlogOwnerCard = ({
   return (
     <div className='flex items-center flex-wrap gap-2'>
       {user && (
-        <div className='size-12 ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden rounded-full'>
+        <ProfileFrame className='size-12'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
-        </div>
+        </ProfileFrame>
       )}
 
       <div>
