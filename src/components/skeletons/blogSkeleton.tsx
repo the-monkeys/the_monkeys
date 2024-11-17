@@ -15,6 +15,18 @@ export const BlogOwnerInfoSkeleton = () => {
   );
 };
 
+export const BlogUserInfoSkeleton = () => {
+  return (
+    <div className='mb-2 flex items-center gap-2'>
+      <Skeleton className='size-6 rounded-full' />
+
+      <Skeleton className='h-4 w-28' />
+
+      <Skeleton className='h-4 w-20' />
+    </div>
+  );
+};
+
 export const PublishedBlogSkeleton = () => {
   return (
     <Container className='min-h-screen px-5 pb-12 space-y-4'>
@@ -42,5 +54,15 @@ export const PublishedBlogSkeleton = () => {
         <Skeleton className='w-full h-40' />
       </div>
     </Container>
+  );
+};
+
+export const BlogListCardSkeleton = () => {
+  return (
+    <div className='md:px-6'>
+      <BlogUserInfoSkeleton />
+
+      <Skeleton className='h-36 sm:h-40 w-full' />
+    </div>
   );
 };

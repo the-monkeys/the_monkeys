@@ -10,9 +10,7 @@ export interface Blog {
 export interface Block {
   id: string;
   type: string;
-  data: {
-    text: string;
-  };
+  data: any;
 }
 export interface GetDraftBlogResponse {
   blogs: Blog[];

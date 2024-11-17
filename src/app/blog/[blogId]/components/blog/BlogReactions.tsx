@@ -40,33 +40,33 @@ export const BlogReactions = ({
       )}
     >
       <div className='flex items-center gap-3'>
-        <button className='group flex items-center gap-1'>
-          <Icon
-            name='RiHeart3'
-            className='opacity-75 group-hover:opacity-100'
-          />
-          <span className='font-jost text-sm opacity-75'>27</span>
-        </button>
+        <div className='flex items-center gap-1'>
+          <button className='opacity-75 hover:opacity-100'>
+            <Icon name='RiHeart3' />
+          </button>
 
-        <button className='group flex items-center gap-1'>
-          <Icon name='RiChat1' className='opacity-75 group-hover:opacity-100' />
-          <span className='font-jost text-sm opacity-75'>- -</span>
-        </button>
+          <p className='font-jost text-sm opacity-75'>27</p>
+        </div>
+
+        <div className='flex items-center gap-1'>
+          <button className='opacity-75 hover:opacity-100'>
+            <Icon name='RiChat4' />
+          </button>
+
+          <p className='font-jost text-sm opacity-75'>3</p>
+        </div>
       </div>
 
       <div className='flex items-center gap-3'>
         <button
-          className='group'
+          className='opacity-75 hover:opacity-100'
           onClick={() => copyToClipboard(blog_id || '')}
         >
-          <Icon
-            name='RiShareForward'
-            className='opacity-75 group-hover:opacity-100'
-          />
+          <Icon name='RiShareForward' type='Fill' />
         </button>
 
-        <button className='group'>
-          <Icon name='RiMore' className='opacity-75 group-hover:opacity-100' />
+        <button className='opacity-75 hover:opacity-100'>
+          <Icon name='RiMore' type='Fill' />
         </button>
       </div>
     </div>

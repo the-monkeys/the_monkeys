@@ -37,7 +37,7 @@ export type IconName =
   | 'RiShareForward'
   | 'RiEditBox'
   | 'RiHeart3'
-  | 'RiChat1'
+  | 'RiChat4'
   | 'RiCodeSSlash'
   | 'RiCalendar'
   | 'RiMail'

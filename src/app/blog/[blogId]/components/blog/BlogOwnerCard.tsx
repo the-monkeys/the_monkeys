@@ -40,11 +40,11 @@ export const BlogOwnerCard = ({
           href={`/${user?.username}`}
           className='font-josefin_Sans text-lg md:text-xl capitalize hover:underline'
         >
-          {user?.first_name} {user?.last_name}{' '}
+          {user?.first_name} {user?.last_name}
         </Link>
 
         <p className='font-jost text-sm'>
-          <span className='opacity-75'>Last Updated on</span>{' '}
+          <span className='opacity-75'>Last Updated on</span>
           {moment(time).format('MMM DD, YYYY')}
         </p>
       </div>

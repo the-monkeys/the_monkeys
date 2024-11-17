@@ -35,7 +35,7 @@ const BlogPage = ({
 
       <BlogReactions
         blog_id={blog?.blog_id}
-        className='px-1 border-t-1 border-b-1 border-secondary-lightGrey/25 my-6 mx-auto w-full sm:w-4/5'
+        className='px-1 border-b-1 border-secondary-lightGrey/25 my-6 mx-auto w-full sm:w-4/5'
       />
 
       <BlogCommentsSection />
