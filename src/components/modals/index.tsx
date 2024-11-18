@@ -47,7 +47,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           </div>
         </div>
 
-        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col overflow-scroll rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>
+        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col overflow-auto rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>
           {children}
         </div>
       </div>

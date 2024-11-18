@@ -17,7 +17,7 @@ export const BlogOwnerInfoSkeleton = () => {
 
 export const BlogUserInfoSkeleton = () => {
   return (
-    <div className='mb-2 flex items-center gap-2'>
+    <div className='mb-4 flex items-center gap-2'>
       <Skeleton className='size-6 rounded-full' />
 
       <Skeleton className='h-4 w-28' />

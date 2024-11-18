@@ -51,7 +51,7 @@ const BlogContent = ({
       <div className='w-full flex-1 space-y-1'>
         <h2
           dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-          className='font-josefin_Sans text-xl sm:text-2xl capitalize line-clamp-2'
+          className='font-josefin_Sans text-xl sm:text-2xl group-hover:underline underline-offset-2 decoration-1 capitalize line-clamp-2'
         ></h2>
 
         <p

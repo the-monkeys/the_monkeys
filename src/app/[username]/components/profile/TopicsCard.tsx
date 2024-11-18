@@ -46,7 +46,7 @@ export const TopicsCard = () => {
           <LinksRedirectArrow
             link='/explore-topics'
             position='Right'
-            className='w-fit'
+            className='w-fit opacity-75'
           >
             <p className='font-jost'>Add/Explore Topics</p>
           </LinksRedirectArrow>

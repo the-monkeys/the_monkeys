@@ -12,9 +12,9 @@ export type IconName =
   | 'RiPencil'
   | 'RiSearch'
   | 'RiKey2'
-  | 'RiBodyScan'
   | 'RiMapPin'
   | 'RiBookmark'
+  | 'RiDraft'
   | 'RiArrowRightUp'
   | 'RiArrowRight'
   | 'RiArrowLeft'
@@ -27,8 +27,6 @@ export type IconName =
   | 'RiAdd'
   | 'RiSubtract'
   | 'RiFileCopy'
-  | 'RiDraft'
-  | 'RiArticle'
   | 'RiUpload2'
   | 'RiDeleteBin'
   | 'RiNavigation'
@@ -54,8 +52,8 @@ export type IconName =
   | 'RiLogoutBoxR'
   | 'RiErrorWarning'
   | 'RiVerifiedBadge'
+  | 'RiArticle'
   | 'RiEye'
-  | 'RiTime'
   | 'RiEyeClose';
 
 export type IconProps = {
