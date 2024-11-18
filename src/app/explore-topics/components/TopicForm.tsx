@@ -1,12 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,67 +19,25 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { RiLoader4Fill } from '@remixicon/react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import { useTheme } from 'next-themes';
 import { useForm } from 'react-hook-form';
-import Select, { StylesConfig } from 'react-select';
+import Select from 'react-select';
 import * as z from 'zod';
+
+import { customStyles } from './functions/customStyles';
 
 const formSchema = z.object({
   Topic: z
     .string()
     .min(3, 'Topic must be at least 3 characters long')
     .max(40, 'Topic must be at most 40 characters long'),
-  SelectedCategory: z.string().min(3),
+  Category: z.string().min(3),
 });
-const customStyles: StylesConfig = {
-  control: (provided: any, state: any) => ({
-    ...provided,
-    outline: 'none',
-    borderColor: state.isFocused ? '#ff462e' : '#2b2b2b',
-    boxShadow: state.isFocused ? '0 0 0 2px #ff462e' : 'none',
-    borderRadius: '0.375rem',
-    backgroundColor: '#FFF4ed',
-  }),
-  menu: (provided: any) => ({
-    ...provided,
-    backgroundColor: '#FFF4ed',
-    border: '1px solid #2b2b2b',
-    borderRadius: '0.375rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    zIndex: 50,
-  }),
-  option: (provided: any, state: any) => ({
-    ...provided,
-    backgroundColor: state.isFocused
-      ? '#ffd2cc' // monkeyOrange on hover
-      : state.isSelected
-        ? '#ff462e' // monkeyOrange on selection
-        : '#FFF4ed', // monkeyWhite otherwise
-    color: state.isSelected || state.isFocused ? 'black' : '#101010',
-    padding: '0.5rem 0.75rem',
-    ':active': 'bg-[#ff462e]',
-    cursor: 'pointer',
-  }),
-  placeholder: (provided: any) => ({
-    ...provided,
-    color: '#4f4f4f',
-    fontSize: '0.875rem',
-  }),
-  singleValue: (provided: any) => ({
-    ...provided,
-    color: '#101010',
-    fontSize: '0.875rem',
-  }),
-  input: (provided: any) => ({
-    ...provided,
-    color: '#101010',
-  }),
-};
 
 export default function TopicForm({ onSuccess }: { onSuccess: () => void }) {
   const { categories: data, isLoading } = useGetAllCategories();
   const { avaliableTopics, error, isTopicsLoading } = useGetProfileTopics();
-
-  const existingTopics = useMemo(() => avaliableTopics?.topics || [], []);
+  const { theme } = useTheme();
 
   const [loading, setLoading] = useState(false);
   const { data: userData, status } = useSession();
@@ -88,7 +45,7 @@ export default function TopicForm({ onSuccess }: { onSuccess: () => void }) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       Topic: '',
-      SelectedCategory: '',
+      Category: '',
     },
   });
 
@@ -106,7 +63,7 @@ export default function TopicForm({ onSuccess }: { onSuccess: () => void }) {
       const inputTopics = values.Topic.split(',').map((t) => t.trim());
       const format = {
         topics: inputTopics,
-        category: values.SelectedCategory,
+        category: values.Category,
       };
 
       // const newTopics = inputTopics.filter((t) => !existingTopics.includes(t));
@@ -166,9 +123,6 @@ export default function TopicForm({ onSuccess }: { onSuccess: () => void }) {
                   disabled={loading}
                 />
               </FormControl>
-              <FormDescription>
-                Enter the name mutiple topics separated by comma(,)
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -177,33 +131,34 @@ export default function TopicForm({ onSuccess }: { onSuccess: () => void }) {
         {/* Category Selector with react-select */}
         <FormField
           control={form.control}
-          name='SelectedCategory'
+          name='Category'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Select category</FormLabel>
+              <FormLabel>Category</FormLabel>
               <FormControl>
                 <Select
                   isDisabled={loading}
                   options={categoryOptions}
                   isLoading={isLoading}
                   placeholder='Select a category'
-                  styles={customStyles} // Use the custom styles
-                  isClearable
+                  styles={customStyles(theme == 'dark' ? true : false)}
                   onChange={(e: any) => field.onChange(e.value)}
-                  className='w-full text-sm' // Tailwind utility class
+                  className='w-full text-sm'
                   classNamePrefix='react-select'
                 />
               </FormControl>
-              <FormDescription>
-                Select the category of the topic
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
         {/* Submit Button */}
-        <Button type='submit' disabled={loading}>
+        <Button
+          variant='secondary'
+          disabled={loading}
+          type='submit'
+          className='float-right'
+        >
           {loading ? (
             <>
               Add
