@@ -9,11 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@editorjs/checklist": "^1.6.0",
+    "@editorjs/code": "^2.9.2",
+    "@editorjs/delimiter": "^1.4.2",
     "@editorjs/editorjs": "^2.29.1",
     "@editorjs/header": "^2.8.1",
     "@editorjs/image": "^2.9.0",
+    "@editorjs/link": "^2.6.2",
     "@editorjs/list": "^1.10.0",
     "@editorjs/paragraph": "^2.11.4",
+    "@editorjs/quote": "^2.7.2",
+    "@editorjs/table": "^2.4.2",
     "@hookform/resolvers": "^3.3.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -59,6 +65,7 @@
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "@types/editorjs__header": "^2.6.3",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
