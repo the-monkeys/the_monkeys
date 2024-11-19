@@ -34,15 +34,12 @@ export const BlogReactions = ({
 
   return (
     <div
-      className={twMerge(
-        className,
-        'py-4 flex justify-between items-center gap-3'
-      )}
+      className={twMerge(className, 'flex justify-between items-center gap-3')}
     >
       <div className='flex items-center gap-3'>
         <div className='flex items-center gap-1'>
           <button className='opacity-75 hover:opacity-100'>
-            <Icon name='RiHeart3' />
+            <Icon name='RiHeart3' size={22} />
           </button>
 
           <p className='font-jost text-sm opacity-75'>27</p>
@@ -50,7 +47,7 @@ export const BlogReactions = ({
 
         <div className='flex items-center gap-1'>
           <button className='opacity-75 hover:opacity-100'>
-            <Icon name='RiChat4' />
+            <Icon name='RiChat4' size={22} />
           </button>
 
           <p className='font-jost text-sm opacity-75'>3</p>
@@ -58,15 +55,15 @@ export const BlogReactions = ({
       </div>
 
       <div className='flex items-center gap-3'>
+        <button className='opacity-75 hover:opacity-100'>
+          <Icon name='RiBookmark' size={22} />
+        </button>
+
         <button
           className='opacity-75 hover:opacity-100'
           onClick={() => copyToClipboard(blog_id || '')}
         >
-          <Icon name='RiShareForward' type='Fill' />
-        </button>
-
-        <button className='opacity-75 hover:opacity-100'>
-          <Icon name='RiMore' type='Fill' />
+          <Icon name='RiShareForward' type='Fill' size={22} />
         </button>
       </div>
     </div>

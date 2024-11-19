@@ -35,16 +35,26 @@ export const BlogOwnerCard = ({
         </ProfileFrame>
       )}
 
-      <div>
+      <div className='flex-1 flex items-center gap-x-1 flex-wrap'>
         <Link
           href={`/${user?.username}`}
-          className='font-josefin_Sans text-lg md:text-xl capitalize hover:underline'
+          className='font-josefin_Sans text-base md:text-lg capitalize hover:underline'
         >
           {user?.first_name} {user?.last_name}
         </Link>
 
-        <p className='font-jost text-sm'>
-          <span className='opacity-75'>Last Updated on</span>
+        <span className='opacity-75'>·</span>
+
+        <button
+          className='text-base md:text-lg font-josefin_Sans text-primary-monkeyOrange opacity-75 hover:opacity-100'
+          disabled={true}
+        >
+          Follow
+        </button>
+
+        <p className='w-full font-jost text-xs md:text-sm opacity-75'>
+          {`@${user?.username}`}
+          <span className='mx-1'>·</span>
           {moment(time).format('MMM DD, YYYY')}
         </p>
       </div>
