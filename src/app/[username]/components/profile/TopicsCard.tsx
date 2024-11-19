@@ -48,7 +48,7 @@ export const TopicsCard = () => {
             position='Right'
             className='w-fit'
           >
-            <p className='font-jost'>Add/Explore Topics</p>
+            <p className='font-jost opacity-75'>Add/Explore Topics</p>
           </LinksRedirectArrow>
         )}
     </div>

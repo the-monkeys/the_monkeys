@@ -67,8 +67,8 @@ const PublishModal = ({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    setSelectedTags(values.topics); // Update selected tags
+    // console.log(values);
+    setSelectedTags(values.topics);
     handlePublishStep();
   }
 

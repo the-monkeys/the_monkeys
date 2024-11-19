@@ -16,9 +16,3 @@ export const newsDateFormatter = (date?: string) => {
     return `${timeDiffHours} hours ago`;
   }
 };
-
-export const DateFormatter = (date?: string) => {
-  const timestamp = moment(date);
-
-  return timestamp.format('MMM D, YYYY');
-};
