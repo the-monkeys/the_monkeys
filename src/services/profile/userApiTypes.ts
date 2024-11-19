@@ -1,3 +1,16 @@
+export interface IsFollowedResponse {
+  status: string;
+  isFollowing?: boolean;
+}
+
+export interface FollowDataResponse {
+  users: {
+    username: string;
+    first_name: string;
+    last_name: string;
+  }[];
+}
+
 export interface GetPublicUserProfileApiResponse {
   username: string;
   first_name: string;

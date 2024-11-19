@@ -58,16 +58,16 @@ const BlogContent = ({
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(descriptionContent),
           }}
-          className='font-jost opacity-75 line-clamp-2'
+          className='font-jost opacity-75 line-clamp-1'
         ></p>
       </div>
 
       {descriptionType === 'image' && (
-        <div className='size-28 sm:size-32 overflow-hidden'>
+        <div className='size-28 md:size-32 overflow-hidden rounded-lg'>
           <img
             src={descriptionBlock?.data?.file?.url}
             alt='Blog Image'
-            className='h-full w-full'
+            className='h-full w-full object-cover'
           />
         </div>
       )}
@@ -88,7 +88,7 @@ export const BlogCard: FC<BlogCardProps> = ({
   const { data: session } = useSession();
 
   return (
-    <div className='w-full md:px-6 first:pt-0 py-6 space-y-2 border-b-1 border-secondary-lightGrey/15 last:border-none'>
+    <div className='w-full md:px-6 first:pt-0 py-6 space-y-4 border-b-1 border-secondary-lightGrey/15 last:border-none'>
       <div>
         <BlogUserInfo user_id={author_id} date={date} />
 
@@ -109,15 +109,15 @@ export const BlogCard: FC<BlogCardProps> = ({
         )}
       </div>
 
-      <div className='py-2 flex justify-between items-center gap-4'>
+      <div className='flex justify-between items-center gap-4'>
         <div className='flex items-center gap-2'>
           <div className='flex items-center gap-1 opacity-75'>
-            <Icon name='RiHeart3' size={18} />
+            <Icon name='RiHeart3' />
             <span className='font-jost text-xs sm:text-sm'>27</span>
           </div>
 
           <div className='flex items-center gap-1 opacity-75'>
-            <Icon name='RiChat4' size={18} />
+            <Icon name='RiChat4' />
             <span className='font-jost text-xs sm:text-sm'>3</span>
           </div>
         </div>
