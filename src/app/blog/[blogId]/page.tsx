@@ -8,6 +8,7 @@ import useGetPublishedBlogDetailByBlogId from '@/hooks/useGetPublishedBlogDetail
 
 import { BlogInfoSection } from './components/blog/BlogInfoSection';
 import { BlogReactions } from './components/blog/BlogReactions';
+import { BlogTopics } from './components/blog/BlogTopics';
 import { BlogCommentsSection } from './components/comments/BlogCommentsSection';
 
 const BlogPage = ({
@@ -26,19 +27,28 @@ const BlogPage = ({
   }
 
   return (
-    <Container className='min-h-screen px-5 pb-12'>
-      <BlogInfoSection blog={blog} />
+    <Container className='pb-12 grid grid-cols-3'>
+      <div className='p-4 col-span-3 md:col-span-2'>
+        <BlogInfoSection blog={blog} />
 
-      <Separator />
+        <Separator className='mt-4' />
 
-      <Editor data={blog?.blog} />
+        <Editor data={blog?.blog} />
 
-      <BlogReactions
-        blog_id={blog?.blog_id}
-        className='px-1 border-t-1 border-b-1 border-secondary-lightGrey/25 my-6 mx-auto w-full sm:w-4/5'
-      />
+        <Separator className='my-12' />
 
-      <BlogCommentsSection />
+        <BlogTopics topics={blog?.tags || []} />
+
+        <BlogReactions blog_id={blog?.blog_id} className='mt-6' />
+
+        <BlogCommentsSection />
+      </div>
+
+      <div className='p-4 col-span-3 md:col-span-1'>
+        <h4 className='font-josefin_Sans text-base sm:text-lg'>
+          Recommended Blogs
+        </h4>
+      </div>
     </Container>
   );
 };

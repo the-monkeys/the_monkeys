@@ -8,39 +8,68 @@ export const BlogOwnerInfoSkeleton = () => {
       <Skeleton className='size-12 rounded-full' />
 
       <div className='flex-1 space-y-1'>
-        <Skeleton className='w-28 sm:w-44 h-8' />
-        <Skeleton className='w-4/5 sm:w-44 h-4' />
+        <Skeleton className='w-28 sm:w-44 h-6' />
+        <Skeleton className='w-4/5 sm:w-44 h-3' />
       </div>
+    </div>
+  );
+};
+
+export const BlogUserInfoSkeleton = () => {
+  return (
+    <div className='mb-4 flex items-center gap-2'>
+      <Skeleton className='size-6 rounded-full' />
+
+      <Skeleton className='h-4 w-28' />
+
+      <Skeleton className='h-4 w-20' />
     </div>
   );
 };
 
 export const PublishedBlogSkeleton = () => {
   return (
-    <Container className='min-h-screen px-5 pb-12 space-y-4'>
-      <div className='pt-4 mx-auto w-full sm:w-4/5 space-y-4'>
-        <BlogOwnerInfoSkeleton />
+    <Container className='pb-12 min-h-screen grid grid-cols-3 gap-4'>
+      <div className='px-4 col-span-3 md:col-span-2 space-y-2'>
+        <div className='space-y-4'>
+          <BlogOwnerInfoSkeleton />
 
-        <div className='flex items-center gap-1 flex-wrap'>
-          <Skeleton className='h-4 w-20' />
-          <Skeleton className='h-4 w-20' />
-          <Skeleton className='h-4 w-20' />
+          <div className='flex items-center gap-1 flex-wrap'>
+            <Skeleton className='h-5 w-20' />
+            <Skeleton className='h-5 w-20' />
+            <Skeleton className='h-5 w-20' />
+          </div>
+
+          <div className='flex justify-end items-center gap-2'>
+            <Skeleton className='size-8 rounded-full' />
+            <Skeleton className='size-8 rounded-full' />
+            <Skeleton className='size-8 rounded-full' />
+          </div>
         </div>
 
-        <div className='flex justify-end items-center gap-3'>
-          <Skeleton className='size-8 rounded-full' />
-          <Skeleton className='size-8 rounded-full' />
-          <Skeleton className='size-8 rounded-full' />
+        <Separator />
+
+        <div className='mx-auto space-y-2'>
+          <Skeleton className='w-full h-10' />
+          <Skeleton className='w-full h-40' />
+          <Skeleton className='w-full h-40' />
         </div>
       </div>
 
-      <Separator />
-
-      <div className='mx-auto w-full sm:w-4/5 space-y-2'>
-        <Skeleton className='w-full h-10' />
-        <Skeleton className='w-full h-40' />
-        <Skeleton className='w-full h-40' />
+      <div className='px-4 col-span-3 md:col-span-1 space-y-4'>
+        <Skeleton className='h-44 w-full' />
+        <Skeleton className='h-28 w-full' />
       </div>
     </Container>
+  );
+};
+
+export const BlogListCardSkeleton = () => {
+  return (
+    <div className='md:px-6'>
+      <BlogUserInfoSkeleton />
+
+      <Skeleton className='h-36 sm:h-40 w-full' />
+    </div>
   );
 };

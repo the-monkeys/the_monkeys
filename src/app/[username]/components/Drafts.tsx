@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-import { Loader } from '@/components/loader';
+import { BlogListCardSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
 
@@ -21,7 +21,13 @@ export const Drafts = () => {
     <div className='min-h-screen'>
       <div className='flex flex-col items-center'>
         {isLoading ? (
-          <Loader />
+          <div className='w-full space-y-6'>
+            {Array(4)
+              .fill(null)
+              .map((_, index) => (
+                <BlogListCardSkeleton key={index} />
+              ))}
+          </div>
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
           <p className='font-jost italic opacity-75'>No drafts available</p>
         ) : (
@@ -30,11 +36,10 @@ export const Drafts = () => {
             return (
               <BlogCard
                 key={blog?.blog_id}
-                title={blog?.blog?.blocks[0]?.data?.text}
-                description={blog?.blog?.blocks[0]?.data?.text}
-                author={session?.user.username as string}
+                titleBlock={blog?.blog?.blocks[0]}
+                descriptionBlock={blog?.blog?.blocks[1]}
+                author_id={blog?.owner_account_id}
                 date={blog?.blog?.time}
-                tags={blog?.tags}
                 blogId={blog?.blog_id}
                 isDraft={true}
                 onEdit={handleEdit}

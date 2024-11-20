@@ -34,39 +34,36 @@ export const BlogReactions = ({
 
   return (
     <div
-      className={twMerge(
-        className,
-        'py-4 flex justify-between items-center gap-3'
-      )}
+      className={twMerge(className, 'flex justify-between items-center gap-3')}
     >
       <div className='flex items-center gap-3'>
-        <button className='group flex items-center gap-1'>
-          <Icon
-            name='RiHeart3'
-            className='opacity-75 group-hover:opacity-100'
-          />
-          <span className='font-jost text-sm opacity-75'>27</span>
-        </button>
+        <div className='flex items-center gap-1'>
+          <button className='opacity-75 hover:opacity-100'>
+            <Icon name='RiHeart3' size={22} />
+          </button>
 
-        <button className='group flex items-center gap-1'>
-          <Icon name='RiChat1' className='opacity-75 group-hover:opacity-100' />
-          <span className='font-jost text-sm opacity-75'>- -</span>
-        </button>
+          <p className='font-jost text-sm opacity-75'>27</p>
+        </div>
+
+        <div className='flex items-center gap-1'>
+          <button className='opacity-75 hover:opacity-100'>
+            <Icon name='RiChat4' size={22} />
+          </button>
+
+          <p className='font-jost text-sm opacity-75'>3</p>
+        </div>
       </div>
 
       <div className='flex items-center gap-3'>
-        <button
-          className='group'
-          onClick={() => copyToClipboard(blog_id || '')}
-        >
-          <Icon
-            name='RiShareForward'
-            className='opacity-75 group-hover:opacity-100'
-          />
+        <button className='opacity-75 hover:opacity-100'>
+          <Icon name='RiBookmark' size={22} />
         </button>
 
-        <button className='group'>
-          <Icon name='RiMore' className='opacity-75 group-hover:opacity-100' />
+        <button
+          className='opacity-75 hover:opacity-100'
+          onClick={() => copyToClipboard(blog_id || '')}
+        >
+          <Icon name='RiShareForward' type='Fill' size={22} />
         </button>
       </div>
     </div>
