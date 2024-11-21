@@ -55,15 +55,19 @@ export const ConnectionsDialog = () => {
         >
           <TabsList className='py-2 sticky top-0 flex gap-0 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-30'>
             <TabsTrigger value='followers' className='w-full'>
-              <p className='font-josefin_Sans text-lg'>Followers</p>
+              <p className='font-josefin_Sans text-lg opacity-75 group-data-[state=active]:opacity-100'>
+                Followers
+              </p>
 
-              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+              <div className='h-[1px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
 
             <TabsTrigger value='following' className='w-full'>
-              <p className='font-josefin_Sans text-lg'>Following</p>
+              <p className='font-josefin_Sans text-lg opacity-75 group-data-[state=active]:opacity-100'>
+                Following
+              </p>
 
-              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+              <div className='h-[1px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
           </TabsList>
 

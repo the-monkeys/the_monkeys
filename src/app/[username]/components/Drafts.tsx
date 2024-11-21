@@ -1,17 +1,17 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 
+import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogListCardSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
 
-import { BlogCard } from './blog/BlogCard';
-
 export const Drafts = () => {
-  const { data: session } = useSession();
-  const { blogs, isLoading } = useGetAllDraftBlogs(session?.user.account_id);
   const router = useRouter();
+  const { data: session } = useSession();
+  const params = useParams<{ username: string }>();
+  const { blogs, isLoading } = useGetAllDraftBlogs(session?.user.account_id);
 
   const handleEdit = (blogId: string) => {
     router.push(`/edit/${blogId}?source=draft`);
@@ -38,11 +38,12 @@ export const Drafts = () => {
                 key={blog?.blog_id}
                 titleBlock={blog?.blog?.blocks[0]}
                 descriptionBlock={blog?.blog?.blocks[1]}
-                author_id={blog?.owner_account_id}
+                authorId={blog?.owner_account_id}
                 date={blog?.blog?.time}
                 blogId={blog?.blog_id}
                 isDraft={true}
                 onEdit={handleEdit}
+                editEnable={session?.user.username === params.username}
               />
             );
           })

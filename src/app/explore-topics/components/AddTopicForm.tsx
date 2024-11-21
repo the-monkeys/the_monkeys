@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { SelectInputStyles } from '@/components/styles/SelectInputStyles';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -13,8 +14,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import { useGetProfileTopics } from '@/hooks/useGetProfileTopics';
-import useGetAllCategories from '@/hooks/usetGetAllCategories';
 import { Category } from '@/services/category/categoryTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RiLoader4Fill } from '@remixicon/react';
@@ -25,8 +24,6 @@ import { useTheme } from 'next-themes';
 import { useForm } from 'react-hook-form';
 import Select from 'react-select';
 import * as z from 'zod';
-
-import { customStyles } from './functions/customStyles';
 
 const formSchema = z.object({
   Topic: z
@@ -142,7 +139,7 @@ export default function TopicForm({
                   options={categoryOptions}
                   isLoading={isCategoriesLoading}
                   placeholder='Select a category'
-                  styles={customStyles(theme == 'dark' ? true : false)}
+                  styles={SelectInputStyles(theme == 'dark' ? true : false)}
                   onChange={(e: any) => field.onChange(e.value)}
                   className='w-full text-sm'
                   classNamePrefix='react-select'

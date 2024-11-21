@@ -1,70 +1,34 @@
-import Icon from '@/components/icon';
-import { toast } from '@/components/ui/use-toast';
+import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
+import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
+import { LikeButton } from '@/components/blog/buttons/LikeButton';
+import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
 export const BlogReactions = ({
   className,
-  blog_id,
+  blogId,
+  accountId,
 }: {
   className?: string;
-  blog_id?: string;
+  blogId?: string;
+  accountId?: string;
 }) => {
-  const copyToClipboard = (text: string) => {
-    if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(`https://themonkeys.live/blog/${text}`)
-        .then(
-          () => {
-            toast({
-              variant: 'default',
-              title: 'Blog Link Copied',
-              description: 'The blog link has been copied.',
-            });
-          },
-          () => {
-            toast({
-              variant: 'error',
-              title: 'Copy Failed',
-              description: 'Unable to copy the blog link.',
-            });
-          }
-        );
-    }
-  };
+  const { data } = useSession();
 
   return (
     <div
       className={twMerge(className, 'flex justify-between items-center gap-3')}
     >
-      <div className='flex items-center gap-3'>
-        <div className='flex items-center gap-1'>
-          <button className='opacity-75 hover:opacity-100'>
-            <Icon name='RiHeart3' size={22} />
-          </button>
-
-          <p className='font-jost text-sm opacity-75'>27</p>
-        </div>
-
-        <div className='flex items-center gap-1'>
-          <button className='opacity-75 hover:opacity-100'>
-            <Icon name='RiChat4' size={22} />
-          </button>
-
-          <p className='font-jost text-sm opacity-75'>3</p>
-        </div>
+      <div className='flex items-center gap-2'>
+        <LikeButton blogId={blogId} />
+        <BookmarkButton blogId={blogId} />
       </div>
 
       <div className='flex items-center gap-3'>
-        <button className='opacity-75 hover:opacity-100'>
-          <Icon name='RiBookmark' size={22} />
-        </button>
-
-        <button
-          className='opacity-75 hover:opacity-100'
-          onClick={() => copyToClipboard(blog_id || '')}
-        >
-          <Icon name='RiShareForward' type='Fill' size={22} />
-        </button>
+        <BlogActionsDropdown
+          blogId={blogId}
+          editEnable={data?.user?.account_id === accountId}
+        />
       </div>
     </div>
   );

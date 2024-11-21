@@ -5,11 +5,11 @@ import Container from '@/components/layout/Container';
 import { PublishedBlogSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/useGetPublishedBlogDetailByBlogId';
+import moment from 'moment';
 
 import { BlogInfoSection } from './components/blog/BlogInfoSection';
 import { BlogReactions } from './components/blog/BlogReactions';
 import { BlogTopics } from './components/blog/BlogTopics';
-import { BlogCommentsSection } from './components/comments/BlogCommentsSection';
 
 const BlogPage = ({
   params,
@@ -33,15 +33,18 @@ const BlogPage = ({
 
         <Separator className='mt-4' />
 
+        <p className='mt-2 font-jost text-xs md:text-sm'>
+          <span className='opacity-75'>Last Updated: </span>
+          {moment(blog?.blog?.time).format('MMM DD, YYYY')}
+        </p>
+
         <Editor data={blog?.blog} />
 
-        <Separator className='my-12' />
+        <Separator className='mt-12 mb-6' />
 
-        <BlogTopics topics={blog?.tags || []} />
+        <BlogTopics topics={blog?.tags || []} className='mb-4' />
 
-        <BlogReactions blog_id={blog?.blog_id} className='mt-6' />
-
-        <BlogCommentsSection />
+        <BlogReactions blogId={blog?.blog_id} />
       </div>
 
       <div className='p-4 col-span-3 md:col-span-1'>

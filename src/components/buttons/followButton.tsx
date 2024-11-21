@@ -105,7 +105,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
         </Button>
       ) : (
         <Button
-          variant='outline'
+          variant='default'
           className='rounded-full'
           disabled={loading}
           onClick={onUserFollow}

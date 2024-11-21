@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
-import { PageHeader, PageHeading } from '@/components/pageHeading';
+import { PageHeader, PageHeading } from '@/components/layout/pageHeading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import Account from './components/Account';

@@ -1,5 +1,5 @@
 import Container from './layout/Container';
-import { PageHeader, PageHeading, PageSubheading } from './pageHeading';
+import { PageHeader, PageHeading, PageSubheading } from './layout/pageHeading';
 
 const LegalPage = ({
   title,

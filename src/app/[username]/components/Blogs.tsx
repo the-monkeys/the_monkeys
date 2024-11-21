@@ -2,16 +2,15 @@
 
 import { useParams, useRouter } from 'next/navigation';
 
+import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogListCardSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetPublishedBlogByAccountId from '@/hooks/useGetPublishedBlogByAccountId';
 import { useSession } from 'next-auth/react';
 
-import { BlogCard } from './blog/BlogCard';
-
 export const Blogs = () => {
   const router = useRouter();
-  const params = useParams<{ username: string }>();
   const { data: session } = useSession();
+  const params = useParams<{ username: string }>();
   const { blogs, isLoading } = useGetPublishedBlogByAccountId(params.username);
 
   const handleEdit = (blogId: string) => {
@@ -20,7 +19,7 @@ export const Blogs = () => {
 
   return (
     <div className='min-h-screen'>
-      <div className='flex flex-col items-center'>
+      <div className='flex flex-col items-center divide-y-1 divide-secondary-lightGrey/15'>
         {isLoading ? (
           <div className='w-full space-y-6'>
             {Array(4)
@@ -39,10 +38,11 @@ export const Blogs = () => {
                 key={blog?.blog_id}
                 titleBlock={blog?.blog?.blocks[0]}
                 descriptionBlock={blog?.blog?.blocks[1]}
-                author_id={blog?.owner_account_id}
+                authorId={blog?.owner_account_id}
                 date={blog?.blog?.time}
                 blogId={blog?.blog_id}
                 onEdit={handleEdit}
+                editEnable={session?.user.username === params.username}
               />
             );
           })

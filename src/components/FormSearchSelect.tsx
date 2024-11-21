@@ -2,7 +2,10 @@
 
 import React from 'react';
 
+import { useTheme } from 'next-themes';
 import Select from 'react-select';
+
+import { SelectInputStyles } from './styles/SelectInputStyles';
 
 interface FormSearchSelectProps {
   defaultSelected?: { value: string; label: string }[];
@@ -19,6 +22,8 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
   options,
   placeholder,
 }) => {
+  const { theme } = useTheme();
+
   return (
     <Select
       isMulti
@@ -30,33 +35,34 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
       options={options}
       placeholder={placeholder}
       classNamePrefix='react-select'
-      styles={{
-        control: (provided, state) => ({
-          ...provided,
-          borderRadius: '10px',
-          borderColor: '#4f4f4f',
-          borderOpacity: state.isFocused ? '50%' : '25%',
-          background: 'transparent',
-        }),
-        option: (provided, state) => ({
-          ...provided,
-          // backgroundColor: state.isSelected
-          //   ? '#ff462e' // monkeyOrange for selected
-          //   : state.isFocused
-          //     ? '#FFF4ed' // monkeyWhite for focused
-          //     : 'white',
-          // color: state.isSelected ? 'white' : 'black',
-          // '&:hover': {
-          //   backgroundColor: state.isSelected ? '#ff462e' : '#FFF4ed', // monkeyOrange for selected, monkeyWhite for hover
-          // },
-        }),
-        menu: (provided) => ({
-          ...provided,
-          height: '200px',
-          overflow: 'hidden',
-          zIndex: 9999,
-        }),
-      }}
+      styles={SelectInputStyles(theme == 'dark' ? true : false)}
+      // styles={{
+      //   control: (provided, state) => ({
+      //     ...provided,
+      //     borderRadius: '10px',
+      //     borderColor: '#4f4f4f',
+      //     borderOpacity: state.isFocused ? '50%' : '25%',
+      //     background: 'transparent',
+      //   }),
+      //   option: (provided, state) => ({
+      //     ...provided,
+      //     // backgroundColor: state.isSelected
+      //     //   ? '#ff462e' // monkeyOrange for selected
+      //     //   : state.isFocused
+      //     //     ? '#FFF4ed' // monkeyWhite for focused
+      //     //     : 'white',
+      //     // color: state.isSelected ? 'white' : 'black',
+      //     // '&:hover': {
+      //     //   backgroundColor: state.isSelected ? '#ff462e' : '#FFF4ed', // monkeyOrange for selected, monkeyWhite for hover
+      //     // },
+      //   }),
+      //   menu: (provided) => ({
+      //     ...provided,
+      //     height: '200px',
+      //     overflow: 'hidden',
+      //     zIndex: 9999,
+      //   }),
+      // }}
     />
   );
 };

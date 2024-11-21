@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useParams } from 'next/navigation';
 
+import { FollowButton } from '@/components/buttons/followButton';
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -12,7 +13,6 @@ import { useSession } from 'next-auth/react';
 
 import { ConnectionsDialog } from './ConnectionsDialog';
 import { EditDialog } from './EditDialog';
-import { FollowButton } from './FollowButton';
 import { ProfileCard } from './ProfileCard';
 import { TopicsCard } from './TopicsCard';
 
