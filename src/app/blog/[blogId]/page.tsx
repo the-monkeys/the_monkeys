@@ -4,7 +4,7 @@ import Editor from '@/components/editor/preview';
 import Container from '@/components/layout/Container';
 import { PublishedBlogSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
-import useGetPublishedBlogDetailByBlogId from '@/hooks/useGetPublishedBlogDetailByBlogId';
+import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import moment from 'moment';
 
 import { BlogInfoSection } from './components/blog/BlogInfoSection';

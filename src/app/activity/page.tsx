@@ -1,7 +1,7 @@
 'use client';
 
 import { Loader } from '@/components/loader';
-import useGetActivities from '@/hooks/useGetActivities';
+import useGetActivities from '@/hooks/user/useGetActivities';
 
 import { ActivityCard } from './components/ActivityCard';
 

@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogListCardSkeleton } from '@/components/skeletons/blogSkeleton';
-import useGetAllDraftBlogs from '@/hooks/useGetAllDraftBlogs';
+import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
 
 export const Drafts = () => {

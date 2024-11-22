@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import useGetProfileInfoById from '@/hooks/useGetProfileInfoByUserId';
+import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 
 import ProfileImage, { ProfileFrame } from '../profileImage';
 import {

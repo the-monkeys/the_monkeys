@@ -2,7 +2,7 @@ import React from 'react';
 
 import Image from 'next/image';
 
-import useProfileImage from '@/hooks/useProfileImage';
+import useProfileImage from '@/hooks/profile/useProfileImage';
 import { twMerge } from 'tailwind-merge';
 
 import { Skeleton } from './ui/skeleton';

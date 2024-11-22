@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { publishSteps } from '@/constants/modal';
-import useGetAllCategories from '@/hooks/usetGetAllCategories';
+import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';

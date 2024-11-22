@@ -9,7 +9,7 @@ import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { letters } from '@/constants/topics';
-import useGetAllCategories from '@/hooks/usetGetAllCategories';
+import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
 import { useSession } from 'next-auth/react';
 
 import { AddTopicForm } from './components/AddTopicDialog';

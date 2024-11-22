@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation';
 
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogListCardSkeleton } from '@/components/skeletons/blogSkeleton';
-import useGetPublishedBlogByAccountId from '@/hooks/useGetPublishedBlogByAccountId';
+import useGetPublishedBlogByAccountId from '@/hooks/blog/useGetPublishedBlogByAccountId';
 import { useSession } from 'next-auth/react';
 
 export const Blogs = () => {

@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useGetFollowers, useGetFollowing } from '@/hooks/useFollowStatus';
+import { useGetFollowers, useGetFollowing } from '@/hooks/user/useFollowStatus';
 
 const ConnectionCard = ({
   first_name,

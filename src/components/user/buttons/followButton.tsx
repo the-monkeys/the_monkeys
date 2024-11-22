@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
-import useIsFollowingUser from '@/hooks/useIsFollowingUser';
+import useIsFollowingUser from '@/hooks/user/useIsFollowingUser';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';

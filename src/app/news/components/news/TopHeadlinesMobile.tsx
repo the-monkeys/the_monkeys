@@ -9,7 +9,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
-import { useGetTopHeadlines } from '@/hooks/useGetAllNews';
+import { useGetTopHeadlines } from '@/hooks/blog/useGetAllNews';
 import { NewsSource3 } from '@/services/news/newsTypes';
 import { RiDoubleQuotesL } from '@remixicon/react';
 
