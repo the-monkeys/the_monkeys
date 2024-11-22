@@ -7,9 +7,15 @@ import {
   UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
 } from '../skeletons/blogSkeleton';
-import { FollowButtonIcon } from './buttons/followButton';
+import { FollowButtonCompact } from './buttons/followButton';
 
-export const UserInfoCardCompact = ({ id }: { id?: string }) => {
+export const UserInfoCardCompact = ({
+  id,
+  prefixContent,
+}: {
+  id?: string;
+  prefixContent?: string;
+}) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
 
   if (isLoading) return <UserInfoCardCompactSkeleton />;
@@ -25,13 +31,13 @@ export const UserInfoCardCompact = ({ id }: { id?: string }) => {
   return (
     <div className='w-fit flex items-center gap-1'>
       {user && (
-        <ProfileFrame className='mr-1 size-6'>
+        <ProfileFrame className='mr-1 size-4 md:size-6'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
         </ProfileFrame>
       )}
 
-      <p className='font-jost text-xs sm:text-sm'>
-        <span className='font-light opacity-75'>Authored by </span>
+      <p className='font-josefin_Sans text-xs sm:text-sm'>
+        <span className='font-light opacity-75'>{prefixContent} </span>
 
         <Link
           href={`/${user?.username}`}
@@ -61,12 +67,12 @@ export const UserInfoCard = ({ id }: { id?: string }) => {
   return (
     <div className='flex items-center flex-wrap gap-2'>
       {user && (
-        <ProfileFrame className='size-14'>
+        <ProfileFrame className='size-10 md:size-12'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
         </ProfileFrame>
       )}
 
-      <div className='flex-1 flex flex-col'>
+      <div className='flex-1 flex flex-col items-start'>
         <Link
           href={`/${user?.username}`}
           className='w-fit font-josefin_Sans font-medium text-sm md:text-base hover:underline underline-offset-2 decoration-1'
@@ -74,12 +80,8 @@ export const UserInfoCard = ({ id }: { id?: string }) => {
           {user?.first_name} {user?.last_name}
         </Link>
 
-        <span className='w-fit font-jost text-xs md:text-sm opacity-75'>
-          {`@${user?.username}`}
-        </span>
+        <FollowButtonCompact username={user?.username} />
       </div>
-
-      <FollowButtonIcon username={user?.username} />
     </div>
   );
 };

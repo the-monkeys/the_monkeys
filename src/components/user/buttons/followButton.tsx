@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
@@ -121,7 +120,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
   );
 };
 
-export const FollowButtonIcon = ({ username }: { username?: string }) => {
+export const FollowButtonCompact = ({ username }: { username?: string }) => {
   const { data, status } = useSession();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
@@ -132,14 +131,12 @@ export const FollowButtonIcon = ({ username }: { username?: string }) => {
 
   if (isLoading) {
     return (
-      <Button
-        variant='outline'
-        size='icon'
-        className='opacity-75 rounded-full'
+      <button
+        className='font-jost text-sm md:text-base opacity-75'
         disabled={true}
       >
-        <Icon name='RiUserUnfollow' />
-      </Button>
+        Follow
+      </button>
     );
   }
 
@@ -222,25 +219,21 @@ export const FollowButtonIcon = ({ username }: { username?: string }) => {
   return (
     <>
       {followStatus?.isFollowing ? (
-        <Button
-          variant='outline'
-          size='icon'
-          className='rounded-full'
+        <button
+          className='font-jost text-sm md:text-base text-alert-red hover:opacity-75'
           disabled={loading}
           onClick={onUserUnfollow}
         >
-          <Icon name='RiUserUnfollow' />
-        </Button>
+          Unfollow
+        </button>
       ) : (
-        <Button
-          variant='default'
-          size='icon'
-          className='rounded-full'
+        <button
+          className='font-jost text-sm md:text-base text-primary-monkeyOrange hover:opacity-75'
           disabled={loading}
           onClick={onUserFollow}
         >
-          <Icon name='RiUserFollow' />
-        </Button>
+          Follow
+        </button>
       )}
     </>
   );

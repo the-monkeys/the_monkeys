@@ -27,7 +27,10 @@ export const BlogReactions = ({
               // isDisable={data?.user?.account_id === accountId}
             />
 
-            <BookmarkButton blogId={blogId} />
+            <BookmarkButton
+              blogId={blogId}
+              // isDisable={data?.user?.account_id === accountId}
+            />
           </>
         ) : (
           <p className='font-jost text-alert-red italic'>

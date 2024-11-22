@@ -5,7 +5,7 @@ import { Skeleton } from '../ui/skeleton';
 export const UserInfoCardSkeleton = () => {
   return (
     <div className='flex items-center flex-wrap gap-2'>
-      <Skeleton className='size-14 rounded-full' />
+      <Skeleton className='size-12 rounded-full' />
 
       <div className='flex-1 space-y-1'>
         <Skeleton className='w-28 sm:w-44 h-6' />
@@ -17,7 +17,7 @@ export const UserInfoCardSkeleton = () => {
 
 export const UserInfoCardCompactSkeleton = () => {
   return (
-    <div className='mb-4 flex items-center gap-2'>
+    <div className='flex items-center gap-2'>
       <Skeleton className='size-6 rounded-full' />
 
       <Skeleton className='h-4 w-28' />
@@ -63,7 +63,7 @@ export const PublishedBlogSkeleton = () => {
 
 export const BlogListCardSkeleton = () => {
   return (
-    <div className='md:px-6'>
+    <div className='md:px-6 space-y-4'>
       <UserInfoCardCompactSkeleton />
 
       <Skeleton className='h-36 sm:h-40 w-full' />

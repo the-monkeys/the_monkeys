@@ -25,3 +25,8 @@ export interface IsLikedResponse {
   status: string;
   isLiked?: boolean;
 }
+
+export interface IsBookmarkedResponse {
+  status: string;
+  bookMarked?: boolean;
+}

@@ -54,7 +54,7 @@ const BlogContent = ({
       <div className='flex-1 space-y-1'>
         <h2
           dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-          className='font-josefin_Sans text-xl sm:text-2xl capitalize line-clamp-2 group-hover:opacity-75'
+          className='font-jost font-medium text-xl sm:text-2xl capitalize line-clamp-2 group-hover:opacity-75'
         ></h2>
 
         <p
@@ -66,11 +66,11 @@ const BlogContent = ({
       </div>
 
       {descriptionType === 'image' && (
-        <div className='w-[100px] md:w-[120px] h-[80px] md:h-[100px] overflow-hidden rounded-lg'>
+        <div className='w-[100px] md:w-[120px] h-[80px] md:h-[100px] overflow-hidden rounded-lg group-hover:rounded-none transition-all'>
           <img
             src={descriptionBlock?.data?.file?.url}
             alt='Blog Image'
-            className='h-full w-full object-cover group-hover:scale-110 transition-all'
+            className='h-full w-full object-cover'
           />
         </div>
       )}
@@ -94,7 +94,7 @@ export const BlogCard: FC<BlogCardProps> = ({
   return (
     <div className='w-full md:px-6 first:pt-0 py-6'>
       <div className='space-y-4'>
-        <UserInfoCardCompact id={authorId} />
+        <UserInfoCardCompact id={authorId} prefixContent='Authored by' />
 
         {isDraft ? (
           <div className='flex gap-4'>
@@ -121,7 +121,7 @@ export const BlogCard: FC<BlogCardProps> = ({
 
           <span className='opacity-75'>·</span>
 
-          <BookmarkButton />
+          <BookmarkButton blogId={blogId} />
         </div>
 
         <div className='flex items-center justify-end gap-2'>

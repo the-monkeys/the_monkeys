@@ -9,6 +9,7 @@ import moment from 'moment';
 
 import { BlogInfoSection } from './components/blog/BlogInfoSection';
 import { BlogReactions } from './components/blog/BlogReactions';
+import { BlogRecommendations } from './components/blog/BlogRecommendations';
 import { BlogTopics } from './components/blog/BlogTopics';
 
 const BlogPage = ({
@@ -36,7 +37,7 @@ const BlogPage = ({
     );
 
   return (
-    <Container className='pb-12 grid grid-cols-3'>
+    <Container className='min-h-screen pb-12 grid grid-cols-3'>
       <div className='p-4 col-span-3 md:col-span-2'>
         <BlogInfoSection blog={blog} />
 
@@ -57,9 +58,11 @@ const BlogPage = ({
       </div>
 
       <div className='p-4 col-span-3 md:col-span-1'>
-        <h4 className='font-josefin_Sans text-base sm:text-lg'>
-          Recommended Blogs
-        </h4>
+        <h4 className='px-1 font-jost text-sm sm:text-base'>You Might Like</h4>
+
+        <Separator className='mt-1 mb-4' />
+
+        <BlogRecommendations />
       </div>
     </Container>
   );

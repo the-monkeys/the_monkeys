@@ -42,7 +42,7 @@ export const BlogActionsDropdown = ({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <button className='p-1 flex items-center justify-center cursor-pointer opacity-75 hover:opacity-100'>
           <Icon name='RiMore' type='Fill' />
         </button>

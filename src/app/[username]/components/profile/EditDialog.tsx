@@ -103,7 +103,7 @@ export const EditDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant='outline' className='rounded-full'>
           <p>Edit</p>
         </Button>

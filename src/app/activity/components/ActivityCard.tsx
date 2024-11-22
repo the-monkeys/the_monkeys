@@ -9,12 +9,12 @@ export const ActivityCard = ({ activity }: { activity: Activity }) => {
     activityIcon2[firstWord as keyof typeof activityIcon2] || 'RiUser';
 
   return (
-    <div className='p-4 sm:p-4 border-1 border-secondary-lightGrey/25 flex items-center gap-4 overflow-hidden rounded-lg'>
+    <div className='p-4 sm:p-4 border-1 border-secondary-lightGrey/25 flex items-center gap-2 sm:gap-4 rounded-lg'>
       <div>
         <Icon name={icon} type='Fill' />
       </div>
 
-      <div className='flex-1'>
+      <div className='flex-1 overflow-hidden'>
         <h4 className='py-1 font-josefin_Sans text-sm sm:text-base capitalize'>
           {activity.description}
         </h4>

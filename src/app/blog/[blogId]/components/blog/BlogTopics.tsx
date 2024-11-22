@@ -19,7 +19,9 @@ export const BlogTopics = ({
           </Badge>
         ))
       ) : (
-        <span>- -</span>
+        <span className='font-jost text-xs md:text-sm opacity-75'>
+          Not available
+        </span>
       )}
     </div>
   );

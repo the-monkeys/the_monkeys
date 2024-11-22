@@ -22,7 +22,7 @@ export const LikeButton = ({
   if (isLoading) {
     return (
       <div className='p-1 flex items-center justify-center opacity-75'>
-        <Icon name='RiHeart3' type='Fill' />
+        <Icon name='RiHeart3' size={22} />
       </div>
     );
   }
@@ -30,7 +30,7 @@ export const LikeButton = ({
   if (isError) {
     return (
       <div className='p-1 flex items-center justify-center opacity-75'>
-        <Icon name='RiHeart3' />
+        <Icon name='RiHeart3' size={22} />
       </div>
     );
   }
@@ -117,13 +117,18 @@ export const LikeButton = ({
     <>
       {likeStatus?.isLiked ? (
         <button
-          className={`group p-1 flex items-center justify-center hover:opacity-75 ${
+          className={`group p-1 flex items-center justify-center opacity-75 hover:opacity-100 ${
             loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
           }`}
           onClick={onPostDislike}
           disabled={loading || isDisable}
         >
-          <Icon name='RiHeart3' type='Fill' />
+          <Icon
+            name='RiHeart3'
+            type='Fill'
+            className='text-primary-monkeyOrange'
+            size={22}
+          />
         </button>
       ) : (
         <button
@@ -133,7 +138,7 @@ export const LikeButton = ({
           onClick={onPostLike}
           disabled={loading || isDisable}
         >
-          <Icon name='RiHeart3' />
+          <Icon name='RiHeart3' size={22} />
         </button>
       )}
     </>
