@@ -32,11 +32,8 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
       {activities?.response.length ? (
         activities?.response.slice(0, 15).map((activity) => {
           return (
-            <div>
-              <ActivityCard
-                key={activity?.timestamp.toString()}
-                activity={activity}
-              />
+            <div key={activity?.timestamp.toString()}>
+              <ActivityCard activity={activity} />
               <div className='h-4 mx-auto w-[4px] bg-secondary-lightGrey/25' />
             </div>
           );
