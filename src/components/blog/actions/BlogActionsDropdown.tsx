@@ -7,7 +7,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
-import { useSession } from 'next-auth/react';
 
 import { DeleteBlogDialog } from './DeleteBlogDialog';
 
@@ -18,10 +17,6 @@ export const BlogActionsDropdown = ({
   blogId?: string;
   editEnable?: boolean;
 }) => {
-  const { status, data } = useSession();
-
-  console.log(data);
-
   const copyToClipboard = () => {
     if (navigator.clipboard) {
       navigator.clipboard
@@ -53,7 +48,7 @@ export const BlogActionsDropdown = ({
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='m-2 w-40'>
+      <DropdownMenuContent className='w-40'>
         <DropdownMenuItem asChild>
           <button
             onClick={copyToClipboard}

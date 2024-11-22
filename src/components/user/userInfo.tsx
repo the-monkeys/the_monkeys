@@ -7,6 +7,7 @@ import {
   UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
 } from '../skeletons/blogSkeleton';
+import { FollowButtonIcon } from './buttons/followButton';
 
 export const UserInfoCardCompact = ({ id }: { id?: string }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
@@ -60,23 +61,25 @@ export const UserInfoCard = ({ id }: { id?: string }) => {
   return (
     <div className='flex items-center flex-wrap gap-2'>
       {user && (
-        <ProfileFrame className='size-12'>
+        <ProfileFrame className='size-14'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
         </ProfileFrame>
       )}
 
-      <div className='flex-1 flex items-center gap-x-1 flex-wrap'>
+      <div className='flex-1 flex flex-col'>
         <Link
           href={`/${user?.username}`}
-          className='font-josefin_Sans text-base md:text-lg hover:underline underline-offset-2 decoration-1'
+          className='w-fit font-josefin_Sans font-medium text-sm md:text-base hover:underline underline-offset-2 decoration-1'
         >
           {user?.first_name} {user?.last_name}
         </Link>
 
-        <p className='w-full font-jost text-xs md:text-sm opacity-75'>
+        <span className='w-fit font-jost text-xs md:text-sm opacity-75'>
           {`@${user?.username}`}
-        </p>
+        </span>
       </div>
+
+      <FollowButtonIcon username={user?.username} />
     </div>
   );
 };

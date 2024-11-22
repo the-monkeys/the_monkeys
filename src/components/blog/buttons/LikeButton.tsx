@@ -1,9 +1,141 @@
-import Icon from '@/components/icon';
+import { useState } from 'react';
 
-export const LikeButton = ({ blogId }: { blogId?: string }) => {
+import Icon from '@/components/icon';
+import { toast } from '@/components/ui/use-toast';
+import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
+import axiosInstance from '@/services/api/axiosInstance';
+import { useSession } from 'next-auth/react';
+import { mutate } from 'swr';
+
+export const LikeButton = ({
+  blogId,
+  isDisable = false,
+}: {
+  blogId?: string;
+  isDisable?: boolean;
+}) => {
+  const { data } = useSession();
+  const { likeStatus, isLoading, isError } = useIsPostLiked(blogId);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  if (isLoading) {
+    return (
+      <div className='p-1 flex items-center justify-center opacity-75'>
+        <Icon name='RiHeart3' type='Fill' />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className='p-1 flex items-center justify-center opacity-75'>
+        <Icon name='RiHeart3' />
+      </div>
+    );
+  }
+
+  const onPostLike = async () => {
+    setLoading(true);
+
+    try {
+      const response = await axiosInstance.post(`/user/like/${blogId}`, {
+        headers: {
+          Authorization: `Bearer ${data?.user.token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Post liked successfully.',
+        });
+
+        mutate(`/user/is-liked/${blogId}`);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to like post.',
+        });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occured.',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onPostDislike = async () => {
+    setLoading(true);
+
+    try {
+      const response = await axiosInstance.post(`/user/unlike/${blogId}`, {
+        headers: {
+          headers: {
+            Authorization: `Bearer ${data?.user.token}`,
+          },
+        },
+      });
+
+      if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Post reaction removed successfully.',
+        });
+
+        mutate(`/user/is-liked/${blogId}`);
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to remove post reaction.',
+        });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occured.',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <button className='p-1 flex items-center justify-center cursor-pointer opacity-75 hover:opacity-100'>
-      <Icon name='RiHeart3' />
-    </button>
+    <>
+      {likeStatus?.isLiked ? (
+        <button
+          className={`group p-1 flex items-center justify-center hover:opacity-75 ${
+            loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
+          }`}
+          onClick={onPostDislike}
+          disabled={loading || isDisable}
+        >
+          <Icon name='RiHeart3' type='Fill' />
+        </button>
+      ) : (
+        <button
+          className={`group p-1 flex items-center justify-center opacity-75 hover:opacity-100 ${
+            loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
+          }`}
+          onClick={onPostLike}
+          disabled={loading || isDisable}
+        >
+          <Icon name='RiHeart3' />
+        </button>
+      )}
+    </>
   );
 };

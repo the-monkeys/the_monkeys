@@ -13,15 +13,27 @@ export const BlogReactions = ({
   blogId?: string;
   accountId?: string;
 }) => {
-  const { data } = useSession();
+  const { data, status } = useSession();
 
   return (
     <div
       className={twMerge(className, 'flex justify-between items-center gap-3')}
     >
-      <div className='flex items-center gap-2'>
-        <LikeButton blogId={blogId} />
-        <BookmarkButton blogId={blogId} />
+      <div className='flex items-center'>
+        {status === 'authenticated' ? (
+          <>
+            <LikeButton
+              blogId={blogId}
+              // isDisable={data?.user?.account_id === accountId}
+            />
+
+            <BookmarkButton blogId={blogId} />
+          </>
+        ) : (
+          <p className='font-jost text-alert-red italic'>
+            You are not logged in
+          </p>
+        )}
       </div>
 
       <div className='flex items-center gap-3'>

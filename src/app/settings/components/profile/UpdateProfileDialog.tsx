@@ -18,6 +18,7 @@ import { toast } from '@/components/ui/use-toast';
 import axiosFileInstance from '@/services/api/axiosFileInstance';
 import { useSession } from 'next-auth/react';
 import { useDropzone } from 'react-dropzone';
+import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 export const UpdateProfileDialog = () => {
@@ -85,6 +86,8 @@ export const UpdateProfileDialog = () => {
 
         setOpen(false);
       }
+
+      mutate(`/files/profile/${data?.user.username}/profile`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

@@ -26,12 +26,21 @@ const BlogPage = ({
     return <PublishedBlogSkeleton />;
   }
 
+  if (isError)
+    return (
+      <Container className='min-h-screen'>
+        <p className='py-4 font-jost text-sm text-alert-red text-center'>
+          Error fetching blog. Try again.
+        </p>
+      </Container>
+    );
+
   return (
     <Container className='pb-12 grid grid-cols-3'>
       <div className='p-4 col-span-3 md:col-span-2'>
         <BlogInfoSection blog={blog} />
 
-        <Separator className='mt-4' />
+        <Separator className='mt-2' />
 
         <p className='mt-2 font-jost text-xs md:text-sm'>
           <span className='opacity-75'>Last Updated: </span>
