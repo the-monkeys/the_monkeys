@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PageHeader, PageHeading } from '@/components/pageHeading';
+import { PageHeader, PageHeading } from '@/components/layout/pageHeading';
 
 import { VerifyEmailStatus } from '../components/VerifyEmailStatus';
 

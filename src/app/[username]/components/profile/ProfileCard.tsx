@@ -8,7 +8,7 @@ import { notFound, useParams } from 'next/navigation';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
-import useUser from '@/hooks/useUser';
+import useUser from '@/hooks/user/useUser';
 import moment from 'moment';
 
 export const ProfileCard = () => {

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,7 +14,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { publishSteps } from '@/constants/modal';
-import useGetAllCategories from '@/hooks/usetGetAllCategories';
+import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -24,8 +23,6 @@ import Modal from '..';
 import ModalContent from '../layout/ModalContent';
 import ModalFooter from '../layout/ModalFooter';
 import ModalHeader from '../layout/ModalHeader';
-import Step1 from './step1';
-import Step2 from './step2';
 
 export type PublishStep = {
   id: number;

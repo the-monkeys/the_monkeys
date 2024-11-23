@@ -8,11 +8,11 @@ import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
+import { FollowButton } from '@/components/user/buttons/followButton';
 import { useSession } from 'next-auth/react';
 
 import { ConnectionsDialog } from './ConnectionsDialog';
 import { EditDialog } from './EditDialog';
-import { FollowButton } from './FollowButton';
 import { ProfileCard } from './ProfileCard';
 import { TopicsCard } from './TopicsCard';
 

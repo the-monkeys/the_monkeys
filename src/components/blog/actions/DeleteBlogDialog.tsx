@@ -16,12 +16,12 @@ import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
-export const DeleteBlogDialog = ({ blogId }: { blogId: string }) => {
+export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
   const { data: session } = useSession();
   const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
 
-  async function deleteBlogById(blogId: string) {
+  async function deleteBlogById(blogId?: string) {
     setIsDeleteLoading(true);
 
     await axiosInstance
@@ -50,8 +50,9 @@ export const DeleteBlogDialog = ({ blogId }: { blogId: string }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className='p-1 flex items-center justify-center cursor-pointer opacity-75 hover:opacity-100'>
-          <Icon name='RiDeleteBin' type='Fill' />
+        <button className='p-2 w-full flex items-center gap-2 hover:opacity-75'>
+          <Icon name='RiDeleteBin' className='text-alert-red' />
+          <p className='font-jost text-base'>Delete Blog</p>
         </button>
       </DialogTrigger>
 

@@ -4,21 +4,24 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { Block } from '@/services/Blogs/BlogTyptes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import moment from 'moment';
 import { useSession } from 'next-auth/react';
 
-import { BlogUserInfo } from './BlogUserInfo';
-import { DeleteBlogDialog } from './DeleteBlogDialog';
+import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
+import { BookmarkButton } from '../buttons/BookmarkButton';
 
 interface BlogCardProps {
   titleBlock: Block;
   descriptionBlock: Block;
-  author_id: string;
+  authorId: string;
   date: number;
   blogId: string;
   isDraft?: boolean;
   onEdit: (blogId: string) => void;
+  editEnable?: boolean;
 }
 
 const BlogContent = ({
@@ -48,22 +51,22 @@ const BlogContent = ({
 
   return (
     <>
-      <div className='w-full flex-1 space-y-1'>
+      <div className='flex-1 space-y-1'>
         <h2
           dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-          className='font-josefin_Sans text-xl sm:text-2xl group-hover:underline underline-offset-2 decoration-1 capitalize line-clamp-2'
+          className='font-jost font-medium text-xl sm:text-2xl capitalize line-clamp-2 group-hover:opacity-75'
         ></h2>
 
         <p
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(descriptionContent),
           }}
-          className='font-jost opacity-75 line-clamp-1'
+          className='font-jost text-sm sm:text-base opacity-75 line-clamp-1'
         ></p>
       </div>
 
       {descriptionType === 'image' && (
-        <div className='size-28 md:size-32 overflow-hidden rounded-lg'>
+        <div className='w-[100px] md:w-[120px] h-[80px] md:h-[100px] overflow-hidden rounded-lg group-hover:rounded-none transition-all'>
           <img
             src={descriptionBlock?.data?.file?.url}
             alt='Blog Image'
@@ -78,19 +81,20 @@ const BlogContent = ({
 export const BlogCard: FC<BlogCardProps> = ({
   titleBlock,
   descriptionBlock,
-  author_id,
+  authorId,
   date,
   blogId,
   isDraft = false,
   onEdit,
+  editEnable = false,
 }) => {
   const params = useParams<{ username: string }>();
   const { data: session } = useSession();
 
   return (
-    <div className='w-full md:px-6 first:pt-0 py-6 space-y-4 border-b-1 border-secondary-lightGrey/15 last:border-none'>
-      <div>
-        <BlogUserInfo user_id={author_id} date={date} />
+    <div className='w-full md:px-6 first:pt-0 py-6'>
+      <div className='space-y-4'>
+        <UserInfoCardCompact id={authorId} prefixContent='Authored by' />
 
         {isDraft ? (
           <div className='flex gap-4'>
@@ -109,17 +113,15 @@ export const BlogCard: FC<BlogCardProps> = ({
         )}
       </div>
 
-      <div className='flex justify-between items-center gap-4'>
+      <div className='pt-4 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-2'>
-          <div className='flex items-center gap-1 opacity-75'>
-            <Icon name='RiHeart3' />
-            <span className='font-jost text-xs sm:text-sm'>27</span>
-          </div>
+          <p className='font-jost text-xs opacity-75'>
+            {moment(date).format('MMM DD, YYYY')}
+          </p>
 
-          <div className='flex items-center gap-1 opacity-75'>
-            <Icon name='RiChat4' />
-            <span className='font-jost text-xs sm:text-sm'>3</span>
-          </div>
+          <span className='opacity-75'>·</span>
+
+          <BookmarkButton blogId={blogId} />
         </div>
 
         <div className='flex items-center justify-end gap-2'>
@@ -134,15 +136,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             ''
           )}
 
-          {session?.user.username === params.username ? (
-            <DeleteBlogDialog blogId={blogId} />
-          ) : (
-            ''
-          )}
-
-          <button className='p-1 flex items-center justify-center cursor-pointer opacity-75 hover:opacity-100'>
-            <Icon name='RiMore' type='Fill' />
-          </button>
+          <BlogActionsDropdown blogId={blogId} editEnable={editEnable} />
         </div>
       </div>
     </div>

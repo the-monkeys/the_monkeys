@@ -1,5 +1,8 @@
 import { authFetcher } from '@/services/fetcher';
-import { FollowDataResponse } from '@/services/profile/userApiTypes';
+import {
+  FollowDataResponse,
+  IsFollowedResponse,
+} from '@/services/profile/userApiTypes';
 import useSWR from 'swr';
 
 export const useGetFollowers = () => {
@@ -25,5 +28,18 @@ export const useGetFollowing = () => {
     following: data,
     followingError: error,
     follwingLoading: isLoading,
+  };
+};
+
+export const useIsFollowingUser = (username: string | undefined) => {
+  const { data, error, isLoading } = useSWR<IsFollowedResponse>(
+    `/user/is-followed/${username}`,
+    authFetcher
+  );
+
+  return {
+    followStatus: data,
+    isError: error,
+    isLoading,
   };
 };

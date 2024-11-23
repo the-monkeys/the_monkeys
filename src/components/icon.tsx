@@ -8,6 +8,8 @@ export type IconName =
   | 'RiNotification3'
   | 'RiUser'
   | 'RiUserStar'
+  | 'RiUserFollow'
+  | 'RiUserUnfollow'
   | 'RiPencil'
   | 'RiSearch'
   | 'RiKey2'

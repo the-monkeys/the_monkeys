@@ -20,3 +20,13 @@ export interface GetDraftBlogResponse {
 export interface GetLatest100BlogsResponse {
   the_blogs: Blog[];
 }
+
+export interface IsLikedResponse {
+  status: string;
+  isLiked?: boolean;
+}
+
+export interface IsBookmarkedResponse {
+  status: string;
+  bookMarked?: boolean;
+}

@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useGetFollowers, useGetFollowing } from '@/hooks/useFollowStatus';
+import { useGetFollowers, useGetFollowing } from '@/hooks/user/useFollowStatus';
 
 const ConnectionCard = ({
   first_name,
@@ -23,13 +23,15 @@ const ConnectionCard = ({
   return (
     <Link
       href={`/${username}`}
-      className='p-2 flex items-center flex-wrap gap-x-2 hover:bg-secondary-lightGrey/15'
+      className='p-2 font-jost flex items-center flex-wrap gap-x-2 hover:bg-secondary-lightGrey/15'
     >
-      <h2 className='font-josefin_Sans capitalize'>
-        {`${first_name} ${last_name}`}
+      <h2 className='w-fit text-sm md:text-base hover:underline underline-offset-2 decoration-1'>
+        {first_name} {last_name}
       </h2>
 
-      <p className='font-jost text-sm opacity-75 truncate'>{`@${username}`}</p>
+      <p className='w-fit text-xs md:text-sm opacity-75 truncate'>
+        {`@${username}`}
+      </p>
     </Link>
   );
 };
@@ -40,42 +42,44 @@ export const ConnectionsDialog = () => {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant='ghost' size='icon' className='rounded-full'>
           <Icon name='RiLinks' />
         </Button>
       </DialogTrigger>
 
-      <DialogContent className='flex flex-col max-h-[60vh] sm:max-h-[80vh] overflow-hidden'>
+      <DialogContent className='flex flex-col'>
         <DialogTitle>My Connections</DialogTitle>
 
-        <Tabs
-          defaultValue='followers'
-          className='max-h-fit space-y-4 overflow-auto'
-        >
-          <TabsList className='py-2 sticky top-0 flex gap-0 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-30'>
+        <Tabs defaultValue='followers' className='space-y-4'>
+          <TabsList className='flex gap-0 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-30'>
             <TabsTrigger value='followers' className='w-full'>
-              <p className='font-josefin_Sans text-lg'>Followers</p>
+              <p className='font-josefin_Sans text-lg opacity-75 group-data-[state=active]:opacity-100'>
+                Followers
+              </p>
 
-              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+              <div className='h-[1px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
 
             <TabsTrigger value='following' className='w-full'>
-              <p className='font-josefin_Sans text-lg'>Following</p>
+              <p className='font-josefin_Sans text-lg opacity-75 group-data-[state=active]:opacity-100'>
+                Following
+              </p>
 
-              <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+              <div className='h-[1px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
           </TabsList>
 
-          <div className='overflow-auto'>
+          <div className='max-h-[50vh] sm:max-h-[60vh] overflow-auto'>
             <TabsContent
-              className='w-full divide-y-1 divide-secondary-lightGrey/25'
+              className='divide-y-1 divide-secondary-lightGrey/25'
               value='followers'
             >
               {followers?.users ? (
                 followers?.users.map((follower) => {
                   return (
                     <ConnectionCard
+                      key={follower?.username}
                       first_name={follower.first_name}
                       last_name={follower.last_name}
                       username={follower.username}
@@ -89,11 +93,15 @@ export const ConnectionsDialog = () => {
               )}
             </TabsContent>
 
-            <TabsContent className='w-full' value='following'>
+            <TabsContent
+              className='divide-y-1 divide-secondary-lightGrey/25'
+              value='following'
+            >
               {following?.users ? (
                 following?.users.map((following) => {
                   return (
                     <ConnectionCard
+                      key={following?.username}
                       first_name={following.first_name}
                       last_name={following.last_name}
                       username={following.username}

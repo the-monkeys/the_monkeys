@@ -1,6 +1,6 @@
 import { StylesConfig } from 'react-select';
 
-export const customStyles = (isDarkTheme: boolean): StylesConfig => ({
+export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
   control: (provided: any, state: any) => ({
     ...provided,
     outline: 'none',

@@ -1,17 +1,20 @@
+import { UserInfoCard } from '@/components/user/userInfo';
 import { Blog } from '@/services/Blogs/BlogTyptes';
 
-import { BlogOwnerCard } from './BlogOwnerCard';
 import { BlogReactions } from './BlogReactions';
 import { BlogTopics } from './BlogTopics';
 
 export const BlogInfoSection = ({ blog }: { blog?: Blog }) => {
   return (
-    <div className='space-y-6'>
-      <BlogOwnerCard owner_id={blog?.owner_account_id} time={blog?.blog.time} />
+    <div>
+      <UserInfoCard id={blog?.owner_account_id} />
 
-      <BlogTopics topics={blog?.tags || []} />
+      <BlogTopics topics={blog?.tags || []} className='my-4' />
 
-      <BlogReactions blog_id={blog?.blog_id} />
+      <BlogReactions
+        blogId={blog?.blog_id}
+        accountId={blog?.owner_account_id}
+      />
     </div>
   );
 };

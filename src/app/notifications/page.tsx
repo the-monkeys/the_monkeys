@@ -5,7 +5,7 @@ import {
   PageHeader,
   PageHeading,
   PageSubheading,
-} from '@/components/pageHeading';
+} from '@/components/layout/pageHeading';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {

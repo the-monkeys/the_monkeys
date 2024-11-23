@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* react-select-styles */
+.react-select__control {
+  outline: none;
+}
+.react-select__control {
+  @apply rounded-md border-2 border-secondary-darkGrey bg-primary-monkeyWhite transition-all;
+}
+
+.react-select__control--is-focused {
+  @apply border-primary-monkeyOrange shadow-[0_0_0_2px_#ff462e];
+}
+
 /* basic styles */
 .ce-header {
   background-color: #fff4ed !important;
@@ -15,16 +27,6 @@
   background-color: #fff4ed !important;
 }
 
-.react-select__control {
-  outline: none;
-}
-.react-select__control {
-  @apply rounded-md border-2 border-secondary-darkGrey bg-primary-monkeyWhite transition-all;
-}
-
-.react-select__control--is-focused {
-  @apply border-primary-monkeyOrange shadow-[0_0_0_2px_#ff462e];
-}
 .dark .ce-paragraph {
   background-color: #101010 !important;
 }
@@ -38,15 +40,20 @@
 }
 
 h1.ce-header {
+  padding: 10px 0;
   font-size: 2rem;
 }
 
 h2.ce-header {
-  font-size: 1.8rem;
+  padding: 10px 0;
+  font-size: 1.6rem;
 }
 
 .ce-paragraph {
-  font-size: 1.2rem;
+  padding: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 30px !important;
 }
 
 .codex-editor__redactor {
@@ -69,6 +76,12 @@ h2.ce-header {
 
 .ce-block--selected .ce-block__content {
   background: transparent !important;
+}
+
+/* image-tool */
+
+.image-tool__image {
+  border-radius: 12px;
 }
 
 /* toolbar: plus & setting button styles */
@@ -317,6 +330,18 @@ h2.ce-header {
 }
 
 @media (max-width: 650px) {
+  h1.ce-header {
+    font-size: 1.6rem;
+  }
+
+  h2.ce-header {
+    font-size: 1.4rem;
+  }
+
+  .ce-paragraph {
+    font-size: 18px;
+  }
+
   .ce-popover {
     --offset: 5px;
     position: absolute;
