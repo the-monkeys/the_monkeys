@@ -40,7 +40,7 @@ const BlogContent = ({
 
 export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
   return (
-    <div className='group md:p-2 space-y-2'>
+    <div className='group md:p-2 flex flex-col gap-2'>
       <UserInfoCardCompact id={blog?.owner_account_id} />
 
       <Link href={`/blog/${blog?.blog_id}`}>

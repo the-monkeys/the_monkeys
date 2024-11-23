@@ -37,7 +37,7 @@ const Nav = () => {
 
   return (
     <header
-      className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-md z-30`}
+      className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-xl z-30`}
     >
       <Container className='w-full p-4 flex items-center justify-between'>
         <div className='flex items-center gap-5'>
