@@ -7,7 +7,6 @@ import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
-import Table from '@editorjs/table';
 
 export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',
@@ -42,14 +41,6 @@ export const editorConfig: EditorConfig = {
       config: {
         quotePlaceholder: 'Enter a quote',
         captionPlaceholder: "Quote's author",
-      },
-    },
-    table: {
-      class: Table,
-      inlineToolbar: true,
-      config: {
-        rows: 2,
-        cols: 3,
       },
     },
 

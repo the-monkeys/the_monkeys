@@ -9,7 +9,6 @@ import LinkTool from '@editorjs/link';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
-import Table from '@editorjs/table';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
@@ -49,14 +48,6 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       config: {
         quotePlaceholder: 'Enter a quote',
         captionPlaceholder: "Quote's author",
-      },
-    },
-    table: {
-      class: Table,
-      inlineToolbar: true,
-      config: {
-        rows: 2,
-        cols: 3,
       },
     },
 
