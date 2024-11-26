@@ -31,13 +31,3 @@ declare module '@editorjs/quote' {
   import Quote from '@editorjs/quote';
   export = Quote;
 }
-
-declare module '@editorjs/code' {
-  import Code from '@editorjs/code';
-  export = Code;
-}
-
-declare module '@editorjs/link' {
-  import LinkTool from '@editorjs/link';
-  export = LinkTool;
-}

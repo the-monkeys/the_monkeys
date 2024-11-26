@@ -10,12 +10,10 @@
   },
   "dependencies": {
     "@editorjs/checklist": "^1.6.0",
-    "@editorjs/code": "^2.9.2",
     "@editorjs/delimiter": "^1.4.2",
     "@editorjs/editorjs": "^2.29.1",
     "@editorjs/header": "^2.8.1",
     "@editorjs/image": "^2.9.0",
-    "@editorjs/link": "^2.6.2",
     "@editorjs/list": "^1.10.0",
     "@editorjs/paragraph": "^2.11.4",
     "@editorjs/quote": "^2.7.2",
