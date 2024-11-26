@@ -2,7 +2,7 @@ import React from 'react';
 
 import Image from 'next/image';
 
-import useProfileImage from '@/hooks/useProfileImage';
+import useProfileImage from '@/hooks/profile/useProfileImage';
 import { twMerge } from 'tailwind-merge';
 
 import { Skeleton } from './ui/skeleton';
@@ -18,7 +18,7 @@ export const ProfileFrame = ({
     <div
       className={twMerge(
         className,
-        'ring-2 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden rounded-full'
+        'ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden rounded-full'
       )}
     >
       {children}
@@ -51,7 +51,7 @@ export const ProfileImage = ({
       title={`Profile Photo: ${username}`}
       width={32}
       height={32}
-      className='w-full h-full'
+      className='w-full h-full object-cover'
     />
   );
 };

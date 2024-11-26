@@ -9,10 +9,10 @@ import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { letters } from '@/constants/topics';
-import useGetAllCategories from '@/hooks/usetGetAllCategories';
+import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
 import { useSession } from 'next-auth/react';
 
-import { AddTopicForm } from './components/AddTopicForm';
+import { AddTopicForm } from './components/AddTopicDialog';
 import { CategoryButton } from './components/CategoryButton';
 import { TopicsList } from './components/TopicsList';
 
@@ -38,7 +38,10 @@ const ExploreTopicsPage = () => {
     <div className='space-y-4'>
       {status === 'authenticated' && (
         <div className='px-4 pb-2 flex justify-center'>
-          <AddTopicForm />
+          <AddTopicForm
+            categories={categories || {}}
+            categoriesLoading={isLoading}
+          />
         </div>
       )}
 

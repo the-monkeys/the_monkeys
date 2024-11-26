@@ -29,7 +29,7 @@ const Editor: FC<EditorProps> = ({ data }) => {
 
   return (
     <div
-      className='mx-auto min-h-screen w-full sm:w-4/5 px-5 sm:px-4 font-jost space-y-6'
+      className='mx-auto px-5 sm:px-4 font-jost break-words'
       id='editorjs_editor-container'
     ></div>
   );

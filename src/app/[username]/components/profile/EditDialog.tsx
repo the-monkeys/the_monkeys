@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { Button } from '@/components/ui/button';
@@ -22,7 +21,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import useGetAuthUserProfile from '@/hooks/useGetAuthUserProfile';
+import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSession } from 'next-auth/react';
@@ -104,15 +103,15 @@ export const EditDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger asChild>
         <Button variant='outline' className='rounded-full'>
-          <Icon name='RiEditBox' size={18} className='mr-2' />
           <p>Edit</p>
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogTitle>Edit Details</DialogTitle>
+
         {isLoading ? (
           <EditDetailsFormSkeleton />
         ) : (

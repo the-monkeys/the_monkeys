@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { NewsSection2Skeleton } from '@/components/skeletons/newsSkeleton';
 import { Button } from '@/components/ui/button';
-import { useGetAllNews2 } from '@/hooks/useGetAllNews';
+import { useGetAllNews2 } from '@/hooks/blog/useGetAllNews';
 import { NewsSource2 } from '@/services/news/newsTypes';
 
 import { Source2Card } from './news/Source2Card';

@@ -2,7 +2,7 @@
 
 import { Loader } from '@/components/loader';
 import { Separator } from '@/components/ui/separator';
-import { useGetTopHeadlines } from '@/hooks/useGetAllNews';
+import { useGetTopHeadlines } from '@/hooks/blog/useGetAllNews';
 import { NewsSource3 } from '@/services/news/newsTypes';
 
 export const Headlines = () => {

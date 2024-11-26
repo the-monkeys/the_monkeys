@@ -13,8 +13,8 @@ import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
-import useGetDraftBlogDetail from '@/hooks/useGetDraftBlogDetail';
-import useGetPublishedBlogDetailByBlogId from '@/hooks/useGetPublishedBlogDetailByBlogId';
+import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
+import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
@@ -195,7 +195,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         <Loader className='mx-auto' />
       ) : (
         <div className='space-y-2'>
-          <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
+          <div className='mx-auto w-full sm:w-4/5 flex justify-between items-center sm:items-end'>
             {isSaving ? (
               <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
                 Saving ...

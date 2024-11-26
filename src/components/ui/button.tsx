@@ -16,7 +16,7 @@ const buttonVariants = cva(
         constructive:
           'bg-alert-green text-secondary-white border-2 border-alert-green hover:text-alert-green hover:bg-opacity-0',
         outline:
-          'border-2 border-secondary-darkGrey dark:border-secondary-white hover:bg-secondary-darkGrey dark:hover:bg-secondary-white hover:text-secondary-white dark:hover:text-secondary-darkGrey',
+          'border-2 border-primary-monkeyBlack dark:border-primary-monkeyWhite hover:bg-primary-monkeyBlack dark:hover:bg-primary-monkeyWhite hover:text-primary-monkeyWhite dark:hover:text-primary-monkeyBlack',
         secondary:
           'bg-primary-monkeyBlack text-secondary-white dark:bg-primary-monkeyWhite dark:text-secondary-darkGrey border-2 border-primary-monkeyBlack dark:border-primary-monkeyWhite hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0',
         ghost:

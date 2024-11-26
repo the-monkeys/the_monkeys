@@ -8,14 +8,11 @@ import { notFound, useParams } from 'next/navigation';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
-import useUser from '@/hooks/useUser';
+import useUser from '@/hooks/user/useUser';
 import moment from 'moment';
-import { useSession } from 'next-auth/react';
 
 export const ProfileCard = () => {
   const params = useParams<{ username: string }>();
-
-  const { data, status } = useSession();
 
   const { user, isLoading, isError } = useUser(params.username);
 
@@ -40,9 +37,9 @@ export const ProfileCard = () => {
       </ProfileFrame>
 
       <div>
-        <h1 className='w-full font-josefin_Sans text-xl md:text-2xl capitalize cursor-default'>
+        <h2 className='w-full font-josefin_Sans text-xl md:text-2xl capitalize cursor-default'>
           {`${user?.first_name} ${user?.last_name}`}
-        </h1>
+        </h2>
 
         <p className='font-jost text-sm opacity-75 truncate'>{`@${user?.username}`}</p>
       </div>
@@ -55,11 +52,11 @@ export const ProfileCard = () => {
 
       <div className='flex items-center flex-wrap gap-x-3 gap-y-1'>
         <p className='font-jost font-medium'>
-          27 <span className='font-normal opacity-75'>Followers</span>
+          27 <span className='text-sm font-normal opacity-75'>Followers</span>
         </p>
 
         <p className='font-jost font-medium'>
-          50 <span className='font-normal opacity-75'>Following</span>
+          50 <span className='text-sm font-normal opacity-75'>Following</span>
         </p>
       </div>
 

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Icon from '../icon';
 import { Button } from '../ui/button';
 
-const CreateButton = () => {
+export const CreateButton = () => {
   return (
     <Button
       size='icon'
@@ -23,5 +23,3 @@ const CreateButton = () => {
     </Button>
   );
 };
-
-export default CreateButton;

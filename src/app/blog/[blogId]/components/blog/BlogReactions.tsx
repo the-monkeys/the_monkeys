@@ -1,73 +1,49 @@
-import Icon from '@/components/icon';
-import { toast } from '@/components/ui/use-toast';
+import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
+import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
+import { LikeButton } from '@/components/blog/buttons/LikeButton';
+import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
 export const BlogReactions = ({
   className,
-  blog_id,
+  blogId,
+  accountId,
 }: {
   className?: string;
-  blog_id?: string;
+  blogId?: string;
+  accountId?: string;
 }) => {
-  const copyToClipboard = (text: string) => {
-    if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(`https://themonkeys.live/blog/${text}`)
-        .then(
-          () => {
-            toast({
-              variant: 'default',
-              title: 'Blog Link Copied',
-              description: 'The blog link has been copied.',
-            });
-          },
-          () => {
-            toast({
-              variant: 'error',
-              title: 'Copy Failed',
-              description: 'Unable to copy the blog link.',
-            });
-          }
-        );
-    }
-  };
+  const { data, status } = useSession();
 
   return (
     <div
-      className={twMerge(
-        className,
-        'py-4 flex justify-between items-center gap-3'
-      )}
+      className={twMerge(className, 'flex justify-between items-center gap-3')}
     >
-      <div className='flex items-center gap-3'>
-        <button className='group flex items-center gap-1'>
-          <Icon
-            name='RiHeart3'
-            className='opacity-75 group-hover:opacity-100'
-          />
-          <span className='font-jost text-sm opacity-75'>27</span>
-        </button>
+      <div className='flex items-center'>
+        {status === 'authenticated' ? (
+          <>
+            <LikeButton
+              blogId={blogId}
+              // isDisable={data?.user?.account_id === accountId}
+            />
 
-        <button className='group flex items-center gap-1'>
-          <Icon name='RiChat1' className='opacity-75 group-hover:opacity-100' />
-          <span className='font-jost text-sm opacity-75'>- -</span>
-        </button>
+            <BookmarkButton
+              blogId={blogId}
+              // isDisable={data?.user?.account_id === accountId}
+            />
+          </>
+        ) : (
+          <p className='font-jost text-alert-red italic'>
+            You are not logged in
+          </p>
+        )}
       </div>
 
       <div className='flex items-center gap-3'>
-        <button
-          className='group'
-          onClick={() => copyToClipboard(blog_id || '')}
-        >
-          <Icon
-            name='RiShareForward'
-            className='opacity-75 group-hover:opacity-100'
-          />
-        </button>
-
-        <button className='group'>
-          <Icon name='RiMore' className='opacity-75 group-hover:opacity-100' />
-        </button>
+        <BlogActionsDropdown
+          blogId={blogId}
+          editEnable={data?.user?.account_id === accountId}
+        />
       </div>
     </div>
   );

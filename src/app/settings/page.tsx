@@ -5,7 +5,7 @@ import {
   PageHeader,
   PageHeading,
   PageSubheading,
-} from '@/components/pageHeading';
+} from '@/components/layout/pageHeading';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { Account } from './components/Account';

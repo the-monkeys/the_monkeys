@@ -3,7 +3,7 @@ import { useParams } from 'next/navigation';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Loader } from '@/components/loader';
 import { Badge } from '@/components/ui/badge';
-import useUser from '@/hooks/useUser';
+import useUser from '@/hooks/user/useUser';
 import { useSession } from 'next-auth/react';
 
 export const TopicsCard = () => {
@@ -48,7 +48,7 @@ export const TopicsCard = () => {
             position='Right'
             className='w-fit'
           >
-            <p className='font-jost'>Add/Explore Topics</p>
+            <p className='font-jost opacity-75'>Add/Explore Topics</p>
           </LinksRedirectArrow>
         )}
     </div>

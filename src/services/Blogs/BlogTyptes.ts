@@ -10,9 +10,7 @@ export interface Blog {
 export interface Block {
   id: string;
   type: string;
-  data: {
-    text: string;
-  };
+  data: any;
 }
 export interface GetDraftBlogResponse {
   blogs: Blog[];
@@ -21,4 +19,14 @@ export interface GetDraftBlogResponse {
 // get latest 100 blog api response
 export interface GetLatest100BlogsResponse {
   the_blogs: Blog[];
+}
+
+export interface IsLikedResponse {
+  status: string;
+  isLiked?: boolean;
+}
+
+export interface IsBookmarkedResponse {
+  status: string;
+  bookMarked?: boolean;
 }

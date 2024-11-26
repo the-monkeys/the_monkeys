@@ -14,6 +14,7 @@ import {
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
+import { mutate } from 'swr';
 
 export const DeleteProfileDialog = () => {
   const { data } = useSession();
@@ -43,6 +44,8 @@ export const DeleteProfileDialog = () => {
 
         setOpen(false);
       }
+
+      mutate(`/files/profile/${data?.user.username}/profile`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

@@ -33,7 +33,7 @@ const Step2 = ({
   });
 
   function onSubmit(values: z.infer<typeof signupSchema>) {
-    console.log(values);
+    // console.log(values);
   }
 
   const handlePreviousStep = (

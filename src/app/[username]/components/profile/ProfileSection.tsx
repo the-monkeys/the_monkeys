@@ -8,8 +8,10 @@ import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { toast } from '@/components/ui/use-toast';
+import { FollowButton } from '@/components/user/buttons/followButton';
 import { useSession } from 'next-auth/react';
 
+import { ConnectionsDialog } from './ConnectionsDialog';
 import { EditDialog } from './EditDialog';
 import { ProfileCard } from './ProfileCard';
 import { TopicsCard } from './TopicsCard';
@@ -43,6 +45,9 @@ export const ProfileSection = () => {
   return (
     <div>
       <div className='mb-2 flex gap-2 items-center justify-end'>
+        {data?.user.username === params.username &&
+          status === 'authenticated' && <ConnectionsDialog />}
+
         <Button
           variant='ghost'
           size='icon'
@@ -57,10 +62,7 @@ export const ProfileSection = () => {
 
         {data?.user.username !== params.username &&
           status === 'authenticated' && (
-            <Button variant='outline' className='rounded-full'>
-              <Icon name='RiUserAdd' size={18} className='mr-2' />
-              <p>Follow</p>
-            </Button>
+            <FollowButton username={params.username} />
           )}
       </div>
 

@@ -13,22 +13,15 @@ import {
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
-import { purifyHTMLString } from '@/utils/purifyHTML';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
-export const DeleteBlogDialog = ({
-  blogId,
-  title,
-}: {
-  blogId: string;
-  title: string;
-}) => {
+export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
   const { data: session } = useSession();
   const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
 
-  async function deleteBlogById(blogId: string) {
+  async function deleteBlogById(blogId?: string) {
     setIsDeleteLoading(true);
 
     await axiosInstance
@@ -56,14 +49,15 @@ export const DeleteBlogDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className='p-1 flex items-center justify-center cursor-pointer hover:opacity-75'>
-        <Icon name='RiDeleteBin' />
+      <DialogTrigger asChild>
+        <button className='p-2 w-full flex items-center gap-2 hover:opacity-75'>
+          <Icon name='RiDeleteBin' className='text-alert-red' />
+          <p className='font-jost text-base'>Delete Blog</p>
+        </button>
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle className='truncate'>
-          Delete Blog: {purifyHTMLString(title)}
-        </DialogTitle>
+        <DialogTitle className='truncate'>Delete Blog</DialogTitle>
 
         <p className='font-jost text-secondary-darkGrey dark:text-secondary-white'>
           Are you sure you want to delete this blog? This action cannot be

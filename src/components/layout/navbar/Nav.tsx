@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import CreateButton from '@/components/buttons/createButton';
+import { CreateButton } from '@/components/buttons/createButton';
+import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
 
 import Container from '../Container';
-import NotificationDropdown from './notificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
 const Nav = () => {
@@ -37,7 +37,7 @@ const Nav = () => {
 
   return (
     <header
-      className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-md z-30`}
+      className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-xl z-30`}
     >
       <Container className='w-full p-4 flex items-center justify-between'>
         <div className='flex items-center gap-5'>
@@ -50,7 +50,12 @@ const Nav = () => {
           <div className='flex items-center gap-5'>
             <ThemeSwitch />
 
-            <NotificationDropdown />
+            <Link
+              href='/notifications'
+              className='hover:opacity-75 cursor-pointer'
+            >
+              <Icon name='RiNotification3' size={24} />
+            </Link>
 
             <ProfileDropdown />
           </div>

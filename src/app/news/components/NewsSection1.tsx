@@ -9,7 +9,7 @@ import {
   CarouselPrevious,
 } from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
-import { useGetAllNews1 } from '@/hooks/useGetAllNews';
+import { useGetAllNews1 } from '@/hooks/blog/useGetAllNews';
 import { NewsSource1 } from '@/services/news/newsTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 

@@ -17,7 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Popover } from '@/components/ui/popover';
 import { toast } from '@/components/ui/use-toast';
-import useGetAuthUserProfile from '@/hooks/useGetAuthUserProfile';
+import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';

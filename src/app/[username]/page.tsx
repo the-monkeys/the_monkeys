@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { Blogs } from './components/Blogs';
 import { Drafts } from './components/Drafts';
+import { NavigationTabs } from './components/NavigationTabs';
 
 export async function generateMetadata({
   params,
@@ -18,22 +19,10 @@ export async function generateMetadata({
   };
 }
 
-const ProfilePage = () => {
+const ProfilePage = ({ params }: { params: { username: string } }) => {
   return (
-    <Tabs defaultValue='blogs' className='space-y-6'>
-      <TabsList className='flex justify-center'>
-        <TabsTrigger value='blogs'>
-          <p className='font-josefin_Sans text-lg'>Blogs</p>
-
-          <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
-        </TabsTrigger>
-
-        <TabsTrigger value='drafts'>
-          <p className='font-josefin_Sans text-lg'>Drafts</p>
-
-          <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
-        </TabsTrigger>
-      </TabsList>
+    <Tabs defaultValue='blogs' className='space-y-10'>
+      <NavigationTabs username={params.username} />
 
       <div className='w-full'>
         <TabsContent className='w-full' value='blogs'>
