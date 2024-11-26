@@ -1,5 +1,4 @@
 import Checklist from '@editorjs/checklist';
-import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -42,11 +41,6 @@ export const editorConfig: EditorConfig = {
         quotePlaceholder: 'Enter a quote',
         captionPlaceholder: "Quote's author",
       },
-    },
-
-    code: {
-      class: Code,
-      inlineToolbar: true,
     },
   },
 };
