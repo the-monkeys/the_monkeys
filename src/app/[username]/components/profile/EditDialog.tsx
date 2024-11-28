@@ -76,8 +76,12 @@ export const EditDialog = () => {
       });
 
       setOpen(false);
-      mutate(`/user/public/${data?.user.username}`);
-      mutate(`/user/${data?.user.username}`);
+      mutate(`/user/public/${data?.user.username}`, `${data?.user.username}`, {
+        revalidate: true,
+      });
+      mutate(`/user/${data?.user.username}`, `${data?.user.username}`, {
+        revalidate: true,
+      });
     } catch (err) {
       toast({
         variant: 'error',
