@@ -39,6 +39,24 @@ cp .env.example .env.local
 npm run dev
 ```
 
+## Quick Setup using Docker
+
+1. Clone & create this repo locally with the following command:
+
+```sh
+git clone https://github.com/the-monkeys/the_monkeys.git
+```
+
+2. Run this Docker command
+
+```sh
+docker build -t monkeys .
+```
+
+```sh
+docker run   -e NEXT_PUBLIC_API_URL=https://dev.themonkeys.site/api/v1   -e AUTH_SECRET=mysecpassword   -e NEXTAUTH_URL=http://localhost:3000   -e NEXTAUTH_SECRET=mysecpassword -p 3000:3000 monkeys
+```
+
 ## Pull Requests
 
 ### _We actively welcome your pull requests, however linking your work to an existing issue is preferred._
@@ -60,3 +78,7 @@ If you plan to contribute a change based on an open issue, please assign yoursel
 If you would like to contribute to the project for the first time, please consider joining checking the [good first issue](https://github.com/the-monkeys/the_monkeys/issues?q=is%3Aopen+is%3Aissue+label%3A%22%F0%9F%99%8B%E2%80%8D%E2%99%82%EF%B8%8F+good+first+issue%22) labels.
 
 Also, all questions are welcomed.
+
+```
+
+```
