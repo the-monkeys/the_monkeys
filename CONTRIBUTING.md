@@ -47,14 +47,14 @@ npm run dev
 git clone https://github.com/the-monkeys/the_monkeys.git
 ```
 
-2. Run this Docker command
+2. Run these Docker commands
 
 ```sh
-docker build -t monkeys .
+docker build -t the_monkeys .
 ```
 
 ```sh
-docker run   -e NEXT_PUBLIC_API_URL=https://dev.themonkeys.site/api/v1   -e AUTH_SECRET=mysecpassword   -e NEXTAUTH_URL=http://localhost:3000   -e NEXTAUTH_SECRET=mysecpassword -p 3000:3000 monkeys
+docker run -e NEXT_PUBLIC_API_URL=https://dev.themonkeys.site/api/v1 -e AUTH_SECRET=mysecpassword -e NEXTAUTH_URL=http://localhost:3000 -e NEXTAUTH_SECRET=mysecpassword -p 3000:3000 the_monkeys
 ```
 
 ## Pull Requests
