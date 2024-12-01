@@ -28,13 +28,15 @@ export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
       .delete(`/blog/${blogId}`)
       .then(() => {
         setIsDeleteLoading(false);
-        mutate(`/blog/all/drafts/${session?.user.account_id}`);
         toast({
           title: 'Success',
           description: 'Blog deleted successfully',
           duration: 3000,
         });
         setOpen(false);
+        mutate(`/blog/all/drafts/${session?.user.account_id}`, undefined, {
+          revalidate: true,
+        });
       })
       .catch(() => {
         setIsDeleteLoading(false);
@@ -58,12 +60,10 @@ export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
 
       <DialogContent>
         <DialogTitle className='truncate'>Delete Blog</DialogTitle>
-
         <p className='font-jost text-secondary-darkGrey dark:text-secondary-white'>
           Are you sure you want to delete this blog? This action cannot be
           undone.
         </p>
-
         <div>
           <Button
             type='button'

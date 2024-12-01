@@ -1,9 +1,11 @@
 import { API_URL } from '@/constants/api';
+import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
+import Quote from '@editorjs/quote';
 import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
@@ -22,7 +24,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       class: Paragraph,
       inlineToolbar: true,
       config: {
-        placeholder: 'pen your thoughts ...',
+        placeholder: 'Add content',
       },
     },
     list: {
@@ -32,10 +34,19 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
         defaultStyle: 'unordered',
       },
     },
-
+    delimiter: Delimiter,
+    quote: {
+      class: Quote,
+      inlineToolbar: true,
+      config: {
+        quotePlaceholder: 'Add Quote',
+        captionPlaceholder: 'Add author details',
+      },
+    },
     image: {
       class: Image,
       config: {
+        captionPlaceholder: '', // Set an empty string to remove the caption
         uploader: {
           async uploadByFile(file: File) {
             const session = await getSession();

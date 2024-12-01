@@ -18,6 +18,7 @@ import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogD
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
+import { mutate } from 'swr';
 
 // Dynamically import the Editor component to avoid server-side rendering issues
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -43,7 +44,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const source = searchParams.get('source');
 
   // if user comes from draft blog card this api should get use
-  const { blog, isLoading, mutate } = useGetDraftBlogDetail(blogId);
+  const { blog, isLoading } = useGetDraftBlogDetail(blogId);
 
   // if user comes from published blog card this api should get use
   const { blog: publishedBlogDetail, isLoading: publishedBlogLoading } =
@@ -115,7 +116,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Fetch draft blog data every time the page loads
   useEffect(() => {
     if (source === 'draft') {
-      mutate();
+      mutate(`/blog/my-drafts/${blogId}`, blogId, { revalidate: true });
+    } else if (source === 'published') {
+      mutate(`/blog/published/${session?.user.account_id}/${blogId}`, blogId, {
+        revalidate: true,
+      });
     }
   }, [mutate, source]);
 
@@ -141,9 +146,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Set editor data based on the source
   useEffect(() => {
     if (source === 'draft' && blog) {
-      setData(blog.blog); // Set the editor data with the fetched draft blog data
+      setData(blog.blog);
     } else if (source === 'published' && publishedBlogDetail) {
-      setData(publishedBlogDetail.blog); // Set the editor data with the fetched published blog data
+      setData(publishedBlogDetail.blog);
     }
   }, [blog, publishedBlogDetail, source]);
 
