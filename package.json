@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@editorjs/checklist": "^1.6.0",
     "@editorjs/delimiter": "^1.4.2",
     "@editorjs/editorjs": "^2.29.1",
     "@editorjs/header": "^2.8.1",

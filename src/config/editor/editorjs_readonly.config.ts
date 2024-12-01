@@ -1,4 +1,3 @@
-import Checklist from '@editorjs/checklist';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -19,6 +18,9 @@ export const editorConfig: EditorConfig = {
     },
     paragraph: {
       class: Paragraph,
+      config: {
+        placeholder: 'Add content',
+      },
     },
     list: {
       class: List,
@@ -29,17 +31,12 @@ export const editorConfig: EditorConfig = {
     image: {
       class: Image,
     },
-    checklist: {
-      class: Checklist,
-      inlineToolbar: true,
-    },
     delimiter: Delimiter,
     quote: {
       class: Quote,
-      inlineToolbar: true,
       config: {
-        quotePlaceholder: 'Enter a quote',
-        captionPlaceholder: "Quote's author",
+        quotePlaceholder: 'Add Quote',
+        captionPlaceholder: 'Add author details',
       },
     },
   },

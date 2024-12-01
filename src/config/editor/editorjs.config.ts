@@ -1,5 +1,4 @@
 import { API_URL } from '@/constants/api';
-import Checklist from '@editorjs/checklist';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -25,7 +24,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       class: Paragraph,
       inlineToolbar: true,
       config: {
-        placeholder: 'pen your thoughts ...',
+        placeholder: 'Add content',
       },
     },
     list: {
@@ -35,20 +34,15 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
         defaultStyle: 'unordered',
       },
     },
-    checklist: {
-      class: Checklist,
-      inlineToolbar: true,
-    },
     delimiter: Delimiter,
     quote: {
       class: Quote,
       inlineToolbar: true,
       config: {
-        quotePlaceholder: 'Enter a quote',
-        captionPlaceholder: "Quote's author",
+        quotePlaceholder: 'Add Quote',
+        captionPlaceholder: 'Add author details',
       },
     },
-
     image: {
       class: Image,
       config: {
