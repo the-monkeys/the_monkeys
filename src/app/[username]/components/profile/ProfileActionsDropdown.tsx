@@ -39,14 +39,14 @@ export const ProfileActionsDropdown = ({ username }: { username: string }) => {
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='mt-2 w-40'>
+      <DropdownMenuContent className='m-2 w-36 sm:w-40'>
         <DropdownMenuItem asChild>
           <button
             onClick={copyToClipboard}
             className='flex w-full items-center gap-2'
           >
             <Icon name='RiShareForward' />
-            <p className='font-roboto text-base'>Share</p>
+            <p className='font-roboto text-sm sm:text-base'>Share</p>
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

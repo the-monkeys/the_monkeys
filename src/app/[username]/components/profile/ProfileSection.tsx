@@ -38,16 +38,14 @@ export const ProfileSection = () => {
         <div className='pt-4 flex gap-1'>
           <UpdateDialog />
 
-          <Button variant='outline' className='flex-1 rounded-full' asChild>
-            <Link href={`/activity?user=${params.username}`}>
+          <Button variant='secondary' className='flex-1' asChild>
+            <Link href={`/activity?user=${params.username}`} target='_blank'>
               Activity
               <Icon name='RiArrowRightUp' className='ml-1' />
             </Link>
           </Button>
         </div>
       )}
-
-      <Separator className='mt-2 mb-3' />
 
       <TopicsCard />
     </div>

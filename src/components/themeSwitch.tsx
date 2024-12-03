@@ -20,7 +20,7 @@ const ThemeSwitch = () => {
         className='hover:opacity-75 cursor-pointer'
         onClick={() => setTheme('light')}
       >
-        <Icon name='RiMoon' size={24} />
+        <Icon name='RiMoon' size={22} />
       </div>
     );
   }
@@ -31,7 +31,7 @@ const ThemeSwitch = () => {
         className='hover:opacity-75 cursor-pointer'
         onClick={() => setTheme('dark')}
       >
-        <Icon name='RiSun' size={24} />
+        <Icon name='RiSun' size={22} />
       </div>
     );
   }

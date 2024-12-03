@@ -1,6 +1,5 @@
 import { useParams } from 'next/navigation';
 
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Loader } from '@/components/loader';
 import { Badge } from '@/components/ui/badge';
 import useUser from '@/hooks/user/useUser';
@@ -8,8 +7,6 @@ import { useSession } from 'next-auth/react';
 
 export const TopicsCard = () => {
   const params = useParams<{ username: string }>();
-
-  const { data, status } = useSession();
 
   const { user, isLoading, isError } = useUser(params.username);
 
@@ -21,7 +18,7 @@ export const TopicsCard = () => {
   const maxTopicsShow = 5;
 
   return (
-    <div>
+    <div className='mt-4'>
       <h2 className='mb-2 font-dm_sans font-medium text-lg sm:text-xl'>
         Topics
       </h2>

@@ -117,8 +117,10 @@ export const UpdateProfileDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className='h-9 w-9 inline-flex items-center justify-center whitespace-nowrap font-roboto transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-base rounded-full bg-secondary-darkGrey text-secondary-white dark:bg-secondary-white dark:text-secondary-darkGrey border-2 border-secondary-darkGrey dark:border-secondary-white hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0'>
-        <Icon name='RiUpload2' />
+      <DialogTrigger asChild>
+        <Button variant='secondary' size='icon' className='rounded-full'>
+          <Icon name='RiUpload2' />
+        </Button>
       </DialogTrigger>
 
       <DialogContent>

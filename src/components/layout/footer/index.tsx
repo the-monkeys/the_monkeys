@@ -40,11 +40,14 @@ const FooterList = ({
 }) => {
   return (
     <div className='space-y-2'>
-      <h2 className='font-dm_sans font-semibold uppercase'>{heading}</h2>
+      <h2 className='font-dm_sans font-medium text-base'>{heading}</h2>
 
-      <ul className='font-roboto space-y-2'>
+      <ul className='space-y-2'>
         {items.map((item, index) => (
-          <li className='opacity-75 hover:opacity-100' key={index}>
+          <li
+            className='font-roboto text-sm opacity-80 hover:opacity-100'
+            key={index}
+          >
             <Link href={item.link}>{item.text}</Link>
           </li>
         ))}
@@ -76,7 +79,9 @@ const Footer = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem className='w-72 md:w-80'>
-                    <FormLabel>Get in Touch</FormLabel>
+                    <FormLabel className='font-roboto text-sm'>
+                      Get in Touch
+                    </FormLabel>
                     <FormMessage />
                     <FormControl>
                       <Input placeholder='Enter email address' {...field} />
@@ -118,14 +123,14 @@ const Footer = () => {
 
             <Link
               className='opacity-75 hover:opacity-100'
-              href='https://twitter.com/TheMonkeysLife'
+              href='https://x.com/MonkeysInsight'
               target='_blank'
             >
               <Icon name='RiTwitterX' type='Fill' />
             </Link>
           </div>
 
-          <p className='font-dm_sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
+          <p className='font-roboto text-text-light/80 dark:text-text-dark/80 text-xs sm:text-sm text-center'>
             Monkeys, {currentYear}, All Rights Reserved
           </p>
         </div>

@@ -10,17 +10,16 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary-monkeyOrange text-secondary-white border-2 border-primary-monkeyOrange hover:text-primary-monkeyOrange hover:bg-opacity-0',
+          'bg-brand-orange text-text-dark light border-2 border-brand-orange hover:text-brand-orange hover:bg-opacity-0',
         destructive:
-          'bg-alert-red text-secondary-white border-2 border-alert-red hover:text-alert-red hover:bg-opacity-0',
+          'bg-alert-red text-text-dark border-2 border-alert-red hover:text-alert-red hover:bg-opacity-0',
         constructive:
-          'bg-alert-green text-secondary-white border-2 border-alert-green hover:text-alert-green hover:bg-opacity-0',
+          'bg-alert-green text-text-dark border-2 border-alert-green hover:text-alert-green hover:bg-opacity-0',
         outline:
-          'border-2 border-primary-monkeyBlack dark:border-primary-monkeyWhite hover:bg-primary-monkeyBlack dark:hover:bg-primary-monkeyWhite hover:text-primary-monkeyWhite dark:hover:text-primary-monkeyBlack',
+          'border-2 border-foreground-light dark:border-foreground-dark hover:bg-foreground-light dark:hover:bg-foreground-dark hover:text-text-light dark:hover:text-text-dark',
         secondary:
-          'bg-primary-monkeyBlack text-secondary-white dark:bg-primary-monkeyWhite dark:text-secondary-darkGrey border-2 border-primary-monkeyBlack dark:border-primary-monkeyWhite hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0',
-        ghost:
-          'hover:bg-primary-monkeyBlack hover:text-secondary-white dark:hover:bg-primary-monkeyWhite dark:hover:text-secondary-darkGrey',
+          'bg-foreground-light text-text-light dark:bg-foreground-dark dark:text-text-dark border-2 border-foreground-light dark:border-foreground-dark hover:bg-foreground-light dark:hover:bg-foreground-dark hover:text-text-light dark:hover:text-text-dark hover:bg-opacity-0 dark:hover:bg-opacity-0',
+        ghost: 'hover:bg-foreground-light dark:hover:bg-foreground-dark',
         link: 'underline-offset-4 hover:underline',
       },
       size: {

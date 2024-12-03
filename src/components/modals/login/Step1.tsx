@@ -35,10 +35,10 @@ const Step1 = ({
         <p className='flex-1'>Coming Soon</p>
       </Button>
 
-      <Button variant='outline' disabled className='w-full flex'>
+      {/* <Button variant='outline' disabled className='w-full flex'>
         <Icon name='RiMeta' type='Fill' />
         <p className='flex-1'>Coming Soon</p>
-      </Button>
+      </Button> */}
 
       <p className='text-center font-roboto text-sm'>
         Don't have an account?

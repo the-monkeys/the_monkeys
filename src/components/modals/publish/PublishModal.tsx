@@ -104,7 +104,7 @@ const PublishModal = ({
         </h1>
 
         {publishStep.subHeading && (
-          <p className='mt-2 font-roboto text-sm sm:text-base opacity-75 text-center'>
+          <p className='mt-2 font-dm_sans text-sm sm:text-base opacity-80 text-center'>
             {publishStep.subHeading}
           </p>
         )}
@@ -172,7 +172,7 @@ const PublishModal = ({
       </ModalContent>
 
       <ModalFooter>
-        <p className='text-center font-roboto text-sm opacity-75'>
+        <p className='text-center font-roboto text-xs sm:text-sm opacity-75'>
           Modifications made here will solely affect the presentation of your
           blog, without altering the actual content of your blog.
         </p>

@@ -40,7 +40,7 @@ export const ProfileCard = ({
 
   return (
     <div className='space-y-2'>
-      <ProfileFrame className='size-28 sm:size-32 shadow-md'>
+      <ProfileFrame className='size-28 sm:size-32'>
         {user?.username && (
           <ProfileImage firstName={user.first_name} username={user.username} />
         )}

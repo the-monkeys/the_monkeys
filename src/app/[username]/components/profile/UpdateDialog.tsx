@@ -110,7 +110,7 @@ export const UpdateDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant='outline' className='flex-1 rounded-full'>
+        <Button variant='secondary' className='flex-1'>
           Update
         </Button>
       </DialogTrigger>
@@ -128,7 +128,7 @@ export const UpdateDialog = () => {
                 name='first_name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-dm_sans text-sm'>
+                    <FormLabel className='font-roboto text-sm'>
                       First Name
                     </FormLabel>
                     <FormControl>
@@ -147,7 +147,7 @@ export const UpdateDialog = () => {
                 name='last_name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-dm_sans text-sm'>
+                    <FormLabel className='font-roboto text-sm'>
                       Last Name
                     </FormLabel>
                     <FormControl>
@@ -166,7 +166,7 @@ export const UpdateDialog = () => {
                 name='address'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-dm_sans text-sm'>
+                    <FormLabel className='font-roboto text-sm'>
                       Location
                     </FormLabel>
                     <FormControl>
@@ -185,7 +185,7 @@ export const UpdateDialog = () => {
                 name='bio'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-dm_sans text-sm'>Bio</FormLabel>
+                    <FormLabel className='font-roboto text-sm'>Bio</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'

@@ -72,7 +72,7 @@ const RootLayout = ({
         <AdSense pId='4687427997504601' />
       </head>
       <body
-        className={`${playfair_Display.variable} ${roboto.variable} ${dm_sans.variable} ${inter.variable} bg-primary-monkeyWhite dark:bg-primary-monkeyBlack`}
+        className={`${playfair_Display.variable} ${roboto.variable} ${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark`}
       >
         <Toaster />
         <SWRProvider>

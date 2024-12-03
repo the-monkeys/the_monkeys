@@ -67,8 +67,10 @@ export const DeleteProfileDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className='h-9 w-9 inline-flex items-center justify-center whitespace-nowrap font-roboto transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-base rounded-full bg-alert-red text-secondary-white border-2 border-alert-red hover:text-alert-red hover:bg-opacity-0'>
-        <Icon name='RiDeleteBin' />
+      <DialogTrigger asChild>
+        <Button variant='destructive' size='icon' className='rounded-full'>
+          <Icon name='RiDeleteBin' />
+        </Button>
       </DialogTrigger>
 
       <DialogContent>

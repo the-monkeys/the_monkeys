@@ -6,6 +6,7 @@ import { CreateButton } from '@/components/buttons/createButton';
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
+import { Separator } from '@/components/ui/separator';
 
 import Container from '../Container';
 import ProfileDropdown from './profileDropdown';
@@ -35,25 +36,23 @@ const MobileNav = () => {
   return (
     <>
       <header
-        className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-xl z-30`}
+        className={`sticky left-0 top-${top} bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-xl z-30`}
       >
         <Container className='w-full p-4 flex items-center justify-between'>
           <Link href='/'>
             <Logo showMobileLogo={true} />
           </Link>
 
-          <ProfileDropdown />
+          <div className='flex items-center gap-4'>
+            <ThemeSwitch />
+
+            <ProfileDropdown />
+          </div>
         </Container>
       </header>
 
-      <div className='fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly border-t-1 border-secondary-lightGrey/15 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-50'>
-        <ThemeSwitch />
-
+      <div className='fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly border-t-1 border-foreground-light dark:border-foreground-dark bg-background-light dark:bg-background-dark z-50'>
         <CreateButton />
-
-        <Link href='/notifications' className='hover:opacity-75 cursor-pointer'>
-          <Icon name='RiNotification3' size={24} />
-        </Link>
       </div>
     </>
   );
