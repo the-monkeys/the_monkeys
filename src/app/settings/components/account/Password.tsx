@@ -82,7 +82,7 @@ export const Password = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         Reset your password to regain access. Forgot it? Change it during login.
       </p>
 
@@ -153,16 +153,16 @@ export const Password = () => {
               />
 
               <ul>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto text-sm list-disc list-inside opacity-75'>
                   Must be at least 6 characters long.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto text-sm list-disc list-inside opacity-75'>
                   Must contain at least one lowercase letter.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto text-sm list-disc list-inside opacity-75'>
                   Must contain at least one uppercase letter.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto text-sm list-disc list-inside opacity-75'>
                   Must contain at least one number.
                 </li>
               </ul>

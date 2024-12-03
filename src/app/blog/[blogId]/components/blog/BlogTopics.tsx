@@ -10,16 +10,20 @@ export const BlogTopics = ({
 }) => {
   return (
     <div className={twMerge(className, 'flex items-center gap-1 flex-wrap')}>
-      <p className='pr-1 font-jost text-xs md:text-sm opacity-75'>Topics:</p>
+      <p className='pr-1 font-roboto text-xs md:text-sm opacity-75'>Topics:</p>
 
       {topics.length ? (
         topics?.map((topic) => (
-          <Badge variant='secondary' key={topic} className='font-jost text-xs'>
+          <Badge
+            variant='secondary'
+            key={topic}
+            className='font-roboto text-xs'
+          >
             {topic}
           </Badge>
         ))
       ) : (
-        <span className='font-jost text-xs md:text-sm opacity-75'>
+        <span className='font-roboto text-xs md:text-sm opacity-75'>
           Not available
         </span>
       )}

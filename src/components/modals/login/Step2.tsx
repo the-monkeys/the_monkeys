@@ -142,7 +142,7 @@ const Step2 = ({
           </div>
         </form>
 
-        <div className='pt-2 text-right font-jost text-sm'>
+        <div className='pt-2 text-right font-roboto text-sm'>
           <Link
             href='#'
             className='text-primary-monkeyOrange'

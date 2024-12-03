@@ -11,6 +11,11 @@ export interface FollowDataResponse {
   }[];
 }
 
+export interface ConnectionCountResponse {
+  followers: number;
+  following: number;
+}
+
 export interface GetPublicUserProfileApiResponse {
   username: string;
   first_name: string;

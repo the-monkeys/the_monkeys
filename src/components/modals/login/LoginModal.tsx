@@ -40,7 +40,7 @@ const LoginModal = ({
         </h1>
 
         {loginStep.subHeading && (
-          <p className='mt-2 font-jost text-sm sm:text-base opacity-75 text-center'>
+          <p className='mt-2 font-roboto text-sm sm:text-base opacity-75 text-center'>
             {loginStep.subHeading}
           </p>
         )}
@@ -49,7 +49,7 @@ const LoginModal = ({
       {handleLoginStep()}
 
       <ModalFooter>
-        <p className='text-center font-jost text-sm opacity-75'>
+        <p className='text-center font-roboto text-sm opacity-75'>
           By logging in to Monkeys, you agree to our Terms and Policies.
         </p>
       </ModalFooter>

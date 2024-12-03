@@ -17,40 +17,34 @@ export const TopicsCard = () => {
     return <Loader className='m-auto' />;
   }
 
+  const topicsCount = user?.topics?.length || 0;
+  const maxTopicsShow = 5;
+
   return (
-    <div className='space-y-3'>
-      <h2 className='mb-2 font-josefin_Sans font-semibold text-lg sm:text-xl'>
-        My Topics
+    <div>
+      <h2 className='mb-2 font-dm_sans font-medium text-lg sm:text-xl'>
+        Topics
       </h2>
 
       {user && user.topics && user.topics.length > 0 ? (
-        <div className='flex flex-wrap gap-x-1 gap-y-2'>
-          {user.topics?.slice(0, 6).map((topic, index) => (
+        <div className='py-2 flex flex-wrap gap-x-1 gap-y-2'>
+          {user.topics?.slice(0, maxTopicsShow).map((topic, index) => (
             <Badge variant='outline' key={index} className='text-sm py-1'>
               {topic}
             </Badge>
           ))}
 
-          <p className='px-1 self-center font-jost text-sm opacity-75'>
-            {`(${user.topics.length})`}
-          </p>
+          {topicsCount > maxTopicsShow ? (
+            <p className='px-1 self-center font-roboto text-sm opacity-75'>
+              {`+${topicsCount} more`}
+            </p>
+          ) : null}
         </div>
       ) : (
-        <p className='font-jost text-sm text-center opacity-75'>
-          You haven't added any topics to your profile.
+        <p className='font-roboto text-sm opacity-80 italic'>
+          No topics have been added.
         </p>
       )}
-
-      {data?.user.username === params.username &&
-        status === 'authenticated' && (
-          <LinksRedirectArrow
-            link='/explore-topics'
-            position='Right'
-            className='w-fit'
-          >
-            <p className='font-jost opacity-75'>Add/Explore Topics</p>
-          </LinksRedirectArrow>
-        )}
     </div>
   );
 };

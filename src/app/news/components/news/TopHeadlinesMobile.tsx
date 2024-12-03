@@ -23,7 +23,7 @@ export const TopHeadlinesMobile = () => {
       <div className='block lg:hidden mt-2 space-y-2'>
         <Loader className='mx-auto' />
 
-        <p className='font-jost text-sm text-center'>
+        <p className='font-roboto text-sm text-center'>
           Fetching latest headlines
         </p>
       </div>
@@ -31,7 +31,7 @@ export const TopHeadlinesMobile = () => {
 
   if (error)
     return (
-      <p className='block lg:hidden py-4 font-jost text-sm text-alert-red text-center'>
+      <p className='block lg:hidden py-4 font-roboto text-sm text-alert-red text-center'>
         Error fetching headlines. Try again.
       </p>
     );
@@ -46,9 +46,7 @@ export const TopHeadlinesMobile = () => {
       }}
       className='block lg:hidden mt-4'
     >
-      <h3 className='font-josefin_Sans font-semibold text-center'>
-        Top Headlines
-      </h3>
+      <h3 className='font-dm_sans font-semibold text-center'>Top Headlines</h3>
 
       <Separator className='w-1/2 my-2 mx-auto bg-secondary-lightGrey/25' />
 
@@ -60,7 +58,9 @@ export const TopHeadlinesMobile = () => {
           >
             <RiDoubleQuotesL className='size-6 absolute top-0 left-0 text-secondary-darkGrey/15 dark:text-secondary-white/15' />
 
-            <p className='font-jost cursor-default line-clamp-2'>{newsItem}</p>
+            <p className='font-roboto cursor-default line-clamp-2'>
+              {newsItem}
+            </p>
           </CarouselItem>
         ))}
       </CarouselContent>

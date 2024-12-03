@@ -114,7 +114,7 @@ const ProfileUpdateDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className='h-9 w-9 inline-flex items-center justify-center whitespace-nowrap font-jost transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-base rounded-full bg-secondary-darkGrey text-secondary-white dark:bg-secondary-white dark:text-secondary-darkGrey border-2 border-secondary-darkGrey dark:border-secondary-white hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0'>
+      <DialogTrigger className='h-9 w-9 inline-flex items-center justify-center whitespace-nowrap font-roboto transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-base rounded-full bg-secondary-darkGrey text-secondary-white dark:bg-secondary-white dark:text-secondary-darkGrey border-2 border-secondary-darkGrey dark:border-secondary-white hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0'>
         <Icon name='RiUpload2' />
       </DialogTrigger>
 
@@ -124,7 +124,7 @@ const ProfileUpdateDialog = () => {
         {!selectedImage && (
           <div className='space-y-2'>
             {uploadError && (
-              <p className='font-jost font-medium text-sm text-alert-red'>
+              <p className='font-roboto font-medium text-sm text-alert-red'>
                 {uploadError}
               </p>
             )}
@@ -132,7 +132,7 @@ const ProfileUpdateDialog = () => {
             <div
               {...getRootProps()}
               className={twMerge(
-                'h-44 sm:h-52 rounded-lg flex flex-col items-center justify-center gap-2 border-2 border-dashed border-secondary-lightGrey/25',
+                'h-44 sm:h-52 rounded-md flex flex-col items-center justify-center gap-2 border-2 border-dashed border-secondary-lightGrey/25',
                 isDragActive &&
                   'border-secondary-darkGrey dark:border-secondary-white'
               )}
@@ -145,13 +145,13 @@ const ProfileUpdateDialog = () => {
                 type='file'
               />
 
-              <p className='font-jost text-sm sm:text-base text-center'>
+              <p className='font-roboto text-sm sm:text-base text-center'>
                 {isDragActive
                   ? 'Drop the file here ...'
                   : 'Drop a file here, or click to select files'}
               </p>
 
-              <p className='font-jost text-xs sm:text-sm text-center opacity-75'>
+              <p className='font-roboto text-xs sm:text-sm text-center opacity-75'>
                 The file should be under 2 MB
               </p>
             </div>
@@ -171,7 +171,7 @@ const ProfileUpdateDialog = () => {
             </div>
 
             <div className='flex items-center gap-2'>
-              <p className='py-1 flex-1 font-jost truncate'>
+              <p className='py-1 flex-1 font-roboto truncate'>
                 {selectedImage.name}
                 <span className='block text-sm opacity-75'>
                   {(selectedImage.size / 1024).toFixed(1)} KB

@@ -33,7 +33,7 @@ const BlogContent = ({
   return (
     <h2
       dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-      className='flex-1 font-jost font-medium text-base md:text-lg capitalize line-clamp-2 group-hover:opacity-75'
+      className='flex-1 font-roboto font-medium text-base md:text-lg capitalize line-clamp-2 group-hover:opacity-75'
     ></h2>
   );
 };
@@ -50,7 +50,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
         />
       </Link>
 
-      <p className='font-jost text-xs opacity-75 text-right'>
+      <p className='font-roboto text-xs opacity-75 text-right'>
         {moment(blog?.blog?.time).format('MMM DD, YYYY')}
       </p>
     </div>

@@ -29,7 +29,7 @@ export const Drafts = () => {
               ))}
           </div>
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='font-jost italic opacity-75'>No drafts available</p>
+          <p className='font-roboto italic opacity-75'>No drafts available</p>
         ) : (
           blogs?.blogs &&
           blogs?.blogs.map((blog) => {

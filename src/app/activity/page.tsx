@@ -14,14 +14,14 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
     return (
       <div className='flex flex-col items-center space-y-2'>
         <Loader />
-        <p className='font-jost'>Fetching all activity</p>
+        <p className='font-roboto'>Fetching all activity</p>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <p className='mb-4 font-jost text-sm text-alert-red text-center'>
+      <p className='mb-4 font-roboto text-sm text-alert-red text-center'>
         Activity info not available
       </p>
     );
@@ -39,7 +39,7 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
           );
         })
       ) : (
-        <p className='col-span-2 sm:col-span-3 font-jost text-center opacity-75'>
+        <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-75'>
           No activity available at this moment.
         </p>
       )}

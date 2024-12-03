@@ -17,7 +17,7 @@ const HomeBanner = () => {
         position='Right'
         className='mx-auto md:m-0 w-fit'
       >
-        <p className='font-josefin_Sans font-medium text-base sm:text-lg'>
+        <p className='font-dm_sans font-medium text-base sm:text-lg'>
           News by Monkeys
         </p>
       </LinksRedirectArrow>
@@ -27,7 +27,7 @@ const HomeBanner = () => {
         <span className='text-primary-monkeyOrange'>Better</span>
       </h1>
 
-      <p className='font-jost text-base md:text-lg text-secondary-darkGrey dark:text-secondary-white text-center md:text-left'>
+      <p className='font-roboto text-base md:text-lg text-secondary-darkGrey dark:text-secondary-white text-center md:text-left'>
         Don't let outdated content overshadow your creation.
       </p>
 
@@ -40,7 +40,7 @@ const HomeBanner = () => {
               type='Fill'
             />
 
-            <p className='font-jost'>Start Writing</p>
+            <p className='font-roboto'>Start Writing</p>
           </Link>
         </Button>
       </div>

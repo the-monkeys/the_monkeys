@@ -15,7 +15,7 @@ export const Headlines = () => {
       <div className='mt-2 space-y-2'>
         <Loader className='mx-auto' />
 
-        <p className='font-jost text-sm text-center'>
+        <p className='font-roboto text-sm text-center'>
           Fetching latest headlines
         </p>
       </div>
@@ -23,7 +23,7 @@ export const Headlines = () => {
 
   if (error)
     return (
-      <p className='py-4 font-jost text-sm text-alert-red text-center'>
+      <p className='py-4 font-roboto text-sm text-alert-red text-center'>
         Error fetching headlines. Try again.
       </p>
     );
@@ -33,7 +33,7 @@ export const Headlines = () => {
       {newsData &&
         newsData.slice(0, 15).map((newsItem, index) => (
           <div key={index} className='p-2 hover:bg-secondary-lightGrey/25'>
-            <p className='font-jost cursor-default'>{newsItem}</p>
+            <p className='font-roboto cursor-default'>{newsItem}</p>
           </div>
         ))}
     </div>
@@ -43,11 +43,9 @@ export const Headlines = () => {
 export const TopHeadlines = () => {
   return (
     <div className='sticky top-0 right-0 hidden lg:block lg:p-4 col-span-4 lg:col-span-1'>
-      <h3 className='px-1 font-josefin_Sans font-semibold text-xl'>
-        Top Headlines
-      </h3>
+      <h3 className='px-1 font-dm_sans font-semibold text-xl'>Top Headlines</h3>
 
-      <p className='px-1 font-jost text-sm opacity-75'>
+      <p className='px-1 font-roboto text-sm opacity-75'>
         Catch the latest headlines in a moment
       </p>
 

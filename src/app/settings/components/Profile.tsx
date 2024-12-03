@@ -106,7 +106,7 @@ export const Profile = () => {
         <Section sectionTitle='Basic Infomation'>
           <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
-              <p className='w-full col-span-1 sm:col-span-2 font-josefin_Sans text-sm'>
+              <p className='w-full col-span-1 sm:col-span-2 font-dm_sans text-sm'>
                 Profile Photo
               </p>
 
@@ -131,7 +131,7 @@ export const Profile = () => {
               name='first_name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
+                  <FormLabel className='font-dm_sans text-sm'>
                     First Name
                   </FormLabel>
                   <FormControl>
@@ -151,7 +151,7 @@ export const Profile = () => {
               name='last_name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
+                  <FormLabel className='font-dm_sans text-sm'>
                     Last Name
                   </FormLabel>
                   <FormControl>
@@ -171,7 +171,7 @@ export const Profile = () => {
               name='address'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
+                  <FormLabel className='font-dm_sans text-sm'>
                     Location
                   </FormLabel>
                   <FormControl>
@@ -191,7 +191,7 @@ export const Profile = () => {
               name='contact_number'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
+                  <FormLabel className='font-dm_sans text-sm'>
                     Contact Number
                   </FormLabel>
                   <FormControl>
@@ -211,9 +211,7 @@ export const Profile = () => {
               name='bio'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
-                    Bio
-                  </FormLabel>
+                  <FormLabel className='font-dm_sans text-sm'>Bio</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -231,7 +229,7 @@ export const Profile = () => {
               name='date_of_birth'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
+                  <FormLabel className='font-dm_sans text-sm'>
                     Birth Date
                   </FormLabel>
                   <FormControl>
@@ -286,7 +284,7 @@ export const Profile = () => {
               name='twitter'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
+                  <FormLabel className='font-dm_sans text-sm'>
                     Twitter
                   </FormLabel>
                   <FormControl>
@@ -306,7 +304,7 @@ export const Profile = () => {
               name='linkedin'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
+                  <FormLabel className='font-dm_sans text-sm'>
                     LinkedIn
                   </FormLabel>
                   <FormControl>
@@ -326,7 +324,7 @@ export const Profile = () => {
               name='instagram'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
+                  <FormLabel className='font-dm_sans text-sm'>
                     Instagram
                   </FormLabel>
                   <FormControl>
@@ -346,9 +344,7 @@ export const Profile = () => {
               name='github'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-josefin_Sans text-sm'>
-                    GitHub
-                  </FormLabel>
+                  <FormLabel className='font-dm_sans text-sm'>GitHub</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'

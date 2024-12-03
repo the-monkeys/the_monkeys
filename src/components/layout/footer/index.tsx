@@ -40,9 +40,9 @@ const FooterList = ({
 }) => {
   return (
     <div className='space-y-2'>
-      <h2 className='font-josefin_Sans font-semibold uppercase'>{heading}</h2>
+      <h2 className='font-dm_sans font-semibold uppercase'>{heading}</h2>
 
-      <ul className='font-jost space-y-2'>
+      <ul className='font-roboto space-y-2'>
         {items.map((item, index) => (
           <li className='opacity-75 hover:opacity-100' key={index}>
             <Link href={item.link}>{item.text}</Link>
@@ -125,7 +125,7 @@ const Footer = () => {
             </Link>
           </div>
 
-          <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
+          <p className='font-dm_sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
             Monkeys, {currentYear}, All Rights Reserved
           </p>
         </div>

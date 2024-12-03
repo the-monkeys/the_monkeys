@@ -11,7 +11,7 @@ export const Source1TitleCard = ({
   className?: string;
 }) => {
   return (
-    <h2 className={twMerge(className, 'font-josefin_Sans font-semibold')}>
+    <h2 className={twMerge(className, 'font-dm_sans font-semibold')}>
       {title}
     </h2>
   );
@@ -33,11 +33,11 @@ export const Source1NewsCard1 = ({
         className='h-[200px] w-full object-cover group-hover:opacity-75'
       />
 
-      <p className='mt-2 mb-1 font-jost text-xs sm:text-sm opacity-75'>
+      <p className='mt-2 mb-1 font-roboto text-xs sm:text-sm opacity-75'>
         {newsItem?.source}
       </p>
 
-      <h2 className='font-josefin_Sans font-semibold line-clamp-2'>
+      <h2 className='font-dm_sans font-semibold line-clamp-2'>
         {newsItem?.title}
       </h2>
     </div>
@@ -66,11 +66,11 @@ export const Source1NewsCard2 = ({
       />
 
       <div className='flex-1'>
-        <p className='mb-2 font-jost text-xs sm:text-sm opacity-75'>
+        <p className='mb-2 font-roboto text-xs sm:text-sm opacity-75'>
           {newsItem?.source}
         </p>
 
-        <h2 className='font-josefin_Sans font-semibold text-lg line-clamp-2'>
+        <h2 className='font-dm_sans font-semibold text-lg line-clamp-2'>
           {newsItem?.title}
         </h2>
 
@@ -78,7 +78,7 @@ export const Source1NewsCard2 = ({
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(newsItem.description),
           }}
-          className='mt-1 font-jost font-light line-clamp-3'
+          className='mt-1 font-roboto font-light line-clamp-3'
         ></p>
       </div>
     </div>
@@ -92,7 +92,7 @@ export const Source1NewsCard3 = ({ newsItem }: { newsItem: NewsSource1 }) => {
         {newsItem?.category}
       </Badge>
 
-      <h2 className='font-josefin_Sans font-semibold text-lg sm:text-xl line-clamp-2'>
+      <h2 className='font-dm_sans font-semibold text-lg sm:text-xl line-clamp-2'>
         {newsItem?.title}
       </h2>
 
@@ -100,7 +100,7 @@ export const Source1NewsCard3 = ({ newsItem }: { newsItem: NewsSource1 }) => {
         dangerouslySetInnerHTML={{
           __html: purifyHTMLString(newsItem?.description),
         }}
-        className='mt-1 font-jost font-light line-clamp-2 text-sm sm:text-base'
+        className='mt-1 font-roboto font-light line-clamp-2 text-sm sm:text-base'
       ></p>
     </>
   );

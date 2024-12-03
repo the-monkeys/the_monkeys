@@ -54,13 +54,13 @@ export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
       <DialogTrigger asChild>
         <button className='p-2 w-full flex items-center gap-2 hover:opacity-75'>
           <Icon name='RiDeleteBin' className='text-alert-red' />
-          <p className='font-jost text-base'>Delete Blog</p>
+          <p className='font-roboto text-base'>Delete Blog</p>
         </button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogTitle className='truncate'>Delete Blog</DialogTitle>
-        <p className='font-jost text-secondary-darkGrey dark:text-secondary-white'>
+        <p className='font-roboto text-secondary-darkGrey dark:text-secondary-white'>
           Are you sure you want to delete this blog? This action cannot be
           undone.
         </p>

@@ -54,19 +54,19 @@ const BlogContent = ({
       <div className='flex-1 space-y-1'>
         <h2
           dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-          className='font-jost font-medium text-xl sm:text-2xl capitalize line-clamp-2 group-hover:opacity-75'
+          className='font-roboto font-medium text-xl sm:text-2xl capitalize line-clamp-2 group-hover:opacity-75'
         ></h2>
 
         <p
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(descriptionContent),
           }}
-          className='font-jost text-sm sm:text-base opacity-75 line-clamp-1'
+          className='font-roboto text-sm sm:text-base opacity-75 line-clamp-1'
         ></p>
       </div>
 
       {descriptionType === 'image' && (
-        <div className='w-[100px] md:w-[120px] h-[80px] md:h-[100px] overflow-hidden rounded-lg group-hover:rounded-none transition-all'>
+        <div className='w-[100px] md:w-[120px] h-[80px] md:h-[100px] overflow-hidden rounded-md group-hover:rounded-none transition-all'>
           <img
             src={descriptionBlock?.data?.file?.url}
             alt='Blog Image'
@@ -115,7 +115,7 @@ export const BlogCard: FC<BlogCardProps> = ({
 
       <div className='pt-4 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-2'>
-          <p className='font-jost text-xs opacity-75'>
+          <p className='font-roboto text-xs opacity-75'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
 

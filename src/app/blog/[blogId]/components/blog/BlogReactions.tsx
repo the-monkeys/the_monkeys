@@ -33,7 +33,7 @@ export const BlogReactions = ({
             />
           </>
         ) : (
-          <p className='font-jost text-alert-red italic'>
+          <p className='font-roboto text-alert-red italic'>
             You are not logged in
           </p>
         )}

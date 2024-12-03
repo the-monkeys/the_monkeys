@@ -33,12 +33,12 @@ const SettingsPage = () => {
         className='px-4 grid grid-cols-4 gap-4 md:gap-6'
       >
         <div className='col-span-4 md:col-span-1 flex flex-col'>
-          <TabsList className='p-3 font-josefin_Sans flex md:flex-col justify-evenly flex-wrap items-start gap-4 md:gap-3'>
+          <TabsList className='p-3 font-dm_sans flex md:flex-col justify-evenly flex-wrap items-start gap-4 md:gap-3'>
             <TabsTrigger
               value='profile'
               className='md:w-full flex flex-row justify-start gap-2 opacity-75 data-[state=active]:opacity-100 hover:opacity-100'
             >
-              <p className='font-josefin_Sans'>Profile</p>
+              <p className='font-dm_sans'>Profile</p>
 
               <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-primary-monkeyOrange'></div>
             </TabsTrigger>
@@ -47,7 +47,7 @@ const SettingsPage = () => {
               value='account'
               className='md:w-full flex flex-row justify-start gap-2 opacity-75 data-[state=active]:opacity-100 hover:opacity-100'
             >
-              <p className='font-josefin_Sans'>Account</p>
+              <p className='font-dm_sans'>Account</p>
 
               <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-primary-monkeyOrange'></div>
             </TabsTrigger>
@@ -56,7 +56,7 @@ const SettingsPage = () => {
               value='security'
               className='md:w-full flex flex-row justify-start gap-2 opacity-75 data-[state=active]:opacity-100 hover:opacity-100'
             >
-              <p className='font-josefin_Sans'>Security</p>
+              <p className='font-dm_sans'>Security</p>
 
               <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-primary-monkeyOrange'></div>
             </TabsTrigger>
@@ -65,7 +65,7 @@ const SettingsPage = () => {
               value='notifications'
               className='md:w-full flex flex-row justify-start gap-2 opacity-75 data-[state=active]:opacity-100 hover:opacity-100'
             >
-              <p className='font-josefin_Sans'>Notifications</p>
+              <p className='font-dm_sans'>Notifications</p>
 
               <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-primary-monkeyOrange'></div>
             </TabsTrigger>
@@ -82,13 +82,13 @@ const SettingsPage = () => {
           </TabsContent>
 
           <TabsContent className='min-h-screen w-full' value='security'>
-            <p className='py-1 font-jost text-center opacity-75'>
+            <p className='py-1 font-roboto text-center opacity-75'>
               Security settings will be available soon.
             </p>
           </TabsContent>
 
           <TabsContent className='min-h-screen w-full' value='notifications'>
-            <p className='py-1 font-jost text-center opacity-75'>
+            <p className='py-1 font-roboto text-center opacity-75'>
               Notification settings will be available soon.
             </p>
           </TabsContent>

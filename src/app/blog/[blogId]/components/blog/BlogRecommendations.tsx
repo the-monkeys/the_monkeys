@@ -9,7 +9,7 @@ export const BlogRecommendations = () => {
 
   if (isError)
     return (
-      <p className='py-4 font-jost text-sm text-alert-red text-center'>
+      <p className='py-4 font-roboto text-sm text-alert-red text-center'>
         Error fetching blogs. Try again.
       </p>
     );
@@ -21,7 +21,7 @@ export const BlogRecommendations = () => {
           return <BlogRecommendationCard key={blog?.blog_id} blog={blog} />;
         })
       ) : (
-        <p className='py-4 font-jost text-sm text-alert-red text-center'>
+        <p className='py-4 font-roboto text-sm text-alert-red text-center'>
           No blogs available.
         </p>
       )}

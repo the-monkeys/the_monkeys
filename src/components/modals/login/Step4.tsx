@@ -146,16 +146,16 @@ const Step4 = ({
           />
 
           <ul>
-            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+            <li className='font-roboto text-sm list-disc list-inside opacity-75'>
               Must be at least 6 characters long.
             </li>
-            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+            <li className='font-roboto text-sm list-disc list-inside opacity-75'>
               Must contain at least one lowercase letter.
             </li>
-            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+            <li className='font-roboto text-sm list-disc list-inside opacity-75'>
               Must contain at least one uppercase letter.
             </li>
-            <li className='font-jost text-sm list-disc list-inside opacity-75'>
+            <li className='font-roboto text-sm list-disc list-inside opacity-75'>
               Must contain at least one number.
             </li>
           </ul>

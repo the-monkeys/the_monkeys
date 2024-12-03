@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
-import { useIsFollowingUser } from '@/hooks/user/useFollowStatus';
+import { useIsFollowingUser } from '@/hooks/user/useUserConnections';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
@@ -99,7 +99,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
     <>
       {followStatus?.isFollowing ? (
         <Button
-          variant='outline'
+          variant='secondary'
           className='rounded-full'
           disabled={loading}
           onClick={onUserUnfollow}
@@ -108,7 +108,6 @@ export const FollowButton = ({ username }: { username?: string }) => {
         </Button>
       ) : (
         <Button
-          variant='default'
           className='rounded-full'
           disabled={loading}
           onClick={onUserFollow}
@@ -132,7 +131,7 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
   if (isLoading) {
     return (
       <button
-        className='font-jost text-sm md:text-base opacity-75'
+        className='font-roboto text-sm md:text-base opacity-75'
         disabled={true}
       >
         Follow
@@ -220,7 +219,7 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
     <>
       {followStatus?.isFollowing ? (
         <button
-          className='font-jost text-sm md:text-base text-alert-red hover:opacity-75'
+          className='font-roboto text-sm md:text-base text-alert-red hover:opacity-75'
           disabled={loading}
           onClick={onUserUnfollow}
         >
@@ -228,7 +227,7 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
         </button>
       ) : (
         <button
-          className='font-jost text-sm md:text-base text-primary-monkeyOrange hover:opacity-75'
+          className='font-roboto text-sm md:text-base text-primary-monkeyOrange hover:opacity-75'
           disabled={loading}
           onClick={onUserFollow}
         >

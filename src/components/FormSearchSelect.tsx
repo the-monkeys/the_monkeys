@@ -47,13 +47,13 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
       //   option: (provided, state) => ({
       //     ...provided,
       //     // backgroundColor: state.isSelected
-      //     //   ? '#ff462e' // monkeyOrange for selected
+      //     //   ? '#FF5542' // monkeyOrange for selected
       //     //   : state.isFocused
-      //     //     ? '#FFF4ed' // monkeyWhite for focused
+      //     //     ? '#F2F2F2' // monkeyWhite for focused
       //     //     : 'white',
       //     // color: state.isSelected ? 'white' : 'black',
       //     // '&:hover': {
-      //     //   backgroundColor: state.isSelected ? '#ff462e' : '#FFF4ed', // monkeyOrange for selected, monkeyWhite for hover
+      //     //   backgroundColor: state.isSelected ? '#FF5542' : '#F2F2F2', // monkeyOrange for selected, monkeyWhite for hover
       //     // },
       //   }),
       //   menu: (provided) => ({

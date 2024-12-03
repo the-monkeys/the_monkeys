@@ -8,9 +8,9 @@ import { Switch } from '@/components/ui/switch';
 const Visibility = () => {
   return (
     <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Change Profile Visibility</h4>
+      <h4 className='font-dm_sans text-lg'>Change Profile Visibility</h4>
 
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         If your make yourself anonymous, your profile information will remain
         hidden from others during any activity.
       </p>

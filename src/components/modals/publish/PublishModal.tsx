@@ -104,14 +104,14 @@ const PublishModal = ({
         </h1>
 
         {publishStep.subHeading && (
-          <p className='mt-2 font-jost text-sm sm:text-base opacity-75 text-center'>
+          <p className='mt-2 font-roboto text-sm sm:text-base opacity-75 text-center'>
             {publishStep.subHeading}
           </p>
         )}
       </ModalHeader>
 
       <ModalContent className='space-y-2'>
-        <p className='font-josefin_Sans'>
+        <p className='font-dm_sans'>
           Choose topics (at most 5)
           <span className='block opacity-75 text-sm'>
             Topics provide readers with a glimpse into the content of your blog.
@@ -134,7 +134,7 @@ const PublishModal = ({
               render={({ field }) => {
                 return (
                   <FormItem className='space-y-1 flex flex-col justify-start'>
-                    <p className='font-jost text-sm'>
+                    <p className='font-roboto text-sm'>
                       Select Topics
                       <span className='text-destructive'>*</span>
                     </p>
@@ -172,7 +172,7 @@ const PublishModal = ({
       </ModalContent>
 
       <ModalFooter>
-        <p className='text-center font-jost text-sm opacity-75'>
+        <p className='text-center font-roboto text-sm opacity-75'>
           Modifications made here will solely affect the presentation of your
           blog, without altering the actual content of your blog.
         </p>

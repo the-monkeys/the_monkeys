@@ -52,7 +52,7 @@ const ExploreTopicsPage = () => {
             onClick={() => setSelectedLetter(letter)}
             className='size-8 sm:size-10 rounded-full'
           >
-            <p className='font-jost text-sm sm:text-base font-medium'>
+            <p className='font-roboto text-sm sm:text-base font-medium'>
               {letter}
             </p>
           </Button>
@@ -62,7 +62,7 @@ const ExploreTopicsPage = () => {
       {isLoading ? (
         <div className='flex flex-col items-center space-y-2'>
           <Loader />
-          <p className='font-jost opacity-75'>Almost there, loading topics</p>
+          <p className='font-roboto opacity-75'>Almost there, loading topics</p>
         </div>
       ) : (
         <div className='px-4 py-0 sm:py-4 grid grid-cols-2 md:grid-cols-3 gap-6'>
@@ -77,7 +77,7 @@ const ExploreTopicsPage = () => {
                   className='p-0 sm:p-2 col-span-2 sm:col-span-1'
                 >
                   <div className='p-1 group flex justify-between items-start'>
-                    <h2 className='py-1 flex-1 font-josefin_Sans text-lg sm:text-xl text-primary-monkeyBlack dark:text-primary-monkeyWhite truncate'>
+                    <h2 className='py-1 flex-1 font-dm_sans text-lg sm:text-xl text-primary-monkeyBlack dark:text-primary-monkeyWhite truncate'>
                       {category}
                     </h2>
 
@@ -94,7 +94,7 @@ const ExploreTopicsPage = () => {
               );
             })
           ) : (
-            <p className='col-span-2 sm:col-span-3 font-jost text-center opacity-75'>
+            <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-75'>
               No topics available at this moment.
             </p>
           )}

@@ -75,9 +75,9 @@ const Username = () => {
 
   return (
     <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Update Username</h4>
+      <h4 className='font-dm_sans text-lg'>Update Username</h4>
 
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         Change your username to something that reflects your individuality.
       </p>
 
@@ -90,7 +90,7 @@ const Username = () => {
                 name='username'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-josefin_Sans text-sm'>
+                    <FormLabel className='font-dm_sans text-sm'>
                       Username
                     </FormLabel>
                     <FormMessage />

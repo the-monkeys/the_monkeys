@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { type VariantProps, cva } from 'class-variance-authority';
 
 const alertVariants = cva(
-  'relative w-full rounded-lg border-1 border-secondary-lightGrey/25 p-4 bg-secondary-lightGrey/10 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg~*]:pl-7',
+  'relative w-full rounded-md border-1 border-secondary-lightGrey/25 p-4 bg-secondary-lightGrey/10 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg~*]:pl-7',
   {
     variants: {
       variant: {
@@ -39,7 +39,7 @@ const AlertTitle = React.forwardRef<
   <h4
     ref={ref}
     className={cn(
-      'font-josefin_Sans text-lg leading-none tracking-tight',
+      'font-dm_sans text-lg leading-none tracking-tight',
       className
     )}
     {...props}
@@ -53,7 +53,7 @@ const AlertDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn('mt-1 font-jost [&_p]:leading-relaxed', className)}
+    className={cn('mt-1 font-roboto [&_p]:leading-relaxed', className)}
     {...props}
   />
 ));

@@ -30,7 +30,7 @@ const BlogPage = ({
   if (isError)
     return (
       <Container className='min-h-screen'>
-        <p className='py-4 font-jost text-sm text-alert-red text-center'>
+        <p className='py-4 font-roboto text-sm text-alert-red text-center'>
           Error fetching blog. Try again.
         </p>
       </Container>
@@ -43,7 +43,7 @@ const BlogPage = ({
 
         <Separator className='mt-2' />
 
-        <p className='mt-2 font-jost text-xs md:text-sm'>
+        <p className='mt-2 font-roboto text-xs md:text-sm'>
           <span className='opacity-75'>Last Updated: </span>
           {moment(blog?.blog?.time).format('MMM DD, YYYY')}
         </p>
@@ -58,7 +58,9 @@ const BlogPage = ({
       </div>
 
       <div className='p-4 col-span-3 md:col-span-1'>
-        <h4 className='px-1 font-jost text-sm sm:text-base'>You Might Like</h4>
+        <h4 className='px-1 font-roboto text-sm sm:text-base'>
+          You Might Like
+        </h4>
 
         <Separator className='mt-1 mb-4' />
 

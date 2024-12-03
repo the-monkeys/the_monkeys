@@ -23,15 +23,15 @@ const SettingsPage = () => {
 
       <Tabs defaultValue='profile'>
         <div className='flex flex-col justify-center items-center'>
-          <TabsList className='font-josefin_Sans flex items-start'>
+          <TabsList className='font-dm_sans flex items-start'>
             <TabsTrigger value='profile'>
-              <p className='font-josefin_Sans text-base sm:text-lg'>Profile</p>
+              <p className='font-dm_sans text-base sm:text-lg'>Profile</p>
 
               <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
             </TabsTrigger>
 
             <TabsTrigger value='account'>
-              <p className='font-josefin_Sans text-base sm:text-lg'>Account</p>
+              <p className='font-dm_sans text-base sm:text-lg'>Account</p>
 
               <div className='h-[2px] w-1 bg-primary-monkeyOrange group-data-[state=active]:w-4/5 transition-all rounded-full' />
             </TabsTrigger>

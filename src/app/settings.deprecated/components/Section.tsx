@@ -12,7 +12,7 @@ const Section: FC<SectionProps> = ({ sectionTitle, children }) => {
       <h3
         className={twMerge(
           sectionTitle === 'Danger' && 'text-alert-red',
-          'w-full sm:w-3/12 font-josefin_Sans text-lg'
+          'w-full sm:w-3/12 font-dm_sans text-lg'
         )}
       >
         {sectionTitle}

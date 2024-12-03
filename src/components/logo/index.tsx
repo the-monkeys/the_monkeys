@@ -34,7 +34,7 @@ const Logo: React.FC<LogoProps> = ({
     <div className='flex flex-col items-start'>
       {showMobileLogo && isMobile ? <MobileLogo /> : <WebLogo />}
       {showSubHeading && (
-        <p className='font-josefin_Sans'>Inspire, Inform, & Innovate</p>
+        <p className='font-dm_sans'>Inspire, Inform, & Innovate</p>
       )}
     </div>
   );

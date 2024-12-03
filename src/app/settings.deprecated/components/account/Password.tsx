@@ -82,9 +82,9 @@ const Password = () => {
 
   return (
     <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Update Password</h4>
+      <h4 className='font-dm_sans text-lg'>Update Password</h4>
 
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         Update your password to restore access and protect your account.
       </p>
 
@@ -155,16 +155,16 @@ const Password = () => {
               />
 
               <ul>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto text-sm list-disc list-inside opacity-75'>
                   Must be at least 6 characters long.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto text-sm list-disc list-inside opacity-75'>
                   Must contain at least one lowercase letter.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto text-sm list-disc list-inside opacity-75'>
                   Must contain at least one uppercase letter.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto text-sm list-disc list-inside opacity-75'>
                   Must contain at least one number.
                 </li>
               </ul>

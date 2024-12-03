@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { VariantProps, cva } from 'class-variance-authority';
 
 const inputVariants = cva(
-  'h-10 flex w-full px-4 text-sm rounded-lg file:border-0 file:rounded-sm file:mr-4 file:text-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 font-jost bg-primary-monkeyWhite dark:bg-primary-monkeyBlack',
+  'h-10 flex w-full px-4 text-sm rounded-md file:border-0 file:rounded-sm file:mr-4 file:text-sm focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 font-roboto bg-primary-monkeyWhite dark:bg-primary-monkeyBlack',
   {
     variants: {
       variant: {

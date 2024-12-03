@@ -22,7 +22,7 @@ export const UserInfoCardCompact = ({
 
   if (isError) {
     return (
-      <p className='mb-4 font-jost text-sm text-alert-red'>
+      <p className='mb-4 font-roboto text-sm text-alert-red'>
         User info not available
       </p>
     );
@@ -36,7 +36,7 @@ export const UserInfoCardCompact = ({
         </ProfileFrame>
       )}
 
-      <p className='font-josefin_Sans text-xs sm:text-sm'>
+      <p className='font-dm_sans text-xs sm:text-sm'>
         <span className='font-light opacity-75'>{prefixContent} </span>
 
         <Link
@@ -59,7 +59,7 @@ export const UserInfoCard = ({ id }: { id?: string }) => {
 
   if (isError)
     return (
-      <p className='py-4 font-jost text-sm text-alert-red'>
+      <p className='py-4 font-roboto text-sm text-alert-red'>
         User not available
       </p>
     );
@@ -75,7 +75,7 @@ export const UserInfoCard = ({ id }: { id?: string }) => {
       <div className='flex-1 flex flex-col items-start'>
         <Link
           href={`/${user?.username}`}
-          className='w-fit font-josefin_Sans font-medium text-sm md:text-base hover:underline underline-offset-2 decoration-1'
+          className='w-fit font-dm_sans font-medium text-sm md:text-base hover:underline underline-offset-2 decoration-1'
         >
           {user?.first_name} {user?.last_name}
         </Link>

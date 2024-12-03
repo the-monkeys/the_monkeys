@@ -17,7 +17,9 @@ const LegalPage = ({
         <PageSubheading subheading={date} className='opacity-75' />
       </PageHeader>
 
-      <div className='font-jost font-light text-base md:text-lg'>{content}</div>
+      <div className='font-roboto font-light text-base md:text-lg'>
+        {content}
+      </div>
     </Container>
   );
 };

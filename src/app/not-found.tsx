@@ -17,7 +17,7 @@ const NotFound = () => {
         />
 
         <div>
-          <p className='font-josefin_Sans font-semibold text-center sm:text-left text-primary-monkeyOrange'>
+          <p className='font-dm_sans font-semibold text-center sm:text-left text-primary-monkeyOrange'>
             Page Not Found
           </p>
 
@@ -28,10 +28,10 @@ const NotFound = () => {
       </div>
 
       <LinksRedirectArrow link='/' position='Left'>
-        <p className='font-jost'>Go back to home</p>
+        <p className='font-roboto'>Go back to home</p>
       </LinksRedirectArrow>
 
-      <p className='font-jost text-center'>Or</p>
+      <p className='font-roboto text-center'>Or</p>
 
       <div className='w-full sm:w-4/5 md:w-1/2 space-y-2 px-5'>
         <SocialCard

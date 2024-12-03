@@ -132,7 +132,7 @@ export const Email = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         Registered Email: {session?.user?.email}
       </p>
 
@@ -156,7 +156,7 @@ export const Email = () => {
               className='text-primary-monkeyOrange'
             />
 
-            <p className='font-jost'>Email Verified</p>
+            <p className='font-roboto'>Email Verified</p>
           </div>
         )
       ) : null}
@@ -170,7 +170,7 @@ export const Email = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-josefin_Sans text-sm'>
+                    <FormLabel className='font-dm_sans text-sm'>
                       Change Email
                     </FormLabel>
                     <FormMessage />

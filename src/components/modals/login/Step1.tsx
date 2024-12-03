@@ -40,7 +40,7 @@ const Step1 = ({
         <p className='flex-1'>Coming Soon</p>
       </Button>
 
-      <p className='text-center font-jost text-sm'>
+      <p className='text-center font-roboto text-sm'>
         Don't have an account?
         <span
           className='text-primary-monkeyOrange cursor-pointer'

@@ -9,12 +9,22 @@ import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import useUser from '@/hooks/user/useUser';
+import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import moment from 'moment';
+import { Session } from 'next-auth';
 
-export const ProfileCard = () => {
+import { ConnectionsDialog } from './ConnectionsDialog';
+
+export const ProfileCard = ({
+  isAuthenticated,
+}: {
+  isAuthenticated: boolean;
+}) => {
   const params = useParams<{ username: string }>();
 
   const { user, isLoading, isError } = useUser(params.username);
+  const { connections, connectionsLoading, connectionsError } =
+    useGetConnectionCount(params.username);
 
   if (isError) {
     notFound();
@@ -26,45 +36,57 @@ export const ProfileCard = () => {
 
   const joinedDate = user?.created_at
     ? moment.unix(user?.created_at.seconds).format('MMM, YYYY')
-    : 'Date not available';
+    : 'Not available';
 
   return (
-    <div className='space-y-3'>
-      <ProfileFrame className='size-28 sm:size-32'>
+    <div className='space-y-2'>
+      <ProfileFrame className='size-28 sm:size-32 shadow-md'>
         {user?.username && (
           <ProfileImage firstName={user.first_name} username={user.username} />
         )}
       </ProfileFrame>
 
       <div>
-        <h2 className='w-full font-josefin_Sans text-xl md:text-2xl capitalize cursor-default'>
+        <h2 className='w-full font-roboto font-medium text-xl md:text-2xl capitalize'>
           {`${user?.first_name} ${user?.last_name}`}
         </h2>
 
-        <p className='font-jost text-sm opacity-75 truncate'>{`@${user?.username}`}</p>
+        <p className='font-roboto text-sm opacity-80 truncate'>{`@${user?.username}`}</p>
+      </div>
+
+      <div className='flex items-center flex-wrap gap-x-2'>
+        <p className='font-roboto font-medium'>
+          {connectionsError ? 'NA' : connections?.followers || 0}{' '}
+          {isAuthenticated ? (
+            <ConnectionsDialog label='Followers' />
+          ) : (
+            <p className='inline font-roboto text-sm font-light opacity-80'>
+              Followers
+            </p>
+          )}
+        </p>
+
+        <p className='font-roboto font-medium'>
+          {connectionsError ? 'NA' : connections?.following || 0}{' '}
+          {isAuthenticated ? (
+            <ConnectionsDialog label='Following' />
+          ) : (
+            <p className='inline font-roboto text-sm font-light opacity-80'>
+              Following
+            </p>
+          )}
+        </p>
       </div>
 
       {user?.bio && (
-        <p className='font-jost leading-tight cursor-default break-words'>
-          {user.bio}
-        </p>
+        <p className='py-1 font-roboto leading-tight break-words'>{user.bio}</p>
       )}
-
-      <div className='flex items-center flex-wrap gap-x-3 gap-y-1'>
-        <p className='font-jost font-medium'>
-          27 <span className='text-sm font-normal opacity-75'>Followers</span>
-        </p>
-
-        <p className='font-jost font-medium'>
-          50 <span className='text-sm font-normal opacity-75'>Following</span>
-        </p>
-      </div>
 
       <div>
         <div className='flex items-center gap-1'>
           <Icon name='RiCalendar' size={18} className='opacity-75' />
 
-          <p className='font-jost cursor-default opacity-75'>
+          <p className='font-roboto text-sm cursor-default opacity-80'>
             Joined {joinedDate}
           </p>
         </div>
@@ -74,7 +96,7 @@ export const ProfileCard = () => {
             <div className='flex items-center gap-1'>
               <Icon name='RiMapPin' size={18} className='opacity-75' />
 
-              <p className='font-jost cursor-default opacity-75'>
+              <p className='font-roboto text-sm cursor-default opacity-80'>
                 {user.address}
               </p>
             </div>
@@ -92,7 +114,7 @@ export const ProfileCard = () => {
           >
             <Icon name='RiTwitterX' type='Fill' size={18} />
 
-            <p className='font-jost opacity-75 hover:opacity-100'>
+            <p className='font-roboto opacity-80 hover:opacity-100'>
               {user.twitter}
             </p>
           </Link>
@@ -107,7 +129,7 @@ export const ProfileCard = () => {
           >
             <Icon name='RiGithub' type='Fill' size={18} />
 
-            <p className='font-jost opacity-75 hover:opacity-100'>
+            <p className='font-roboto opacity-80 hover:opacity-100'>
               {user.github}
             </p>
           </Link>
@@ -122,7 +144,7 @@ export const ProfileCard = () => {
           >
             <Icon name='RiLinkedin' type='Fill' size={18} />
 
-            <p className='font-jost opacity-75 hover:opacity-100'>
+            <p className='font-roboto opacity-80 hover:opacity-100'>
               {user.linkedin}
             </p>
           </Link>
@@ -137,7 +159,7 @@ export const ProfileCard = () => {
           >
             <Icon name='RiInstagram' type='Fill' size={18} />
 
-            <p className='font-jost opacity-75 hover:opacity-100'>
+            <p className='font-roboto opacity-80 hover:opacity-100'>
               {user.instagram}
             </p>
           </Link>

@@ -8,7 +8,7 @@ export const GridHeading = ({
   className?: string;
 }) => {
   return (
-    <h2 className={twMerge(className, 'font-josefin_Sans text-xl sm:text-2xl')}>
+    <h2 className={twMerge(className, 'font-dm_sans text-xl sm:text-2xl')}>
       {children}
     </h2>
   );
@@ -24,7 +24,7 @@ export const GridSubHeading = ({
     <p
       className={twMerge(
         className,
-        (className = 'font-jost leading-tight opacity-75')
+        (className = 'font-roboto leading-tight opacity-75')
       )}
     >
       {children}
@@ -43,7 +43,7 @@ export const GridContainer = ({
     <div
       className={twMerge(
         className,
-        'group border-1 border-secondary-lightGrey/25 hover:border-secondary-lightGrey/50 rounded-lg overflow-hidden'
+        'group border-1 border-secondary-lightGrey/25 hover:border-secondary-lightGrey/50 rounded-md overflow-hidden'
       )}
     >
       {children}

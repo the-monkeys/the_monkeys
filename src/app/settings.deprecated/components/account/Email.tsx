@@ -132,13 +132,13 @@ const Email = () => {
 
   return (
     <div className='flex flex-col items-start'>
-      <h4 className='font-josefin_Sans text-lg'>Verify Email</h4>
+      <h4 className='font-dm_sans text-lg'>Verify Email</h4>
 
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         Verify your email address to keep your account secure and stay updated.
       </p>
 
-      <p className='font-jost text-sm'>
+      <p className='font-roboto text-sm'>
         Registered Email: {session?.user?.email}
       </p>
 
@@ -162,14 +162,14 @@ const Email = () => {
               className='text-primary-monkeyOrange'
             />
 
-            <p className='font-jost'>Email Verified</p>
+            <p className='font-roboto'>Email Verified</p>
           </div>
         )
       ) : null}
 
-      <h4 className='mt-6 font-josefin_Sans text-lg'>Update Email</h4>
+      <h4 className='mt-6 font-dm_sans text-lg'>Update Email</h4>
 
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         Update your email for seamless communication and enhanced security.
       </p>
 
@@ -182,7 +182,7 @@ const Email = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-josefin_Sans text-sm'>
+                    <FormLabel className='font-dm_sans text-sm'>
                       Email Address
                     </FormLabel>
                     <FormMessage />

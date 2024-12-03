@@ -59,7 +59,7 @@ export const Danger = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         When you delete your account on Monkeys, all your personal data will be
         permanently erased. This action cannot be undone.
       </p>
@@ -74,13 +74,13 @@ export const Danger = () => {
         <DialogContent>
           <DialogTitle className='text-alert-red'>Delete Account</DialogTitle>
 
-          <p className='font-jost text-secondary-darkGrey dark:text-secondary-white'>
+          <p className='font-roboto text-secondary-darkGrey dark:text-secondary-white'>
             Are you sure you want to delete your account? This action is
             irreversible and cannot be undone.
           </p>
 
           <div className='space-y-2'>
-            <p className='font-jost font-medium text-sm'>
+            <p className='font-roboto font-medium text-sm'>
               To confirm, type "delete my account" in the box below
             </p>
 

@@ -55,7 +55,7 @@ export const BlogActionsDropdown = ({
             className='flex w-full items-center gap-2'
           >
             <Icon name='RiFileCopy' />
-            <p className='font-jost text-base'>Copy Link</p>
+            <p className='font-roboto text-base'>Copy Link</p>
           </button>
         </DropdownMenuItem>
 
