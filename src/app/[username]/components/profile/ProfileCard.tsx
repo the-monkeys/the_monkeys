@@ -11,7 +11,6 @@ import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import useUser from '@/hooks/user/useUser';
 import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import moment from 'moment';
-import { Session } from 'next-auth';
 
 import { ConnectionsDialog } from './ConnectionsDialog';
 
@@ -60,9 +59,9 @@ export const ProfileCard = ({
           {isAuthenticated ? (
             <ConnectionsDialog label='Followers' />
           ) : (
-            <p className='inline font-roboto text-sm font-light opacity-80'>
+            <span className='inline font-roboto text-sm font-light opacity-80'>
               Followers
-            </p>
+            </span>
           )}
         </p>
 
@@ -71,9 +70,9 @@ export const ProfileCard = ({
           {isAuthenticated ? (
             <ConnectionsDialog label='Following' />
           ) : (
-            <p className='inline font-roboto text-sm font-light opacity-80'>
+            <span className='inline font-roboto text-sm font-light opacity-80'>
               Following
-            </p>
+            </span>
           )}
         </p>
       </div>
@@ -84,21 +83,17 @@ export const ProfileCard = ({
 
       <div>
         <div className='flex items-center gap-1'>
-          <Icon name='RiCalendar' size={18} className='opacity-75' />
+          <Icon name='RiCalendar' size={18} className='opacity-80' />
 
-          <p className='font-roboto text-sm cursor-default opacity-80'>
-            Joined {joinedDate}
-          </p>
+          <p className='font-roboto text-sm opacity-80'>Joined {joinedDate}</p>
         </div>
 
         {user?.address && (
           <div className='flex items-center gap-1'>
             <div className='flex items-center gap-1'>
-              <Icon name='RiMapPin' size={18} className='opacity-75' />
+              <Icon name='RiMapPin' size={18} className='opacity-80' />
 
-              <p className='font-roboto text-sm cursor-default opacity-80'>
-                {user.address}
-              </p>
+              <p className='font-roboto text-sm opacity-80'>{user.address}</p>
             </div>
           </div>
         )}
@@ -112,9 +107,14 @@ export const ProfileCard = ({
             href={`https://x.com/${user.twitter}`}
             className='flex items-center gap-1'
           >
-            <Icon name='RiTwitterX' type='Fill' size={18} />
+            <Icon
+              name='RiTwitterX'
+              type='Fill'
+              size={18}
+              className='opacity-80'
+            />
 
-            <p className='font-roboto opacity-80 hover:opacity-100'>
+            <p className='font-roboto font-light opacity-80 hover:opacity-100'>
               {user.twitter}
             </p>
           </Link>
@@ -127,9 +127,14 @@ export const ProfileCard = ({
             href={`https://github.com/${user.github}/`}
             className='flex items-center gap-1'
           >
-            <Icon name='RiGithub' type='Fill' size={18} />
+            <Icon
+              name='RiGithub'
+              type='Fill'
+              size={18}
+              className='opacity-80'
+            />
 
-            <p className='font-roboto opacity-80 hover:opacity-100'>
+            <p className='font-roboto font-light opacity-80 hover:opacity-100'>
               {user.github}
             </p>
           </Link>
@@ -142,9 +147,14 @@ export const ProfileCard = ({
             href={`https://www.linkedin.com/in/${user.linkedin}`}
             className='flex items-center gap-1'
           >
-            <Icon name='RiLinkedin' type='Fill' size={18} />
+            <Icon
+              name='RiLinkedin'
+              type='Fill'
+              size={18}
+              className='opacity-80'
+            />
 
-            <p className='font-roboto opacity-80 hover:opacity-100'>
+            <p className='font-roboto font-light opacity-80 hover:opacity-100'>
               {user.linkedin}
             </p>
           </Link>
@@ -157,9 +167,14 @@ export const ProfileCard = ({
             href={`https://www.instagram.com/${user.instagram}/`}
             className='flex items-center gap-1'
           >
-            <Icon name='RiInstagram' type='Fill' size={18} />
+            <Icon
+              name='RiInstagram'
+              type='Fill'
+              size={18}
+              className='opacity-80'
+            />
 
-            <p className='font-roboto opacity-80 hover:opacity-100'>
+            <p className='font-roboto font-light opacity-80 hover:opacity-100'>
               {user.instagram}
             </p>
           </Link>

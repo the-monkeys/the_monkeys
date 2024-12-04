@@ -90,7 +90,7 @@ const Footer = () => {
                 )}
               />
 
-              <Button size='lg' disabled>
+              <Button variant='brand' size='lg' disabled>
                 Subscribe
               </Button>
             </div>

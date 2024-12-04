@@ -108,6 +108,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
         </Button>
       ) : (
         <Button
+          variant='brand'
           className='rounded-full'
           disabled={loading}
           onClick={onUserFollow}

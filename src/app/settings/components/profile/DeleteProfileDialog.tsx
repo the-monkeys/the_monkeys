@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -77,6 +78,8 @@ export const DeleteProfileDialog = () => {
         <DialogTitle className='text-alert-red'>
           Delete Profile Photo
         </DialogTitle>
+
+        <DialogDescription className='hidden'></DialogDescription>
 
         <p className='font-roboto text-secondary-darkGrey dark:text-secondary-white'>
           Are you sure you want to delete your profile photo? It will be

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -53,6 +54,8 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
 
       <DialogContent className='flex flex-col'>
         <DialogTitle>Connections</DialogTitle>
+
+        <DialogDescription className='hidden'></DialogDescription>
 
         <Tabs defaultValue='followers' className='space-y-4'>
           <TabsList className='flex gap-0 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-30'>

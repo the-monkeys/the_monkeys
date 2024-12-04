@@ -49,7 +49,7 @@ const LoginModal = ({
       {handleLoginStep()}
 
       <ModalFooter>
-        <p className='text-center font-roboto text-xs sm:text-sm opacity-75'>
+        <p className='font-roboto text-xs text-foreground-dark dark:text-foreground-light text-center'>
           By logging in to Monkeys, you agree to our Terms and Policies.
         </p>
       </ModalFooter>

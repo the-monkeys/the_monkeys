@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -60,10 +61,14 @@ export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
 
       <DialogContent>
         <DialogTitle className='truncate'>Delete Blog</DialogTitle>
+
+        <DialogDescription className='hidden'></DialogDescription>
+
         <p className='font-roboto text-secondary-darkGrey dark:text-secondary-white'>
           Are you sure you want to delete this blog? This action cannot be
           undone.
         </p>
+
         <div>
           <Button
             type='button'

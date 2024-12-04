@@ -170,14 +170,15 @@ export const Email = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-dm_sans text-sm'>
+                    <FormLabel className='font-roboto text-sm'>
                       Change Email
                     </FormLabel>
                     <FormMessage />
                     <FormControl>
                       <Input
                         placeholder={
-                          session?.user?.email || 'Enter email address'
+                          `eg. ${session?.user?.email}` ||
+                          'eg. yourmail@monkeys.xyz'
                         }
                         {...field}
                       />
@@ -189,7 +190,6 @@ export const Email = () => {
 
             <Button
               size='lg'
-              variant='secondary'
               type='submit'
               disabled={updateLoading ? true : false}
             >

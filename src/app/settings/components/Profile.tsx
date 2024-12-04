@@ -358,11 +358,7 @@ export const Profile = () => {
         </Section>
 
         <div className='flex justify-end'>
-          <Button
-            variant='secondary'
-            disabled={loading ? true : false}
-            type='submit'
-          >
+          <Button disabled={loading ? true : false} type='submit'>
             {loading && <Loader />} Save Changes
           </Button>
         </div>

@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -126,6 +127,8 @@ export const UpdateProfileDialog = () => {
       <DialogContent>
         <DialogTitle>Update Profile Photo</DialogTitle>
 
+        <DialogDescription className='hidden'></DialogDescription>
+
         {!selectedImage && (
           <div className='space-y-2'>
             {uploadError && (
@@ -137,9 +140,8 @@ export const UpdateProfileDialog = () => {
             <div
               {...getRootProps()}
               className={twMerge(
-                'h-44 sm:h-52 rounded-md flex flex-col items-center justify-center gap-2 border-2 border-dashed border-secondary-lightGrey/25',
-                isDragActive &&
-                  'border-secondary-darkGrey dark:border-secondary-white'
+                'h-44 sm:h-52 rounded-md flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border-light dark:border-border-dark',
+                isDragActive && 'border-brand-orange'
               )}
             >
               <Icon name='RiUpload2' size={32} />
@@ -165,7 +167,7 @@ export const UpdateProfileDialog = () => {
 
         {selectedImage && (
           <div className='overflow-hidden'>
-            <div className='mx-auto w-fit h-44 sm:h-52 rounded-md overflow-hidden'>
+            <div className='mx-auto w-fit h-44 sm:h-52 overflow-hidden'>
               <Image
                 src={URL.createObjectURL(selectedImage)}
                 alt='Selected Image'
@@ -175,7 +177,7 @@ export const UpdateProfileDialog = () => {
               />
             </div>
 
-            <div className='flex items-center gap-2'>
+            <div className='mt-4 flex items-center gap-2'>
               <p className='py-1 flex-1 font-roboto truncate'>
                 {selectedImage.name}
                 <span className='block text-sm opacity-75'>

@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -118,6 +119,8 @@ export const UpdateDialog = () => {
       <DialogContent>
         <DialogTitle>Update Details</DialogTitle>
 
+        <DialogDescription className='hidden'></DialogDescription>
+
         {isLoading ? (
           <UpdateDetailsFormSkeleton />
         ) : (
@@ -199,7 +202,6 @@ export const UpdateDialog = () => {
               />
               <div className='pt-4'>
                 <Button
-                  variant='secondary'
                   disabled={loading}
                   type='submit'
                   className='float-right'

@@ -1,5 +1,6 @@
 import { useParams } from 'next/navigation';
 
+import { TopicBadgeProfile } from '@/components/buttons/topicBadge';
 import { Loader } from '@/components/loader';
 import { Badge } from '@/components/ui/badge';
 import useUser from '@/hooks/user/useUser';
@@ -25,11 +26,11 @@ export const TopicsCard = () => {
 
       {user && user.topics && user.topics.length > 0 ? (
         <div className='py-2 flex flex-wrap gap-x-1 gap-y-2'>
-          {user.topics?.slice(0, maxTopicsShow).map((topic, index) => (
-            <Badge variant='outline' key={index} className='text-sm py-1'>
-              {topic}
-            </Badge>
-          ))}
+          {user.topics
+            ?.slice(0, maxTopicsShow)
+            .map((topic, index) => (
+              <TopicBadgeProfile key={index} topic={topic} />
+            ))}
 
           {topicsCount > maxTopicsShow ? (
             <p className='px-1 self-center font-roboto text-sm opacity-75'>

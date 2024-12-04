@@ -63,6 +63,14 @@ const config = {
         '1': '1px',
       },
       keyframes: {
+        'scale-up': {
+          '0%': {
+            scale: '0.8',
+          },
+          '100%': {
+            scale: '1',
+          },
+        },
         'opacity-pulse': {
           '0%': {
             opacity: '0.25',
@@ -119,6 +127,7 @@ const config = {
         },
       },
       animation: {
+        'scale-up': 'scale-up 0.1s ease-in',
         'icon-shake': 'icon-shake 0.6s ease-in-out',
         'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
         'loader-rotate': 'loader-rotate 0.6s linear infinite',

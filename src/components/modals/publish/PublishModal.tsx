@@ -118,9 +118,9 @@ const PublishModal = ({
           </span>
         </p>
 
-        <div className='py-2 flex items-center gap-2 flex-wrap'>
+        <div className='py-2 flex items-center gap-x-1 gap-y-2 flex-wrap'>
           {selectedTopics.map((topic) => (
-            <Badge variant='outline' key={topic.value} className='text-xl'>
+            <Badge variant='secondary' key={topic.value} className='text-xl'>
               {topic.label}
             </Badge>
           ))}
@@ -172,7 +172,7 @@ const PublishModal = ({
       </ModalContent>
 
       <ModalFooter>
-        <p className='text-center font-roboto text-xs sm:text-sm opacity-75'>
+        <p className='font-roboto text-xs text-foreground-dark dark:text-foreground-light text-center'>
           Modifications made here will solely affect the presentation of your
           blog, without altering the actual content of your blog.
         </p>

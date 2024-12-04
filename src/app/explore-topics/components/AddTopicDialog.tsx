@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -40,12 +41,11 @@ export const AddTopicForm = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent aria-describedby='Topic-Dialog'>
+      <DialogContent>
         <DialogTitle>Add Topic</DialogTitle>
-        {/* Todo
-        Create a form with following inputs:
-        1. Topic name (input box)
-        2. Category name (select menu) */}
+
+        <DialogDescription className='hidden'></DialogDescription>
+
         <TopicForm
           onSuccess={closeDialog}
           categoriesData={categories}

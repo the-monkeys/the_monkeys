@@ -96,12 +96,7 @@ export const Username = () => {
               />
             </div>
 
-            <Button
-              size='lg'
-              variant='secondary'
-              disabled={loading ? true : false}
-              type='submit'
-            >
+            <Button size='lg' disabled={loading ? true : false} type='submit'>
               {loading && <Loader />} Update
             </Button>
           </div>

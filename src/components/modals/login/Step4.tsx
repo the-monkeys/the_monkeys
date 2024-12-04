@@ -164,6 +164,7 @@ const Step4 = ({
 
           <div className='pt-6 flex flex-row-reverse  gap-2 items-center'>
             <Button
+              variant='brand'
               disabled={loading ? true : false}
               className='flex-1 order-1'
             >

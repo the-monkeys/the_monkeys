@@ -10,7 +10,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-brand-orange text-text-dark light border-2 border-brand-orange hover:text-brand-orange hover:bg-opacity-0',
+          'bg-background-dark dark:bg-background-light text-text-dark dark:text-text-light hover:bg-foreground-dark dark:hover:bg-foreground-light',
         destructive:
           'bg-alert-red text-text-dark border-2 border-alert-red hover:text-alert-red hover:bg-opacity-0',
         constructive:
@@ -21,6 +21,8 @@ const buttonVariants = cva(
           'bg-foreground-light text-text-light dark:bg-foreground-dark dark:text-text-dark border-2 border-foreground-light dark:border-foreground-dark hover:bg-foreground-light dark:hover:bg-foreground-dark hover:text-text-light dark:hover:text-text-dark hover:bg-opacity-0 dark:hover:bg-opacity-0',
         ghost: 'hover:bg-foreground-light dark:hover:bg-foreground-dark',
         link: 'underline-offset-4 hover:underline',
+        brand:
+          'bg-brand-orange text-text-dark light border-2 border-brand-orange hover:text-brand-orange hover:bg-opacity-0',
       },
       size: {
         default: 'h-9 px-4 py-2',

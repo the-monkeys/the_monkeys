@@ -125,6 +125,7 @@ const Step2 = ({
 
           <div className='pt-6 flex flex-row-reverse  gap-2 items-center'>
             <Button
+              variant='brand'
               className='flex-1 order-1'
               disabled={loading ? true : false}
             >
@@ -142,13 +143,13 @@ const Step2 = ({
           </div>
         </form>
 
-        <div className='pt-2 text-right font-roboto text-sm'>
+        <div className='mt-4 text-center'>
           <Link
             href='#'
-            className='text-primary-monkeyOrange'
+            className='font-dm_sans text-sm hover:opacity-80'
             onClick={handleForgotPassword}
           >
-            Forgot Password
+            Forgot your password?
           </Link>
         </div>
       </Form>

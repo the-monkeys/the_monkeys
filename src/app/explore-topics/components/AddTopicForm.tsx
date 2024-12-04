@@ -126,7 +126,6 @@ export default function TopicForm({
           )}
         />
 
-        {/* Category Selector with react-select */}
         <FormField
           control={form.control}
           name='Category'
