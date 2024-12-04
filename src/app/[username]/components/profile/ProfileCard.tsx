@@ -114,7 +114,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto font-light opacity-80 hover:opacity-100'>
+            <p className='font-roboto opacity-80 hover:opacity-100'>
               {user.twitter}
             </p>
           </Link>
@@ -134,7 +134,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto font-light opacity-80 hover:opacity-100'>
+            <p className='font-roboto opacity-80 hover:opacity-100'>
               {user.github}
             </p>
           </Link>
@@ -154,7 +154,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto font-light opacity-80 hover:opacity-100'>
+            <p className='font-roboto opacity-80 hover:opacity-100'>
               {user.linkedin}
             </p>
           </Link>
@@ -174,7 +174,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto font-light opacity-80 hover:opacity-100'>
+            <p className='font-roboto opacity-80 hover:opacity-100'>
               {user.instagram}
             </p>
           </Link>

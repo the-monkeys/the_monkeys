@@ -7,7 +7,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
-import { useSession } from 'next-auth/react';
 
 export const ProfileActionsDropdown = ({ username }: { username: string }) => {
   const copyToClipboard = () => {
@@ -46,7 +45,7 @@ export const ProfileActionsDropdown = ({ username }: { username: string }) => {
             className='flex w-full items-center gap-2'
           >
             <Icon name='RiShareForward' />
-            <p className='font-roboto text-sm sm:text-base'>Share</p>
+            <p className='font-roboto text-sm sm:text-base'>Share Profile</p>
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

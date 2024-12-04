@@ -7,7 +7,6 @@ import { useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import { useSession } from 'next-auth/react';
 

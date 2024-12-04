@@ -1,4 +1,4 @@
-import { Badge } from '@/components/ui/badge';
+import { TopicBadgeBlog } from '@/components/badges/topicBadge';
 import { twMerge } from 'tailwind-merge';
 
 export const BlogTopics = ({
@@ -10,21 +10,13 @@ export const BlogTopics = ({
 }) => {
   return (
     <div className={twMerge(className, 'flex items-center gap-1 flex-wrap')}>
-      <p className='pr-1 font-roboto text-xs md:text-sm opacity-75'>Topics:</p>
-
       {topics.length ? (
-        topics?.map((topic) => (
-          <Badge
-            variant='secondary'
-            key={topic}
-            className='font-roboto text-xs'
-          >
-            {topic}
-          </Badge>
+        topics?.map((topic, index) => (
+          <TopicBadgeBlog key={index} topic={topic} />
         ))
       ) : (
         <span className='font-roboto text-xs md:text-sm opacity-75'>
-          Not available
+          No topics available
         </span>
       )}
     </div>

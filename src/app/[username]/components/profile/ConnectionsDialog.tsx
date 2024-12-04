@@ -53,7 +53,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
       </DialogTrigger>
 
       <DialogContent className='flex flex-col'>
-        <DialogTitle>Connections</DialogTitle>
+        <DialogTitle>My Connections</DialogTitle>
 
         <DialogDescription className='hidden'></DialogDescription>
 
@@ -64,7 +64,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
                 Followers
               </p>
 
-              <div className='mt-[1px] h-[2px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+              <div className='mt-[2px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
 
             <TabsTrigger value='following' className='w-full'>
@@ -72,7 +72,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
                 Following
               </p>
 
-              <div className='mt-[1px] h-[2px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+              <div className='mt-[2px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
           </TabsList>
 

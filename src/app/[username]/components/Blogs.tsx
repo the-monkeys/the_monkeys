@@ -19,7 +19,7 @@ export const Blogs = () => {
 
   return (
     <div className='min-h-screen'>
-      <div className='flex flex-col items-center divide-y-1 divide-secondary-lightGrey/15'>
+      <div className='flex flex-col items-center'>
         {isLoading ? (
           <div className='w-full space-y-6'>
             {Array(4)
@@ -42,7 +42,7 @@ export const Blogs = () => {
                 date={blog?.blog?.time}
                 blogId={blog?.blog_id}
                 onEdit={handleEdit}
-                editEnable={session?.user.username === params.username}
+                modificationEnable={session?.user.username === params.username}
               />
             );
           })

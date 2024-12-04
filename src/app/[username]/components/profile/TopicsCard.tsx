@@ -1,10 +1,7 @@
 import { useParams } from 'next/navigation';
 
-import { TopicBadgeProfile } from '@/components/buttons/topicBadge';
-import { Loader } from '@/components/loader';
-import { Badge } from '@/components/ui/badge';
+import { TopicBadgeProfile } from '@/components/badges/topicBadge';
 import useUser from '@/hooks/user/useUser';
-import { useSession } from 'next-auth/react';
 
 export const TopicsCard = () => {
   const params = useParams<{ username: string }>();
@@ -12,7 +9,7 @@ export const TopicsCard = () => {
   const { user, isLoading, isError } = useUser(params.username);
 
   if (isLoading) {
-    return <Loader className='m-auto' />;
+    return null;
   }
 
   const topicsCount = user?.topics?.length || 0;
@@ -20,7 +17,7 @@ export const TopicsCard = () => {
 
   return (
     <div className='mt-4'>
-      <h2 className='mb-2 font-dm_sans font-medium text-lg sm:text-xl'>
+      <h2 className='mb-2 font-dm_sans font-medium text-base sm:text-lg'>
         Topics
       </h2>
 
@@ -34,7 +31,7 @@ export const TopicsCard = () => {
 
           {topicsCount > maxTopicsShow ? (
             <p className='px-1 self-center font-roboto text-sm opacity-75'>
-              {`+${topicsCount} more`}
+              {`+${topicsCount - maxTopicsShow} more`}
             </p>
           ) : null}
         </div>

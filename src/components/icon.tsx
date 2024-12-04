@@ -30,7 +30,7 @@ export type IconName =
   | 'RiSubtract'
   | 'RiFileCopy'
   | 'RiUpload2'
-  | 'RiDeleteBin'
+  | 'RiDeleteBin4'
   | 'RiNavigation'
   | 'RiSettings3'
   | 'RiHistory'

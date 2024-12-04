@@ -5,6 +5,9 @@ import { Block, Blog } from '@/services/Blogs/BlogTyptes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 
+import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
+import { BookmarkButton } from '../buttons/BookmarkButton';
+
 const BlogContent = ({
   titleBlock,
   descriptionBlock,
@@ -33,26 +36,34 @@ const BlogContent = ({
   return (
     <h2
       dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-      className='flex-1 font-roboto font-medium text-base md:text-lg capitalize line-clamp-2 group-hover:opacity-75'
+      className='flex-1 font-roboto text-base sm:text-lg capitalize line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
     ></h2>
   );
 };
 
 export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
   return (
-    <div className='group md:p-2 flex flex-col gap-2'>
+    <div className='md:p-2 flex flex-col gap-2'>
       <UserInfoCardCompact id={blog?.owner_account_id} />
 
-      <Link href={`/blog/${blog?.blog_id}`}>
+      <Link href={`/blog/${blog?.blog_id}`} className='group'>
         <BlogContent
           titleBlock={blog?.blog?.blocks[0]}
           descriptionBlock={blog?.blog?.blocks[1]}
         />
       </Link>
 
-      <p className='font-roboto text-xs opacity-75 text-right'>
-        {moment(blog?.blog?.time).format('MMM DD, YYYY')}
-      </p>
+      <div className='flex justify-between items-center gap-4'>
+        <p className='px-1 font-roboto text-xs opacity-75 text-right'>
+          {moment(blog?.blog?.time).format('MMM DD, YYYY')}
+        </p>
+
+        <div className='flex items-center gap-2'>
+          <BookmarkButton blogId={blog?.blog_id} />
+
+          <BlogActionsDropdown blogId={blog?.blog_id} />
+        </div>
+      </div>
     </div>
   );
 };

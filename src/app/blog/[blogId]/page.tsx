@@ -43,11 +43,6 @@ const BlogPage = ({
 
         <Separator className='mt-2' />
 
-        <p className='mt-2 font-roboto text-xs md:text-sm'>
-          <span className='opacity-75'>Last Updated: </span>
-          {moment(blog?.blog?.time).format('MMM DD, YYYY')}
-        </p>
-
         <Editor data={blog?.blog} />
 
         <Separator className='mt-12 mb-6' />
@@ -58,7 +53,7 @@ const BlogPage = ({
       </div>
 
       <div className='p-4 col-span-3 md:col-span-1'>
-        <h4 className='px-1 font-roboto text-sm sm:text-base'>
+        <h4 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
           You Might Like
         </h4>
 

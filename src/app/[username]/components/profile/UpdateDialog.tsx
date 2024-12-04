@@ -67,11 +67,14 @@ export const UpdateDialog = () => {
       instagram: user?.instagram,
       github: user?.github,
     };
+
     setLoading(true);
+
     try {
       await axiosInstance.put(`/user/${data?.user.username}`, {
         values,
       });
+
       toast({
         variant: 'success',
         title: 'Success',
@@ -79,6 +82,7 @@ export const UpdateDialog = () => {
       });
 
       setOpen(false);
+
       mutate(`/user/public/${data?.user.username}`, `${data?.user.username}`, {
         revalidate: true,
       });

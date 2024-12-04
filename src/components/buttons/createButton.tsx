@@ -7,8 +7,8 @@ export const CreateButton = () => {
   return (
     <Button
       variant='brand'
-      asChild
       className='group rounded-full hover:text-text-dark hover:bg-opacity-100'
+      asChild
     >
       <Link href='/create' title='Create Blogs Here'>
         <Icon

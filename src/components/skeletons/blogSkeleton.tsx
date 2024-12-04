@@ -32,7 +32,7 @@ export const PublishedBlogSkeleton = () => {
         <div>
           <UserInfoCardSkeleton />
 
-          <div className='my-4 flex items-center gap-1 flex-wrap'>
+          <div className='mt-2 mb-4 flex items-center gap-1 flex-wrap'>
             <Skeleton className='h-5 w-20 rounded-full' />
             <Skeleton className='h-5 w-20 rounded-full' />
             <Skeleton className='h-5 w-20 rounded-full' />

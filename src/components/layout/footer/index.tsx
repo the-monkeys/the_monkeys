@@ -67,7 +67,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <Container className='px-5 pt-10 pb-14 border-t-1 border-secondary-lightGrey/15'>
+    <Container className='px-5 pt-10 pb-14 border-t-1 border-border-light dark:border-border-dark'>
       <footer className='space-y-6'>
         <Logo showSubHeading />
 
@@ -106,7 +106,7 @@ const Footer = () => {
         <div className='pb-8 space-y-2'>
           <div className='py-2 flex items-center justify-center gap-4'>
             <Link
-              className='opacity-75 hover:opacity-100'
+              className='hover:opacity-80'
               href='https://discord.gg/6fK9YuV8FV'
               target='_blank'
             >
@@ -114,7 +114,7 @@ const Footer = () => {
             </Link>
 
             <Link
-              className='opacity-75 hover:opacity-100'
+              className='hover:opacity-80'
               href='https://github.com/the-monkeys'
               target='_blank'
             >
@@ -122,7 +122,7 @@ const Footer = () => {
             </Link>
 
             <Link
-              className='opacity-75 hover:opacity-100'
+              className='hover:opacity-80'
               href='https://x.com/MonkeysInsight'
               target='_blank'
             >

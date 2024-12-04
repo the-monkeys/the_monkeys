@@ -104,7 +104,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
           disabled={loading}
           onClick={onUserUnfollow}
         >
-          <p>Unfollow</p>
+          Unfollow
         </Button>
       ) : (
         <Button
@@ -113,7 +113,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
           disabled={loading}
           onClick={onUserFollow}
         >
-          <p>Follow</p>
+          Follow
         </Button>
       )}
     </>
@@ -124,21 +124,14 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
   const { data, status } = useSession();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
+  const [loading, setLoading] = useState<boolean>(false);
+
   if (status === 'unauthenticated' || data?.user?.username === username)
     return null;
 
-  const [loading, setLoading] = useState<boolean>(false);
+  if (isLoading) return null;
 
-  if (isLoading) {
-    return (
-      <button
-        className='font-roboto text-sm md:text-base opacity-75'
-        disabled={true}
-      >
-        Follow
-      </button>
-    );
-  }
+  if (isError) return null;
 
   const onUserFollow = async () => {
     setLoading(true);
@@ -220,17 +213,17 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
     <>
       {followStatus?.isFollowing ? (
         <button
-          className='font-roboto text-sm md:text-base text-alert-red hover:opacity-75'
           disabled={loading}
           onClick={onUserUnfollow}
+          className='font-dm_sans font-medium text-sm sm:text-base text-alert-red hover:opacity-80'
         >
           Unfollow
         </button>
       ) : (
         <button
-          className='font-roboto text-sm md:text-base text-primary-monkeyOrange hover:opacity-75'
           disabled={loading}
           onClick={onUserFollow}
+          className='font-dm_sans font-medium text-sm sm:text-base text-brand-orange hover:opacity-80'
         >
           Follow
         </button>

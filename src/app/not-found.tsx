@@ -1,8 +1,11 @@
+'use client';
+
 import Image from 'next/image';
 
 import SocialCard from '@/components/cards/SocialCard';
 import Container from '@/components/layout/Container';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
+import { toast } from '@/components/ui/use-toast';
 
 const NotFound = () => {
   return (
@@ -17,11 +20,11 @@ const NotFound = () => {
         />
 
         <div>
-          <p className='font-dm_sans font-semibold text-center sm:text-left text-primary-monkeyOrange'>
+          <p className='font-dm_sans font-semibold text-center sm:text-left text-brand-orange'>
             Page Not Found
           </p>
 
-          <p className='font-playfair_Display text-3xl font-semibold md:text-5xl text-center sm:text-left text-secondary-darkGrey dark:text-secondary-white'>
+          <p className='font-playfair_Display text-3xl font-semibold md:text-5xl text-center sm:text-left text-text-light dark:text-text-dark'>
             Lost your path?
           </p>
         </div>
@@ -30,8 +33,6 @@ const NotFound = () => {
       <LinksRedirectArrow link='/' position='Left'>
         <p className='font-roboto'>Go back to home</p>
       </LinksRedirectArrow>
-
-      <p className='font-roboto text-center'>Or</p>
 
       <div className='w-full sm:w-4/5 md:w-1/2 space-y-2 px-5'>
         <SocialCard

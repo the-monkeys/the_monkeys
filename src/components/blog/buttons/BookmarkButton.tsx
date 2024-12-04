@@ -21,16 +21,24 @@ export const BookmarkButton = ({
 
   if (isLoading) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-75'>
-        <Icon name='RiBookmark' size={22} />
+      <div className='p-1 flex items-center justify-center opacity-80'>
+        <Icon
+          name='RiBookmark'
+          type='Fill'
+          className='text-foreground-light dark:text-foreground-dark'
+        />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-75'>
-        <Icon name='RiBookmark' size={22} />
+      <div className='p-1 flex items-center justify-center opacity-80'>
+        <Icon
+          name='RiBookmark'
+          type='Fill'
+          className='text-foreground-light dark:text-foreground-dark'
+        />
       </div>
     );
   }
@@ -53,6 +61,7 @@ export const BookmarkButton = ({
         });
 
         mutate(`/user/is-bookmarked/${blogId}`);
+        mutate(`/user/count-bookmarks/${blogId}`);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -96,6 +105,7 @@ export const BookmarkButton = ({
         });
 
         mutate(`/user/is-bookmarked/${blogId}`);
+        mutate(`/user/count-bookmarks/${blogId}`);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -120,23 +130,23 @@ export const BookmarkButton = ({
     <>
       {bookmarkStatus?.bookMarked ? (
         <button
-          className={`group p-1 flex items-center justify-center opacity-75 hover:opacity-100 ${
+          className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
             loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
           }`}
           onClick={onPostRemoveBookmark}
           disabled={loading || isDisable}
         >
-          <Icon name='RiBookmark' type='Fill' size={22} />
+          <Icon name='RiBookmark' type='Fill' />
         </button>
       ) : (
         <button
-          className={`group p-1 flex items-center justify-center opacity-75 hover:opacity-100 ${
+          className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
             loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
           }`}
           onClick={onPostBookmark}
           disabled={loading || isDisable}
         >
-          <Icon name='RiBookmark' size={22} />
+          <Icon name='RiBookmark' />
         </button>
       )}
     </>

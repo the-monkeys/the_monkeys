@@ -13,7 +13,7 @@ export const NavigationTabs = ({ username }: { username: string }) => {
           Blogs
         </p>
 
-        <div className='mt-[1px] h-[2px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+        <div className='mt-[2px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
       </TabsTrigger>
 
       {data?.user.username === username && (
@@ -22,7 +22,7 @@ export const NavigationTabs = ({ username }: { username: string }) => {
             Drafts
           </p>
 
-          <div className='mt-[1px] h-[2px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+          <div className='mt-[2px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
         </TabsTrigger>
       )}
     </TabsList>

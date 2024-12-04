@@ -1,28 +1,15 @@
 import React, { FC } from 'react';
 
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { Block } from '@/services/Blogs/BlogTyptes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
-import { useSession } from 'next-auth/react';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { BookmarkButton } from '../buttons/BookmarkButton';
-
-interface BlogCardProps {
-  titleBlock: Block;
-  descriptionBlock: Block;
-  authorId: string;
-  date: number;
-  blogId: string;
-  isDraft?: boolean;
-  onEdit: (blogId: string) => void;
-  editEnable?: boolean;
-}
 
 const BlogContent = ({
   titleBlock,
@@ -54,19 +41,19 @@ const BlogContent = ({
       <div className='flex-1 space-y-1'>
         <h2
           dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-          className='font-roboto font-medium text-xl sm:text-2xl capitalize line-clamp-2 group-hover:opacity-75'
+          className='font-roboto font-medium text-lg sm:text-xl capitalize line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
         ></h2>
 
         <p
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(descriptionContent),
           }}
-          className='font-roboto text-sm sm:text-base opacity-75 line-clamp-1'
+          className='font-roboto text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-3'
         ></p>
       </div>
 
       {descriptionType === 'image' && (
-        <div className='w-[100px] md:w-[120px] h-[80px] md:h-[100px] overflow-hidden rounded-md group-hover:rounded-none transition-all'>
+        <div className='h-[80px] sm:h-[110px] w-[100px] sm:w-[150px] overflow-hidden rounded-md'>
           <img
             src={descriptionBlock?.data?.file?.url}
             alt='Blog Image'
@@ -78,6 +65,18 @@ const BlogContent = ({
   );
 };
 
+interface BlogCardProps {
+  titleBlock: Block;
+  descriptionBlock: Block;
+  authorId: string;
+  date: number;
+  blogId: string;
+  isDraft?: boolean;
+  onEdit: (blogId: string) => void;
+  modificationEnable?: boolean;
+  bookmarkEnable?: boolean;
+}
+
 export const BlogCard: FC<BlogCardProps> = ({
   titleBlock,
   descriptionBlock,
@@ -86,25 +85,23 @@ export const BlogCard: FC<BlogCardProps> = ({
   blogId,
   isDraft = false,
   onEdit,
-  editEnable = false,
+  modificationEnable = false,
+  bookmarkEnable = true,
 }) => {
-  const params = useParams<{ username: string }>();
-  const { data: session } = useSession();
-
   return (
-    <div className='w-full md:px-6 first:pt-0 py-6'>
-      <div className='space-y-4'>
-        <UserInfoCardCompact id={authorId} prefixContent='Authored by' />
+    <div className='w-full md:px-6 pt-4 pb-6 first:pt-0'>
+      <div className='space-y-2'>
+        <UserInfoCardCompact id={authorId} />
 
         {isDraft ? (
-          <div className='flex gap-4'>
+          <div className='flex gap-2'>
             <BlogContent
               titleBlock={titleBlock}
               descriptionBlock={descriptionBlock}
             />
           </div>
         ) : (
-          <Link href={`/blog/${blogId}`} className='group flex gap-4'>
+          <Link href={`/blog/${blogId}`} className='group flex gap-2'>
             <BlogContent
               titleBlock={titleBlock}
               descriptionBlock={descriptionBlock}
@@ -113,30 +110,27 @@ export const BlogCard: FC<BlogCardProps> = ({
         )}
       </div>
 
-      <div className='pt-4 flex justify-between items-center gap-4'>
+      <div className='mt-2 flex justify-between items-center gap-4'>
+        <p className='px-1 font-roboto text-xs opacity-75 text-right'>
+          {moment(date).format('MMM DD, YYYY')}
+        </p>
+
         <div className='flex items-center gap-2'>
-          <p className='font-roboto text-xs opacity-75'>
-            {moment(date).format('MMM DD, YYYY')}
-          </p>
+          {bookmarkEnable ? <BookmarkButton blogId={blogId} /> : null}
 
-          <span className='opacity-75'>·</span>
-
-          <BookmarkButton blogId={blogId} />
-        </div>
-
-        <div className='flex items-center justify-end gap-2'>
-          {session?.user.username === params.username ? (
+          {modificationEnable ? (
             <button
               onClick={() => onEdit(blogId)}
-              className='p-1 flex items-center justify-center cursor-pointer opacity-75 hover:opacity-100'
+              className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'
             >
-              <Icon name='RiEdit2' type='Fill' />
+              <Icon name='RiPencil' />
             </button>
-          ) : (
-            ''
-          )}
+          ) : null}
 
-          <BlogActionsDropdown blogId={blogId} editEnable={editEnable} />
+          <BlogActionsDropdown
+            blogId={blogId}
+            modificationEnable={modificationEnable}
+          />
         </div>
       </div>
     </div>

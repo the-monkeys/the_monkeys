@@ -43,7 +43,8 @@ export const Drafts = () => {
                 blogId={blog?.blog_id}
                 isDraft={true}
                 onEdit={handleEdit}
-                editEnable={session?.user.username === params.username}
+                modificationEnable={session?.user.username === params.username}
+                bookmarkEnable={false}
               />
             );
           })

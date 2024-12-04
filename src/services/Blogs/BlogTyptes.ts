@@ -26,7 +26,15 @@ export interface IsLikedResponse {
   isLiked?: boolean;
 }
 
+export interface likesCountResponse {
+  count: number;
+}
+
 export interface IsBookmarkedResponse {
   status: string;
   bookMarked?: boolean;
+}
+
+export interface bookmarksCountResponse {
+  count: number;
 }

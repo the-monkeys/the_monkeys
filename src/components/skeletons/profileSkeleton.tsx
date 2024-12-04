@@ -10,14 +10,14 @@ export const ProfileCardSkeleton = () => {
         <Skeleton className='h-3 w-36' />
       </div>
 
-      <div className='space-y-1'>
-        <Skeleton className='h-4 w-full' />
-        <Skeleton className='h-4 w-4/5' />
-      </div>
-
       <div className='flex gap-2'>
         <Skeleton className='h-4 w-28' />
         <Skeleton className='h-4 w-28' />
+      </div>
+
+      <div className='space-y-1'>
+        <Skeleton className='h-4 w-full' />
+        <Skeleton className='h-4 w-4/5' />
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ export const DeleteProfileDialog = () => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant='destructive' size='icon' className='rounded-full'>
-          <Icon name='RiDeleteBin' />
+          <Icon name='RiDeleteBin4' />
         </Button>
       </DialogTrigger>
 

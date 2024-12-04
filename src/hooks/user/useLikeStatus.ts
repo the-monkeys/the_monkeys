@@ -1,4 +1,7 @@
-import { IsLikedResponse } from '@/services/Blogs/BlogTyptes';
+import {
+  IsLikedResponse,
+  likesCountResponse,
+} from '@/services/Blogs/BlogTyptes';
 import { authFetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 
@@ -12,5 +15,18 @@ export const useIsPostLiked = (blogId: string | undefined) => {
     likeStatus: data,
     isLoading,
     isError: error,
+  };
+};
+
+export const useGetLikesCount = (blogId: string | undefined) => {
+  const { data, isLoading, error } = useSWR<likesCountResponse>(
+    `/user/count-likes/${blogId}`,
+    authFetcher
+  );
+
+  return {
+    likes: data,
+    likeCountLoading: isLoading,
+    likeCountError: error,
   };
 };

@@ -21,16 +21,24 @@ export const LikeButton = ({
 
   if (isLoading) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-75'>
-        <Icon name='RiHeart3' size={22} />
+      <div className='p-1 flex items-center justify-center opacity-80'>
+        <Icon
+          name='RiHeart3'
+          type='Fill'
+          className='text-foreground-light dark:text-foreground-dark'
+        />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-75'>
-        <Icon name='RiHeart3' size={22} />
+      <div className='p-1 flex items-center justify-center opacity-80'>
+        <Icon
+          name='RiHeart3'
+          type='Fill'
+          className='text-foreground-light dark:text-foreground-dark'
+        />
       </div>
     );
   }
@@ -53,6 +61,7 @@ export const LikeButton = ({
         });
 
         mutate(`/user/is-liked/${blogId}`);
+        mutate(`/user/count-likes/${blogId}`);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -93,6 +102,7 @@ export const LikeButton = ({
         });
 
         mutate(`/user/is-liked/${blogId}`);
+        mutate(`/user/count-likes/${blogId}`);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -117,28 +127,23 @@ export const LikeButton = ({
     <>
       {likeStatus?.isLiked ? (
         <button
-          className={`group p-1 flex items-center justify-center opacity-75 hover:opacity-100 ${
+          className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
             loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
           }`}
           onClick={onPostDislike}
           disabled={loading || isDisable}
         >
-          <Icon
-            name='RiHeart3'
-            type='Fill'
-            className='text-primary-monkeyOrange'
-            size={22}
-          />
+          <Icon name='RiHeart3' type='Fill' className='text-brand-orange' />
         </button>
       ) : (
         <button
-          className={`group p-1 flex items-center justify-center opacity-75 hover:opacity-100 ${
+          className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
             loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
           }`}
           onClick={onPostLike}
           disabled={loading || isDisable}
         >
-          <Icon name='RiHeart3' size={22} />
+          <Icon name='RiHeart3' />
         </button>
       )}
     </>

@@ -193,7 +193,7 @@ export const UpdateProfileDialog = () => {
                 disabled={loading}
                 className='rounded-full'
               >
-                <Icon name='RiDeleteBin' />
+                <Icon name='RiDeleteBin4' />
               </Button>
 
               <Button
