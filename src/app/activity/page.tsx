@@ -14,7 +14,7 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
     return (
       <div className='flex flex-col items-center space-y-2'>
         <Loader />
-        <p className='font-roboto'>Fetching all activity</p>
+        <p className='font-roboto opacity-80'>Fetching activities</p>
       </div>
     );
   }
@@ -28,13 +28,14 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
   }
 
   return (
-    <div className='mx-auto w-full sm:w-4/5 md:w-3/5 px-4'>
+    <div className='px-4'>
       {activities?.response.length ? (
         activities?.response.slice(0, 15).map((activity) => {
           return (
-            <div key={activity?.timestamp.toString()}>
+            <div key={activity?.timestamp.toString()} className='group'>
               <ActivityCard activity={activity} />
-              <div className='h-4 mx-auto w-[4px] bg-foreground-light dark:bg-foreground-dark' />
+
+              <div className='mx-6 h-6 sm:h-8 w-fit border-l-2 border-border-light dark:border-border-dark group-hover:border-brand-orange dark:group-hover:border-brand-orange border-dashed' />
             </div>
           );
         })

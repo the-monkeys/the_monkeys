@@ -1,7 +1,4 @@
-import {
-  IsLikedResponse,
-  likesCountResponse,
-} from '@/services/Blogs/BlogTyptes';
+import { IsLikedResponse, likesCountResponse } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 

@@ -1,12 +1,11 @@
 import Link from 'next/link';
 
 import { UserInfoCardCompact } from '@/components/user/userInfo';
-import { Block, Blog } from '@/services/Blogs/BlogTyptes';
+import { Block, Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
-import { BookmarkButton } from '../buttons/BookmarkButton';
 
 const BlogContent = ({
   titleBlock,
@@ -54,7 +53,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
       </Link>
 
       <div className='flex justify-between items-center gap-1'>
-        <p className='font-roboto text-xs'>
+        <p className='font-roboto text-xs opacity-80'>
           {moment(blog?.blog?.time).format('MMM DD, YYYY')}
         </p>
 

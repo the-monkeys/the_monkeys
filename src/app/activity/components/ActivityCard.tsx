@@ -1,34 +1,22 @@
-import Icon from '@/components/icon';
-import { activityIcon2 } from '@/constants/activity';
 import { Activity } from '@/services/activity/activityApiTypes';
 import moment from 'moment';
 
 export const ActivityCard = ({ activity }: { activity: Activity }) => {
-  const firstWord = activity.description.toLowerCase().split(' ')[0];
-  const icon =
-    activityIcon2[firstWord as keyof typeof activityIcon2] || 'RiUser';
-
   return (
-    <div className='p-4 sm:p-4 border-1 border-dashed border-border-light dark:border-border-dark flex items-center gap-2 sm:gap-4 rounded-md'>
+    <div className='w-fit pb-2 flex items-start gap-2 sm:gap-4'>
       <div>
-        <Icon name={icon} type='Fill' />
+        <p className='font-dm_sans text-xs sm:text-sm'>
+          {moment(activity.timestamp.toString()).format('MMM DD, YYYY')}
+        </p>
+
+        <p className='font-roboto text-xs opacity-80'>
+          {moment(activity.timestamp.toString()).format('h:mm A')}
+        </p>
       </div>
 
-      <div className='flex-1 overflow-hidden'>
-        <h4 className='py-1 font-dm_sans text-sm sm:text-base capitalize'>
-          {activity.description}
-        </h4>
-
-        <div className='flex justify-between flex-wrap'>
-          <p className='font-roboto text-xs sm:text-sm opacity-80'>
-            {moment(activity.timestamp.toString()).format('MMM DD, YYYY')}
-          </p>
-
-          <p className='font-roboto text-xs sm:text-sm opacity-80'>
-            {moment(activity.timestamp.toString()).format('h:mm A')}
-          </p>
-        </div>
-      </div>
+      <h4 className='flex-1 font-roboto text-sm sm:text-base capitalize'>
+        {activity.description}
+      </h4>
     </div>
   );
 };

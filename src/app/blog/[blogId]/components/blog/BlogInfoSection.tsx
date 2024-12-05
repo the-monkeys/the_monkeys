@@ -1,5 +1,5 @@
 import { UserInfoCard } from '@/components/user/userInfo';
-import { Blog } from '@/services/Blogs/BlogTyptes';
+import { Blog } from '@/services/blog/blogTypes';
 
 import { BlogReactions } from './BlogReactions';
 import { BlogTopics } from './BlogTopics';

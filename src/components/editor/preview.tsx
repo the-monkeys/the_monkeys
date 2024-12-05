@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef } from 'react';
 
 import { editorConfig } from '@/config/editor/editorjs_readonly.config';
-import { Block } from '@/services/Blogs/BlogTyptes';
+import { Block } from '@/services/blog/blogTypes';
 import EditorJS from '@editorjs/editorjs';
 
 export type EditorProps = {

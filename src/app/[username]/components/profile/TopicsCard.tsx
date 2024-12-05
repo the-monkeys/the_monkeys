@@ -22,7 +22,7 @@ export const TopicsCard = () => {
         Topics
       </h2>
 
-      <Separator className='mt-1 mb-4' />
+      <Separator className='mt-2 mb-4' />
 
       {user && user.topics && user.topics.length > 0 ? (
         <div className='flex flex-wrap gap-x-1 gap-y-2'>

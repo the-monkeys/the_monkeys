@@ -8,10 +8,10 @@ import {
 } from '@/components/layout/pageHeading';
 
 export const metadata: Metadata = {
-  title: 'Activity',
+  title: 'Notifications',
 };
 
-const ActivityPageLayout = ({
+const NotificationPageLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -19,10 +19,10 @@ const ActivityPageLayout = ({
   return (
     <Container className='pb-12 min-h-screen space-y-6 md:space-y-10'>
       <PageHeader>
-        <PageHeading heading='Activity' className='py-1 self-start' />
+        <PageHeading heading='Notifications' className='py-1' />
         <PageSubheading
-          subheading='You became part of Monkeys and have since then...'
-          className='self-start opacity-80'
+          subheading='View all your notifications in one place.'
+          className='text-center opacity-75'
         />
       </PageHeader>
 
@@ -31,4 +31,4 @@ const ActivityPageLayout = ({
   );
 };
 
-export default ActivityPageLayout;
+export default NotificationPageLayout;

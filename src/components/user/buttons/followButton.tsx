@@ -215,7 +215,7 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
         <button
           disabled={loading}
           onClick={onUserUnfollow}
-          className='font-dm_sans font-medium text-sm sm:text-base text-alert-red hover:opacity-80'
+          className='font-dm_sans text-sm sm:text-base text-alert-red hover:opacity-80'
         >
           Unfollow
         </button>
@@ -223,7 +223,7 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
         <button
           disabled={loading}
           onClick={onUserFollow}
-          className='font-dm_sans font-medium text-sm sm:text-base text-brand-orange hover:opacity-80'
+          className='font-dm_sans text-sm sm:text-base text-brand-orange hover:opacity-80'
         >
           Follow
         </button>

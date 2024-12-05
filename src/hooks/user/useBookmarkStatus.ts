@@ -1,7 +1,7 @@
 import {
   IsBookmarkedResponse,
   bookmarksCountResponse,
-} from '@/services/Blogs/BlogTyptes';
+} from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 

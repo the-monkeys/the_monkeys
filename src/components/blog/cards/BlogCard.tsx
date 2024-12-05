@@ -4,10 +4,9 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
-import { Block } from '@/services/Blogs/BlogTyptes';
+import { Block } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
-import { isSharedArrayBuffer } from 'util/types';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { BookmarkButton } from '../buttons/BookmarkButton';
@@ -49,7 +48,7 @@ const BlogContent = ({
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(descriptionContent),
           }}
-          className='font-roboto text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-3'
+          className='font-roboto text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-2'
         ></p>
       </div>
 
@@ -115,15 +114,15 @@ export const BlogCard: FC<BlogCardProps> = ({
         )}
       </div>
 
-      <div className='mt-2 flex justify-between items-center gap-4'>
+      <div className='mt-3 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-2'>
-          {status === 'authenticated' && bookmarkEnable && (
-            <BookmarkButton blogId={blogId} />
-          )}
-
           <p className='font-roboto text-xs'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
+
+          {status === 'authenticated' && bookmarkEnable && (
+            <BookmarkButton blogId={blogId} />
+          )}
         </div>
 
         <div className='flex items-center gap-1'>

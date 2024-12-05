@@ -24,7 +24,7 @@ export const UserInfoCardCompact = ({ id }: { id?: string }) => {
   }
 
   return (
-    <div className='w-full flex items-center gap-1'>
+    <div className='w-full flex items-center gap-2'>
       {user && (
         <ProfileFrame className='size-6'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
@@ -56,7 +56,7 @@ export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
     );
 
   return (
-    <div className='flex items-center flex-wrap gap-1 sm:gap-2 overflow-hidden'>
+    <div className='flex items-center flex-wrap gap-2 overflow-hidden'>
       {user && (
         <ProfileFrame className='size-12'>
           <ProfileImage firstName={user.first_name} username={user?.username} />

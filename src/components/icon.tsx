@@ -39,6 +39,7 @@ export type IconName =
   | 'RiHeart3'
   | 'RiCalendar'
   | 'RiMail'
+  | 'RiMailOpen'
   | 'RiMailSend'
   | 'RiGithub'
   | 'RiTwitterX'
