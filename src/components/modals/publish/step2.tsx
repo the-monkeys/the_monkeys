@@ -22,7 +22,7 @@ const Step2 = ({
 
   return (
     <ModalContent className='space-y-2'>
-      <p className='font-josefin_Sans'>
+      <p className='font-dm_sans'>
         Choose topics (at most 5)
         <span className='block opacity-75 text-sm'>
           Topics provide readers with a glimpse into the content of your blog.

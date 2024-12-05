@@ -18,7 +18,7 @@
   background: radial-gradient(
     52% 52% at 52% 52%,
     rgba(255, 244, 237, 0) 0%,
-    #fff4ed 100%
+    #f2f2f2 100%
   );
 }
 
@@ -26,7 +26,7 @@
   background: radial-gradient(
     52% 52% at 52% 52%,
     rgba(16, 16, 16, 0) 0%,
-    #101010 100%
+    #191919 100%
   );
 }
 

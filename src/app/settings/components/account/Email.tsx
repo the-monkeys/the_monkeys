@@ -132,7 +132,7 @@ export const Email = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         Registered Email: {session?.user?.email}
       </p>
 
@@ -153,10 +153,10 @@ export const Email = () => {
             <Icon
               name='RiVerifiedBadge'
               type='Fill'
-              className='text-primary-monkeyOrange'
+              className='text-brand-orange'
             />
 
-            <p className='font-jost'>Email Verified</p>
+            <p className='font-roboto'>Email Verified</p>
           </div>
         )
       ) : null}
@@ -170,14 +170,15 @@ export const Email = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-josefin_Sans text-sm'>
+                    <FormLabel className='font-roboto text-sm'>
                       Change Email
                     </FormLabel>
                     <FormMessage />
                     <FormControl>
                       <Input
                         placeholder={
-                          session?.user?.email || 'Enter email address'
+                          `eg. ${session?.user?.email}` ||
+                          'eg. yourmail@monkeys.xyz'
                         }
                         {...field}
                       />
@@ -189,7 +190,6 @@ export const Email = () => {
 
             <Button
               size='lg'
-              variant='secondary'
               type='submit'
               disabled={updateLoading ? true : false}
             >

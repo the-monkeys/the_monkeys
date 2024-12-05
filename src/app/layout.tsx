@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Josefin_Sans, Jost, Playfair_Display } from 'next/font/google';
+import { DM_Sans, Playfair_Display, Poppins, Roboto } from 'next/font/google';
 
 import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
@@ -11,21 +11,29 @@ import './globals.css';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 
-const jost = Jost({
-  subsets: ['latin'],
-  variable: '--font-jost',
-  display: 'swap',
-});
-
-const josefin_Sans = Josefin_Sans({
-  subsets: ['latin'],
-  variable: '--font-josefin_Sans',
-  display: 'swap',
-});
-
 const playfair_Display = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair_Display',
+  display: 'swap',
+});
+
+const roboto = Roboto({
+  weight: ['100', '300', '400', '700'],
+  subsets: ['latin'],
+  variable: '--font-roboto',
+  display: 'swap',
+});
+
+const dm_sans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dm_sans',
+  display: 'swap',
+});
+
+const poppins = Poppins({
+  weight: ['100', '300', '400', '700'],
+  subsets: ['latin'],
+  variable: '--font-poppins',
   display: 'swap',
 });
 
@@ -65,7 +73,7 @@ const RootLayout = ({
         <AdSense pId='4687427997504601' />
       </head>
       <body
-        className={`${jost.variable} ${josefin_Sans.variable} bg-primary-monkeyWhite dark:bg-primary-monkeyBlack ${playfair_Display.variable}`}
+        className={`${playfair_Display.variable} ${roboto.variable} ${dm_sans.variable} ${poppins.variable} bg-background-light dark:bg-background-dark`}
       >
         <Toaster />
         <SWRProvider>

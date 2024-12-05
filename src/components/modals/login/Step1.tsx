@@ -17,6 +17,7 @@ const Step1 = ({
 
     setLoginStep(loginSteps[1]);
   };
+
   const handleRegister = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     e.preventDefault();
 
@@ -24,8 +25,12 @@ const Step1 = ({
   };
 
   return (
-    <ModalContent className='space-y-4'>
-      <Button className='w-full flex' onClick={(e) => handleSubmit(e)}>
+    <ModalContent className='space-y-3'>
+      <Button
+        variant='brand'
+        className='w-full flex'
+        onClick={(e) => handleSubmit(e)}
+      >
         <Icon name='RiMail' type='Fill' />
         <p className='flex-1'>Login with Email</p>
       </Button>
@@ -35,21 +40,21 @@ const Step1 = ({
         <p className='flex-1'>Coming Soon</p>
       </Button>
 
-      <Button variant='outline' disabled className='w-full flex'>
+      {/* <Button variant='outline' disabled className='w-full flex'>
         <Icon name='RiMeta' type='Fill' />
         <p className='flex-1'>Coming Soon</p>
-      </Button>
+      </Button> */}
 
-      <p className='text-center font-jost text-sm'>
-        Don't have an account?
-        <span
-          className='text-primary-monkeyOrange cursor-pointer'
+      <div className='flex justify-center items-center gap-1'>
+        <p className='font-dm_sans text-sm opacity-80'>New user?</p>
+
+        <button
+          className='font-dm_sans text-sm hover:text-brand-orange'
           onClick={(e) => handleRegister(e)}
         >
-          {' '}
           Join Monkeys
-        </span>
-      </p>
+        </button>
+      </div>
     </ModalContent>
   );
 };

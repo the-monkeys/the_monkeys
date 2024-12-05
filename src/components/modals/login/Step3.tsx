@@ -80,7 +80,7 @@ const Step3 = ({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className='font-roboto text-sm'>Email</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter email address' {...field} />
                 </FormControl>
@@ -99,7 +99,11 @@ const Step3 = ({
               Previous
             </Button>
 
-            <Button className='flex-1' disabled={loading ? true : false}>
+            <Button
+              variant='brand'
+              className='flex-1'
+              disabled={loading ? true : false}
+            >
               {loading && <Loader />} Send Link
             </Button>
           </div>

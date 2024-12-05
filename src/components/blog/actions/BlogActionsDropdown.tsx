@@ -12,10 +12,12 @@ import { DeleteBlogDialog } from './DeleteBlogDialog';
 
 export const BlogActionsDropdown = ({
   blogId,
-  editEnable = false,
+  modificationEnable = false,
+  isShareable = true,
 }: {
   blogId?: string;
-  editEnable?: boolean;
+  modificationEnable?: boolean;
+  isShareable?: boolean;
 }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
@@ -43,31 +45,33 @@ export const BlogActionsDropdown = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className='p-1 flex items-center justify-center cursor-pointer opacity-75 hover:opacity-100'>
-          <Icon name='RiMore' type='Fill' />
+        <button className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'>
+          <Icon name='RiMore' />
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='w-40'>
-        <DropdownMenuItem asChild>
-          <button
-            onClick={copyToClipboard}
-            className='flex w-full items-center gap-2'
-          >
-            <Icon name='RiFileCopy' />
-            <p className='font-jost text-base'>Copy Link</p>
-          </button>
-        </DropdownMenuItem>
+      <DropdownMenuContent className='mx-2 w-36 sm:w-40'>
+        {isShareable && (
+          <DropdownMenuItem asChild>
+            <button
+              onClick={copyToClipboard}
+              className='flex w-full items-center gap-2'
+            >
+              <Icon name='RiShareForward' />
+              <p className='font-roboto text-sm sm:text-base'>Share Blog</p>
+            </button>
+          </DropdownMenuItem>
+        )}
 
-        {editEnable && (
+        {modificationEnable ? (
           <>
-            <DropdownMenuSeparator />
+            {isShareable && <DropdownMenuSeparator />}
 
             <DropdownMenuItem asChild>
               <DeleteBlogDialog blogId={blogId} />
             </DropdownMenuItem>
           </>
-        )}
+        ) : null}
       </DropdownMenuContent>
     </DropdownMenu>
   );

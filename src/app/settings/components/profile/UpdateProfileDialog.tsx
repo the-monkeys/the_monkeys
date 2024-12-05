@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -117,17 +118,21 @@ export const UpdateProfileDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className='h-9 w-9 inline-flex items-center justify-center whitespace-nowrap font-jost transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 text-base rounded-full bg-secondary-darkGrey text-secondary-white dark:bg-secondary-white dark:text-secondary-darkGrey border-2 border-secondary-darkGrey dark:border-secondary-white hover:text-secondary-darkGrey dark:hover:text-secondary-white hover:bg-opacity-0 dark:hover:bg-opacity-0'>
-        <Icon name='RiUpload2' />
+      <DialogTrigger asChild>
+        <Button variant='secondary' size='icon' className='rounded-full'>
+          <Icon name='RiUpload2' />
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogTitle>Update Profile Photo</DialogTitle>
 
+        <DialogDescription className='hidden'></DialogDescription>
+
         {!selectedImage && (
           <div className='space-y-2'>
             {uploadError && (
-              <p className='font-jost font-medium text-sm text-alert-red'>
+              <p className='font-roboto font-medium text-sm text-alert-red'>
                 {uploadError}
               </p>
             )}
@@ -135,9 +140,8 @@ export const UpdateProfileDialog = () => {
             <div
               {...getRootProps()}
               className={twMerge(
-                'h-44 sm:h-52 rounded-lg flex flex-col items-center justify-center gap-2 border-2 border-dashed border-secondary-lightGrey/25',
-                isDragActive &&
-                  'border-secondary-darkGrey dark:border-secondary-white'
+                'h-44 sm:h-52 rounded-md flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border-light dark:border-border-dark',
+                isDragActive && 'border-brand-orange'
               )}
             >
               <Icon name='RiUpload2' size={32} />
@@ -148,13 +152,13 @@ export const UpdateProfileDialog = () => {
                 type='file'
               />
 
-              <p className='font-jost text-sm sm:text-base text-center'>
+              <p className='font-roboto text-sm sm:text-base text-center'>
                 {isDragActive
                   ? 'Drop the file here ...'
                   : 'Drop a file here, or click to select files'}
               </p>
 
-              <p className='font-jost text-xs sm:text-sm text-center opacity-75'>
+              <p className='font-roboto text-xs sm:text-sm text-center opacity-75'>
                 The file should be under 2 MB
               </p>
             </div>
@@ -163,7 +167,7 @@ export const UpdateProfileDialog = () => {
 
         {selectedImage && (
           <div className='overflow-hidden'>
-            <div className='mx-auto w-fit h-44 sm:h-52 rounded-md overflow-hidden'>
+            <div className='mx-auto w-fit h-44 sm:h-52 overflow-hidden'>
               <Image
                 src={URL.createObjectURL(selectedImage)}
                 alt='Selected Image'
@@ -173,8 +177,8 @@ export const UpdateProfileDialog = () => {
               />
             </div>
 
-            <div className='flex items-center gap-2'>
-              <p className='py-1 flex-1 font-jost truncate'>
+            <div className='mt-4 flex items-center gap-2'>
+              <p className='py-1 flex-1 font-roboto truncate'>
                 {selectedImage.name}
                 <span className='block text-sm opacity-75'>
                   {(selectedImage.size / 1024).toFixed(1)} KB
@@ -189,7 +193,7 @@ export const UpdateProfileDialog = () => {
                 disabled={loading}
                 className='rounded-full'
               >
-                <Icon name='RiDeleteBin' />
+                <Icon name='RiDeleteBin4' />
               </Button>
 
               <Button

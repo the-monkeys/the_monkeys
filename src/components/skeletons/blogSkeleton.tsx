@@ -32,7 +32,7 @@ export const PublishedBlogSkeleton = () => {
         <div>
           <UserInfoCardSkeleton />
 
-          <div className='my-4 flex items-center gap-1 flex-wrap'>
+          <div className='mt-2 mb-4 flex items-center gap-1 flex-wrap'>
             <Skeleton className='h-5 w-20 rounded-full' />
             <Skeleton className='h-5 w-20 rounded-full' />
             <Skeleton className='h-5 w-20 rounded-full' />
@@ -63,10 +63,16 @@ export const PublishedBlogSkeleton = () => {
 
 export const BlogListCardSkeleton = () => {
   return (
-    <div className='md:px-6 space-y-4'>
+    <div className='md:px-6 space-y-2'>
       <UserInfoCardCompactSkeleton />
 
-      <Skeleton className='h-36 sm:h-40 w-full' />
+      <Skeleton className='h-28 sm:h-24 w-full' />
+
+      <div className='flex justify-end gap-1'>
+        <Skeleton className='size-6 rounded-full' />
+        <Skeleton className='size-6 rounded-full' />
+        <Skeleton className='size-6 rounded-full' />
+      </div>
     </div>
   );
 };

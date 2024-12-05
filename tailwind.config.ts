@@ -18,31 +18,59 @@ const config = {
       },
     },
     fontFamily: {
-      jost: ['var(--font-jost)'],
-      josefin_Sans: ['var(--font-josefin_Sans)'],
       playfair_Display: ['var(--font-playfair_Display)'],
+      roboto: ['var(--font-roboto)'],
+      dm_sans: ['var(--font-dm_sans)'],
+      inter: ['var(--font-poppins)'],
     },
     extend: {
       colors: {
-        primary: {
-          monkeyOrange: '#ff462e',
-          monkeyBlack: '#101010',
-          monkeyWhite: '#FFF4ed',
+        brand: {
+          orange: '#FF5542',
         },
-        secondary: {
-          darkGrey: '#2b2b2b',
-          lightGrey: '#4f4f4f',
-          white: '#f2f2f3',
+        background: {
+          dark: '#191919',
+          light: '#F2F2F2',
+        },
+        foreground: {
+          dark: '#2C2C2C',
+          light: '#D9D9D9',
+        },
+        border: {
+          dark: '#707070',
+          light: '#808080',
+        },
+        text: {
+          dark: '#FAFAFA',
+          light: '#1E1E1E',
         },
         alert: {
-          red: '#ED3232',
-          green: '#34A853',
+          red: '#F61E1E',
+          green: '#2B8C43',
+        },
+        primary: {
+          monkeyOrange: '#FF5542',
+          monkeyBlack: '#191919',
+          monkeyWhite: '#F2F2F2',
+        },
+        secondary: {
+          darkGrey: '#2C2C2C',
+          lightGrey: '#4f4f4f',
+          white: '#f2f2f3',
         },
       },
       borderWidth: {
         '1': '1px',
       },
       keyframes: {
+        'scale-up': {
+          '0%': {
+            scale: '0.8',
+          },
+          '100%': {
+            scale: '1',
+          },
+        },
         'opacity-pulse': {
           '0%': {
             opacity: '0.25',
@@ -99,6 +127,7 @@ const config = {
         },
       },
       animation: {
+        'scale-up': 'scale-up 0.1s ease-in',
         'icon-shake': 'icon-shake 0.6s ease-in-out',
         'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
         'loader-rotate': 'loader-rotate 0.6s linear infinite',

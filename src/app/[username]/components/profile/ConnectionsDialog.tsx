@@ -5,11 +5,15 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useGetFollowers, useGetFollowing } from '@/hooks/user/useFollowStatus';
+import {
+  useGetFollowers,
+  useGetFollowing,
+} from '@/hooks/user/useUserConnections';
 
 const ConnectionCard = ({
   first_name,
@@ -23,56 +27,58 @@ const ConnectionCard = ({
   return (
     <Link
       href={`/${username}`}
-      className='p-2 font-jost flex items-center flex-wrap gap-x-2 hover:bg-secondary-lightGrey/15'
+      className='px-1 py-2 flex items-center gap-x-2 hover:bg-foreground-light dark:hover:bg-foreground-dark overflow-hidden'
     >
-      <h2 className='w-fit text-sm md:text-base hover:underline underline-offset-2 decoration-1'>
+      <h2 className='font-roboto text-sm md:text-base'>
         {first_name} {last_name}
       </h2>
 
-      <p className='w-fit text-xs md:text-sm opacity-75 truncate'>
+      <p className='flex-1 font-roboto text-xs md:text-sm opacity-75 truncate'>
         {`@${username}`}
       </p>
     </Link>
   );
 };
 
-export const ConnectionsDialog = () => {
+export const ConnectionsDialog = ({ label }: { label: string }) => {
   const { followers, follwerLoading } = useGetFollowers();
   const { following, follwingLoading } = useGetFollowing();
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='ghost' size='icon' className='rounded-full'>
-          <Icon name='RiLinks' />
-        </Button>
+        <button className='font-roboto text-sm font-light opacity-80 hover:opacity-100'>
+          {label}
+        </button>
       </DialogTrigger>
 
       <DialogContent className='flex flex-col'>
         <DialogTitle>My Connections</DialogTitle>
 
+        <DialogDescription className='hidden'></DialogDescription>
+
         <Tabs defaultValue='followers' className='space-y-4'>
-          <TabsList className='flex gap-0 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-30'>
+          <TabsList className='flex gap-0 bg-background-light dark:bg-background-dark z-30'>
             <TabsTrigger value='followers' className='w-full'>
-              <p className='font-josefin_Sans text-lg opacity-75 group-data-[state=active]:opacity-100'>
+              <p className='font-dm_sans text-base sm:text-lg opacity-75 group-data-[state=active]:opacity-100'>
                 Followers
               </p>
 
-              <div className='h-[1px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+              <div className='mt-[2px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
 
             <TabsTrigger value='following' className='w-full'>
-              <p className='font-josefin_Sans text-lg opacity-75 group-data-[state=active]:opacity-100'>
+              <p className='font-dm_sans text-base sm:text-lg opacity-75 group-data-[state=active]:opacity-100'>
                 Following
               </p>
 
-              <div className='h-[1px] w-0 bg-primary-monkeyOrange group-data-[state=active]:w-full transition-all' />
+              <div className='mt-[2px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
           </TabsList>
 
           <div className='max-h-[50vh] sm:max-h-[60vh] overflow-auto'>
             <TabsContent
-              className='divide-y-1 divide-secondary-lightGrey/25'
+              className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
               value='followers'
             >
               {followers?.users ? (
@@ -87,14 +93,14 @@ export const ConnectionsDialog = () => {
                   );
                 })
               ) : (
-                <p className='py-4 font-jost text-center italic opacity-75'>
+                <p className='py-4 font-roboto text-center italic opacity-75'>
                   You don&apos;t have any followers yet.
                 </p>
               )}
             </TabsContent>
 
             <TabsContent
-              className='divide-y-1 divide-secondary-lightGrey/25'
+              className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
               value='following'
             >
               {following?.users ? (
@@ -109,7 +115,7 @@ export const ConnectionsDialog = () => {
                   );
                 })
               ) : (
-                <p className='py-4 font-jost text-center italic opacity-75'>
+                <p className='py-4 font-roboto text-center italic opacity-75'>
                   You&apos;re not following anyone yet.
                 </p>
               )}

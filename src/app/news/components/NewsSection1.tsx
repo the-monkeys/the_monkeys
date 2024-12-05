@@ -29,7 +29,7 @@ export const NewsSection1 = () => {
 
   if (error)
     return (
-      <p className='py-4 font-jost text-sm text-alert-red text-center'>
+      <p className='py-4 font-roboto text-sm text-alert-red text-center'>
         Error fetching news. Try again.
       </p>
     );
@@ -77,11 +77,11 @@ export const NewsSection1 = () => {
             className='w-full'
           />
 
-          <p className='mt-1 mb-2 font-jost text-xs sm:text-sm opacity-75'>
+          <p className='mt-1 mb-2 font-roboto text-xs sm:text-sm opacity-75'>
             {newsDataWithImagesAndUniqueDesc[0].source}
           </p>
 
-          <h2 className='font-josefin_Sans font-semibold text-lg md:text-2xl line-clamp-2 md:line-clamp-none'>
+          <h2 className='font-dm_sans font-semibold text-lg md:text-2xl line-clamp-2 md:line-clamp-none'>
             {newsDataWithImagesAndUniqueDesc[0].title}
           </h2>
 
@@ -91,7 +91,7 @@ export const NewsSection1 = () => {
                 newsDataWithImagesAndUniqueDesc[0].description
               ),
             }}
-            className='font-jost font-light line-clamp-2 sm:line-clamp-4'
+            className='font-roboto font-light line-clamp-2 sm:line-clamp-4'
           ></p>
         </div>
 
@@ -104,12 +104,12 @@ export const NewsSection1 = () => {
               className='group-hover:opacity-75'
             />
 
-            <h2 className='mt-1 font-josefin_Sans font-semibold text-lg sm:text-xl line-clamp-2 md:line-clamp-none'>
+            <h2 className='mt-1 font-dm_sans font-semibold text-lg sm:text-xl line-clamp-2 md:line-clamp-none'>
               {newsDataWithImagesAndUniqueDesc[1].title}
             </h2>
           </div>
 
-          <p className='mt-2 mb-1 px-1 font-jost'>Related News</p>
+          <p className='mt-2 mb-1 px-1 font-roboto'>Related News</p>
 
           <div className='border-1 border-secondary-lightGrey/25 divide-y-1 divide-secondary-lightGrey/25'>
             <Source1TitleCard

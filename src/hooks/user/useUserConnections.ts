@@ -1,9 +1,23 @@
 import { authFetcher } from '@/services/fetcher';
 import {
+  ConnectionCountResponse,
   FollowDataResponse,
   IsFollowedResponse,
 } from '@/services/profile/userApiTypes';
 import useSWR from 'swr';
+
+export const useGetConnectionCount = (username: string | undefined) => {
+  const { data, error, isLoading } = useSWR<ConnectionCountResponse>(
+    `/user/connection-count/${username}`,
+    authFetcher
+  );
+
+  return {
+    connections: data,
+    connectionsError: error,
+    connectionsLoading: isLoading,
+  };
+};
 
 export const useGetFollowers = () => {
   const { data, error, isLoading } = useSWR<FollowDataResponse>(

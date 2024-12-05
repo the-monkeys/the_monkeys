@@ -25,7 +25,7 @@ const CollaborativeWriting = () => {
           className='w-full h-8 sm:h-10'
         />
 
-        <p className='mt-1 font-jost text-xs sm:text-sm text-center opacity-75'>
+        <p className='mt-1 font-roboto text-xs sm:text-sm text-center opacity-75'>
           Ashley, Rahul & Phil are writing...
         </p>
 
@@ -39,7 +39,7 @@ const CollaborativeWriting = () => {
               className='absolute top-full left-full text-primary-monkeyOrange'
             />
 
-            <p className='absolute left-full bottom-0 mb-1 px-3 font-jost text-xs sm:text-sm bg-primary-monkeyOrange text-secondary-white rounded-full drop-shadow-sm'>
+            <p className='absolute left-full bottom-0 mb-1 px-3 font-roboto text-xs sm:text-sm bg-primary-monkeyOrange text-secondary-white rounded-full drop-shadow-sm'>
               Ashley
             </p>
           </div>
@@ -53,7 +53,7 @@ const CollaborativeWriting = () => {
               className='absolute top-full left-full text-primary-monkeyOrange'
             />
 
-            <p className='absolute left-full bottom-0 mb-1 px-3 font-jost text-xs sm:text-sm bg-primary-monkeyOrange text-secondary-white rounded-full drop-shadow-sm'>
+            <p className='absolute left-full bottom-0 mb-1 px-3 font-roboto text-xs sm:text-sm bg-primary-monkeyOrange text-secondary-white rounded-full drop-shadow-sm'>
               Rahul
             </p>
           </div>
@@ -66,7 +66,7 @@ const CollaborativeWriting = () => {
               className='absolute top-full left-full text-primary-monkeyOrange'
             />
 
-            <p className='absolute left-full bottom-0 mb-1 px-3 font-jost text-xs sm:text-sm bg-primary-monkeyOrange text-secondary-white rounded-full drop-shadow-sm'>
+            <p className='absolute left-full bottom-0 mb-1 px-3 font-roboto text-xs sm:text-sm bg-primary-monkeyOrange text-secondary-white rounded-full drop-shadow-sm'>
               Phil
             </p>
           </div>

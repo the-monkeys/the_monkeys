@@ -16,7 +16,7 @@ const LandingPage = () => {
 
       <FeaturesGrid />
 
-      <p className='my-16 sm:my-20 px-4 font-josefin_Sans font-light text-2xl sm:text-3xl text-center'>
+      <p className='my-16 sm:my-20 px-4 font-dm_sans font-light text-2xl sm:text-3xl text-center'>
         Coming Soon !!
         <br />
         Get Ready to Discover, Write & Inspire

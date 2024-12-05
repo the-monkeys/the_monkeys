@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -82,7 +83,7 @@ export const Password = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-jost text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-75'>
         Reset your password to regain access. Forgot it? Change it during login.
       </p>
 
@@ -96,6 +97,8 @@ export const Password = () => {
         <DialogContent>
           <DialogTitle>Update Password</DialogTitle>
 
+          <DialogDescription className='hidden'></DialogDescription>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
               <FormField
@@ -103,7 +106,9 @@ export const Password = () => {
                 name='currentPassword'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Current Password</FormLabel>
+                    <FormLabel className='font-roboto text-sm'>
+                      Current Password
+                    </FormLabel>
                     <FormControl>
                       <PasswordInput
                         placeholder='Enter current password'
@@ -121,7 +126,9 @@ export const Password = () => {
                 name='password'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>New Password</FormLabel>
+                    <FormLabel className='font-roboto text-sm'>
+                      New Password
+                    </FormLabel>
                     <FormControl>
                       <PasswordInput
                         placeholder='Enter new password'
@@ -139,7 +146,9 @@ export const Password = () => {
                 name='confirmPassword'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel className='font-roboto text-sm'>
+                      Confirm Password
+                    </FormLabel>
                     <FormControl>
                       <PasswordInput
                         placeholder='Enter new password'
@@ -152,27 +161,23 @@ export const Password = () => {
                 )}
               />
 
-              <ul>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+              <ul className='space-y-1'>
+                <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
                   Must be at least 6 characters long.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
                   Must contain at least one lowercase letter.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
                   Must contain at least one uppercase letter.
                 </li>
-                <li className='font-jost text-sm list-disc list-inside opacity-75'>
+                <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
                   Must contain at least one number.
                 </li>
               </ul>
 
               <div className='pt-6'>
-                <Button
-                  variant='secondary'
-                  className='float-right'
-                  disabled={loading}
-                >
+                <Button className='float-right' disabled={loading}>
                   {loading && <Loader />}
                   Update
                 </Button>

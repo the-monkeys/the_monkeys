@@ -30,7 +30,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
   }, []);
 
   return (
-    <div className='fixed left-0 top-0 flex h-full w-full justify-center bg-secondary-white/60 backdrop-blur-sm dark:bg-secondary-darkGrey/60 z-50'>
+    <div className='fixed left-0 top-0 flex h-full w-full justify-center bg-foreground-light/80 backdrop-blur-sm dark:bg-foreground-dark/80 z-50'>
       <div className='flex w-full flex-col items-start gap-1 self-end sm:max-w-md sm:self-center drop-shadow-xl'>
         <div className='w-full flex justify-between items-center px-2'>
           <Logo />
@@ -47,7 +47,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           </div>
         </div>
 
-        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col overflow-auto rounded-lg bg-primary-monkeyWhite transition-all dark:bg-primary-monkeyBlack sm:min-h-[300px] sm:self-center'>
+        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col overflow-auto rounded-md bg-background-light transition-all dark:bg-background-dark sm:min-h-[300px] sm:self-center'>
           {children}
         </div>
       </div>

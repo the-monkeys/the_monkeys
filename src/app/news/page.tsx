@@ -30,11 +30,11 @@ const NewsPage = () => {
   return (
     <Container className='pb-20 min-h-screen px-5'>
       <div className='flex justify-between flex-wrap'>
-        <p className='font-jost text-xs sm:text-sm opacity-75'>
+        <p className='font-roboto text-xs sm:text-sm opacity-75'>
           {formattedDate}
         </p>
 
-        <p className='font-jost text-xs sm:text-sm opacity-75'>
+        <p className='font-roboto text-xs sm:text-sm opacity-75'>
           {formattedTime} UTC
         </p>
       </div>
@@ -44,7 +44,7 @@ const NewsPage = () => {
           Monkeys <span className='text-primary-monkeyOrange'>News</span>
         </h1>
 
-        <p className='font-josefin_Sans text-sm sm:text-base text-secondary-darkGrey dark:text-secondary-white text-center animate-appear-up'>
+        <p className='font-dm_sans text-sm sm:text-base text-secondary-darkGrey dark:text-secondary-white text-center animate-appear-up'>
           Latest news and highlights in Business, Technology, Sports and many
           more.
         </p>

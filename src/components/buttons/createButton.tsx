@@ -6,19 +6,17 @@ import { Button } from '../ui/button';
 export const CreateButton = () => {
   return (
     <Button
-      size='icon'
+      variant='brand'
+      className='group rounded-full hover:text-text-dark hover:bg-opacity-100'
       asChild
-      className='group rounded-full hover:bg-opacity-100'
     >
-      <Link
-        href='/create'
-        title='Create Blogs Here'
-        className='flex flex-col items-center'
-      >
+      <Link href='/create' title='Create Blogs Here'>
         <Icon
           name='RiPencil'
-          className='group-hover:animate-icon-shake text-secondary-white'
+          className='mr-2 group-hover:animate-icon-shake'
+          size={18}
         />
+        Create
       </Link>
     </Button>
   );

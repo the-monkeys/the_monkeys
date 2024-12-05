@@ -1,4 +1,4 @@
-import { GetLatest100BlogsResponse } from '@/services/Blogs/BlogTyptes';
+import { GetLatest100BlogsResponse } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 

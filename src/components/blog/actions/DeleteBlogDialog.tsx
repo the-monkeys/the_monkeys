@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -16,7 +17,10 @@ import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
-export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
+export const DeleteBlogDialog = React.forwardRef<
+  HTMLButtonElement,
+  { blogId?: string }
+>(({ blogId }, ref) => {
   const { data: session } = useSession();
   const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
@@ -53,17 +57,21 @@ export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button className='p-2 w-full flex items-center gap-2 hover:opacity-75'>
-          <Icon name='RiDeleteBin' className='text-alert-red' />
-          <p className='font-jost text-base'>Delete Blog</p>
+          <Icon name='RiDeleteBin4' className='text-alert-red' />
+          <p className='font-roboto text-sm sm:text-base'>Delete Blog</p>
         </button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogTitle className='truncate'>Delete Blog</DialogTitle>
-        <p className='font-jost text-secondary-darkGrey dark:text-secondary-white'>
+
+        <DialogDescription className='hidden'></DialogDescription>
+
+        <p className='font-roboto'>
           Are you sure you want to delete this blog? This action cannot be
           undone.
         </p>
+
         <div>
           <Button
             type='button'
@@ -79,4 +87,4 @@ export const DeleteBlogDialog = ({ blogId }: { blogId?: string }) => {
       </DialogContent>
     </Dialog>
   );
-};
+});

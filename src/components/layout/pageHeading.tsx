@@ -27,7 +27,7 @@ const PageSubheading = ({
   className?: string;
 }) => {
   return (
-    <p className={twMerge(className, 'font-jost text-sm sm:text-base')}>
+    <p className={twMerge(className, 'font-dm_sans text-xs sm:text-sm')}>
       {subheading}
     </p>
   );

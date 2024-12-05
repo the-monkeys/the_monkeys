@@ -10,7 +10,7 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
         ? '#d4d4d4' // Light gray border for dark theme
         : '#cccccc' // Light gray border for light theme
       : isDarkTheme
-        ? '#2b2b2b' // Dark gray border for dark theme
+        ? '#2C2C2C' // Dark gray border for dark theme
         : '#e5e5e5', // Light gray border for light theme
     boxShadow: state.isFocused
       ? isDarkTheme
@@ -28,7 +28,7 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
   menu: (provided: any) => ({
     ...provided,
     backgroundColor: isDarkTheme ? '#1f1f1f' : '#ffffff', // Black for dark, white for light
-    border: `1px solid ${isDarkTheme ? '#2b2b2b' : '#e5e5e5'}`, // Dark gray for dark, light gray for light
+    border: `1px solid ${isDarkTheme ? '#2C2C2C' : '#e5e5e5'}`, // Dark gray for dark, light gray for light
     borderRadius: '0.375rem',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow
     zIndex: 50,

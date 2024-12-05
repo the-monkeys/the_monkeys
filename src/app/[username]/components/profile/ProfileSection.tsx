@@ -2,73 +2,49 @@
 
 import React from 'react';
 
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { toast } from '@/components/ui/use-toast';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import { useSession } from 'next-auth/react';
 
-import { ConnectionsDialog } from './ConnectionsDialog';
-import { EditDialog } from './EditDialog';
+import { ProfileActionsDropdown } from './ProfileActionsDropdown';
 import { ProfileCard } from './ProfileCard';
 import { TopicsCard } from './TopicsCard';
+import { UpdateDialog } from './UpdateDialog';
 
 export const ProfileSection = () => {
   const params = useParams<{ username: string }>();
 
   const { data, status } = useSession();
 
-  const copyToClipboard = (text: string) => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(`https://themonkeys.live/${text}`).then(
-        () => {
-          toast({
-            variant: 'default',
-            title: 'Profile Link Copied',
-            description: 'The profile link has been copied.',
-          });
-        },
-        () => {
-          toast({
-            variant: 'error',
-            title: 'Copy Failed',
-            description: 'Unable to copy the profile link.',
-          });
-        }
-      );
-    }
-  };
+  const isAuthenticated =
+    data?.user.username === params.username && status === 'authenticated';
 
   return (
     <div>
-      <div className='mb-2 flex gap-2 items-center justify-end'>
-        {data?.user.username === params.username &&
-          status === 'authenticated' && <ConnectionsDialog />}
+      <div className='flex gap-1 items-center justify-end'>
+        <ProfileActionsDropdown username={params.username} />
 
-        <Button
-          variant='ghost'
-          size='icon'
-          className='rounded-full'
-          onClick={() => copyToClipboard(data?.user.username || '')}
-        >
-          <Icon name='RiShareForward' />
-        </Button>
-
-        {data?.user.username === params.username &&
-          status === 'authenticated' && <EditDialog />}
-
-        {data?.user.username !== params.username &&
-          status === 'authenticated' && (
-            <FollowButton username={params.username} />
-          )}
+        <FollowButton username={params.username} />
       </div>
 
-      <ProfileCard />
+      <ProfileCard isAuthenticated={isAuthenticated} />
 
-      <Separator className='my-4' />
+      {isAuthenticated && (
+        <div className='pt-4 flex gap-1'>
+          <UpdateDialog />
+
+          <Button variant='secondary' className='flex-1' asChild>
+            <Link href={`/activity?user=${params.username}`} target='_blank'>
+              Activity
+              <Icon name='RiArrowRightUp' className='ml-1' />
+            </Link>
+          </Button>
+        </div>
+      )}
 
       <TopicsCard />
     </div>

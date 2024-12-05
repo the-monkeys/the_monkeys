@@ -16,15 +16,13 @@ export const Source2Card: FC<NewsSource2> = React.memo((props) => {
         />
       </div>
 
-      <p className='mt-2 mb-1 font-jost text-xs sm:text-sm opacity-75'>
+      <p className='mt-2 mb-1 font-roboto text-xs sm:text-sm opacity-75'>
         {source.name} | {author}
       </p>
 
-      <h2 className='font-josefin_Sans font-medium text-lg line-clamp-2'>
-        {title}
-      </h2>
+      <h2 className='font-dm_sans font-medium text-lg line-clamp-2'>{title}</h2>
 
-      <p className='show sm:hidden font-jost font-light line-clamp-3 opacity-75'>
+      <p className='show sm:hidden font-roboto font-light line-clamp-3 opacity-75'>
         {description}
       </p>
     </div>

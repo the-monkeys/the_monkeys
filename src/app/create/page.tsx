@@ -228,11 +228,11 @@ const CreatePage = () => {
       <div className='space-y-2'>
         <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
           {isSaving ? (
-            <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
+            <p className='font-dm_sans text-sm sm:text-base opacity-75'>
               Saving ...
             </p>
           ) : (
-            <p className='font-josefin_Sans text-sm sm:text-base opacity-75'>
+            <p className='font-dm_sans text-sm sm:text-base opacity-75'>
               Saved
             </p>
           )}

@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 
 export const Drafts = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const params = useParams<{ username: string }>();
   const { blogs, isLoading } = useGetAllDraftBlogs(session?.user.account_id);
 
@@ -29,12 +29,13 @@ export const Drafts = () => {
               ))}
           </div>
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='font-jost italic opacity-75'>No drafts available</p>
+          <p className='font-roboto italic opacity-75'>No drafts available</p>
         ) : (
           blogs?.blogs &&
           blogs?.blogs.map((blog) => {
             return (
               <BlogCard
+                status={status}
                 key={blog?.blog_id}
                 titleBlock={blog?.blog?.blocks[0]}
                 descriptionBlock={blog?.blog?.blocks[1]}
@@ -43,7 +44,9 @@ export const Drafts = () => {
                 blogId={blog?.blog_id}
                 isDraft={true}
                 onEdit={handleEdit}
-                editEnable={session?.user.username === params.username}
+                modificationEnable={session?.user.username === params.username}
+                bookmarkEnable={false}
+                isShareable={false}
               />
             );
           })

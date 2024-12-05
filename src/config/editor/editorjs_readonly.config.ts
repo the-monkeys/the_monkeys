@@ -19,7 +19,7 @@ export const editorConfig: EditorConfig = {
     paragraph: {
       class: Paragraph,
       config: {
-        placeholder: 'Add content',
+        placeholder: '',
       },
     },
     list: {
@@ -35,8 +35,8 @@ export const editorConfig: EditorConfig = {
     quote: {
       class: Quote,
       config: {
-        quotePlaceholder: 'Add Quote',
-        captionPlaceholder: 'Add author details',
+        quotePlaceholder: '',
+        captionPlaceholder: '',
       },
     },
   },

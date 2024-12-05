@@ -12,7 +12,10 @@ const ThemeSwitch = () => {
 
   useEffect(() => setMounted(true), []);
 
-  if (!mounted) return null;
+  if (!mounted)
+    return (
+      <div className='size-4 rounded-full bg-foreground-light dark:bg-foreground-dark'></div>
+    );
 
   if (resolvedTheme === 'dark') {
     return (
@@ -20,7 +23,7 @@ const ThemeSwitch = () => {
         className='hover:opacity-75 cursor-pointer'
         onClick={() => setTheme('light')}
       >
-        <Icon name='RiMoon' size={24} />
+        <Icon name='RiMoon' size={22} className='animate-scale-up' />
       </div>
     );
   }
@@ -31,7 +34,7 @@ const ThemeSwitch = () => {
         className='hover:opacity-75 cursor-pointer'
         onClick={() => setTheme('dark')}
       >
-        <Icon name='RiSun' size={24} />
+        <Icon name='RiSun' size={22} className='animate-scale-up' />
       </div>
     );
   }

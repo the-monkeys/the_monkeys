@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import moment from 'moment';
 
 import ProfileImage, { ProfileFrame } from '../profileImage';
 import {
@@ -9,48 +10,38 @@ import {
 } from '../skeletons/blogSkeleton';
 import { FollowButtonCompact } from './buttons/followButton';
 
-export const UserInfoCardCompact = ({
-  id,
-  prefixContent,
-}: {
-  id?: string;
-  prefixContent?: string;
-}) => {
+export const UserInfoCardCompact = ({ id }: { id?: string }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
 
   if (isLoading) return <UserInfoCardCompactSkeleton />;
 
   if (isError) {
     return (
-      <p className='mb-4 font-jost text-sm text-alert-red'>
-        User info not available
+      <p className='mb-4 font-roboto text-sm opacity-80 italic'>
+        User not available
       </p>
     );
   }
 
   return (
-    <div className='w-fit flex items-center gap-1'>
+    <div className='w-full flex items-center gap-2'>
       {user && (
-        <ProfileFrame className='mr-1 size-4 md:size-6'>
+        <ProfileFrame className='size-6'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
         </ProfileFrame>
       )}
 
-      <p className='font-josefin_Sans text-xs sm:text-sm'>
-        <span className='font-light opacity-75'>{prefixContent} </span>
-
-        <Link
-          href={`/${user?.username}`}
-          className='hover:underline underline-offset-2 decoration-1'
-        >
-          {user?.first_name} {user?.last_name}
-        </Link>
-      </p>
+      <Link
+        href={`/${user?.username}`}
+        className='font-dm_sans font-medium text-xs sm:text-sm hover:opacity-80'
+      >
+        {user?.first_name} {user?.last_name}
+      </Link>
     </div>
   );
 };
 
-export const UserInfoCard = ({ id }: { id?: string }) => {
+export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
 
   if (isLoading) {
@@ -59,26 +50,34 @@ export const UserInfoCard = ({ id }: { id?: string }) => {
 
   if (isError)
     return (
-      <p className='py-4 font-jost text-sm text-alert-red'>
+      <p className='py-4 font-roboto text-sm text-alert-red'>
         User not available
       </p>
     );
 
   return (
-    <div className='flex items-center flex-wrap gap-2'>
+    <div className='flex items-center flex-wrap gap-2 overflow-hidden'>
       {user && (
-        <ProfileFrame className='size-10 md:size-12'>
+        <ProfileFrame className='size-12'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
         </ProfileFrame>
       )}
 
-      <div className='flex-1 flex flex-col items-start'>
-        <Link
-          href={`/${user?.username}`}
-          className='w-fit font-josefin_Sans font-medium text-sm md:text-base hover:underline underline-offset-2 decoration-1'
-        >
-          {user?.first_name} {user?.last_name}
-        </Link>
+      <div className='flex-1'>
+        <div className='flex items-center gap-1'>
+          <Link
+            href={`/${user?.username}`}
+            className='font-dm_sans font-medium text-sm sm:text-base hover:opacity-80'
+          >
+            {user?.first_name} {user?.last_name}
+          </Link>
+
+          <span className='opacity-80'>·</span>
+
+          <p className='font-roboto text-xs sm:text-sm opacity-80'>
+            {moment(date).format('MMM DD, YYYY')}
+          </p>
+        </div>
 
         <FollowButtonCompact username={user?.username} />
       </div>

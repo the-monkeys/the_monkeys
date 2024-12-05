@@ -18,7 +18,7 @@ export const ProfileFrame = ({
     <div
       className={twMerge(
         className,
-        'ring-1 ring-secondary-lightGrey/25 flex items-center justify-center overflow-hidden rounded-full'
+        'flex items-center justify-center overflow-hidden rounded-full'
       )}
     >
       {children}
@@ -39,7 +39,7 @@ export const ProfileImage = ({
 
   if (isError)
     return (
-      <p className='font-jost text-3xl text-primary-monkeyBlack dark:text-primary-monkeyWhite'>
+      <p className='font-roboto text-3xl text-text-light dark:text-text-dark'>
         {firstName.slice(0, 2)}
       </p>
     );

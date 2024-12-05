@@ -1,4 +1,4 @@
-import { Blog } from '@/services/Blogs/BlogTyptes';
+import { Blog } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 

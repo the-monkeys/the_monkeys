@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 
 export const Blogs = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const params = useParams<{ username: string }>();
   const { blogs, isLoading } = useGetPublishedBlogByAccountId(params.username);
 
@@ -19,7 +19,7 @@ export const Blogs = () => {
 
   return (
     <div className='min-h-screen'>
-      <div className='flex flex-col items-center divide-y-1 divide-secondary-lightGrey/15'>
+      <div className='flex flex-col items-center'>
         {isLoading ? (
           <div className='w-full space-y-6'>
             {Array(4)
@@ -29,12 +29,13 @@ export const Blogs = () => {
               ))}
           </div>
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='font-jost italic opacity-75'>No blogs available</p>
+          <p className='font-roboto italic opacity-75'>No blogs available</p>
         ) : (
           blogs?.blogs &&
           blogs?.blogs.map((blog) => {
             return (
               <BlogCard
+                status={status}
                 key={blog?.blog_id}
                 titleBlock={blog?.blog?.blocks[0]}
                 descriptionBlock={blog?.blog?.blocks[1]}
@@ -42,7 +43,7 @@ export const Blogs = () => {
                 date={blog?.blog?.time}
                 blogId={blog?.blog_id}
                 onEdit={handleEdit}
-                editEnable={session?.user.username === params.username}
+                modificationEnable={session?.user.username === params.username}
               />
             );
           })

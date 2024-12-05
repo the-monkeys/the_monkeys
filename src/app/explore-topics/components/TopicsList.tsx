@@ -25,7 +25,7 @@ export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
       <ul className='pl-2 pr-1 space-y-1'>
         {displayedTopics.map((topic) => (
           <li key={topic} className='group flex items-center justify-between'>
-            <p className='py-1 flex-1 font-jost opacity-75 group-hover:opacity-100'>
+            <p className='py-1 flex-1 font-roboto opacity-75 group-hover:opacity-100'>
               {topic}
             </p>
 

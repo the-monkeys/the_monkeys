@@ -40,11 +40,14 @@ const FooterList = ({
 }) => {
   return (
     <div className='space-y-2'>
-      <h2 className='font-josefin_Sans font-semibold uppercase'>{heading}</h2>
+      <h2 className='font-dm_sans font-medium text-base'>{heading}</h2>
 
-      <ul className='font-jost space-y-2'>
+      <ul className='space-y-2'>
         {items.map((item, index) => (
-          <li className='opacity-75 hover:opacity-100' key={index}>
+          <li
+            className='font-roboto text-sm opacity-80 hover:opacity-100'
+            key={index}
+          >
             <Link href={item.link}>{item.text}</Link>
           </li>
         ))}
@@ -64,7 +67,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <Container className='px-5 pt-10 pb-14 border-t-1 border-secondary-lightGrey/15'>
+    <Container className='px-5 pt-10 pb-14 border-t-1 border-border-light dark:border-border-dark'>
       <footer className='space-y-6'>
         <Logo showSubHeading />
 
@@ -76,7 +79,9 @@ const Footer = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem className='w-72 md:w-80'>
-                    <FormLabel>Get in Touch</FormLabel>
+                    <FormLabel className='font-roboto text-sm'>
+                      Get in Touch
+                    </FormLabel>
                     <FormMessage />
                     <FormControl>
                       <Input placeholder='Enter email address' {...field} />
@@ -85,7 +90,7 @@ const Footer = () => {
                 )}
               />
 
-              <Button size='lg' disabled>
+              <Button variant='brand' size='lg' disabled>
                 Subscribe
               </Button>
             </div>
@@ -101,7 +106,7 @@ const Footer = () => {
         <div className='pb-8 space-y-2'>
           <div className='py-2 flex items-center justify-center gap-4'>
             <Link
-              className='opacity-75 hover:opacity-100'
+              className='hover:opacity-80'
               href='https://discord.gg/6fK9YuV8FV'
               target='_blank'
             >
@@ -109,7 +114,7 @@ const Footer = () => {
             </Link>
 
             <Link
-              className='opacity-75 hover:opacity-100'
+              className='hover:opacity-80'
               href='https://github.com/the-monkeys'
               target='_blank'
             >
@@ -117,15 +122,15 @@ const Footer = () => {
             </Link>
 
             <Link
-              className='opacity-75 hover:opacity-100'
-              href='https://twitter.com/TheMonkeysLife'
+              className='hover:opacity-80'
+              href='https://x.com/MonkeysInsight'
               target='_blank'
             >
               <Icon name='RiTwitterX' type='Fill' />
             </Link>
           </div>
 
-          <p className='font-josefin_Sans text-secondary-darkGrey dark:text-secondary-white text-sm text-center opacity-75'>
+          <p className='font-roboto text-text-light/80 dark:text-text-dark/80 text-xs sm:text-sm text-center'>
             Monkeys, {currentYear}, All Rights Reserved
           </p>
         </div>

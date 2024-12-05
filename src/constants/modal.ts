@@ -1,6 +1,5 @@
 import { LoginStep } from '@/components/modals/login/LoginModal';
 import { PublishStep } from '@/components/modals/publish/PublishModal';
-import { SignupStep } from '@/components/modals/signup/SignupModal';
 
 export const loginSteps: LoginStep[] = [
   {
@@ -22,19 +21,6 @@ export const loginSteps: LoginStep[] = [
     id: 4,
     heading: 'Join Monkeys',
     subHeading: 'Create your Monkeys account',
-  },
-];
-
-export const signupSteps: SignupStep[] = [
-  {
-    id: 1,
-    heading: 'Join Monkeys',
-    subHeading: 'Select an option to sign up',
-  },
-  {
-    id: 2,
-    heading: 'Enter Details',
-    subHeading: 'Provide your personal information',
   },
 ];
 

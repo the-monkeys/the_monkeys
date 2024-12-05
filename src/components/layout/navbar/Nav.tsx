@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import { CreateButton } from '@/components/buttons/createButton';
-import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
@@ -37,25 +36,23 @@ const Nav = () => {
 
   return (
     <header
-      className={`sticky left-0 top-${top} bg-primary-monkeyWhite/50 dark:bg-primary-monkeyBlack/50 backdrop-blur-xl z-30`}
+      className={`sticky left-0 top-${top} bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-xl z-30`}
     >
       <Container className='w-full p-4 flex items-center justify-between'>
-        <div className='flex items-center gap-5'>
-          <Link href='/'>
-            <Logo showMobileLogo={true} />
-          </Link>
-        </div>
+        <Link href='/'>
+          <Logo showMobileLogo={true} />
+        </Link>
 
-        <div className='flex items-center space-x-4'>
-          <div className='flex items-center gap-5'>
+        <div className='flex items-center space-x-3'>
+          <div className='flex items-center gap-4'>
             <ThemeSwitch />
 
-            <Link
+            {/* <Link
               href='/notifications'
               className='hover:opacity-75 cursor-pointer'
             >
               <Icon name='RiNotification3' size={24} />
-            </Link>
+            </Link> */}
 
             <ProfileDropdown />
           </div>

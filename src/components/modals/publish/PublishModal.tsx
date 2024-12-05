@@ -104,23 +104,23 @@ const PublishModal = ({
         </h1>
 
         {publishStep.subHeading && (
-          <p className='mt-2 font-jost text-sm sm:text-base opacity-75 text-center'>
+          <p className='mt-2 font-dm_sans text-sm sm:text-base opacity-80 text-center'>
             {publishStep.subHeading}
           </p>
         )}
       </ModalHeader>
 
       <ModalContent className='space-y-2'>
-        <p className='font-josefin_Sans'>
+        <p className='font-dm_sans'>
           Choose topics (at most 5)
           <span className='block opacity-75 text-sm'>
             Topics provide readers with a glimpse into the content of your blog.
           </span>
         </p>
 
-        <div className='py-2 flex items-center gap-2 flex-wrap'>
+        <div className='py-2 flex items-center gap-x-1 gap-y-2 flex-wrap'>
           {selectedTopics.map((topic) => (
-            <Badge variant='outline' key={topic.value} className='text-xl'>
+            <Badge variant='secondary' key={topic.value} className='text-xl'>
               {topic.label}
             </Badge>
           ))}
@@ -134,7 +134,7 @@ const PublishModal = ({
               render={({ field }) => {
                 return (
                   <FormItem className='space-y-1 flex flex-col justify-start'>
-                    <p className='font-jost text-sm'>
+                    <p className='font-roboto text-sm'>
                       Select Topics
                       <span className='text-destructive'>*</span>
                     </p>
@@ -172,7 +172,7 @@ const PublishModal = ({
       </ModalContent>
 
       <ModalFooter>
-        <p className='text-center font-jost text-sm opacity-75'>
+        <p className='font-roboto text-xs text-foreground-dark dark:text-foreground-light text-center'>
           Modifications made here will solely affect the presentation of your
           blog, without altering the actual content of your blog.
         </p>

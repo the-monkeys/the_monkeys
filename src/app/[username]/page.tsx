@@ -21,7 +21,7 @@ export async function generateMetadata({
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
   return (
-    <Tabs defaultValue='blogs' className='space-y-10'>
+    <Tabs defaultValue='blogs' className='space-y-6'>
       <NavigationTabs username={params.username} />
 
       <div className='w-full'>

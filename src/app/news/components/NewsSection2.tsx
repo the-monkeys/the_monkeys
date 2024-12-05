@@ -20,7 +20,7 @@ export const NewsSection2 = () => {
 
   if (error)
     return (
-      <p className='py-4 font-jost text-sm text-alert-red text-center'>
+      <p className='py-4 font-roboto text-sm text-alert-red text-center'>
         Error fetching news. Try again.
       </p>
     );
