@@ -17,7 +17,7 @@ const ActivityPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='pb-12 min-h-screen space-y-4 md:space-y-6'>
+    <Container className='pb-12 min-h-screen space-y-6 md:space-y-10'>
       <PageHeader>
         <PageHeading heading='Activity' className='py-1' />
         <PageSubheading

@@ -77,7 +77,7 @@ const ExploreTopicsPage = () => {
                   className='p-0 sm:p-2 col-span-2 sm:col-span-1'
                 >
                   <div className='p-1 group flex justify-between items-start'>
-                    <h2 className='py-1 flex-1 font-dm_sans text-lg sm:text-xl text-primary-monkeyBlack dark:text-primary-monkeyWhite truncate'>
+                    <h2 className='py-1 flex-1 font-dm_sans text-lg sm:text-xl text-text-light dark:text-text-dark truncate'>
                       {category}
                     </h2>
 

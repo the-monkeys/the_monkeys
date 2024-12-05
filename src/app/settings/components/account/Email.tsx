@@ -153,7 +153,7 @@ export const Email = () => {
             <Icon
               name='RiVerifiedBadge'
               type='Fill'
-              className='text-primary-monkeyOrange'
+              className='text-brand-orange'
             />
 
             <p className='font-roboto'>Email Verified</p>

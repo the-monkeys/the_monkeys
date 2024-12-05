@@ -34,7 +34,7 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
           return (
             <div key={activity?.timestamp.toString()}>
               <ActivityCard activity={activity} />
-              <div className='h-4 mx-auto w-[4px] bg-secondary-lightGrey/25' />
+              <div className='h-4 mx-auto w-[4px] bg-foreground-light dark:bg-foreground-dark' />
             </div>
           );
         })

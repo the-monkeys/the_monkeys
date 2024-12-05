@@ -58,7 +58,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
         <DialogDescription className='hidden'></DialogDescription>
 
         <Tabs defaultValue='followers' className='space-y-4'>
-          <TabsList className='flex gap-0 bg-primary-monkeyWhite dark:bg-primary-monkeyBlack z-30'>
+          <TabsList className='flex gap-0 bg-background-light dark:bg-background-dark z-30'>
             <TabsTrigger value='followers' className='w-full'>
               <p className='font-dm_sans text-base sm:text-lg opacity-75 group-data-[state=active]:opacity-100'>
                 Followers
@@ -78,7 +78,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
 
           <div className='max-h-[50vh] sm:max-h-[60vh] overflow-auto'>
             <TabsContent
-              className='divide-y-1 divide-secondary-lightGrey/25'
+              className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
               value='followers'
             >
               {followers?.users ? (
@@ -100,7 +100,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
             </TabsContent>
 
             <TabsContent
-              className='divide-y-1 divide-secondary-lightGrey/25'
+              className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
               value='following'
             >
               {following?.users ? (

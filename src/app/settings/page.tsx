@@ -40,7 +40,7 @@ const SettingsPage = () => {
             >
               <p className='font-dm_sans'>Profile</p>
 
-              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-primary-monkeyOrange'></div>
+              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-brand-orange'></div>
             </TabsTrigger>
 
             <TabsTrigger
@@ -49,7 +49,7 @@ const SettingsPage = () => {
             >
               <p className='font-dm_sans'>Account</p>
 
-              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-primary-monkeyOrange'></div>
+              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-brand-orange'></div>
             </TabsTrigger>
 
             <TabsTrigger
@@ -58,7 +58,7 @@ const SettingsPage = () => {
             >
               <p className='font-dm_sans'>Security</p>
 
-              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-primary-monkeyOrange'></div>
+              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-brand-orange'></div>
             </TabsTrigger>
 
             <TabsTrigger
@@ -67,7 +67,7 @@ const SettingsPage = () => {
             >
               <p className='font-dm_sans'>Notifications</p>
 
-              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-primary-monkeyOrange'></div>
+              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-brand-orange'></div>
             </TabsTrigger>
           </TabsList>
         </div>

@@ -66,7 +66,13 @@ export const BlogListCardSkeleton = () => {
     <div className='md:px-6 space-y-2'>
       <UserInfoCardCompactSkeleton />
 
-      <Skeleton className='h-36 sm:h-40 w-full' />
+      <Skeleton className='h-28 sm:h-24 w-full' />
+
+      <div className='flex justify-end gap-1'>
+        <Skeleton className='size-6 rounded-full' />
+        <Skeleton className='size-6 rounded-full' />
+        <Skeleton className='size-6 rounded-full' />
+      </div>
     </div>
   );
 };

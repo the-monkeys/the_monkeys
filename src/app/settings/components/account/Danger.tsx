@@ -77,7 +77,7 @@ export const Danger = () => {
 
           <DialogDescription className='hidden'></DialogDescription>
 
-          <p className='font-roboto text-secondary-darkGrey dark:text-secondary-white'>
+          <p className='font-roboto'>
             Are you sure you want to delete your account? This action is
             irreversible and cannot be undone.
           </p>

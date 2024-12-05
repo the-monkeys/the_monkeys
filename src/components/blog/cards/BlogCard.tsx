@@ -116,11 +116,17 @@ export const BlogCard: FC<BlogCardProps> = ({
       </div>
 
       <div className='mt-2 flex justify-between items-center gap-4'>
-        <div className='flex items-center gap-1'>
+        <div className='flex items-center gap-2'>
           {status === 'authenticated' && bookmarkEnable && (
             <BookmarkButton blogId={blogId} />
           )}
 
+          <p className='font-roboto text-xs'>
+            {moment(date).format('MMM DD, YYYY')}
+          </p>
+        </div>
+
+        <div className='flex items-center gap-1'>
           {status === 'authenticated' && modificationEnable && (
             <button
               onClick={() => onEdit(blogId)}
@@ -129,12 +135,6 @@ export const BlogCard: FC<BlogCardProps> = ({
               <Icon name='RiPencil' />
             </button>
           )}
-        </div>
-
-        <div className='flex items-center gap-1'>
-          <p className='font-roboto text-xs opacity-80'>
-            {moment(date).format('MMM DD, YYYY')}
-          </p>
 
           <BlogActionsDropdown
             blogId={blogId}

@@ -1,6 +1,7 @@
 import { useParams } from 'next/navigation';
 
 import { TopicBadgeProfile } from '@/components/badges/topicBadge';
+import { Separator } from '@/components/ui/separator';
 import useUser from '@/hooks/user/useUser';
 
 export const TopicsCard = () => {
@@ -17,12 +18,14 @@ export const TopicsCard = () => {
 
   return (
     <div className='mt-4'>
-      <h2 className='mb-2 font-dm_sans font-medium text-base sm:text-lg'>
+      <h2 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
         Topics
       </h2>
 
+      <Separator className='mt-1 mb-4' />
+
       {user && user.topics && user.topics.length > 0 ? (
-        <div className='py-2 flex flex-wrap gap-x-1 gap-y-2'>
+        <div className='flex flex-wrap gap-x-1 gap-y-2'>
           {user.topics
             ?.slice(0, maxTopicsShow)
             .map((topic, index) => (
@@ -36,7 +39,7 @@ export const TopicsCard = () => {
           ) : null}
         </div>
       ) : (
-        <p className='font-roboto text-sm opacity-80 italic'>
+        <p className='font-roboto text-sm opacity-80 text-center'>
           No topics have been added.
         </p>
       )}

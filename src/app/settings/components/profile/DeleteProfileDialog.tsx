@@ -81,7 +81,7 @@ export const DeleteProfileDialog = () => {
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <p className='font-roboto text-secondary-darkGrey dark:text-secondary-white'>
+        <p className='font-roboto'>
           Are you sure you want to delete your profile photo? It will be
           replaced with the default profile.
         </p>
