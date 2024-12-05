@@ -63,7 +63,7 @@ export const PublishedBlogSkeleton = () => {
 
 export const BlogListCardSkeleton = () => {
   return (
-    <div className='md:px-6 space-y-4'>
+    <div className='md:px-6 space-y-2'>
       <UserInfoCardCompactSkeleton />
 
       <Skeleton className='h-36 sm:h-40 w-full' />

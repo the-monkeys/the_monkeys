@@ -53,16 +53,12 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
         />
       </Link>
 
-      <div className='flex justify-between items-center gap-4'>
-        <p className='font-roboto text-xs opacity-75 text-right'>
+      <div className='flex justify-end items-center gap-1'>
+        <p className='font-roboto text-xs opacity-80'>
           {moment(blog?.blog?.time).format('MMM DD, YYYY')}
         </p>
 
-        <div className='flex items-center gap-2'>
-          <BookmarkButton blogId={blog?.blog_id} />
-
-          <BlogActionsDropdown blogId={blog?.blog_id} />
-        </div>
+        <BlogActionsDropdown blogId={blog?.blog_id} />
       </div>
     </div>
   );

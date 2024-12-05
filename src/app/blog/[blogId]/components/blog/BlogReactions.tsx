@@ -24,7 +24,7 @@ export const BlogReactions = ({
     <div
       className={twMerge(className, 'flex justify-between items-center gap-3')}
     >
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-1'>
         {status === 'authenticated' ? (
           <>
             <div className='flex items-center'>

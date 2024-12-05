@@ -67,6 +67,7 @@ const BlogContent = ({
 };
 
 interface BlogCardProps {
+  status: 'authenticated' | 'loading' | 'unauthenticated';
   titleBlock: Block;
   descriptionBlock: Block;
   authorId: string;
@@ -80,6 +81,7 @@ interface BlogCardProps {
 }
 
 export const BlogCard: FC<BlogCardProps> = ({
+  status,
   titleBlock,
   descriptionBlock,
   authorId,
@@ -114,21 +116,25 @@ export const BlogCard: FC<BlogCardProps> = ({
       </div>
 
       <div className='mt-2 flex justify-between items-center gap-4'>
-        <p className='font-roboto text-xs opacity-75 text-right'>
-          {moment(date).format('MMM DD, YYYY')}
-        </p>
+        <div className='flex items-center gap-1'>
+          {status === 'authenticated' && bookmarkEnable && (
+            <BookmarkButton blogId={blogId} />
+          )}
 
-        <div className='flex items-center gap-2'>
-          {bookmarkEnable ? <BookmarkButton blogId={blogId} /> : null}
-
-          {modificationEnable ? (
+          {status === 'authenticated' && modificationEnable && (
             <button
               onClick={() => onEdit(blogId)}
               className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'
             >
               <Icon name='RiPencil' />
             </button>
-          ) : null}
+          )}
+        </div>
+
+        <div className='flex items-center gap-1'>
+          <p className='font-roboto text-xs opacity-80'>
+            {moment(date).format('MMM DD, YYYY')}
+          </p>
 
           <BlogActionsDropdown
             blogId={blogId}

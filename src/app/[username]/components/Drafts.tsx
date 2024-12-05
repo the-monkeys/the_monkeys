@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 
 export const Drafts = () => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const params = useParams<{ username: string }>();
   const { blogs, isLoading } = useGetAllDraftBlogs(session?.user.account_id);
 
@@ -35,6 +35,7 @@ export const Drafts = () => {
           blogs?.blogs.map((blog) => {
             return (
               <BlogCard
+                status={status}
                 key={blog?.blog_id}
                 titleBlock={blog?.blog?.blocks[0]}
                 descriptionBlock={blog?.blog?.blocks[1]}
