@@ -37,7 +37,7 @@ const Editor: FC<EditorProps> = ({ data, onChange, config }) => {
 
   return (
     <div
-      className='mx-auto w-full sm:w-4/5 px-5 sm:px-4 font-roboto space-y-6'
+      className='mx-auto w-full sm:w-4/5 px-5 sm:px-4 space-y-6'
       id='editorjs_editor-container'
     ></div>
   );

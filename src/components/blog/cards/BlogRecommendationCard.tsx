@@ -54,7 +54,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
       </Link>
 
       <div className='flex justify-between items-center gap-4'>
-        <p className='px-1 font-roboto text-xs opacity-75 text-right'>
+        <p className='font-roboto text-xs opacity-75 text-right'>
           {moment(blog?.blog?.time).format('MMM DD, YYYY')}
         </p>
 

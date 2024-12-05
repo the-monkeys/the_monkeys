@@ -11,13 +11,13 @@ const LegalPage = ({
   content: React.ReactNode;
 }) => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-10'>
+    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeader>
         <PageHeading heading={title} className='py-1' />
         <PageSubheading subheading={date} className='opacity-75' />
       </PageHeader>
 
-      <div className='font-roboto font-light text-base md:text-lg'>
+      <div className='font-roboto font-light text-sm sm:text-base text-justify'>
         {content}
       </div>
     </Container>

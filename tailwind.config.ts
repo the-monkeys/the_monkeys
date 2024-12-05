@@ -21,7 +21,7 @@ const config = {
       playfair_Display: ['var(--font-playfair_Display)'],
       roboto: ['var(--font-roboto)'],
       dm_sans: ['var(--font-dm_sans)'],
-      inter: ['var(--font-inter)'],
+      inter: ['var(--font-poppins)'],
     },
     extend: {
       colors: {

@@ -7,6 +7,7 @@ import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { Block } from '@/services/Blogs/BlogTyptes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
+import { isSharedArrayBuffer } from 'util/types';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { BookmarkButton } from '../buttons/BookmarkButton';
@@ -75,6 +76,7 @@ interface BlogCardProps {
   onEdit: (blogId: string) => void;
   modificationEnable?: boolean;
   bookmarkEnable?: boolean;
+  isShareable?: boolean;
 }
 
 export const BlogCard: FC<BlogCardProps> = ({
@@ -85,8 +87,9 @@ export const BlogCard: FC<BlogCardProps> = ({
   blogId,
   isDraft = false,
   onEdit,
-  modificationEnable = false,
   bookmarkEnable = true,
+  modificationEnable = false,
+  isShareable = true,
 }) => {
   return (
     <div className='w-full md:px-6 pt-4 pb-6 first:pt-0'>
@@ -111,7 +114,7 @@ export const BlogCard: FC<BlogCardProps> = ({
       </div>
 
       <div className='mt-2 flex justify-between items-center gap-4'>
-        <p className='px-1 font-roboto text-xs opacity-75 text-right'>
+        <p className='font-roboto text-xs opacity-75 text-right'>
           {moment(date).format('MMM DD, YYYY')}
         </p>
 
@@ -130,6 +133,7 @@ export const BlogCard: FC<BlogCardProps> = ({
           <BlogActionsDropdown
             blogId={blogId}
             modificationEnable={modificationEnable}
+            isShareable={isShareable}
           />
         </div>
       </div>

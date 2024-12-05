@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DM_Sans, Inter, Playfair_Display, Roboto } from 'next/font/google';
+import { DM_Sans, Playfair_Display, Poppins, Roboto } from 'next/font/google';
 
 import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
@@ -30,9 +30,10 @@ const dm_sans = DM_Sans({
   display: 'swap',
 });
 
-const inter = Inter({
+const poppins = Poppins({
+  weight: ['100', '300', '400', '700'],
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-poppins',
   display: 'swap',
 });
 
@@ -72,7 +73,7 @@ const RootLayout = ({
         <AdSense pId='4687427997504601' />
       </head>
       <body
-        className={`${playfair_Display.variable} ${roboto.variable} ${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark`}
+        className={`${playfair_Display.variable} ${roboto.variable} ${dm_sans.variable} ${poppins.variable} bg-background-light dark:bg-background-dark`}
       >
         <Toaster />
         <SWRProvider>

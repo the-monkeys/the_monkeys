@@ -13,9 +13,11 @@ import { DeleteBlogDialog } from './DeleteBlogDialog';
 export const BlogActionsDropdown = ({
   blogId,
   modificationEnable = false,
+  isShareable = true,
 }: {
   blogId?: string;
   modificationEnable?: boolean;
+  isShareable?: boolean;
 }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
@@ -49,25 +51,27 @@ export const BlogActionsDropdown = ({
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className='mx-2 w-36 sm:w-40'>
-        <DropdownMenuItem asChild>
-          <button
-            onClick={copyToClipboard}
-            className='flex w-full items-center gap-2'
-          >
-            <Icon name='RiShareForward' />
-            <p className='font-roboto text-sm sm:text-base'>Share Blog</p>
-          </button>
-        </DropdownMenuItem>
+        {isShareable && (
+          <DropdownMenuItem asChild>
+            <button
+              onClick={copyToClipboard}
+              className='flex w-full items-center gap-2'
+            >
+              <Icon name='RiShareForward' />
+              <p className='font-roboto text-sm sm:text-base'>Share Blog</p>
+            </button>
+          </DropdownMenuItem>
+        )}
 
-        {modificationEnable && (
+        {modificationEnable ? (
           <>
-            <DropdownMenuSeparator />
+            {isShareable && <DropdownMenuSeparator />}
 
             <DropdownMenuItem asChild>
               <DeleteBlogDialog blogId={blogId} />
             </DropdownMenuItem>
           </>
-        )}
+        ) : null}
       </DropdownMenuContent>
     </DropdownMenu>
   );
