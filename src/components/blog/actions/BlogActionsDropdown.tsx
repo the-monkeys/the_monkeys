@@ -3,22 +3,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
 
-import { DeleteBlogDialog } from './DeleteBlogDialog';
-
-export const BlogActionsDropdown = ({
-  blogId,
-  modificationEnable = false,
-  isShareable = true,
-}: {
-  blogId?: string;
-  modificationEnable?: boolean;
-  isShareable?: boolean;
-}) => {
+export const BlogActionsDropdown = ({ blogId }: { blogId: string }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
       navigator.clipboard
@@ -50,28 +39,16 @@ export const BlogActionsDropdown = ({
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='mx-2 w-36 sm:w-40'>
-        {isShareable && (
-          <DropdownMenuItem asChild>
-            <button
-              onClick={copyToClipboard}
-              className='flex w-full items-center gap-2'
-            >
-              <Icon name='RiShareForward' />
-              <p className='font-roboto text-sm sm:text-base'>Share Blog</p>
-            </button>
-          </DropdownMenuItem>
-        )}
-
-        {modificationEnable ? (
-          <>
-            {isShareable && <DropdownMenuSeparator />}
-
-            <DropdownMenuItem asChild>
-              <DeleteBlogDialog blogId={blogId} />
-            </DropdownMenuItem>
-          </>
-        ) : null}
+      <DropdownMenuContent className='mx-2 w-32 sm:w-36'>
+        <DropdownMenuItem asChild>
+          <button
+            onClick={copyToClipboard}
+            className='flex w-full items-center gap-2'
+          >
+            <Icon name='RiShareForward' />
+            <p className='font-roboto text-sm sm:text-base'>Share</p>
+          </button>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

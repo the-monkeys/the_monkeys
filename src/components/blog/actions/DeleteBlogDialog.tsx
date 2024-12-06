@@ -17,48 +17,67 @@ import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
-export const DeleteBlogDialog = React.forwardRef<
-  HTMLButtonElement,
-  { blogId?: string }
->(({ blogId }, ref) => {
+export const DeleteBlogDialog = ({
+  blogId,
+  isDraft,
+}: {
+  blogId: string;
+  isDraft?: boolean;
+}) => {
   const { data: session } = useSession();
-  const [isDeleteLoading, setIsDeleteLoading] = React.useState<boolean>(false);
+  const [isLoading, setLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
 
-  async function deleteBlogById(blogId?: string) {
-    setIsDeleteLoading(true);
+  const accountId = session?.user.account_id;
 
-    await axiosInstance
-      .delete(`/blog/${blogId}`)
-      .then(() => {
-        setIsDeleteLoading(false);
+  async function deleteBlogById(blogId?: string) {
+    setLoading(true);
+
+    try {
+      const response = await axiosInstance.delete(`/blog/${blogId}`);
+
+      if (response.status === 200) {
         toast({
           title: 'Success',
           description: 'Blog deleted successfully',
-          duration: 3000,
         });
+
         setOpen(false);
-        mutate(`/blog/all/drafts/${session?.user.account_id}`, undefined, {
-          revalidate: true,
-        });
-      })
-      .catch(() => {
-        setIsDeleteLoading(false);
+      }
+
+      {
+        isDraft
+          ? mutate(`/blog/all/drafts/${accountId}`, undefined, {
+              revalidate: true,
+            })
+          : mutate(`/blog/all/publishes/${accountId}`, undefined, {
+              revalidate: true,
+            });
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
         toast({
+          variant: 'error',
           title: 'Error',
-          description: 'Error deleting blog',
-          duration: 3000,
+          description: err.message || 'Failed to delete blog.',
         });
-        setOpen(false);
-      });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occured.',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className='p-2 w-full flex items-center gap-2 hover:opacity-75'>
-          <Icon name='RiDeleteBin4' className='text-alert-red' />
-          <p className='font-roboto text-sm sm:text-base'>Delete Blog</p>
+        <button className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'>
+          <Icon name='RiDeleteBin4' />
         </button>
       </DialogTrigger>
 
@@ -78,13 +97,14 @@ export const DeleteBlogDialog = React.forwardRef<
             variant='destructive'
             className='w-fit float-right'
             onClick={() => deleteBlogById(blogId)}
-            disabled={isDeleteLoading}
+            disabled={isLoading}
           >
-            {isDeleteLoading && <Loader />}
+            {isLoading && <Loader />}
             Yes, Delete
           </Button>
         </div>
       </DialogContent>
     </Dialog>
   );
-});
+};
+// );

@@ -9,6 +9,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
+import { DeleteBlogDialog } from '../actions/DeleteBlogDialog';
 import { BookmarkButton } from '../buttons/BookmarkButton';
 
 const BlogContent = ({
@@ -76,7 +77,6 @@ interface BlogCardProps {
   onEdit: (blogId: string) => void;
   modificationEnable?: boolean;
   bookmarkEnable?: boolean;
-  isShareable?: boolean;
 }
 
 export const BlogCard: FC<BlogCardProps> = ({
@@ -90,7 +90,6 @@ export const BlogCard: FC<BlogCardProps> = ({
   onEdit,
   bookmarkEnable = true,
   modificationEnable = false,
-  isShareable = true,
 }) => {
   return (
     <div className='w-full md:px-6 pt-4 pb-6 first:pt-0'>
@@ -135,11 +134,11 @@ export const BlogCard: FC<BlogCardProps> = ({
             </button>
           )}
 
-          <BlogActionsDropdown
-            blogId={blogId}
-            modificationEnable={modificationEnable}
-            isShareable={isShareable}
-          />
+          {status === 'authenticated' && modificationEnable && (
+            <DeleteBlogDialog blogId={blogId} />
+          )}
+
+          {!isDraft && <BlogActionsDropdown blogId={blogId} />}
         </div>
       </div>
     </div>

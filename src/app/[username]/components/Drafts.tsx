@@ -46,7 +46,6 @@ export const Drafts = () => {
                 onEdit={handleEdit}
                 modificationEnable={session?.user.username === params.username}
                 bookmarkEnable={false}
-                isShareable={false}
               />
             );
           })
