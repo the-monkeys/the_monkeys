@@ -22,7 +22,7 @@ const NotificationPageLayout = ({
         <PageHeading heading='Notifications' className='py-1' />
         <PageSubheading
           subheading='View all your notifications in one place.'
-          className='text-center opacity-75'
+          className='text-center opacity-80'
         />
       </PageHeader>
 

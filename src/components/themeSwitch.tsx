@@ -20,7 +20,7 @@ const ThemeSwitch = () => {
   if (resolvedTheme === 'dark') {
     return (
       <div
-        className='hover:opacity-75 cursor-pointer'
+        className='hover:opacity-80 cursor-pointer'
         onClick={() => setTheme('light')}
       >
         <Icon name='RiMoon' size={22} className='animate-scale-up' />
@@ -31,7 +31,7 @@ const ThemeSwitch = () => {
   if (resolvedTheme === 'light') {
     return (
       <div
-        className='hover:opacity-75 cursor-pointer'
+        className='hover:opacity-80 cursor-pointer'
         onClick={() => setTheme('dark')}
       >
         <Icon name='RiSun' size={22} className='animate-scale-up' />

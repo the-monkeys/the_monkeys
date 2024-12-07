@@ -39,7 +39,7 @@ export const DeleteBlogDialog = ({
       if (response.status === 200) {
         toast({
           title: 'Success',
-          description: 'Blog deleted successfully',
+          description: 'Deleted successfully',
         });
 
         setOpen(false);
@@ -76,8 +76,8 @@ export const DeleteBlogDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'>
-          <Icon name='RiDeleteBin4' />
+        <button className='p-1 flex items-center justify-center cursor-pointer hover:text-alert-red'>
+          <Icon name='RiDeleteBin4' size={18} />
         </button>
       </DialogTrigger>
 

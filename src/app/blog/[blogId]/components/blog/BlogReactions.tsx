@@ -65,10 +65,7 @@ export const BlogReactions = ({
       </div>
 
       <div className='flex items-center gap-3'>
-        <BlogActionsDropdown
-          blogId={blogId}
-          modificationEnable={data?.user?.account_id === accountId}
-        />
+        <BlogActionsDropdown blogId={blogId} />
       </div>
     </div>
   );

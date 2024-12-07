@@ -27,12 +27,12 @@ export const NotificationCard = ({
           />
         )}
 
-        <div className='flex-1 space-y-1'>
+        <div className='flex-1 space-y-1 overflow-hidden'>
           <p className='font-roboto text-xs sm:text-sm opacity-80'>
             Message Description
           </p>
 
-          <h4 className='font-roboto text-sm sm:text-base capitalize'>
+          <h4 className='font-roboto text-sm sm:text-base capitalize break-words'>
             {notificationData?.message}
           </h4>
         </div>

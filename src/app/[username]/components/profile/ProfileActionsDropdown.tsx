@@ -3,7 +3,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
@@ -33,7 +32,7 @@ export const ProfileActionsDropdown = ({ username }: { username: string }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className='p-1 flex items-center justify-center cursor-pointer opacity-75 hover:opacity-100'>
+        <button className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'>
           <Icon name='RiMore' type='Fill' />
         </button>
       </DropdownMenuTrigger>

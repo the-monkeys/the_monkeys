@@ -15,7 +15,7 @@ export const BlogTopics = ({
           <TopicBadgeBlog key={index} topic={topic} />
         ))
       ) : (
-        <span className='font-roboto text-xs md:text-sm opacity-75'>
+        <span className='font-roboto text-xs md:text-sm opacity-80'>
           No topics available
         </span>
       )}

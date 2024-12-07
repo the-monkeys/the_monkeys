@@ -17,9 +17,7 @@ export const UserInfoCardCompact = ({ id }: { id?: string }) => {
 
   if (isError) {
     return (
-      <p className='mb-4 font-roboto text-sm opacity-80 italic'>
-        User not available
-      </p>
+      <p className='mb-4 font-roboto text-sm opacity-80'>User not available</p>
     );
   }
 
@@ -33,7 +31,7 @@ export const UserInfoCardCompact = ({ id }: { id?: string }) => {
 
       <Link
         href={`/${user?.username}`}
-        className='font-dm_sans font-medium text-xs sm:text-sm hover:opacity-80'
+        className='font-dm_sans text-xs sm:text-sm hover:opacity-80'
       >
         {user?.first_name} {user?.last_name}
       </Link>
@@ -50,9 +48,7 @@ export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
 
   if (isError)
     return (
-      <p className='py-4 font-roboto text-sm text-alert-red'>
-        User not available
-      </p>
+      <p className='py-4 font-roboto text-sm opacity-80'>User not available</p>
     );
 
   return (
@@ -67,7 +63,7 @@ export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
         <div className='flex items-center gap-1'>
           <Link
             href={`/${user?.username}`}
-            className='font-dm_sans font-medium text-sm sm:text-base hover:opacity-80'
+            className='font-dm_sans text-sm sm:text-base hover:opacity-80'
           >
             {user?.first_name} {user?.last_name}
           </Link>

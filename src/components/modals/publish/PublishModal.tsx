@@ -113,7 +113,7 @@ const PublishModal = ({
       <ModalContent className='space-y-2'>
         <p className='font-dm_sans'>
           Choose topics (at most 5)
-          <span className='block opacity-75 text-sm'>
+          <span className='block opacity-80 text-sm'>
             Topics provide readers with a glimpse into the content of your blog.
           </span>
         </p>

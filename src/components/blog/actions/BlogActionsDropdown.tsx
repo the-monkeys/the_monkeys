@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
 
-export const BlogActionsDropdown = ({ blogId }: { blogId: string }) => {
+export const BlogActionsDropdown = ({ blogId }: { blogId?: string }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
       navigator.clipboard
@@ -35,7 +35,7 @@ export const BlogActionsDropdown = ({ blogId }: { blogId: string }) => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'>
-          <Icon name='RiMore' />
+          <Icon name='RiMore' size={18} />
         </button>
       </DropdownMenuTrigger>
 

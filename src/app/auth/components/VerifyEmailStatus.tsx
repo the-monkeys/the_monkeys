@@ -7,10 +7,13 @@ import { Loader } from '@/components/loader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from '@/components/ui/use-toast';
 import { verifyEmailVerificationToken } from '@/services/auth/auth';
+import { useSession } from 'next-auth/react';
 
 import { SearchParamsComponent } from './SearchParams';
 
 export const VerifyEmailStatus = () => {
+  const { data: session, update } = useSession();
+
   const [searchParams, setSearchParams] = useState<{
     username: string;
     evpw: string;
@@ -32,6 +35,16 @@ export const VerifyEmailStatus = () => {
     []
   );
 
+  const updateUserSession = async () => {
+    await update({
+      ...session,
+      user: {
+        ...session?.user,
+        email_verification_status: 'Verified',
+      },
+    });
+  };
+
   useEffect(() => {
     if (searchParams.username !== '' && searchParams.evpw !== '') {
       verifyEmailVerificationToken({
@@ -51,6 +64,8 @@ export const VerifyEmailStatus = () => {
             message:
               'Email verification successful. You can now continue using our services without any interruptions.',
           });
+
+          updateUserSession();
         })
         .catch((err) => {
           toast({

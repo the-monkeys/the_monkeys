@@ -29,7 +29,9 @@ export const Blogs = () => {
               ))}
           </div>
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='font-roboto italic opacity-75'>No blogs available</p>
+          <p className='font-roboto text-sm opacity-80'>
+            No blogs published yet.
+          </p>
         ) : (
           blogs?.blogs &&
           blogs?.blogs.map((blog) => {

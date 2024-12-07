@@ -60,7 +60,7 @@ export const Danger = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-roboto text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-80'>
         When you delete your account on Monkeys, all your personal data will be
         permanently erased. This action cannot be undone.
       </p>

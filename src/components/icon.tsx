@@ -41,6 +41,7 @@ export type IconName =
   | 'RiMail'
   | 'RiMailOpen'
   | 'RiMailSend'
+  | 'RiCodeSSlash'
   | 'RiGithub'
   | 'RiTwitterX'
   | 'RiDiscord'

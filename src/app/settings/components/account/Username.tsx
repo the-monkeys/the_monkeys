@@ -74,7 +74,7 @@ export const Username = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-roboto text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-80'>
         Change your username to something that reflects your individuality.
       </p>
 
