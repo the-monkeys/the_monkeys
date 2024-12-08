@@ -24,7 +24,7 @@ const ExploreTopicsPageLayout = ({
         <PageHeading heading='Explore Topics' className='py-1' />
         <PageSubheading
           subheading='Explore wide variety of topics, from Business, Sports, Technology and much more.'
-          className='text-center opacity-75'
+          className='text-center opacity-80'
         />
       </PageHeader>
 

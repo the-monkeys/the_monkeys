@@ -25,6 +25,7 @@ export const BookmarkButton = ({
         <Icon
           name='RiBookmark'
           type='Fill'
+          size={18}
           className='text-foreground-light dark:text-foreground-dark'
         />
       </div>
@@ -37,6 +38,7 @@ export const BookmarkButton = ({
         <Icon
           name='RiBookmark'
           type='Fill'
+          size={18}
           className='text-foreground-light dark:text-foreground-dark'
         />
       </div>
@@ -136,7 +138,7 @@ export const BookmarkButton = ({
           onClick={onPostRemoveBookmark}
           disabled={loading || isDisable}
         >
-          <Icon name='RiBookmark' type='Fill' />
+          <Icon name='RiBookmark' type='Fill' size={18} />
         </button>
       ) : (
         <button
@@ -146,7 +148,7 @@ export const BookmarkButton = ({
           onClick={onPostBookmark}
           disabled={loading || isDisable}
         >
-          <Icon name='RiBookmark' />
+          <Icon name='RiBookmark' size={18} />
         </button>
       )}
     </>

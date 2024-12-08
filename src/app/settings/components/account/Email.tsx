@@ -123,43 +123,34 @@ export const Email = () => {
     }
   };
 
-  let verificationStatus = '';
-
-  if (session?.user?.email_verification_status) {
-  } else {
-    verificationStatus = '';
-  }
-
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-roboto text-sm opacity-75'>
+      <p className='font-roboto text-sm opacity-80'>
         Registered Email: {session?.user?.email}
       </p>
 
-      {session?.user?.email_verification_status ? (
-        session?.user?.email_verification_status === 'Unverified' ? (
-          <Button
-            type='button'
-            size='lg'
-            variant='secondary'
-            className='mt-4'
-            onClick={reqVerification}
-            disabled={verifyLoading ? true : false}
-          >
-            {verifyLoading && <Loader />} Verify Email
-          </Button>
-        ) : (
-          <div className='mt-4 flex items-center gap-2'>
-            <Icon
-              name='RiVerifiedBadge'
-              type='Fill'
-              className='text-brand-orange'
-            />
+      {!session?.user?.email_verification_status ||
+      session?.user?.email_verification_status !== 'Verified' ? (
+        <Button
+          type='button'
+          size='lg'
+          className='mt-4'
+          onClick={reqVerification}
+          disabled={verifyLoading ? true : false}
+        >
+          {verifyLoading && <Loader />} Verify Email
+        </Button>
+      ) : (
+        <div className='mt-4 flex items-center gap-2'>
+          <Icon
+            name='RiVerifiedBadge'
+            type='Fill'
+            className='text-brand-orange'
+          />
 
-            <p className='font-roboto'>Email Verified</p>
-          </div>
-        )
-      ) : null}
+          <p className='font-roboto'>Email Verified</p>
+        </div>
+      )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>

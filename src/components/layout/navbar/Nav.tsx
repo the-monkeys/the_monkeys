@@ -47,13 +47,6 @@ const Nav = () => {
           <div className='flex items-center gap-4'>
             <ThemeSwitch />
 
-            {/* <Link
-              href='/notifications'
-              className='hover:opacity-75 cursor-pointer'
-            >
-              <Icon name='RiNotification3' size={24} />
-            </Link> */}
-
             <ProfileDropdown />
           </div>
 

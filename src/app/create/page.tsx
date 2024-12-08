@@ -228,30 +228,15 @@ const CreatePage = () => {
       <div className='space-y-2'>
         <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
           {isSaving ? (
-            <p className='font-dm_sans text-sm sm:text-base opacity-75'>
+            <p className='font-roboto text-xs sm:text-sm opacity-80'>
               Saving ...
             </p>
           ) : (
-            <p className='font-dm_sans text-sm sm:text-base opacity-75'>
-              Saved
-            </p>
+            <p className='font-roboto text-xs sm:text-sm opacity-80'>Saved</p>
           )}
 
-          <Button
-            variant='secondary'
-            onClick={() => setShowModal(true)}
-            className='hidden sm:inline-flex'
-          >
+          <Button variant='secondary' onClick={() => setShowModal(true)}>
             Publish
-          </Button>
-
-          <Button
-            variant='secondary'
-            size='icon'
-            onClick={() => setShowModal(true)}
-            className='show sm:hidden rounded-full'
-          >
-            <Icon name='RiArrowRight' />
           </Button>
         </div>
 

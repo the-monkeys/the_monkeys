@@ -38,7 +38,7 @@ export const ProfileSection = () => {
           <UpdateDialog />
 
           <Button variant='secondary' className='flex-1' asChild>
-            <Link href={`/activity?user=${params.username}`} target='_blank'>
+            <Link href={`/activity?user=${params.username}`}>
               Activity
               <Icon name='RiArrowRightUp' className='ml-1' />
             </Link>

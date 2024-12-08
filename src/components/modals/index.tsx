@@ -36,7 +36,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           <Logo />
 
           <div
-            className='hover:opacity-75 cursor-pointer'
+            className='hover:opacity-80 cursor-pointer'
             onClick={() => {
               if (setModal) {
                 setModal(false);

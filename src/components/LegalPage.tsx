@@ -14,7 +14,7 @@ const LegalPage = ({
     <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeader>
         <PageHeading heading={title} className='py-1' />
-        <PageSubheading subheading={date} className='opacity-75' />
+        <PageSubheading subheading={date} className='opacity-80' />
       </PageHeader>
 
       <div className='font-roboto font-light text-sm sm:text-base text-justify'>

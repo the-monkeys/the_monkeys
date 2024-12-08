@@ -19,7 +19,7 @@ const NotificationsPage = () => {
 
   if (isError) {
     return (
-      <p className='mb-4 font-roboto text-sm text-alert-red text-center'>
+      <p className='mb-4 font-roboto text-sm text-center opacity-80'>
         Notifications info not available.
       </p>
     );
@@ -37,7 +37,7 @@ const NotificationsPage = () => {
           );
         })
       ) : (
-        <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-75'>
+        <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-80'>
           No notifications yet.
         </p>
       )}

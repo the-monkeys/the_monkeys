@@ -25,6 +25,7 @@ export const LikeButton = ({
         <Icon
           name='RiHeart3'
           type='Fill'
+          size={18}
           className='text-foreground-light dark:text-foreground-dark'
         />
       </div>
@@ -37,6 +38,7 @@ export const LikeButton = ({
         <Icon
           name='RiHeart3'
           type='Fill'
+          size={18}
           className='text-foreground-light dark:text-foreground-dark'
         />
       </div>
@@ -133,7 +135,12 @@ export const LikeButton = ({
           onClick={onPostDislike}
           disabled={loading || isDisable}
         >
-          <Icon name='RiHeart3' type='Fill' className='text-brand-orange' />
+          <Icon
+            name='RiHeart3'
+            type='Fill'
+            size={18}
+            className='text-brand-orange'
+          />
         </button>
       ) : (
         <button
@@ -143,7 +150,7 @@ export const LikeButton = ({
           onClick={onPostLike}
           disabled={loading || isDisable}
         >
-          <Icon name='RiHeart3' />
+          <Icon name='RiHeart3' size={18} />
         </button>
       )}
     </>

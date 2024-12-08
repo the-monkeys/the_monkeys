@@ -1,7 +1,5 @@
 import Link from 'next/link';
 
-import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -33,7 +31,7 @@ const ConnectionCard = ({
         {first_name} {last_name}
       </h2>
 
-      <p className='flex-1 font-roboto text-xs md:text-sm opacity-75 truncate'>
+      <p className='flex-1 font-roboto text-xs md:text-sm opacity-80 truncate'>
         {`@${username}`}
       </p>
     </Link>
@@ -60,19 +58,19 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
         <Tabs defaultValue='followers' className='space-y-4'>
           <TabsList className='flex gap-0 bg-background-light dark:bg-background-dark z-30'>
             <TabsTrigger value='followers' className='w-full'>
-              <p className='font-dm_sans text-base sm:text-lg opacity-75 group-data-[state=active]:opacity-100'>
+              <p className='font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
                 Followers
               </p>
 
-              <div className='mt-[2px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+              <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
 
             <TabsTrigger value='following' className='w-full'>
-              <p className='font-dm_sans text-base sm:text-lg opacity-75 group-data-[state=active]:opacity-100'>
+              <p className='font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
                 Following
               </p>
 
-              <div className='mt-[2px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+              <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
           </TabsList>
 
@@ -93,7 +91,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
                   );
                 })
               ) : (
-                <p className='py-4 font-roboto text-center italic opacity-75'>
+                <p className='py-4 font-roboto text-xs sm:text-sm text-center opacity-80'>
                   You don&apos;t have any followers yet.
                 </p>
               )}
@@ -115,7 +113,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
                   );
                 })
               ) : (
-                <p className='py-4 font-roboto text-center italic opacity-75'>
+                <p className='py-4 font-roboto text-xs sm:text-sm text-center opacity-80'>
                   You&apos;re not following anyone yet.
                 </p>
               )}

@@ -158,7 +158,7 @@ export const UpdateProfileDialog = () => {
                   : 'Drop a file here, or click to select files'}
               </p>
 
-              <p className='font-roboto text-xs sm:text-sm text-center opacity-75'>
+              <p className='font-roboto text-xs sm:text-sm text-center opacity-80'>
                 The file should be under 2 MB
               </p>
             </div>
@@ -180,7 +180,7 @@ export const UpdateProfileDialog = () => {
             <div className='mt-4 flex items-center gap-2'>
               <p className='py-1 flex-1 font-roboto truncate'>
                 {selectedImage.name}
-                <span className='block text-sm opacity-75'>
+                <span className='block text-sm opacity-80'>
                   {(selectedImage.size / 1024).toFixed(1)} KB
                 </span>
               </p>

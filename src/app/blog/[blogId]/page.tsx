@@ -5,7 +5,6 @@ import Container from '@/components/layout/Container';
 import { PublishedBlogSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
-import moment from 'moment';
 
 import { BlogInfoSection } from './components/blog/BlogInfoSection';
 import { BlogReactions } from './components/blog/BlogReactions';
@@ -54,7 +53,7 @@ const BlogPage = ({
 
       <div className='p-4 col-span-3 md:col-span-1'>
         <h4 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
-          You Might Like
+          You might also like
         </h4>
 
         <Separator className='mt-1 mb-4' />

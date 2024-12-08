@@ -1,6 +1,7 @@
 import { useParams } from 'next/navigation';
 
 import { TopicBadgeProfile } from '@/components/badges/topicBadge';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Separator } from '@/components/ui/separator';
 import useUser from '@/hooks/user/useUser';
 
@@ -18,11 +19,13 @@ export const TopicsCard = () => {
 
   return (
     <div className='mt-4'>
-      <h2 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
-        Topics
-      </h2>
+      <LinksRedirectArrow link='/explore-topics'>
+        <h2 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
+          Topics
+        </h2>
+      </LinksRedirectArrow>
 
-      <Separator className='mt-2 mb-4' />
+      <Separator className='mt-1 mb-4' />
 
       {user && user.topics && user.topics.length > 0 ? (
         <div className='flex flex-wrap gap-x-1 gap-y-2'>
@@ -33,7 +36,7 @@ export const TopicsCard = () => {
             ))}
 
           {topicsCount > maxTopicsShow ? (
-            <p className='px-1 self-center font-roboto text-sm opacity-75'>
+            <p className='px-1 self-center font-roboto text-sm opacity-80'>
               {`+${topicsCount - maxTopicsShow} more`}
             </p>
           ) : null}

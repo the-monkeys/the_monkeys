@@ -19,7 +19,7 @@ const ProfileDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <div className='hover:opacity-75 cursor-pointer'>
+        <div className='hover:opacity-80 cursor-pointer'>
           <Icon name='RiUser' size={22} />
         </div>
       </DropdownMenuTrigger>

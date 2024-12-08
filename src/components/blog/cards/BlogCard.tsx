@@ -9,6 +9,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
+import { DeleteBlogDialog } from '../actions/DeleteBlogDialog';
 import { BookmarkButton } from '../buttons/BookmarkButton';
 
 const BlogContent = ({
@@ -41,7 +42,7 @@ const BlogContent = ({
       <div className='flex-1 space-y-1'>
         <h2
           dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-          className='font-roboto font-medium text-lg sm:text-xl capitalize line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
+          className='font-roboto font-medium text-lg sm:text-xl capitalize line-clamp-2 group-hover:opacity-80'
         ></h2>
 
         <p
@@ -76,7 +77,6 @@ interface BlogCardProps {
   onEdit: (blogId: string) => void;
   modificationEnable?: boolean;
   bookmarkEnable?: boolean;
-  isShareable?: boolean;
 }
 
 export const BlogCard: FC<BlogCardProps> = ({
@@ -90,7 +90,6 @@ export const BlogCard: FC<BlogCardProps> = ({
   onEdit,
   bookmarkEnable = true,
   modificationEnable = false,
-  isShareable = true,
 }) => {
   return (
     <div className='w-full md:px-6 pt-4 pb-6 first:pt-0'>
@@ -131,15 +130,15 @@ export const BlogCard: FC<BlogCardProps> = ({
               onClick={() => onEdit(blogId)}
               className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'
             >
-              <Icon name='RiPencil' />
+              <Icon name='RiPencil' size={18} />
             </button>
           )}
 
-          <BlogActionsDropdown
-            blogId={blogId}
-            modificationEnable={modificationEnable}
-            isShareable={isShareable}
-          />
+          {status === 'authenticated' && modificationEnable && (
+            <DeleteBlogDialog blogId={blogId} />
+          )}
+
+          {!isDraft && <BlogActionsDropdown blogId={blogId} />}
         </div>
       </div>
     </div>

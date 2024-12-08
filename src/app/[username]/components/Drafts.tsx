@@ -29,7 +29,9 @@ export const Drafts = () => {
               ))}
           </div>
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='font-roboto italic opacity-75'>No drafts available</p>
+          <p className='font-roboto text-sm opacity-80'>
+            No drafts created yet.
+          </p>
         ) : (
           blogs?.blogs &&
           blogs?.blogs.map((blog) => {
@@ -46,7 +48,6 @@ export const Drafts = () => {
                 onEdit={handleEdit}
                 modificationEnable={session?.user.username === params.username}
                 bookmarkEnable={false}
-                isShareable={false}
               />
             );
           })

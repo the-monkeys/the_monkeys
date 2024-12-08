@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent } from '@/components/ui/tabs';
 
 import { Blogs } from './components/Blogs';
 import { Drafts } from './components/Drafts';
 import { NavigationTabs } from './components/NavigationTabs';
+import { Saved } from './components/Saved';
 
 export async function generateMetadata({
   params,
@@ -31,6 +32,10 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
 
         <TabsContent className='w-full' value='drafts'>
           <Drafts />
+        </TabsContent>
+
+        <TabsContent className='w-full' value='saved'>
+          <Saved />
         </TabsContent>
       </div>
     </Tabs>

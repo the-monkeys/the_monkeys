@@ -24,7 +24,7 @@ const SettingsPage = () => {
         <PageHeading heading='Settings' className='py-1 self-start' />
         <PageSubheading
           subheading='Customize your experience and manage your account settings.'
-          className='self-start opacity-75'
+          className='self-start opacity-80'
         />
       </PageHeader>
 
@@ -36,7 +36,7 @@ const SettingsPage = () => {
           <TabsList className='p-3 font-dm_sans flex md:flex-col justify-evenly flex-wrap items-start gap-4 md:gap-3'>
             <TabsTrigger
               value='profile'
-              className='md:w-full flex flex-row justify-start gap-2 opacity-75 data-[state=active]:opacity-100 hover:opacity-100'
+              className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'
             >
               <p className='font-dm_sans'>Profile</p>
 
@@ -45,7 +45,7 @@ const SettingsPage = () => {
 
             <TabsTrigger
               value='account'
-              className='md:w-full flex flex-row justify-start gap-2 opacity-75 data-[state=active]:opacity-100 hover:opacity-100'
+              className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'
             >
               <p className='font-dm_sans'>Account</p>
 
@@ -54,7 +54,7 @@ const SettingsPage = () => {
 
             <TabsTrigger
               value='security'
-              className='md:w-full flex flex-row justify-start gap-2 opacity-75 data-[state=active]:opacity-100 hover:opacity-100'
+              className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'
             >
               <p className='font-dm_sans'>Security</p>
 
@@ -63,7 +63,7 @@ const SettingsPage = () => {
 
             <TabsTrigger
               value='notifications'
-              className='md:w-full flex flex-row justify-start gap-2 opacity-75 data-[state=active]:opacity-100 hover:opacity-100'
+              className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'
             >
               <p className='font-dm_sans'>Notifications</p>
 
@@ -82,13 +82,13 @@ const SettingsPage = () => {
           </TabsContent>
 
           <TabsContent className='min-h-screen w-full' value='security'>
-            <p className='py-1 font-roboto text-center opacity-75'>
+            <p className='py-1 font-roboto text-center opacity-80'>
               Security settings will be available soon.
             </p>
           </TabsContent>
 
           <TabsContent className='min-h-screen w-full' value='notifications'>
-            <p className='py-1 font-roboto text-center opacity-75'>
+            <p className='py-1 font-roboto text-center opacity-80'>
               Notification settings will be available soon.
             </p>
           </TabsContent>
