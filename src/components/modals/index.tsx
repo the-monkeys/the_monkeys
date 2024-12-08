@@ -33,7 +33,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
     <div className='fixed left-0 top-0 flex h-full w-full justify-center bg-foreground-light/80 backdrop-blur-sm dark:bg-foreground-dark/80 z-50'>
       <div className='flex w-full flex-col items-start gap-1 self-end sm:max-w-md sm:self-center drop-shadow-xl'>
         <div className='w-full flex justify-between items-center px-2'>
-          <Logo />
+          <Logo showMobileLogo={true} />
 
           <div
             className='hover:opacity-80 cursor-pointer'

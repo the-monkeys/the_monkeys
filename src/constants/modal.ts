@@ -27,7 +27,7 @@ export const loginSteps: LoginStep[] = [
 export const publishSteps: PublishStep[] = [
   {
     id: 1,
-    heading: 'Topics',
-    subHeading: 'Select suitable topics for your blog',
+    heading: 'Add Topics',
+    subHeading: 'Add suitable topics to your blog (at most 5)',
   },
 ];

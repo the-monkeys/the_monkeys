@@ -1,29 +1,10 @@
 import Container from '../layout/Container';
 import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
-
-export const UserInfoCardSkeleton = () => {
-  return (
-    <div className='flex items-center flex-wrap gap-2'>
-      <Skeleton className='size-12 rounded-full' />
-
-      <div className='flex-1 space-y-1'>
-        <Skeleton className='w-28 sm:w-44 h-6' />
-        <Skeleton className='w-24 sm:w-40 h-3' />
-      </div>
-    </div>
-  );
-};
-
-export const UserInfoCardCompactSkeleton = () => {
-  return (
-    <div className='flex items-center gap-2'>
-      <Skeleton className='size-6 rounded-full' />
-
-      <Skeleton className='h-4 w-28' />
-    </div>
-  );
-};
+import {
+  UserInfoCardCompactSkeleton,
+  UserInfoCardSkeleton,
+} from './userSkeleton';
 
 export const PublishedBlogSkeleton = () => {
   return (
@@ -50,6 +31,7 @@ export const PublishedBlogSkeleton = () => {
         <div className='mx-auto space-y-2'>
           <Skeleton className='w-full h-44' />
           <Skeleton className='w-full h-44' />
+          <Skeleton className='w-full h-44' />
         </div>
       </div>
 
@@ -68,11 +50,19 @@ export const BlogListCardSkeleton = () => {
 
       <Skeleton className='h-28 sm:h-24 w-full' />
 
-      <div className='flex justify-end gap-1'>
-        <Skeleton className='size-6 rounded-full' />
-        <Skeleton className='size-6 rounded-full' />
-        <Skeleton className='size-6 rounded-full' />
-      </div>
+      <Skeleton className='w-full h-6' />
+    </div>
+  );
+};
+
+export const FeedListCardSkeleton = () => {
+  return (
+    <div className='md:px-6 space-y-2'>
+      <UserInfoCardCompactSkeleton />
+
+      <Skeleton className='h-28 sm:h-24 w-full' />
+
+      <Skeleton className='w-full h-6' />
     </div>
   );
 };

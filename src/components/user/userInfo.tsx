@@ -7,7 +7,7 @@ import ProfileImage, { ProfileFrame } from '../profileImage';
 import {
   UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
-} from '../skeletons/blogSkeleton';
+} from '../skeletons/userSkeleton';
 import { FollowButtonCompact } from './buttons/followButton';
 
 export const UserInfoCardCompact = ({ id }: { id?: string }) => {
@@ -31,7 +31,7 @@ export const UserInfoCardCompact = ({ id }: { id?: string }) => {
 
       <Link
         href={`/${user?.username}`}
-        className='font-dm_sans text-xs sm:text-sm hover:opacity-80'
+        className='font-dm_sans font-medium text-sm hover:opacity-80'
       >
         {user?.first_name} {user?.last_name}
       </Link>
@@ -60,7 +60,7 @@ export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
       )}
 
       <div className='flex-1'>
-        <div className='flex items-center gap-1'>
+        <div className='flex items-center gap-2'>
           <Link
             href={`/${user?.username}`}
             className='font-dm_sans text-sm sm:text-base hover:opacity-80'
@@ -68,14 +68,12 @@ export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
             {user?.first_name} {user?.last_name}
           </Link>
 
-          <span className='opacity-80'>·</span>
-
-          <p className='font-roboto text-xs sm:text-sm opacity-80'>
-            {moment(date).format('MMM DD, YYYY')}
-          </p>
+          <FollowButtonCompact username={user?.username} />
         </div>
 
-        <FollowButtonCompact username={user?.username} />
+        <p className='font-roboto text-xs opacity-80'>
+          {moment(date).format('MMM DD, YYYY')}
+        </p>
       </div>
     </div>
   );

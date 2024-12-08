@@ -11,6 +11,7 @@ const WebLogo = () => {
         height={30}
         width={120}
       />
+
       <Image
         className='hidden dark:block'
         src={'/logo-full-light.svg'}

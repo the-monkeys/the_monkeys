@@ -12,7 +12,6 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';

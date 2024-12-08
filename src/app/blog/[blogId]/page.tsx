@@ -1,5 +1,6 @@
 'use client';
 
+import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import Editor from '@/components/editor/preview';
 import Container from '@/components/layout/Container';
 import { PublishedBlogSkeleton } from '@/components/skeletons/blogSkeleton';
@@ -36,7 +37,7 @@ const BlogPage = ({
     );
 
   return (
-    <Container className='min-h-screen pb-12 grid grid-cols-3'>
+    <Container className='pb-12 min-h-screen grid grid-cols-3'>
       <div className='p-4 col-span-3 md:col-span-2'>
         <BlogInfoSection blog={blog} />
 
@@ -52,11 +53,13 @@ const BlogPage = ({
       </div>
 
       <div className='p-4 col-span-3 md:col-span-1'>
-        <h4 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
+        <ContributeAndSponsorCard className='mb-4' />
+
+        <h4 className='px-1 font-dm_sans font-medium text-base sm:text-lg opacity-80'>
           You might also like
         </h4>
 
-        <Separator className='mt-1 mb-4' />
+        <Separator className='mt-1 mb-3' />
 
         <BlogRecommendations />
       </div>

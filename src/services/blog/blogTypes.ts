@@ -21,6 +21,12 @@ export interface GetLatest100BlogsResponse {
   the_blogs: Blog[];
 }
 
+// get blogs based on topics
+
+export interface GetBlogsByTopics {
+  the_blogs: Blog[];
+}
+
 export interface IsLikedResponse {
   status: string;
   isLiked?: boolean;

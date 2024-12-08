@@ -4,75 +4,17 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
-import { Block } from '@/services/blog/blogTypes';
-import { purifyHTMLString } from '@/utils/purifyHTML';
+import { Blog } from '@/services/blog/blogTypes';
 import moment from 'moment';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { DeleteBlogDialog } from '../actions/DeleteBlogDialog';
 import { BookmarkButton } from '../buttons/BookmarkButton';
-
-const BlogContent = ({
-  titleBlock,
-  descriptionBlock,
-}: {
-  titleBlock: Block;
-  descriptionBlock?: Block;
-}) => {
-  const title = titleBlock.data.text;
-  const descriptionType = descriptionBlock?.type;
-  let descriptionContent;
-
-  switch (descriptionType) {
-    case 'list':
-      descriptionContent = descriptionBlock?.data?.items[0];
-      break;
-    case 'paragraph':
-      descriptionContent = descriptionBlock?.data?.text;
-      break;
-    case 'header':
-      descriptionContent = descriptionBlock?.data?.text;
-      break;
-    default:
-      descriptionContent = title;
-  }
-
-  return (
-    <>
-      <div className='flex-1 space-y-1'>
-        <h2
-          dangerouslySetInnerHTML={{ __html: purifyHTMLString(title) }}
-          className='font-roboto font-medium text-lg sm:text-xl capitalize line-clamp-2 group-hover:opacity-80'
-        ></h2>
-
-        <p
-          dangerouslySetInnerHTML={{
-            __html: purifyHTMLString(descriptionContent),
-          }}
-          className='font-roboto text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-2'
-        ></p>
-      </div>
-
-      {descriptionType === 'image' && (
-        <div className='h-[80px] sm:h-[110px] w-[100px] sm:w-[150px] overflow-hidden rounded-md'>
-          <img
-            src={descriptionBlock?.data?.file?.url}
-            alt='Blog Image'
-            className='h-full w-full object-cover'
-          />
-        </div>
-      )}
-    </>
-  );
-};
+import { getCardContent } from '../getBlogContent';
 
 interface BlogCardProps {
+  blog: Blog;
   status: 'authenticated' | 'loading' | 'unauthenticated';
-  titleBlock: Block;
-  descriptionBlock: Block;
-  authorId: string;
-  date: number;
-  blogId: string;
   isDraft?: boolean;
   onEdit: (blogId: string) => void;
   modificationEnable?: boolean;
@@ -80,40 +22,57 @@ interface BlogCardProps {
 }
 
 export const BlogCard: FC<BlogCardProps> = ({
+  blog,
   status,
-  titleBlock,
-  descriptionBlock,
-  authorId,
-  date,
-  blogId,
   isDraft = false,
   onEdit,
   bookmarkEnable = true,
   modificationEnable = false,
 }) => {
+  const authorId = blog?.owner_account_id;
+  const blogId = blog?.blog_id;
+  const date = blog?.blog?.time;
+
+  const { titleDiv, descriptionDiv, imageDiv } = getCardContent(blog);
+
   return (
-    <div className='w-full md:px-6 pt-4 pb-6 first:pt-0'>
+    <div className='w-full px-2 sm:px-4 md:px-6'>
       <div className='space-y-2'>
         <UserInfoCardCompact id={authorId} />
 
         {isDraft ? (
-          <div className='flex gap-2'>
-            <BlogContent
-              titleBlock={titleBlock}
-              descriptionBlock={descriptionBlock}
-            />
+          <div className='group flex flex-col sm:flex-row gap-4'>
+            <div className='flex-1'>
+              {titleDiv}
+              {descriptionDiv}
+            </div>
+
+            {imageDiv && (
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden border-1 border-foreground-light dark:border-foreground-dark rounded-md'>
+                {imageDiv}
+              </div>
+            )}
           </div>
         ) : (
-          <Link href={`/blog/${blogId}`} className='group flex gap-2'>
-            <BlogContent
-              titleBlock={titleBlock}
-              descriptionBlock={descriptionBlock}
-            />
+          <Link
+            href={`/blog/${blogId}`}
+            className='group flex flex-col sm:flex-row gap-4'
+          >
+            <div className='flex-1'>
+              {titleDiv}
+              {descriptionDiv}
+            </div>
+
+            {imageDiv && (
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] bg-foreground-light dark:bg-foreground-dark overflow-hidden rounded-md shadow-md'>
+                {imageDiv}
+              </div>
+            )}
           </Link>
         )}
       </div>
 
-      <div className='mt-3 flex justify-between items-center gap-4'>
+      <div className='mt-2 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-2'>
           <p className='font-roboto text-xs'>
             {moment(date).format('MMM DD, YYYY')}

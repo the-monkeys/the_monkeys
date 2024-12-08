@@ -17,11 +17,13 @@ export const BlogRecommendations = () => {
   return (
     <div className='flex flex-col gap-4'>
       {blogs?.the_blogs.length ? (
-        blogs?.the_blogs.slice(0, 5).map((blog) => {
-          return <BlogRecommendationCard key={blog?.blog_id} blog={blog} />;
+        blogs?.the_blogs.map((blog) => {
+          return blog?.blog?.blocks.length < 5 ? null : (
+            <BlogRecommendationCard key={blog?.blog_id} blog={blog} />
+          );
         })
       ) : (
-        <p className='py-4 font-roboto text-sm text-alert-red text-center'>
+        <p className='font-roboto text-sm opacity-80 text-center'>
           No blogs available.
         </p>
       )}
