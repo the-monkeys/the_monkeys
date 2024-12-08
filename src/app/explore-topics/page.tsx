@@ -17,7 +17,7 @@ import { CategoryButton } from './components/CategoryButton';
 import { TopicsList } from './components/TopicsList';
 
 const ExploreTopicsPage = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const { categories, isError, isLoading } = useGetAllCategories();
   const [selectedLetter, setSelectedLetter] = useState<string>('');
 

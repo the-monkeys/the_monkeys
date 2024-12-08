@@ -25,7 +25,7 @@ export const TopicsCard = () => {
         </h2>
       </LinksRedirectArrow>
 
-      <Separator className='mt-1 mb-4' />
+      <Separator className='mt-1 mb-3' />
 
       {user && user.topics && user.topics.length > 0 ? (
         <div className='flex flex-wrap gap-x-1 gap-y-2'>

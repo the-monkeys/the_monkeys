@@ -14,15 +14,17 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
     return (
       <div className='flex flex-col items-center space-y-2'>
         <Loader />
-        <p className='font-roboto opacity-80'>Fetching activities</p>
+        <p className='font-roboto text-sm text-center opacity-80'>
+          Fetching activities
+        </p>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <p className='mb-4 font-roboto text-sm text-center opacity-80'>
-        Activity info not available
+      <p className='font-roboto text-sm text-center opacity-80'>
+        No activities yet.
       </p>
     );
   }

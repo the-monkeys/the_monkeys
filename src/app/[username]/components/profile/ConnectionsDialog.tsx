@@ -57,7 +57,11 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
 
         <Tabs defaultValue='followers' className='space-y-4'>
           <TabsList className='flex gap-0 bg-background-light dark:bg-background-dark z-30'>
-            <TabsTrigger value='followers' className='w-full'>
+            <TabsTrigger
+              disabled={follwerLoading}
+              value='followers'
+              className='w-full'
+            >
               <p className='font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
                 Followers
               </p>
@@ -65,7 +69,11 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
               <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
             </TabsTrigger>
 
-            <TabsTrigger value='following' className='w-full'>
+            <TabsTrigger
+              disabled={follwingLoading}
+              value='following'
+              className='w-full'
+            >
               <p className='font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
                 Following
               </p>

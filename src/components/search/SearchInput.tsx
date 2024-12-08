@@ -39,6 +39,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
       >
         <Icon
           name='RiSearch'
+          size={18}
           className='opacity-80 group-focus-within:opacity-100'
         />
 
@@ -51,7 +52,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
       </div>
 
       {searchQuery.trim() && (
-        <div className='mt-2 p-4 border-1 border-foreground-light dark:border-foreground-dark shadow-md  rounded-lg sm:rounded-xl'>
+        <div className='mt-2 p-4 border-1 border-foreground-light dark:border-foreground-dark shadow-md  rounded-xl'>
           {searchUsersLoading ? (
             <SearchResultSkeleton />
           ) : (

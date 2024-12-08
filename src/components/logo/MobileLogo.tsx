@@ -4,20 +4,20 @@ const MobileLogo = () => {
   return (
     <>
       <Image
-        className='dark:hidden'
-        src={'/logo-dark.svg'}
+        src={'/logo-full-dark.svg'}
         alt='Monkeys Logo'
         title='Monkeys Logo'
-        height={30}
-        width={30}
+        height={22}
+        width={88}
+        className='dark:hidden'
       />
       <Image
-        className='hidden dark:block'
-        src={'/logo-light.svg'}
+        src={'/logo-full-light.svg'}
         alt='Monkeys Logo'
         title='Monkeys Logo'
-        height={30}
-        width={30}
+        height={22}
+        width={88}
+        className='hidden dark:block'
       />
     </>
   );

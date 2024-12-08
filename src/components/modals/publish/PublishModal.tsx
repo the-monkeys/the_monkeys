@@ -9,8 +9,10 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from '@/components/ui/form';
 import { publishSteps } from '@/constants/modal';
@@ -64,7 +66,6 @@ const PublishModal = ({
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values);
     setSelectedTags(values.topics);
     handlePublishStep();
   }
@@ -110,21 +111,20 @@ const PublishModal = ({
         )}
       </ModalHeader>
 
-      <ModalContent className='space-y-2'>
-        <p className='font-dm_sans'>
-          Choose topics (at most 5)
-          <span className='block opacity-80 text-sm'>
-            Topics provide readers with a glimpse into the content of your blog.
-          </span>
-        </p>
-
-        <div className='py-2 flex items-center gap-x-1 gap-y-2 flex-wrap'>
-          {selectedTopics.map((topic) => (
-            <Badge variant='secondary' key={topic.value} className='text-xl'>
-              {topic.label}
-            </Badge>
-          ))}
-        </div>
+      <ModalContent className='space-y-4'>
+        {selectedTopics.length ? (
+          <div className='flex items-center gap-x-1 gap-y-2 flex-wrap'>
+            {selectedTopics.map((topic) => (
+              <Badge
+                key={topic.value}
+                variant='secondary'
+                className='font-dm_sans text-base sm:text-base hover:bg-opacity-100 dark:hover:bg-opacity-100'
+              >
+                {topic.label}
+              </Badge>
+            ))}
+          </div>
+        ) : null}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
@@ -134,10 +134,11 @@ const PublishModal = ({
               render={({ field }) => {
                 return (
                   <FormItem className='space-y-1 flex flex-col justify-start'>
-                    <p className='font-roboto text-sm'>
-                      Select Topics
-                      <span className='text-destructive'>*</span>
-                    </p>
+                    <FormLabel className='font-roboto text-sm'>
+                      Choose Topics*
+                    </FormLabel>
+
+                    <FormDescription></FormDescription>
 
                     <FormControl>
                       <FormSearchSelect
@@ -149,7 +150,7 @@ const PublishModal = ({
                           }
                         }}
                         options={formatCategories() || []}
-                        placeholder='add suitable topics'
+                        placeholder='Add suitable topics'
                       />
                     </FormControl>
                     <FormMessage />

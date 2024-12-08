@@ -82,13 +82,13 @@ const SettingsPage = () => {
           </TabsContent>
 
           <TabsContent className='min-h-screen w-full' value='security'>
-            <p className='py-1 font-roboto text-center opacity-80'>
+            <p className='py-1 font-roboto text-sm opacity-80 text-center'>
               Security settings will be available soon.
             </p>
           </TabsContent>
 
           <TabsContent className='min-h-screen w-full' value='notifications'>
-            <p className='py-1 font-roboto text-center opacity-80'>
+            <p className='py-1 font-roboto text-sm opacity-80 text-center'>
               Notification settings will be available soon.
             </p>
           </TabsContent>

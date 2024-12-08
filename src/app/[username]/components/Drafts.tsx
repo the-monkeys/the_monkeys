@@ -19,7 +19,7 @@ export const Drafts = () => {
 
   return (
     <div className='min-h-screen'>
-      <div className='flex flex-col items-center'>
+      <div className='flex flex-col gap-6 sm:gap-8'>
         {isLoading ? (
           <div className='w-full space-y-6'>
             {Array(4)
@@ -29,7 +29,7 @@ export const Drafts = () => {
               ))}
           </div>
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='font-roboto text-sm opacity-80'>
+          <p className='w-full font-roboto text-sm opacity-80 text-center'>
             No drafts created yet.
           </p>
         ) : (
@@ -37,13 +37,9 @@ export const Drafts = () => {
           blogs?.blogs.map((blog) => {
             return (
               <BlogCard
-                status={status}
                 key={blog?.blog_id}
-                titleBlock={blog?.blog?.blocks[0]}
-                descriptionBlock={blog?.blog?.blocks[1]}
-                authorId={blog?.owner_account_id}
-                date={blog?.blog?.time}
-                blogId={blog?.blog_id}
+                blog={blog}
+                status={status}
                 isDraft={true}
                 onEdit={handleEdit}
                 modificationEnable={session?.user.username === params.username}
