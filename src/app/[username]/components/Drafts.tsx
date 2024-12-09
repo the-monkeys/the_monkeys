@@ -11,11 +11,20 @@ export const Drafts = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const params = useParams<{ username: string }>();
-  const { blogs, isLoading } = useGetAllDraftBlogs(session?.user.account_id);
+  const { blogs, isLoading, isError } = useGetAllDraftBlogs(
+    session?.user.account_id
+  );
 
   const handleEdit = (blogId: string) => {
     router.push(`/edit/${blogId}?source=draft`);
   };
+
+  if (isError)
+    return (
+      <p className='w-full font-roboto text-sm opacity-80 text-center'>
+        Oops! Something went wrong. Please try again.
+      </p>
+    );
 
   return (
     <div className='min-h-screen'>

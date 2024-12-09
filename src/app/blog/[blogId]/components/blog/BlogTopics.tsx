@@ -8,17 +8,13 @@ export const BlogTopics = ({
   topics: string[];
   className?: string;
 }) => {
+  if (!topics.length) return null;
+
   return (
     <div className={twMerge(className, 'flex items-center gap-1 flex-wrap')}>
-      {topics.length ? (
-        topics?.map((topic, index) => (
-          <TopicBadgeBlog key={index} topic={topic} />
-        ))
-      ) : (
-        <span className='font-roboto text-xs md:text-sm opacity-80'>
-          No topics available
-        </span>
-      )}
+      {topics?.map((topic, index) => (
+        <TopicBadgeBlog key={index} topic={topic} />
+      ))}
     </div>
   );
 };

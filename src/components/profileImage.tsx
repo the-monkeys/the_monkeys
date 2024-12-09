@@ -39,7 +39,7 @@ export const ProfileImage = ({
 
   if (isError)
     return (
-      <p className='font-roboto text-3xl text-text-light dark:text-text-dark'>
+      <p className='font-roboto text-lg sm:text-xl text-text-light dark:text-text-dark'>
         {firstName.slice(0, 2)}
       </p>
     );

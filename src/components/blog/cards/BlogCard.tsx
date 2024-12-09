@@ -33,10 +33,13 @@ export const BlogCard: FC<BlogCardProps> = ({
   const blogId = blog?.blog_id;
   const date = blog?.blog?.time;
 
-  const { titleDiv, descriptionDiv, imageDiv } = getCardContent(blog);
+  const { titleDiv, descriptionDiv, imageDiv } = getCardContent({
+    blog,
+    isDraft,
+  });
 
   return (
-    <div className='w-full px-2 sm:px-4 md:px-6'>
+    <div className='w-full md:px-6 '>
       <div className='space-y-2'>
         <UserInfoCardCompact id={authorId} />
 
@@ -48,7 +51,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             </div>
 
             {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden border-1 border-foreground-light dark:border-foreground-dark rounded-md'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden border-1 border-border-light/25 dark:border-border-dark/25 rounded-md'>
                 {imageDiv}
               </div>
             )}
@@ -58,13 +61,13 @@ export const BlogCard: FC<BlogCardProps> = ({
             href={`/blog/${blogId}`}
             className='group flex flex-col sm:flex-row gap-4'
           >
-            <div className='flex-1'>
+            <div className='flex-1' data-underline={false ? 'false' : 'true '}>
               {titleDiv}
               {descriptionDiv}
             </div>
 
             {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] bg-foreground-light dark:bg-foreground-dark overflow-hidden rounded-md shadow-md'>
+              <div className='h-[150px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden border-1 border-border-light/25 dark:border-border-dark/25 rounded-md'>
                 {imageDiv}
               </div>
             )}

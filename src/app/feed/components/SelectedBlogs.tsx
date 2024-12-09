@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 
+import Link from 'next/link';
+
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
+import Icon from '@/components/icon';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { FeedListCardSkeleton } from '@/components/skeletons/blogSkeleton';
+import { Button } from '@/components/ui/button';
 import axiosInstance from '@/services/api/axiosInstance';
 import { GetBlogsByTopics } from '@/services/blog/blogTypes';
 import { z } from 'zod';
@@ -61,9 +66,18 @@ export const SelectedBlogs = ({
             ))}
         </div>
       ) : !blogs?.the_blogs || blogs?.the_blogs?.length === 0 ? (
-        <p className='font-roboto text-sm opacity-80 text-center'>
-          No blogs available for this topic.
-        </p>
+        <div className='flex flex-col items-center gap-4'>
+          <p className='font-roboto text-sm opacity-80 text-center'>
+            No blogs available for this topic.
+          </p>
+
+          <Button size='sm' className='rounded-full ' asChild>
+            <Link href='/create'>
+              <Icon name='RiPencil' className='mr-1' />
+              Write Your Own
+            </Link>
+          </Button>
+        </div>
       ) : (
         blogs?.the_blogs.map((blog) => {
           return (
@@ -71,17 +85,6 @@ export const SelectedBlogs = ({
           );
         })
       )}
-      {/* {blogs.the_blogs.length > 0 ? (
-        blogs.the_blogs.map((blog, index) => (
-          <div key={index} className='border p-4 rounded-md shadow'>
-            <h3 className='font-bold text-lg'>
-              {blog.blog.blocks[0].data.text}
-            </h3>
-          </div>
-        ))
-      ) : (
-        <p className='font-roboto text-sm opacity-80'>No blogs available.</p>
-      )} */}
     </div>
   );
 };

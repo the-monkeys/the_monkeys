@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { publishSteps } from '@/constants/modal';
-import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
+import useGetAllTopics from '@/hooks/user/useGetAllTopics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -52,7 +52,7 @@ const PublishModal = ({
   publishedBlogLoading: boolean;
 }) => {
   const [publishStep, setPublishStep] = useState<PublishStep>(publishSteps[0]);
-  const { categories, isError, isLoading } = useGetAllCategories();
+  const { topics } = useGetAllTopics();
   const [instrumentSearch, setInstrumentSearch] = useState('');
   const [selectedTopics, setSelectedTopics] = useState<
     { value: string; label: string }[]
@@ -89,12 +89,14 @@ const PublishModal = ({
     );
   };
 
-  const formatCategories = () => {
-    const categoriesArray: { value: string; label: string }[] = [];
-    for (const category in categories?.category) {
-      categoriesArray.push({ value: category, label: category });
+  const formatTopics = () => {
+    const topicsArray: { value: string; label: string }[] = [];
+
+    for (const topic of topics?.topics || []) {
+      topicsArray.push({ value: topic.topic, label: topic.topic });
     }
-    return categoriesArray;
+
+    return topicsArray;
   };
 
   return (
@@ -149,7 +151,7 @@ const PublishModal = ({
                             setInstrumentSearch(e);
                           }
                         }}
-                        options={formatCategories() || []}
+                        options={formatTopics() || []}
                         placeholder='Add suitable topics'
                       />
                     </FormControl>
