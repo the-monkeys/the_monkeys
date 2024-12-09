@@ -16,6 +16,7 @@ import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
+import { WSS_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
@@ -78,9 +79,7 @@ const CreatePage = () => {
 
   // Function to create and manage WebSocket connection
   const createWebSocket = useCallback((blogId: string, token: string) => {
-    const ws = new WebSocket(
-      `wss://dev.themonkeys.site/api/v1/blog/draft/${blogId}?token=${token}`
-    );
+    const ws = new WebSocket(`${WSS_URL}/blog/draft/${blogId}?token=${token}`);
 
     ws.onopen = () => {
       console.log('WebSocket connection opened');

@@ -65,18 +65,9 @@ export const CategoryButton = ({ category, topics }: props) => {
       setLoading(true);
       setStatus(null);
 
-      await axiosInstance.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/follow-topics/${username}`,
-        {
-          topics,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
+      await axiosInstance.put(`/user/follow-topics/${username}`, {
+        topics,
+      });
 
       toast({
         title: 'Success',

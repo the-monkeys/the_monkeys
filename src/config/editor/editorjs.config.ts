@@ -68,7 +68,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
             return {
               success: 1,
               file: {
-                url: `https://dev.themonkeys.site/api/v1/files/post/${blogId}/${response.data.new_file_name}`,
+                url: `${API_URL}/files/post/${blogId}/${response.data.new_file_name}`,
               },
             };
           },
