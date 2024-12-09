@@ -34,7 +34,9 @@ const ProfileDropdown = () => {
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiLoginBox' size={18} className='text-alert-green' />
-              <p className='font-dm_sans text-sm sm:text-base'>Login</p>
+              <p className='font-dm_sans text-sm sm:text-base text-alert-green'>
+                Login
+              </p>
             </div>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -46,9 +48,7 @@ const ProfileDropdown = () => {
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiUser' size={18} />
-              <p className='font-dm_sans font-medium text-sm sm:text-base'>
-                Profile
-              </p>
+              <p className='font-dm_sans text-sm sm:text-base'>Profile</p>
             </Link>
           </DropdownMenuItem>
 
@@ -57,9 +57,7 @@ const ProfileDropdown = () => {
           <DropdownMenuItem asChild>
             <Link href='/settings' className='flex w-full items-center gap-2'>
               <Icon name='RiSettings3' size={18} />
-              <p className='font-dm_sans font-medium text-sm sm:text-base'>
-                Settings
-              </p>
+              <p className='font-dm_sans text-sm sm:text-base'>Settings</p>
             </Link>
           </DropdownMenuItem>
 
@@ -71,9 +69,7 @@ const ProfileDropdown = () => {
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiNotification3' size={18} />
-              <p className='font-dm_sans font-medium text-sm sm:text-base'>
-                Notifications
-              </p>
+              <p className='font-dm_sans text-sm sm:text-base'>Notifications</p>
             </Link>
           </DropdownMenuItem>
 
@@ -93,7 +89,7 @@ const ProfileDropdown = () => {
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiLogoutBoxR' size={18} className='text-alert-red' />
-              <p className='font-dm_sans font-medium text-sm sm:text-base'>
+              <p className='font-dm_sans text-sm sm:text-base text-alert-red'>
                 Logout
               </p>
             </div>

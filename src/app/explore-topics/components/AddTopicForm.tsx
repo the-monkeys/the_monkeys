@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { Loader } from '@/components/loader';
 import { SelectInputStyles } from '@/components/styles/SelectInputStyles';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,9 +17,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { Category } from '@/services/category/categoryTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { RiLoader4Fill } from '@remixicon/react';
 import axios from 'axios';
-import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { useForm } from 'react-hook-form';
@@ -103,16 +102,13 @@ export default function TopicForm({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='space-y-8 max-w-3xl mx-auto py-5 w-full'
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
         <FormField
           control={form.control}
           name='Topic'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Topic</FormLabel>
+              <FormLabel className='font-roboto text-sm'>Topic</FormLabel>
               <FormControl>
                 <Input
                   placeholder='Topic'
@@ -131,16 +127,16 @@ export default function TopicForm({
           name='Category'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category</FormLabel>
+              <FormLabel className='font-roboto text-sm'>Category</FormLabel>
               <FormControl>
                 <Select
                   isDisabled={loading}
+                  onChange={(e: any) => field.onChange(e.value)}
                   options={categoryOptions}
                   isLoading={isCategoriesLoading}
                   placeholder='Select a category'
                   styles={SelectInputStyles(theme == 'dark' ? true : false)}
-                  onChange={(e: any) => field.onChange(e.value)}
-                  className='w-full text-sm'
+                  className='w-full'
                   classNamePrefix='react-select'
                 />
               </FormControl>
@@ -149,26 +145,10 @@ export default function TopicForm({
           )}
         />
 
-        {/* Submit Button */}
-        <div className='flex justify-between items-center'>
-          <div>
-            <RiLoader4Fill
-              className={clsx(
-                'animate-spin',
-                loading ? 'visible' : 'invisible'
-              )}
-            />
-          </div>
-          <div>
-            <Button
-              variant='secondary'
-              disabled={loading}
-              type='submit'
-              className='float-right'
-            >
-              Add
-            </Button>
-          </div>
+        <div className='pt-4'>
+          <Button disabled={loading} type='submit' className='float-right'>
+            {loading && <Loader />} Add
+          </Button>
         </div>
       </form>
     </Form>

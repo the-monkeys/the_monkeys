@@ -37,16 +37,16 @@ const config = {
           light: '#D9D9D9',
         },
         border: {
-          dark: '#707070',
-          light: '#808080',
+          dark: '#696969',
+          light: '#878787',
         },
         text: {
           dark: '#FAFAFA',
           light: '#1E1E1E',
         },
         alert: {
-          red: '#F61E1E',
-          green: '#2B8C43',
+          red: '#EF4444',
+          green: '#22C55E',
         },
         primary: {
           monkeyOrange: '#FF5542',

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSession } from 'next-auth/react';
 
-import { AllBlogs } from './components/AllBlogs';
+import { LatestBlogs } from './components/LatestBlogs';
 import { SelectedBlogs } from './components/SelectedBlogs';
 
 const BlogFeedPage = ({
@@ -18,14 +18,14 @@ const BlogFeedPage = ({
   return (
     <div>
       <Tabs
-        defaultValue={searchParams.topic ? searchParams.topic : 'All'}
+        defaultValue={searchParams.topic ? searchParams.topic : 'Latest'}
         className='space-y-6'
       >
         <TabsList className='px-0 sm:px-2 md:px-6 flex justify-start gap-2 bg-background-light dark:bg-background-dark z-30'>
-          <TabsTrigger value='All'>
+          <TabsTrigger value='Latest'>
             <Link href={`/feed`}>
               <p className='px-2 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
-                All
+                Latest
               </p>
 
               <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
@@ -47,9 +47,9 @@ const BlogFeedPage = ({
 
         <TabsContent
           className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
-          value='All'
+          value='Latest'
         >
-          <AllBlogs status={status} />
+          <LatestBlogs status={status} />
         </TabsContent>
 
         <TabsContent

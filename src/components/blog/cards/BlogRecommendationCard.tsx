@@ -12,7 +12,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
       <UserInfoCardCompact id={blog?.owner_account_id} />
 
       <Link href={`/blog/${blog?.blog_id}`} className='group'>
-        {getCardContent(blog).recommendationTitleDiv}
+        {getCardContent({ blog }).recommendationTitleDiv}
       </Link>
 
       <p className='font-roboto text-xs opacity-80'>

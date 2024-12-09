@@ -19,7 +19,7 @@ export const FeedBlogCard = ({
   const blogId = blog?.blog_id;
   const date = blog?.blog?.time;
 
-  const { titleDiv, descriptionDiv, imageDiv } = getCardContent(blog);
+  const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
 
   return (
     <div className='w-full px-0 sm:px-4 md:px-6'>
@@ -36,7 +36,7 @@ export const FeedBlogCard = ({
           </div>
 
           {imageDiv && (
-            <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] bg-foreground-light dark:bg-foreground-dark overflow-hidden rounded-md shadow-md'>
+            <div className='h-[150px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden border-1 border-border-light/25 dark:border-border-dark/25 rounded-md'>
               {imageDiv}
             </div>
           )}

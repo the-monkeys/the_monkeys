@@ -11,11 +11,20 @@ export const Blogs = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const params = useParams<{ username: string }>();
-  const { blogs, isLoading } = useGetPublishedBlogByAccountId(params.username);
+  const { blogs, isLoading, isError } = useGetPublishedBlogByAccountId(
+    params.username
+  );
 
   const handleEdit = (blogId: string) => {
     router.push(`/edit/${blogId}?source=published`);
   };
+
+  if (isError)
+    return (
+      <p className='w-full font-roboto text-sm opacity-80 text-center'>
+        Oops! Something went wrong. Please try again.
+      </p>
+    );
 
   return (
     <div className='min-h-screen'>

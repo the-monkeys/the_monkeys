@@ -1,7 +1,13 @@
 import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
-export const getCardContent = (blog: Blog) => {
+export const getCardContent = ({
+  blog,
+  isDraft = false,
+}: {
+  blog: Blog;
+  isDraft?: boolean;
+}) => {
   const blocks = blog?.blog?.blocks || [];
   const titleContent = blocks[0]?.data?.text;
   let descriptionContent = '';
@@ -9,8 +15,9 @@ export const getCardContent = (blog: Blog) => {
 
   const titleDiv = (
     <h2
+      data-underline={isDraft ? 'false' : 'true'}
       dangerouslySetInnerHTML={{ __html: purifyHTMLString(titleContent) }}
-      className='font-roboto font-medium text-lg sm:text-xl capitalize line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
+      className='font-roboto font-medium text-lg sm:text-xl capitalize line-clamp-2 data-[underline=true]:group-hover:underline underline-offset-2 decoration-1 '
     ></h2>
   );
 
@@ -40,7 +47,7 @@ export const getCardContent = (blog: Blog) => {
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(descriptionContent),
           }}
-          className='font-roboto text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-2'
+          className='font-roboto font-light text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-2'
         ></p>
       );
     }

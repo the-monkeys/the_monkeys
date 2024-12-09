@@ -2,12 +2,19 @@ import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import { FeedListCardSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
-export const AllBlogs = ({
+export const LatestBlogs = ({
   status,
 }: {
   status: 'authenticated' | 'loading' | 'unauthenticated';
 }) => {
   const { blogs, isLoading, isError } = useGetLatest100Blogs();
+
+  if (isError)
+    return (
+      <p className='w-full font-roboto text-sm opacity-80 text-center'>
+        Oops! Something went wrong. Please try again.
+      </p>
+    );
 
   return (
     <div className='flex flex-col gap-6 sm:gap-8'>

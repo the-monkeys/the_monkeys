@@ -20,7 +20,7 @@ const BlogFeedPageLayout = ({
       </div>
 
       <div className='h-fit col-span-3 md:col-span-1 order-1 md:order-2'>
-        <ContributeAndSponsorCard className='mb-4' />
+        <ContributeAndSponsorCard className='mb-2' />
 
         <SearchInput />
       </div>

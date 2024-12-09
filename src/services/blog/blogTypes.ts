@@ -16,6 +16,12 @@ export interface GetDraftBlogResponse {
   blogs: Blog[];
 }
 
+// get all bookmarked blogs
+
+export interface GetBookmarkedBlogsResponse {
+  blogs: Blog[];
+}
+
 // get latest 100 blog api response
 export interface GetLatest100BlogsResponse {
   the_blogs: Blog[];
