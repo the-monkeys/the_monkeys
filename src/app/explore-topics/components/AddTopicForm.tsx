@@ -15,9 +15,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
+import axiosInstance from '@/services/api/axiosInstance';
 import { Category } from '@/services/category/categoryTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { useForm } from 'react-hook-form';
@@ -73,15 +73,7 @@ export default function TopicForm({
         category: values.Category,
       };
 
-      await axios.post(
-        `https://dev.themonkeys.site/api/v1/user/topics`,
-        { ...format },
-        {
-          headers: {
-            Authorization: `Bearer ${userData?.user.token}`,
-          },
-        }
-      );
+      await axiosInstance.post(`/user/topics`, { ...format });
       toast({
         variant: 'success',
         title: 'Success',

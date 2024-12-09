@@ -12,6 +12,7 @@ import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
+import { WSS_URL } from '@/constants/api';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -52,9 +53,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Function to create and manage WebSocket connection
   const createWebSocket = useCallback((blogId: string, token: string) => {
-    const ws = new WebSocket(
-      `wss://dev.themonkeys.site/api/v1/blog/draft/${blogId}?token=${token}`
-    );
+    const ws = new WebSocket(`${WSS_URL}/blog/draft/${blogId}?token=${token}`);
 
     ws.onopen = () => {
       console.log('WebSocket connection opened');
