@@ -12,7 +12,7 @@ export const Saved = () => {
   if (isError)
     return (
       <p className='w-full font-roboto text-sm opacity-80 text-center'>
-        Oops! Something went wrong. Please try again.
+        No saved blogs yet.
       </p>
     );
 

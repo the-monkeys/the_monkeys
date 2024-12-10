@@ -10,6 +10,7 @@ import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
 
 import Container from '../Container';
+import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
 const Nav = () => {
@@ -36,23 +37,25 @@ const Nav = () => {
 
   return (
     <header
-      className={`sticky left-0 top-${top} bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-xl z-30`}
+      className={`hidden md:block sticky left-0 top-${top} bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-xl z-30`}
     >
       <Container className='w-full p-4 flex items-center justify-between'>
         <Link href='/'>
-          <Logo showMobileLogo={true} />
+          <Logo />
         </Link>
 
         <div className='flex items-center space-x-3'>
-          <div className='flex items-center gap-4'>
+          <div className='flex items-center gap-3'>
             <ThemeSwitch />
 
+            <NotificationDropdown />
+
             <ProfileDropdown />
+
+            <Separator orientation='vertical' className='h-8' />
+
+            <CreateButton />
           </div>
-
-          <Separator orientation='vertical' className='h-8' />
-
-          <CreateButton />
         </div>
       </Container>
     </header>

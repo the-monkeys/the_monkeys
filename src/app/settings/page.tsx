@@ -33,7 +33,7 @@ const SettingsPage = () => {
         className='px-4 grid grid-cols-4 gap-4 md:gap-6'
       >
         <div className='col-span-4 md:col-span-1 flex flex-col'>
-          <TabsList className='p-3 font-dm_sans flex md:flex-col justify-evenly flex-wrap items-start gap-4 md:gap-3'>
+          <TabsList className='py-3 font-dm_sans flex md:flex-col justify-evenly flex-wrap items-start gap-4 md:gap-3'>
             <TabsTrigger
               value='profile'
               className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'

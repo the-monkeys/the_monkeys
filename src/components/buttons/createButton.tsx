@@ -7,16 +7,16 @@ export const CreateButton = () => {
   return (
     <Button
       variant='brand'
+      size='icon'
       className='group rounded-full hover:text-text-dark hover:bg-opacity-100'
       asChild
     >
       <Link href='/create' title='Create Blogs Here'>
         <Icon
           name='RiPencil'
-          className='mr-2 group-hover:animate-icon-shake'
+          className='group-hover:animate-icon-shake'
           size={18}
         />
-        Create
       </Link>
     </Button>
   );

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
-import Icon from '@/components/icon';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
 import { mutate } from 'swr';
@@ -65,11 +64,8 @@ export const MarkReadButton = ({
   };
 
   return (
-    <button className='self-end' disabled={loading} onClick={onMarkRead}>
-      <Badge variant='default' className='font-dm_sans cursor-pointer'>
-        <Icon name='RiCheck' size={18} className='mr-1' />
-        Mark as read
-      </Badge>
-    </button>
+    <Button size='sm' disabled={loading} onClick={onMarkRead}>
+      Mark as read
+    </Button>
   );
 };
