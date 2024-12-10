@@ -64,7 +64,7 @@ h2.ce-header {
 
 li.cdx-list__item {
   padding: 2px 0;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 300;
   font-family: var(--font-poppins);
   line-height: 28px !important;
@@ -420,7 +420,7 @@ li.cdx-list__item {
   }
 
   li.cdx-list__item {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .image-tool__image img {

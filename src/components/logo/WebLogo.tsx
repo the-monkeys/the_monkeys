@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const WebLogo = () => {
   return (
-    <>
+    <div className='hidden md:block'>
       <Image
         className='dark:hidden'
         src={'/logo-full-dark.svg'}
@@ -20,7 +20,7 @@ const WebLogo = () => {
         height={30}
         width={120}
       />
-    </>
+    </div>
   );
 };
 

@@ -25,7 +25,7 @@ const ProfileDropdown = () => {
       </DropdownMenuTrigger>
 
       {status === 'unauthenticated' ? (
-        <DropdownMenuContent className='m-2 w-44'>
+        <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44'>
           <DropdownMenuItem>
             <div
               onClick={() => {
@@ -41,7 +41,7 @@ const ProfileDropdown = () => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       ) : (
-        <DropdownMenuContent className='m-2 w-36 sm:w-44'>
+        <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44'>
           <DropdownMenuItem asChild>
             <Link
               href={`/${data?.user?.username}`}
@@ -65,11 +65,11 @@ const ProfileDropdown = () => {
 
           <DropdownMenuItem asChild>
             <Link
-              href={`/notifications`}
+              href={`/activity?user=${data?.user?.username}`}
               className='flex w-full items-center gap-2'
             >
-              <Icon name='RiNotification3' size={18} />
-              <p className='font-dm_sans text-sm sm:text-base'>Notifications</p>
+              <Icon name='RiHistory' size={18} />
+              <p className='font-dm_sans text-sm sm:text-base'>Activity</p>
             </Link>
           </DropdownMenuItem>
 

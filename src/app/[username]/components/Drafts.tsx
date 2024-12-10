@@ -22,7 +22,7 @@ export const Drafts = () => {
   if (isError)
     return (
       <p className='w-full font-roboto text-sm opacity-80 text-center'>
-        Oops! Something went wrong. Please try again.
+        No drafts created yet.
       </p>
     );
 
