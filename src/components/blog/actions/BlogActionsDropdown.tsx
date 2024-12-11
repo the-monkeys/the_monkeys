@@ -6,28 +6,27 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
+import { LIVE_URL } from '@/constants/api';
 
 export const BlogActionsDropdown = ({ blogId }: { blogId?: string }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
-      navigator.clipboard
-        .writeText(`https://themonkeys.live/blog/${blogId}`)
-        .then(
-          () => {
-            toast({
-              variant: 'default',
-              title: 'Blog Link Copied',
-              description: 'The blog link has been copied.',
-            });
-          },
-          () => {
-            toast({
-              variant: 'error',
-              title: 'Copy Failed',
-              description: 'Unable to copy the blog link.',
-            });
-          }
-        );
+      navigator.clipboard.writeText(`${LIVE_URL}/blog/${blogId}`).then(
+        () => {
+          toast({
+            variant: 'default',
+            title: 'Blog Link Copied',
+            description: 'The blog link has been copied.',
+          });
+        },
+        () => {
+          toast({
+            variant: 'error',
+            title: 'Copy Failed',
+            description: 'Unable to copy the blog link.',
+          });
+        }
+      );
     }
   };
 

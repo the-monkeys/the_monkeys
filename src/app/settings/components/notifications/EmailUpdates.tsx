@@ -1,17 +1,17 @@
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 
-export const Visibility = () => {
+export const EmailUpdates = () => {
   return (
     <div className='p-1 space-y-2'>
       <p className='font-roboto text-sm opacity-80'>
-        Keep yourself anonymous while using Monkeys.
+        Receive latest updates and promotional messages from Monkeys.
       </p>
 
       <div className='mt-4 flex items-center space-x-2'>
-        <Switch id='anonymous' disabled />
-        <Label htmlFor='anonymous' className='font-roboto text-sm'>
-          Go Anonymous
+        <Switch id='emailUpdates' disabled />
+        <Label htmlFor='emailUpdates' className='font-roboto text-sm'>
+          Receive Updates
         </Label>
       </div>
     </div>

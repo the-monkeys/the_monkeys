@@ -51,7 +51,6 @@ export const Username = () => {
         username: values.username,
       })
       .then((res) => {
-        console.log(res);
         updateUserSession(res.data.token);
         form.reset();
         toast({
@@ -89,7 +88,14 @@ export const Username = () => {
                   <FormItem>
                     <FormMessage />
                     <FormControl>
-                      <Input placeholder='Enter username' {...field} />
+                      <Input
+                        placeholder={
+                          session?.user?.username
+                            ? `@${session?.user?.username}`
+                            : 'Enter username'
+                        }
+                        {...field}
+                      />
                     </FormControl>
                   </FormItem>
                 )}

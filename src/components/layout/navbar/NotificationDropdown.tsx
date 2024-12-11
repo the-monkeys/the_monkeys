@@ -51,11 +51,9 @@ const NotificationDropdown = () => {
 
           <Separator className='mt-1 mb-2' />
 
-          <div className='mb-4'>
+          <div className='mb-4 space-y-1'>
             {unreadNotifications?.length ? (
-              unreadNotifications.slice(0, 4).map((notificationItem) => {
-                if (notificationItem.seen) return null;
-
+              unreadNotifications.slice(0, 5).map((notificationItem) => {
                 return (
                   <div
                     key={notificationItem.id}
@@ -81,7 +79,7 @@ const NotificationDropdown = () => {
             asChild
           >
             <Link href='/notifications'>
-              View all
+              See all
               <Icon name='RiArrowRightUp' size={18} className='ml-1' />
             </Link>
           </Button>

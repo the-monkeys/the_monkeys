@@ -6,11 +6,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
+import { LIVE_URL } from '@/constants/api';
 
 export const ProfileActionsDropdown = ({ username }: { username: string }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(`https://themonkeys.live/${username}`).then(
+      navigator.clipboard.writeText(`${LIVE_URL}/${username}`).then(
         () => {
           toast({
             variant: 'default',
