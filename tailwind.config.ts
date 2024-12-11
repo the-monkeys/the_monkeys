@@ -1,3 +1,5 @@
+import { Poppins } from 'next/font/google';
+
 import type { Config } from 'tailwindcss';
 
 const config = {
@@ -21,7 +23,7 @@ const config = {
       playfair_Display: ['var(--font-playfair_Display)'],
       roboto: ['var(--font-roboto)'],
       dm_sans: ['var(--font-dm_sans)'],
-      inter: ['var(--font-poppins)'],
+      poppins: ['var(--font-poppins)'],
     },
     extend: {
       colors: {

@@ -1,4 +1,5 @@
 import { API_URL } from '@/constants/api';
+import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -24,7 +25,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       class: Paragraph,
       inlineToolbar: true,
       config: {
-        placeholder: 'Add content',
+        placeholder: 'Type something',
       },
     },
     list: {
@@ -35,18 +36,24 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       },
     },
     delimiter: Delimiter,
+    code: {
+      class: Code,
+      config: {
+        placeholder: 'Type code',
+      },
+    },
     quote: {
       class: Quote,
       inlineToolbar: true,
       config: {
-        quotePlaceholder: 'Add Quote',
-        captionPlaceholder: 'Add author details',
+        quotePlaceholder: 'Type something',
+        captionPlaceholder: 'Type something',
       },
     },
     image: {
       class: Image,
       config: {
-        captionPlaceholder: '', // Set an empty string to remove the caption
+        captionPlaceholder: 'Type something',
         uploader: {
           async uploadByFile(file: File) {
             const session = await getSession();
