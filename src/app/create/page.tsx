@@ -233,9 +233,7 @@ const CreatePage = () => {
             <p className='font-roboto text-xs sm:text-sm opacity-80'>Saved</p>
           )}
 
-          <Button variant='secondary' onClick={() => setShowModal(true)}>
-            Publish
-          </Button>
+          <Button onClick={() => setShowModal(true)}>Publish</Button>
         </div>
 
         <Suspense fallback={<Loader />}>

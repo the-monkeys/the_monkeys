@@ -1,3 +1,4 @@
+import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -32,6 +33,12 @@ export const editorConfig: EditorConfig = {
       class: Image,
     },
     delimiter: Delimiter,
+    code: {
+      class: Code,
+      config: {
+        placholder: '',
+      },
+    },
     quote: {
       class: Quote,
       config: {

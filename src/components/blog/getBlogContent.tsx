@@ -47,7 +47,7 @@ export const getCardContent = ({
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(descriptionContent),
           }}
-          className='font-roboto font-light text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-2'
+          className='font-roboto text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-2'
         ></p>
       );
     }

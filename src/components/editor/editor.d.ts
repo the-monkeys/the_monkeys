@@ -31,3 +31,8 @@ declare module '@editorjs/quote' {
   import Quote from '@editorjs/quote';
   export = Quote;
 }
+
+declare module '@editorjs/code' {
+  import Code from '@editorjs/code';
+  export = Code;
+}

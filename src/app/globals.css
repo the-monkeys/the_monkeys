@@ -41,21 +41,21 @@
 }
 
 h1.ce-header {
-  padding: 12px 0 10px;
+  padding: 0 0 14px 0 !important;
   font-weight: 600;
   font-family: var(--font-dm_sans);
   font-size: 30px;
 }
 
 h2.ce-header {
-  padding: 10px 0 6px;
+  padding: 0 0 12px 0 !important;
   font-weight: 500;
   font-family: var(--font-poppins);
   font-size: 22px;
 }
 
 .ce-paragraph {
-  padding: 4px 0;
+  padding: 0 0 10px 0 !important;
   font-size: 18px;
   font-weight: 300;
   font-family: var(--font-poppins);
@@ -63,7 +63,7 @@ h2.ce-header {
 }
 
 li.cdx-list__item {
-  padding: 2px 0;
+  padding: 0 !important;
   font-size: 18px;
   font-weight: 300;
   font-family: var(--font-poppins);
@@ -95,35 +95,69 @@ li.cdx-list__item {
 /* list tool */
 
 .cdx-list {
-  padding: 0 0 0 30px !important;
+  padding: 0 0 12px 30px !important;
 }
 
 /* quote tool */
 
 .cdx-quote {
-  padding: 16px 10px !important;
+  padding: 14px 16px !important;
+  position: relative;
+}
+
+.cdx-quote::before {
+  content: '❝';
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 30px;
+  opacity: 0.5;
+  color: #2c2c2c;
+}
+
+.dark .cdx-quote::before {
+  color: #d9d9d9;
 }
 
 .cdx-quote__text {
-  padding: 0 0 12px 0 !important;
-  font-family: var(--font-dm_sans);
-  font-size: 20px;
-  text-align: center;
+  padding: 0 !important;
+  font-family: var(--font-poppins);
+  font-size: 18px;
+  border-radius: 0px !important;
 }
 
 .cdx-quote__caption {
-  padding: 0 !important;
-  font-family: var(--font-poppins);
-  opacity: 0.8;
-  font-style: italic;
-  font-size: 14px;
-  text-align: center;
+  display: none;
 }
 
-/* image-tool */
+/* code tool */
+
+.ce-code {
+  padding: 0 0 10px 0 !important;
+  background: transparent !important;
+}
+
+.ce-code__textarea {
+  min-height: 250px !important;
+  padding: 12px 16px !important;
+  border: none !important;
+  background: #d9d9d9 !important;
+  color: #1e1e1e !important;
+  font-size: 16px !important;
+  font-family: monospace !important;
+  border-radius: 8px;
+  resize: none !important;
+}
+
+.dark .ce-code__textarea {
+  background: #2c2c2c !important;
+  color: #fafafa !important;
+}
+
+/* image tool */
 
 .image-tool {
-  padding: 12px 0 !important;
+  padding: 10px 0 !important;
   overflow: hidden;
 }
 
@@ -190,7 +224,7 @@ li.cdx-list__item {
 }
 
 .ce-popover-item__title {
-  font-family: var(--font-roboto);
+  font-family: var(--font-dm_sans);
   font-size: 14px !important;
 }
 
@@ -289,7 +323,8 @@ li.cdx-list__item {
   color: #d9d9d9;
 }
 
-/* inline toolbar styles */
+/* inline toolbar*/
+
 .ce-inline-toolbar,
 .ce-inline-toolbar--showed {
   background-color: #f2f2f2;
@@ -327,10 +362,15 @@ li.cdx-list__item {
 }
 
 /* conversion toolbar */
+
 .ce-conversion-toolbar,
 .ce-conversion-toolbar--showed {
   background-color: #f2f2f2;
   border: 1px solid rgba(43, 43, 43, 0.25);
+}
+
+.ce-conversion-tool {
+  font-family: var(--font-dm_sans);
 }
 
 .ce-conversion-tool--focused {
@@ -340,7 +380,7 @@ li.cdx-list__item {
 
 .ce-conversion-tool:hover {
   background-color: transparent !important;
-  color: #ff5542;
+  opacity: 0.8;
 }
 
 .ce-conversion-tool__icon {
@@ -349,6 +389,7 @@ li.cdx-list__item {
 }
 
 .ce-conversion-tool__icon svg {
+  width: 18px;
   color: #d9d9d9;
 }
 
@@ -370,12 +411,11 @@ li.cdx-list__item {
 /* delimiter styles */
 
 .ce-delimiter {
-  padding: 16px 0 !important;
+  padding: 12px 0 !important;
 }
 
 .ce-delimiter::before {
   content: '● ● ●' !important;
-  opacity: 0.8;
   font-size: 18px !important;
   line-height: normal !important;
   height: fit-content !important;
@@ -423,8 +463,26 @@ li.cdx-list__item {
     font-size: 16px;
   }
 
+  .cdx-quote {
+    padding: 14px 16px !important;
+  }
+
+  .cdx-quote__text {
+    font-size: 16px;
+  }
+
   .image-tool__image img {
     border-radius: 8px;
+  }
+
+  .ce-code__textarea {
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+  }
+
+  .dark .ce-code__textarea {
+    padding: 10px 14px !important;
+    font-size: 14px !important;
   }
 
   .ce-popover {
@@ -441,7 +499,7 @@ li.cdx-list__item {
   }
 
   .ce-delimiter {
-    padding: 14px 0 !important;
+    padding: 10px 0 !important;
   }
 
   .ce-delimiter:before {

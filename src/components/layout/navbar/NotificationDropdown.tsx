@@ -45,7 +45,7 @@ const NotificationDropdown = () => {
           <h3 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
             Notifications{' '}
             <span className='text-sm sm:text-base text-brand-orange'>
-              ({unreadNotifications?.length || '0'})
+              {unreadNotifications?.length || '0'}
             </span>
           </h3>
 
