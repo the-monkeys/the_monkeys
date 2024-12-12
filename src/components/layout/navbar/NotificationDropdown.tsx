@@ -51,7 +51,7 @@ const NotificationDropdown = () => {
 
           <Separator className='mt-1 mb-2' />
 
-          <div className='mb-4 space-y-1'>
+          <div className='mb-2 space-y-1'>
             {unreadNotifications?.length ? (
               unreadNotifications.slice(0, 5).map((notificationItem) => {
                 return (
@@ -73,7 +73,7 @@ const NotificationDropdown = () => {
           </div>
 
           <Button
-            variant='outline'
+            variant='secondary'
             size='sm'
             onClick={() => setOpen(false)}
             asChild

@@ -56,7 +56,7 @@ const ProfileDropdown = () => {
 
           <DropdownMenuItem asChild>
             <Link href='/settings' className='flex w-full items-center gap-2'>
-              <Icon name='RiSettings3' size={18} />
+              <Icon name='RiSettings' size={18} />
               <p className='font-dm_sans text-sm sm:text-base'>Settings</p>
             </Link>
           </DropdownMenuItem>

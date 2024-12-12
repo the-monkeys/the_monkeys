@@ -1,6 +1,5 @@
 import { Notification } from '@/services/notification/notificationTypes';
-
-import { MarkReadButton } from './MarkReadButton';
+import { twMerge } from 'tailwind-merge';
 
 export const NotificationCard = ({
   notificationData,
@@ -8,7 +7,14 @@ export const NotificationCard = ({
   notificationData?: Notification;
 }) => {
   return (
-    <div className='px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-2 border-1 border-foreground-light dark:border-foreground-dark rounded-md'>
+    <div
+      className={twMerge(
+        'px-4 py-3 flex flex-col sm:flex-row items-start sm:items-center gap-3 border-1 rounded-md',
+        !notificationData?.seen
+          ? 'border-brand-orange'
+          : 'border-foreground-light dark:border-foreground-dark'
+      )}
+    >
       <div className='flex-1 overflow-hidden space-y-1'>
         <h4 className='w-fit font-roboto text-xs sm:text-sm opacity-80'>
           Message Description
@@ -18,13 +24,6 @@ export const NotificationCard = ({
           {notificationData?.message}
         </p>
       </div>
-
-      {!notificationData?.seen && (
-        <MarkReadButton
-          notificationId={notificationData?.id}
-          userId={notificationData?.user_id}
-        />
-      )}
     </div>
   );
 };

@@ -219,6 +219,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               />
             )}
           </Suspense>
+
           {showModal && (
             <PublishModal
               setModal={setShowModal}

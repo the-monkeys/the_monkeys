@@ -15,7 +15,7 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
       <div className='flex flex-col items-center space-y-2'>
         <Loader />
         <p className='font-roboto text-sm text-center opacity-80'>
-          Fetching activities
+          Retrieving your activities...
         </p>
       </div>
     );

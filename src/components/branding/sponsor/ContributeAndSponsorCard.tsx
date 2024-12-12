@@ -37,7 +37,7 @@ export const ContributeAndSponsorCard = ({
             href='https://github.com/the-monkeys/the_monkeys'
             target='_blank'
           >
-            <Icon name='RiCodeSSlash' className='mr-2 text-blue-500' />
+            <Icon name='RiCodeSSlash' className='mr-1 text-blue-500' />
             Contribute
           </Link>
         </Button>
@@ -48,7 +48,7 @@ export const ContributeAndSponsorCard = ({
           asChild
         >
           <Link href='https://github.com/sponsors/the-monkeys' target='_blank'>
-            <Icon name='RiShakeHands' className='mr-2 text-pink-500' />
+            <Icon name='RiShakeHands' className='mr-1 text-pink-500' />
             Sponsor
           </Link>
         </Button>

@@ -17,6 +17,8 @@ import {
 import { Input } from '@/components/ui/input';
 import { Popover } from '@/components/ui/popover';
 import { toast } from '@/components/ui/use-toast';
+import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
+import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialgo';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -28,8 +30,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Section } from './Section';
-import { DeleteProfileDialog } from './profile/DeleteProfileDialog';
-import { UpdateProfileDialog } from './profile/UpdateProfileDialog';
 import { parseDateTime } from './profile/parseDate';
 
 export const Profile = () => {
@@ -110,7 +110,7 @@ export const Profile = () => {
                 Profile Photo
               </p>
 
-              <ProfileFrame className='size-28 sm:size-32'>
+              <ProfileFrame className='ring-2 ring-foreground-light dark:ring-foreground-dark size-28 sm:size-32'>
                 {data?.user && (
                   <ProfileImage
                     firstName={data.user.first_name}

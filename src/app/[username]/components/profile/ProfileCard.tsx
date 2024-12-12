@@ -51,7 +51,7 @@ export const ProfileCard = ({
           {`${user?.first_name} ${user?.last_name}`}
         </h2>
 
-        <div className='flex gap-1'>
+        <div className='flex item-center gap-1'>
           <p className='font-roboto text-sm opacity-80 truncate'>
             {`@${user?.username}`}
           </p>

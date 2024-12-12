@@ -17,7 +17,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
   if (status === 'unauthenticated' || data?.user?.username === username)
     return null;
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return null;
 
   const onUserFollow = async () => {
     setLoading(true);

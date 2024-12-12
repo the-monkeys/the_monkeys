@@ -44,8 +44,8 @@ export const ProfileActionsDropdown = ({ username }: { username: string }) => {
             onClick={copyToClipboard}
             className='flex w-full items-center gap-2'
           >
-            <Icon name='RiShareForward' />
-            <p className='font-roboto text-sm sm:text-base'>Share Profile</p>
+            <Icon name='RiClipboard' size={18} />
+            <p className='font-dm_sans text-sm sm:text-base'>Copy Link</p>
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

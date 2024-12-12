@@ -10,7 +10,9 @@ import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
 
 import Container from '../Container';
-import NotificationDropdown from './NotificationDropdown';
+// Use as fallback if WebSocket is not working.
+// import NotificationDropdown from './NotificationDropdown';
+import WSNotificationDropdown from './WSNotificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
 const Nav = () => {
@@ -48,7 +50,10 @@ const Nav = () => {
           <div className='flex items-center gap-3'>
             <ThemeSwitch />
 
-            <NotificationDropdown />
+            {/* Use <NotificationDropdown /> as a fallback if WebSocket is not working.
+            Uncomment only when necessary. */}
+
+            <WSNotificationDropdown />
 
             <ProfileDropdown />
 

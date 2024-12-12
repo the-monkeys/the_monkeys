@@ -38,7 +38,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://themonkeys.live/'),
+  metadataBase: new URL('https://monkeys.com.co/'),
   alternates: {
     canonical: '/',
     languages: {
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
   },
   verification: {
-    google: '-aw7tEMRsboqWp8YhQwHAT2tEddw1uk_FPS3F3hvRic',
+    google: 'WIMiYru73CLiTFT9yEP2zIgQCv07AxBETTstbKe7Fws',
   },
 };
 
