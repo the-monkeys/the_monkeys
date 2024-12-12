@@ -9,7 +9,9 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { Account } from './components/Account';
+import { Notifications } from './components/Notifications';
 import { Profile } from './components/Profile';
+import { Security } from './components/Security';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -82,15 +84,11 @@ const SettingsPage = () => {
           </TabsContent>
 
           <TabsContent className='min-h-screen w-full' value='security'>
-            <p className='py-1 font-roboto text-sm opacity-80 text-center'>
-              Security settings will be available soon.
-            </p>
+            <Security />
           </TabsContent>
 
           <TabsContent className='min-h-screen w-full' value='notifications'>
-            <p className='py-1 font-roboto text-sm opacity-80 text-center'>
-              Notification settings will be available soon.
-            </p>
+            <Notifications />
           </TabsContent>
         </div>
       </Tabs>

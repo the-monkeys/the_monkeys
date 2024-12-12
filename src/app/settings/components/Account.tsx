@@ -1,7 +1,4 @@
-import React from 'react';
-
 import { Section } from './Section';
-import { Danger } from './account/Danger';
 import { Email } from './account/Email';
 import { Password } from './account/Password';
 import { Username } from './account/Username';
@@ -24,10 +21,6 @@ export const Account = () => {
 
       <Section sectionTitle='Change Visibility'>
         <Visibility />
-      </Section>
-
-      <Section sectionTitle='Delete Account' isDanger={true}>
-        <Danger />
       </Section>
     </div>
   );

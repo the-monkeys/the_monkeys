@@ -168,7 +168,7 @@ li.cdx-list__item {
 }
 
 .image-tool__image img {
-  border-radius: 10px;
+  border-radius: 8px;
 }
 
 .ce-popover-item[data-item-name='withBorder'] {
@@ -494,7 +494,7 @@ li.cdx-list__item {
     right: var(--offset);
     bottom: auto;
     top: 100%;
-    border-radius: 10px;
+    border-radius: 8px;
     margin-top: 1rem;
   }
 

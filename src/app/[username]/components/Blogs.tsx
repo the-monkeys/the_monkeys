@@ -21,9 +21,11 @@ export const Blogs = () => {
 
   if (isError)
     return (
-      <p className='w-full font-roboto text-sm opacity-80 text-center'>
-        No blogs published yet.
-      </p>
+      <div className='min-h-screen'>
+        <p className='w-full font-roboto text-sm opacity-80 text-center'>
+          No blogs published yet.
+        </p>
+      </div>
     );
 
   return (

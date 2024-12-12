@@ -6,11 +6,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
+import { LIVE_URL } from '@/constants/api';
 
 export const ProfileActionsDropdown = ({ username }: { username: string }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(`https://themonkeys.live/${username}`).then(
+      navigator.clipboard.writeText(`${LIVE_URL}/${username}`).then(
         () => {
           toast({
             variant: 'default',
@@ -43,8 +44,8 @@ export const ProfileActionsDropdown = ({ username }: { username: string }) => {
             onClick={copyToClipboard}
             className='flex w-full items-center gap-2'
           >
-            <Icon name='RiShareForward' />
-            <p className='font-roboto text-sm sm:text-base'>Share Profile</p>
+            <Icon name='RiClipboard' size={18} />
+            <p className='font-dm_sans text-sm sm:text-base'>Copy Link</p>
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

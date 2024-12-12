@@ -2,18 +2,21 @@
 
 import { Loader } from '@/components/loader';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
+import { useSession } from 'next-auth/react';
 
+import { MarkReadButton } from './components/MarkReadButton';
 import { NotificationCard } from './components/NotificationCard';
 
 const NotificationsPage = () => {
   const { notifications, isLoading, isError } = useGetAllNotifications();
+  const { data: session } = useSession();
 
   if (isLoading) {
     return (
       <div className='flex flex-col items-center space-y-2'>
         <Loader />
         <p className='font-roboto text-sm text-center opacity-80'>
-          Fetching notifications
+          Fetching your notifications...
         </p>
       </div>
     );
@@ -27,22 +30,37 @@ const NotificationsPage = () => {
     );
   }
 
+  let unreadNotifications: { id: number }[] = [];
+
+  if (notifications?.notifications) {
+    unreadNotifications = notifications?.notifications.notification.filter(
+      (notification) => !notification.seen
+    );
+  }
+
   return (
-    <div className='mx-auto w-full sm:w-4/5 md:w-3/5 px-4 space-y-2'>
-      {notifications?.notifications.notification.length ? (
-        notifications?.notifications.notification.map((notificationItem) => {
-          return (
-            <NotificationCard
-              key={notificationItem.id}
-              notificationData={notificationItem}
-            />
-          );
-        })
-      ) : (
-        <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-80'>
-          No notifications yet.
-        </p>
-      )}
+    <div className='mx-auto w-full sm:w-4/5 md:w-3/5 px-4 flex flex-col items-center sm:items-end space-y-4'>
+      <MarkReadButton
+        notificationIds={unreadNotifications}
+        userId={session?.user.username}
+      />
+
+      <div className='w-full space-y-2'>
+        {notifications?.notifications.notification.length ? (
+          notifications?.notifications.notification.map((notificationItem) => {
+            return (
+              <NotificationCard
+                key={notificationItem.id}
+                notificationData={notificationItem}
+              />
+            );
+          })
+        ) : (
+          <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-80'>
+            No notifications yet.
+          </p>
+        )}
+      </div>
     </div>
   );
 };

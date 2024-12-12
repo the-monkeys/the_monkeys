@@ -38,7 +38,7 @@ const BlogPage = ({
 
   return (
     <Container className='pb-12 min-h-screen grid grid-cols-3'>
-      <div className='p-4 col-span-3 md:col-span-2'>
+      <div className='p-4 col-span-3 lg:col-span-2'>
         <BlogInfoSection blog={blog} />
 
         <Separator className='mt-2' />
@@ -52,8 +52,8 @@ const BlogPage = ({
         <BlogReactions blogId={blog?.blog_id} />
       </div>
 
-      <div className='p-4 col-span-3 md:col-span-1'>
-        <ContributeAndSponsorCard className='mb-4' />
+      <div className='p-4 col-span-3 lg:col-span-1'>
+        <ContributeAndSponsorCard className='mb-6' />
 
         <h4 className='px-1 font-dm_sans font-medium text-base sm:text-lg opacity-80'>
           You might also like

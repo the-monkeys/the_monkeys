@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 
 import { Loader } from '@/components/loader';
+import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +23,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
+import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
+import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialgo';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -115,12 +118,12 @@ export const UpdateDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant='secondary' className='flex-1'>
-          Update
+        <Button variant='secondary' className='w-full'>
+          Update Details
         </Button>
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent className='max-h-[60vh] sm:max-h-[80vh] overflow-auto'>
         <DialogTitle>Update Details</DialogTitle>
 
         <DialogDescription className='hidden'></DialogDescription>
@@ -130,6 +133,25 @@ export const UpdateDialog = () => {
         ) : (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+              <div className='flex flex-wrap items-end gap-2'>
+                <p className='w-full font-roboto text-sm'>Profile Photo</p>
+
+                <ProfileFrame className='ring-2 ring-foreground-light dark:ring-foreground-dark size-24 sm:size-28'>
+                  {data?.user && (
+                    <ProfileImage
+                      firstName={data.user.first_name}
+                      username={data.user.username}
+                    />
+                  )}
+                </ProfileFrame>
+
+                <div className='space-x-2'>
+                  <DeleteProfileDialog />
+
+                  <UpdateProfileDialog />
+                </div>
+              </div>
+
               <FormField
                 control={form.control}
                 name='first_name'
@@ -204,6 +226,7 @@ export const UpdateDialog = () => {
                   </FormItem>
                 )}
               />
+
               <div className='pt-4'>
                 <Button
                   disabled={loading}

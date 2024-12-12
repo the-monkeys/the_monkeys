@@ -2,8 +2,8 @@ import { IconName } from '@/components/icon';
 
 export const activityIcon = {
   logged: 'RiKey2' as IconName,
-  changed: 'RiSettings3' as IconName,
-  updated: 'RiSettings3' as IconName,
+  changed: 'RiSettings' as IconName,
+  updated: 'RiSettings' as IconName,
   verified: 'RiVerifiedBadge' as IconName,
   published: 'RiArticle' as IconName,
   created: 'RiDraft' as IconName,

@@ -9,7 +9,7 @@ import {
 export const PublishedBlogSkeleton = () => {
   return (
     <Container className='pb-12 min-h-screen grid grid-cols-3 gap-4'>
-      <div className='p-4 col-span-3 md:col-span-2'>
+      <div className='p-4 col-span-3 lg:col-span-2'>
         <div>
           <UserInfoCardSkeleton />
 
@@ -35,7 +35,7 @@ export const PublishedBlogSkeleton = () => {
         </div>
       </div>
 
-      <div className='px-4 col-span-3 md:col-span-1 space-y-4'>
+      <div className='px-4 col-span-3 lg:col-span-1 space-y-4'>
         <Skeleton className='h-44 w-full' />
         <Skeleton className='h-28 w-full' />
       </div>

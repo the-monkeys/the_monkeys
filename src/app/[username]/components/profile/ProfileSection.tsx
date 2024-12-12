@@ -2,11 +2,8 @@
 
 import React from 'react';
 
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import { useSession } from 'next-auth/react';
 
@@ -34,15 +31,8 @@ export const ProfileSection = () => {
       <ProfileCard isAuthenticated={isAuthenticated} />
 
       {isAuthenticated && (
-        <div className='pt-4 flex gap-1'>
+        <div className='pt-4'>
           <UpdateDialog />
-
-          <Button variant='secondary' className='flex-1' asChild>
-            <Link href={`/activity?user=${params.username}`}>
-              Activity
-              <Icon name='RiArrowRightUp' className='ml-1' />
-            </Link>
-          </Button>
         </div>
       )}
 

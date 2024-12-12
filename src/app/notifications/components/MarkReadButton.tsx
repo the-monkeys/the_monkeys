@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -16,10 +17,10 @@ const markReadSchema = z.object({
 });
 
 export const MarkReadButton = ({
-  notificationId,
+  notificationIds,
   userId,
 }: {
-  notificationId?: number;
+  notificationIds?: { id: number }[];
   userId?: string;
 }) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,7 +28,7 @@ export const MarkReadButton = ({
   const onMarkRead = async () => {
     const payload = {
       user_id: userId,
-      notification: [{ id: notificationId }],
+      notification: notificationIds,
     };
 
     setLoading(true);
@@ -64,8 +65,13 @@ export const MarkReadButton = ({
   };
 
   return (
-    <Button size='sm' disabled={loading} onClick={onMarkRead}>
-      Mark as read
+    <Button
+      size='sm'
+      disabled={loading}
+      onClick={onMarkRead}
+      className='rounded-full'
+    >
+      <Icon name='RiCheck' size={18} className='mr-1' /> Mark all as read
     </Button>
   );
 };

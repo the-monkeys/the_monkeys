@@ -36,8 +36,8 @@ export const AddTopicForm = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
         <Button variant='outline' className='rounded-full'>
-          <p>Create Topic</p>
-          <Icon name='RiAdd' size={18} className='ml-2' />
+          <Icon name='RiAdd' size={18} className='mr-1' />
+          <p>Add your topic</p>
         </Button>
       </DialogTrigger>
 

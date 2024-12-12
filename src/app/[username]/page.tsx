@@ -16,7 +16,6 @@ export async function generateMetadata({
 
   return {
     title: `${username}`,
-    description: 'Manage and view your profile on Monkeys.',
   };
 }
 

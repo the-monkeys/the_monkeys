@@ -45,7 +45,7 @@ export const FeedBlogCard = ({
 
       <div className='mt-2 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-2'>
-          <p className='font-roboto text-xs'>
+          <p className='font-roboto text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
 

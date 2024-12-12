@@ -21,9 +21,11 @@ export const Drafts = () => {
 
   if (isError)
     return (
-      <p className='w-full font-roboto text-sm opacity-80 text-center'>
-        No drafts created yet.
-      </p>
+      <div className='min-h-screen'>
+        <p className='w-full font-roboto text-sm opacity-80 text-center'>
+          No drafts created yet.
+        </p>
+      </div>
     );
 
   return (

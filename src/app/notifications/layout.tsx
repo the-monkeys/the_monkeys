@@ -17,7 +17,7 @@ const NotificationPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='pb-12 min-h-screen space-y-6 md:space-y-10'>
+    <Container className='pb-12 min-h-screen space-y-4 md:space-y-6'>
       <PageHeader>
         <PageHeading heading='Notifications' className='py-1' />
         <PageSubheading

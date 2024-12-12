@@ -6,6 +6,10 @@ export interface Notification {
   seen?: boolean;
 }
 
+export interface WSNotification {
+  notification: Notification[];
+}
+
 export interface allNotificationsResponse {
   notifications: {
     notification: Notification[];

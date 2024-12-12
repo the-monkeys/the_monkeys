@@ -9,7 +9,9 @@ import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 
 import Container from '../Container';
-import NotificationDropdown from './NotificationDropdown';
+// Use as fallback if WebSocket is not working.
+// import NotificationDropdown from './NotificationDropdown';
+import WSNotificationDropdown from './WSNotificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
 const MobileNav = () => {
@@ -47,7 +49,10 @@ const MobileNav = () => {
           <div className='flex items-center gap-3'>
             <ThemeSwitch />
 
-            <NotificationDropdown />
+            {/* Use <NotificationDropdown /> as a fallback if WebSocket is not working.
+            Uncomment only when necessary. */}
+
+            <WSNotificationDropdown />
 
             <ProfileDropdown />
           </div>

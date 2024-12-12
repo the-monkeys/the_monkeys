@@ -13,6 +13,7 @@ import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import moment from 'moment';
 
 import { ConnectionsDialog } from './ConnectionsDialog';
+import { UpdateUsernameDialog } from './UpdateUsernameDialog';
 
 export const ProfileCard = ({
   isAuthenticated,
@@ -50,7 +51,13 @@ export const ProfileCard = ({
           {`${user?.first_name} ${user?.last_name}`}
         </h2>
 
-        <p className='font-roboto text-sm opacity-80 truncate'>{`@${user?.username}`}</p>
+        <div className='flex item-center gap-1'>
+          <p className='font-roboto text-sm opacity-80 truncate'>
+            {`@${user?.username}`}
+          </p>
+
+          <UpdateUsernameDialog />
+        </div>
       </div>
 
       <div className='flex items-center flex-wrap gap-x-2'>
