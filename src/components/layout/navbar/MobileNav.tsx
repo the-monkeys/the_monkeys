@@ -59,7 +59,7 @@ const MobileNav = () => {
         </Container>
       </header>
 
-      <div className='md:hidden fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly border-t-1 border-foreground-light dark:border-foreground-dark bg-background-light dark:bg-background-dark z-50'>
+      <div className='md:hidden fixed bottom-0 left-0 flex w-full px-4 py-2 items-center justify-evenly border-t-1 border-foreground-light dark:border-foreground-dark bg-background-light dark:bg-background-dark z-50'>
         <CreateButton />
       </div>
     </>

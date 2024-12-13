@@ -85,7 +85,7 @@ export const VerifyEmailStatus = () => {
   }, [searchParams]);
 
   return (
-    <div className='flex flex-col items-center px-5 py-4'>
+    <div className='flex flex-col items-center px-4 py-5'>
       <Suspense
         fallback={
           <div>

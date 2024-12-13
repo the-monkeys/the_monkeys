@@ -1,72 +1,66 @@
 import Link from 'next/link';
 
 import HomeBanner from '@/components/branding/HomeBanner';
+import { LinksSection } from '@/components/branding/LinksSection';
+import { AI } from '@/components/branding/featuresGrid/AI';
+import { CollaborativeBlogging } from '@/components/branding/featuresGrid/CollaborativeBlogging';
+import { DiverseTopics } from '@/components/branding/featuresGrid/DiscoverDiversity';
+import { RespectfulEnv } from '@/components/branding/featuresGrid/RespectfulEnv';
+import { VersionControl } from '@/components/branding/featuresGrid/VersionControl';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { Button } from '@/components/ui/button';
 
 const LandingPage = () => {
   return (
-    <Container className='min-h-screen pb-12 px-5 space-y-10 sm:space-y-12'>
+    <Container className='min-h-screen space-y-8 sm:space-y-10'>
       <HomeBanner />
 
-      <div className='mx-auto max-w-5xl grid grid-cols-2 gap-4 md:gap-6'>
-        <div className='col-span-2 md:col-span-1 px-3 sm:px-4 py-4 sm:py-5 flex flex-col bg-foreground-light/25 dark:bg-foreground-dark/25 border-1 border-foreground-light dark:border-foreground-dark rounded-xl'>
-          <h2 className='pb-2 font-dm_sans font-medium text-xl sm:text-2xl'>
-            <span className='text-brand-orange'>Discover</span> Endless
-            Possibilities
-          </h2>
+      <h2 className='mx-auto w-fit pt-8 px-4 font-dm_sans text-lg sm:text-xl md:text-2xl text-center leading-7'>
+        With Monkeys,{' '}
+        <span className='px-1 bg-brand-orange/25'>create content</span> ✍ that
+        truly makes a difference.
+      </h2>
 
-          <p className='mb-4 sm:mb-6 font-roboto font-light text-sm md:text-base opacity-80'>
-            With an ever-growing range of topics, there&apos;s always something
-            fresh and exciting to explore.
-          </p>
+      <LinksSection />
 
-          <Button
-            className='group w-fit pl-6 pr-4 self-end rounded-full'
-            asChild
-          >
-            <Link href='/feed'>
-              Discover
-              <Icon
-                name='RiArrowRight'
-                size={16}
-                className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1'
-              />
-            </Link>
-          </Button>
-        </div>
+      <h2 className='mx-auto w-full sm:w-4/5 pt-[150px] sm:pt[200px] px-4 font-arvo text-2xl sm:text-3xl md:text-4xl text-center'>
+        We are built to empower creativity, collaboration, and meaningful
+        storytelling.
+      </h2>
 
-        <div className='col-span-2 md:col-span-1 p-4 flex flex-col bg-foreground-light/25 dark:bg-foreground-dark/25 border-1 border-foreground-light dark:border-foreground-dark rounded-xl'>
-          <h2 className='pb-2 font-dm_sans font-medium text-xl sm:text-2xl'>
-            <span className='text-brand-orange'>News </span> That Matters
-          </h2>
+      <div className='bg-gradient-to-t from-brand-orange from-[15%] px-4 py-[80px]'>
+        <div className='grid grid-cols-3 gap-2 sm:gap-4 mx-auto max-w-5xl'>
+          <CollaborativeBlogging />
 
-          <p className='mb-4 sm:mb-6 font-roboto font-light text-sm md:text-base opacity-80'>
-            Stay ahead of the curve with the most important news and stories
-            shaping the world today.
-          </p>
+          <DiverseTopics />
 
-          <Button
-            variant='secondary'
-            className='group w-fit pl-6 pr-4 self-end rounded-full'
-            asChild
-          >
-            <Link href='/news'>
-              News
-              <Icon
-                name='RiArrowRight'
-                size={16}
-                className='mx-2 transition-all group-hover:ml-3 group-hover:mr-1'
-              />
-            </Link>
-          </Button>
+          <AI />
+
+          <VersionControl />
+
+          <RespectfulEnv />
         </div>
       </div>
 
-      <h2 className='mx-auto w-fit py-6 px-4 font-dm_sans text-2xl sm:text-3xl text-center'>
-        Create content ✍ that makes a difference.
-      </h2>
+      <div className='py-[80px] sm:py-[100px] px-4 flex flex-col items-center gap-4'>
+        <p className='font-dm_sans text-base sm:text-lg md:text-xl text-center'>
+          Start your blogging journey today—collaborate, create, and share
+          without limits!
+        </p>
+
+        <Button size='lg' className='group px-6 rounded-full shadow-md' asChild>
+          <Link href='/create' title='Create'>
+            <div>
+              <Icon
+                name='RiPencil'
+                className='mr-2 group-hover:animate-icon-shake'
+              />
+            </div>
+            <p className='font-dm_sans'>Start Writing</p>
+          </Link>
+        </Button>
+      </div>
     </Container>
   );
 };

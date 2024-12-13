@@ -16,7 +16,7 @@
 
 .radial_light {
   background: radial-gradient(
-    52% 52% at 52% 52%,
+    50% 50% at 52% 52%,
     rgba(242, 242, 242, 0) 0%,
     #f2f2f2 100%
   );
@@ -24,7 +24,7 @@
 
 .radial_dark {
   background: radial-gradient(
-    52% 52% at 52% 52%,
+    50% 50% at 52% 52%,
     rgba(25, 25, 25, 0) 0%,
     #191919 100%
   );

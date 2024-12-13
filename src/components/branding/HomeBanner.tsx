@@ -6,7 +6,7 @@ import MonkeysBranding from './MonkeysBranding';
 
 const HomeBanner = () => {
   return (
-    <div className='py-6 relative flex flex-col justify-center items-center min-h-60 md:min-h-80'>
+    <div className='py-6 px-4 relative flex flex-col justify-center items-center min-h-60 md:min-h-80'>
       <div className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] h-full w-full -z-10'>
         <MonkeysBranding />
       </div>
@@ -24,7 +24,7 @@ const HomeBanner = () => {
         <Button
           size='lg'
           variant='brand'
-          className='group px-6 rounded-full hover:text-text-dark hover:bg-opacity-80 shadow-md'
+          className='group px-6 rounded-full hover:text-text-dark hover:bg-opacity-100 shadow-md'
           asChild
         >
           <Link href='/create' title='Create'>
@@ -34,7 +34,7 @@ const HomeBanner = () => {
                 className='mr-2 group-hover:animate-icon-shake'
               />
             </div>
-            <p className='font-dm_sans'>Pen your ideas</p>
+            <p className='font-dm_sans'>Start Writing</p>
           </Link>
         </Button>
       </div>

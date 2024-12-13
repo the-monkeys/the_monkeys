@@ -15,9 +15,6 @@ const BlogFeedPage = ({
   searchParams: { topic: string };
 }) => {
   const { status } = useSession();
-  const router = useRouter();
-
-  if (status === 'unauthenticated') router.push('/');
 
   return (
     <div>
