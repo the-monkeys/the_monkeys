@@ -50,7 +50,7 @@ const NewsPage = () => {
         </p>
       </div>
 
-      <MarketData />
+      {/* <MarketData /> */}
 
       {/* <TopHeadlinesMobile /> */}
 
