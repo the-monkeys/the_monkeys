@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DM_Sans, Playfair_Display, Poppins, Roboto } from 'next/font/google';
+import { Arvo, DM_Sans, Poppins, Roboto } from 'next/font/google';
 
 import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
@@ -11,9 +11,10 @@ import './globals.css';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 
-const playfair_Display = Playfair_Display({
+const arvo = Arvo({
+  weight: ['400', '700'],
   subsets: ['latin'],
-  variable: '--font-playfair_Display',
+  variable: '--font-arvo',
   display: 'swap',
 });
 
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
   },
   title: {
     template: '%s - Monkeys',
-    default: 'Collaborate on Blogs and Showcase Your Thoughts - Monkeys',
+    default: 'Inspire, Inform, Innovate - Monkeys',
   },
   description:
     'Join Monkeys for collaborative blog writing, blog version control, diverse topics and staying updated with ongoing global headlines.',
@@ -73,7 +74,7 @@ const RootLayout = ({
         <AdSense pId='4687427997504601' />
       </head>
       <body
-        className={`${playfair_Display.variable} ${roboto.variable} ${dm_sans.variable} ${poppins.variable} bg-background-light dark:bg-background-dark`}
+        className={`${arvo.variable} ${roboto.variable} ${dm_sans.variable} ${poppins.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
         <Toaster />
         <SWRProvider>

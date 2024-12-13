@@ -24,7 +24,7 @@ const NotFound = () => {
             Page Not Found
           </p>
 
-          <p className='font-playfair_Display text-3xl font-semibold md:text-5xl text-center sm:text-left text-text-light dark:text-text-dark'>
+          <p className='font-arvo text-3xl md:text-5xl text-center sm:text-left text-text-light dark:text-text-dark'>
             Lost your path?
           </p>
         </div>

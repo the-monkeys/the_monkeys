@@ -40,7 +40,7 @@ const NewsPage = () => {
       </div>
 
       <div className='pt-6 sm:pt-8 pb-6 space-y-2 sm:space-y-4'>
-        <h1 className='font-playfair_Display font-bold text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm text-center animate-appear-up'>
+        <h1 className='font-arvo font-bold text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm text-center animate-appear-up'>
           Monkeys <span className='text-primary-monkeyOrange'>News</span>
         </h1>
 
@@ -50,7 +50,7 @@ const NewsPage = () => {
         </p>
       </div>
 
-      <MarketData />
+      {/* <MarketData /> */}
 
       {/* <TopHeadlinesMobile /> */}
 

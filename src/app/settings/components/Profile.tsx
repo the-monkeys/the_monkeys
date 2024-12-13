@@ -110,7 +110,7 @@ export const Profile = () => {
                 Profile Photo
               </p>
 
-              <ProfileFrame className='ring-2 ring-foreground-light dark:ring-foreground-dark size-28 sm:size-32'>
+              <ProfileFrame className='size-28 sm:size-32'>
                 {data?.user && (
                   <ProfileImage
                     firstName={data.user.first_name}

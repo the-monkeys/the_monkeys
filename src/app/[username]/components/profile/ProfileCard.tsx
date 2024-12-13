@@ -56,7 +56,7 @@ export const ProfileCard = ({
             {`@${user?.username}`}
           </p>
 
-          <UpdateUsernameDialog />
+          {isAuthenticated && <UpdateUsernameDialog />}
         </div>
       </div>
 

@@ -8,12 +8,7 @@ const PageHeading = ({
   className?: string;
 }) => {
   return (
-    <h1
-      className={twMerge(
-        className,
-        'font-playfair_Display font-semibold text-3xl sm:text-4xl'
-      )}
-    >
+    <h1 className={twMerge(className, 'font-arvo text-3xl sm:text-4xl')}>
       {heading}
     </h1>
   );

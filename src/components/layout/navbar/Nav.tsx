@@ -42,7 +42,7 @@ const Nav = () => {
       className={`hidden md:block sticky left-0 top-${top} bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-xl z-30`}
     >
       <Container className='w-full p-4 flex items-center justify-between'>
-        <Link href='/'>
+        <Link href='/feed'>
           <Logo />
         </Link>
 
