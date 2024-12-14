@@ -11,7 +11,7 @@ const LegalPage = ({
   content: React.ReactNode;
 }) => {
   return (
-    <Container className='px-5 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
+    <Container className='px-4 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
       <PageHeader>
         <PageHeading heading={title} className='py-1' />
         <PageSubheading subheading={date} className='opacity-80' />

@@ -102,12 +102,12 @@ const PublishModal = ({
   return (
     <Modal setModal={setModal}>
       <ModalHeader>
-        <h1 className='font-playfair_Display text-2xl sm:text-3xl text-center font-semibold'>
+        <h1 className='font-arvo text-2xl sm:text-3xl text-center'>
           {publishStep?.heading}
         </h1>
 
         {publishStep.subHeading && (
-          <p className='mt-2 font-dm_sans text-sm sm:text-base opacity-80 text-center'>
+          <p className='font-dm_sans text-sm sm:text-base opacity-80 text-center'>
             {publishStep.subHeading}
           </p>
         )}

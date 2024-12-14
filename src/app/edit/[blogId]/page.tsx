@@ -193,7 +193,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   }, [data, session?.user.account_id, blogId, formatData, router]);
 
   return (
-    <Container className='min-h-screen px-5 py-4 pb-12'>
+    <Container className='min-h-screen px-4 py-5 pb-12'>
       {isLoading || publishedBlogLoading ? (
         <Loader className='mx-auto' />
       ) : (

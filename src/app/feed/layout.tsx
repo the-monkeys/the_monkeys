@@ -14,7 +14,7 @@ const BlogFeedPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='grid grid-cols-3 gap-6 sm:gap-4 md:gap-6 px-5 py-4 pb-12'>
+    <Container className='grid grid-cols-3 gap-6 sm:gap-4 md:gap-6 px-4 py-5 pb-12'>
       <div className='min-h-screen col-span-3 md:col-span-2 order-2 md:order-1'>
         {children}
       </div>

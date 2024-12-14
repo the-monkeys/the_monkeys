@@ -26,6 +26,8 @@ export type IconName =
   | 'RiLoader5'
   | 'RiRadioButton'
   | 'RiClose'
+  | 'RiCompass'
+  | 'RiSparkling'
   | 'RiAdd'
   | 'RiSubtract'
   | 'RiFileCopy'

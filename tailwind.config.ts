@@ -1,5 +1,3 @@
-import { Poppins } from 'next/font/google';
-
 import type { Config } from 'tailwindcss';
 
 const config = {
@@ -20,7 +18,7 @@ const config = {
       },
     },
     fontFamily: {
-      playfair_Display: ['var(--font-playfair_Display)'],
+      arvo: ['var(--font-arvo)'],
       roboto: ['var(--font-roboto)'],
       dm_sans: ['var(--font-dm_sans)'],
       poppins: ['var(--font-poppins)'],
@@ -49,16 +47,6 @@ const config = {
         alert: {
           red: '#EF4444',
           green: '#22C55E',
-        },
-        primary: {
-          monkeyOrange: '#FF5542',
-          monkeyBlack: '#191919',
-          monkeyWhite: '#F2F2F2',
-        },
-        secondary: {
-          darkGrey: '#2C2C2C',
-          lightGrey: '#4f4f4f',
-          white: '#f2f2f3',
         },
       },
       borderWidth: {

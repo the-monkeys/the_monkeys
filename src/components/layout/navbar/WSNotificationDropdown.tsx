@@ -61,25 +61,25 @@ const WSNotificationDropdown = () => {
   useEffect(() => {
     let cleanup: (() => void) | null = null;
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        if (cleanup) {
-          cleanup();
-          // console.log('WS Disconnected');
-        }
-      } else if (
-        document.visibilityState === 'visible' &&
-        session?.user?.token
-      ) {
-        cleanup = createWebSocket(session.user.token);
-        // console.log('WS Reconnected');
-      }
-    };
+    // const handleVisibilityChange = () => {
+    //   if (document.visibilityState === 'hidden') {
+    //     if (cleanup) {
+    //       cleanup();
+    //       // console.log('WS Disconnected');
+    //     }
+    //   } else if (
+    //     document.visibilityState === 'visible' &&
+    //     session?.user?.token
+    //   ) {
+    //     cleanup = createWebSocket(session.user.token);
+    //     // console.log('WS Reconnected');
+    //   }
+    // };
 
     if (session?.user?.token) {
       cleanup = createWebSocket(session.user.token);
 
-      document.addEventListener('visibilitychange', handleVisibilityChange);
+      // document.addEventListener('visibilitychange', handleVisibilityChange);
 
       const handleBeforeUnload = () => {
         if (cleanup) cleanup();
@@ -88,10 +88,10 @@ const WSNotificationDropdown = () => {
 
       return () => {
         if (cleanup) cleanup();
-        document.removeEventListener(
-          'visibilitychange',
-          handleVisibilityChange
-        );
+        // document.removeEventListener(
+        //   'visibilitychange',
+        //   handleVisibilityChange
+        // );
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }

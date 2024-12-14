@@ -6,7 +6,7 @@ const Logo = ({ showSubHeading = false }: { showSubHeading?: boolean }) => {
     <div className='flex flex-col items-start'>
       <MobileLogo /> <WebLogo />
       {showSubHeading && (
-        <p className='font-dm_sans'>Inspire, Inform, & Innovate</p>
+        <p className='font-dm_sans'>Inspire, Inform, Innovate</p>
       )}
     </div>
   );

@@ -42,7 +42,7 @@ const MobileNav = () => {
         className={`block md:hidden sticky left-0 top-${top} bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-xl z-30`}
       >
         <Container className='w-full p-4 flex items-center justify-between'>
-          <Link href='/'>
+          <Link href='/feed'>
             <Logo />
           </Link>
 
@@ -59,7 +59,7 @@ const MobileNav = () => {
         </Container>
       </header>
 
-      <div className='md:hidden fixed bottom-0 left-0 flex w-full px-5 py-2 items-center justify-evenly border-t-1 border-foreground-light dark:border-foreground-dark bg-background-light dark:bg-background-dark z-50'>
+      <div className='md:hidden fixed bottom-0 left-0 flex w-full px-4 py-2 items-center justify-evenly border-t-1 border-foreground-light dark:border-foreground-dark bg-background-light dark:bg-background-dark z-50'>
         <CreateButton />
       </div>
     </>

@@ -136,7 +136,7 @@ export const UpdateDialog = () => {
               <div className='flex flex-wrap items-end gap-2'>
                 <p className='w-full font-roboto text-sm'>Profile Photo</p>
 
-                <ProfileFrame className='ring-2 ring-foreground-light dark:ring-foreground-dark size-24 sm:size-28'>
+                <ProfileFrame className='size-24 sm:size-28'>
                   {data?.user && (
                     <ProfileImage
                       firstName={data.user.first_name}

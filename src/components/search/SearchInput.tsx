@@ -3,6 +3,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
+import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
 import Icon from '../icon';
@@ -12,6 +13,7 @@ import { SearchUsers } from './SearchUsers';
 
 export const SearchInput = ({ className }: { className?: string }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const { status } = useSession();
 
   const { searchUsers, searchUsersLoading, searchUsersError } =
     useGetSearchUser(searchQuery.trim() ? searchQuery : undefined);
@@ -45,9 +47,12 @@ export const SearchInput = ({ className }: { className?: string }) => {
 
         <Input
           variant='ghost'
-          placeholder='Search'
+          placeholder={
+            status === 'authenticated' ? 'Search' : 'You are not logged in'
+          }
           className='h-fit px-0 rounded-none'
           onChange={(e) => handleInputChange(e)}
+          disabled={status === 'unauthenticated'}
         />
       </div>
 

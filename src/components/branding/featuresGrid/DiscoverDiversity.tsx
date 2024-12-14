@@ -1,124 +1,19 @@
-import { GridContainer, GridHeading, GridSubHeading } from './gridLayout';
+import Icon from '@/components/icon';
 
-const DiscoverDiversity = () => {
+export const DiverseTopics = () => {
   return (
-    <GridContainer className='h-full group col-span-2 sm:col-span-1 space-y-4'>
-      <div className='py-4 px-4'>
-        <GridHeading>Discover Diversity</GridHeading>
+    <div className='group p-4 md:p-6 col-span-3 sm:col-span-2 md:col-span-1 flex flex-col justify-between gap-4 bg-background-light dark:bg-background-dark border-1 border-foreground-light dark:border-foreground-dark rounded-xl overflow-hidden'>
+      <Icon name='RiCompass' size={24} className='opacity-80' />
 
-        <GridSubHeading>
-          Explore categories tailored to your interests.
-        </GridSubHeading>
+      <div className='space-y-1'>
+        <h2 className='font-dm_sans font-medium text-base sm:text-lg md:text-xl'>
+          Diverse Topics
+        </h2>
+
+        <p className='font-roboto text-xs sm:text-sm md:text-base opacity-80'>
+          Explore categories from tech to travel—something for everyone.
+        </p>
       </div>
-
-      <div className='mx-4 h-40 space-y-2 overflow-hidden' aria-disabled='true'>
-        <div className='-ml-1 group-hover:-ml-10 flex gap-1 overflow-hidden transition-all'>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Business
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Science
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Nature
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Relationship
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Cooking
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Writing
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Sexuality
-          </p>
-        </div>
-
-        <div className='-ml-14 group-hover:-ml-4 flex gap-1 overflow-hidden transition-all'>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Finance
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Design
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Health
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Humor
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Gaming
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Hobbies
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Animation
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Podcasts
-          </p>
-        </div>
-
-        <div className='-ml-4 group-hover:-ml-16 flex gap-1 overflow-hidden transition-all'>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Crypto
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Sports
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Law
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Technology
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Religion
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Movies
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Crypto
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Leadership
-          </p>
-        </div>
-
-        <div className='-ml-16 group-hover:-ml-2 flex gap-1 overflow-hidden transition-all'>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Reading
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Programming
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Photography
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Music
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Art
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Spirituality
-          </p>
-          <p className='px-4 py-1 font-roboto bg-secondary-lightGrey/15 rounded-full'>
-            Language
-          </p>
-          <p className='px-4 py-1 font-roboto bg-primary-monkeyOrange text-secondary-white rounded-full'>
-            Lifestyle
-          </p>
-        </div>
-      </div>
-    </GridContainer>
+    </div>
   );
 };
-
-export default DiscoverDiversity;

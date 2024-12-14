@@ -1,13 +1,12 @@
 import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Separator } from '@/components/ui/separator';
+import moment from 'moment';
 
 import { NewsSection1 } from './components/NewsSection1';
 import { NewsSection2 } from './components/NewsSection2';
-import { MarketData } from './components/news/MarketData';
-import { TopHeadlines } from './components/news/TopHeadlines';
-import { TopHeadlinesMobile } from './components/news/TopHeadlinesMobile';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -19,50 +18,42 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const NewsPage = () => {
   const currDate = new Date();
-  const formattedDate = currDate.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-  const formattedTime = currDate.toUTCString().split(' ')[4]; // Extract the time part from the UTC string
 
   return (
-    <Container className='pb-20 min-h-screen px-5'>
-      <div className='flex justify-between flex-wrap'>
-        <p className='font-roboto text-xs sm:text-sm opacity-75'>
-          {formattedDate}
+    <Container className='mb-20 min-h-screen p-4 space-y-2'>
+      <div className='px-1 flex justify-between flex-wrap gap-1'>
+        <p className='font-roboto text-xs xl:text-sm'>
+          {moment(currDate).format('MMMM DD, YYYY')}
         </p>
 
-        <p className='font-roboto text-xs sm:text-sm opacity-75'>
-          {formattedTime} UTC
+        <p className='font-roboto text-xs xl:text-sm'>
+          {moment.utc(currDate).format('HH:MM A')} UTC
         </p>
       </div>
 
-      <div className='pt-6 sm:pt-8 pb-6 space-y-2 sm:space-y-4'>
-        <h1 className='font-playfair_Display font-bold text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm text-center animate-appear-up'>
-          Monkeys <span className='text-primary-monkeyOrange'>News</span>
+      <div className='py-4 sm:py-6'>
+        <LinksRedirectArrow
+          position='Left'
+          link='/feed'
+          className='sm:mx-auto w-fit'
+        >
+          <p className='font-dm_sans text-sm sm:text-base'>Monkeys</p>
+        </LinksRedirectArrow>
+
+        <h1 className='py-2 font-arvo text-[30px] sm:text-[40px] md:text-[50px] text-center drop-shadow-sm'>
+          Monkeys <span className='text-brand-orange'>News</span>
         </h1>
 
-        <p className='font-dm_sans text-sm sm:text-base text-secondary-darkGrey dark:text-secondary-white text-center animate-appear-up'>
+        <p className='font-dm_sans font-light text-sm sm:text-base md:text-lg text-center opacity-80'>
           Latest news and highlights in Business, Technology, Sports and many
           more.
         </p>
       </div>
 
-      {/* <MarketData /> */}
+      <Separator />
 
-      {/* <TopHeadlinesMobile /> */}
 
-      {/* <div className='mt-8 grid grid-cols-3'>
-        <div className='col-span-3 lg:col-span-2'>
-          <NewsSection1 />
-        </div>
-
-        <TopHeadlines />
-      </div> */}
-
-      <Separator className='hidden sm:block my-4' />
+      <NewsSection1 />
 
       <NewsSection2 />
     </Container>
