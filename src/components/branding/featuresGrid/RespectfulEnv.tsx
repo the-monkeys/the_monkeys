@@ -11,8 +11,8 @@ export const RespectfulEnv = () => {
         </h2>
 
         <p className='font-roboto text-xs sm:text-sm md:text-base opacity-80'>
-          Share your thoughts freely while adhering to a no-hate policy that
-          fosters inclusivity and positivity.
+          Share your thoughts freely while respecting our no-hate, inclusive
+          policy.
         </p>
       </div>
     </div>

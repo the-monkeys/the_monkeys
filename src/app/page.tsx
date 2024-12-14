@@ -18,7 +18,7 @@ const LandingPage = () => {
 
       <h2 className='mx-auto w-fit pt-8 px-4 font-dm_sans text-lg sm:text-xl md:text-2xl text-center leading-7'>
         With Monkeys,{' '}
-        <span className='px-1 bg-brand-orange/25'>create content</span> ✍ that
+        <span className='px-1 bg-brand-orange/80'>create content</span> ✍ that
         truly makes a difference.
       </h2>
 
@@ -29,7 +29,7 @@ const LandingPage = () => {
         storytelling.
       </h2>
 
-      <div className='bg-gradient-to-t from-brand-orange from-[15%] px-4 py-[80px]'>
+      <div className='bg-gradient-to-t from-brand-orange from-[25%] px-4 py-[80px]'>
         <div className='grid grid-cols-3 gap-2 sm:gap-4 mx-auto max-w-5xl'>
           <CollaborativeBlogging />
 
@@ -45,7 +45,7 @@ const LandingPage = () => {
 
       <div className='py-[80px] sm:py-[100px] px-4 flex flex-col items-center gap-4'>
         <p className='font-dm_sans text-base sm:text-lg md:text-xl text-center'>
-          Start your blogging journey today—collaborate, create, and share
+          🚀 Start your blogging journey today—collaborate, create, and share
           without limits!
         </p>
 

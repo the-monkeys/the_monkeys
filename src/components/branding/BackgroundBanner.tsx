@@ -1,6 +1,6 @@
 import Styles from './styles/backgroundStyles.module.css';
 
-const MonkeysBranding = () => {
+export const BackgroundBanner = () => {
   return (
     <div className='w-full h-full relative flex flex-col justify-end items-center'>
       <div className={Styles.screen_overlay_linear}></div>
@@ -15,5 +15,3 @@ const MonkeysBranding = () => {
     </div>
   );
 };
-
-export default MonkeysBranding;

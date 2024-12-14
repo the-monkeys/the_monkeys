@@ -48,16 +48,6 @@ const config = {
           red: '#EF4444',
           green: '#22C55E',
         },
-        primary: {
-          monkeyOrange: '#FF5542',
-          monkeyBlack: '#191919',
-          monkeyWhite: '#F2F2F2',
-        },
-        secondary: {
-          darkGrey: '#2C2C2C',
-          lightGrey: '#4f4f4f',
-          white: '#f2f2f3',
-        },
       },
       borderWidth: {
         '1': '1px',

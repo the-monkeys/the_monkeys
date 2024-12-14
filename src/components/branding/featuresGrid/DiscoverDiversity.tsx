@@ -11,8 +11,7 @@ export const DiverseTopics = () => {
         </h2>
 
         <p className='font-roboto text-xs sm:text-sm md:text-base opacity-80'>
-          Explore diverse categories, from tech and health to travel and
-          lifestyle—something for everyone.
+          Explore categories from tech to travel—something for everyone.
         </p>
       </div>
     </div>

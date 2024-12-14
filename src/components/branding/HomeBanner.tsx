@@ -2,16 +2,18 @@ import Link from 'next/link';
 
 import Icon from '../icon';
 import { Button } from '../ui/button';
-import MonkeysBranding from './MonkeysBranding';
+import { BackgroundBanner } from './BackgroundBanner';
+
+('./BackgroundBanner');
 
 const HomeBanner = () => {
   return (
     <div className='py-6 px-4 relative flex flex-col justify-center items-center min-h-60 md:min-h-80'>
       <div className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] h-full w-full -z-10'>
-        <MonkeysBranding />
+        <BackgroundBanner />
       </div>
 
-      <h1 className='pb-2 md:pb-4 font-arvo font-medium text-[30px] sm:text-[40px] md:text-[50px] drop-shadow-sm text-center leading-10 animate-appear-up'>
+      <h1 className='pb-2 md:pb-4 font-arvo text-[30px] sm:text-[40px] md:text-[50px] drop-shadow-sm text-center leading-10 animate-appear-up'>
         Inspire, Inform, Innovate
       </h1>
 
