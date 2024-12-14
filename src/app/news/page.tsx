@@ -52,6 +52,7 @@ const NewsPage = () => {
 
       <Separator />
 
+
       <NewsSection1 />
 
       <NewsSection2 />
