@@ -1,8 +1,20 @@
 import { baseUrl } from '@/constants/baseUrl';
-import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
+import axiosInstance from '@/services/api/axiosInstance';
+import { Blog } from '@/services/blog/blogTypes';
+
+// Fetch blog posts from the API
+async function fetchBlogPosts() {
+  try {
+    const response = await axiosInstance.post('/blog/latest');
+    return response.data?.blogs || [];
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    return [];
+  }
+}
 
 export default async function sitemap() {
-  const { blogs } = useGetLatest100Blogs();
+  const blogPosts = await fetchBlogPosts();
 
   const staticUrls = [
     {
@@ -18,16 +30,15 @@ export default async function sitemap() {
     {
       url: `${baseUrl}/news`,
       changeFrequency: 'weekly',
-      priority: 0.8,
+      priority: 1,
     },
   ];
 
-  const blogUrls =
-    blogs?.the_blogs?.map((post) => ({
-      url: `${baseUrl}/blog/${post.blog_id}`,
-      changeFrequency: 'weekly',
-      priority: 1,
-    })) || [];
+  const blogUrls = blogPosts.map((post: Blog) => ({
+    url: `${baseUrl}/blog/${post.blog_id}`,
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
 
   return [...staticUrls, ...blogUrls];
 }
