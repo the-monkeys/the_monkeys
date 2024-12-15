@@ -1,16 +1,14 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./public/logo-full-light.svg" alt="The Monkeys">
-  <source media="(prefers-color-scheme: light)" srcset="./public/logo-full-dark.svg" alt="The Monkeys">
+  <source media="(prefers-color-scheme: dark)" srcset="./public/logo-full-light.svg" alt="The Monkeys" height="80px">
+  <source media="(prefers-color-scheme: light)" srcset="./public/logo-full-dark.svg" alt="The Monkeys" height="80px">
   <img src="./public/logo-full-light.svg" alt="Monkeys">
 </picture>
 
-# The Monkeys: Seamless Creation, Effortless Collaboration
+# Inspire, Inform, Innovate
 
-#### Unleash Your Creativity and Influence: Blog Together, Write Better
+#### Blog together and write content that connect, inspire, and leave a lasting impact.
 
-Welcome to The Monkeys, your go-to educational and informational blogging platform!
-
-At The Monkeys, we provide a dynamic space for individuals to share their knowledge and experiences across a wide array of topics. Whether you're passionate about science, technology, personal development, self-improvement, psychology, philosophy, fashion, health, or lifestyle, you'll find a place here to both learn and contribute.
+With Monkeys, create content that truly makes a difference. We provide a dynamic space for individuals to share their knowledge and experiences across a wide array of topics. Whether you're passionate about science, technology, personal development, self-improvement, psychology, philosophy, fashion, health, or lifestyle, you'll find a place here to both learn and contribute.
 
 Our platform is designed with the belief that learning should be accessible to everyone. Dive into our diverse range of perspectives and insights, and expand your understanding of the world.
 
@@ -23,10 +21,12 @@ Explore, learn, and grow with The Monkeys. We're excited to have you on this jou
 - [x] Shift the codebase from React.js to Next.
 - [x] Initial project setup.
 - [x] UI/UX design (v1).
-- [ ] Landing page.
-- [ ] Authentication service.
-- [ ] User service.
-- [ ] Blog service.
+- [x] Landing page.
+- [x] Authentication service.
+- [x] User service.
+- [x] Blog service.
+- [ ] Enhance website performance.
+- [ ] Improve editor.
 
 ## Installation
 
@@ -70,11 +70,11 @@ npm run dev
 
 ## Backend
 
-The backbone of The Monkeys platform is powered by a robust backend written in Go, housed in our dedicated repository.
+The backbone of Monkeys platform is powered by a robust backend written in Go, housed in our dedicated repository.
 
 For those interested in exploring the architecture of our backend, or looking to contribute, we invite you to visit the repository. Dive into the code, understand the intricacies, and join our community of developers in enhancing the platform. Your contributions are invaluable in making The Monkeys a richer, more dynamic space for everyone.
 
-Backend repo: [The Monkeys Backend](https://github.com/the-monkeys/the_monkeys_engine)
+Backend repo: [The Monkeys Backend](https://github.com/the-monkeys/monkeys_engine)
 
 ## Guidelines
 
@@ -87,10 +87,6 @@ When raising an issue, please follow the specified format provided in our reposi
 #### 2. Submitting a Pull Request (PR)
 
 When submitting a pull request, ensure you follow the provided format outlined in our repository. This helps us review and merge your changes effectively.
-
-#### 3. Taking an Issue
-
-To claim ownership of an issue, comment `.take` on the issue thread. This will assign the issue to you, allowing you to work on it. Please ensure that the issue is not already assigned or in progress before claiming it.
 
 By following these guidelines, you help maintain a high standard of collaboration and development on The Monkeys platform. We appreciate your cooperation and contributions!
 
