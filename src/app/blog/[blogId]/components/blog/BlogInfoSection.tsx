@@ -11,10 +11,7 @@ export const BlogInfoSection = ({ blog }: { blog?: Blog }) => {
 
       <BlogTopics topics={blog?.tags || []} className='pb-1' />
 
-      <BlogReactions
-        blogId={blog?.blog_id}
-        accountId={blog?.owner_account_id}
-      />
+      <BlogReactions blogId={blog?.blog_id} />
     </div>
   );
 };
