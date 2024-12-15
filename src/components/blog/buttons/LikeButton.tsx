@@ -129,8 +129,8 @@ export const LikeButton = ({
     <>
       {likeStatus?.isLiked ? (
         <button
-          className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
-            loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
+          className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 animate-scale-up ${
+            loading || isDisable ? 'cursor-default' : 'cursor-pointer'
           }`}
           onClick={onPostDislike}
           disabled={loading || isDisable}
@@ -145,7 +145,7 @@ export const LikeButton = ({
       ) : (
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
-            loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
+            loading || isDisable ? 'cursor-default' : 'cursor-pointer'
           }`}
           onClick={onPostLike}
           disabled={loading || isDisable}

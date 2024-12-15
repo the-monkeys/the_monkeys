@@ -9,7 +9,11 @@ export const NewsSection1Skeleton = () => {
       <Skeleton className='h-4 w-full' />
 
       <Skeleton className='h-3 w-full sm:w-4/5' />
-      <Skeleton className='h-3 w-4/5' />
+
+      <div className='py-4 flex justify-center gap-2'>
+        <Skeleton className='size-8 rounded-full' />
+        <Skeleton className='size-8 rounded-full' />
+      </div>
     </div>
   );
 };

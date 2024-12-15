@@ -55,7 +55,7 @@ const BlogPage = ({
       <div className='p-4 col-span-3 lg:col-span-1'>
         <ContributeAndSponsorCard className='mb-6' />
 
-        <h4 className='px-1 font-dm_sans font-medium text-base sm:text-lg opacity-80'>
+        <h4 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
           You might also like
         </h4>
 

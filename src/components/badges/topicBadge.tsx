@@ -15,7 +15,7 @@ export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
 export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
   return (
     <Link href={`/feed?topic=${topic}`}>
-      <Badge variant='secondary' className='cursor-pointer'>
+      <Badge variant='outline' className='cursor-pointer'>
         {topic}
       </Badge>
     </Link>

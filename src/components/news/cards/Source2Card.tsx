@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { NewsSource2 } from '@/services/news/newsTypes';
 
 export const Source2Card: FC<NewsSource2> = React.memo((props) => {
-  const { source, author, title, description, url, urlToImage, publishedAt } =
-    props;
+  const { source, author, title, description, url, urlToImage } = props;
 
   return (
     <div className='flex flex-col sm:flex-row gap-2 sm:gap-[10px] col-span-2 sm:col-span-1'>
@@ -19,8 +18,8 @@ export const Source2Card: FC<NewsSource2> = React.memo((props) => {
         />
       </div>
 
-      <Link href={url} className='flex-1 group'>
-        <p className='mb-1 font-dm_sans text-xs'>
+      <Link href={url} target='_blank' className='flex-1 group'>
+        <p className='mb-1 font-dm_sans font-medium text-xs'>
           {`${source.name} | ${author}`}
         </p>
 

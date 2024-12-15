@@ -9,7 +9,6 @@ import moment from 'moment';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { DeleteBlogDialog } from '../actions/DeleteBlogDialog';
-import { BookmarkButton } from '../buttons/BookmarkButton';
 import { getCardContent } from '../getBlogContent';
 
 interface BlogCardProps {
@@ -26,7 +25,6 @@ export const BlogCard: FC<BlogCardProps> = ({
   status,
   isDraft = false,
   onEdit,
-  bookmarkEnable = true,
   modificationEnable = false,
 }) => {
   const authorId = blog?.owner_account_id;
@@ -80,10 +78,6 @@ export const BlogCard: FC<BlogCardProps> = ({
           <p className='font-roboto text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
-
-          {status === 'authenticated' && bookmarkEnable && (
-            <BookmarkButton blogId={blogId} />
-          )}
         </div>
 
         <div className='flex items-center gap-1'>

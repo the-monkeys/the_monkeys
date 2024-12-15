@@ -59,7 +59,7 @@ export const getCardContent = ({
           src={imageContent}
           alt='Blog Image'
           loading='lazy'
-          className='h-full w-full object-cover'
+          className='h-full w-full object-cover group-hover:opacity-90'
         />
       );
     }

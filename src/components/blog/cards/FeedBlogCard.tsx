@@ -48,12 +48,11 @@ export const FeedBlogCard = ({
           <p className='font-roboto text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
-
-          {status === 'authenticated' && <BookmarkButton blogId={blogId} />}
         </div>
 
-        <div className='flex items-center gap-1'>
-          {<BlogActionsDropdown blogId={blogId} />}
+        <div className='flex items-center gap-2'>
+          {status === 'authenticated' && <BookmarkButton blogId={blogId} />}
+          <BlogActionsDropdown blogId={blogId} />
         </div>
       </div>
     </div>
