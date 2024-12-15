@@ -133,7 +133,7 @@ export const BookmarkButton = ({
       {bookmarkStatus?.bookMarked ? (
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
-            loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
+            loading || isDisable ? 'cursor-default' : 'cursor-pointer'
           }`}
           onClick={onPostRemoveBookmark}
           disabled={loading || isDisable}
@@ -143,7 +143,7 @@ export const BookmarkButton = ({
       ) : (
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
-            loading || isDisable ? 'cursor-not-allowed' : 'cursor-pointer'
+            loading || isDisable ? 'cursor-default' : 'cursor-pointer'
           }`}
           onClick={onPostBookmark}
           disabled={loading || isDisable}

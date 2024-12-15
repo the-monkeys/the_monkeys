@@ -66,9 +66,7 @@ export const ProfileCard = ({
           {isAuthenticated ? (
             <ConnectionsDialog label='Followers' />
           ) : (
-            <span className='inline font-roboto text-sm font-light opacity-80'>
-              Followers
-            </span>
+            <span className='inline text-sm opacity-80'>Followers</span>
           )}
         </p>
 
@@ -77,9 +75,7 @@ export const ProfileCard = ({
           {isAuthenticated ? (
             <ConnectionsDialog label='Following' />
           ) : (
-            <span className='inline font-roboto text-sm font-light opacity-80'>
-              Following
-            </span>
+            <span className='inline text-sm opacity-80'>Following</span>
           )}
         </p>
       </div>

@@ -64,8 +64,6 @@ const Footer = () => {
     },
   });
 
-  const currentYear = new Date().getFullYear();
-
   return (
     <Container className='px-4 py-12'>
       <footer className='space-y-6'>
@@ -104,34 +102,34 @@ const Footer = () => {
         </div>
 
         <div className='pb-8 space-y-2'>
-          <div className='py-2 flex items-center justify-center gap-4'>
+          <div className='flex items-center justify-center gap-4'>
             <Link
-              className='hover:opacity-80'
+              className='opacity-80 hover:opacity-100'
               href='https://discord.gg/6fK9YuV8FV'
               target='_blank'
             >
-              <Icon name='RiDiscord' type='Fill' />
+              <Icon name='RiDiscord' type='Fill' size={18} />
             </Link>
 
             <Link
-              className='hover:opacity-80'
+              className='opacity-80 hover:opacity-100'
               href='https://github.com/the-monkeys'
               target='_blank'
             >
-              <Icon name='RiGithub' type='Fill' />
+              <Icon name='RiGithub' type='Fill' size={18} />
             </Link>
 
             <Link
-              className='hover:opacity-80'
+              className='opacity-80 hover:opacity-100'
               href='https://x.com/MonkeysInsight'
               target='_blank'
             >
-              <Icon name='RiTwitterX' type='Fill' />
+              <Icon name='RiTwitterX' type='Fill' size={18} />
             </Link>
           </div>
 
-          <p className='font-roboto text-text-light/80 dark:text-text-dark/80 text-xs sm:text-sm text-center'>
-            Monkeys, {currentYear}, All Rights Reserved
+          <p className='font-roboto text-xs sm:text-sm text-center opacity-80'>
+            Monkeys, All Rights Reserved
           </p>
         </div>
       </footer>

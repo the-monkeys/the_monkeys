@@ -16,7 +16,7 @@ export const ContributeAndSponsorCard = ({
         'p-4 flex flex-col sm:flex-row md:flex-col gap-4 items-start md:items-center border-1 border-foreground-light dark:border-foreground-dark rounded-xl'
       )}
     >
-      <div>
+      <div className='w-full'>
         <h3 className='font-dm_sans font-medium text-base md:text-lg text-left'>
           Your support matters!
         </h3>

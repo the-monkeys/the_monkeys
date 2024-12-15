@@ -14,8 +14,12 @@ export const TopicsCard = () => {
     return null;
   }
 
+  if (isError) {
+    return null;
+  }
+
   const topicsCount = user?.topics?.length || 0;
-  const maxTopicsShow = 5;
+  const maxTopicsShow = 6;
 
   return (
     <div className='mt-4'>
@@ -42,7 +46,7 @@ export const TopicsCard = () => {
           ) : null}
         </div>
       ) : (
-        <p className='font-roboto text-sm opacity-80 text-center'>
+        <p className='font-roboto text-xs lg:text-sm opacity-80'>
           No topics have been added.
         </p>
       )}

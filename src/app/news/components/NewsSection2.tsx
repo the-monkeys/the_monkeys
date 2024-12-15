@@ -36,7 +36,7 @@ export const NewsSection2 = () => {
         Explore world news
       </h4>
 
-      <Separator className='mt-1 mb-4' />
+      <Separator className='mt-1 mb-4 xl:mb-6 bg-border-light dark:bg-border-dark' />
 
       <div className='grid grid-cols-2 gap-8 sm:gap-6'>
         {newsData

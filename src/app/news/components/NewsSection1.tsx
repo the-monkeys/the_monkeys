@@ -61,7 +61,7 @@ export const NewsSection1 = () => {
             ))}
         </CarouselContent>
 
-        <div className='flex justify-center gap-4'>
+        <div className='mx-auto w-fit pt-2 flex justify-center gap-4'>
           <CarouselPrevious variant={'outline'} />
           <CarouselNext variant={'outline'} />
         </div>
