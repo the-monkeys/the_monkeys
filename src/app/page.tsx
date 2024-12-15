@@ -51,7 +51,9 @@ const LandingPage = () => {
         </Button>
       </div>
 
-      <ContributeAndSponsorCard className='mx-auto max-w-xl' />
+      <div className='mx-auto max-w-xl px-4'>
+        <ContributeAndSponsorCard />
+      </div>
     </Container>
   );
 };
