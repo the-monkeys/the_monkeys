@@ -197,7 +197,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       {isLoading || publishedBlogLoading ? (
         <Loader className='mx-auto' />
       ) : (
-        <div className='space-y-2'>
+        <div className='space-y-4'>
           <div className='mx-auto w-full sm:w-4/5 flex justify-between items-center sm:items-end'>
             {isSaving ? (
               <p className='font-roboto text-xs sm:text-sm opacity-80'>

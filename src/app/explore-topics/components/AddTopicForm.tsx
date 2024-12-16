@@ -18,7 +18,6 @@ import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
 import { Category } from '@/services/category/categoryTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
 import { useTheme } from 'next-themes';
 import { useForm } from 'react-hook-form';
 import Select from 'react-select';
@@ -46,7 +45,6 @@ export default function TopicForm({
   const { theme } = useTheme();
 
   const [loading, setLoading] = useState(false);
-  const { data: userData, status } = useSession();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -74,11 +72,7 @@ export default function TopicForm({
       };
 
       await axiosInstance.post(`/user/topics`, { ...format });
-      toast({
-        variant: 'success',
-        title: 'Success',
-        description: 'New topic successfully added.',
-      });
+
       onSuccess();
     } catch (error) {
       console.error('Form submission error:', error);
