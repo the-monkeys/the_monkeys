@@ -17,7 +17,7 @@ export const SearchUsers = ({ users }: { users?: SearchUser[] | null }) => {
         <div className='flex flex-col gap-2'>
           {users.slice(0, 5).map((user) => {
             return (
-              <div className='flex gap-2 items-center'>
+              <div className='flex gap-2 items-center' key={user.username}>
                 <ProfileFrame className='size-8 md:size-10'>
                   <ProfileImage
                     firstName={user.first_name}

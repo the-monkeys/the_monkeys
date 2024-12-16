@@ -29,10 +29,10 @@ const ProfileDropdown = () => {
           <DropdownMenuItem>
             <div
               onClick={() => {
-								if (window.location.pathname === '/login') {
-									window.location.reload();
-									return;
-								}
+                if (window.location.pathname === '/login') {
+                  window.location.reload();
+                  return;
+                }
 
                 router.push('api/auth/signin');
               }}

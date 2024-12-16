@@ -46,8 +46,9 @@ const ExploreTopicsPage = () => {
       )}
 
       <div className='w-full md:w-4/5 mx-auto px-2 flex justify-center flex-wrap gap-1'>
-        {letters.map((letter) => (
+        {letters.map((letter, index) => (
           <Button
+            key={index}
             variant='ghost'
             onClick={() => setSelectedLetter(letter)}
             className='size-8 sm:size-10 rounded-full'
