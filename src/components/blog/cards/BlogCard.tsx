@@ -49,7 +49,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             </div>
 
             {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden border-1 border-border-light/25 dark:border-border-dark/25 rounded-md'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-sm'>
                 {imageDiv}
               </div>
             )}
@@ -65,7 +65,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             </div>
 
             {imageDiv && (
-              <div className='h-[150px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden border-1 border-border-light/25 dark:border-border-dark/25 rounded-md'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-sm'>
                 {imageDiv}
               </div>
             )}
@@ -74,7 +74,7 @@ export const BlogCard: FC<BlogCardProps> = ({
       </div>
 
       <div className='mt-2 flex justify-between items-center gap-4'>
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-1'>
           <p className='font-roboto text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
