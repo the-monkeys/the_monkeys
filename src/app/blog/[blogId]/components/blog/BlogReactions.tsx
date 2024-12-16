@@ -1,5 +1,6 @@
 import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
+import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { useGetLikesCount } from '@/hooks/user/useLikeStatus';
 import { useSession } from 'next-auth/react';
@@ -37,22 +38,18 @@ export const BlogReactions = ({
     >
       <div className='flex items-center gap-1'>
         <div className='flex items-center'>
-          <LikeButton
-            blogId={blogId}
-            // isDisable={data?.user?.account_id === accountId}
-          />
+          <LikeButton blogId={blogId} />
 
-          <p className='font-roboto text-xs sm:text-sm opacity-80'>
-            {likeCountLoading ? 0 : likeCountError ? 'NA' : likes?.count}
+          <p className='font-dm_sans text-xs sm:text-sm opacity-80'>
+            {likeCountLoading ? '-' : likeCountError ? null : likes?.count}
           </p>
         </div>
+
+        {/* <CommentButton blogId={blogId} isDisable={true} /> */}
       </div>
 
-      <div className='flex items-center gap-2'>
-        <BookmarkButton
-          blogId={blogId}
-          // isDisable={data?.user?.account_id === accountId}
-        />
+      <div className='flex items-center gap-1'>
+        <BookmarkButton blogId={blogId} />
 
         <BlogActionsDropdown blogId={blogId} />
       </div>

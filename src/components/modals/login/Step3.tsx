@@ -15,6 +15,7 @@ import { toast } from '@/components/ui/use-toast';
 import { API_URL } from '@/constants/api';
 import { loginSteps } from '@/constants/modal';
 import { forgotPasswordSchema } from '@/lib/schema/auth';
+import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
@@ -39,7 +40,7 @@ const Step3 = ({
   async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
     setLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/auth/forgot-pass`, {
+      const response = await axiosInstance.post(`${API_URL}/auth/forgot-pass`, {
         email: values.email,
       });
 

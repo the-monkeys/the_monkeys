@@ -22,7 +22,7 @@ const NewsPage = () => {
   return (
     <Container className='mb-20 min-h-screen p-4 space-y-2'>
       <LinksRedirectArrow position='Left' link='/feed' className='w-fit'>
-        <p className='font-dm_sans text-xs xl:text-sm'>Monkeys Blog</p>
+        <p className='font-dm_sans text-xs sm:text-sm'>Monkeys Blog</p>
       </LinksRedirectArrow>
 
       <p className='font-roboto text-xs xl:text-sm opacity-80'></p>

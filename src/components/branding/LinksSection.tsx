@@ -22,7 +22,7 @@ export const LinksSection = () => {
           className='group w-fit pl-6 pr-4 self-end rounded-full'
           asChild
         >
-          <Link href='/feed'>
+          <Link href='/feed' title='Monkeys Blog'>
             Discover
             <Icon
               name='RiArrowRight'
@@ -48,7 +48,7 @@ export const LinksSection = () => {
           className='group w-fit pl-6 pr-4 self-end rounded-full'
           asChild
         >
-          <Link href='/news'>
+          <Link href='/news' title='Monkeys News'>
             News
             <Icon
               name='RiArrowRight'

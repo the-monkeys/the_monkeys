@@ -41,33 +41,36 @@
 }
 
 h1.ce-header {
-  padding: 0 0 14px 0 !important;
+  padding: 0 !important;
+  margin: 0 0 20px 0 !important;
+  font-size: 28px;
   font-weight: 600;
-  font-family: var(--font-dm_sans);
-  font-size: 30px;
+  font-family: var(--font-lato);
 }
 
 h2.ce-header {
-  padding: 0 0 12px 0 !important;
-  font-weight: 500;
-  font-family: var(--font-poppins);
-  font-size: 22px;
+  padding: 0 !important;
+  margin: 0 0 10px 0 !important;
+  font-size: 24px;
+  font-weight: 600;
+  font-family: var(--font-lato);
 }
 
 .ce-paragraph {
-  padding: 0 0 10px 0 !important;
+  padding: 0 !important;
+  margin: 0 0 20px 0 !important;
   font-size: 18px;
-  font-weight: 300;
-  font-family: var(--font-poppins);
-  line-height: 28px !important;
+  font-weight: 400;
+  font-family: var(--font-lato);
+  line-height: 30px !important;
 }
 
 li.cdx-list__item {
-  padding: 0 !important;
+  padding: 0 0 4px 0 !important;
   font-size: 18px;
-  font-weight: 300;
-  font-family: var(--font-poppins);
-  line-height: 28px !important;
+  font-weight: 400;
+  font-family: var(--font-lato);
+  line-height: 30px !important;
 }
 
 .codex-editor__redactor {
@@ -95,20 +98,22 @@ li.cdx-list__item {
 /* list tool */
 
 .cdx-list {
-  padding: 0 0 12px 30px !important;
+  padding: 0 0 0 28px !important;
+  margin: 0 0 28px 0 !important;
 }
 
 /* quote tool */
 
 .cdx-quote {
-  padding: 14px 16px !important;
+  padding: 0 16px !important;
+  margin: 0 0 20px 0 !important;
   position: relative;
 }
 
 .cdx-quote::before {
   content: '❝';
   position: absolute;
-  top: 0;
+  top: -10px;
   left: 0;
   font-size: 30px;
   opacity: 0.5;
@@ -121,9 +126,11 @@ li.cdx-list__item {
 
 .cdx-quote__text {
   padding: 0 !important;
-  font-family: var(--font-poppins);
   font-size: 18px;
+  font-weight: 400;
+  font-family: var(--font-lato);
   border-radius: 0px !important;
+  line-height: 30px !important;
 }
 
 .cdx-quote__caption {
@@ -133,7 +140,8 @@ li.cdx-list__item {
 /* code tool */
 
 .ce-code {
-  padding: 0 0 10px 0 !important;
+  padding: 0 !important;
+  margin: 0 0 20px 0 !important;
   background: transparent !important;
 }
 
@@ -141,7 +149,8 @@ li.cdx-list__item {
   min-height: 250px !important;
   padding: 12px 16px !important;
   border: none !important;
-  background: #d9d9d9 !important;
+  background: rgba(217, 217, 217, 0.5) !important;
+  border: 1px solid #d9d9d9 !important;
   color: #1e1e1e !important;
   font-size: 16px !important;
   font-family: monospace !important;
@@ -150,14 +159,16 @@ li.cdx-list__item {
 }
 
 .dark .ce-code__textarea {
-  background: #2c2c2c !important;
+  background: rgba(44, 44, 44, 0.5) !important;
+  border: 1px solid #2c2c2c !important;
   color: #fafafa !important;
 }
 
 /* image tool */
 
 .image-tool {
-  padding: 10px 0 !important;
+  padding: 0 !important;
+  margin: 0 0 20px 0 !important;
   overflow: hidden;
 }
 
@@ -168,10 +179,16 @@ li.cdx-list__item {
 }
 
 .image-tool__image img {
-  border-radius: 8px;
+  margin: auto;
+  max-height: 480px;
+  object-fit: contain;
 }
 
 .ce-popover-item[data-item-name='withBorder'] {
+  display: none;
+}
+
+.ce-popover-item[data-item-name='stretched'] {
   display: none;
 }
 
@@ -411,12 +428,13 @@ li.cdx-list__item {
 /* delimiter styles */
 
 .ce-delimiter {
-  padding: 12px 0 !important;
+  padding: 0 !important;
+  margin: 20px 0 !important;
 }
 
 .ce-delimiter::before {
   content: '● ● ●' !important;
-  font-size: 18px !important;
+  font-size: 14px !important;
   line-height: normal !important;
   height: fit-content !important;
   letter-spacing: normal !important;
@@ -446,33 +464,35 @@ li.cdx-list__item {
   padding: 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 650px) {
   h1.ce-header {
-    font-size: 28px;
+    margin: 0 0 18px 0 !important;
+    font-size: 26px;
   }
 
   h2.ce-header {
+    margin: 0 0 8px 0 !important;
     font-size: 20px;
   }
 
   .ce-paragraph {
+    margin: 0 0 18px 0 !important;
     font-size: 16px;
+    line-height: 28px !important;
   }
 
   li.cdx-list__item {
     font-size: 16px;
+    line-height: 28px !important;
   }
 
   .cdx-quote {
-    padding: 14px 16px !important;
+    margin: 0 0 18px 0 !important;
   }
 
   .cdx-quote__text {
     font-size: 16px;
-  }
-
-  .image-tool__image img {
-    border-radius: 8px;
+    line-height: 28px !important;
   }
 
   .ce-code__textarea {
@@ -499,11 +519,11 @@ li.cdx-list__item {
   }
 
   .ce-delimiter {
-    padding: 10px 0 !important;
+    margin: 18px 0 !important;
   }
 
   .ce-delimiter:before {
-    font-size: 16px !important;
+    font-size: 12px !important;
   }
 
   .cdx-quote__text {

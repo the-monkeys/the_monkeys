@@ -8,7 +8,7 @@ export const CarouselCard = ({ newsItem }: { newsItem: NewsSource1 }) => {
   return (
     <CarouselItem className='max-h-fit p-0'>
       <p className='mb-2 font-dm_sans font-medium text-xs sm:text-sm capitalize opacity-80'>
-        {`${newsItem.category} | ${newsItem.author}`}
+        {newsItem.category}
       </p>
 
       <Link href={newsItem.url || '#'} target='_blank' className='group'>

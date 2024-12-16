@@ -13,13 +13,7 @@ export const PublishedBlogSkeleton = () => {
         <div>
           <UserInfoCardSkeleton />
 
-          <div className='mt-2 mb-4 flex items-center gap-1 flex-wrap'>
-            <Skeleton className='h-5 w-20 rounded-full' />
-            <Skeleton className='h-5 w-20 rounded-full' />
-            <Skeleton className='h-5 w-20 rounded-full' />
-          </div>
-
-          <div className='flex items-center gap-2'>
+          <div className='mt-2 flex items-center gap-2'>
             <Skeleton className='size-8 rounded-full' />
             <Skeleton className='size-8 rounded-full' />
             <Skeleton className='size-8 rounded-full' />
@@ -35,7 +29,7 @@ export const PublishedBlogSkeleton = () => {
         </div>
       </div>
 
-      <div className='px-4 col-span-3 lg:col-span-1 space-y-4'>
+      <div className='hidden lg:block px-4 col-span-3 lg:col-span-1 space-y-4'>
         <Skeleton className='h-44 w-full' />
         <Skeleton className='h-28 w-full' />
       </div>

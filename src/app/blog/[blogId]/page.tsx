@@ -45,21 +45,15 @@ const BlogPage = ({
 
         <Editor data={blog?.blog} />
 
-        <Separator className='mt-12 mb-6' />
-
-        <BlogTopics topics={blog?.tags || []} className='mb-4' />
+        <Separator className='mt-10 mb-4' />
 
         <BlogReactions blogId={blog?.blog_id} />
       </div>
 
-      <div className='p-4 col-span-3 lg:col-span-1'>
+      <div className='p-4 col-span-3 lg:col-span-1 space-y-6'>
+        <BlogTopics topics={blog?.tags || []} />
+
         <ContributeAndSponsorCard className='mb-6' />
-
-        <h4 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
-          You might also like
-        </h4>
-
-        <Separator className='mt-1 mb-3' />
 
         <BlogRecommendations />
       </div>

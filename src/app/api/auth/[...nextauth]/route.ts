@@ -16,6 +16,7 @@ const authOptions: AuthOptions = {
         last_name: { label: 'last_name', type: 'text' },
         password: { label: 'password', type: 'password' },
       },
+
       async authorize(credentials) {
         try {
           const authResponse = await axios.post(

@@ -22,6 +22,8 @@ export const TopicButton = ({
 }: TopicButtonProps) => {
   const { data: session, status } = useSession();
 
+  if (status === 'unauthenticated') return null;
+
   const handleCategoryClick = async () => {
     const token = session?.user?.token;
     const username = session?.user?.username;
@@ -43,24 +45,12 @@ export const TopicButton = ({
     }
 
     try {
-      await axiosInstance.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/follow-topics/${username}`,
-        {
-          topics: [topic],
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      toast({
-        title: 'Success',
-        description: 'Topic added to your interests.',
+      await axiosInstance.put(`/user/follow-topics/${username}`, {
+        topics: [topic],
       });
+
       onSuccess();
+
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
     } catch (error: any) {
@@ -85,23 +75,10 @@ export const TopicButton = ({
     }
 
     try {
-      await axiosInstance.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/un-follow-topics/${username}`,
-        {
-          topics: [topic],
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      toast({
-        title: 'Success',
-        description: 'Topic removed from your interests.',
+      await axiosInstance.put(`/user/un-follow-topics/${username}`, {
+        topics: [topic],
       });
+
       onSuccess();
 
       mutate('/user/topics');
@@ -114,8 +91,6 @@ export const TopicButton = ({
       console.error('Error:', error.message);
     }
   };
-
-  if (status === 'unauthenticated') return null;
 
   return (
     <>
