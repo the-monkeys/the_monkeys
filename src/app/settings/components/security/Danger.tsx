@@ -84,7 +84,7 @@ export const Danger = () => {
 
           <div className='space-y-2'>
             <p className='font-roboto font-medium text-sm'>
-              To confirm, type "delete my account" in the box below
+              {`To confirm, type "delete my account" in the box below`}
             </p>
 
             <Input

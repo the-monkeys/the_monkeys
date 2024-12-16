@@ -9,8 +9,8 @@ export const CollaborativeBlogging = () => {
         </h2>
 
         <p className='font-roboto text-xs sm:text-sm md:text-base opacity-80'>
-          Invite co-authors to work on blogs together and create impactful
-          stories. Writing is better when it's shared!
+          {`Invite co-authors to work on blogs together and create impactful
+          stories. Writing is better when it's shared!`}
         </p>
       </div>
 

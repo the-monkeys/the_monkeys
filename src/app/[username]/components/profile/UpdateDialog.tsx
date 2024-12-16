@@ -102,8 +102,6 @@ export const UpdateDialog = () => {
     }
   };
 
-  if (isError) return null;
-
   useEffect(() => {
     if (user) {
       form.reset({
@@ -114,6 +112,8 @@ export const UpdateDialog = () => {
       });
     }
   }, [user, form]);
+
+  if (isError) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
