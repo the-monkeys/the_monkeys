@@ -29,6 +29,11 @@ const ProfileDropdown = () => {
           <DropdownMenuItem>
             <div
               onClick={() => {
+								if (window.location.pathname === '/login') {
+									window.location.reload();
+									return;
+								}
+
                 router.push('api/auth/signin');
               }}
               className='flex w-full items-center gap-2'
