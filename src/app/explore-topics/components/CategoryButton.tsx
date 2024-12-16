@@ -22,23 +22,24 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
 
   if (status === 'unauthenticated') return null;
 
-  // Ensure user and topics are defined before executing
-  useEffect(() => {
-    if (user && topics.length > 0) {
-      const userTopics = user?.topics || [];
+  // useEffect(() => {
+  //   if (!user || topics.length === 0) {
+  //     setIsAllTopicsFollowed(false);
+  //     setIsSomeTopicsFollowed(false);
+  //     return;
+  //   }
 
-      const allTopicsFollowed = topics.every((topic) =>
-        userTopics.includes(topic)
-      );
+  //   const userTopics = user.topics || [];
+  //   const allTopicsFollowed = topics.every((topic) =>
+  //     userTopics.includes(topic)
+  //   );
+  //   const someTopicsFollowed = topics.some((topic) =>
+  //     userTopics.includes(topic)
+  //   );
 
-      const someTopicsFollowed = topics.some((topic) =>
-        userTopics.includes(topic)
-      );
-
-      setIsAllTopicsFollowed(allTopicsFollowed);
-      setIsSomeTopicsFollowed(someTopicsFollowed);
-    }
-  }, [user, topics]);
+  //   setIsAllTopicsFollowed(allTopicsFollowed);
+  //   setIsSomeTopicsFollowed(someTopicsFollowed);
+  // }, [user, topics]);
 
   const handleCategoryClick = async () => {
     const token = session?.user?.token;
@@ -55,7 +56,7 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
     if (!username) {
       toast({
         title: 'Error',
-        description: 'Username is missing, please relogin',
+        description: 'Username is missing, please relogin.',
       });
       return;
     }
@@ -69,7 +70,6 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
       });
 
       setStatus('success');
-
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
       setIsAllTopicsFollowed(true);
@@ -79,7 +79,6 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
         title: 'Error',
         description: 'Something went wrong.',
       });
-
       console.error('Error:', error.message);
       setStatus('error');
     } finally {
@@ -108,10 +107,8 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
       });
 
       setStatus('success');
-
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
-
       setIsAllTopicsFollowed(false);
       setIsSomeTopicsFollowed(false);
     } catch (error: any) {
@@ -119,7 +116,6 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
         title: 'Error',
         description: 'Failed to remove topics.',
       });
-
       console.error('Error:', error.message);
       setStatus('error');
     } finally {
