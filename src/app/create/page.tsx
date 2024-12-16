@@ -223,7 +223,7 @@ const CreatePage = () => {
 
   return (
     <>
-      <div className='space-y-2'>
+      <div className='space-y-4'>
         <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
           {isSaving ? (
             <p className='font-roboto text-xs sm:text-sm opacity-80'>
