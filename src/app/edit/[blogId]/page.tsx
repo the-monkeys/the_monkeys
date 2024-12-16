@@ -104,8 +104,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Load the Editor component dynamically
   useEffect(() => {
     const loadEditor = async () => {
-      const module = await import('@/components/editor');
-      setEditor(() => module.default);
+      const editor = await import('@/components/editor');
+      setEditor(() => editor.default);
     };
 
     loadEditor();

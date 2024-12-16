@@ -34,3 +34,4 @@ export const Source2Card: FC<NewsSource2> = React.memo((props) => {
     </div>
   );
 });
+Source2Card.displayName = 'Source2Card';
