@@ -82,10 +82,7 @@ const ExploreTopicsPage = () => {
                       {category}
                     </h2>
 
-                    <CategoryButton
-                      category={category}
-                      topics={uniqueTopics} // Use unique topics here
-                    />
+                    {/* <CategoryButton topics={uniqueTopics} /> */}
                   </div>
 
                   <Separator />

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { useIsFollowingUser } from '@/hooks/user/useUserConnections';
@@ -22,23 +21,23 @@ export const FollowButton = ({ username }: { username?: string }) => {
   const onUserFollow = async () => {
     setLoading(true);
 
+    const previousFollowStatus = followStatus;
+
+    mutate(`/user/is-followed/${username}`, { isFollowing: true }, false);
+
     try {
-      const response = await axiosInstance.post(`/user/follow/${username}`, {
-        headers: {
-          Authorization: `Bearer ${data?.user.token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/user/follow/${username}`);
 
       if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'User followed successfully.',
-        });
-
         mutate(`/user/is-followed/${username}`);
       }
     } catch (err: unknown) {
+      mutate(
+        `/user/is-followed/${username}`,
+        { isFollowing: previousFollowStatus },
+        false
+      );
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -60,23 +59,23 @@ export const FollowButton = ({ username }: { username?: string }) => {
   const onUserUnfollow = async () => {
     setLoading(true);
 
+    const previousFollowStatus = followStatus;
+
+    mutate(`/user/is-followed/${username}`, { isFollowing: false }, false);
+
     try {
-      const response = await axiosInstance.post(`/user/unfollow/${username}`, {
-        headers: {
-          Authorization: `Bearer ${data?.user.token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/user/unfollow/${username}`);
 
       if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'User unfollowed successfully.',
-        });
-
         mutate(`/user/is-followed/${username}`);
       }
     } catch (err: unknown) {
+      mutate(
+        `/user/is-followed/${username}`,
+        { isFollowing: previousFollowStatus },
+        false
+      );
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -99,7 +98,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
     <>
       {followStatus?.isFollowing ? (
         <Button
-          variant='secondary'
+          variant='outline'
           className='rounded-full'
           disabled={loading}
           onClick={onUserUnfollow}
@@ -137,19 +136,9 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post(`/user/follow/${username}`, {
-        headers: {
-          Authorization: `Bearer ${data?.user.token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/user/follow/${username}`);
 
       if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'User followed successfully.',
-        });
-
         mutate(`/user/is-followed/${username}`);
       }
     } catch (err: unknown) {
@@ -175,19 +164,9 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.post(`/user/unfollow/${username}`, {
-        headers: {
-          Authorization: `Bearer ${data?.user.token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/user/unfollow/${username}`);
 
       if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'User unfollowed successfully.',
-        });
-
         mutate(`/user/is-followed/${username}`);
       }
     } catch (err: unknown) {

@@ -8,10 +8,10 @@ import { getCardContent } from '../getBlogContent';
 
 export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
   return (
-    <div className='py-2 md:px-2 flex flex-col gap-2'>
+    <div className='px-4 flex flex-col'>
       <UserInfoCardCompact id={blog?.owner_account_id} />
 
-      <Link href={`/blog/${blog?.blog_id}`} className='group'>
+      <Link href={`/blog/${blog?.blog_id}`} className='group pt-2 pb-1'>
         {getCardContent({ blog }).recommendationTitleDiv}
       </Link>
 

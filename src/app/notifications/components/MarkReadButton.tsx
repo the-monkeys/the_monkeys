@@ -67,7 +67,7 @@ export const MarkReadButton = ({
   return (
     <Button
       size='sm'
-      disabled={loading}
+      disabled={loading || !notificationIds?.length}
       onClick={onMarkRead}
       className='rounded-full'
     >

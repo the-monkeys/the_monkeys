@@ -10,12 +10,7 @@ import axiosInstance from '@/services/api/axiosInstance';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
-type props = {
-  category: string;
-  topics: string[];
-};
-
-export const CategoryButton = ({ category, topics }: props) => {
+export const CategoryButton = ({ topics }: { topics: string[] }) => {
   const { data: session, status } = useSession();
   const { toast } = useToast();
   const { user, isLoading } = useUser(session?.user?.username);
@@ -25,21 +20,26 @@ export const CategoryButton = ({ category, topics }: props) => {
   const [isAllTopicsFollowed, setIsAllTopicsFollowed] = useState(false);
   const [isSomeTopicsFollowed, setIsSomeTopicsFollowed] = useState(false);
 
-  // Update the state based on the user's topics
-  useEffect(() => {
-    const userTopics = user?.topics || [];
+  if (status === 'unauthenticated') return null;
 
-    const allTopicsFollowed = topics.every((topic) =>
-      userTopics.includes(topic)
-    );
+  // useEffect(() => {
+  //   if (!user || topics.length === 0) {
+  //     setIsAllTopicsFollowed(false);
+  //     setIsSomeTopicsFollowed(false);
+  //     return;
+  //   }
 
-    const someTopicsFollowed = topics.some((topic) =>
-      userTopics.includes(topic)
-    );
+  //   const userTopics = user.topics || [];
+  //   const allTopicsFollowed = topics.every((topic) =>
+  //     userTopics.includes(topic)
+  //   );
+  //   const someTopicsFollowed = topics.some((topic) =>
+  //     userTopics.includes(topic)
+  //   );
 
-    setIsAllTopicsFollowed(allTopicsFollowed);
-    setIsSomeTopicsFollowed(someTopicsFollowed);
-  }, [user, topics]);
+  //   setIsAllTopicsFollowed(allTopicsFollowed);
+  //   setIsSomeTopicsFollowed(someTopicsFollowed);
+  // }, [user, topics]);
 
   const handleCategoryClick = async () => {
     const token = session?.user?.token;
@@ -56,7 +56,7 @@ export const CategoryButton = ({ category, topics }: props) => {
     if (!username) {
       toast({
         title: 'Error',
-        description: 'Username is missing, please relogin',
+        description: 'Username is missing, please relogin.',
       });
       return;
     }
@@ -69,22 +69,16 @@ export const CategoryButton = ({ category, topics }: props) => {
         topics,
       });
 
-      toast({
-        title: 'Success',
-        description: 'Category added to your interests.',
-      });
-
       setStatus('success');
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
       setIsAllTopicsFollowed(true);
-      setIsSomeTopicsFollowed(false); // All topics followed after clicking
+      setIsSomeTopicsFollowed(false);
     } catch (error: any) {
       toast({
         title: 'Error',
         description: 'Something went wrong.',
       });
-
       console.error('Error:', error.message);
       setStatus('error');
     } finally {
@@ -108,44 +102,26 @@ export const CategoryButton = ({ category, topics }: props) => {
       setLoading(true);
       setStatus(null);
 
-      await axiosInstance.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/un-follow-topics/${username}`,
-        {
-          topics,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-
-      toast({
-        title: 'Success',
-        description: 'Category successfully removed from your interests.',
+      await axiosInstance.put(`/user/un-follow-topics/${username}`, {
+        topics,
       });
 
       setStatus('success');
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
-
       setIsAllTopicsFollowed(false);
-      setIsSomeTopicsFollowed(false); // No topics followed after unfollowing
+      setIsSomeTopicsFollowed(false);
     } catch (error: any) {
       toast({
         title: 'Error',
         description: 'Failed to remove topics.',
       });
-
       console.error('Error:', error.message);
       setStatus('error');
     } finally {
       setLoading(false);
     }
   };
-
-  if (status === 'unauthenticated') return null;
 
   return (
     <div className='hidden group-hover:flex gap-2'>

@@ -38,8 +38,13 @@ const LandingPage = () => {
           without limits!
         </p>
 
-        <Button size='lg' className='group px-6 rounded-full shadow-md' asChild>
-          <Link href='/create' title='Create'>
+        <Button
+          size='lg'
+          className='group px-6 rounded-full shadow-md'
+          title='Create Blog'
+          asChild
+        >
+          <Link href='/create'>
             <div>
               <Icon
                 name='RiPencil'

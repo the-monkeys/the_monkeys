@@ -8,8 +8,8 @@ const WebLogo = () => {
         src={'/logo-full-dark.svg'}
         alt='Monkeys Logo'
         title='Monkeys Logo'
-        height={30}
-        width={120}
+        height={28}
+        width={112}
       />
 
       <Image
@@ -17,8 +17,8 @@ const WebLogo = () => {
         src={'/logo-full-light.svg'}
         alt='Monkeys Logo'
         title='Monkeys Logo'
-        height={30}
-        width={120}
+        height={28}
+        width={112}
       />
     </div>
   );

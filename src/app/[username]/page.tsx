@@ -15,7 +15,7 @@ export async function generateMetadata({
   const username = params.username;
 
   return {
-    title: `${username}`,
+    title: `@${username}`,
   };
 }
 

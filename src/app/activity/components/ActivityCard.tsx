@@ -14,7 +14,7 @@ export const ActivityCard = ({ activity }: { activity: Activity }) => {
         </p>
       </div>
 
-      <h4 className='flex-1 font-roboto text-sm sm:text-base capitalize'>
+      <h4 className='flex-1 font-roboto text-sm sm:text-base capitalize group-hover:opacity-80 cursor-default'>
         {activity.description}
       </h4>
     </div>

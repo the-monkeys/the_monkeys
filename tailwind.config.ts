@@ -19,9 +19,9 @@ const config = {
     },
     fontFamily: {
       arvo: ['var(--font-arvo)'],
-      roboto: ['var(--font-roboto)'],
       dm_sans: ['var(--font-dm_sans)'],
-      poppins: ['var(--font-poppins)'],
+      roboto: ['var(--font-roboto)'],
+      lato: ['var(--font-lato)'],
     },
     extend: {
       colors: {
@@ -41,8 +41,8 @@ const config = {
           light: '#878787',
         },
         text: {
-          dark: '#FAFAFA',
-          light: '#1E1E1E',
+          dark: '#FEFEFE',
+          light: '#111111',
         },
         alert: {
           red: '#EF4444',
@@ -56,6 +56,9 @@ const config = {
         'scale-up': {
           '0%': {
             scale: '0.8',
+          },
+          '50%': {
+            scale: '1.2',
           },
           '100%': {
             scale: '1',
@@ -117,7 +120,7 @@ const config = {
         },
       },
       animation: {
-        'scale-up': 'scale-up 0.1s ease-in',
+        'scale-up': 'scale-up 0.2s ease-in',
         'icon-shake': 'icon-shake 0.6s ease-in-out',
         'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
         'loader-rotate': 'loader-rotate 0.6s linear infinite',

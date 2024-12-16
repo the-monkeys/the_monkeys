@@ -1,4 +1,5 @@
 import { API_URL } from '@/constants/api';
+import axiosInstance from '@/services/api/axiosInstance';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
@@ -62,14 +63,9 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await axios.post(
+            const response = await axiosInstance.post(
               `${API_URL}/files/post/${blogId}?token=${token}`,
-              formData,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              }
+              formData
             );
 
             return {

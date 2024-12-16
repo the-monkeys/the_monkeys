@@ -48,24 +48,24 @@ export const BookmarkButton = ({
   const onPostBookmark = async () => {
     setLoading(true);
 
+    const previousBookmarkStatus = bookmarkStatus;
+
+    mutate(`/user/is-bookmarked/${blogId}`, { bookMarked: true }, false);
+
     try {
-      const response = await axiosInstance.post(`/user/bookmark/${blogId}`, {
-        headers: {
-          Authorization: `Bearer ${data?.user.token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/user/bookmark/${blogId}`);
 
       if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Post bookmarked successfully.',
-        });
-
         mutate(`/user/is-bookmarked/${blogId}`);
         mutate(`/user/count-bookmarks/${blogId}`);
       }
     } catch (err: unknown) {
+      mutate(
+        `/user/is-bookmarked/${blogId}`,
+        { bookMarked: previousBookmarkStatus },
+        false
+      );
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -87,29 +87,26 @@ export const BookmarkButton = ({
   const onPostRemoveBookmark = async () => {
     setLoading(true);
 
+    const previousBookmarkStatus = bookmarkStatus;
+
+    mutate(`/user/is-bookmarked/${blogId}`, { bookMarked: false }, false);
+
     try {
       const response = await axiosInstance.post(
-        `/user/remove-bookmark/${blogId}`,
-        {
-          headers: {
-            headers: {
-              Authorization: `Bearer ${data?.user.token}`,
-            },
-          },
-        }
+        `/user/remove-bookmark/${blogId}`
       );
 
       if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Post bookmark removed successfully.',
-        });
-
         mutate(`/user/is-bookmarked/${blogId}`);
         mutate(`/user/count-bookmarks/${blogId}`);
       }
     } catch (err: unknown) {
+      mutate(
+        `/user/is-bookmarked/${blogId}`,
+        { bookMarked: previousBookmarkStatus },
+        false
+      );
+
       if (err instanceof Error) {
         toast({
           variant: 'error',

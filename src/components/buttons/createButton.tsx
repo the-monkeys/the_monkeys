@@ -11,7 +11,7 @@ export const CreateButton = () => {
       className='group rounded-full hover:text-text-dark hover:bg-opacity-100'
       asChild
     >
-      <Link href='/create' title='Create Blogs Here'>
+      <Link href='/create' title='Create Blog'>
         <Icon
           name='RiPencil'
           className='group-hover:animate-icon-shake'
