@@ -1,8 +1,8 @@
 npm run lint
 
-if [ $? neq 0 ] then
+if [ $? neq 0 ]; then
 	exit 1
-endif
+fi
 
 npm run format $(git diff --cached --name-only --diff-filter=ACMR | sed 's| |\\ |g') --ignore-unknown
 
