@@ -69,12 +69,7 @@ export const UpdateProfileDialog = () => {
     try {
       const response = await axiosFileInstance.post(
         `/files/profile/${data?.user.username}/profile`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${data?.user.token}`,
-          },
-        }
+        formData
       );
 
       if (response.status === 202) {
