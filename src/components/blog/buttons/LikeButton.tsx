@@ -48,24 +48,20 @@ export const LikeButton = ({
   const onPostLike = async () => {
     setLoading(true);
 
+    const previousLikeStatus = likeStatus;
+
+    mutate(`/user/is-liked/${blogId}`, { isLiked: true }, false);
+
     try {
-      const response = await axiosInstance.post(`/user/like/${blogId}`, {
-        headers: {
-          Authorization: `Bearer ${data?.user.token}`,
-        },
-      });
+      const response = await axiosInstance.post(`/user/like/${blogId}`);
 
       if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Post liked successfully.',
-        });
-
         mutate(`/user/is-liked/${blogId}`);
         mutate(`/user/count-likes/${blogId}`);
       }
     } catch (err: unknown) {
+      mutate(`/user/is-liked/${blogId}`, previousLikeStatus, false);
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -87,26 +83,20 @@ export const LikeButton = ({
   const onPostDislike = async () => {
     setLoading(true);
 
+    const previousLikeStatus = likeStatus;
+
+    mutate(`/user/is-liked/${blogId}`, { isLiked: false }, false);
+
     try {
-      const response = await axiosInstance.post(`/user/unlike/${blogId}`, {
-        headers: {
-          headers: {
-            Authorization: `Bearer ${data?.user.token}`,
-          },
-        },
-      });
+      const response = await axiosInstance.post(`/user/unlike/${blogId}`);
 
       if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Post reaction removed successfully.',
-        });
-
         mutate(`/user/is-liked/${blogId}`);
         mutate(`/user/count-likes/${blogId}`);
       }
     } catch (err: unknown) {
+      mutate(`/user/is-liked/${blogId}`, previousLikeStatus, false);
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
