@@ -22,19 +22,22 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
 
   if (status === 'unauthenticated') return null;
 
+  // Ensure user and topics are defined before executing
   useEffect(() => {
-    const userTopics = user?.topics || [];
+    if (user && topics.length > 0) {
+      const userTopics = user?.topics || [];
 
-    const allTopicsFollowed = topics.every((topic) =>
-      userTopics.includes(topic)
-    );
+      const allTopicsFollowed = topics.every((topic) =>
+        userTopics.includes(topic)
+      );
 
-    const someTopicsFollowed = topics.some((topic) =>
-      userTopics.includes(topic)
-    );
+      const someTopicsFollowed = topics.some((topic) =>
+        userTopics.includes(topic)
+      );
 
-    setIsAllTopicsFollowed(allTopicsFollowed);
-    setIsSomeTopicsFollowed(someTopicsFollowed);
+      setIsAllTopicsFollowed(allTopicsFollowed);
+      setIsSomeTopicsFollowed(someTopicsFollowed);
+    }
   }, [user, topics]);
 
   const handleCategoryClick = async () => {
