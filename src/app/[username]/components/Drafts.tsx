@@ -3,7 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 
 import { BlogCard } from '@/components/blog/cards/BlogCard';
-import { BlogListCardSkeleton } from '@/components/skeletons/blogSkeleton';
+import { BlogCardSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
 
@@ -30,13 +30,13 @@ export const Drafts = () => {
 
   return (
     <div className='min-h-screen'>
-      <div className='flex flex-col gap-6 sm:gap-8'>
+      <div className='flex flex-col gap-8 lg:gap-10'>
         {isLoading ? (
           <div className='w-full space-y-6'>
             {Array(4)
               .fill(null)
               .map((_, index) => (
-                <BlogListCardSkeleton key={index} />
+                <BlogCardSkeleton key={index} />
               ))}
           </div>
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (

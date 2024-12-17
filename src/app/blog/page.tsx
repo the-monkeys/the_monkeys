@@ -13,14 +13,14 @@ import { BlogRecommendations } from './components/blog/BlogRecommendations';
 import { BlogTopics } from './components/blog/BlogTopics';
 
 const BlogPage = ({
-  params,
+  searchParams,
 }: {
-  params: {
-    blogId: string;
+  searchParams: {
+    id: string;
   };
 }) => {
   const { blog, isError, isLoading } = useGetPublishedBlogDetailByBlogId(
-    params.blogId
+    searchParams.id
   );
 
   if (isLoading) {

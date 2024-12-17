@@ -49,14 +49,14 @@ export const BlogCard: FC<BlogCardProps> = ({
             </div>
 
             {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-sm'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-lg'>
                 {imageDiv}
               </div>
             )}
           </div>
         ) : (
           <Link
-            href={`/blog/${blogId}`}
+            href={`/blog?id=${blogId}`}
             className='group flex flex-col sm:flex-row gap-4'
           >
             <div className='flex-1' data-underline={false ? 'false' : 'true '}>
@@ -65,7 +65,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             </div>
 
             {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-sm'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-lg'>
                 {imageDiv}
               </div>
             )}

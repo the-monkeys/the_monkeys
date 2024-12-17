@@ -91,7 +91,7 @@ export const Username = () => {
                       <Input
                         placeholder={
                           session?.user?.username
-                            ? `@${session?.user?.username}`
+                            ? `${session?.user?.username}`
                             : 'Enter username'
                         }
                         {...field}

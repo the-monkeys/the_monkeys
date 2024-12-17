@@ -17,14 +17,14 @@ export const getCardContent = ({
     <h2
       data-underline={isDraft ? 'false' : 'true'}
       dangerouslySetInnerHTML={{ __html: purifyHTMLString(titleContent) }}
-      className='font-roboto font-medium text-lg sm:text-xl capitalize line-clamp-2 data-[underline=true]:group-hover:underline underline-offset-2 decoration-1 '
+      className='mb-1 font-roboto font-semibold text-lg lg:text-xl capitalize line-clamp-2 data-[underline=true]:group-hover:underline underline-offset-2 decoration-1 '
     ></h2>
   );
 
   const recommendationTitleDiv = (
     <h2
       dangerouslySetInnerHTML={{ __html: purifyHTMLString(titleContent) }}
-      className='font-roboto font-medium text-base sm:text-lg capitalize line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
+      className='font-roboto font-medium text-base lg:text-lg capitalize line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
     ></h2>
   );
 

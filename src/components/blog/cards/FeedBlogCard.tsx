@@ -27,7 +27,7 @@ export const FeedBlogCard = ({
         <UserInfoCardCompact id={authorId} />
 
         <Link
-          href={`/blog/${blogId}`}
+          href={`/blog?id=${blogId}`}
           className='group flex flex-col sm:flex-row gap-4'
         >
           <div className='flex-1'>
@@ -36,7 +36,7 @@ export const FeedBlogCard = ({
           </div>
 
           {imageDiv && (
-            <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-sm'>
+            <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-lg'>
               {imageDiv}
             </div>
           )}
