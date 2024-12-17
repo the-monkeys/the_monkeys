@@ -1,7 +1,8 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
 import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
-import Editor from '@/components/editor/preview';
 import Container from '@/components/layout/Container';
 import { PublishedBlogSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
@@ -11,6 +12,10 @@ import { BlogInfoSection } from './components/blog/BlogInfoSection';
 import { BlogReactions } from './components/blog/BlogReactions';
 import { BlogRecommendations } from './components/blog/BlogRecommendations';
 import { BlogTopics } from './components/blog/BlogTopics';
+
+const Editor = dynamic(() => import('@/components/editor/preview'), {
+  ssr: false,
+});
 
 const BlogPage = ({
   searchParams,
