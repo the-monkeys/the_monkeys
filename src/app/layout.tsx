@@ -19,7 +19,7 @@ const arvo = Arvo({
 });
 
 const roboto = Roboto({
-  weight: ['100', '300', '400', '700'],
+  weight: ['100', '300', '400', '500', '700'],
   subsets: ['latin'],
   variable: '--font-roboto',
   display: 'swap',

@@ -4,6 +4,7 @@ import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { Blog } from '@/services/blog/blogTypes';
 import moment from 'moment';
 
+import { LikesCount } from '../LikesCount';
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { BookmarkButton } from '../buttons/BookmarkButton';
 import { getCardContent } from '../getBlogContent';
@@ -44,10 +45,12 @@ export const FeedBlogCard = ({
       </div>
 
       <div className='mt-2 flex justify-between items-center gap-4'>
-        <div className='flex items-center gap-1'>
+        <div className='flex items-center gap-[6px]'>
           <p className='font-roboto text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
+
+          <LikesCount blogId={blog.blog_id} />
         </div>
 
         <div className='flex items-center gap-1'>

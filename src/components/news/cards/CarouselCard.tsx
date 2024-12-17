@@ -12,9 +12,12 @@ export const CarouselCard = ({ newsItem }: { newsItem: NewsSource1 }) => {
       </p>
 
       <Link href={newsItem.url || '#'} target='_blank' className='group'>
-        <h2 className='font-roboto font-medium text-lg sm:text-xl line-clamp-2 group-hover:underline underline-offset-2 decoration-1'>
-          {newsItem?.title}
-        </h2>
+        <h2
+          dangerouslySetInnerHTML={{
+            __html: purifyHTMLString(newsItem?.title),
+          }}
+          className='font-roboto font-medium text-lg sm:text-xl line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
+        ></h2>
 
         <p
           dangerouslySetInnerHTML={{

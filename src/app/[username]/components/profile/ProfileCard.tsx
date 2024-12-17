@@ -47,7 +47,7 @@ export const ProfileCard = ({
       </ProfileFrame>
 
       <div>
-        <h2 className='w-full font-roboto font-medium text-xl md:text-2xl capitalize'>
+        <h2 className='w-full font-roboto text-xl md:text-2xl capitalize'>
           {`${user?.first_name} ${user?.last_name}`}
         </h2>
 
