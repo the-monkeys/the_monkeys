@@ -6,33 +6,37 @@ import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import Icon from '@/components/icon';
 import { BlogCardSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Button } from '@/components/ui/button';
+import useUser from '@/hooks/user/useUser';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import { GetBlogsByTopics } from '@/services/blog/blogTypes';
 
-export const SelectedBlogs = ({
-  topic,
+export const FollowingBlogs = ({
+  username,
   status,
 }: {
-  topic: string;
+  username?: string;
   status: 'authenticated' | 'loading' | 'unauthenticated';
 }) => {
   const [blogs, setBlogs] = useState<GetBlogsByTopics>({ the_blogs: [] });
   const [blogsLoading, setBlogsLoading] = useState(true);
   const [blogsError, setBlogsError] = useState(false);
 
+  const { user, isLoading } = useUser(username);
+
   useEffect(() => {
-    const fetchBlogs = async () => {
-      const payload = {
-        tags: [topic],
-      };
+    const fetchBlogs = async (topics: string[]) => {
+      const payload = { tags: topics };
 
       try {
         setBlogsLoading(true);
 
         getBlogsByTopicSchema.parse(payload);
 
-        const response = await axiosInstanceNoAuth.post('/blog/tags', payload);
+        const response = await axiosInstanceNoAuth.post(
+          '/blog/tadddgs',
+          payload
+        );
 
         setBlogs(response.data);
       } catch (err: unknown) {
@@ -42,8 +46,10 @@ export const SelectedBlogs = ({
       }
     };
 
-    fetchBlogs();
-  }, [topic]);
+    if (user?.topics && user.topics.length > 0) {
+      fetchBlogs(user.topics);
+    }
+  }, [user?.topics]);
 
   if (blogsError)
     return (
@@ -54,7 +60,7 @@ export const SelectedBlogs = ({
 
   return (
     <div className='flex flex-col gap-6 sm:gap-8'>
-      {blogsLoading ? (
+      {isLoading || blogsLoading ? (
         <div className='w-full space-y-6'>
           {Array(4)
             .fill(null)
@@ -65,7 +71,7 @@ export const SelectedBlogs = ({
       ) : !blogs?.the_blogs || blogs?.the_blogs?.length === 0 ? (
         <div className='flex flex-col items-center gap-4'>
           <p className='font-roboto text-sm opacity-80 text-center'>
-            No blogs available for this topic.
+            No blogs available for followed topics.
           </p>
 
           <Button
@@ -81,11 +87,9 @@ export const SelectedBlogs = ({
           </Button>
         </div>
       ) : (
-        blogs?.the_blogs.map((blog) => {
-          return (
-            <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
-          );
-        })
+        blogs.the_blogs.map((blog) => (
+          <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
+        ))
       )}
     </div>
   );

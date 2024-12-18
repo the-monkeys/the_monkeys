@@ -1,64 +1,72 @@
 'use client';
 
+import { useState } from 'react';
+
 import Link from 'next/link';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { useSession } from 'next-auth/react';
 
+import { FollowingBlogs } from './components/FollowingBlogs';
 import { LatestBlogs } from './components/LatestBlogs';
 import { SelectedBlogs } from './components/SelectedBlogs';
 
 const BlogFeedPage = ({
   searchParams,
 }: {
-  searchParams: { topic: string };
+  searchParams: { source: string; topic: string };
 }) => {
-  const { status } = useSession();
+  const { data: session, status } = useSession();
+
+  const [activeTab, setActiveTab] = useState(
+    searchParams.topic ||
+      (searchParams.source === 'following' ? 'following' : 'all')
+  );
 
   return (
     <div className='mx-auto max-w-3xl'>
-      <Tabs
-        defaultValue={searchParams.topic ? searchParams.topic : 'Latest'}
-        className='space-y-6'
-      >
-        <TabsList className='px-0 sm:px-2 md:px-6 flex justify-start gap-2 bg-background-light dark:bg-background-dark z-30'>
-          <TabsTrigger value='Latest'>
-            <Link href={`/feed`}>
-              <p className='px-2 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
-                Latest
-              </p>
+      <div className='px-0 lg:px-6 flex items-center gap-2'>
+        <Button
+          variant={activeTab === 'all' ? 'default' : 'secondary'}
+          size='sm'
+          onClick={() => setActiveTab('all')}
+          asChild
+        >
+          <Link href='/feed?source=all'>All</Link>
+        </Button>
 
-              <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+        <Button
+          variant={activeTab === 'following' ? 'default' : 'secondary'}
+          size='sm'
+          onClick={() => setActiveTab('following')}
+          asChild
+        >
+          <Link href='/feed?source=following'>Following</Link>
+        </Button>
+
+        {searchParams.topic && (
+          <Button
+            variant={activeTab === searchParams.topic ? 'default' : 'secondary'}
+            size='sm'
+            onClick={() => setActiveTab(searchParams.topic)}
+            asChild
+          >
+            <Link href={`/feed?topic=${searchParams.topic}`}>
+              {searchParams.topic}
             </Link>
-          </TabsTrigger>
+          </Button>
+        )}
+      </div>
 
-          {searchParams.topic && (
-            <TabsTrigger value={searchParams.topic} asChild>
-              <Link href={`/feed?topic=${searchParams.topic}`}>
-                <p className='px-2 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100 capitalize'>
-                  {searchParams.topic}
-                </p>
-
-                <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
-              </Link>
-            </TabsTrigger>
-          )}
-        </TabsList>
-
-        <TabsContent
-          className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
-          value='Latest'
-        >
-          <LatestBlogs status={status} />
-        </TabsContent>
-
-        <TabsContent
-          className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
-          value={searchParams.topic}
-        >
+      <div className='mt-6 md:mt-8 divide-y divide-foreground-light dark:divide-foreground-dark'>
+        {activeTab === 'all' && <LatestBlogs status={status} />}
+        {activeTab === 'following' && (
+          <FollowingBlogs username={session?.user.username} status={status} />
+        )}
+        {activeTab === searchParams.topic && (
           <SelectedBlogs topic={searchParams.topic} status={status} />
-        </TabsContent>
-      </Tabs>
+        )}
+      </div>
     </div>
   );
 };

@@ -54,7 +54,7 @@ const WSNotificationDropdown = () => {
     };
 
     return () => {
-      ws.close();
+      ws.close = () => console.log('Connection closed 😟');
     };
   }, []);
 

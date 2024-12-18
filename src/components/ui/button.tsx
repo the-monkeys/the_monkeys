@@ -5,12 +5,12 @@ import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md font-dm_sans transition-colors disabled:pointer-events-none disabled:opacity-50 text-base',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-md font-dm_sans disabled:pointer-events-none disabled:opacity-50 text-base',
   {
     variants: {
       variant: {
         default:
-          'bg-background-dark dark:bg-background-light text-text-dark dark:text-text-light hover:bg-foreground-dark dark:hover:bg-foreground-light',
+          'bg-background-dark text-text-dark dark:bg-background-light dark:text-text-light border-2 border-background-dark dark:border-background-light hover:bg-background-dark dark:hover:bg-background-light hover:text-text-light dark:hover:text-text-dark hover:bg-opacity-0 dark:hover:bg-opacity-0',
         destructive:
           'bg-alert-red text-text-dark border-2 border-alert-red hover:text-alert-red hover:bg-opacity-0',
         constructive:

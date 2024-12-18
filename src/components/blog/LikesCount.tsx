@@ -5,10 +5,12 @@ export const LikesCount = ({ blogId }: { blogId?: string }) => {
 
   if (likeCountError || likeCountLoading) return null;
 
+  if (!likes?.count) return null;
+
   return (
-    <p className='font-roboto text-xs'>
+    <p className='font-dm_sans text-xs'>
       <span className='mr-[6px]'>·</span>
-      {likes?.count || 0}{' '}
+      {likes?.count}{' '}
       <span className='opacity-80'>
         {(likes?.count as number) > 1 ? 'likes' : 'like'}
       </span>

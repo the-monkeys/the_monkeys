@@ -5,7 +5,7 @@ import useSWR from 'swr';
 const useUser = (username: string | undefined) => {
   const { data, error, isLoading, mutate } =
     useSWR<GetPublicUserProfileApiResponse>(
-      `/user/public/${username}`,
+      username ? `/user/public/${username}` : null,
       fetcher
     );
 

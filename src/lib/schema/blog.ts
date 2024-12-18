@@ -8,3 +8,7 @@ export const blogDetailsSchema = z.object({
     .string({ required_error: 'Preview subheading is required' })
     .min(1, 'Preview subheading is required'),
 });
+
+export const getBlogsByTopicSchema = z.object({
+  tags: z.array(z.string()),
+});
