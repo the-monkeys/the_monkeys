@@ -1,12 +1,6 @@
-import type { Metadata } from 'next';
-
 import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import Container from '@/components/layout/Container';
 import { SearchInput } from '@/components/search/SearchInput';
-
-export const metadata: Metadata = {
-  title: 'Feed',
-};
 
 const BlogFeedPageLayout = ({
   children,

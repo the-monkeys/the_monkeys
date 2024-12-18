@@ -26,8 +26,8 @@ const ProfileDropdown = () => {
 
       {status === 'unauthenticated' ? (
         <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44'>
-          <DropdownMenuItem>
-            <div
+          <DropdownMenuItem asChild>
+            <button
               onClick={() => {
                 if (window.location.pathname === '/login') {
                   window.location.reload();
@@ -42,7 +42,7 @@ const ProfileDropdown = () => {
               <p className='font-dm_sans text-sm sm:text-base text-alert-green'>
                 Login
               </p>
-            </div>
+            </button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       ) : (
@@ -81,7 +81,7 @@ const ProfileDropdown = () => {
           <DropdownMenuSeparator />
 
           <DropdownMenuItem asChild>
-            <div
+            <button
               onClick={() => {
                 signOut();
                 toast({
@@ -97,7 +97,7 @@ const ProfileDropdown = () => {
               <p className='font-dm_sans text-sm sm:text-base text-alert-red'>
                 Logout
               </p>
-            </div>
+            </button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       )}

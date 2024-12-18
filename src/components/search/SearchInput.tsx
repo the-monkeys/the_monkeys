@@ -36,7 +36,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
       <div
         className={twMerge(
           className,
-          'group px-4 py-2 flex items-center gap-2 border-1 border-foreground-light dark:border-foreground-dark focus-within:border-transparent dark:focus-within:border-transparent rounded-full'
+          'group px-4 py-2 flex items-center gap-2 border-1 border-foreground-light dark:border-foreground-dark focus-within:border-border-light dark:focus-within:border-border-light rounded-full'
         )}
       >
         <Icon
@@ -48,9 +48,11 @@ export const SearchInput = ({ className }: { className?: string }) => {
         <Input
           variant='ghost'
           placeholder={
-            status === 'authenticated' ? 'Search' : 'You are not logged in'
+            status === 'authenticated'
+              ? 'Search authors'
+              : 'You are not logged in'
           }
-          className='h-fit px-0 rounded-none'
+          className='h-fit px-0 rounded-none focus-visible:shadow-none'
           onChange={(e) => handleInputChange(e)}
           disabled={status === 'unauthenticated'}
         />

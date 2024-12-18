@@ -5,10 +5,6 @@ import ProfileImage, { ProfileFrame } from '../profileImage';
 export const SearchUsers = ({ users }: { users?: SearchUser[] | null }) => {
   return (
     <div className='space-y-2'>
-      <p className='pb-1 font-dm_sans font-medium text-sm sm:text-base opacity-80'>
-        Profiles
-      </p>
-
       {!users || users === null ? (
         <p className='font-roboto text-sm opacity-80 text-center'>
           No matching profiles.

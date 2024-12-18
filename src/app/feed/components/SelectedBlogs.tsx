@@ -4,8 +4,7 @@ import Link from 'next/link';
 
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import Icon from '@/components/icon';
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
-import { FeedListCardSkeleton } from '@/components/skeletons/blogSkeleton';
+import { BlogCardSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Button } from '@/components/ui/button';
 import axiosInstance from '@/services/api/axiosInstance';
 import { GetBlogsByTopics } from '@/services/blog/blogTypes';
@@ -62,11 +61,11 @@ export const SelectedBlogs = ({
           {Array(4)
             .fill(null)
             .map((_, index) => (
-              <FeedListCardSkeleton key={index} />
+              <BlogCardSkeleton key={index} />
             ))}
         </div>
       ) : !blogs?.the_blogs || blogs?.the_blogs?.length === 0 ? (
-        <div className='flex flex-col items-center gap-4'>
+        <div className='flex flex-col items-center gap-6'>
           <p className='font-roboto text-sm opacity-80 text-center'>
             No blogs available for this topic.
           </p>

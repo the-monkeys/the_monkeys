@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const MobileLogo = () => {
   return (
-    <div className='block md:hidden '>
+    <div className='block md:hidden pt-1'>
       <Image
         src={'/logo-full-dark.svg'}
         alt='Monkeys Logo'

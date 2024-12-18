@@ -33,7 +33,7 @@ export const BlogRecommendations = () => {
 
       <Separator className='mb-3' />
 
-      <div className='flex flex-col gap-6'>
+      <div className='flex flex-col gap-6 lg:gap-8'>
         {blogs?.the_blogs.length ? (
           blogs?.the_blogs.slice(0, 5).map((blog) => {
             return blog?.blog?.blocks.length < 5 ? null : (

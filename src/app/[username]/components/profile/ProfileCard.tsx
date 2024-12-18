@@ -47,7 +47,7 @@ export const ProfileCard = ({
       </ProfileFrame>
 
       <div>
-        <h2 className='w-full font-roboto font-medium text-xl md:text-2xl capitalize'>
+        <h2 className='w-full font-roboto text-xl md:text-2xl capitalize'>
           {`${user?.first_name} ${user?.last_name}`}
         </h2>
 
@@ -67,21 +67,25 @@ export const ProfileCard = ({
       <div className='flex items-center flex-wrap gap-x-2'>
         <Icon name='RiGroup' size={18} className='opacity-80' />
 
-        <p className='font-roboto'>
-          {connectionsError ? '-' : connections?.followers || 0}{' '}
+        <p className='font-roboto text-sm md:text-base'>
+          {connectionsLoading || connectionsError
+            ? '-'
+            : connections?.followers || 0}{' '}
           {isAuthenticated ? (
             <ConnectionsDialog label='followers' />
           ) : (
-            <span className='inline text-sm opacity-80'>followers</span>
+            <span className='inline opacity-80'>followers</span>
           )}
         </p>
 
-        <p className='font-roboto'>
-          {connectionsError ? '-' : connections?.following || 0}{' '}
+        <p className='font-roboto text-sm md:text-base'>
+          {connectionsLoading || connectionsError
+            ? '-'
+            : connections?.following || 0}{' '}
           {isAuthenticated ? (
             <ConnectionsDialog label='following' />
           ) : (
-            <span className='inline text-sm opacity-80'>following</span>
+            <span className='inline opacity-80'>following</span>
           )}
         </p>
       </div>

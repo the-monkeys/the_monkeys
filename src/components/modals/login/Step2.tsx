@@ -146,7 +146,7 @@ const Step2 = ({
         <div className='mt-4 text-center'>
           <Link
             href='#'
-            className='font-dm_sans text-sm hover:underline'
+            className='font-dm_sans text-sm hover:underline opacity-80'
             onClick={handleForgotPassword}
           >
             Forgot your password?

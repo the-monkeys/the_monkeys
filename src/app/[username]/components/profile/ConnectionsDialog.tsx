@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { ConnectionsListSkeleton } from '@/components/skeletons/userSkeleton';
 import {
   Dialog,
   DialogContent,
@@ -38,9 +39,13 @@ const ConnectionCard = ({
   );
 };
 
-export const ConnectionsDialog = ({ label }: { label: string }) => {
-  const { followers, follwerLoading } = useGetFollowers();
-  const { following, follwingLoading } = useGetFollowing();
+export const ConnectionsDialog = ({
+  label,
+}: {
+  label: 'followers' | 'following';
+}) => {
+  const { followers, followerLoading } = useGetFollowers();
+  const { following, followingLoading } = useGetFollowing();
 
   return (
     <Dialog>
@@ -55,10 +60,10 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <Tabs defaultValue='followers' className='space-y-4'>
+        <Tabs defaultValue={label} className='space-y-4'>
           <TabsList className='flex gap-0 bg-background-light dark:bg-background-dark z-30'>
             <TabsTrigger
-              disabled={follwerLoading}
+              disabled={followerLoading}
               value='followers'
               className='w-full'
             >
@@ -70,7 +75,7 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
             </TabsTrigger>
 
             <TabsTrigger
-              disabled={follwingLoading}
+              disabled={followingLoading}
               value='following'
               className='w-full'
             >
@@ -83,49 +88,55 @@ export const ConnectionsDialog = ({ label }: { label: string }) => {
           </TabsList>
 
           <div className='max-h-[50vh] sm:max-h-[60vh] overflow-auto'>
-            <TabsContent
-              className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
-              value='followers'
-            >
-              {followers?.users ? (
-                followers?.users.map((follower) => {
-                  return (
-                    <ConnectionCard
-                      key={follower?.username}
-                      first_name={follower.first_name}
-                      last_name={follower.last_name}
-                      username={follower.username}
-                    />
-                  );
-                })
-              ) : (
-                <p className='py-4 font-roboto text-xs sm:text-sm text-center opacity-80'>
-                  You don&apos;t have any followers yet.
-                </p>
-              )}
-            </TabsContent>
+            {followerLoading || followingLoading ? (
+              <ConnectionsListSkeleton />
+            ) : (
+              <>
+                <TabsContent
+                  className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
+                  value='followers'
+                >
+                  {followers?.users ? (
+                    followers?.users.map((follower) => {
+                      return (
+                        <ConnectionCard
+                          key={follower?.username}
+                          first_name={follower.first_name}
+                          last_name={follower.last_name}
+                          username={follower.username}
+                        />
+                      );
+                    })
+                  ) : (
+                    <p className='py-4 font-roboto text-xs sm:text-sm text-center opacity-80'>
+                      You don&apos;t have any followers yet.
+                    </p>
+                  )}
+                </TabsContent>
 
-            <TabsContent
-              className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
-              value='following'
-            >
-              {following?.users ? (
-                following?.users.map((following) => {
-                  return (
-                    <ConnectionCard
-                      key={following?.username}
-                      first_name={following.first_name}
-                      last_name={following.last_name}
-                      username={following.username}
-                    />
-                  );
-                })
-              ) : (
-                <p className='py-4 font-roboto text-xs sm:text-sm text-center opacity-80'>
-                  You&apos;re not following anyone yet.
-                </p>
-              )}
-            </TabsContent>
+                <TabsContent
+                  className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
+                  value='following'
+                >
+                  {following?.users ? (
+                    following?.users.map((following) => {
+                      return (
+                        <ConnectionCard
+                          key={following?.username}
+                          first_name={following.first_name}
+                          last_name={following.last_name}
+                          username={following.username}
+                        />
+                      );
+                    })
+                  ) : (
+                    <p className='py-4 font-roboto text-xs sm:text-sm text-center opacity-80'>
+                      You&apos;re not following anyone yet.
+                    </p>
+                  )}
+                </TabsContent>
+              </>
+            )}
           </div>
         </Tabs>
       </DialogContent>

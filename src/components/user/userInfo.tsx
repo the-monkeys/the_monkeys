@@ -22,16 +22,16 @@ export const UserInfoCardCompact = ({ id }: { id?: string }) => {
   }
 
   return (
-    <div className='w-full flex items-center gap-2'>
+    <div className='w-full flex items-center gap-1'>
       {user && (
-        <ProfileFrame className='size-6'>
+        <ProfileFrame className='size-5 lg:size-6'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
         </ProfileFrame>
       )}
 
       <Link
         href={`/${user?.username}`}
-        className='font-dm_sans font-medium text-sm hover:opacity-80'
+        className='font-dm_sans text-xs lg:text-sm hover:opacity-80'
       >
         {user?.first_name} {user?.last_name}
       </Link>

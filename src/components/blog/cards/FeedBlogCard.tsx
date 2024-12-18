@@ -4,6 +4,7 @@ import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { Blog } from '@/services/blog/blogTypes';
 import moment from 'moment';
 
+import { LikesCount } from '../LikesCount';
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { BookmarkButton } from '../buttons/BookmarkButton';
 import { getCardContent } from '../getBlogContent';
@@ -27,7 +28,7 @@ export const FeedBlogCard = ({
         <UserInfoCardCompact id={authorId} />
 
         <Link
-          href={`/blog/${blogId}`}
+          href={`/blog?id=${blogId}`}
           className='group flex flex-col sm:flex-row gap-4'
         >
           <div className='flex-1'>
@@ -36,7 +37,7 @@ export const FeedBlogCard = ({
           </div>
 
           {imageDiv && (
-            <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-sm'>
+            <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-lg'>
               {imageDiv}
             </div>
           )}
@@ -44,10 +45,12 @@ export const FeedBlogCard = ({
       </div>
 
       <div className='mt-2 flex justify-between items-center gap-4'>
-        <div className='flex items-center gap-1'>
+        <div className='flex items-center gap-[6px]'>
           <p className='font-roboto text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
+
+          <LikesCount blogId={blog.blog_id} />
         </div>
 
         <div className='flex items-center gap-1'>

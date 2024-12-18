@@ -1,9 +1,13 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
 import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
-import Editor from '@/components/editor/preview';
 import Container from '@/components/layout/Container';
-import { PublishedBlogSkeleton } from '@/components/skeletons/blogSkeleton';
+import {
+  EditorBlockSkeleton,
+  PublishedBlogSkeleton,
+} from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 
@@ -12,15 +16,20 @@ import { BlogReactions } from './components/blog/BlogReactions';
 import { BlogRecommendations } from './components/blog/BlogRecommendations';
 import { BlogTopics } from './components/blog/BlogTopics';
 
+const Editor = dynamic(() => import('@/components/editor/preview'), {
+  ssr: false,
+  loading: () => <EditorBlockSkeleton />,
+});
+
 const BlogPage = ({
-  params,
+  searchParams,
 }: {
-  params: {
-    blogId: string;
+  searchParams: {
+    id: string;
   };
 }) => {
   const { blog, isError, isLoading } = useGetPublishedBlogDetailByBlogId(
-    params.blogId
+    searchParams.id
   );
 
   if (isLoading) {

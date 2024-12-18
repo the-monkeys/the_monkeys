@@ -8,7 +8,9 @@ import { Separator } from '@/components/ui/separator';
 export const BlogTopics = ({ topics }: { topics: string[] }) => {
   return (
     <div>
-      <h4 className='px-1 font-dm_sans text-sm md:text-base'>Published in</h4>
+      <h4 className='px-1 font-dm_sans font-medium text-sm md:text-base'>
+        Published in
+      </h4>
 
       <Separator className='mt-1 mb-2' />
 
@@ -20,7 +22,7 @@ export const BlogTopics = ({ topics }: { topics: string[] }) => {
         ) : (
           <div className='py-2 flex-1 flex flex-col items-center gap-4'>
             <p className='font-roboto text-sm opacity-80 text-center'>
-              No blogs available.
+              No topics available.
             </p>
 
             <Button size='sm' className='rounded-full ' asChild>

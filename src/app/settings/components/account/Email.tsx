@@ -168,8 +168,7 @@ export const Email = () => {
                     <FormControl>
                       <Input
                         placeholder={
-                          `eg. ${session?.user?.email}` ||
-                          'eg. yourmail@monkeys.xyz'
+                          `${session?.user?.email}` || 'yourmail@monkeys.xyz'
                         }
                         {...field}
                       />
