@@ -22,3 +22,13 @@ export const UserInfoCardCompactSkeleton = () => {
     </div>
   );
 };
+
+export const ConnectionsListSkeleton = () => {
+  return (
+    <div className='space-y-2'>
+      {new Array(4).fill(null).map((_, index) => {
+        return <Skeleton key={index} className='h-10 w-full' />;
+      })}
+    </div>
+  );
+};

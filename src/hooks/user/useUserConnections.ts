@@ -28,7 +28,7 @@ export const useGetFollowers = () => {
   return {
     followers: data,
     followerError: error,
-    follwerLoading: isLoading,
+    followerLoading: isLoading,
   };
 };
 
@@ -41,7 +41,7 @@ export const useGetFollowing = () => {
   return {
     following: data,
     followingError: error,
-    follwingLoading: isLoading,
+    followingLoading: isLoading,
   };
 };
 
