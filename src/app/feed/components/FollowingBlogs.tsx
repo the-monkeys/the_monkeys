@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import Icon from '@/components/icon';
-import { BlogCardSkeleton } from '@/components/skeletons/blogSkeleton';
+import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Button } from '@/components/ui/button';
 import useUser from '@/hooks/user/useUser';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
@@ -33,10 +33,7 @@ export const FollowingBlogs = ({
 
         getBlogsByTopicSchema.parse(payload);
 
-        const response = await axiosInstanceNoAuth.post(
-          '/blog/tadddgs',
-          payload
-        );
+        const response = await axiosInstanceNoAuth.post('/blog/tags', payload);
 
         setBlogs(response.data);
       } catch (err: unknown) {
@@ -61,13 +58,7 @@ export const FollowingBlogs = ({
   return (
     <div className='flex flex-col gap-6 sm:gap-8'>
       {isLoading || blogsLoading ? (
-        <div className='w-full space-y-6'>
-          {Array(4)
-            .fill(null)
-            .map((_, index) => (
-              <BlogCardSkeleton key={index} />
-            ))}
-        </div>
+        <BlogCardListSkeleton />
       ) : !blogs?.the_blogs || blogs?.the_blogs?.length === 0 ? (
         <div className='flex flex-col items-center gap-4'>
           <p className='font-roboto text-sm opacity-80 text-center'>

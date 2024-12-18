@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import Icon from '@/components/icon';
-import { BlogCardSkeleton } from '@/components/skeletons/blogSkeleton';
+import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Button } from '@/components/ui/button';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
@@ -55,13 +55,7 @@ export const SelectedBlogs = ({
   return (
     <div className='flex flex-col gap-6 sm:gap-8'>
       {blogsLoading ? (
-        <div className='w-full space-y-6'>
-          {Array(4)
-            .fill(null)
-            .map((_, index) => (
-              <BlogCardSkeleton key={index} />
-            ))}
-        </div>
+        <BlogCardListSkeleton />
       ) : !blogs?.the_blogs || blogs?.the_blogs?.length === 0 ? (
         <div className='flex flex-col items-center gap-4'>
           <p className='font-roboto text-sm opacity-80 text-center'>

@@ -56,3 +56,15 @@ export const BlogCardSkeleton = () => {
     </div>
   );
 };
+
+export const BlogCardListSkeleton = () => {
+  return (
+    <div className='w-full space-y-6 md:space-y-8'>
+      {Array(4)
+        .fill(null)
+        .map((_, index) => (
+          <BlogCardSkeleton key={index} />
+        ))}
+    </div>
+  );
+};
