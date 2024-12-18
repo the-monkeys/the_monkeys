@@ -8,7 +8,7 @@ export const LikesCount = ({ blogId }: { blogId?: string }) => {
   return (
     <p className='font-roboto text-xs'>
       <span className='mr-[6px]'>·</span>
-      {likes?.count}{' '}
+      {likes?.count || 0}{' '}
       <span className='opacity-80'>
         {(likes?.count as number) > 1 ? 'likes' : 'like'}
       </span>

@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { footerList } from '@/constants/footer';
+import { MONKEYS_DISCORD, MONKEYS_GITHUB, MONKEYS_X } from '@/constants/social';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -105,7 +106,7 @@ const Footer = () => {
           <div className='flex items-center justify-center gap-4'>
             <Link
               className='opacity-80 hover:opacity-100'
-              href='https://discord.gg/6fK9YuV8FV'
+              href={MONKEYS_DISCORD}
               target='_blank'
             >
               <Icon name='RiDiscord' type='Fill' size={18} />
@@ -113,7 +114,7 @@ const Footer = () => {
 
             <Link
               className='opacity-80 hover:opacity-100'
-              href='https://github.com/the-monkeys'
+              href={MONKEYS_GITHUB}
               target='_blank'
             >
               <Icon name='RiGithub' type='Fill' size={18} />
@@ -121,7 +122,7 @@ const Footer = () => {
 
             <Link
               className='opacity-80 hover:opacity-100'
-              href='https://x.com/MonkeysInsight'
+              href={MONKEYS_X}
               target='_blank'
             >
               <Icon name='RiTwitterX' type='Fill' size={18} />
