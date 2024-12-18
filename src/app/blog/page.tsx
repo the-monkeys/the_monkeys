@@ -4,7 +4,10 @@ import dynamic from 'next/dynamic';
 
 import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import Container from '@/components/layout/Container';
-import { PublishedBlogSkeleton } from '@/components/skeletons/blogSkeleton';
+import {
+  EditorBlockSkeleton,
+  PublishedBlogSkeleton,
+} from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 
@@ -15,6 +18,7 @@ import { BlogTopics } from './components/blog/BlogTopics';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
+  loading: () => <EditorBlockSkeleton />,
 });
 
 const BlogPage = ({
