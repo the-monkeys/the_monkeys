@@ -40,7 +40,7 @@ export const PublishedBlogSkeleton = () => {
 
 export const BlogCardSkeleton = () => {
   return (
-    <div className='md:px-6 space-y-2'>
+    <div className='px-0 lg:px-6 space-y-2'>
       <UserInfoCardCompactSkeleton />
 
       <Skeleton className='h-28 sm:h-24 w-full' />
@@ -53,6 +53,17 @@ export const BlogCardSkeleton = () => {
         <Skeleton className='size-6 rounded-full' />
         <Skeleton className='size-6 rounded-full' />
       </div>
+    </div>
+  );
+};
+
+export const BlogCardListSkeleton = () => {
+  return (
+    <div className='w-full space-y-6 md:space-y-8'>
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
     </div>
   );
 };

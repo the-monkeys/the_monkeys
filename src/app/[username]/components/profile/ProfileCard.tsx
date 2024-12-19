@@ -8,6 +8,12 @@ import { notFound, useParams } from 'next/navigation';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import {
+  GITHUB_URL,
+  INSTAGRAM_URL,
+  LINKEDIN_URL,
+  X_URL,
+} from '@/constants/social';
 import useUser from '@/hooks/user/useUser';
 import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import moment from 'moment';
@@ -40,7 +46,7 @@ export const ProfileCard = ({
 
   return (
     <div className='space-y-2'>
-      <ProfileFrame className='size-28 sm:size-32'>
+      <ProfileFrame className='size-[100px] md:size-[120px]'>
         {user?.username && (
           <ProfileImage firstName={user.first_name} username={user.username} />
         )}
@@ -113,7 +119,7 @@ export const ProfileCard = ({
           <Link
             target='_blank'
             title='Twitter'
-            href={`https://x.com/${user.twitter}`}
+            href={`${X_URL}/${user.twitter}`}
             className='flex items-center gap-1'
           >
             <Icon
@@ -123,7 +129,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto text-sm opacity-80 hover:opacity-100'>
+            <p className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline'>
               {user.twitter}
             </p>
           </Link>
@@ -133,7 +139,7 @@ export const ProfileCard = ({
           <Link
             target='_blank'
             title='Twitter'
-            href={`https://github.com/${user.github}/`}
+            href={`${GITHUB_URL}/${user.github}/`}
             className='flex items-center gap-1'
           >
             <Icon
@@ -143,7 +149,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto text-sm opacity-80 hover:opacity-100'>
+            <p className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline'>
               {user.github}
             </p>
           </Link>
@@ -153,7 +159,7 @@ export const ProfileCard = ({
           <Link
             target='_blank'
             title='Twitter'
-            href={`https://www.linkedin.com/in/${user.linkedin}`}
+            href={`${LINKEDIN_URL}/${user.linkedin}`}
             className='flex items-center gap-1'
           >
             <Icon
@@ -163,7 +169,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto text-sm opacity-80 hover:opacity-100'>
+            <p className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline'>
               {user.linkedin}
             </p>
           </Link>
@@ -173,7 +179,7 @@ export const ProfileCard = ({
           <Link
             target='_blank'
             title='Twitter'
-            href={`https://www.instagram.com/${user.instagram}/`}
+            href={`${INSTAGRAM_URL}/${user.instagram}/`}
             className='flex items-center gap-1'
           >
             <Icon
@@ -183,7 +189,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto text-sm opacity-80 hover:opacity-100'>
+            <p className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline'>
               {user.instagram}
             </p>
           </Link>

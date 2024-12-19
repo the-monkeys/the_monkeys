@@ -1,5 +1,5 @@
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
-import { BlogCardSkeleton } from '@/components/skeletons/blogSkeleton';
+import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
 export const LatestBlogs = ({
@@ -19,13 +19,7 @@ export const LatestBlogs = ({
   return (
     <div className='flex flex-col gap-8 lg:gap-10'>
       {isLoading ? (
-        <div className='w-full space-y-6'>
-          {Array(4)
-            .fill(null)
-            .map((_, index) => (
-              <BlogCardSkeleton key={index} />
-            ))}
-        </div>
+        <BlogCardListSkeleton />
       ) : !blogs?.the_blogs || blogs?.the_blogs?.length === 0 ? (
         <p className='font-roboto text-sm opacity-80'>No blogs available.</p>
       ) : (

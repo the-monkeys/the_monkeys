@@ -21,7 +21,7 @@ export const ProfileSection = () => {
     data?.user.username === params.username && status === 'authenticated';
 
   return (
-    <div>
+    <>
       <div className='flex gap-1 items-center justify-end'>
         <ProfileActionsDropdown username={params.username} />
 
@@ -37,6 +37,6 @@ export const ProfileSection = () => {
       )}
 
       <TopicsCard />
-    </div>
+    </>
   );
 };

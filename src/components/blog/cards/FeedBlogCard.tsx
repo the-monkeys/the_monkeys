@@ -23,7 +23,7 @@ export const FeedBlogCard = ({
   const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
 
   return (
-    <div className='w-full px-0 sm:px-4 md:px-6'>
+    <div className='w-full px-0 lg:px-6'>
       <div className='space-y-2'>
         <UserInfoCardCompact id={authorId} />
 
@@ -44,9 +44,9 @@ export const FeedBlogCard = ({
         </Link>
       </div>
 
-      <div className='mt-2 flex justify-between items-center gap-4'>
+      <div className='mt-2 px-1 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-[6px]'>
-          <p className='font-roboto text-xs opacity-80'>
+          <p className='font-dm_sans text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
 

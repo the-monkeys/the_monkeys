@@ -1,6 +1,5 @@
-import Link from 'next/link';
-
 import Icon, { IconName } from '../icon';
+import LinksRedirectArrow from '../links/LinksRedirectArrow';
 
 const SocialCard = ({
   icon,
@@ -14,20 +13,18 @@ const SocialCard = ({
   link: string;
 }) => {
   return (
-    <div className='group w-full flex items-center border-1 border-border-light dark:border-border-dark p-4 rounded-md space-x-4 cursor-default'>
-      <div>
-        <Icon name={icon} type='Fill' size={24} />
+    <div className='col-span-2 sm:col-span-1 p-4 flex flex-col justify-between bg-foreground-light/25 dark:bg-foreground-dark/25 border-1 border-border-light dark:border-border-dark rounded-md space-y-4'>
+      <Icon name={icon} className='opacity-80' />
+
+      <div className='space-y-1'>
+        <LinksRedirectArrow link={link}>
+          <h2 className='font-dm_sans font-medium text-base md:text-lg'>
+            {title}
+          </h2>
+        </LinksRedirectArrow>
+
+        <p className='font-roboto text-xs md:text-sm opacity-80'>{text}</p>
       </div>
-
-      <div className='flex-1'>
-        <p className='font-dm_sans font-medium text-lg'>{title}</p>
-
-        <p className='font-roboto font-light text-xs md:text-sm'>{text}</p>
-      </div>
-
-      <Link href={link}>
-        <Icon name='RiArrowRightUp' className='group-hover:text-brand-orange' />
-      </Link>
     </div>
   );
 };

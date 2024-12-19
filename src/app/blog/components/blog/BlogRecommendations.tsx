@@ -27,7 +27,7 @@ export const BlogRecommendations = () => {
 
   return (
     <div className='pb-6 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-xl'>
-      <h4 className='px-4 py-3 font-dm_sans font-medium text-sm md:text-base'>
+      <h4 className='px-4 pt-3 pb-2 font-dm_sans font-medium text-base md:text-lg'>
         You might also like
       </h4>
 
