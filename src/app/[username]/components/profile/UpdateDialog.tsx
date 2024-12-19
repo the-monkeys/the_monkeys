@@ -118,9 +118,7 @@ export const UpdateDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant='secondary' className='w-full'>
-          Update Details
-        </Button>
+        <Button className='w-full'>Update Details</Button>
       </DialogTrigger>
 
       <DialogContent className='max-h-[60vh] sm:max-h-[80vh] overflow-auto'>

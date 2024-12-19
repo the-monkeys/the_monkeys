@@ -16,7 +16,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
         {getCardContent({ blog }).recommendationTitleDiv}
       </Link>
 
-      <div className='flex items-center gap-[6px]'>
+      <div className='px-1 flex items-center gap-[6px]'>
         <p className='font-dm_sans text-xs opacity-80'>
           {moment(blog?.blog?.time).format('MMM DD, YYYY')}
         </p>

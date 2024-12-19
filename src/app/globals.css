@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  font-family: var(--font-roboto);
+}
+
 /* react-select-styles */
 .react-select__control {
   outline: none;

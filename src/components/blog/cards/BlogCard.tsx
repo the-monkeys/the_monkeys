@@ -59,7 +59,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             href={`/blog?id=${blogId}`}
             className='group flex flex-col sm:flex-row gap-4'
           >
-            <div className='flex-1' data-underline={false ? 'false' : 'true '}>
+            <div className='flex-1'>
               {titleDiv}
               {descriptionDiv}
             </div>
@@ -73,7 +73,7 @@ export const BlogCard: FC<BlogCardProps> = ({
         )}
       </div>
 
-      <div className='mt-2 flex justify-between items-center gap-4'>
+      <div className='mt-2 px-1 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-1'>
           <p className='font-dm_sans text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}

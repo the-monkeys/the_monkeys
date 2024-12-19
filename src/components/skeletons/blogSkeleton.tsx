@@ -40,7 +40,7 @@ export const PublishedBlogSkeleton = () => {
 
 export const BlogCardSkeleton = () => {
   return (
-    <div className='md:px-6 space-y-2'>
+    <div className='px-0 lg:px-6 space-y-2'>
       <UserInfoCardCompactSkeleton />
 
       <Skeleton className='h-28 sm:h-24 w-full' />
@@ -60,11 +60,10 @@ export const BlogCardSkeleton = () => {
 export const BlogCardListSkeleton = () => {
   return (
     <div className='w-full space-y-6 md:space-y-8'>
-      {Array(4)
-        .fill(null)
-        .map((_, index) => (
-          <BlogCardSkeleton key={index} />
-        ))}
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
     </div>
   );
 };
