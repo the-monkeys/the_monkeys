@@ -8,7 +8,6 @@ import {
   UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
 } from '../skeletons/userSkeleton';
-import { FollowButtonCompact } from './buttons/followButton';
 
 export const UserInfoCardCompact = ({ id }: { id?: string }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
@@ -31,7 +30,7 @@ export const UserInfoCardCompact = ({ id }: { id?: string }) => {
 
       <Link
         href={`/${user?.username}`}
-        className='font-dm_sans text-xs lg:text-sm hover:opacity-80'
+        className='font-dm_sans font-medium text-xs lg:text-sm hover:opacity-80'
       >
         {user?.first_name} {user?.last_name}
       </Link>
@@ -54,22 +53,18 @@ export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
   return (
     <div className='flex items-center flex-wrap gap-2 overflow-hidden'>
       {user && (
-        <ProfileFrame className='size-12'>
+        <ProfileFrame className='size-10'>
           <ProfileImage firstName={user.first_name} username={user?.username} />
         </ProfileFrame>
       )}
 
       <div className='flex-1'>
-        <div className='flex items-center gap-1'>
-          <Link
-            href={`/${user?.username}`}
-            className='font-dm_sans text-sm md:text-base hover:opacity-80'
-          >
-            {user?.first_name} {user?.last_name}
-          </Link>
-
-          <FollowButtonCompact username={user?.username} />
-        </div>
+        <Link
+          href={`/${user?.username}`}
+          className='font-dm_sans font-medium text-sm md:text-base hover:opacity-80'
+        >
+          {user?.first_name} {user?.last_name}
+        </Link>
 
         <p className='font-roboto text-xs opacity-80'>
           {moment(date).format('MMM DD, YYYY')}

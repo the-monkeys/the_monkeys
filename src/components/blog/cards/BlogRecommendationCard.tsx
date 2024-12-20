@@ -11,7 +11,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
     <div className='px-4 flex flex-col'>
       <UserInfoCardCompact id={blog?.owner_account_id} />
 
-      <Link href={`/blog?id=${blog?.blog_id}`} className='group py-2'>
+      <Link href={`/blog?id=${blog?.blog_id}`} className='group py-1'>
         {getCardContent({ blog }).recommendationTitleDiv}
       </Link>
 

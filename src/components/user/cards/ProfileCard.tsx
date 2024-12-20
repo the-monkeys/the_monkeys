@@ -18,8 +18,8 @@ import useUser from '@/hooks/user/useUser';
 import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import moment from 'moment';
 
-import { ConnectionsDialog } from './ConnectionsDialog';
-import { UpdateUsernameDialog } from './UpdateUsernameDialog';
+import { ConnectionsDialog } from '../dialogs/ConnectionsDialog';
+import { UpdateUsernameDialog } from '../dialogs/UpdateUsernameDialog';
 
 export const ProfileCard = ({
   isAuthenticated,
@@ -53,7 +53,7 @@ export const ProfileCard = ({
       </ProfileFrame>
 
       <div>
-        <h2 className='w-full font-roboto text-xl md:text-2xl capitalize'>
+        <h2 className='w-full font-dm_sans font-medium text-xl md:text-2xl capitalize'>
           {`${user?.first_name} ${user?.last_name}`}
         </h2>
 
@@ -67,13 +67,15 @@ export const ProfileCard = ({
       </div>
 
       {user?.bio && (
-        <p className='py-2 font-roboto leading-tight break-words'>{user.bio}</p>
+        <p className='pb-2 text-sm md:text-base font-roboto leading-tight break-words'>
+          {user.bio}
+        </p>
       )}
 
       <div className='flex items-center flex-wrap gap-x-2'>
         <Icon name='RiGroup' size={18} className='opacity-80' />
 
-        <p className='font-roboto text-sm md:text-base'>
+        <p className='font-roboto text-sm'>
           {connectionsLoading || connectionsError
             ? '-'
             : connections?.followers || 0}{' '}
@@ -84,7 +86,7 @@ export const ProfileCard = ({
           )}
         </p>
 
-        <p className='font-roboto text-sm md:text-base'>
+        <p className='font-roboto text-sm'>
           {connectionsLoading || connectionsError
             ? '-'
             : connections?.following || 0}{' '}

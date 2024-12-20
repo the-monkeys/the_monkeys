@@ -5,10 +5,10 @@ import React from 'react';
 import { useParams } from 'next/navigation';
 
 import { FollowButton } from '@/components/user/buttons/followButton';
+import { ProfileCard } from '@/components/user/cards/ProfileCard';
 import { useSession } from 'next-auth/react';
 
 import { ProfileActionsDropdown } from './ProfileActionsDropdown';
-import { ProfileCard } from './ProfileCard';
 import { TopicsCard } from './TopicsCard';
 import { UpdateDialog } from './UpdateDialog';
 

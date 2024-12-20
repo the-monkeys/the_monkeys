@@ -18,7 +18,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
   if (status === 'unauthenticated' || data?.user?.username === username)
     return null;
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Loader className='my-1' />;
 
   if (isError) return null;
 
@@ -84,7 +84,6 @@ export const FollowButton = ({ username }: { username?: string }) => {
     <>
       {followStatus?.isFollowing ? (
         <Button
-          variant='outline'
           className='rounded-full'
           disabled={loading}
           onClick={onUserUnfollow}
@@ -107,7 +106,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
   );
 };
 
-export const FollowButtonCompact = ({ username }: { username?: string }) => {
+export const FollowButtonSecondary = ({ username }: { username?: string }) => {
   const { data, status } = useSession();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
@@ -181,29 +180,26 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
   return (
     <>
       {followStatus?.isFollowing ? (
-        <button
+        <Button
+          size='sm'
+          className='rounded-full'
           disabled={loading}
           onClick={onUserUnfollow}
-          className='hover:opacity-80'
         >
-          {loading ? (
-            <Loader size={18} />
-          ) : (
-            <Icon name='RiUserUnfollow' size={18} type='Fill' className='m-1' />
-          )}
-        </button>
+          {loading && <Loader />}
+          Unfollow
+        </Button>
       ) : (
-        <button
+        <Button
+          variant='brand'
+          size='sm'
+          className='rounded-full'
           disabled={loading}
           onClick={onUserFollow}
-          className='text-brand-orange hover:opacity-80'
         >
-          {loading ? (
-            <Loader size={18} />
-          ) : (
-            <Icon name='RiUserFollow' size={18} type='Fill' className='m-1' />
-          )}
-        </button>
+          {loading && <Loader />}
+          Follow
+        </Button>
       )}
     </>
   );

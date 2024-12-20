@@ -9,6 +9,7 @@ import {
   PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
+import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 
 import { BlogInfoSection } from './components/blog/BlogInfoSection';
@@ -52,7 +53,7 @@ const BlogPage = ({
 
         <Separator className='mt-2' />
 
-        <Editor data={blog?.blog} />
+        <Editor key={blog?.blog_id} data={blog?.blog} />
 
         <Separator className='mt-10 mb-4' />
 
@@ -60,6 +61,16 @@ const BlogPage = ({
       </div>
 
       <div className='p-4 col-span-3 lg:col-span-1 space-y-6'>
+        <div>
+          <h4 className='px-1 font-dm_sans font-medium text-sm md:text-base'>
+            About author
+          </h4>
+
+          <Separator className='mt-1 mb-2' />
+
+          <ProfileInfoCard userId={blog?.owner_account_id} />
+        </div>
+
         <BlogTopics topics={blog?.tags || []} />
 
         <ContributeAndSponsorCard className='mb-6' />
