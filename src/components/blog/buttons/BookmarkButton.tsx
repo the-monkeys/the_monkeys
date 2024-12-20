@@ -56,6 +56,12 @@ export const BookmarkButton = ({
       const response = await axiosInstance.post(`/user/bookmark/${blogId}`);
 
       if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Blog bookmarked successfully.',
+        });
+
         mutate(`/user/is-bookmarked/${blogId}`);
         mutate(`/user/count-bookmarks/${blogId}`);
       }
@@ -97,6 +103,12 @@ export const BookmarkButton = ({
       );
 
       if (response.status === 200) {
+        toast({
+          variant: 'success',
+          title: 'Success',
+          description: 'Removed bookmark successfully.',
+        });
+
         mutate(`/user/is-bookmarked/${blogId}`);
         mutate(`/user/count-bookmarks/${blogId}`);
       }

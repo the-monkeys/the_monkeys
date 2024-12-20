@@ -84,7 +84,7 @@ const BlogFeedPage = ({
 
         <div
           ref={tabContainerRef}
-          className='w-fit flex items-center gap-4 overflow-hidden pr-[20px]'
+          className='w-fit flex items-center gap-5 overflow-hidden pr-[20px]'
         >
           <div
             data-state={activeTab === 'all' ? 'active' : 'inactive'}
@@ -93,7 +93,7 @@ const BlogFeedPage = ({
             <Link href='/feed?source=all'>
               <button
                 onClick={() => setActiveTab('all')}
-                className='px-1 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
               >
                 Latest
               </button>
@@ -109,7 +109,7 @@ const BlogFeedPage = ({
             <Link href='/feed?source=following'>
               <button
                 onClick={() => setActiveTab('following')}
-                className='px-1 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
               >
                 Following
               </button>
@@ -128,7 +128,7 @@ const BlogFeedPage = ({
               <Link href={`/feed?topic=${searchParams.topic}`}>
                 <button
                   onClick={() => setActiveTab(searchParams.topic)}
-                  className='px-1 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                  className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
                 >
                   {searchParams.topic}
                 </button>

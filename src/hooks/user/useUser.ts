@@ -6,7 +6,10 @@ const useUser = (username: string | undefined) => {
   const { data, error, isLoading, mutate } =
     useSWR<GetPublicUserProfileApiResponse>(
       username ? `/user/public/${username}` : null,
-      fetcher
+      fetcher,
+      {
+        revalidateOnFocus: false,
+      }
     );
 
   return {

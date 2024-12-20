@@ -5,7 +5,12 @@ import useSWR from 'swr';
 const useGetProfileInfoById = (userId: string | undefined) => {
   const { data, error, isLoading } = useSWR<GetProfileInfoByUserIdResponse>(
     `/user/public/account/${userId}`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      refreshInterval: 0,
+    }
   );
 
   return {

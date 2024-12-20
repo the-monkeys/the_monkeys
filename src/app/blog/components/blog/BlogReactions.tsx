@@ -1,6 +1,5 @@
 import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
-import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { useGetLikesCount } from '@/hooks/user/useLikeStatus';
 import { useSession } from 'next-auth/react';

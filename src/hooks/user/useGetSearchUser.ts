@@ -3,7 +3,7 @@ import useSWR from 'swr';
 
 export const useGetSearchUser = (searchQuery?: string) => {
   const { data, error, isLoading } = useSWR<GetUserSearchResponse>(
-    `user/search?search_term=${searchQuery}`,
+    searchQuery ? `user/search?search_term=${searchQuery}` : null,
     authFetcher
   );
 

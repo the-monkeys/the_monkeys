@@ -60,10 +60,10 @@ export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
       )}
 
       <div className='flex-1'>
-        <div className='flex items-center gap-2'>
+        <div className='flex items-center gap-1'>
           <Link
             href={`/${user?.username}`}
-            className='font-dm_sans text-sm sm:text-base hover:opacity-80'
+            className='font-dm_sans text-sm md:text-base hover:opacity-80'
           >
             {user?.first_name} {user?.last_name}
           </Link>

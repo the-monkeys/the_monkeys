@@ -15,26 +15,24 @@ import { UpdateDialog } from './UpdateDialog';
 export const ProfileSection = () => {
   const params = useParams<{ username: string }>();
 
-  const { data, status } = useSession();
+  const { data: session, status } = useSession();
 
   const isAuthenticated =
-    data?.user.username === params.username && status === 'authenticated';
+    session?.user.username === params.username && status === 'authenticated';
 
   return (
     <>
       <div className='flex gap-1 items-center justify-end'>
         <ProfileActionsDropdown username={params.username} />
 
-        <FollowButton username={params.username} />
+        {params.username !== session?.user.username && (
+          <FollowButton username={params.username} />
+        )}
+
+        {isAuthenticated && <UpdateDialog />}
       </div>
 
       <ProfileCard isAuthenticated={isAuthenticated} />
-
-      {isAuthenticated && (
-        <div className='pt-4'>
-          <UpdateDialog />
-        </div>
-      )}
 
       <TopicsCard />
     </>

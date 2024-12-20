@@ -5,7 +5,12 @@ import useSWR from 'swr';
 const useGetAllCategories = () => {
   const { data, error, isLoading } = useSWR<GetAllCategoriesAPIResponse>(
     '/user/category',
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      refreshInterval: 0,
+    }
   );
 
   return {

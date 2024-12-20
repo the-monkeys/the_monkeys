@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { useIsFollowingUser } from '@/hooks/user/useUserConnections';
@@ -16,28 +18,21 @@ export const FollowButton = ({ username }: { username?: string }) => {
   if (status === 'unauthenticated' || data?.user?.username === username)
     return null;
 
-  if (isLoading) return null;
+  if (isLoading) return <Loader />;
+
+  if (isError) return null;
 
   const onUserFollow = async () => {
     setLoading(true);
-
-    const previousFollowStatus = followStatus;
-
-    mutate(`/user/is-followed/${username}`, { isFollowing: true }, false);
 
     try {
       const response = await axiosInstance.post(`/user/follow/${username}`);
 
       if (response.status === 200) {
         mutate(`/user/is-followed/${username}`);
+        mutate(`/user/connection-count/${username}`);
       }
     } catch (err: unknown) {
-      mutate(
-        `/user/is-followed/${username}`,
-        { isFollowing: previousFollowStatus },
-        false
-      );
-
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -59,23 +54,14 @@ export const FollowButton = ({ username }: { username?: string }) => {
   const onUserUnfollow = async () => {
     setLoading(true);
 
-    const previousFollowStatus = followStatus;
-
-    mutate(`/user/is-followed/${username}`, { isFollowing: false }, false);
-
     try {
       const response = await axiosInstance.post(`/user/unfollow/${username}`);
 
       if (response.status === 200) {
         mutate(`/user/is-followed/${username}`);
+        mutate(`/user/connection-count/${username}`);
       }
     } catch (err: unknown) {
-      mutate(
-        `/user/is-followed/${username}`,
-        { isFollowing: previousFollowStatus },
-        false
-      );
-
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -103,6 +89,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
           disabled={loading}
           onClick={onUserUnfollow}
         >
+          {loading && <Loader />}
           Unfollow
         </Button>
       ) : (
@@ -112,6 +99,7 @@ export const FollowButton = ({ username }: { username?: string }) => {
           disabled={loading}
           onClick={onUserFollow}
         >
+          {loading && <Loader />}
           Follow
         </Button>
       )}
@@ -128,7 +116,7 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
   if (status === 'unauthenticated' || data?.user?.username === username)
     return null;
 
-  if (isLoading) return null;
+  if (isLoading) return <Loader />;
 
   if (isError) return null;
 
@@ -140,6 +128,7 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
 
       if (response.status === 200) {
         mutate(`/user/is-followed/${username}`);
+        mutate(`/user/connection-count/${username}`);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -168,6 +157,7 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
 
       if (response.status === 200) {
         mutate(`/user/is-followed/${username}`);
+        mutate(`/user/connection-count/${username}`);
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -194,17 +184,25 @@ export const FollowButtonCompact = ({ username }: { username?: string }) => {
         <button
           disabled={loading}
           onClick={onUserUnfollow}
-          className='font-dm_sans font-medium text-sm sm:text-base text-alert-red hover:opacity-80'
+          className='hover:opacity-80'
         >
-          Unfollow
+          {loading ? (
+            <Loader size={18} />
+          ) : (
+            <Icon name='RiUserUnfollow' size={18} type='Fill' className='m-1' />
+          )}
         </button>
       ) : (
         <button
           disabled={loading}
           onClick={onUserFollow}
-          className='font-dm_sans font-medium text-sm sm:text-base text-brand-orange hover:opacity-80'
+          className='text-brand-orange hover:opacity-80'
         >
-          Follow
+          {loading ? (
+            <Loader size={18} />
+          ) : (
+            <Icon name='RiUserFollow' size={18} type='Fill' className='m-1' />
+          )}
         </button>
       )}
     </>

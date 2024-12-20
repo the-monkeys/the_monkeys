@@ -44,13 +44,13 @@ export const FeedBlogCard = ({
         </Link>
       </div>
 
-      <div className='mt-2 px-1 flex justify-between items-center gap-4'>
+      <div className='mt-2 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-[6px]'>
           <p className='font-dm_sans text-xs opacity-80'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
 
-          <LikesCount blogId={blog.blog_id} />
+          {status === 'authenticated' && <LikesCount blogId={blog.blog_id} />}
         </div>
 
         <div className='flex items-center gap-1'>
