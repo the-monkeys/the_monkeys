@@ -72,7 +72,7 @@ export const ProfileInfoCard = ({
         </p>
       )}
 
-      <div className='mt-2 flex gap-3'>
+      <div className='mt-2 flex gap-x-3 gap-y-1 flex-wrap'>
         <div className='flex items-center gap-1'>
           <Icon name='RiCalendar' size={18} className='opacity-80' />
 
