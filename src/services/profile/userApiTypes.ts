@@ -30,11 +30,18 @@ export interface GetPublicUserProfileApiResponse {
   topics?: string[];
 }
 
-export interface GetProfileInfoByUserIdResponse {
-  account_id: string;
-  username: string;
-  first_name: string;
-  last_name: string;
+export interface GetProfileInfoByIdResponse {
+  user: {
+    account_id: string;
+    username: string;
+    first_name: string;
+    last_name: string;
+    bio: string;
+    address: string;
+    created_at: Timestamp;
+  };
+  followers: number;
+  following: number;
 }
 export interface GetAuthUserProfileApiResponse {
   account_id: string;

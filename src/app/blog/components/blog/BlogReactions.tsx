@@ -39,7 +39,7 @@ export const BlogReactions = ({
         <div className='flex items-center'>
           <LikeButton blogId={blogId} />
 
-          <p className='font-dm_sans text-xs sm:text-sm opacity-80'>
+          <p className='font-dm_sans text-xs sm:text-sm'>
             {likeCountLoading ? '-' : likeCountError ? null : likes?.count}
           </p>
         </div>

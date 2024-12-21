@@ -37,7 +37,7 @@ export const FeedBlogCard = ({
           </div>
 
           {imageDiv && (
-            <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-lg'>
+            <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-md'>
               {imageDiv}
             </div>
           )}

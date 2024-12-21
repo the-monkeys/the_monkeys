@@ -45,8 +45,8 @@ export const ProfileCard = ({
     : 'Not available';
 
   return (
-    <div className='space-y-2'>
-      <ProfileFrame className='size-[100px] md:size-[120px]'>
+    <div className='mt-2 space-y-2'>
+      <ProfileFrame className='size-[80px] md:size-[100px]'>
         {user?.username && (
           <ProfileImage firstName={user.first_name} username={user.username} />
         )}
@@ -58,7 +58,7 @@ export const ProfileCard = ({
         </h2>
 
         <div className='flex item-center gap-1'>
-          <p className='font-roboto text-sm opacity-80 truncate'>
+          <p className='font-dm_sans text-xs sm:text-sm opacity-80 truncate'>
             {`@${user?.username}`}
           </p>
 
@@ -67,56 +67,52 @@ export const ProfileCard = ({
       </div>
 
       {user?.bio && (
-        <p className='pb-2 text-sm md:text-base font-roboto leading-tight break-words'>
-          {user.bio}
-        </p>
+        <p className='py-1 text-base leading-tight break-words'>{user.bio}</p>
       )}
 
-      <div className='flex items-center flex-wrap gap-x-2'>
-        <Icon name='RiGroup' size={18} className='opacity-80' />
-
-        <p className='font-roboto text-sm'>
+      <div className='mb-4 flex items-center flex-wrap gap-x-2'>
+        <p>
           {connectionsLoading || connectionsError
             ? '-'
             : connections?.followers || 0}{' '}
           {isAuthenticated ? (
             <ConnectionsDialog label='followers' />
           ) : (
-            <span className='inline opacity-80'>followers</span>
+            <span className='text-sm opacity-80'>Followers</span>
           )}
         </p>
 
-        <p className='font-roboto text-sm'>
+        <p>
           {connectionsLoading || connectionsError
             ? '-'
             : connections?.following || 0}{' '}
           {isAuthenticated ? (
             <ConnectionsDialog label='following' />
           ) : (
-            <span className='inline opacity-80'>following</span>
+            <span className='text-sm opacity-80'>Following</span>
           )}
         </p>
       </div>
 
-      <div>
+      <div className='flex items-center flex-wrap gap-x-2 gap-y-1'>
         <div className='flex items-center gap-1'>
-          <Icon name='RiCalendar' size={18} className='opacity-80' />
+          <Icon name='RiCalendar' size={16} className='opacity-80' />
 
-          <p className='font-roboto text-sm opacity-80'>Joined {joinedDate}</p>
+          <p className='text-sm opacity-80'>Joined {joinedDate}</p>
         </div>
 
         {user?.address && (
           <div className='flex items-center gap-1'>
             <div className='flex items-center gap-1'>
-              <Icon name='RiMapPin' size={18} className='opacity-80' />
+              <Icon name='RiMapPin' size={16} className='opacity-80' />
 
-              <p className='font-roboto text-sm opacity-80'>{user.address}</p>
+              <p className='text-sm opacity-80'>{user.address}</p>
             </div>
           </div>
         )}
       </div>
 
-      <div className='flex items-center flex-wrap gap-x-3 gap-y-1'>
+      <div className='flex items-center flex-wrap gap-x-2 gap-y-1'>
         {user?.twitter && (
           <Link
             target='_blank'
@@ -131,7 +127,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline'>
+            <p className='text-sm opacity-80 hover:opacity-100 hover:underline'>
               {user.twitter}
             </p>
           </Link>
@@ -151,7 +147,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline'>
+            <p className='text-sm opacity-80 hover:opacity-100 hover:underline'>
               {user.github}
             </p>
           </Link>
@@ -171,7 +167,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline'>
+            <p className='text-sm opacity-80 hover:opacity-100 hover:underline'>
               {user.linkedin}
             </p>
           </Link>
@@ -191,7 +187,7 @@ export const ProfileCard = ({
               className='opacity-80'
             />
 
-            <p className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline'>
+            <p className='text-sm opacity-80 hover:opacity-100 hover:underline'>
               {user.instagram}
             </p>
           </Link>

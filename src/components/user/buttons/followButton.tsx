@@ -180,23 +180,12 @@ export const FollowButtonSecondary = ({ username }: { username?: string }) => {
   return (
     <>
       {followStatus?.isFollowing ? (
-        <Button
-          size='sm'
-          className='rounded-full'
-          disabled={loading}
-          onClick={onUserUnfollow}
-        >
+        <Button disabled={loading} onClick={onUserUnfollow}>
           {loading && <Loader />}
           Unfollow
         </Button>
       ) : (
-        <Button
-          variant='brand'
-          size='sm'
-          className='rounded-full'
-          disabled={loading}
-          onClick={onUserFollow}
-        >
+        <Button variant='brand' disabled={loading} onClick={onUserFollow}>
           {loading && <Loader />}
           Follow
         </Button>

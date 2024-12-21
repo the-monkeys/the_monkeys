@@ -22,7 +22,7 @@ export const ProfileSection = () => {
 
   return (
     <>
-      <div className='flex gap-1 items-center justify-end'>
+      <div className='mb-2 flex gap-1 items-center justify-end'>
         <ProfileActionsDropdown username={params.username} />
 
         {params.username !== session?.user.username && (

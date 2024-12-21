@@ -11,12 +11,12 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
     <div className='px-4 flex flex-col'>
       <UserInfoCardCompact id={blog?.owner_account_id} />
 
-      <Link href={`/blog?id=${blog?.blog_id}`} className='group py-1'>
+      <Link href={`/blog?id=${blog?.blog_id}`} className='group mt-1 mb-2'>
         {getCardContent({ blog }).recommendationTitleDiv}
       </Link>
 
       <div className='flex items-center gap-[6px]'>
-        <p className='font-dm_sans text-xs opacity-80'>
+        <p className='text-xs opacity-80'>
           {moment(blog?.blog?.time).format('MMM DD, YYYY')}
         </p>
       </div>

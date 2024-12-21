@@ -61,21 +61,16 @@ const BlogPage = ({
       </div>
 
       <div className='p-4 col-span-3 lg:col-span-1 space-y-6'>
-        <div>
-          <h4 className='px-1 font-dm_sans font-medium text-sm md:text-base'>
-            About author
-          </h4>
-
-          <Separator className='mt-1 mb-2' />
-
-          <ProfileInfoCard userId={blog?.owner_account_id} />
-        </div>
+        <ProfileInfoCard
+          userId={blog?.owner_account_id}
+          className='max-w-[500px]'
+        />
 
         <BlogTopics topics={blog?.tags || []} />
 
-        <ContributeAndSponsorCard className='mb-6' />
-
         <BlogRecommendations />
+
+        <ContributeAndSponsorCard className='mb-6' />
       </div>
     </Container>
   );
