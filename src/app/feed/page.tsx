@@ -7,8 +7,8 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import { useSession } from 'next-auth/react';
 
-import { FollowingBlogs } from './components/FollowingBlogs';
 import { LatestBlogs } from './components/LatestBlogs';
+import { MyInterestsBlogs } from './components/MyInterestsBlogs';
 import { SelectedBlogs } from './components/SelectedBlogs';
 
 const BlogFeedPage = ({
@@ -17,10 +17,15 @@ const BlogFeedPage = ({
   searchParams: { source: string; topic: string };
 }) => {
   const { data: session, status } = useSession();
-  const [activeTab, setActiveTab] = useState(
-    searchParams.topic ||
-      (searchParams.source === 'following' ? 'following' : 'all')
-  );
+
+  const getDefaultTab = () => {
+    if (searchParams.topic) return searchParams.topic;
+    if (searchParams.source === 'following') return 'following';
+    if (searchParams.source === 'interests') return 'interests';
+    return 'all';
+  };
+
+  const [activeTab, setActiveTab] = useState(getDefaultTab);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
   const tabContainerRef = useRef<HTMLDivElement>(null);
@@ -84,7 +89,7 @@ const BlogFeedPage = ({
 
         <div
           ref={tabContainerRef}
-          className='w-fit flex items-center gap-4 overflow-hidden pr-[20px]'
+          className='w-fit flex items-center gap-5 overflow-hidden pr-[20px]'
         >
           <div
             data-state={activeTab === 'all' ? 'active' : 'inactive'}
@@ -93,7 +98,7 @@ const BlogFeedPage = ({
             <Link href='/feed?source=all'>
               <button
                 onClick={() => setActiveTab('all')}
-                className='px-1 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
               >
                 Latest
               </button>
@@ -103,20 +108,36 @@ const BlogFeedPage = ({
           </div>
 
           <div
+            data-state={activeTab === 'interests' ? 'active' : 'inactive'}
+            className='group'
+          >
+            <Link href='/feed?source=interests'>
+              <button
+                onClick={() => setActiveTab('interests')}
+                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+              >
+                My Interests
+              </button>
+            </Link>
+
+            <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+          </div>
+
+          {/* <div
             data-state={activeTab === 'following' ? 'active' : 'inactive'}
             className='group'
           >
             <Link href='/feed?source=following'>
               <button
                 onClick={() => setActiveTab('following')}
-                className='px-1 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
               >
                 Following
               </button>
             </Link>
 
             <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
-          </div>
+          </div> */}
 
           {searchParams.topic && (
             <div
@@ -128,7 +149,7 @@ const BlogFeedPage = ({
               <Link href={`/feed?topic=${searchParams.topic}`}>
                 <button
                   onClick={() => setActiveTab(searchParams.topic)}
-                  className='px-1 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                  className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
                 >
                   {searchParams.topic}
                 </button>
@@ -153,8 +174,8 @@ const BlogFeedPage = ({
 
       <div className='mt-6 md:mt-8 divide-y divide-foreground-light dark:divide-foreground-dark'>
         {activeTab === 'all' && <LatestBlogs status={status} />}
-        {activeTab === 'following' && (
-          <FollowingBlogs username={session?.user.username} status={status} />
+        {activeTab === 'interests' && (
+          <MyInterestsBlogs username={session?.user.username} status={status} />
         )}
         {activeTab === searchParams.topic && (
           <SelectedBlogs topic={searchParams.topic} status={status} />

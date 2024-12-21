@@ -4,7 +4,12 @@ import useSWR from 'swr';
 const useProfileImage = (username: string) => {
   const { data, error, isLoading } = useSWR<Blob>(
     `/files/profile/${username}/profile`,
-    fetcher
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      refreshInterval: 0,
+    }
   );
 
   let imageUrl = '';
