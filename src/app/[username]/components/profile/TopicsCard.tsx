@@ -29,7 +29,7 @@ export const TopicsCard = () => {
       <Separator className='mt-1 mb-3' />
 
       {user && user.topics && user.topics.length > 0 ? (
-        <div className='mt-2 flex flex-wrap gap-x-1 gap-y-2'>
+        <div className='mt-2 flex flex-wrap gap-2'>
           {user.topics
             ?.slice(0, maxTopicsShow)
             .map((topic, index) => (
@@ -37,7 +37,7 @@ export const TopicsCard = () => {
             ))}
 
           {topicsCount > maxTopicsShow ? (
-            <p className='px-1 self-center font-roboto text-sm opacity-80'>
+            <p className='px-1 self-center text-xs md:text-sm opacity-80'>
               {`+${topicsCount - maxTopicsShow} more`}
             </p>
           ) : null}

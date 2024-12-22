@@ -5,7 +5,7 @@ import { Badge } from '../ui/badge';
 export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
   return (
     <Link href={`/feed?topic=${topic}`}>
-      <Badge variant='outline' className='py-1 cursor-pointer'>
+      <Badge variant='secondary' className='py-1 cursor-pointer rounded-md'>
         {topic}
       </Badge>
     </Link>
@@ -15,7 +15,7 @@ export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
 export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
   return (
     <Link href={`/feed?topic=${topic}`}>
-      <Badge variant='outline' className='cursor-pointer'>
+      <Badge variant='outline' className='px-4 py-[6px] cursor-pointer'>
         {topic}
       </Badge>
     </Link>

@@ -11,7 +11,7 @@ import { getBlogsByTopicSchema } from '@/lib/schema/blog';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import { GetBlogsByTopics } from '@/services/blog/blogTypes';
 
-export const FollowingBlogs = ({
+export const MyInterestsBlogs = ({
   username,
   status,
 }: {
@@ -62,7 +62,7 @@ export const FollowingBlogs = ({
       ) : !blogs?.the_blogs || blogs?.the_blogs?.length === 0 ? (
         <div className='flex flex-col items-center gap-4'>
           <p className='font-roboto text-sm opacity-80 text-center'>
-            No blogs available for followed topics.
+            No blogs available for interested topics.
           </p>
 
           <Button

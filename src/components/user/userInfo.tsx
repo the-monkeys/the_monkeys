@@ -8,7 +8,6 @@ import {
   UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
 } from '../skeletons/userSkeleton';
-import { FollowButtonCompact } from './buttons/followButton';
 
 export const UserInfoCardCompact = ({ id }: { id?: string }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
@@ -21,19 +20,24 @@ export const UserInfoCardCompact = ({ id }: { id?: string }) => {
     );
   }
 
+  const userData = user?.user;
+
   return (
-    <div className='w-full flex items-center gap-1'>
-      {user && (
+    <div className='w-full flex items-center gap-2'>
+      {userData && (
         <ProfileFrame className='size-5 lg:size-6'>
-          <ProfileImage firstName={user.first_name} username={user?.username} />
+          <ProfileImage
+            firstName={userData.first_name}
+            username={userData.username}
+          />
         </ProfileFrame>
       )}
 
       <Link
-        href={`/${user?.username}`}
-        className='font-dm_sans text-xs lg:text-sm hover:opacity-80'
+        href={`/${userData?.username}`}
+        className='font-dm_sans font-medium text-xs sm:text-sm hover:opacity-80'
       >
-        {user?.first_name} {user?.last_name}
+        {userData?.first_name} {userData?.last_name}
       </Link>
     </div>
   );
@@ -48,28 +52,29 @@ export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
 
   if (isError)
     return (
-      <p className='py-4 font-roboto text-sm opacity-80'>User not available</p>
+      <p className='py-2 font-roboto text-sm opacity-80'>User not available</p>
     );
 
+  const userData = user?.user;
+
   return (
-    <div className='flex items-center flex-wrap gap-2 overflow-hidden'>
-      {user && (
-        <ProfileFrame className='size-12'>
-          <ProfileImage firstName={user.first_name} username={user?.username} />
+    <div className='w-fit flex items-center flex-wrap gap-2'>
+      {userData && (
+        <ProfileFrame className='size-10'>
+          <ProfileImage
+            firstName={userData.first_name}
+            username={userData?.username}
+          />
         </ProfileFrame>
       )}
 
       <div className='flex-1'>
-        <div className='flex items-center gap-2'>
-          <Link
-            href={`/${user?.username}`}
-            className='font-dm_sans text-sm sm:text-base hover:opacity-80'
-          >
-            {user?.first_name} {user?.last_name}
-          </Link>
-
-          <FollowButtonCompact username={user?.username} />
-        </div>
+        <Link
+          href={`/${userData?.username}`}
+          className='font-dm_sans font-medium text-sm sm:text-base hover:opacity-80'
+        >
+          {userData?.first_name} {userData?.last_name}
+        </Link>
 
         <p className='font-roboto text-xs opacity-80'>
           {moment(date).format('MMM DD, YYYY')}
