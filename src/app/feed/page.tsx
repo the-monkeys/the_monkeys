@@ -7,9 +7,9 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import { useSession } from 'next-auth/react';
 
+import { BlogsByInterest } from './components/BlogsByInterest';
+import { BlogsByTopic } from './components/BlogsByTopic';
 import { LatestBlogs } from './components/LatestBlogs';
-import { MyInterestsBlogs } from './components/MyInterestsBlogs';
-import { SelectedBlogs } from './components/SelectedBlogs';
 
 const BlogFeedPage = ({
   searchParams,
@@ -98,7 +98,7 @@ const BlogFeedPage = ({
             <Link href='/feed?source=all'>
               <button
                 onClick={() => setActiveTab('all')}
-                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'
               >
                 Latest
               </button>
@@ -114,9 +114,9 @@ const BlogFeedPage = ({
             <Link href='/feed?source=interests'>
               <button
                 onClick={() => setActiveTab('interests')}
-                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'
               >
-                My Interests
+                Your Interests
               </button>
             </Link>
 
@@ -149,7 +149,7 @@ const BlogFeedPage = ({
               <Link href={`/feed?topic=${searchParams.topic}`}>
                 <button
                   onClick={() => setActiveTab(searchParams.topic)}
-                  className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'
+                  className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'
                 >
                   {searchParams.topic}
                 </button>
@@ -175,10 +175,10 @@ const BlogFeedPage = ({
       <div className='mt-6 md:mt-8 divide-y divide-foreground-light dark:divide-foreground-dark'>
         {activeTab === 'all' && <LatestBlogs status={status} />}
         {activeTab === 'interests' && (
-          <MyInterestsBlogs username={session?.user.username} status={status} />
+          <BlogsByInterest username={session?.user.username} status={status} />
         )}
         {activeTab === searchParams.topic && (
-          <SelectedBlogs topic={searchParams.topic} status={status} />
+          <BlogsByTopic topic={searchParams.topic} status={status} />
         )}
       </div>
     </div>
