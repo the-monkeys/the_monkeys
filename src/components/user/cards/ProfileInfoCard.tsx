@@ -6,6 +6,7 @@ import { ProfileInfoCardSkeleton } from '@/components/skeletons/profileSkeleton'
 import { Button } from '@/components/ui/button';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import moment from 'moment';
+import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
 import { FollowButtonSecondary } from '../buttons/followButton';
@@ -17,9 +18,12 @@ export const ProfileInfoCard = ({
   userId?: string;
   className?: string;
 }) => {
+  const { data: session, status } = useSession();
   const { user, isLoading, isError } = useGetProfileInfoById(userId);
 
   if (isLoading) return <ProfileInfoCardSkeleton />;
+
+  if (isError) return null;
 
   const userData = user?.user;
 
@@ -102,7 +106,10 @@ export const ProfileInfoCard = ({
           <Link href={`/${userData?.username}`}>View Profile</Link>
         </Button>
 
-        <FollowButtonSecondary username={userData?.username} />
+        {userData?.username !== session?.user.username &&
+          status === 'authenticated' && (
+            <FollowButtonSecondary username={userData?.username} />
+          )}
       </div>
     </div>
   );

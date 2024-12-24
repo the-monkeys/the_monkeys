@@ -25,9 +25,10 @@ export const ProfileSection = () => {
       <div className='mb-2 flex gap-1 items-center justify-end'>
         <ProfileActionsDropdown username={params.username} />
 
-        {params.username !== session?.user.username && (
-          <FollowButton username={params.username} />
-        )}
+        {params.username !== session?.user.username &&
+          status === 'authenticated' && (
+            <FollowButton username={params.username} />
+          )}
 
         {isAuthenticated && <UpdateDialog />}
       </div>
