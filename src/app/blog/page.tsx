@@ -53,7 +53,9 @@ const BlogPage = ({
 
         <Separator className='mt-2' />
 
-        <Editor key={blog?.blog_id} data={blog?.blog} />
+        <div className='overflow-hidden'>
+          <Editor key={blog?.blog_id} data={blog?.blog} />
+        </div>
 
         <Separator className='mt-10 mb-4' />
 

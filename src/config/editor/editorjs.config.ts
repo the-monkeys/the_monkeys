@@ -8,7 +8,6 @@ import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
-import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({

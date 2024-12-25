@@ -21,7 +21,7 @@ const config = {
       arvo: ['var(--font-arvo)'],
       dm_sans: ['var(--font-dm_sans)'],
       roboto: ['var(--font-roboto)'],
-      lato: ['var(--font-lato)'],
+      ibm_plex_sans: ['var(--font-ibm_plex_sans)'],
     },
     extend: {
       colors: {
@@ -41,7 +41,7 @@ const config = {
           light: '#878787',
         },
         text: {
-          dark: '#FEFEFE',
+          dark: '#F1F1F1',
           light: '#111111',
         },
         alert: {
