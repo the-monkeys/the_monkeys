@@ -1,14 +1,12 @@
 import { twMerge } from 'tailwind-merge';
 
-const Container = ({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => {
+const Container = (props: React.HTMLProps<HTMLDivElement>) => {
+  const { children, className, ...rest } = props;
+
   return (
-    <div className={twMerge(className, 'mx-auto max-w-7xl')}>{children}</div>
+    <div className={twMerge('mx-auto max-w-7xl', className)} {...rest}>
+      {children}
+    </div>
   );
 };
 
