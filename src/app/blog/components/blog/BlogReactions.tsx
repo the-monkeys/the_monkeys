@@ -1,3 +1,4 @@
+import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
@@ -13,7 +14,6 @@ export const BlogReactions = ({
   blogId?: string;
 }) => {
   const { status } = useSession();
-  const { likes, likeCountLoading, likeCountError } = useGetLikesCount(blogId);
 
   if (status === 'unauthenticated')
     return (
@@ -39,9 +39,7 @@ export const BlogReactions = ({
         <div className='flex items-center'>
           <LikeButton blogId={blogId} />
 
-          <p className='font-dm_sans text-xs sm:text-sm'>
-            {likeCountLoading ? '-' : likeCountError ? null : likes?.count}
-          </p>
+          {status === 'authenticated' && <LikesCount blogId={blogId} />}
         </div>
 
         {/* <CommentButton blogId={blogId} isDisable={true} /> */}

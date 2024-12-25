@@ -1,22 +1,16 @@
 import { useState } from 'react';
 
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { useIsFollowingUser } from '@/hooks/user/useUserConnections';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const FollowButton = ({ username }: { username?: string }) => {
-  const { data, status } = useSession();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
   const [loading, setLoading] = useState<boolean>(false);
-
-  if (status === 'unauthenticated' || data?.user?.username === username)
-    return null;
 
   if (isLoading) return <Loader className='my-1' />;
 
@@ -107,13 +101,9 @@ export const FollowButton = ({ username }: { username?: string }) => {
 };
 
 export const FollowButtonSecondary = ({ username }: { username?: string }) => {
-  const { data, status } = useSession();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
   const [loading, setLoading] = useState<boolean>(false);
-
-  if (status === 'unauthenticated' || data?.user?.username === username)
-    return null;
 
   if (isLoading) return <Loader />;
 
