@@ -6,6 +6,10 @@ on:
   push:
     branches:
       - main
+  workflow_run:
+    workflows: ['Linter']
+    types:
+      - completed
 
 jobs:
   run-tests:
