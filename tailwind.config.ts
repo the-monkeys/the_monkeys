@@ -100,6 +100,14 @@ const config = {
             transform: 'rotate(360deg)',
           },
         },
+        'theme-spin': {
+          '0%': {
+            transform: 'rotate(0deg)',
+          },
+          '100%': {
+            transform: 'rotate(90deg)',
+          },
+        },
         'appear-up': {
           '0%': {
             opacity: '0',
@@ -124,8 +132,9 @@ const config = {
         'icon-shake': 'icon-shake 0.6s ease-in-out',
         'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
         'loader-rotate': 'loader-rotate 0.6s linear infinite',
+        'theme-spin': 'theme-spin 0.2s linear',
         'appear-up': 'appear-up .8s ease-out',
-        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-down': 'accordion-down 0.1s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },
