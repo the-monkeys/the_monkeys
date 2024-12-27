@@ -2,7 +2,6 @@ import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
-import { useGetLikesCount } from '@/hooks/user/useLikeStatus';
 import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
@@ -23,9 +22,7 @@ export const BlogReactions = ({
           'flex justify-between items-center gap-3'
         )}
       >
-        <p className='font-roboto text-xs sm:text-sm opacity-80 italic'>
-          You are not logged in.
-        </p>
+        <p className='text-sm opacity-80'>You are not logged in.</p>
 
         <BlogActionsDropdown blogId={blogId} />
       </div>
@@ -39,7 +36,9 @@ export const BlogReactions = ({
         <div className='flex items-center'>
           <LikeButton blogId={blogId} />
 
-          {status === 'authenticated' && <LikesCount blogId={blogId} />}
+          {status === 'authenticated' && (
+            <LikesCount blogId={blogId} showSeparator={true} />
+          )}
         </div>
 
         {/* <CommentButton blogId={blogId} isDisable={true} /> */}

@@ -15,6 +15,7 @@ export type IconName =
   | 'RiMapPin'
   | 'RiLinks'
   | 'RiBookmark'
+  | 'RiBookmark2'
   | 'RiChat1'
   | 'RiArrowRightUp'
   | 'RiArrowRight'

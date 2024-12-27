@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import Icon from '@/components/icon';
-import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Button } from '@/components/ui/button';
 import useUser from '@/hooks/user/useUser';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
@@ -55,7 +55,7 @@ export const BlogsByInterest = ({
 
   if (status === 'unauthenticated') {
     return (
-      <p className='w-full font-roboto text-sm opacity-80 text-center'>
+      <p className='w-full text-sm opacity-80 text-center'>
         Login to view blogs.
       </p>
     );
@@ -63,14 +63,14 @@ export const BlogsByInterest = ({
 
   if (userError || blogsError) {
     return (
-      <p className='w-full font-roboto text-sm opacity-80 text-center'>
+      <p className='w-full text-sm opacity-80 text-center'>
         Oops! Something went wrong. Please try again.
       </p>
     );
   }
 
   if (userLoading || blogsLoading) {
-    return <BlogCardListSkeleton />;
+    return <FeedBlogCardListSkeleton />;
   }
 
   return (
@@ -81,7 +81,7 @@ export const BlogsByInterest = ({
         ))
       ) : (
         <div className='flex flex-col items-center gap-4'>
-          <p className='font-roboto text-sm opacity-80 text-center'>
+          <p className='text-sm opacity-80 text-center'>
             No blogs available for interested topics.
           </p>
           <Button size='sm' className='rounded-full' asChild>

@@ -124,6 +124,7 @@ export const LikeButton = ({
           }`}
           onClick={onPostDislike}
           disabled={loading || isDisable}
+          title='Remove Like'
         >
           <Icon
             name='RiHeart3'
@@ -139,6 +140,7 @@ export const LikeButton = ({
           }`}
           onClick={onPostLike}
           disabled={loading || isDisable}
+          title='Add Like'
         >
           <Icon name='RiHeart3' size={18} />
         </button>

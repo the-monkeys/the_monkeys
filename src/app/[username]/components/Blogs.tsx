@@ -22,7 +22,7 @@ export const Blogs = () => {
   if (isError)
     return (
       <div className='min-h-screen'>
-        <p className='w-full font-roboto text-sm opacity-80 text-center'>
+        <p className='w-full text-sm opacity-80 text-center'>
           No blogs published yet.
         </p>
       </div>
@@ -34,7 +34,7 @@ export const Blogs = () => {
         {isLoading ? (
           <BlogCardListSkeleton />
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='w-full font-roboto text-sm opacity-80 text-center'>
+          <p className='w-full text-sm opacity-80 text-center'>
             No blogs published yet.
           </p>
         ) : (

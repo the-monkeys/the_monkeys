@@ -58,7 +58,7 @@ const config = {
             scale: '0.8',
           },
           '50%': {
-            scale: '1.2',
+            scale: '1.3',
           },
           '100%': {
             scale: '1',

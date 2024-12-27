@@ -1,7 +1,7 @@
 'use client';
 
-import { BlogCard } from '@/components/blog/cards/BlogCard';
-import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
+import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetBookmarkedBlogs from '@/hooks/blog/useGetBookmarkedBlogs';
 import { useSession } from 'next-auth/react';
 
@@ -12,7 +12,7 @@ export const Saved = () => {
   if (isError)
     return (
       <div className='min-h-screen'>
-        <p className='w-full font-roboto text-sm opacity-80 text-center'>
+        <p className='w-full text-sm opacity-80 text-center'>
           No saved blogs yet.
         </p>
       </div>
@@ -22,22 +22,16 @@ export const Saved = () => {
     <div className='min-h-screen'>
       <div className='flex flex-col gap-8 lg:gap-10'>
         {isLoading ? (
-          <BlogCardListSkeleton />
+          <FeedBlogCardListSkeleton />
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='w-full font-roboto text-sm opacity-80 text-center'>
+          <p className='w-full text-sm opacity-80 text-center'>
             No saved blogs yet.
           </p>
         ) : (
           blogs?.blogs &&
           blogs?.blogs.map((blog) => {
             return (
-              <BlogCard
-                key={blog?.blog_id}
-                blog={blog}
-                status={status}
-                onEdit={() => {}}
-                modificationEnable={false}
-              />
+              <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
             );
           })
         )}

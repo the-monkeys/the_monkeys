@@ -41,10 +41,7 @@ export const ProfileInfoCard = ({
       <div className='mb-2 flex items-end gap-2'>
         {userData && (
           <ProfileFrame className='size-16 sm:size-20'>
-            <ProfileImage
-              firstName={userData.first_name}
-              username={userData?.username}
-            />
+            <ProfileImage username={userData?.username} />
           </ProfileFrame>
         )}
 

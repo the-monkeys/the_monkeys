@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import Icon from '@/components/icon';
-import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Button } from '@/components/ui/button';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
@@ -48,13 +48,13 @@ export const BlogsByTopic = ({
 
   if (blogsError)
     return (
-      <p className='w-full font-roboto text-sm opacity-80 text-center'>
+      <p className='w-full text-sm opacity-80 text-center'>
         Oops! Something went wrong. Please try again.
       </p>
     );
 
   if (blogsLoading) {
-    return <BlogCardListSkeleton />;
+    return <FeedBlogCardListSkeleton />;
   }
 
   return (
@@ -65,7 +65,7 @@ export const BlogsByTopic = ({
         ))
       ) : (
         <div className='flex flex-col items-center gap-4'>
-          <p className='font-roboto text-sm opacity-80 text-center'>
+          <p className='text-sm opacity-80 text-center'>
             No blogs available for this topic.
           </p>
 

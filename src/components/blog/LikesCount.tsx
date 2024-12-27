@@ -1,6 +1,12 @@
 import { useGetLikesCount } from '@/hooks/user/useLikeStatus';
 
-export const LikesCount = ({ blogId }: { blogId?: string }) => {
+export const LikesCount = ({
+  blogId,
+  showSeparator = false,
+}: {
+  blogId?: string;
+  showSeparator?: boolean;
+}) => {
   const { likes, likeCountLoading, likeCountError } = useGetLikesCount(blogId);
 
   if (likeCountError || likeCountLoading) return null;
@@ -8,8 +14,8 @@ export const LikesCount = ({ blogId }: { blogId?: string }) => {
   if (!likes?.count) return null;
 
   return (
-    <p className='font-dm_sans text-xs opacity-80'>
-      <span className='mr-[6px]'>·</span>
+    <p className='font-dm_sans text-sm opacity-80'>
+      {showSeparator && <span className='mr-[6px]'>·</span>}
       {likes?.count} {(likes?.count as number) > 1 ? 'likes' : 'like'}
     </p>
   );

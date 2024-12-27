@@ -21,26 +21,16 @@ export const BookmarkButton = ({
 
   if (isLoading) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-80'>
-        <Icon
-          name='RiBookmark'
-          type='Fill'
-          size={18}
-          className='text-foreground-light dark:text-foreground-dark'
-        />
+      <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
+        <Icon name='RiBookmark' type='Fill' size={18} />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-80'>
-        <Icon
-          name='RiBookmark'
-          type='Fill'
-          size={18}
-          className='text-foreground-light dark:text-foreground-dark'
-        />
+      <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
+        <Icon name='RiBookmark' type='Fill' size={18} />
       </div>
     );
   }
@@ -146,8 +136,9 @@ export const BookmarkButton = ({
           }`}
           onClick={onPostRemoveBookmark}
           disabled={loading || isDisable}
+          title='Remove Bookmark'
         >
-          <Icon name='RiBookmark' type='Fill' size={18} />
+          <Icon name='RiBookmark2' type='Fill' size={18} />
         </button>
       ) : (
         <button
@@ -156,6 +147,7 @@ export const BookmarkButton = ({
           }`}
           onClick={onPostBookmark}
           disabled={loading || isDisable}
+          title='Add Bookmark'
         >
           <Icon name='RiBookmark' size={18} />
         </button>
