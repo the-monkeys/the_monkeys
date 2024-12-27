@@ -40,8 +40,6 @@ export const BlogReactions = ({
             <LikesCount blogId={blogId} showSeparator={true} />
           )}
         </div>
-
-        {/* <CommentButton blogId={blogId} isDisable={true} /> */}
       </div>
 
       <div className='flex items-center gap-1'>

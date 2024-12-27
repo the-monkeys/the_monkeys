@@ -15,10 +15,7 @@ export const SearchUsers = ({ users }: { users?: SearchUser[] | null }) => {
             return (
               <div className='flex gap-2 items-center' key={user.username}>
                 <ProfileFrame className='size-8 md:size-10'>
-                  <ProfileImage
-                    firstName={user.first_name}
-                    username={user.username}
-                  />
+                  <ProfileImage username={user?.username} />
                 </ProfileFrame>
 
                 <div className='flex-1 overflow-hidden'>

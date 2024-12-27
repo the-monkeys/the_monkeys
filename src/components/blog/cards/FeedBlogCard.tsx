@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 import { UserInfoCard } from '@/components/user/userInfo';
 import { Blog } from '@/services/blog/blogTypes';
-import moment from 'moment';
 
 import { LikesCount } from '../LikesCount';
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
@@ -25,7 +24,7 @@ export const FeedBlogCard = ({
   return (
     <div className='w-full px-0 lg:px-6'>
       <div className='space-y-3'>
-        <UserInfoCard id={authorId} />
+        <UserInfoCard id={authorId} date={date} />
 
         <Link
           href={`/blog?id=${blogId}`}
@@ -37,7 +36,7 @@ export const FeedBlogCard = ({
           </div>
 
           {imageDiv && (
-            <div className='h-full sm:h-[120px] w-full sm:w-[165px] bg-foreground-light dark:bg-foreground-dark overflow-hidden rounded-lg'>
+            <div className='h-full sm:h-[120px] w-full sm:w-[165px] bg-foreground-light dark:bg-foreground-dark overflow-hidden rounded-sm'>
               {imageDiv}
             </div>
           )}

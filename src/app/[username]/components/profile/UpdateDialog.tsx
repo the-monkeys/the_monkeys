@@ -118,7 +118,6 @@ export const UpdateDialog = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {/* <Button className='w-full'>Update Details</Button> */}
         <Button className='rounded-full'>Update</Button>
       </DialogTrigger>
 
@@ -136,12 +135,7 @@ export const UpdateDialog = () => {
                 <p className='w-full font-roboto text-sm'>Profile Photo</p>
 
                 <ProfileFrame className='size-24 sm:size-28'>
-                  {data?.user && (
-                    <ProfileImage
-                      firstName={data.user.first_name}
-                      username={data.user.username}
-                    />
-                  )}
+                  {data?.user && <ProfileImage username={data.user.username} />}
                 </ProfileFrame>
 
                 <div className='space-x-2'>

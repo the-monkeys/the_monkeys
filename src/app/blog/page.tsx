@@ -40,15 +40,15 @@ const BlogPage = ({
   if (isError)
     return (
       <Container className='min-h-screen'>
-        <p className='py-4 font-roboto text-sm text-alert-red text-center'>
-          Error fetching blog. Try again.
+        <p className='py-4 text-sm text-alert-red text-center'>
+          Error fetching blog content. Try again.
         </p>
       </Container>
     );
 
   return (
-    <Container className='pb-12 min-h-screen grid grid-cols-3'>
-      <div className='p-4 col-span-3 lg:col-span-2'>
+    <Container className='py-8 px-4 min-h-screen grid grid-cols-3 gap-6 lg:gap-8'>
+      <div className='col-span-3 lg:col-span-2'>
         <BlogInfoSection blog={blog} />
 
         <Separator className='mt-2' />
@@ -62,17 +62,19 @@ const BlogPage = ({
         <BlogReactions blogId={blog?.blog_id} />
       </div>
 
-      <div className='p-4 col-span-3 lg:col-span-1 space-y-6'>
-        <ProfileInfoCard
-          userId={blog?.owner_account_id}
-          className='max-w-[500px]'
-        />
-
+      <div className='col-span-3 lg:col-span-1 space-y-6'>
         <BlogTopics topics={blog?.tags || []} />
 
-        <BlogRecommendations />
+        <div className='space-y-1'>
+          <h4 className='px-1 font-dm_sans font-medium'>About Author</h4>
 
-        <ContributeAndSponsorCard className='mb-6' />
+          <ProfileInfoCard
+            userId={blog?.owner_account_id}
+            className='max-w-[500px]'
+          />
+        </div>
+
+        <BlogRecommendations />
       </div>
     </Container>
   );

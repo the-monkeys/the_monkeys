@@ -29,7 +29,7 @@ const config = {
           orange: '#FF5542',
         },
         background: {
-          dark: '#191919',
+          dark: '#0F0F0F',
           light: '#F2F2F2',
         },
         foreground: {
@@ -41,8 +41,8 @@ const config = {
           light: '#878787',
         },
         text: {
-          dark: '#F1F1F1',
-          light: '#111111',
+          dark: '#FCFCFC',
+          light: '#0D0D0D',
         },
         alert: {
           red: '#EF4444',

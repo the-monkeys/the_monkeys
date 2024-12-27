@@ -3,9 +3,8 @@ import React, { FC } from 'react';
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
-import { UserInfoCard, UserInfoCardCompact } from '@/components/user/userInfo';
+import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { Blog } from '@/services/blog/blogTypes';
-import moment from 'moment';
 
 import { LikesCount } from '../LikesCount';
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
@@ -40,7 +39,7 @@ export const BlogCard: FC<BlogCardProps> = ({
   return (
     <div className='w-full md:px-6'>
       <div className='space-y-3'>
-        <UserInfoCardCompact id={authorId} />
+        <UserInfoCardCompact id={authorId} date={date} />
 
         {isDraft ? (
           <div className='group flex flex-col sm:flex-row gap-4'>
@@ -66,7 +65,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             </div>
 
             {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] bg-foreground-light dark:bg-foreground-dark overflow-hidden rounded-lg'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] bg-foreground-light dark:bg-foreground-dark overflow-hidden rounded-sm'>
                 {imageDiv}
               </div>
             )}

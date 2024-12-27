@@ -111,12 +111,7 @@ export const Profile = () => {
               </p>
 
               <ProfileFrame className='size-28 sm:size-32'>
-                {data?.user && (
-                  <ProfileImage
-                    firstName={data.user.first_name}
-                    username={data.user.username}
-                  />
-                )}
+                {data?.user && <ProfileImage username={data.user?.username} />}
               </ProfileFrame>
 
               <div className='space-x-2'>

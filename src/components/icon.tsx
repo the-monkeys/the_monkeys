@@ -12,7 +12,7 @@ export type IconName =
   | 'RiUserUnfollow'
   | 'RiPencil'
   | 'RiSearch'
-  | 'RiMapPin'
+  | 'RiMapPinUser'
   | 'RiLinks'
   | 'RiBookmark'
   | 'RiBookmark2'
