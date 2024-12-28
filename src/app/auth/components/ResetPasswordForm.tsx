@@ -183,16 +183,16 @@ export const ResetPasswordForm = () => {
           />
 
           <ul className='space-y-1'>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must be at least 6 characters long.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one lowercase letter.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one uppercase letter.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one number.
             </li>
           </ul>

@@ -89,9 +89,7 @@ const Step4 = ({
             name='first_name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>
-                  First Name
-                </FormLabel>
+                <FormLabel className='text-sm'>First Name</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter first Name' {...field} />
                 </FormControl>
@@ -104,7 +102,7 @@ const Step4 = ({
             name='last_name'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>Last Name</FormLabel>
+                <FormLabel className='text-sm'>Last Name</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter last Name' {...field} />
                 </FormControl>
@@ -117,7 +115,7 @@ const Step4 = ({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>Email</FormLabel>
+                <FormLabel className='text-sm'>Email</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter email address' {...field} />
                 </FormControl>
@@ -131,7 +129,7 @@ const Step4 = ({
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>Password</FormLabel>
+                <FormLabel className='text-sm'>Password</FormLabel>
                 <FormControl>
                   <PasswordInput
                     placeholder='Enter password'
@@ -145,16 +143,16 @@ const Step4 = ({
           />
 
           <ul className='space-y-1'>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must be at least 6 characters long.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one lowercase letter.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one uppercase letter.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one number.
             </li>
           </ul>

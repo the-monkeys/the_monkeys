@@ -132,7 +132,7 @@ export const UpdateDialog = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
               <div className='flex flex-wrap items-end gap-2'>
-                <p className='w-full font-roboto text-sm'>Profile Photo</p>
+                <p className='w-full text-sm'>Profile Photo</p>
 
                 <ProfileFrame className='size-24 sm:size-28'>
                   {data?.user && <ProfileImage username={data.user.username} />}
@@ -150,9 +150,7 @@ export const UpdateDialog = () => {
                 name='first_name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>
-                      First Name
-                    </FormLabel>
+                    <FormLabel className='text-sm'>First Name</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
@@ -169,9 +167,7 @@ export const UpdateDialog = () => {
                 name='last_name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>
-                      Last Name
-                    </FormLabel>
+                    <FormLabel className='text-sm'>Last Name</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
@@ -188,9 +184,7 @@ export const UpdateDialog = () => {
                 name='address'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>
-                      Location
-                    </FormLabel>
+                    <FormLabel className='text-sm'>Location</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
@@ -207,7 +201,7 @@ export const UpdateDialog = () => {
                 name='bio'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>Bio</FormLabel>
+                    <FormLabel className='text-sm'>Bio</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'

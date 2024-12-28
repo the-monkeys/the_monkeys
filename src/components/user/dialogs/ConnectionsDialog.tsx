@@ -28,11 +28,11 @@ const ConnectionCard = ({
       href={`/${username}`}
       className='px-1 py-2 flex items-center gap-x-2 hover:bg-foreground-light dark:hover:bg-foreground-dark overflow-hidden'
     >
-      <h2 className='font-roboto text-sm md:text-base'>
+      <h2 className='text-sm md:text-base'>
         {first_name} {last_name}
       </h2>
 
-      <p className='flex-1 font-roboto text-xs md:text-sm opacity-80 truncate'>
+      <p className='flex-1 text-xs md:text-sm opacity-80 truncate'>
         {`@${username}`}
       </p>
     </Link>
@@ -50,7 +50,7 @@ export const ConnectionsDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className='font-roboto text-sm opacity-80 hover:opacity-100 hover:underline capitalize'>
+        <button className='text-sm opacity-80 hover:opacity-100 hover:underline capitalize'>
           {label}
         </button>
       </DialogTrigger>
@@ -108,7 +108,7 @@ export const ConnectionsDialog = ({
                       );
                     })
                   ) : (
-                    <p className='py-4 font-roboto text-xs sm:text-sm text-center opacity-80'>
+                    <p className='py-4 text-xs sm:text-sm text-center opacity-80'>
                       You don&apos;t have any followers yet.
                     </p>
                   )}
@@ -130,7 +130,7 @@ export const ConnectionsDialog = ({
                       );
                     })
                   ) : (
-                    <p className='py-4 font-roboto text-xs sm:text-sm text-center opacity-80'>
+                    <p className='py-4 text-xs sm:text-sm text-center opacity-80'>
                       You&apos;re not following anyone yet.
                     </p>
                   )}

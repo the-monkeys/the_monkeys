@@ -20,7 +20,6 @@ const config = {
     fontFamily: {
       arvo: ['var(--font-arvo)'],
       dm_sans: ['var(--font-dm_sans)'],
-      roboto: ['var(--font-roboto)'],
       ibm_plex_sans: ['var(--font-ibm_plex_sans)'],
     },
     extend: {

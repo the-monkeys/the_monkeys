@@ -15,7 +15,7 @@ const NotificationsPage = () => {
     return (
       <div className='flex flex-col items-center space-y-2'>
         <Loader />
-        <p className='font-roboto text-sm text-center opacity-80'>
+        <p className='text-sm text-center opacity-80'>
           Fetching your notifications...
         </p>
       </div>
@@ -24,9 +24,7 @@ const NotificationsPage = () => {
 
   if (isError) {
     return (
-      <p className='font-roboto text-sm text-center opacity-80'>
-        No notifications yet.
-      </p>
+      <p className='text-sm text-center opacity-80'>No notifications yet.</p>
     );
   }
 
@@ -56,7 +54,7 @@ const NotificationsPage = () => {
             );
           })
         ) : (
-          <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-80'>
+          <p className='col-span-2 sm:col-span-3 text-center opacity-80'>
             No notifications yet.
           </p>
         )}

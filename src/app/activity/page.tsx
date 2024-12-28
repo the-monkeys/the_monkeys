@@ -14,7 +14,7 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
     return (
       <div className='flex flex-col items-center space-y-2'>
         <Loader />
-        <p className='font-roboto text-sm text-center opacity-80'>
+        <p className='text-sm text-center opacity-80'>
           Retrieving your activities...
         </p>
       </div>
@@ -22,11 +22,7 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
   }
 
   if (isError) {
-    return (
-      <p className='font-roboto text-sm text-center opacity-80'>
-        No activities yet.
-      </p>
-    );
+    return <p className='text-sm text-center opacity-80'>No activities yet.</p>;
   }
 
   return (
@@ -42,7 +38,7 @@ const ActivityPage = ({ searchParams }: { searchParams: { user: string } }) => {
           );
         })
       ) : (
-        <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-80'>
+        <p className='col-span-2 sm:col-span-3 text-center opacity-80'>
           No activity available at this moment.
         </p>
       )}

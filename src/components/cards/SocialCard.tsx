@@ -23,7 +23,7 @@ const SocialCard = ({
           </h2>
         </LinksRedirectArrow>
 
-        <p className='font-roboto text-xs md:text-sm opacity-80'>{text}</p>
+        <p className='text-xs md:text-sm opacity-80'>{text}</p>
       </div>
     </div>
   );

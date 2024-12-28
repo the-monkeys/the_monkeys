@@ -17,7 +17,7 @@ const LegalPage = ({
         <PageSubheading subheading={date} className='opacity-80' />
       </PageHeader>
 
-      <div className='font-roboto font-light text-sm sm:text-base text-justify'>
+      <div className='font-light text-sm sm:text-base text-justify'>
         {content}
       </div>
     </Container>

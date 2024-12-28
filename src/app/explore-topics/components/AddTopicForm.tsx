@@ -94,7 +94,7 @@ export default function TopicForm({
           name='Topic'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>Topic</FormLabel>
+              <FormLabel className='text-sm'>Topic</FormLabel>
               <FormControl>
                 <Input
                   placeholder='Topic'
@@ -113,7 +113,7 @@ export default function TopicForm({
           name='Category'
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>Category</FormLabel>
+              <FormLabel className='text-sm'>Category</FormLabel>
               <FormControl>
                 <Select
                   isDisabled={loading}

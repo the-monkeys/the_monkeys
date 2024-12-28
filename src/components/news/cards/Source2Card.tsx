@@ -23,13 +23,11 @@ export const Source2Card: FC<NewsSource2> = React.memo((props) => {
           {`${source.name} | ${author}`}
         </p>
 
-        <h2 className='font-roboto font-medium text-base sm:text-lg line-clamp-2 group-hover:underline underline-offset-2 decoration-1'>
+        <h2 className='font-medium text-base sm:text-lg line-clamp-2 group-hover:underline underline-offset-2 decoration-1'>
           {title}
         </h2>
 
-        <p className='font-roboto text-sm opacity-80 line-clamp-1'>
-          {description}
-        </p>
+        <p className='text-sm opacity-80 line-clamp-1'>{description}</p>
       </Link>
     </div>
   );
