@@ -39,7 +39,7 @@ export const signupSchema = z.object({
   password: passwordCriteria,
 });
 
-export const createUserSchema = z
+export const registerUserSchema = z
   .object({
     first_name: z
       .string({ required_error: 'First Name is required' })
