@@ -7,9 +7,9 @@ import {
   PageSubheading,
 } from '@/components/layout/pageHeading';
 
-import CreateUser from '../components/CreateUserForm';
+import RegisterUserForm from '../components/RegisterUserForm';
 
-export default function Create() {
+export default function Register() {
   return (
     <>
       <PageHeader className='mt-8'>
@@ -17,7 +17,7 @@ export default function Create() {
         <PageSubheading subheading='Create your Monkeys account' />
       </PageHeader>
       <Container className='max-w-screen-sm my-8 px-3 flex flex-col gap-8'>
-        <CreateUser />
+        <RegisterUserForm />
         <div className='mt-4 text-center'>
           <span className='font-dm_sans'>Already have an account? </span>
           <Link
