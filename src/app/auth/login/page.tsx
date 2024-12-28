@@ -13,23 +13,19 @@ export default function LoginPage() {
           Select an option to log in
         </p>
       </div>
-      <Container className='max-w-screen-sm my-8'>
-        <div className='mx-3 flex flex-col items-center gap-8'>
-          <Button variant='outline' disabled className='w-full flex'>
-            <Icon name='RiGoogle' type='Fill' />
-            <p className='flex-1'>Coming Soon</p>
-          </Button>
+      <Container className='max-w-screen-sm my-8 px-3 flex flex-col gap-8'>
+        <Button variant='outline' disabled className='w-full flex'>
+          <Icon name='RiGoogle' type='Fill' />
+          <p className='flex-1'>Coming Soon</p>
+        </Button>
 
-          <div className='flex items-center gap-2 w-full'>
-            <div className='border border-foreground-light dark:border-foreground-dark w-full' />
-            <p>OR</p>
-            <div className='border border-foreground-light dark:border-foreground-dark w-full' />
-          </div>
-
-          <div className='w-full'>
-            <LoginForm />
-          </div>
+        <div className='flex items-center gap-2 w-full'>
+          <div className='border border-foreground-light dark:border-foreground-dark w-full' />
+          <p>OR</p>
+          <div className='border border-foreground-light dark:border-foreground-dark w-full' />
         </div>
+
+        <LoginForm />
       </Container>
     </>
   );
