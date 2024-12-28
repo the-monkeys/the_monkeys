@@ -128,16 +128,6 @@ export default function LoginForm() {
           </Button>
         </div>
       </form>
-
-      <div className='mt-4 text-center'>
-        <span className='font-dm_sans'>New to Monkeys? </span>
-        <Link
-          href='/auth/create-user'
-          className='font-dm_sans hover:underline opacity-80 text-brand-orange'
-        >
-          Join Monkeys
-        </Link>
-      </div>
     </Form>
   );
 }
