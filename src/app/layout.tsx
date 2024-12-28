@@ -5,6 +5,7 @@ import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 import Providers from './Providers';
 import './globals.css';
@@ -73,10 +74,12 @@ const RootLayout = ({
         <SWRProvider>
           <Providers>
             <ThemeProviders>
-              <Navbar />
-              <div>{auth}</div>
-              <main>{children}</main>
-              <Footer />
+              <TooltipProvider>
+                <Navbar />
+                <div>{auth}</div>
+                <main>{children}</main>
+                <Footer />
+              </TooltipProvider>
             </ThemeProviders>
           </Providers>
         </SWRProvider>
