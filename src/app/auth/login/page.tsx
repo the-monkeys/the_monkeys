@@ -1,5 +1,10 @@
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
+import {
+  PageHeader,
+  PageHeading,
+  PageSubheading,
+} from '@/components/layout/pageHeading';
 import { Button } from '@/components/ui/button';
 
 import LoginForm from '../components/LoginForm';
@@ -7,12 +12,10 @@ import LoginForm from '../components/LoginForm';
 export default function LoginPage() {
   return (
     <>
-      <div className='space-y-4 mt-8'>
-        <h2 className='font-arvo text-3xl text-center'>Account Login</h2>
-        <p className='font-dm_sans text-sm sm:text-base opacity-80 text-center'>
-          Select an option to log in
-        </p>
-      </div>
+      <PageHeader className='mt-8'>
+        <PageHeading heading='Account Login' />
+        <PageSubheading subheading='Select an option to log in' />
+      </PageHeader>
       <Container className='max-w-screen-sm my-8 px-3 flex flex-col gap-8'>
         <Button variant='outline' disabled className='w-full flex'>
           <Icon name='RiGoogle' type='Fill' />
