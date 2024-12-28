@@ -47,9 +47,7 @@ export const ProfileCard = ({
   return (
     <div className='mt-2 space-y-2'>
       <ProfileFrame className='size-[80px] md:size-[100px]'>
-        {user?.username && (
-          <ProfileImage firstName={user.first_name} username={user.username} />
-        )}
+        <ProfileImage username={user?.username} />
       </ProfileFrame>
 
       <div>
@@ -104,7 +102,7 @@ export const ProfileCard = ({
         {user?.address && (
           <div className='flex items-center gap-1'>
             <div className='flex items-center gap-1'>
-              <Icon name='RiMapPin' size={16} className='opacity-80' />
+              <Icon name='RiMapPinUser' size={16} className='opacity-80' />
 
               <p className='text-sm opacity-80'>{user.address}</p>
             </div>

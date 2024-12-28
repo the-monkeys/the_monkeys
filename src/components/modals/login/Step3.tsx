@@ -81,7 +81,7 @@ const Step3 = ({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>Email</FormLabel>
+                <FormLabel className='text-sm'>Email</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter email address' {...field} />
                 </FormControl>

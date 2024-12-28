@@ -10,7 +10,7 @@ export const News = () => {
           Global Spotlight
         </h2>
 
-        <p className='font-roboto text-xs sm:text-sm md:text-base opacity-80'>
+        <p className='text-xs sm:text-sm md:text-base opacity-80'>
           Stay updated with the latest headlines and global events.
         </p>
       </div>

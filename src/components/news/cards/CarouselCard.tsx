@@ -16,14 +16,14 @@ export const CarouselCard = ({ newsItem }: { newsItem: NewsSource1 }) => {
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(newsItem?.title),
           }}
-          className='font-roboto font-medium text-lg sm:text-xl line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
+          className='font-medium text-lg sm:text-xl line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
         ></h2>
 
         <p
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(newsItem?.description),
           }}
-          className='font-roboto text-sm sm:text-base opacity-80 line-clamp-2 sm:line-clamp-1'
+          className='text-sm sm:text-base opacity-80 line-clamp-2 sm:line-clamp-1'
         ></p>
       </Link>
     </CarouselItem>

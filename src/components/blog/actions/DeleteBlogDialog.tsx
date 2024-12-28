@@ -86,7 +86,7 @@ export const DeleteBlogDialog = ({
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <p className='font-roboto'>
+        <p>
           Are you sure you want to delete this blog? This action cannot be
           undone.
         </p>

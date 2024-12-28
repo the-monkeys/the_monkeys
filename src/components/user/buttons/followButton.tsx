@@ -6,8 +6,15 @@ import { toast } from '@/components/ui/use-toast';
 import { useIsFollowingUser } from '@/hooks/user/useUserConnections';
 import axiosInstance from '@/services/api/axiosInstance';
 import { mutate } from 'swr';
+import { twMerge } from 'tailwind-merge';
 
-export const FollowButton = ({ username }: { username?: string }) => {
+export const FollowButton = ({
+  username,
+  className,
+}: {
+  username?: string;
+  className?: string;
+}) => {
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -78,9 +85,9 @@ export const FollowButton = ({ username }: { username?: string }) => {
     <>
       {followStatus?.isFollowing ? (
         <Button
-          className='rounded-full'
           disabled={loading}
           onClick={onUserUnfollow}
+          className={twMerge(className, 'rounded-full')}
         >
           {loading && <Loader />}
           Unfollow
@@ -88,9 +95,9 @@ export const FollowButton = ({ username }: { username?: string }) => {
       ) : (
         <Button
           variant='brand'
-          className='rounded-full'
           disabled={loading}
           onClick={onUserFollow}
+          className={twMerge(className, 'rounded-full')}
         >
           {loading && <Loader />}
           Follow
@@ -100,7 +107,13 @@ export const FollowButton = ({ username }: { username?: string }) => {
   );
 };
 
-export const FollowButtonSecondary = ({ username }: { username?: string }) => {
+export const FollowButtonSecondary = ({
+  username,
+  className,
+}: {
+  username?: string;
+  className?: string;
+}) => {
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -170,12 +183,21 @@ export const FollowButtonSecondary = ({ username }: { username?: string }) => {
   return (
     <>
       {followStatus?.isFollowing ? (
-        <Button disabled={loading} onClick={onUserUnfollow}>
+        <Button
+          variant='secondary'
+          disabled={loading}
+          onClick={onUserUnfollow}
+          className={twMerge(className, 'rounded-full')}
+        >
           {loading && <Loader />}
           Unfollow
         </Button>
       ) : (
-        <Button variant='brand' disabled={loading} onClick={onUserFollow}>
+        <Button
+          disabled={loading}
+          onClick={onUserFollow}
+          className={twMerge(className, 'rounded-full')}
+        >
           {loading && <Loader />}
           Follow
         </Button>

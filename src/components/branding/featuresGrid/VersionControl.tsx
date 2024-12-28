@@ -6,7 +6,7 @@ export const VersionControl = () => {
           Version Control*
         </h2>
 
-        <p className='font-roboto text-xs sm:text-sm md:text-base opacity-80'>
+        <p className='text-xs sm:text-sm md:text-base opacity-80'>
           With our intuitive versioning system, update your blogs seamlessly to
           keep them fresh and relevant.
         </p>

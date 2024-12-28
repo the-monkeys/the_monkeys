@@ -9,9 +9,11 @@ import { mutate } from 'swr';
 
 export const BookmarkButton = ({
   blogId,
+  size = 18,
   isDisable = false,
 }: {
   blogId?: string;
+  size?: number;
   isDisable?: boolean;
 }) => {
   const { data } = useSession();
@@ -21,26 +23,16 @@ export const BookmarkButton = ({
 
   if (isLoading) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-80'>
-        <Icon
-          name='RiBookmark'
-          type='Fill'
-          size={18}
-          className='text-foreground-light dark:text-foreground-dark'
-        />
+      <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
+        <Icon name='RiBookmark' type='Fill' size={size} />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-80'>
-        <Icon
-          name='RiBookmark'
-          type='Fill'
-          size={18}
-          className='text-foreground-light dark:text-foreground-dark'
-        />
+      <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
+        <Icon name='RiBookmark' type='Fill' size={size} />
       </div>
     );
   }
@@ -142,22 +134,28 @@ export const BookmarkButton = ({
       {bookmarkStatus?.bookMarked ? (
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
-            loading || isDisable ? 'cursor-default' : 'cursor-pointer'
+            loading || isDisable
+              ? 'cursor-not-allowed opacity-80'
+              : 'cursor-pointer'
           }`}
           onClick={onPostRemoveBookmark}
           disabled={loading || isDisable}
+          title='Remove Bookmark'
         >
-          <Icon name='RiBookmark' type='Fill' size={18} />
+          <Icon name='RiBookmark2' type='Fill' size={size} />
         </button>
       ) : (
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
-            loading || isDisable ? 'cursor-default' : 'cursor-pointer'
+            loading || isDisable
+              ? 'cursor-not-allowed opacity-80'
+              : 'cursor-pointer'
           }`}
           onClick={onPostBookmark}
           disabled={loading || isDisable}
+          title='Add Bookmark'
         >
-          <Icon name='RiBookmark' size={18} />
+          <Icon name='RiBookmark' size={size} />
         </button>
       )}
     </>

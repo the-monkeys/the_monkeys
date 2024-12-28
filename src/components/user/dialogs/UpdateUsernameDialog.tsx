@@ -102,9 +102,7 @@ export const UpdateUsernameDialog = () => {
               name='username'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>
-                    Username
-                  </FormLabel>
+                  <FormLabel className='text-sm'>Username</FormLabel>
                   <FormMessage />
                   <FormControl>
                     <Input

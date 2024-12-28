@@ -43,7 +43,7 @@ export const TopicsCard = () => {
           ) : null}
         </div>
       ) : (
-        <p className='font-roboto text-sm opacity-80 text-center'>
+        <p className='text-sm opacity-80 text-center'>
           No topics have been added.
         </p>
       )}

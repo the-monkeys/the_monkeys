@@ -5,7 +5,11 @@ import useSWR from 'swr';
 const useGetPublishedBlogDetailByBlogId = (blogId: string | undefined) => {
   const { data, error, isLoading } = useSWR<Blog>(
     `/blog/${blogId}`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateOnFocus: false,
+      refreshInterval: 0,
+    }
   );
 
   return {

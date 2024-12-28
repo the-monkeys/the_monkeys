@@ -12,12 +12,12 @@ export const BlogRecommendations = () => {
 
   if (isLoading)
     return (
-      <div className='pb-6 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-xl'>
-        <h4 className='px-4 py-3 font-dm_sans text-sm md:text-base'>
+      <div className='pb-6 bg-foreground-light/50 dark:bg-foreground-dark/50 rounded-lg'>
+        <h4 className='p-4 pb-2 font-dm_sans font-medium'>
           You might also like
         </h4>
 
-        <Separator className='mb-3' />
+        <Separator className='mb-4 bg-background-light dark:bg-background-dark' />
 
         <Loader className='mx-auto' />
       </div>
@@ -26,14 +26,12 @@ export const BlogRecommendations = () => {
   if (isError) return null;
 
   return (
-    <div className='pb-6 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-xl'>
-      <h4 className='px-4 pt-3 pb-2 font-dm_sans text-sm md:text-base'>
-        You might also like
-      </h4>
+    <div className='pb-6 bg-foreground-light/50 dark:bg-foreground-dark/50 rounded-lg'>
+      <h4 className='p-4 pb-2 font-dm_sans font-medium'>You might also like</h4>
 
-      <Separator className='mb-3' />
+      <Separator className='mb-4 bg-background-light dark:bg-background-dark' />
 
-      <div className='flex flex-col gap-6 lg:gap-8'>
+      <div className='flex flex-col gap-6'>
         {blogs?.the_blogs.length ? (
           blogs?.the_blogs.slice(0, 5).map((blog) => {
             return blog?.blog?.blocks.length < 5 ? null : (
@@ -42,7 +40,7 @@ export const BlogRecommendations = () => {
           })
         ) : (
           <div className='py-2 flex flex-col items-center gap-4'>
-            <p className='font-roboto text-sm opacity-80 text-center'>
+            <p className='text-sm opacity-80 text-center'>
               No blogs available.
             </p>
 

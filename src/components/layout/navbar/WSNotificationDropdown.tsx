@@ -133,7 +133,7 @@ const WSNotificationDropdown = () => {
 
       {status === 'unauthenticated' ? (
         <DropdownMenuContent className='mt-3 mr-2 w-[250px] sm:w-[350px]'>
-          <p className='py-4 px-2 font-roboto text-sm opacity-80 text-center'>
+          <p className='py-4 px-2 text-sm opacity-80 text-center'>
             Login to view notifications.
           </p>
         </DropdownMenuContent>
@@ -155,13 +155,13 @@ const WSNotificationDropdown = () => {
                   key={notificationItem.id}
                   className='px-3 py-2 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-md'
                 >
-                  <p className='flex-1 font-roboto text-xs sm:text-sm capitalize break-words line-clamp-2'>
+                  <p className='flex-1 text-xs sm:text-sm capitalize break-words line-clamp-2'>
                     {notificationItem.message}
                   </p>
                 </div>
               ))
             ) : (
-              <p className='py-4 font-roboto text-sm sm:text-base text-center opacity-80'>
+              <p className='py-4 text-sm sm:text-base text-center opacity-80'>
                 No notifications yet.
               </p>
             )}

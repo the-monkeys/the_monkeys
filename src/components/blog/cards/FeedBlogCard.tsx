@@ -1,8 +1,7 @@
 import Link from 'next/link';
 
-import { UserInfoCardCompact } from '@/components/user/userInfo';
+import { UserInfoCard } from '@/components/user/userInfo';
 import { Blog } from '@/services/blog/blogTypes';
-import moment from 'moment';
 
 import { LikesCount } from '../LikesCount';
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
@@ -24,32 +23,28 @@ export const FeedBlogCard = ({
 
   return (
     <div className='w-full px-0 lg:px-6'>
-      <div className='space-y-2'>
-        <UserInfoCardCompact id={authorId} />
+      <div className='space-y-3'>
+        <UserInfoCard id={authorId} date={date} />
 
         <Link
           href={`/blog?id=${blogId}`}
-          className='group flex flex-col sm:flex-row gap-4'
+          className='group flex flex-col sm:flex-row gap-2 sm:gap-4'
         >
-          <div className='flex-1'>
+          <div className='flex-1 space-y-1 sm:space-y-2'>
             {titleDiv}
             {descriptionDiv}
           </div>
 
           {imageDiv && (
-            <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-md'>
+            <div className='h-[185px] sm:h-[120px] w-full sm:w-[165px] overflow-hidden rounded-md'>
               {imageDiv}
             </div>
           )}
         </Link>
       </div>
 
-      <div className='mt-2 flex justify-between items-center gap-4'>
+      <div className='mt-3 flex justify-between items-center gap-4'>
         <div className='flex items-center gap-[6px]'>
-          <p className='font-dm_sans text-xs opacity-80'>
-            {moment(date).format('MMM DD, YYYY')}
-          </p>
-
           {status === 'authenticated' && <LikesCount blogId={blog.blog_id} />}
         </div>
 

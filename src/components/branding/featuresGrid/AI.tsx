@@ -15,7 +15,7 @@ export const AI = () => {
           Monkeys AI
         </h2>
 
-        <p className='font-roboto text-sm sm:text-base text-center opacity-80'>
+        <p className='text-sm sm:text-base text-center opacity-80'>
           Personalized experience with AI-driven content suggestions.
         </p>
       </div>

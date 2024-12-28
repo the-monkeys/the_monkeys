@@ -37,7 +37,7 @@ export interface GetProfileInfoByIdResponse {
     first_name: string;
     last_name: string;
     bio: string;
-    address: string;
+    location: string;
     created_at: Timestamp;
   };
   followers: number;

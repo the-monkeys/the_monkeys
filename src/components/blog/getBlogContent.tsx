@@ -15,16 +15,16 @@ export const getCardContent = ({
 
   const titleDiv = (
     <h2
-      data-underline={isDraft ? 'false' : 'true'}
+      data-hover={isDraft ? 'false' : 'true'}
       dangerouslySetInnerHTML={{ __html: purifyHTMLString(titleContent) }}
-      className='mb-1 font-roboto font-medium text-xl lg:text-2xl capitalize line-clamp-2 data-[underline=true]:group-hover:underline underline-offset-2 decoration-1'
+      className='font-bold text-xl lg:text-2xl capitalize line-clamp-2 data-[hover=true]:group-hover:opacity-80'
     ></h2>
   );
 
   const recommendationTitleDiv = (
     <h2
       dangerouslySetInnerHTML={{ __html: purifyHTMLString(titleContent) }}
-      className='font-roboto font-medium text-lg lg:text-xl capitalize line-clamp-2 group-hover:underline underline-offset-2 decoration-1'
+      className='font-semibold text-base sm:text-lg capitalize line-clamp-2 group-hover:opacity-80'
     ></h2>
   );
 
@@ -47,7 +47,7 @@ export const getCardContent = ({
           dangerouslySetInnerHTML={{
             __html: purifyHTMLString(descriptionContent),
           }}
-          className='font-roboto text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-2'
+          className='opacity-80 leading-[1.4] line-clamp-2'
         ></p>
       );
     }
@@ -59,7 +59,7 @@ export const getCardContent = ({
           src={imageContent}
           alt='Blog Image'
           loading='lazy'
-          className='h-full w-full object-cover group-hover:opacity-90'
+          className='h-full w-full object-cover'
         />
       );
     }
@@ -74,7 +74,7 @@ export const getCardContent = ({
         dangerouslySetInnerHTML={{
           __html: purifyHTMLString(descriptionContent),
         }}
-        className='font-roboto text-sm sm:text-base opacity-80 line-clamp-1 sm:line-clamp-2'
+        className='opacity-80 line-clamp-2'
       ></p>
     );
   }

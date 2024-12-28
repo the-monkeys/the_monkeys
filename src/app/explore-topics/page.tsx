@@ -53,9 +53,7 @@ const ExploreTopicsPage = () => {
             onClick={() => setSelectedLetter(letter)}
             className='size-8 sm:size-10 rounded-full'
           >
-            <p className='font-roboto text-sm sm:text-base font-medium'>
-              {letter}
-            </p>
+            <p className='text-sm sm:text-base font-medium'>{letter}</p>
           </Button>
         ))}
       </div>
@@ -63,7 +61,7 @@ const ExploreTopicsPage = () => {
       {isLoading ? (
         <div className='flex flex-col items-center space-y-2'>
           <Loader />
-          <p className='font-roboto opacity-80'>Almost there, loading topics</p>
+          <p className='opacity-80'>Almost there, loading topics</p>
         </div>
       ) : (
         <div className='px-4 py-0 sm:py-4 grid grid-cols-2 md:grid-cols-3 gap-6'>
@@ -92,7 +90,7 @@ const ExploreTopicsPage = () => {
               );
             })
           ) : (
-            <p className='col-span-2 sm:col-span-3 font-roboto text-center opacity-80'>
+            <p className='col-span-2 sm:col-span-3 text-center opacity-80'>
               No topics available at this moment.
             </p>
           )}
