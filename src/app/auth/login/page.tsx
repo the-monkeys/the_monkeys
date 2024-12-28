@@ -1,4 +1,5 @@
 import Icon from '@/components/icon';
+import Container from '@/components/layout/Container';
 import { Button } from '@/components/ui/button';
 
 import LoginForm from '../components/LoginForm';
@@ -12,7 +13,7 @@ export default function LoginPage() {
           Select an option to log in
         </p>
       </div>
-      <div className='max-w-screen-sm mx-auto my-8'>
+      <Container className='max-w-screen-sm my-8'>
         <div className='mx-3 flex flex-col items-center gap-8'>
           <Button variant='outline' disabled className='w-full flex'>
             <Icon name='RiGoogle' type='Fill' />
@@ -29,7 +30,7 @@ export default function LoginPage() {
             <LoginForm />
           </div>
         </div>
-      </div>
+      </Container>
     </>
   );
 }
