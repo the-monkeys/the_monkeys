@@ -10,7 +10,6 @@ export const useIsPostBookmarked = (blogId: string | undefined) => {
     `/user/is-bookmarked/${blogId}`,
     authFetcher,
     {
-      revalidateOnFocus: false,
       revalidateIfStale: false,
       refreshInterval: 0,
     }

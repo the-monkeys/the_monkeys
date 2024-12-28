@@ -2,18 +2,17 @@
 
 import dynamic from 'next/dynamic';
 
-import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
+import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import Container from '@/components/layout/Container';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import { Separator } from '@/components/ui/separator';
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
+import { UserInfoCard } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 
-import { BlogInfoSection } from './components/blog/BlogInfoSection';
-import { BlogReactions } from './components/blog/BlogReactions';
+import { BlogReactionsContainer } from './components/blog/BlogReactions';
 import { BlogRecommendations } from './components/blog/BlogRecommendations';
 import { BlogTopics } from './components/blog/BlogTopics';
 
@@ -47,19 +46,19 @@ const BlogPage = ({
     );
 
   return (
-    <Container className='py-8 px-4 min-h-screen grid grid-cols-3 gap-6 lg:gap-8'>
-      <div className='col-span-3 lg:col-span-2'>
-        <BlogInfoSection blog={blog} />
+    <Container className='px-4 py-5 min-h-screen grid grid-cols-3 gap-6 lg:gap-8'>
+      <div className='relative col-span-3 lg:col-span-2'>
+        <div className='mb-2 flex justify-between items-center'>
+          <UserInfoCard id={blog?.owner_account_id} date={blog?.blog?.time} />
 
-        <Separator className='mt-2' />
+          <BlogActionsDropdown blogId={blog?.blog_id} />
+        </div>
 
-        <div className='overflow-hidden'>
+        <div className='pb-10 overflow-hidden'>
           <Editor key={blog?.blog_id} data={blog?.blog} />
         </div>
 
-        <Separator className='mt-10 mb-4' />
-
-        <BlogReactions blogId={blog?.blog_id} />
+        <BlogReactionsContainer blogId={blog?.blog_id} />
       </div>
 
       <div className='col-span-3 lg:col-span-1 space-y-6'>

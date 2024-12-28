@@ -60,7 +60,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     };
 
     ws.onmessage = (event) => {
-      console.log('WebSocket message received:', event.data);
+      console.log('WebSocket message received');
       setIsSaving(false); // Reset saving status when message is received
     };
 
@@ -174,7 +174,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         toast({
           variant: 'success',
           title: 'Blog Published successfully',
@@ -183,7 +183,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         router.push(`/${session?.user?.username}`);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         toast({
           variant: 'destructive',
           title: 'Error publishing blog',

@@ -5,7 +5,12 @@ import useSWR from 'swr';
 const useGetBookmarkedBlogs = () => {
   const { data, error, isLoading } = useSWR<GetBookmarkedBlogsResponse>(
     `blog/all/bookmarks`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
 
   return {

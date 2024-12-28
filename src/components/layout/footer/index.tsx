@@ -45,10 +45,7 @@ const FooterList = ({
 
       <ul className='space-y-2'>
         {items.map((item, index) => (
-          <li
-            className='font-roboto text-sm opacity-80 hover:opacity-100'
-            key={index}
-          >
+          <li className='text-sm opacity-80 hover:opacity-100' key={index}>
             <Link href={item.link}>{item.text}</Link>
           </li>
         ))}
@@ -78,9 +75,7 @@ const Footer = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem className='w-72 md:w-80'>
-                    <FormLabel className='font-roboto text-sm'>
-                      Get in Touch
-                    </FormLabel>
+                    <FormLabel className='text-sm'>Get in Touch</FormLabel>
                     <FormMessage />
                     <FormControl>
                       <Input placeholder='Enter email address' {...field} />
@@ -129,7 +124,7 @@ const Footer = () => {
             </Link>
           </div>
 
-          <p className='font-roboto text-xs sm:text-sm text-center opacity-80'>
+          <p className='text-xs sm:text-sm text-center opacity-80'>
             Monkeys, All Rights Reserved
           </p>
         </div>

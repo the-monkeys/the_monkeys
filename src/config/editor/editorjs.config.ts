@@ -17,7 +17,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       class: Header,
       inlineToolbar: true,
       config: {
-        levels: [1, 2],
+        levels: [1, 2, 3],
         defaultLevel: 1,
       },
     },

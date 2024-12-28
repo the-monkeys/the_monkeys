@@ -28,11 +28,11 @@ export const ProfileInfoCard = ({
     <div
       className={twMerge(
         className,
-        'border-1 border-border-light/25 dark:border-border-dark/25 shadow-md rounded-lg overflow-hidden'
+        'border-1 border-foreground-light/25 dark:border-foreground-dark/25 shadow-md rounded-lg overflow-hidden'
       )}
     >
-      <div className='mb-[20px] px-4 pt-8 pb-2 w-full flex items-end gap-3 bg-background-dark dark:bg-background-light text-text-dark dark:text-text-light'>
-        <ProfileFrame className='-mb-[20px] size-[85px] !border-none ring-[3px] !ring-background-light dark:!ring-background-dark z-50'>
+      <div className='mb-[20px] px-4 pt-8 pb-2 w-full flex items-end gap-3 bg-foreground-light/25 dark:bg-foreground-dark/25'>
+        <ProfileFrame className='-mb-[20px] size-[85px] !border-none ring-2 ring-foreground-light dark:ring-foreground-dark'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
 

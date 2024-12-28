@@ -14,7 +14,7 @@ export const LikesCount = ({
   if (!likes?.count) return null;
 
   return (
-    <p className='font-dm_sans text-sm opacity-80'>
+    <p className='text-sm opacity-80'>
       {showSeparator && <span className='mr-[6px]'>·</span>}
       {likes?.count} {(likes?.count as number) > 1 ? 'likes' : 'like'}
     </p>

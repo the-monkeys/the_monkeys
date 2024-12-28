@@ -65,7 +65,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             </div>
 
             {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] bg-foreground-light dark:bg-foreground-dark overflow-hidden rounded-sm'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-md'>
                 {imageDiv}
               </div>
             )}

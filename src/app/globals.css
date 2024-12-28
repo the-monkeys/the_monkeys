@@ -5,6 +5,7 @@
 :root {
   --blog-h1-text-size: 30px;
   --blog-h2-text-size: 26px;
+  --blog-h3-text-size: 24px;
   --blog-p-text-size: 18px;
   --blog-list-text-size: 18px;
   --blog-quote-text-size: 18px;
@@ -16,11 +17,12 @@
   :root {
     --blog-h1-text-size: 28px;
     --blog-h2-text-size: 24px;
+    --blog-h3-text-size: 22px;
     --blog-p-text-size: 18px;
     --blog-list-text-size: 18px;
     --blog-quote-text-size: 18px;
     --blog-code-text-size: 16px;
-    --blog-text-height: 1.68;
+    --blog-text-height: 1.8;
   }
 }
 
@@ -77,6 +79,13 @@ h2.ce-header {
   padding: 0 !important;
   margin: 0 0 12px 0 !important;
   font-size: var(--blog-h2-text-size);
+  font-weight: 600;
+}
+
+h3.ce-header {
+  padding: 0 !important;
+  margin: 0 0 12px 0 !important;
+  font-size: var(--blog-h3-text-size);
   font-weight: 600;
 }
 
@@ -483,6 +492,10 @@ li.cdx-list__item {
 
   h2.ce-header {
     font-size: var(--blog-h2-text-size);
+  }
+
+  h2.ce-header {
+    font-size: var(--blog-h3-text-size);
   }
 
   .ce-paragraph {

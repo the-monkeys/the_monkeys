@@ -8,13 +8,13 @@ const BlogFeedPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='grid grid-cols-3 gap-6 sm:gap-4 px-4 py-5 pb-12'>
-      <div className='min-h-screen col-span-3 md:col-span-2 order-2 md:order-1'>
+    <Container className='grid grid-cols-3 gap-6 lg:gap-8 px-4 py-5 pb-12'>
+      <div className='min-h-screen col-span-3 lg:col-span-2 order-2 lg:order-1'>
         {children}
       </div>
 
-      <div className='h-fit col-span-3 md:col-span-1 order-1 md:order-2'>
-        <ContributeAndSponsorCard className='mb-2' />
+      <div className='mx-auto max-w-3xl w-full h-fit col-span-3 lg:col-span-1 order-1 lg:order-2'>
+        <ContributeAndSponsorCard className='mb-4' />
 
         <SearchInput />
       </div>

@@ -62,8 +62,6 @@ const Step4 = ({
     }
 
     if (res?.error) {
-      console.log(res, 'res');
-
       toast({
         variant: 'error',
         title: 'Login Error',

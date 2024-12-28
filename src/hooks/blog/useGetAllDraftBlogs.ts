@@ -5,7 +5,12 @@ import useSWR from 'swr';
 const useGetAllDraftBlogs = (accountId: string | undefined) => {
   const { data, error, isLoading } = useSWR<GetDraftBlogResponse>(
     `/blog/all/drafts/${accountId}`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
 
   return {
