@@ -63,3 +63,26 @@ export async function login(credentials: { email: string; password: string }) {
 
   return authResponse.data as User;
 }
+
+export async function register(user: {
+  first_name: string;
+  last_name: string | undefined;
+  email: string;
+  password: string;
+}) {
+  const authResponse = await axios.post(
+    `${API_URL}/auth/register`,
+    {
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      password: user.password,
+      redirect: false,
+    },
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
+
+  return authResponse.data as User;
+}

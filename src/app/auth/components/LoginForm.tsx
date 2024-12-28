@@ -105,7 +105,15 @@ export default function LoginForm() {
                   onChange={field.onChange}
                 />
               </FormControl>
-              <FormMessage />
+              <div className='flex justify-between'>
+                <FormMessage />
+                <Link
+                  href='/auth/forgot-password'
+                  className='font-dm_sans text-sm hover:underline opacity-80 text-blue-600 dark:text-blue-400 ml-auto'
+                >
+                  Forgot your password?
+                </Link>
+              </div>
             </FormItem>
           )}
         />
@@ -122,11 +130,12 @@ export default function LoginForm() {
       </form>
 
       <div className='mt-4 text-center'>
+        <span className='font-dm_sans'>New to Monkeys? </span>
         <Link
-          href='/auth/forgot-password'
-          className='font-dm_sans text-sm hover:underline opacity-80 text-blue-600 dark:text-blue-400'
+          href='/auth/create-user'
+          className='font-dm_sans hover:underline opacity-80 text-brand-orange'
         >
-          Forgot your password?
+          Join Monkeys
         </Link>
       </div>
     </Form>
