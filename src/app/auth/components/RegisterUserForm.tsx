@@ -18,7 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Tooltip } from '@/components/ui/tooltip';
 import { toast } from '@/components/ui/use-toast';
-import { createUserSchema } from '@/lib/schema/auth';
+import { registerUserSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import { register } from '@/services/auth/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -27,15 +27,15 @@ import { RiInformationLine } from '@remixicon/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export default function CreateUser() {
+export default function RegisterUserForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const form = useForm<z.infer<typeof createUserSchema>>({
-    resolver: zodResolver(createUserSchema),
+  const form = useForm<z.infer<typeof registerUserSchema>>({
+    resolver: zodResolver(registerUserSchema),
   });
 
-  const onSubmit = async (values: z.infer<typeof createUserSchema>) => {
+  const onSubmit = async (values: z.infer<typeof registerUserSchema>) => {
     setLoading(true);
 
     const requestBody = {
