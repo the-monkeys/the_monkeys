@@ -1,13 +1,13 @@
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
-import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
+import useGetFollowingAuthorsBlogs from '@/hooks/blog/useGetFollowingAuthorsBlogs';
 
-export const LatestBlogs = ({
+export const FollowingBlogs = ({
   status,
 }: {
   status: 'authenticated' | 'loading' | 'unauthenticated';
 }) => {
-  const { blogs, isLoading, isError } = useGetLatest100Blogs();
+  const { blogs, isLoading, isError } = useGetFollowingAuthorsBlogs();
 
   if (isError)
     return (

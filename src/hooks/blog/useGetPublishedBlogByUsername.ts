@@ -1,11 +1,15 @@
 import { GetDraftBlogResponse } from '@/services/blog/blogTypes';
-import { authFetcher } from '@/services/fetcher';
+import { authFetcher, fetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 
-const useGetPublishedBlogByAccountId = (username: string | undefined) => {
+const useGetPublishedBlogByUsername = (username: string | undefined) => {
   const { data, error, isLoading } = useSWR<GetDraftBlogResponse>(
-    `/blog/all/publishes/${username}`,
-    authFetcher
+    `blog/all/${username}`,
+    fetcherV2,
+    {
+      revalidateOnFocus: false,
+      refreshInterval: 0,
+    }
   );
 
   return {
@@ -15,4 +19,4 @@ const useGetPublishedBlogByAccountId = (username: string | undefined) => {
   };
 };
 
-export default useGetPublishedBlogByAccountId;
+export default useGetPublishedBlogByUsername;

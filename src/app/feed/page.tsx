@@ -7,25 +7,19 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import { useSession } from 'next-auth/react';
 
-import { BlogsByInterest } from './components/BlogsByInterest';
-import { BlogsByTopic } from './components/BlogsByTopic';
+import { FollowingBlogs } from './components/FollowingBlogs';
 import { LatestBlogs } from './components/LatestBlogs';
 
 const BlogFeedPage = ({
   searchParams,
 }: {
-  searchParams: { source: string; topic: string };
+  searchParams: { source: string };
 }) => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
-  const getDefaultTab = () => {
-    if (searchParams.topic) return searchParams.topic;
-    if (searchParams.source === 'following') return 'following';
-    if (searchParams.source === 'interests') return 'interests';
-    return 'all';
-  };
-
-  const [activeTab, setActiveTab] = useState(getDefaultTab);
+  const [activeTab, setActiveTab] = useState<string>(
+    searchParams.source || 'all'
+  );
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(false);
   const tabContainerRef = useRef<HTMLDivElement>(null);
@@ -104,26 +98,10 @@ const BlogFeedPage = ({
               </button>
             </Link>
 
-            <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+            <div className='mx-auto mt-[6px] h-[2px] w-0 bg-brand-orange group-data-[state=active]:w-full rounded-full transition-all' />
           </div>
 
           <div
-            data-state={activeTab === 'interests' ? 'active' : 'inactive'}
-            className='group'
-          >
-            <Link href='/feed?source=interests'>
-              <button
-                onClick={() => setActiveTab('interests')}
-                className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'
-              >
-                Your Interests
-              </button>
-            </Link>
-
-            <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
-          </div>
-
-          {/* <div
             data-state={activeTab === 'following' ? 'active' : 'inactive'}
             className='group'
           >
@@ -136,28 +114,8 @@ const BlogFeedPage = ({
               </button>
             </Link>
 
-            <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
-          </div> */}
-
-          {searchParams.topic && (
-            <div
-              data-state={
-                activeTab === searchParams.topic ? 'active' : 'inactive'
-              }
-              className='group'
-            >
-              <Link href={`/feed?topic=${searchParams.topic}`}>
-                <button
-                  onClick={() => setActiveTab(searchParams.topic)}
-                  className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'
-                >
-                  {searchParams.topic}
-                </button>
-              </Link>
-
-              <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
-            </div>
-          )}
+            <div className='mx-auto mt-[6px] h-[2px] w-0 bg-brand-orange group-data-[state=active]:w-full rounded-full transition-all' />
+          </div>
         </div>
 
         {showRightButton && (
@@ -172,14 +130,9 @@ const BlogFeedPage = ({
         )}
       </div>
 
-      <div className='mt-6 md:mt-8 divide-y divide-foreground-light dark:divide-foreground-dark'>
+      <div className='mt-6 md:mt-8 min-h-screen'>
         {activeTab === 'all' && <LatestBlogs status={status} />}
-        {activeTab === 'interests' && (
-          <BlogsByInterest username={session?.user.username} status={status} />
-        )}
-        {activeTab === searchParams.topic && (
-          <BlogsByTopic topic={searchParams.topic} status={status} />
-        )}
+        {activeTab === 'following' && <FollowingBlogs status={status} />}
       </div>
     </div>
   );

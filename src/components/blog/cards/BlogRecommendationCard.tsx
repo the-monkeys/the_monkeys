@@ -11,7 +11,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
   const date = blog?.blog?.time;
 
   return (
-    <div className=' px-4 flex flex-col space-y-1'>
+    <div className=' px-4 flex flex-col space-y-2'>
       <UserInfoCardCompact id={authorId} date={date} />
 
       <Link href={`/blog?id=${blogId}`} className='group'>

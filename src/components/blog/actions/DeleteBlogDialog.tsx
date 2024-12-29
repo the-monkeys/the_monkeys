@@ -82,11 +82,11 @@ export const DeleteBlogDialog = ({
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle className='truncate'>Delete Blog</DialogTitle>
+        <DialogTitle>{isDraft ? 'Remove Draft' : 'Delete Blog'}</DialogTitle>
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <p>
+        <p className='opacity-80'>
           Are you sure you want to delete this blog? This action cannot be
           undone.
         </p>
@@ -100,7 +100,7 @@ export const DeleteBlogDialog = ({
             disabled={isLoading}
           >
             {isLoading && <Loader />}
-            Yes, Delete
+            Yes, {isDraft ? 'Remove' : 'Delete'}
           </Button>
         </div>
       </DialogContent>

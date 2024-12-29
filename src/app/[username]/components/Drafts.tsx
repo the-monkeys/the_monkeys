@@ -11,9 +11,7 @@ export const Drafts = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
   const params = useParams<{ username: string }>();
-  const { blogs, isLoading, isError } = useGetAllDraftBlogs(
-    session?.user.account_id
-  );
+  const { blogs, isLoading, isError } = useGetAllDraftBlogs();
 
   const handleEdit = (blogId: string) => {
     router.push(`/edit/${blogId}?source=draft`);
@@ -45,7 +43,6 @@ export const Drafts = () => {
                 key={blog?.blog_id}
                 blog={blog}
                 status={status}
-                isDraft={true}
                 onEdit={handleEdit}
                 modificationEnable={session?.user.username === params.username}
               />

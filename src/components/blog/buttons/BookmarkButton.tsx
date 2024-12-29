@@ -56,6 +56,7 @@ export const BookmarkButton = ({
 
         mutate(`/user/is-bookmarked/${blogId}`);
         mutate(`/user/count-bookmarks/${blogId}`);
+        mutate(`/blog/my-bookmarks`);
       }
     } catch (err: unknown) {
       mutate(

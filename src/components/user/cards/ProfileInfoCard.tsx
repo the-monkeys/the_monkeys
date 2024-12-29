@@ -32,12 +32,12 @@ export const ProfileInfoCard = ({
       )}
     >
       <div className='mb-[20px] px-4 pt-8 pb-2 w-full flex items-end gap-3 bg-foreground-light/50 dark:bg-foreground-dark/50'>
-        <ProfileFrame className='-mb-[20px] size-[85px] !border-none ring-2 ring-foreground-light dark:ring-foreground-dark'>
+        <ProfileFrame className='-mb-[20px] size-[85px] !ring-2'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
 
         <div className='flex-1 overflow-hidden'>
-          <p className='font-dm_sans text-xs opacity-80 truncate'>
+          <p className='font-dm_sans text-sm opacity-80 truncate'>
             {`@${userData?.username}`}
           </p>
 
@@ -80,7 +80,9 @@ export const ProfileInfoCard = ({
       <div className='mt-4 p-4 pt-0 flex flex-col items-center gap-3'>
         <LinksRedirectArrow link={`/${userData?.username}`}>
           <p className='font-dm_sans text-sm'>
-            {`Visit ${userData?.first_name}'s profile`}
+            Visit{' '}
+            <span className='font-medium text-brand-orange'>{`${userData?.first_name}`}</span>
+            &apos;s profile
           </p>
         </LinksRedirectArrow>
 

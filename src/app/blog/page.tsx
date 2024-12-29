@@ -8,6 +8,7 @@ import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
+import { Separator } from '@/components/ui/separator';
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCard } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
@@ -32,6 +33,11 @@ const BlogPage = ({
     searchParams.id
   );
 
+  const blogId = blog?.blog_id;
+  const authorId = blog?.owner_account_id;
+  const date = blog?.published_time || blog?.blog?.time;
+  const tags = blog?.tags;
+
   if (isLoading) {
     return <PublishedBlogSkeleton />;
   }
@@ -46,31 +52,30 @@ const BlogPage = ({
     );
 
   return (
-    <Container className='px-4 py-5 min-h-screen grid grid-cols-3 gap-6 lg:gap-8'>
+    <Container className='px-4 py-5 grid grid-cols-3 gap-6 lg:gap-8'>
       <div className='relative col-span-3 lg:col-span-2'>
         <div className='mb-2 flex justify-between items-center'>
-          <UserInfoCard id={blog?.owner_account_id} date={blog?.blog?.time} />
+          <UserInfoCard id={authorId} date={date} />
 
-          <BlogActionsDropdown blogId={blog?.blog_id} />
+          <BlogActionsDropdown blogId={blogId} />
         </div>
 
-        <div className='pb-10 overflow-hidden'>
-          <Editor key={blog?.blog_id} data={blog?.blog} />
+        <Separator className='mt-4' />
+
+        <div className='pb-10 min-h-screen overflow-hidden'>
+          <Editor key={blogId} data={blog?.blog} />
         </div>
 
-        <BlogReactionsContainer blogId={blog?.blog_id} />
+        <BlogReactionsContainer blogId={blogId} />
       </div>
 
       <div className='col-span-3 lg:col-span-1 space-y-6'>
-        <BlogTopics topics={blog?.tags || []} />
+        <BlogTopics topics={tags || []} />
 
         <div className='space-y-1'>
           <h4 className='px-1 font-dm_sans font-medium'>About Author</h4>
 
-          <ProfileInfoCard
-            userId={blog?.owner_account_id}
-            className='max-w-[500px]'
-          />
+          <ProfileInfoCard userId={authorId} className='max-w-[500px]' />
         </div>
 
         <BlogRecommendations />

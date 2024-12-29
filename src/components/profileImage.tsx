@@ -5,6 +5,7 @@ import Image from 'next/image';
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import { twMerge } from 'tailwind-merge';
 
+import Icon from './icon';
 import { Skeleton } from './ui/skeleton';
 
 export const ProfileFrame = ({
@@ -18,7 +19,7 @@ export const ProfileFrame = ({
     <div
       className={twMerge(
         className,
-        'bg-foreground-light dark:bg-foreground-dark border-1 border-border-light dark:border-border-dark flex items-center justify-center overflow-hidden rounded-full'
+        'bg-background-light dark:bg-background-dark ring-1 ring-border-light/25 dark:ring-border-dark/25 flex items-center justify-center overflow-hidden rounded-full'
       )}
     >
       {children}
@@ -31,7 +32,17 @@ export const ProfileImage = ({ username }: { username?: string }) => {
 
   if (isLoading) return <Skeleton className='size-32' />;
 
-  if (isError) return null;
+  if (isError)
+    return (
+      <Image
+        src='/default-profile.svg'
+        alt={`Profile: ${username}`}
+        title={`Profile: ${username}`}
+        width={32}
+        height={32}
+        className='w-full h-full object-cover'
+      />
+    );
 
   return (
     <Image

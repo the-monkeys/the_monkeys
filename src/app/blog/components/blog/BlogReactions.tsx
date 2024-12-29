@@ -26,9 +26,7 @@ export const BlogReactions = ({
       <div className='flex items-center'>
         <LikeButton blogId={blogId} size={20} />
 
-        {status === 'authenticated' && (
-          <LikesCount blogId={blogId} showSeparator={true} />
-        )}
+        {status === 'authenticated' && <LikesCount blogId={blogId} />}
       </div>
 
       <div className='flex items-center gap-2'>
