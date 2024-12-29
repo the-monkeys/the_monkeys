@@ -59,7 +59,7 @@ export default function LoginForm() {
         variant: 'error',
         title: 'Login Error',
         description:
-          'There was an error registring in. Please check your credentials and try again.',
+          'There was an error registering in. Please check your credentials and try again.',
       });
     } finally {
       setLoading(false);
