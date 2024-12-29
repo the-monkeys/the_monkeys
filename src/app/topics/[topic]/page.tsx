@@ -38,8 +38,8 @@ const TopicBlogsPage = ({
   return (
     <Container className='pb-12 px-4 min-h-screen'>
       <PageHeader>
-        <PageSubheading subheading='Read about' className='text-lg ' />
-        <PageHeading heading={topic} />
+        <PageSubheading subheading='Read about' />
+        <PageHeading heading={topic} className='text-center' />
       </PageHeader>
 
       <div className='mt-3 mb-10 flex justify-center gap-2 flex-wrap'>

@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
@@ -8,21 +9,23 @@ import { Blog } from '@/services/blog/blogTypes';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { DeleteBlogDialog } from '../actions/DeleteBlogDialog';
+import { EditBlogDialog } from '../actions/EditBlogDialog';
+import { BookmarkButton } from '../buttons/BookmarkButton';
 import { getCardContent } from '../getBlogContent';
 
 interface BlogCardProps {
   blog: Blog;
   status: 'authenticated' | 'loading' | 'unauthenticated';
-  onEdit: (blogId: string) => void;
   modificationEnable?: boolean;
 }
 
 export const BlogCard: FC<BlogCardProps> = ({
   blog,
   status,
-  onEdit,
   modificationEnable = false,
 }) => {
+  const router = useRouter();
+
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time || blog?.blog?.time;
@@ -33,8 +36,12 @@ export const BlogCard: FC<BlogCardProps> = ({
     isDraft,
   });
 
+  const handleEdit = (blogId: string) => {
+    router.push(`/edit/${blogId}`);
+  };
+
   return (
-    <div className='w-full md:px-6'>
+    <div className='relative w-full md:px-6'>
       <div className='space-y-3'>
         <UserInfoCardCompact id={authorId} date={date} />
 
@@ -82,18 +89,24 @@ export const BlogCard: FC<BlogCardProps> = ({
         </div>
 
         <div className='flex items-center gap-1'>
-          {status === 'authenticated' && modificationEnable && (
+          {status === 'authenticated' && modificationEnable && !isDraft && (
+            <EditBlogDialog blogId={blogId} />
+          )}
+
+          {status === 'authenticated' && modificationEnable && isDraft && (
             <button
-              onClick={() => onEdit(blogId)}
+              onClick={() => handleEdit(blogId)}
               className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'
             >
-              <Icon name='RiPencil' size={18} />
+              <Icon name='RiEdit2' size={18} />
             </button>
           )}
 
           {status === 'authenticated' && modificationEnable && (
             <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
           )}
+
+          {!isDraft && <BookmarkButton blogId={blogId} />}
 
           {!isDraft && <BlogActionsDropdown blogId={blogId} />}
         </div>

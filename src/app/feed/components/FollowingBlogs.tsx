@@ -9,6 +9,13 @@ export const FollowingBlogs = ({
 }) => {
   const { blogs, isLoading, isError } = useGetFollowingAuthorsBlogs();
 
+  if (status === 'unauthenticated')
+    return (
+      <p className='w-full text-sm opacity-80 text-center'>
+        Login to view blogs.
+      </p>
+    );
+
   if (isError)
     return (
       <p className='w-full text-sm opacity-80 text-center'>

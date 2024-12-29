@@ -3,7 +3,7 @@
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
 import Container from '@/components/layout/Container';
@@ -14,7 +14,6 @@ import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL } from '@/constants/api';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
-import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
@@ -36,20 +35,13 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
+  const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const { data: session } = useSession();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const blogId = params.blogId;
-  const source = searchParams.get('source');
 
-  // if user comes from draft blog card this api should get use
   const { blog, isLoading } = useGetDraftBlogDetail(blogId);
-
-  // if user comes from published blog card this api should get use
-  const { blog: publishedBlogDetail, isLoading: publishedBlogLoading } =
-    useGetPublishedBlogDetailByBlogId(blogId);
-  const authToken = session?.user.token;
 
   // Function to create and manage WebSocket connection
   const createWebSocket = useCallback((blogId: string, token: string) => {
@@ -113,14 +105,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Fetch draft blog data every time the page loads
   useEffect(() => {
-    if (source === 'draft') {
-      mutate(`/blog/my-drafts/${blogId}`, blogId, { revalidate: true });
-    } else if (source === 'published') {
-      mutate(`/blog/published/${session?.user.account_id}/${blogId}`, blogId, {
-        revalidate: true,
-      });
-    }
-  }, [mutate, source]);
+    mutate(`/blog/my-drafts/${blogId}`, blogId, { revalidate: true });
+  }, [mutate]);
 
   // Create WebSocket connection when authToken is available
   useEffect(() => {
@@ -143,12 +129,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Set editor data based on the source
   useEffect(() => {
-    if (source === 'draft' && blog) {
+    if (blog) {
       setData(blog.blog);
-    } else if (source === 'published' && publishedBlogDetail) {
-      setData(publishedBlogDetail.blog);
     }
-  }, [blog, publishedBlogDetail, source]);
+  }, [blog]);
 
   // Send data to WebSocket when data changes
   useEffect(() => {
@@ -160,7 +144,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   }, [data, webSocket, session?.user.account_id, formatData]);
 
   // Handle the publish action
-  const handlePublishStep = useCallback(() => {
+  const handlePublishStep = useCallback(async () => {
     if (!data || data.blocks.length === 0) {
       toast({
         variant: 'destructive',
@@ -171,30 +155,34 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     }
 
     const formattedData = formatData(data, session?.user.account_id);
-    axiosInstance
-      .post(`/blog/publish/${blogId}`, formattedData)
-      .then((res) => {
-        // console.log(res);
-        toast({
-          variant: 'success',
-          title: 'Blog Published successfully',
-          description: 'success',
-        });
-        router.push(`/${session?.user?.username}`);
-      })
-      .catch((err) => {
-        // console.log(err);
-        toast({
-          variant: 'destructive',
-          title: 'Error publishing blog',
-          description: 'error',
-        });
+
+    setBlogPublishLoading(true);
+
+    try {
+      await axiosInstance.post(`/blog/publish/${blogId}`, formattedData);
+      toast({
+        variant: 'success',
+        title: 'Blog Published successfully',
+        description: 'Your blog has been published successfully!',
       });
+      setBlogPublishLoading(false);
+      router.push(`/${session?.user?.username}`);
+    } catch (err) {
+      console.error(err); // Optional: Log the error for debugging purposes
+      toast({
+        variant: 'destructive',
+        title: 'Error publishing blog',
+        description:
+          'There was an error while publishing your blog. Please try again.',
+      });
+    } finally {
+      setBlogPublishLoading(false);
+    }
   }, [data, session?.user.account_id, blogId, formatData, router]);
 
   return (
     <Container className='min-h-screen px-4 py-5 pb-12'>
-      {isLoading || publishedBlogLoading ? (
+      {isLoading ? (
         <Loader className='mx-auto' />
       ) : (
         <div className='space-y-4'>
@@ -224,7 +212,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               setSelectedTags={setSelectedTags}
               blogId={blogId}
               handlePublishStep={handlePublishStep}
-              publishedBlogLoading={publishedBlogLoading}
+              publishedBlogLoading={blogPublishLoading}
             />
           )}
         </div>

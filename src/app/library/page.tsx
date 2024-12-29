@@ -10,7 +10,7 @@ const LibraryPage = ({
   const source = params.source;
 
   return (
-    <div className='mx-auto max-w-3xl'>
+    <div className='mx-auto max-w-3xl min-h-screen'>
       <Bookmarks />
     </div>
   );

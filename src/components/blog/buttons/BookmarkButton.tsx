@@ -16,10 +16,12 @@ export const BookmarkButton = ({
   size?: number;
   isDisable?: boolean;
 }) => {
-  const { data } = useSession();
+  const { status } = useSession();
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(blogId);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  if (status === 'unauthenticated') return null;
 
   if (isLoading) {
     return (

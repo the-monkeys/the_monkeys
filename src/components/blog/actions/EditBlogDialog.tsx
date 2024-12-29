@@ -13,53 +13,41 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
-import axiosInstance from '@/services/api/axiosInstance';
+import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
-export const DeleteBlogDialog = ({
-  blogId,
-  isDraft,
-}: {
-  blogId: string;
-  isDraft?: boolean;
-}) => {
+export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
   const { data: session } = useSession();
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
 
-  const accountId = session?.user.account_id;
+  const username = session?.user.username;
 
   async function deleteBlogById(blogId?: string) {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.delete(`/blog/${blogId}`);
+      const response = await axiosInstanceV2.post(`/blog/to-draft/${blogId}`);
 
       if (response.status === 200) {
         toast({
           title: 'Success',
-          description: 'Deleted successfully',
+          description: 'Converted to draft successfully',
         });
 
         setOpen(false);
       }
 
-      {
-        isDraft
-          ? mutate(`/blog/all/drafts/${accountId}`, undefined, {
-              revalidate: true,
-            })
-          : mutate(`/blog/all/publishes/${accountId}`, undefined, {
-              revalidate: true,
-            });
-      }
+      mutate(`/blog/all/${username}`, undefined, {
+        revalidate: true,
+      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
           variant: 'error',
           title: 'Error',
-          description: err.message || 'Failed to delete blog.',
+          description: err.message || 'Failed to convert blog.',
         });
       } else {
         toast({
@@ -77,33 +65,33 @@ export const DeleteBlogDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'>
-          <Icon name='RiDeleteBin6' size={18} className='text-alert-red' />
+          <Icon name='RiPencil' size={18} />
         </button>
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle>{isDraft ? 'Remove Draft' : 'Delete Blog'}</DialogTitle>
+        <DialogTitle>Convert to Draft?</DialogTitle>
 
         <DialogDescription className='hidden'></DialogDescription>
 
         <p className='opacity-80'>
-          Are you sure you want to delete this blog? This action cannot be
-          undone.
+          Converting this blog to a draft will remove all reactions it has
+          received. Are you sure you want to proceed?
         </p>
 
         <div className='pt-4'>
           <Button
             type='button'
-            variant='destructive'
             className='w-fit float-right'
             onClick={() => deleteBlogById(blogId)}
             disabled={isLoading}
           >
             {isLoading && <Loader />}
-            Yes, {isDraft ? 'Remove' : 'Delete'}
+            Yes, Convert
           </Button>
         </div>
       </DialogContent>
     </Dialog>
   );
 };
+// );

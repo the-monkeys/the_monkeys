@@ -165,7 +165,8 @@ const PublishModal = ({
                 disabled={publishedBlogLoading}
                 className='flex-1'
               >
-                Publish {publishedBlogLoading && <Loader />}
+                {publishedBlogLoading && <Loader />}
+                Publish
               </Button>
             </div>
           </form>
