@@ -21,10 +21,10 @@ const ExploreTopicsPageLayout = ({
   return (
     <Container className='pb-12 min-h-screen space-y-4 md:space-y-6'>
       <PageHeader>
-        <PageHeading heading='Explore Topics' className='py-1' />
+        <PageHeading heading='Explore Topics' />
         <PageSubheading
           subheading='Explore wide variety of topics, from Business, Sports, Technology and much more.'
-          className='text-center opacity-80'
+          className='text-center'
         />
       </PageHeader>
 

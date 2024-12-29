@@ -8,7 +8,7 @@ const VerifyEmailPage = () => {
   return (
     <>
       <PageHeader>
-        <PageHeading heading='Email Verification' className='py-1' />
+        <PageHeading heading='Email Verification' />
       </PageHeader>
 
       <VerifyEmailStatus />

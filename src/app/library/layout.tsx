@@ -8,20 +8,20 @@ import {
 } from '@/components/layout/pageHeading';
 
 export const metadata: Metadata = {
-  title: 'Notifications',
+  title: 'Library',
 };
 
-const NotificationPageLayout = ({
+const LibraryPageLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='pb-12 min-h-screen space-y-4 md:space-y-6'>
+    <Container className='pb-12 min-h-screen space-y-8'>
       <PageHeader>
-        <PageHeading heading='Notifications' />
+        <PageHeading heading='Library' />
         <PageSubheading
-          subheading='View all your notifications in one place.'
+          subheading='Explore and manage your bookmarks effortlessly.'
           className='text-center'
         />
       </PageHeader>
@@ -31,4 +31,4 @@ const NotificationPageLayout = ({
   );
 };
 
-export default NotificationPageLayout;
+export default LibraryPageLayout;
