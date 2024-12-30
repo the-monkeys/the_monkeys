@@ -35,7 +35,7 @@ export default function LoginPage() {
         <div className='mt-4 text-center'>
           <span className='font-dm_sans'>New to Monkeys? </span>
           <Link
-            href='/auth/create-user'
+            href='/auth/register'
             className='font-dm_sans hover:underline opacity-80 text-brand-orange'
           >
             Join Monkeys
