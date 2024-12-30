@@ -97,6 +97,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             <button
               onClick={() => handleEdit(blogId)}
               className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'
+              title='Edit Draft'
             >
               <Icon name='RiEdit2' size={18} />
             </button>

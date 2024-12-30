@@ -76,7 +76,10 @@ export const DeleteBlogDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'>
+        <button
+          className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
+          title='Delete Blog'
+        >
           <Icon name='RiDeleteBin6' size={18} className='text-alert-red' />
         </button>
       </DialogTrigger>

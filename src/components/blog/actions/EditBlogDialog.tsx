@@ -64,7 +64,10 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'>
+        <button
+          className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
+          title='Convert to Draft'
+        >
           <Icon name='RiPencil' size={18} />
         </button>
       </DialogTrigger>
