@@ -1,23 +1,18 @@
 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
-import useGetPublishedBlogByAccountId from '@/hooks/blog/useGetPublishedBlogByAccountId';
+import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
 import { useSession } from 'next-auth/react';
 
 export const Blogs = () => {
-  const router = useRouter();
   const { data: session, status } = useSession();
   const params = useParams<{ username: string }>();
-  const { blogs, isLoading, isError } = useGetPublishedBlogByAccountId(
+  const { blogs, isLoading, isError } = useGetPublishedBlogByUsername(
     params.username
   );
-
-  const handleEdit = (blogId: string) => {
-    router.push(`/edit/${blogId}?source=published`);
-  };
 
   if (isError)
     return (
@@ -45,7 +40,6 @@ export const Blogs = () => {
                 key={blog?.blog_id}
                 blog={blog}
                 status={status}
-                onEdit={handleEdit}
                 modificationEnable={session?.user.username === params.username}
               />
             );

@@ -5,7 +5,7 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetBookmarkedBlogs from '@/hooks/blog/useGetBookmarkedBlogs';
 import { useSession } from 'next-auth/react';
 
-export const Saved = () => {
+export const Bookmarks = () => {
   const { status } = useSession();
   const { blogs, isLoading, isError } = useGetBookmarkedBlogs();
 
@@ -13,7 +13,7 @@ export const Saved = () => {
     return (
       <div className='min-h-screen'>
         <p className='w-full text-sm opacity-80 text-center'>
-          No saved blogs yet.
+          No blogs bookmarked yet.
         </p>
       </div>
     );

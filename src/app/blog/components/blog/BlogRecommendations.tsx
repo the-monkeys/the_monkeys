@@ -32,8 +32,8 @@ export const BlogRecommendations = () => {
       <Separator className='mb-4 bg-background-light dark:bg-background-dark' />
 
       <div className='flex flex-col gap-6'>
-        {blogs?.the_blogs.length ? (
-          blogs?.the_blogs.slice(0, 5).map((blog) => {
+        {blogs?.blogs.length ? (
+          blogs?.blogs.slice(0, 5).map((blog) => {
             return blog?.blog?.blocks.length < 5 ? null : (
               <BlogRecommendationCard key={blog?.blog_id} blog={blog} />
             );

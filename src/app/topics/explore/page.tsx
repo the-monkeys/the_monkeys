@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import React from 'react';
 
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { Loader } from '@/components/loader';
@@ -35,25 +36,27 @@ const ExploreTopicsPage = () => {
         );
 
   return (
-    <div className='space-y-4'>
-      {status === 'authenticated' && (
-        <div className='px-4 pb-2 flex justify-center'>
+    <div className='space-y-8'>
+      <div className='mx-auto max-w-4xl flex justify-center items-center flex-wrap gap-2'>
+        {status === 'authenticated' && (
           <AddTopicForm
             categories={categories || {}}
             categoriesLoading={isLoading}
           />
-        </div>
-      )}
+        )}
 
-      <div className='w-full md:w-4/5 mx-auto px-2 flex justify-center flex-wrap gap-1'>
         {letters.map((letter, index) => (
           <Button
             key={index}
-            variant='ghost'
+            variant='outline'
+            size='icon'
             onClick={() => setSelectedLetter(letter)}
-            className='size-8 sm:size-10 rounded-full'
+            className='rounded-full'
+            title={
+              letter === '#' ? 'All Categories' : `Categories from ${letter}`
+            }
           >
-            <p className='text-sm sm:text-base font-medium'>{letter}</p>
+            <p className='text-sm sm:text-base'>{letter}</p>
           </Button>
         ))}
       </div>
@@ -64,26 +67,23 @@ const ExploreTopicsPage = () => {
           <p className='opacity-80'>Almost there, loading topics</p>
         </div>
       ) : (
-        <div className='px-4 py-0 sm:py-4 grid grid-cols-2 md:grid-cols-3 gap-6'>
+        <div className='px-4 py-0 sm:py-4 grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8'>
           {categoryData && filteredCategories.length ? (
             filteredCategories.map((category) => {
               const topics = categoryData[category].Topics;
               const uniqueTopics = Array.from(new Set(topics));
 
               return (
-                <div
-                  key={category}
-                  className='p-0 sm:p-2 col-span-2 sm:col-span-1'
-                >
-                  <div className='p-1 group flex justify-between items-start'>
-                    <h2 className='py-1 flex-1 font-dm_sans text-lg sm:text-xl text-text-light dark:text-text-dark truncate'>
+                <div key={category} className='col-span-2 sm:col-span-1'>
+                  <div className='group flex justify-between items-start'>
+                    <h2 className='px-1 flex-1 font-dm_sans text-lg text-text-light dark:text-text-dark truncate'>
                       {category}
                     </h2>
 
                     {/* <CategoryButton topics={uniqueTopics} /> */}
                   </div>
 
-                  <Separator />
+                  <Separator className='mt-1 mb-2' />
 
                   <TopicsList topics={uniqueTopics} />
                 </div>

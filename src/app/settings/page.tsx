@@ -23,10 +23,10 @@ const SettingsPage = () => {
   return (
     <Container className='pb-12 space-y-4 md:space-y-6'>
       <PageHeader>
-        <PageHeading heading='Settings' className='py-1 self-start' />
+        <PageHeading heading='Settings' className='self-start' />
         <PageSubheading
           subheading='Customize your experience and manage your account settings.'
-          className='self-start opacity-80'
+          className='self-start'
         />
       </PageHeader>
 

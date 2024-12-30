@@ -97,10 +97,10 @@ export const TopicButton = ({
       {isFollowed ? (
         <Button
           size='icon'
-          variant='destructive'
+          variant='ghost'
           onClick={handleUnfollowCategory}
           disabled={loading}
-          className='rounded-full'
+          className='text-alert-red rounded-full'
         >
           <Icon name='RiSubtract' size={18} />
         </Button>

@@ -16,10 +16,12 @@ export const BookmarkButton = ({
   size?: number;
   isDisable?: boolean;
 }) => {
-  const { data } = useSession();
+  const { status } = useSession();
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(blogId);
 
   const [loading, setLoading] = useState<boolean>(false);
+
+  if (status === 'unauthenticated') return null;
 
   if (isLoading) {
     return (
@@ -56,6 +58,7 @@ export const BookmarkButton = ({
 
         mutate(`/user/is-bookmarked/${blogId}`);
         mutate(`/user/count-bookmarks/${blogId}`);
+        mutate(`/blog/my-bookmarks`);
       }
     } catch (err: unknown) {
       mutate(

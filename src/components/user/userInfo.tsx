@@ -14,7 +14,7 @@ export const UserInfoCardCompact = ({
   date,
 }: {
   id?: string;
-  date?: number;
+  date?: number | string;
 }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
 
@@ -29,7 +29,7 @@ export const UserInfoCardCompact = ({
   return (
     <div className='w-full flex items-center gap-2'>
       <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-6 border-none'>
+        <ProfileFrame className='size-5 border-none'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
       </Link>
@@ -52,7 +52,13 @@ export const UserInfoCardCompact = ({
   );
 };
 
-export const UserInfoCard = ({ id, date }: { id?: string; date?: number }) => {
+export const UserInfoCard = ({
+  id,
+  date,
+}: {
+  id?: string;
+  date?: number | string;
+}) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
 
   if (isLoading) return <UserInfoCardSkeleton />;

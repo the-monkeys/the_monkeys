@@ -185,6 +185,7 @@ export const FollowButtonSecondary = ({
       {followStatus?.isFollowing ? (
         <Button
           variant='secondary'
+          size='sm'
           disabled={loading}
           onClick={onUserUnfollow}
           className={twMerge(className, 'rounded-full')}
@@ -194,6 +195,7 @@ export const FollowButtonSecondary = ({
         </Button>
       ) : (
         <Button
+          size='sm'
           disabled={loading}
           onClick={onUserFollow}
           className={twMerge(className, 'rounded-full')}

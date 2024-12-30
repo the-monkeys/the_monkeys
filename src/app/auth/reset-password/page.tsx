@@ -8,7 +8,7 @@ const ResetPasswordPage = () => {
   return (
     <>
       <PageHeader>
-        <PageHeading heading='Reset Password' className='py-1' />
+        <PageHeading heading='Reset Password' />
       </PageHeader>
 
       <ResetPasswordForm />
