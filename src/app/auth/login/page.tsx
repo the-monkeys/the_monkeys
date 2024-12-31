@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import {
@@ -29,6 +31,16 @@ export default function LoginPage() {
         </div>
 
         <LoginForm />
+
+        <div className='mt-4 text-center'>
+          <span className='font-dm_sans'>New to Monkeys? </span>
+          <Link
+            href='/auth/register'
+            className='font-dm_sans hover:underline opacity-80 text-brand-orange'
+          >
+            Join Monkeys
+          </Link>
+        </div>
       </Container>
     </>
   );
