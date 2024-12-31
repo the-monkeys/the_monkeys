@@ -11,10 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { letters } from '@/constants/topics';
 import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 
 import { AddTopicForm } from './components/AddTopicDialog';
-import { CategoryButton } from './components/CategoryButton';
 import { TopicsList } from './components/TopicsList';
 
 const ExploreTopicsPage = () => {

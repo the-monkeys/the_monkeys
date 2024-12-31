@@ -17,9 +17,9 @@ import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { WSS_URL } from '@/constants/api';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
-import { useSession } from 'next-auth/react';
 
 // Dynamically import the Editor component to avoid server-side rendering issues
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -70,7 +70,7 @@ const CreatePage = () => {
   // Get the session data
   const { data: session } = useSession();
 
-  const authToken = session?.user.token;
+  const authToken = session?.user?.token;
   const router = useRouter();
 
   // Use useRef to store the blog ID

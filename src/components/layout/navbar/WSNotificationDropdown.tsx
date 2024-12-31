@@ -11,11 +11,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { WSS_URL } from '@/constants/api';
+import { useSession } from '@/lib/store/useSession';
 import {
   Notification,
   WSNotification,
 } from '@/services/notification/notificationTypes';
-import { useSession } from 'next-auth/react';
 
 const WSNotificationDropdown = () => {
   const { data: session, status } = useSession();

@@ -14,9 +14,9 @@ import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL } from '@/constants/api';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 // Dynamically import the Editor component to avoid server-side rendering issues

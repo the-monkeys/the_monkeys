@@ -3,8 +3,8 @@ import { useState } from 'react';
 import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const LikeButton = ({

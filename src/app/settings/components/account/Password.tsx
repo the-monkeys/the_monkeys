@@ -22,9 +22,9 @@ import {
 } from '@/components/ui/form';
 import { toast } from '@/components/ui/use-toast';
 import { updatePasswordSchema } from '@/lib/schema/auth';
+import { signOut, useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signOut, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

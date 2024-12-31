@@ -1,10 +1,9 @@
 import { LikesCount } from '@/components/blog/LikesCount';
-import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { Separator } from '@/components/ui/separator';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 import { twMerge } from 'tailwind-merge';
 
 export const BlogReactions = ({

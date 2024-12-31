@@ -6,8 +6,8 @@ import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/user/useUser';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const CategoryButton = ({ topics }: { topics: string[] }) => {

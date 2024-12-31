@@ -2,7 +2,7 @@
 
 import { Loader } from '@/components/loader';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 
 import { MarkReadButton } from './components/MarkReadButton';
 import { NotificationCard } from './components/NotificationCard';

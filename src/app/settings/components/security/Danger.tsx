@@ -13,8 +13,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
+import { signOut, useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
-import { signOut, useSession } from 'next-auth/react';
 
 export const Danger = () => {
   const { data } = useSession();

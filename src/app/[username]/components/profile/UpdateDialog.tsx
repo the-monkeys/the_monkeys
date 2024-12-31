@@ -26,9 +26,9 @@ import { toast } from '@/components/ui/use-toast';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialgo';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
+import { User } from '@/lib/types';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
 import { z } from 'zod';
@@ -40,8 +40,7 @@ const updateProfileSchema = z.object({
   bio: z.string().optional(),
 });
 
-export const UpdateDialog = () => {
-  const { data } = useSession();
+export const UpdateDialog = ({ data }: { data: { user: User } }) => {
   const { user, isLoading, isError } = useGetAuthUserProfile(
     data?.user.username
   );
@@ -86,10 +85,10 @@ export const UpdateDialog = () => {
 
       setOpen(false);
 
-      mutate(`/user/public/${data?.user.username}`, `${data?.user.username}`, {
+      mutate(`/user/public/${data?.user.username}`, `${data?.user?.username}`, {
         revalidate: true,
       });
-      mutate(`/user/${data?.user.username}`, `${data?.user.username}`, {
+      mutate(`/user/${data?.user.username}`, `${data?.user?.username}`, {
         revalidate: true,
       });
     } catch (err) {

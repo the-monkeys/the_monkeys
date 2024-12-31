@@ -62,7 +62,6 @@ npm run dev
 
 - [Next.js](https://nextjs.org/) – The React Framework for the Web.
 - [Netlify](https://www.netlify.com/) – Netlify is the essential platform for the delivery of exceptional and dynamic web experiences, without limitations.
-- [Next Auth](https://next-auth.js.org/) – Add authentication to your next app in minutes.
 - [Zod](https://zod.dev/) – TypeScript-first schema validation with static type inference.
 - [Tailwind CSS](https://tailwindcss.com/) – A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
 - [Shadcn/ui](https://ui.shadcn.com/) – Beautifully designed components that you can copy and paste into your apps.

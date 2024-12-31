@@ -7,7 +7,8 @@ import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 
-import Providers from './Providers';
+import SessionStore from './SessionStore';
+import { getAuthData } from './action';
 import './globals.css';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
@@ -55,13 +56,14 @@ export const metadata: Metadata = {
   },
 };
 
-const RootLayout = ({
-  auth,
+const RootLayout = async ({
   children,
 }: Readonly<{
-  auth: React.ReactNode;
   children: React.ReactNode;
 }>) => {
+  const authData = await getAuthData();
+  console.log(authData);
+
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
@@ -71,17 +73,15 @@ const RootLayout = ({
         className={`${arvo.variable} ${dm_sans.variable} ${ibm_plex_sans.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
         <Toaster />
+        <SessionStore data={authData} />
         <SWRProvider>
-          <Providers>
-            <ThemeProviders>
-              <TooltipProvider>
-                <Navbar />
-                <div>{auth}</div>
-                <main>{children}</main>
-                <Footer />
-              </TooltipProvider>
-            </ThemeProviders>
-          </Providers>
+          <ThemeProviders>
+            <TooltipProvider>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+            </TooltipProvider>
+          </ThemeProviders>
         </SWRProvider>
       </body>
     </html>

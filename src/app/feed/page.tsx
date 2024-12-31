@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 
 import { FollowingBlogs } from './components/FollowingBlogs';
 import { LatestBlogs } from './components/LatestBlogs';
