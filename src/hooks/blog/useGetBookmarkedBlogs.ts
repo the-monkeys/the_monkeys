@@ -1,11 +1,11 @@
 import { GetBookmarkedBlogsResponse } from '@/services/blog/blogTypes';
-import { authFetcher } from '@/services/fetcher';
+import { authFetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 
 const useGetBookmarkedBlogs = () => {
   const { data, error, isLoading } = useSWR<GetBookmarkedBlogsResponse>(
-    `blog/all/bookmarks`,
-    authFetcher
+    `blog/my-bookmarks`,
+    authFetcherV2
   );
 
   return {

@@ -12,7 +12,7 @@ export const LinksSection = () => {
           Possibilities
         </h2>
 
-        <p className='mb-4 sm:mb-6 font-roboto text-sm md:text-base opacity-80'>
+        <p className='mb-4 sm:mb-6 text-sm md:text-base opacity-80'>
           With an ever-growing range of topics, there&apos;s always something
           fresh and exciting to explore.
         </p>
@@ -38,7 +38,7 @@ export const LinksSection = () => {
           <span className='text-brand-orange'>News </span> That Matters
         </h2>
 
-        <p className='mb-4 sm:mb-6 font-roboto text-sm md:text-base opacity-80'>
+        <p className='mb-4 sm:mb-6 text-sm md:text-base opacity-80'>
           Stay ahead of the curve with the most important news and stories
           shaping the world today.
         </p>

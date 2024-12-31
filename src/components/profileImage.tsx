@@ -5,6 +5,7 @@ import Image from 'next/image';
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import { twMerge } from 'tailwind-merge';
 
+import Icon from './icon';
 import { Skeleton } from './ui/skeleton';
 
 export const ProfileFrame = ({
@@ -18,7 +19,7 @@ export const ProfileFrame = ({
     <div
       className={twMerge(
         className,
-        'ring-2 ring-foreground-light dark:ring-foreground-dark flex items-center justify-center overflow-hidden rounded-full'
+        'bg-background-light dark:bg-background-dark ring-1 ring-border-light/25 dark:ring-border-dark/25 flex items-center justify-center overflow-hidden rounded-full'
       )}
     >
       {children}
@@ -26,29 +27,28 @@ export const ProfileFrame = ({
   );
 };
 
-export const ProfileImage = ({
-  firstName,
-  username,
-}: {
-  firstName: string;
-  username: string;
-}) => {
+export const ProfileImage = ({ username }: { username?: string }) => {
   const { imageUrl, isLoading, isError } = useProfileImage(username);
 
   if (isLoading) return <Skeleton className='size-32' />;
 
   if (isError)
     return (
-      <p className='font-roboto text-lg sm:text-xl text-text-light dark:text-text-dark'>
-        {firstName.slice(0, 2)}
-      </p>
+      <Image
+        src='/default-profile.svg'
+        alt={`Profile: ${username}`}
+        title={`Profile: ${username}`}
+        width={32}
+        height={32}
+        className='w-full h-full object-cover'
+      />
     );
 
   return (
     <Image
       src={imageUrl}
-      alt={`Profile Photo: ${username}`}
-      title={`Profile Photo: ${username}`}
+      alt={`Profile: ${username}`}
+      title={`Profile: ${username}`}
       width={32}
       height={32}
       className='w-full h-full object-cover'

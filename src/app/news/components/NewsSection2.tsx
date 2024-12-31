@@ -20,7 +20,7 @@ export const NewsSection2 = () => {
   if (error)
     return (
       <div className='py-4 min-h-screen'>
-        <p className='w-full font-roboto text-sm opacity-80 text-center'>
+        <p className='w-full text-sm opacity-80 text-center'>
           Unable to load news. Please try again later.
         </p>
       </div>

@@ -9,12 +9,12 @@ export const ActivityCard = ({ activity }: { activity: Activity }) => {
           {moment(activity.timestamp.toString()).format('MMM DD, YYYY')}
         </p>
 
-        <p className='font-roboto text-xs opacity-80'>
+        <p className='text-xs opacity-80'>
           {moment(activity.timestamp.toString()).format('h:mm A')}
         </p>
       </div>
 
-      <h4 className='flex-1 font-roboto text-sm sm:text-base capitalize cursor-default'>
+      <h4 className='flex-1 text-sm sm:text-base capitalize cursor-default'>
         {activity.description}
       </h4>
     </div>

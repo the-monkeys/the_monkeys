@@ -5,7 +5,13 @@ export interface Blog {
     time: number;
     blocks: Block[];
   };
+  is_draft: boolean;
+  published_time: string;
   tags: string[];
+  LikeCount: number;
+  like_count: number;
+  BookmarkCount: number;
+  bookmark_count: number;
 }
 export interface Block {
   id: string;
@@ -22,15 +28,27 @@ export interface GetBookmarkedBlogsResponse {
   blogs: Blog[];
 }
 
+// get all blogs of following authors
+
+export interface GetFollwingAuthorsBlogsResponse {
+  blogs: Blog[];
+}
+
 // get latest 100 blog api response
 export interface GetLatest100BlogsResponse {
-  the_blogs: Blog[];
+  blogs: Blog[];
 }
 
 // get blogs based on topics
 
 export interface GetBlogsByTopics {
-  the_blogs: Blog[];
+  blogs: Blog[];
+}
+
+// get blogs of people we follow
+
+export interface GetBlogsByFollowing {
+  blogs: Blog[];
 }
 
 export interface IsLikedResponse {

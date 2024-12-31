@@ -1,11 +1,15 @@
 import { Blog } from '@/services/blog/blogTypes';
-import { authFetcher } from '@/services/fetcher';
+import { authFetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 
 const useGetPublishedBlogDetailByBlogId = (blogId: string | undefined) => {
   const { data, error, isLoading } = useSWR<Blog>(
     `/blog/${blogId}`,
-    authFetcher
+    authFetcherV2,
+    {
+      revalidateOnFocus: false,
+      refreshInterval: 0,
+    }
   );
 
   return {

@@ -77,7 +77,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
           )}
 
           {searchUsersError && (
-            <p className='font-roboto text-sm opacity-80 text-center'>
+            <p className='text-sm opacity-80 text-center'>
               Failed to load search results.
             </p>
           )}

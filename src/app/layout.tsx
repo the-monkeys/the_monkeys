@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Arvo, DM_Sans, Lato, Roboto } from 'next/font/google';
+import { Arvo, DM_Sans, IBM_Plex_Sans } from 'next/font/google';
 
 import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
@@ -18,23 +18,16 @@ const arvo = Arvo({
   display: 'swap',
 });
 
-const roboto = Roboto({
-  weight: ['100', '300', '400', '500', '700'],
+const ibm_plex_sans = IBM_Plex_Sans({
+  weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin'],
-  variable: '--font-roboto',
+  variable: '--font-ibm_plex_sans',
   display: 'swap',
 });
 
 const dm_sans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm_sans',
-  display: 'swap',
-});
-
-const lato = Lato({
-  weight: ['100', '300', '400', '700'],
-  subsets: ['latin'],
-  variable: '--font-lato',
   display: 'swap',
 });
 
@@ -74,7 +67,7 @@ const RootLayout = ({
         <AdSense pId='4687427997504601' />
       </head>
       <body
-        className={`${arvo.variable} ${roboto.variable} ${dm_sans.variable} ${lato.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
+        className={`${arvo.variable} ${dm_sans.variable} ${ibm_plex_sans.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
         <Toaster />
         <SWRProvider>

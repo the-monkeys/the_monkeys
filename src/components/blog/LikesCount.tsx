@@ -5,12 +5,10 @@ export const LikesCount = ({ blogId }: { blogId?: string }) => {
 
   if (likeCountError || likeCountLoading) return null;
 
-  if (!likes?.count) return null;
-
   return (
-    <p className='font-dm_sans text-xs opacity-80'>
+    <p className='font-dm_sans text-sm opacity-80'>
       <span className='mr-[6px]'>·</span>
-      {likes?.count} {(likes?.count as number) > 1 ? 'likes' : 'like'}
+      {likes?.count ? likes?.count : '0'} likes
     </p>
   );
 };

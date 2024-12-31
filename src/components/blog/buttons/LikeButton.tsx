@@ -9,9 +9,11 @@ import { mutate } from 'swr';
 
 export const LikeButton = ({
   blogId,
+  size = 18,
   isDisable = false,
 }: {
   blogId?: string;
+  size?: number;
   isDisable?: boolean;
 }) => {
   const { data } = useSession();
@@ -25,7 +27,7 @@ export const LikeButton = ({
         <Icon
           name='RiHeart3'
           type='Fill'
-          size={18}
+          size={size}
           className='text-foreground-light dark:text-foreground-dark'
         />
       </div>
@@ -38,7 +40,7 @@ export const LikeButton = ({
         <Icon
           name='RiHeart3'
           type='Fill'
-          size={18}
+          size={size}
           className='text-foreground-light dark:text-foreground-dark'
         />
       </div>
@@ -120,27 +122,33 @@ export const LikeButton = ({
       {likeStatus?.isLiked ? (
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 animate-scale-up ${
-            loading || isDisable ? 'cursor-default' : 'cursor-pointer'
+            loading || isDisable
+              ? 'cursor-not-allowed opacity-80'
+              : 'cursor-pointer'
           }`}
           onClick={onPostDislike}
           disabled={loading || isDisable}
+          title='Remove Like'
         >
           <Icon
             name='RiHeart3'
             type='Fill'
-            size={18}
+            size={size}
             className='text-brand-orange'
           />
         </button>
       ) : (
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
-            loading || isDisable ? 'cursor-default' : 'cursor-pointer'
+            loading || isDisable
+              ? 'cursor-not-allowed opacity-80'
+              : 'cursor-pointer'
           }`}
           onClick={onPostLike}
           disabled={loading || isDisable}
+          title='Add Like'
         >
-          <Icon name='RiHeart3' size={18} />
+          <Icon name='RiHeart3' size={size} />
         </button>
       )}
     </>

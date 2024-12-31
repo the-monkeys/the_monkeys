@@ -2,7 +2,11 @@ import { fetcher } from '@/services/fetcher';
 import useSWR from 'swr';
 
 export const useGetAllNews1 = () => {
-  const { data, error } = useSWR('/blog/news1', fetcher);
+  const { data, error } = useSWR('/blog/news1', fetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   return {
     news: data,
@@ -12,7 +16,11 @@ export const useGetAllNews1 = () => {
 };
 
 export const useGetAllNews2 = () => {
-  const { data, error } = useSWR('/blog/news2', fetcher);
+  const { data, error } = useSWR('/blog/news2', fetcher, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   return {
     news: data,

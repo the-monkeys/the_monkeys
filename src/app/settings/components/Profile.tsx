@@ -57,7 +57,6 @@ export const Profile = () => {
 
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
     setLoading(true);
-    console.log(values);
     axiosInstance
       .put(`/user/${data?.user.username}`, {
         values,
@@ -70,8 +69,6 @@ export const Profile = () => {
         });
       })
       .catch((err) => {
-        console.log(err);
-
         toast({
           variant: 'error',
           title: 'Error',
@@ -106,17 +103,12 @@ export const Profile = () => {
         <Section sectionTitle='Basic Infomation'>
           <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
-              <p className='w-full col-span-1 sm:col-span-2 font-roboto text-sm'>
+              <p className='w-full col-span-1 sm:col-span-2 text-sm'>
                 Profile Photo
               </p>
 
               <ProfileFrame className='size-28 sm:size-32'>
-                {data?.user && (
-                  <ProfileImage
-                    firstName={data.user.first_name}
-                    username={data.user.username}
-                  />
-                )}
+                {data?.user && <ProfileImage username={data.user?.username} />}
               </ProfileFrame>
 
               <div className='space-x-2'>
@@ -131,9 +123,7 @@ export const Profile = () => {
               name='first_name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>
-                    First Name
-                  </FormLabel>
+                  <FormLabel className='text-sm'>First Name</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -151,9 +141,7 @@ export const Profile = () => {
               name='last_name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>
-                    Last Name
-                  </FormLabel>
+                  <FormLabel className='text-sm'>Last Name</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -171,9 +159,7 @@ export const Profile = () => {
               name='address'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>
-                    Location
-                  </FormLabel>
+                  <FormLabel className='text-sm'>Location</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -191,9 +177,7 @@ export const Profile = () => {
               name='contact_number'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>
-                    Contact Number
-                  </FormLabel>
+                  <FormLabel className='text-sm'>Contact Number</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -211,7 +195,7 @@ export const Profile = () => {
               name='bio'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>Bio</FormLabel>
+                  <FormLabel className='text-sm'>Bio</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -229,9 +213,7 @@ export const Profile = () => {
               name='date_of_birth'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>
-                    Birth Date
-                  </FormLabel>
+                  <FormLabel className='text-sm'>Birth Date</FormLabel>
                   <FormControl>
                     <Popover>
                       <PopoverTrigger asChild>
@@ -285,7 +267,7 @@ export const Profile = () => {
               name='twitter'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>Twitter</FormLabel>
+                  <FormLabel className='text-sm'>Twitter</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -303,9 +285,7 @@ export const Profile = () => {
               name='linkedin'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>
-                    LinkedIn
-                  </FormLabel>
+                  <FormLabel className='text-sm'>LinkedIn</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -323,9 +303,7 @@ export const Profile = () => {
               name='instagram'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>
-                    Instagram
-                  </FormLabel>
+                  <FormLabel className='text-sm'>Instagram</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'
@@ -343,7 +321,7 @@ export const Profile = () => {
               name='github'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='font-roboto text-sm'>GitHub</FormLabel>
+                  <FormLabel className='text-sm'>GitHub</FormLabel>
                   <FormControl>
                     <Input
                       className='w-full'

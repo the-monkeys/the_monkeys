@@ -20,8 +20,7 @@ const config = {
     fontFamily: {
       arvo: ['var(--font-arvo)'],
       dm_sans: ['var(--font-dm_sans)'],
-      roboto: ['var(--font-roboto)'],
-      lato: ['var(--font-lato)'],
+      ibm_plex_sans: ['var(--font-ibm_plex_sans)'],
     },
     extend: {
       colors: {
@@ -29,7 +28,7 @@ const config = {
           orange: '#FF5542',
         },
         background: {
-          dark: '#191919',
+          dark: '#0F0F0F',
           light: '#F2F2F2',
         },
         foreground: {
@@ -41,8 +40,8 @@ const config = {
           light: '#878787',
         },
         text: {
-          dark: '#FEFEFE',
-          light: '#111111',
+          dark: '#FCFCFC',
+          light: '#0D0D0D',
         },
         alert: {
           red: '#EF4444',
@@ -58,7 +57,7 @@ const config = {
             scale: '0.8',
           },
           '50%': {
-            scale: '1.2',
+            scale: '1.3',
           },
           '100%': {
             scale: '1',
@@ -100,6 +99,14 @@ const config = {
             transform: 'rotate(360deg)',
           },
         },
+        'theme-spin': {
+          '0%': {
+            transform: 'rotate(0deg)',
+          },
+          '100%': {
+            transform: 'rotate(90deg)',
+          },
+        },
         'appear-up': {
           '0%': {
             opacity: '0',
@@ -124,8 +131,9 @@ const config = {
         'icon-shake': 'icon-shake 0.6s ease-in-out',
         'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
         'loader-rotate': 'loader-rotate 0.6s linear infinite',
+        'theme-spin': 'theme-spin 0.2s linear',
         'appear-up': 'appear-up .8s ease-out',
-        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-down': 'accordion-down 0.1s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },

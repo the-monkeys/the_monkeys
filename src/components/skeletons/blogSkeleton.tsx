@@ -16,15 +16,7 @@ export const PublishedBlogSkeleton = () => {
   return (
     <Container className='pb-12 min-h-screen grid grid-cols-3 gap-4'>
       <div className='p-4 col-span-3 lg:col-span-2'>
-        <div>
-          <UserInfoCardSkeleton />
-
-          <div className='mt-3 flex items-center gap-2'>
-            <Skeleton className='size-6 rounded-full' />
-            <Skeleton className='size-6 rounded-full' />
-            <Skeleton className='size-6 rounded-full' />
-          </div>
-        </div>
+        <UserInfoCardSkeleton />
 
         <Separator className='mt-4 mb-8' />
 
@@ -40,14 +32,33 @@ export const PublishedBlogSkeleton = () => {
 
 export const BlogCardSkeleton = () => {
   return (
-    <div className='px-0 lg:px-6 space-y-2'>
+    <div className='px-0 lg:px-6 space-y-3'>
       <UserInfoCardCompactSkeleton />
 
       <Skeleton className='h-28 sm:h-24 w-full' />
 
       <div className='flex justify-end items-center gap-2'>
         <div className='flex-1'>
-          <Skeleton className='h-3 w-28' />
+          <Skeleton className='h-4 w-28' />
+        </div>
+
+        <Skeleton className='size-6 rounded-full' />
+        <Skeleton className='size-6 rounded-full' />
+      </div>
+    </div>
+  );
+};
+
+export const FeedBlogCardSkeleton = () => {
+  return (
+    <div className='px-0 lg:px-6 space-y-3'>
+      <UserInfoCardSkeleton />
+
+      <Skeleton className='h-28 sm:h-24 w-full' />
+
+      <div className='flex justify-end items-center gap-2'>
+        <div className='flex-1'>
+          <Skeleton className='h-4 w-28' />
         </div>
 
         <Skeleton className='size-6 rounded-full' />
@@ -64,6 +75,17 @@ export const BlogCardListSkeleton = () => {
       <BlogCardSkeleton />
       <BlogCardSkeleton />
       <BlogCardSkeleton />
+    </div>
+  );
+};
+
+export const FeedBlogCardListSkeleton = () => {
+  return (
+    <div className='w-full space-y-6 md:space-y-8'>
+      <FeedBlogCardSkeleton />
+      <FeedBlogCardSkeleton />
+      <FeedBlogCardSkeleton />
+      <FeedBlogCardSkeleton />
     </div>
   );
 };

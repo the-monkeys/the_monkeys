@@ -76,22 +76,25 @@ export const DeleteBlogDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'>
+        <button
+          className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
+          title='Delete Blog'
+        >
           <Icon name='RiDeleteBin6' size={18} className='text-alert-red' />
         </button>
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle className='truncate'>Delete Blog</DialogTitle>
+        <DialogTitle>{isDraft ? 'Remove Draft' : 'Delete Blog'}</DialogTitle>
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <p className='font-roboto'>
+        <p className='opacity-80'>
           Are you sure you want to delete this blog? This action cannot be
           undone.
         </p>
 
-        <div>
+        <div className='pt-4'>
           <Button
             type='button'
             variant='destructive'
@@ -100,11 +103,10 @@ export const DeleteBlogDialog = ({
             disabled={isLoading}
           >
             {isLoading && <Loader />}
-            Yes, Delete
+            Yes, {isDraft ? 'Remove' : 'Delete'}
           </Button>
         </div>
       </DialogContent>
     </Dialog>
   );
 };
-// );

@@ -136,9 +136,7 @@ const PublishModal = ({
               render={({ field }) => {
                 return (
                   <FormItem className='space-y-1 flex flex-col justify-start'>
-                    <FormLabel className='font-roboto text-sm'>
-                      Choose Topics*
-                    </FormLabel>
+                    <FormLabel className='text-sm'>Choose Topics*</FormLabel>
 
                     <FormDescription></FormDescription>
 
@@ -167,7 +165,8 @@ const PublishModal = ({
                 disabled={publishedBlogLoading}
                 className='flex-1'
               >
-                Publish {publishedBlogLoading && <Loader />}
+                {publishedBlogLoading && <Loader />}
+                Publish
               </Button>
             </div>
           </form>
@@ -175,7 +174,7 @@ const PublishModal = ({
       </ModalContent>
 
       <ModalFooter>
-        <p className='font-roboto text-xs text-foreground-dark dark:text-foreground-light text-center'>
+        <p className='text-xs text-foreground-dark dark:text-foreground-light text-center'>
           Modifications made here will solely affect the presentation of your
           blog, without altering the actual content of your blog.
         </p>

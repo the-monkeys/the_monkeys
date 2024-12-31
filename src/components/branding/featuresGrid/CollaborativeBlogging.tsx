@@ -8,7 +8,7 @@ export const CollaborativeBlogging = () => {
           Collaborative Blogging*
         </h2>
 
-        <p className='font-roboto text-xs sm:text-sm md:text-base opacity-80'>
+        <p className='text-xs sm:text-sm md:text-base opacity-80'>
           {`Invite co-authors to work on blogs together and create impactful
           stories. Writing is better when it's shared!`}
         </p>

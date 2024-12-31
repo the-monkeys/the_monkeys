@@ -25,7 +25,7 @@ const NewsPage = () => {
         <p className='font-dm_sans text-xs sm:text-sm'>Monkeys Blog</p>
       </LinksRedirectArrow>
 
-      <p className='font-roboto text-xs xl:text-sm opacity-80'></p>
+      <p className='text-xs xl:text-sm opacity-80'></p>
 
       <div className='py-4 sm:py-6'>
         <p className='mx-auto w-fit font-dm_sans text-xs opacity-80'>

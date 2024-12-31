@@ -22,7 +22,7 @@ const ActivityPageLayout = ({
         <PageHeading heading='Activity' className='py-1 self-start' />
         <PageSubheading
           subheading='You became part of Monkeys and have since then...'
-          className='self-start opacity-80'
+          className='self-start'
         />
       </PageHeader>
 

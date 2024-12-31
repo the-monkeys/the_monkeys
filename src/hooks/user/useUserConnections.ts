@@ -11,7 +11,6 @@ export const useGetConnectionCount = (username: string | undefined) => {
     `/user/connection-count/${username}`,
     authFetcher,
     {
-      revalidateOnFocus: false,
       refreshInterval: 0,
     }
   );

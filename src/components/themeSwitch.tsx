@@ -22,9 +22,13 @@ const ThemeSwitch = () => {
       <button
         className='hover:opacity-80 cursor-pointer'
         onClick={() => setTheme('light')}
-        title='Change Theme'
+        title='Switch Theme'
       >
-        <Icon name='RiMoon' size={22} className='animate-scale-up' />
+        <Icon
+          name='RiMoon'
+          size={22}
+          className='animate-theme-spin direction-reverse'
+        />
       </button>
     );
   }
@@ -34,9 +38,9 @@ const ThemeSwitch = () => {
       <button
         className='hover:opacity-80 cursor-pointer'
         onClick={() => setTheme('dark')}
-        title='Change Theme'
+        title='Switch Theme'
       >
-        <Icon name='RiSun' size={22} className='animate-scale-up' />
+        <Icon name='RiSun' size={22} className='animate-theme-spin' />
       </button>
     );
   }

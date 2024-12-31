@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import Link from 'next/link';
+
 import { Button } from '@/components/ui/button';
 import useUser from '@/hooks/user/useUser';
 import { useSession } from 'next-auth/react';
@@ -21,13 +23,18 @@ export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
   };
 
   return (
-    <div className='pt-2 space-y-2'>
-      <ul className='pl-2 pr-1 space-y-1'>
+    <div className='space-y-4'>
+      <ul className='pl-2 space-y-1'>
         {displayedTopics.map((topic) => (
           <li key={topic} className='group flex items-center justify-between'>
-            <p className='py-1 flex-1 font-roboto opacity-80 group-hover:opacity-100'>
-              {topic}
-            </p>
+            <div className='flex-1'>
+              <Link
+                href={`/topics/${topic}`}
+                className='text-sm opacity-80 group-hover:opacity-100 truncate'
+              >
+                {topic}
+              </Link>
+            </div>
 
             <TopicButton
               topic={topic}
@@ -42,7 +49,7 @@ export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
       {totalTopics > 6 && (
         <Button
           size='sm'
-          variant='link'
+          variant='ghost'
           onClick={() => setShowAll((prev) => !prev)}
           className='w-full rounded-none'
         >

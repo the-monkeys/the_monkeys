@@ -7,11 +7,13 @@ import {
   PageSubheading,
 } from '@/components/layout/pageHeading';
 
-export const metadata: Metadata = {
-  title: 'Explore Topics',
-  description:
-    'Discover a range of topics, including Business, Technology, Arts, Travelling, Health, Humor, Entertainment and more. Stay informed and explore diverse categories that cater to your interests and curiosity.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Explore Topics',
+    description:
+      'Unleash your curiosity, explore content that matters to you, and add your favorite topics to your profile for a personalized experience.',
+  };
+}
 
 const ExploreTopicsPageLayout = ({
   children,
@@ -19,12 +21,12 @@ const ExploreTopicsPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='pb-12 min-h-screen space-y-4 md:space-y-6'>
+    <Container className='pb-12 min-h-screen space-y-8'>
       <PageHeader>
-        <PageHeading heading='Explore Topics' className='py-1' />
+        <PageHeading heading='Explore Topics' />
         <PageSubheading
           subheading='Explore wide variety of topics, from Business, Sports, Technology and much more.'
-          className='text-center opacity-80'
+          className='text-center'
         />
       </PageHeader>
 

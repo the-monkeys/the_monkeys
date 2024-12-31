@@ -5,7 +5,6 @@ import { Tabs, TabsContent } from '@/components/ui/tabs';
 import { Blogs } from './components/Blogs';
 import { Drafts } from './components/Drafts';
 import { NavigationTabs } from './components/NavigationTabs';
-import { Saved } from './components/Saved';
 
 export async function generateMetadata({
   params,
@@ -21,7 +20,7 @@ export async function generateMetadata({
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
   return (
-    <div className=''>
+    <div>
       <Tabs defaultValue='blogs' className='space-y-6 md:space-y-8'>
         <NavigationTabs username={params.username} />
 
@@ -32,10 +31,6 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
 
           <TabsContent className='w-full' value='drafts'>
             <Drafts />
-          </TabsContent>
-
-          <TabsContent className='w-full' value='saved'>
-            <Saved />
           </TabsContent>
         </div>
       </Tabs>
