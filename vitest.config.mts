@@ -5,5 +5,8 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
     environment: 'jsdom',
+    coverage: {
+      provider: 'v8',
+    },
   },
 });
