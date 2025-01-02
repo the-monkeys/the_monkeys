@@ -183,7 +183,7 @@ const CreatePage = () => {
       return; // Ensure data is not null and has a title block
     }
 
-    const formattedData = formatData(data, session?.user.account_id);
+    const formattedData = formatData(data, session?.user!.account_id);
 
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
@@ -206,7 +206,7 @@ const CreatePage = () => {
           description: 'error',
         });
       });
-  }, [data, session?.user.account_id, blogId, formatData, router]);
+  }, [data, blogId, formatData, router]);
 
   // Send data to WebSocket when data changes
   useEffect(() => {
@@ -215,11 +215,16 @@ const CreatePage = () => {
       webSocket &&
       webSocket.readyState === WebSocket.OPEN
     ) {
-      const formattedData = formatData(data, session?.user.account_id);
+      const formattedData = formatData(data, session?.user!.account_id);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
-  }, [data, webSocket, session?.user.account_id, formatData]);
+  }, [data, webSocket, formatData]);
+
+  if (!session.user) {
+    router.replace('/auth/login');
+    return;
+  }
 
   return (
     <>

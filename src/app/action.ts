@@ -7,7 +7,7 @@ import { SignJWT, jwtVerify } from 'jose';
 
 export const getAuthData = async () => {
   const cookieStore = await cookies();
-  const authCookie = cookieStore.get('monkeys-auth-cookie');
+  const authCookie = cookieStore.get('monkeys-auth-token');
 
   try {
     if (!authCookie?.value) return null;

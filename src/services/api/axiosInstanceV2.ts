@@ -10,7 +10,6 @@ const axiosInstanceV2 = axios.create({
 
 axiosInstanceV2.interceptors.request.use(
   async (config) => {
-    console.log(config);
     // Get public IP address
     const ip = await publicIpv4();
     config.headers['Ip'] = ip;

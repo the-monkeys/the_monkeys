@@ -62,7 +62,6 @@ const RootLayout = async ({
   children: React.ReactNode;
 }>) => {
   const authData = await getAuthData();
-  console.log(authData);
 
   return (
     <html lang='en' suppressHydrationWarning>
