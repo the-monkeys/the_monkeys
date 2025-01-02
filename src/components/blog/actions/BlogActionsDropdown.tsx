@@ -11,7 +11,7 @@ import { LIVE_URL } from '@/constants/api';
 export const BlogActionsDropdown = ({ blogId }: { blogId?: string }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(`${LIVE_URL}/blog/${blogId}`).then(
+      navigator.clipboard.writeText(`${LIVE_URL}/blog?id=${blogId}`).then(
         () => {
           toast({
             variant: 'default',
