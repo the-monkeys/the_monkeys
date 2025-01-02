@@ -1,5 +1,5 @@
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
-import { FeedListCardSkeleton } from '@/components/skeletons/blogSkeleton';
+import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
 export const LatestBlogs = ({
@@ -11,25 +11,19 @@ export const LatestBlogs = ({
 
   if (isError)
     return (
-      <p className='w-full font-roboto text-sm opacity-80 text-center'>
+      <p className='w-full text-sm opacity-80 text-center'>
         Oops! Something went wrong. Please try again.
       </p>
     );
 
   return (
-    <div className='flex flex-col gap-6 sm:gap-8'>
+    <div className='flex flex-col gap-8 lg:gap-10'>
       {isLoading ? (
-        <div className='w-full space-y-6'>
-          {Array(4)
-            .fill(null)
-            .map((_, index) => (
-              <FeedListCardSkeleton key={index} />
-            ))}
-        </div>
-      ) : !blogs?.the_blogs || blogs?.the_blogs?.length === 0 ? (
-        <p className='font-roboto text-sm opacity-80'>No blogs available.</p>
+        <FeedBlogCardListSkeleton />
+      ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
+        <p className='text-sm text-center opacity-80'>No blogs available.</p>
       ) : (
-        blogs?.the_blogs.map((blog) => {
+        blogs?.blogs.map((blog) => {
           return blog.blog.blocks.length < 5 ? null : (
             <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
           );

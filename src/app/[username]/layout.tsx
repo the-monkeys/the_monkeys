@@ -8,7 +8,7 @@ const ProfilePageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='grid grid-cols-3 gap-8 md:gap-6 px-5 py-4 pb-12'>
+    <Container className='grid grid-cols-3 gap-8 md:gap-6 px-4 py-4 pb-12'>
       <div className='col-span-3 md:col-span-1'>
         <ProfileSection />
       </div>

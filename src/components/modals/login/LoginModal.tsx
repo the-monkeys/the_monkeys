@@ -35,12 +35,12 @@ const LoginModal = ({
   return (
     <Modal setModal={setModal}>
       <ModalHeader>
-        <h1 className='font-playfair_Display text-2xl sm:text-3xl text-center font-semibold'>
+        <h1 className='font-arvo text-2xl sm:text-3xl text-center'>
           {loginStep?.heading}
         </h1>
 
         {loginStep.subHeading && (
-          <p className='mt-2 font-dm_sans text-sm sm:text-base opacity-80 text-center'>
+          <p className='font-dm_sans text-sm sm:text-base opacity-80 text-center'>
             {loginStep.subHeading}
           </p>
         )}
@@ -49,7 +49,7 @@ const LoginModal = ({
       {handleLoginStep()}
 
       <ModalFooter>
-        <p className='font-roboto text-xs text-foreground-dark dark:text-foreground-light text-center'>
+        <p className='text-xs text-foreground-dark dark:text-foreground-light text-center'>
           By logging in to Monkeys, you agree to our Terms and Policies.
         </p>
       </ModalFooter>

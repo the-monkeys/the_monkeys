@@ -86,7 +86,7 @@ const CreatePage = () => {
     };
 
     ws.onmessage = (event) => {
-      console.log('WebSocket message received:', event.data);
+      console.log('WebSocket message received');
       setIsSaving(false); // Reset saving status when message is received
     };
 
@@ -130,8 +130,8 @@ const CreatePage = () => {
   // Load the Editor component dynamically
   useEffect(() => {
     const loadEditor = async () => {
-      const module = await import('@/components/editor');
-      setEditor(() => module.default);
+      const editor = await import('@/components/editor');
+      setEditor(() => editor.default);
     };
 
     loadEditor();
@@ -188,7 +188,7 @@ const CreatePage = () => {
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
       .then((res) => {
-        console.log(res);
+        // console.log(res);
         toast({
           variant: 'success',
           title: 'Blog Published successfully',
@@ -198,7 +198,7 @@ const CreatePage = () => {
         router.push(`/${session?.user?.username}`);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
         setPublishedBlogLoading(false);
         toast({
           variant: 'destructive',
@@ -223,14 +223,12 @@ const CreatePage = () => {
 
   return (
     <>
-      <div className='space-y-2'>
+      <div className='space-y-4'>
         <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
           {isSaving ? (
-            <p className='font-roboto text-xs sm:text-sm opacity-80'>
-              Saving ...
-            </p>
+            <p className='text-xs sm:text-sm opacity-80'>Saving ...</p>
           ) : (
-            <p className='font-roboto text-xs sm:text-sm opacity-80'>Saved</p>
+            <p className='text-xs sm:text-sm opacity-80'>Saved</p>
           )}
 
           <Button onClick={() => setShowModal(true)}>Publish</Button>

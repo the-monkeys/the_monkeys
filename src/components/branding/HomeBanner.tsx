@@ -1,46 +1,43 @@
 import Link from 'next/link';
 
 import Icon from '../icon';
-import LinksRedirectArrow from '../links/LinksRedirectArrow';
 import { Button } from '../ui/button';
-import MonkeysBranding from './MonkeysBranding';
+import { BackgroundBanner } from './BackgroundBanner';
+
+('./BackgroundBanner');
 
 const HomeBanner = () => {
   return (
-    <div className='relative flex flex-col justify-end gap-4 min-h-60 md:min-h-80'>
-      <div className='absolute top-0 right-0 w-full sm:w-4/5 md:w-1/2 opacity-75 sm:opacity-100 -z-10 '>
-        <MonkeysBranding />
+    <div className='py-6 px-4 relative flex flex-col justify-center items-center min-h-60 md:min-h-80'>
+      <div className='absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] h-full w-full -z-10'>
+        <BackgroundBanner />
       </div>
 
-      <LinksRedirectArrow
-        link='/news'
-        position='Right'
-        className='mx-auto md:m-0 w-fit'
-      >
-        <p className='font-dm_sans font-medium text-base sm:text-lg'>
-          News by Monkeys
-        </p>
-      </LinksRedirectArrow>
-
-      <h1 className='w-full md:w-4/5 font-playfair_Display font-medium text-4xl sm:text-5xl md:text-6xl text-primary-monkeyBlack dark:text-primary-monkeyWhite drop-shadow-sm text-center md:text-left animate-appear-up'>
-        Blog <span className='text-primary-monkeyOrange'>Together</span> Write{' '}
-        <span className='text-primary-monkeyOrange'>Better</span>
+      <h1 className='pb-2 md:pb-4 font-arvo text-[30px] sm:text-[40px] md:text-[50px] drop-shadow-sm text-center leading-10 animate-appear-up'>
+        Inspire, Inform, Innovate
       </h1>
 
-      <p className='font-roboto text-base md:text-lg text-secondary-darkGrey dark:text-secondary-white text-center md:text-left'>
-        Don't let outdated content overshadow your creation.
+      <p className='font-dm_sans font-light text-base sm:text-lg md:text-xl text-center opacity-80 animate-appear-up'>
+        Blog together and write content that connect, inspire, and leave a
+        lasting impact.
       </p>
 
-      <div className='flex justify-center md:justify-start'>
-        <Button size='lg' className='group px-4 sm:px-6 rounded-full' asChild>
-          <Link href='/create' title='Create Blogs Here'>
-            <Icon
-              name='RiPencil'
-              className='mr-2 group-hover:animate-icon-shake'
-              type='Fill'
-            />
-
-            <p className='font-roboto'>Start Writing</p>
+      <div className='mt-6 md:mt-8 flex justify-center sm:justify-start items-center flex-wrap gap-2'>
+        <Button
+          size='lg'
+          variant='brand'
+          className='group px-6 rounded-full hover:text-text-dark hover:bg-opacity-100 shadow-md'
+          title='Create Blog'
+          asChild
+        >
+          <Link href='/create'>
+            <div>
+              <Icon
+                name='RiPencil'
+                className='mr-2 group-hover:animate-icon-shake'
+              />
+            </div>
+            <p className='font-dm_sans'>Start Writing</p>
           </Link>
         </Button>
       </div>

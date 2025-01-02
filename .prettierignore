@@ -3,6 +3,9 @@ node_modules/
 out/
 .cache/
 
+# Env file
+.env.example
+
 # Ignore configuration files
 .eslintcache
 .prettierignore

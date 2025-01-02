@@ -8,12 +8,7 @@ const PageHeading = ({
   className?: string;
 }) => {
   return (
-    <h1
-      className={twMerge(
-        className,
-        'font-playfair_Display font-semibold text-3xl sm:text-4xl'
-      )}
-    >
+    <h1 className={twMerge(className, 'pb-1 font-arvo text-3xl md:text-4xl')}>
       {heading}
     </h1>
   );
@@ -27,7 +22,7 @@ const PageSubheading = ({
   className?: string;
 }) => {
   return (
-    <p className={twMerge(className, 'font-dm_sans text-xs sm:text-sm')}>
+    <p className={twMerge(className, 'font-dm_sans font-light text-sm')}>
       {subheading}
     </p>
   );
@@ -41,7 +36,9 @@ const PageHeader = ({
   children: React.ReactNode;
 }) => {
   return (
-    <div className={twMerge(className, 'px-4 py-2 flex flex-col items-center')}>
+    <div
+      className={twMerge(className, 'p-4 flex flex-col items-center space-y-2')}
+    >
       {children}
     </div>
   );

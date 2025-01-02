@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { loginSteps } from '@/constants/modal';
@@ -26,11 +24,7 @@ const Step1 = ({
 
   return (
     <ModalContent className='space-y-3'>
-      <Button
-        variant='brand'
-        className='w-full flex'
-        onClick={(e) => handleSubmit(e)}
-      >
+      <Button variant='brand' className='w-full flex' onClick={handleSubmit}>
         <Icon name='RiMail' type='Fill' />
         <p className='flex-1'>Login with Email</p>
       </Button>
@@ -49,8 +43,8 @@ const Step1 = ({
         <p className='font-dm_sans text-sm opacity-80'>New user?</p>
 
         <button
-          className='font-dm_sans text-sm hover:text-brand-orange'
-          onClick={(e) => handleRegister(e)}
+          className='font-dm_sans text-sm text-brand-orange hover:underline'
+          onClick={handleRegister}
         >
           Join Monkeys
         </button>

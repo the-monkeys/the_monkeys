@@ -102,12 +102,12 @@ const PublishModal = ({
   return (
     <Modal setModal={setModal}>
       <ModalHeader>
-        <h1 className='font-playfair_Display text-2xl sm:text-3xl text-center font-semibold'>
+        <h1 className='font-arvo text-2xl sm:text-3xl text-center'>
           {publishStep?.heading}
         </h1>
 
         {publishStep.subHeading && (
-          <p className='mt-2 font-dm_sans text-sm sm:text-base opacity-80 text-center'>
+          <p className='font-dm_sans text-sm sm:text-base opacity-80 text-center'>
             {publishStep.subHeading}
           </p>
         )}
@@ -136,9 +136,7 @@ const PublishModal = ({
               render={({ field }) => {
                 return (
                   <FormItem className='space-y-1 flex flex-col justify-start'>
-                    <FormLabel className='font-roboto text-sm'>
-                      Choose Topics*
-                    </FormLabel>
+                    <FormLabel className='text-sm'>Choose Topics*</FormLabel>
 
                     <FormDescription></FormDescription>
 
@@ -167,7 +165,8 @@ const PublishModal = ({
                 disabled={publishedBlogLoading}
                 className='flex-1'
               >
-                Publish {publishedBlogLoading && <Loader />}
+                {publishedBlogLoading && <Loader />}
+                Publish
               </Button>
             </div>
           </form>
@@ -175,7 +174,7 @@ const PublishModal = ({
       </ModalContent>
 
       <ModalFooter>
-        <p className='font-roboto text-xs text-foreground-dark dark:text-foreground-light text-center'>
+        <p className='text-xs text-foreground-dark dark:text-foreground-light text-center'>
           Modifications made here will solely affect the presentation of your
           blog, without altering the actual content of your blog.
         </p>

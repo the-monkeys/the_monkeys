@@ -7,7 +7,7 @@ import * as LabelPrimitive from '@radix-ui/react-label';
 import { type VariantProps, cva } from 'class-variance-authority';
 
 const labelVariants = cva(
-  'font-roboto text-text-light dark:text-text-dark leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+  'text-text-light dark:text-text-dark leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
 );
 
 const Label = React.forwardRef<

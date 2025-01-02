@@ -95,17 +95,9 @@ export const ResetPasswordForm = () => {
   function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
     setLoading(true);
     axiosInstanceNoAuth
-      .post(
-        '/auth/update-password',
-        {
-          new_password: values.password,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`,
-          },
-        }
-      )
+      .post('/auth/update-password', {
+        new_password: values.password,
+      })
       .then((res) => {
         toast({
           variant: 'success',
@@ -127,7 +119,7 @@ export const ResetPasswordForm = () => {
   }
 
   return (
-    <div className='flex flex-col items-center px-5 py-4'>
+    <div className='flex flex-col items-center px-4 py-5'>
       <Suspense fallback={<Loader />}>
         <SearchParamsComponent setSearchParams={updateSearchParams} />
       </Suspense>
@@ -191,16 +183,16 @@ export const ResetPasswordForm = () => {
           />
 
           <ul className='space-y-1'>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must be at least 6 characters long.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one lowercase letter.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one uppercase letter.
             </li>
-            <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
               Must contain at least one number.
             </li>
           </ul>

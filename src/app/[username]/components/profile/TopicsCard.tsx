@@ -14,21 +14,29 @@ export const TopicsCard = () => {
     return null;
   }
 
+  if (isError) {
+    return null;
+  }
+
   const topicsCount = user?.topics?.length || 0;
-  const maxTopicsShow = 5;
+  const maxTopicsShow = 6;
 
   return (
-    <div className='mt-4'>
-      <LinksRedirectArrow link='/explore-topics'>
-        <h2 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
-          Topics
-        </h2>
-      </LinksRedirectArrow>
+    <div className='mt-6'>
+      <div className='flex flex-col'>
+        <h4 className='px-1 font-dm_sans font-medium text-base md:text-lg'>
+          Topics of interest
+        </h4>
+
+        <LinksRedirectArrow link='/topics/explore' className='w-fit px-[6px]'>
+          <p className='font-dm_sans text-sm opacity-80'>explore topics</p>
+        </LinksRedirectArrow>
+      </div>
 
       <Separator className='mt-1 mb-3' />
 
       {user && user.topics && user.topics.length > 0 ? (
-        <div className='flex flex-wrap gap-x-1 gap-y-2'>
+        <div className='mt-2 flex flex-wrap gap-2'>
           {user.topics
             ?.slice(0, maxTopicsShow)
             .map((topic, index) => (
@@ -36,13 +44,13 @@ export const TopicsCard = () => {
             ))}
 
           {topicsCount > maxTopicsShow ? (
-            <p className='px-1 self-center font-roboto text-sm opacity-80'>
+            <p className='px-1 self-center text-xs md:text-sm opacity-80'>
               {`+${topicsCount - maxTopicsShow} more`}
             </p>
           ) : null}
         </div>
       ) : (
-        <p className='font-roboto text-sm opacity-80 text-center'>
+        <p className='text-sm opacity-80 text-center'>
           No topics have been added.
         </p>
       )}

@@ -102,8 +102,6 @@ export const UpdateDialog = () => {
     }
   };
 
-  if (isError) return null;
-
   useEffect(() => {
     if (user) {
       form.reset({
@@ -115,12 +113,12 @@ export const UpdateDialog = () => {
     }
   }, [user, form]);
 
+  if (isError) return null;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant='secondary' className='w-full'>
-          Update Details
-        </Button>
+        <Button className='rounded-full'>Update</Button>
       </DialogTrigger>
 
       <DialogContent className='max-h-[60vh] sm:max-h-[80vh] overflow-auto'>
@@ -134,15 +132,10 @@ export const UpdateDialog = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
               <div className='flex flex-wrap items-end gap-2'>
-                <p className='w-full font-roboto text-sm'>Profile Photo</p>
+                <p className='w-full text-sm'>Profile Photo</p>
 
-                <ProfileFrame className='ring-2 ring-foreground-light dark:ring-foreground-dark size-24 sm:size-28'>
-                  {data?.user && (
-                    <ProfileImage
-                      firstName={data.user.first_name}
-                      username={data.user.username}
-                    />
-                  )}
+                <ProfileFrame className='size-24 sm:size-28'>
+                  {data?.user && <ProfileImage username={data.user.username} />}
                 </ProfileFrame>
 
                 <div className='space-x-2'>
@@ -157,9 +150,7 @@ export const UpdateDialog = () => {
                 name='first_name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>
-                      First Name
-                    </FormLabel>
+                    <FormLabel className='text-sm'>First Name</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
@@ -176,9 +167,7 @@ export const UpdateDialog = () => {
                 name='last_name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>
-                      Last Name
-                    </FormLabel>
+                    <FormLabel className='text-sm'>Last Name</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
@@ -195,9 +184,7 @@ export const UpdateDialog = () => {
                 name='address'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>
-                      Location
-                    </FormLabel>
+                    <FormLabel className='text-sm'>Location</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'
@@ -214,7 +201,7 @@ export const UpdateDialog = () => {
                 name='bio'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>Bio</FormLabel>
+                    <FormLabel className='text-sm'>Bio</FormLabel>
                     <FormControl>
                       <Input
                         className='w-full'

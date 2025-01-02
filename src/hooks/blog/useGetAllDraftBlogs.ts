@@ -1,11 +1,15 @@
 import { GetDraftBlogResponse } from '@/services/blog/blogTypes';
-import { authFetcher } from '@/services/fetcher';
+import { authFetcher, authFetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 
-const useGetAllDraftBlogs = (accountId: string | undefined) => {
+const useGetAllDraftBlogs = () => {
   const { data, error, isLoading } = useSWR<GetDraftBlogResponse>(
-    `/blog/all/drafts/${accountId}`,
-    authFetcher
+    `/blog/my-drafts`,
+    authFetcherV2,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
   );
 
   return {

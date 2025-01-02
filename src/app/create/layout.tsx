@@ -16,7 +16,7 @@ const CreatePageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='min-h-screen px-5 py-4 pb-12'>{children}</Container>
+    <Container className='min-h-screen px-4 py-5 pb-12'>{children}</Container>
   );
 };
 

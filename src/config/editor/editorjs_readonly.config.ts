@@ -14,7 +14,7 @@ export const editorConfig: EditorConfig = {
     header: {
       class: Header,
       config: {
-        levels: [1, 2],
+        levels: [1, 2, 3],
       },
     },
     paragraph: {

@@ -8,7 +8,11 @@ import useSWR from 'swr';
 export const useIsPostBookmarked = (blogId: string | undefined) => {
   const { data, isLoading, error } = useSWR<IsBookmarkedResponse>(
     `/user/is-bookmarked/${blogId}`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateIfStale: false,
+      refreshInterval: 0,
+    }
   );
 
   return {
@@ -21,7 +25,12 @@ export const useIsPostBookmarked = (blogId: string | undefined) => {
 export const useGetBookmarksCount = (blogId: string | undefined) => {
   const { data, isLoading, error } = useSWR<bookmarksCountResponse>(
     `/user/count-bookmarks/${blogId}`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      refreshInterval: 0,
+    }
   );
 
   return {

@@ -95,8 +95,6 @@ export const Email = () => {
       );
 
       if (response.status === 200) {
-        console.log(response, 'this api');
-
         updateUserSession(response.data.token);
         toast({
           variant: 'success',
@@ -125,7 +123,7 @@ export const Email = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-roboto text-sm opacity-80'>
+      <p className='text-sm opacity-80'>
         Registered Email: {session?.user?.email}
       </p>
 
@@ -148,7 +146,7 @@ export const Email = () => {
             className='text-brand-orange'
           />
 
-          <p className='font-roboto'>Email Verified</p>
+          <p>Email Verified</p>
         </div>
       )}
 
@@ -161,15 +159,12 @@ export const Email = () => {
                 name='email'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className='font-roboto text-sm'>
-                      Change Email
-                    </FormLabel>
+                    <FormLabel className='text-sm'>Change Email</FormLabel>
                     <FormMessage />
                     <FormControl>
                       <Input
                         placeholder={
-                          `eg. ${session?.user?.email}` ||
-                          'eg. yourmail@monkeys.xyz'
+                          `${session?.user?.email}` || 'yourmail@monkeys.xyz'
                         }
                         {...field}
                       />

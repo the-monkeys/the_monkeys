@@ -9,7 +9,10 @@ import useSWR from 'swr';
 export const useGetConnectionCount = (username: string | undefined) => {
   const { data, error, isLoading } = useSWR<ConnectionCountResponse>(
     `/user/connection-count/${username}`,
-    authFetcher
+    authFetcher,
+    {
+      refreshInterval: 0,
+    }
   );
 
   return {
@@ -22,26 +25,36 @@ export const useGetConnectionCount = (username: string | undefined) => {
 export const useGetFollowers = () => {
   const { data, error, isLoading } = useSWR<FollowDataResponse>(
     `/user/followers`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      refreshInterval: 0,
+    }
   );
 
   return {
     followers: data,
     followerError: error,
-    follwerLoading: isLoading,
+    followerLoading: isLoading,
   };
 };
 
 export const useGetFollowing = () => {
   const { data, error, isLoading } = useSWR<FollowDataResponse>(
     `/user/following`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      refreshInterval: 0,
+    }
   );
 
   return {
     following: data,
     followingError: error,
-    follwingLoading: isLoading,
+    followingLoading: isLoading,
   };
 };
 

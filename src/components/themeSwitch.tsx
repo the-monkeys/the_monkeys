@@ -19,23 +19,29 @@ const ThemeSwitch = () => {
 
   if (resolvedTheme === 'dark') {
     return (
-      <div
+      <button
         className='hover:opacity-80 cursor-pointer'
         onClick={() => setTheme('light')}
+        title='Switch Theme'
       >
-        <Icon name='RiMoon' size={22} className='animate-scale-up' />
-      </div>
+        <Icon
+          name='RiMoon'
+          size={22}
+          className='animate-theme-spin direction-reverse'
+        />
+      </button>
     );
   }
 
   if (resolvedTheme === 'light') {
     return (
-      <div
+      <button
         className='hover:opacity-80 cursor-pointer'
         onClick={() => setTheme('dark')}
+        title='Switch Theme'
       >
-        <Icon name='RiSun' size={22} className='animate-scale-up' />
-      </div>
+        <Icon name='RiSun' size={22} className='animate-theme-spin' />
+      </button>
     );
   }
 };

@@ -69,12 +69,7 @@ export const UpdateProfileDialog = () => {
     try {
       const response = await axiosFileInstance.post(
         `/files/profile/${data?.user.username}/profile`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${data?.user.token}`,
-          },
-        }
+        formData
       );
 
       if (response.status === 202) {
@@ -132,7 +127,7 @@ export const UpdateProfileDialog = () => {
         {!selectedImage && (
           <div className='space-y-2'>
             {uploadError && (
-              <p className='font-roboto font-medium text-sm text-alert-red'>
+              <p className='font-medium text-sm text-alert-red'>
                 {uploadError}
               </p>
             )}
@@ -152,13 +147,13 @@ export const UpdateProfileDialog = () => {
                 type='file'
               />
 
-              <p className='font-roboto text-sm sm:text-base text-center'>
+              <p className='text-sm sm:text-base text-center'>
                 {isDragActive
                   ? 'Drop the file here ...'
                   : 'Drop a file here, or click to select files'}
               </p>
 
-              <p className='font-roboto text-xs sm:text-sm text-center opacity-80'>
+              <p className='text-xs sm:text-sm text-center opacity-80'>
                 The file should be under 2 MB
               </p>
             </div>
@@ -178,7 +173,7 @@ export const UpdateProfileDialog = () => {
             </div>
 
             <div className='mt-4 flex items-center gap-2'>
-              <p className='py-1 flex-1 font-roboto truncate'>
+              <p className='py-1 flex-1 truncate'>
                 {selectedImage.name}
                 <span className='block text-sm opacity-80'>
                   {(selectedImage.size / 1024).toFixed(1)} KB

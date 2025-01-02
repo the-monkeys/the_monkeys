@@ -28,7 +28,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        'px-4 py-2 bg-background-light dark:bg-background-dark border-1 border-foreground-light dark:border-foreground-dark rounded-md shadow-md',
+        'px-4 py-2 bg-background-light dark:bg-background-dark border border-foreground-light dark:border-foreground-dark rounded-md shadow-md',
         className
       )}
       classNames={{
@@ -50,10 +50,7 @@ function Calendar({
           'font-dm_sans text-text-light/80 dark:text-text-dark/80 rounded-md w-9 font-normal text-sm',
         row: 'flex w-full mt-2 space-x-1',
         cell: 'text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
-        day: cn(
-          buttonVariants({ variant: 'ghost' }),
-          'h-9 w-9 p-0 font-roboto'
-        ),
+        day: cn(buttonVariants({ variant: 'ghost' }), 'h-9 w-9 p-0'),
         day_selected:
           'bg-foreground-light dark:bg-foreground-dark hover:bg-primary',
         day_today: 'bg-accent text-accent-foreground',
@@ -65,17 +62,20 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        Dropdown: ({ value, onChange, children, ...props }: DropdownProps) => {
+        Dropdown: ({ value, onChange, children }: DropdownProps) => {
           const options = React.Children.toArray(
             children
           ) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[];
+
           const selected = options.find((child) => child.props.value === value);
+
           const handleChange = (value: string) => {
             const changeEvent = {
               target: { value },
             } as React.ChangeEvent<HTMLSelectElement>;
             onChange?.(changeEvent);
           };
+
           return (
             <Select
               value={value?.toString()}
@@ -93,7 +93,6 @@ function Calendar({
                     <SelectItem
                       key={`${option.props.value}-${id}`}
                       value={option.props.value?.toString() ?? ''}
-                      className='font-roboto'
                     >
                       {option.props.children}
                     </SelectItem>
@@ -103,10 +102,10 @@ function Calendar({
             </Select>
           );
         },
-        IconLeft: ({ ...props }) => (
+        IconLeft: () => (
           <Icon name='RiArrowUpS' size={18} className='-rotate-90' />
         ),
-        IconRight: ({ ...props }) => (
+        IconRight: () => (
           <Icon name='RiArrowDownS' size={18} className='-rotate-90' />
         ),
       }}

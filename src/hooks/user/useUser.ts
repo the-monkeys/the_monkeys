@@ -5,8 +5,11 @@ import useSWR from 'swr';
 const useUser = (username: string | undefined) => {
   const { data, error, isLoading, mutate } =
     useSWR<GetPublicUserProfileApiResponse>(
-      `/user/public/${username}`,
-      fetcher
+      username ? `/user/public/${username}` : null,
+      fetcher,
+      {
+        revalidateOnFocus: false,
+      }
     );
 
   return {

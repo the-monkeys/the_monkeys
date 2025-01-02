@@ -13,17 +13,17 @@ export const ContributeAndSponsorCard = ({
     <div
       className={twMerge(
         className,
-        'p-4 flex flex-col sm:flex-row md:flex-col gap-4 items-start md:items-center border-1 border-foreground-light dark:border-foreground-dark rounded-xl'
+        'p-4 flex flex-col sm:flex-row md:flex-col gap-4 items-start md:items-center border-1 border-border-light/25 dark:border-border-dark/25 rounded-xl'
       )}
     >
-      <div>
-        <h3 className='font-dm_sans font-medium text-base md:text-lg text-left'>
+      <div className='w-full'>
+        <h3 className='pb-1 font-dm_sans font-semibold text-base md:text-lg text-left'>
           Your support matters!
         </h3>
 
-        <p className='font-roboto font-light text-xs sm:text-sm opacity-80'>
-          <b>Contribute</b> ideas or code, or <b>sponsor</b> us to help drive
-          growth and impact.
+        <p className='text-sm opacity-80'>
+          Contribute ideas or code, or sponsor us to help drive growth and
+          impact.
         </p>
       </div>
 

@@ -1,4 +1,5 @@
 import { API_URL } from '@/constants/api';
+import axiosInstance from '@/services/api/axiosInstance';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
@@ -7,7 +8,6 @@ import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
-import axios from 'axios';
 import { getSession } from 'next-auth/react';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({
@@ -17,7 +17,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       class: Header,
       inlineToolbar: true,
       config: {
-        levels: [1, 2],
+        levels: [1, 2, 3],
         defaultLevel: 1,
       },
     },
@@ -62,14 +62,9 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await axios.post(
+            const response = await axiosInstance.post(
               `${API_URL}/files/post/${blogId}?token=${token}`,
-              formData,
-              {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              }
+              formData
             );
 
             return {

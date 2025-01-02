@@ -96,7 +96,7 @@ const Step2 = ({
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>Email</FormLabel>
+                <FormLabel className='text-sm'>Email</FormLabel>
                 <FormControl>
                   <Input placeholder='Enter email address' {...field} />
                 </FormControl>
@@ -110,7 +110,7 @@ const Step2 = ({
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>Password</FormLabel>
+                <FormLabel className='text-sm'>Password</FormLabel>
                 <FormControl>
                   <PasswordInput
                     placeholder='Enter password'
@@ -146,7 +146,7 @@ const Step2 = ({
         <div className='mt-4 text-center'>
           <Link
             href='#'
-            className='font-dm_sans text-sm hover:opacity-80'
+            className='font-dm_sans text-sm hover:underline opacity-80'
             onClick={handleForgotPassword}
           >
             Forgot your password?

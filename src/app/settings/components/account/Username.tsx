@@ -73,7 +73,7 @@ export const Username = () => {
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='font-roboto text-sm opacity-80'>
+      <p className='text-sm opacity-80'>
         Change your username to something that reflects your individuality.
       </p>
 
@@ -91,7 +91,7 @@ export const Username = () => {
                       <Input
                         placeholder={
                           session?.user?.username
-                            ? `@${session?.user?.username}`
+                            ? `${session?.user?.username}`
                             : 'Enter username'
                         }
                         {...field}

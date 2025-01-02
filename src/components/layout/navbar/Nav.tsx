@@ -8,6 +8,7 @@ import { CreateButton } from '@/components/buttons/createButton';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
+import { twMerge } from 'tailwind-merge';
 
 import Container from '../Container';
 // Use as fallback if WebSocket is not working.
@@ -39,10 +40,14 @@ const Nav = () => {
 
   return (
     <header
-      className={`hidden md:block sticky left-0 top-${top} bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-xl z-30`}
+      className={twMerge(
+        'hidden md:block sticky left-0 border-foreground-light dark:border-foreground-dark bg-background-light/80  dark:bg-background-dark/80 backdrop-blur-sm z-30',
+        `top-${top}`,
+        top === 0 && prevScrollpos === 0 ? 'border-none' : 'border-b-1'
+      )}
     >
-      <Container className='w-full p-4 flex items-center justify-between'>
-        <Link href='/'>
+      <Container className='w-full px-4 py-[14px] flex items-center justify-between'>
+        <Link href='/feed'>
           <Logo />
         </Link>
 

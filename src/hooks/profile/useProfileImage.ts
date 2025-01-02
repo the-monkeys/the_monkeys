@@ -1,10 +1,15 @@
 import fetcher from '@/services/fileFetcher';
 import useSWR from 'swr';
 
-const useProfileImage = (username: string) => {
+const useProfileImage = (username: string | undefined) => {
   const { data, error, isLoading } = useSWR<Blob>(
-    `/files/profile/${username}/profile`,
-    fetcher
+    username ? `/files/profile/${username}/profile` : null,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateIfStale: false,
+      refreshInterval: 0,
+    }
   );
 
   let imageUrl = '';

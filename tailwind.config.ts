@@ -1,5 +1,3 @@
-import { Poppins } from 'next/font/google';
-
 import type { Config } from 'tailwindcss';
 
 const config = {
@@ -20,10 +18,9 @@ const config = {
       },
     },
     fontFamily: {
-      playfair_Display: ['var(--font-playfair_Display)'],
-      roboto: ['var(--font-roboto)'],
+      arvo: ['var(--font-arvo)'],
       dm_sans: ['var(--font-dm_sans)'],
-      poppins: ['var(--font-poppins)'],
+      ibm_plex_sans: ['var(--font-ibm_plex_sans)'],
     },
     extend: {
       colors: {
@@ -31,7 +28,7 @@ const config = {
           orange: '#FF5542',
         },
         background: {
-          dark: '#191919',
+          dark: '#0F0F0F',
           light: '#F2F2F2',
         },
         foreground: {
@@ -43,22 +40,12 @@ const config = {
           light: '#878787',
         },
         text: {
-          dark: '#FAFAFA',
-          light: '#1E1E1E',
+          dark: '#FCFCFC',
+          light: '#0D0D0D',
         },
         alert: {
           red: '#EF4444',
           green: '#22C55E',
-        },
-        primary: {
-          monkeyOrange: '#FF5542',
-          monkeyBlack: '#191919',
-          monkeyWhite: '#F2F2F2',
-        },
-        secondary: {
-          darkGrey: '#2C2C2C',
-          lightGrey: '#4f4f4f',
-          white: '#f2f2f3',
         },
       },
       borderWidth: {
@@ -68,6 +55,9 @@ const config = {
         'scale-up': {
           '0%': {
             scale: '0.8',
+          },
+          '50%': {
+            scale: '1.3',
           },
           '100%': {
             scale: '1',
@@ -109,6 +99,14 @@ const config = {
             transform: 'rotate(360deg)',
           },
         },
+        'theme-spin': {
+          '0%': {
+            transform: 'rotate(0deg)',
+          },
+          '100%': {
+            transform: 'rotate(90deg)',
+          },
+        },
         'appear-up': {
           '0%': {
             opacity: '0',
@@ -129,12 +127,13 @@ const config = {
         },
       },
       animation: {
-        'scale-up': 'scale-up 0.1s ease-in',
+        'scale-up': 'scale-up 0.2s ease-in',
         'icon-shake': 'icon-shake 0.6s ease-in-out',
         'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
         'loader-rotate': 'loader-rotate 0.6s linear infinite',
+        'theme-spin': 'theme-spin 0.2s linear',
         'appear-up': 'appear-up .8s ease-out',
-        'accordion-down': 'accordion-down 0.2s ease-out',
+        'accordion-down': 'accordion-down 0.1s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
       },
     },
