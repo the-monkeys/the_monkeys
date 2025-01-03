@@ -9,9 +9,9 @@ import Icon from '@/components/icon';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Button } from '@/components/ui/button';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
 import { GetBlogsByTopics } from '@/services/blog/blogTypes';
-import { useSession } from 'next-auth/react';
 
 export const BlogsByTopic = ({ topic }: { topic: string }) => {
   const { status } = useSession();

@@ -2,7 +2,7 @@ import Container from '@/components/layout/Container';
 
 import { ProfileSection } from './components/profile/ProfileSection';
 
-const ProfilePageLayout = ({
+const ProfilePageLayout = async ({
   children,
 }: Readonly<{
   children: React.ReactNode;

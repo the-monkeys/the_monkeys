@@ -13,8 +13,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const EditBlogDialog = ({ blogId }: { blogId: string }) => {

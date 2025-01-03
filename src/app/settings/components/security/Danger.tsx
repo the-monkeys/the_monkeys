@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 
+import { logOut } from '@/app/action';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -13,8 +14,8 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
-import { signOut, useSession } from 'next-auth/react';
 
 export const Danger = () => {
   const { data } = useSession();
@@ -31,7 +32,7 @@ export const Danger = () => {
       );
 
       if (response.status === 200) {
-        signOut();
+        await logOut();
 
         toast({
           variant: 'success',

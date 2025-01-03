@@ -17,9 +17,9 @@ import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { WSS_URL } from '@/constants/api';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
-import { useSession } from 'next-auth/react';
 
 // Dynamically import the Editor component to avoid server-side rendering issues
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -68,9 +68,9 @@ const CreatePage = () => {
   const [publishedBlogLoading, setPublishedBlogLoading] =
     useState<boolean>(false);
   // Get the session data
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
-  const authToken = session?.user.token;
+  const authToken = session?.user?.token;
   const router = useRouter();
 
   // Use useRef to store the blog ID
@@ -126,6 +126,12 @@ const CreatePage = () => {
     },
     [selectedTags]
   );
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/auth/login');
+    }
+  }, []);
 
   // Load the Editor component dynamically
   useEffect(() => {
@@ -183,7 +189,7 @@ const CreatePage = () => {
       return; // Ensure data is not null and has a title block
     }
 
-    const formattedData = formatData(data, session?.user.account_id);
+    const formattedData = formatData(data, session?.user!.account_id);
 
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
@@ -206,7 +212,7 @@ const CreatePage = () => {
           description: 'error',
         });
       });
-  }, [data, session?.user.account_id, blogId, formatData, router]);
+  }, [data, blogId, formatData, router]);
 
   // Send data to WebSocket when data changes
   useEffect(() => {
@@ -215,14 +221,14 @@ const CreatePage = () => {
       webSocket &&
       webSocket.readyState === WebSocket.OPEN
     ) {
-      const formattedData = formatData(data, session?.user.account_id);
+      const formattedData = formatData(data, session?.user!.account_id);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
-  }, [data, webSocket, session?.user.account_id, formatData]);
+  }, [data, webSocket, formatData]);
 
   return (
-    <>
+    <Suspense>
       <div className='space-y-4'>
         <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
           {isSaving ? (
@@ -250,7 +256,7 @@ const CreatePage = () => {
           publishedBlogLoading={publishedBlogLoading}
         />
       )}
-    </>
+    </Suspense>
   );
 };
 

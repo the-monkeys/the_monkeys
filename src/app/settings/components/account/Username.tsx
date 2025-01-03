@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 
+import { updateAuthCookie } from '@/app/action';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,14 +16,14 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { API_URL } from '@/constants/api';
 import { updateUsername } from '@/lib/schema/settings';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export const Username = () => {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof updateUsername>>({
@@ -33,13 +34,10 @@ export const Username = () => {
   });
 
   const updateUserSession = async (token: string) => {
-    await update({
-      ...session,
-      user: {
-        ...session?.user,
-        token: token,
-        username: form.getValues('username'),
-      },
+    await updateAuthCookie({
+      ...session?.user,
+      token: token,
+      username: form.getValues('username'),
     });
   };
 

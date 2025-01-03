@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 
 export const Blogs = () => {
   const { data: session, status } = useSession();
@@ -40,7 +40,7 @@ export const Blogs = () => {
                 key={blog?.blog_id}
                 blog={blog}
                 status={status}
-                modificationEnable={session?.user.username === params.username}
+                modificationEnable={session?.user?.username === params.username}
               />
             );
           })

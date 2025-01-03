@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 
 const NotificationDropdown = () => {
   const { status } = useSession();

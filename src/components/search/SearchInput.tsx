@@ -3,7 +3,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 
 import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 import { twMerge } from 'tailwind-merge';
 
 import Icon from '../icon';

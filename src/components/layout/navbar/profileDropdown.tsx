@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { logOut } from '@/app/action';
 import Icon from '@/components/icon';
 import {
   DropdownMenu,
@@ -9,12 +10,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { toast } from '@/components/ui/use-toast';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 
 const ProfileDropdown = () => {
   const { status, data } = useSession();
   const router = useRouter();
+
+  const handleSignout = async () => {
+    await logOut();
+    router.replace('/');
+  };
 
   return (
     <DropdownMenu>
@@ -34,7 +39,7 @@ const ProfileDropdown = () => {
                   return;
                 }
 
-                router.push('api/auth/signin');
+                router.push('auth/login');
               }}
               className='flex w-full items-center gap-2'
             >
@@ -86,15 +91,7 @@ const ProfileDropdown = () => {
 
           <DropdownMenuItem asChild>
             <button
-              onClick={() => {
-                signOut();
-                toast({
-                  variant: 'success',
-                  title: ' Logout Successful',
-                  description:
-                    'You have successfully logged out. See you next time!',
-                });
-              }}
+              onClick={handleSignout}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiLogoutBoxR' size={18} className='text-alert-red' />

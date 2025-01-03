@@ -5,9 +5,10 @@ import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { SessionStoreProvider } from '@/lib/store/useSession';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 
-import Providers from './Providers';
+import { getAuthData } from './action';
 import './globals.css';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
@@ -55,13 +56,13 @@ export const metadata: Metadata = {
   },
 };
 
-const RootLayout = ({
-  auth,
+const RootLayout = async ({
   children,
 }: Readonly<{
-  auth: React.ReactNode;
   children: React.ReactNode;
 }>) => {
+  const authData = await getAuthData();
+
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
@@ -72,16 +73,15 @@ const RootLayout = ({
       >
         <Toaster />
         <SWRProvider>
-          <Providers>
+          <SessionStoreProvider value={authData}>
             <ThemeProviders>
               <TooltipProvider>
                 <Navbar />
-                <div>{auth}</div>
                 <main>{children}</main>
                 <Footer />
               </TooltipProvider>
             </ThemeProviders>
-          </Providers>
+          </SessionStoreProvider>
         </SWRProvider>
       </body>
     </html>

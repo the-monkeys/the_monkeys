@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import useUser from '@/hooks/user/useUser';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@/lib/store/useSession';
 
 import { TopicButton } from './TopicButton';
 
