@@ -44,7 +44,7 @@ export const FollowButton = ({
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {
@@ -73,7 +73,7 @@ export const FollowButton = ({
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {
@@ -143,7 +143,7 @@ export const FollowButtonSecondary = ({
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {
@@ -172,7 +172,7 @@ export const FollowButtonSecondary = ({
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {
