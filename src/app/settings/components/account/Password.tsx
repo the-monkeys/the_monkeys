@@ -73,7 +73,7 @@ export const Password = () => {
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {
