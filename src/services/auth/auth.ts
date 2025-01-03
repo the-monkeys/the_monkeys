@@ -1,8 +1,11 @@
-import { AxiosRequestConfig } from 'axios';
+import { API_URL } from '@/constants/api';
+import { User } from '@/lib/types';
+import axios, { AxiosRequestConfig } from 'axios';
 
 import axiosInstanceNoAuth from '../api/axiosInstanceNoAuth';
 
 const APIEndpoint = {
+  LOGIN: '/auth/login',
   RESET_PASSWORD: '/auth/reset-password',
   VERIFY_EMAIL: '/auth/verify-email',
 } as const;
@@ -42,4 +45,21 @@ export async function verifyEmailVerificationToken(
     );
 
   return response.data;
+}
+
+export async function login(credentials: { email: string; password: string }) {
+  const authResponse = await axios.post(
+    `${API_URL}/auth/login`,
+    {
+      email: credentials.email,
+      password: credentials.password,
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
+
+  return authResponse.data as User;
 }
