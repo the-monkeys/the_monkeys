@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { updateAuthCookie } from '@/app/action';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -32,7 +33,7 @@ import { z } from 'zod';
 
 export const UpdateUsernameDialog = () => {
   const router = useRouter();
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof updateUsername>>({
@@ -43,13 +44,10 @@ export const UpdateUsernameDialog = () => {
   });
 
   const updateUserSession = async (token: string) => {
-    await update({
-      ...session,
-      user: {
-        ...session?.user,
-        token: token,
-        username: form.getValues('username'),
-      },
+    await updateAuthCookie({
+      ...session?.user,
+      token: token,
+      username: form.getValues('username'),
     });
   };
 

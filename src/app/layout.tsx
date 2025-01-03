@@ -5,9 +5,9 @@ import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { SessionStoreProvider } from '@/lib/store/useSession';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 
-import SessionStore from './SessionStore';
 import { getAuthData } from './action';
 import './globals.css';
 import SWRProvider from './swr-provider';
@@ -72,15 +72,16 @@ const RootLayout = async ({
         className={`${arvo.variable} ${dm_sans.variable} ${ibm_plex_sans.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
         <Toaster />
-        <SessionStore data={authData} />
         <SWRProvider>
-          <ThemeProviders>
-            <TooltipProvider>
-              <Navbar />
-              <main>{children}</main>
-              <Footer />
-            </TooltipProvider>
-          </ThemeProviders>
+          <SessionStoreProvider value={authData}>
+            <ThemeProviders>
+              <TooltipProvider>
+                <Navbar />
+                <main>{children}</main>
+                <Footer />
+              </TooltipProvider>
+            </ThemeProviders>
+          </SessionStoreProvider>
         </SWRProvider>
       </body>
     </html>

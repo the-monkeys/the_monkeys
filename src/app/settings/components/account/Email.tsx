@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 
+import { updateAuthCookie } from '@/app/action';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -23,7 +24,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export const Email = () => {
-  const { data: session, update } = useSession();
+  const { data: session } = useSession();
 
   const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
   const [updateLoading, setUpdateLoading] = useState<boolean>(false);
@@ -36,13 +37,10 @@ export const Email = () => {
   });
 
   const updateUserSession = async (token: string) => {
-    await update({
-      ...session,
-      user: {
-        ...session?.user,
-        token: token,
-        email: form.getValues('email'),
-      },
+    await updateAuthCookie({
+      ...session?.user,
+      token: token,
+      email: form.getValues('email'),
     });
   };
 
@@ -75,7 +73,7 @@ export const Email = () => {
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {
@@ -113,7 +111,7 @@ export const Email = () => {
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {

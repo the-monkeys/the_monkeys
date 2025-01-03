@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { logOut } from '@/app/action';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -22,7 +23,7 @@ import {
 } from '@/components/ui/form';
 import { toast } from '@/components/ui/use-toast';
 import { updatePasswordSchema } from '@/lib/schema/auth';
-import { signOut, useSession } from '@/lib/store/useSession';
+import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -54,7 +55,7 @@ export const Password = () => {
       );
 
       if (response.status === 200) {
-        signOut();
+        await logOut();
 
         toast({
           variant: 'success',
@@ -73,7 +74,7 @@ export const Password = () => {
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {

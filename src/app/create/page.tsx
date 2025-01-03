@@ -68,7 +68,7 @@ const CreatePage = () => {
   const [publishedBlogLoading, setPublishedBlogLoading] =
     useState<boolean>(false);
   // Get the session data
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const authToken = session?.user?.token;
   const router = useRouter();
@@ -126,6 +126,12 @@ const CreatePage = () => {
     },
     [selectedTags]
   );
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.replace('/auth/login');
+    }
+  }, []);
 
   // Load the Editor component dynamically
   useEffect(() => {
@@ -221,13 +227,8 @@ const CreatePage = () => {
     }
   }, [data, webSocket, formatData]);
 
-  if (!session.user) {
-    router.replace('/auth/login');
-    return;
-  }
-
   return (
-    <>
+    <Suspense>
       <div className='space-y-4'>
         <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
           {isSaving ? (
@@ -255,7 +256,7 @@ const CreatePage = () => {
           publishedBlogLoading={publishedBlogLoading}
         />
       )}
-    </>
+    </Suspense>
   );
 };
 

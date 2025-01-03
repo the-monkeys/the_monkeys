@@ -38,7 +38,7 @@ export const VerifyEmailStatus = () => {
 
   const updateUserSession = async () => {
     await updateAuthCookie({
-      ...session.user,
+      ...session!.user,
       email_verification_status: 'Verified',
     });
   };
