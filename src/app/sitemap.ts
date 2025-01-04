@@ -19,7 +19,8 @@ async function fetchBlogPosts(): Promise<Blog[]> {
     }
 
     const data = await response.json();
-    return data?.blogs || [];
+    console.log('response', data);
+    return data?.the_blogs || [];
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];
