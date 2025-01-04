@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 
 export const FeedNavigation = ({
-  feedSource = 'all',
+  feedSource = 'feed',
 }: {
   feedSource: string;
 }) => {
@@ -76,12 +76,25 @@ export const FeedNavigation = ({
         className='w-fit flex items-center gap-4 overflow-hidden pr-[20px]'
       >
         <div
+          data-state={feedSource === 'feed' ? 'active' : 'inactive'}
+          className='group'
+        >
+          <Link href='/feed?source=feed'>
+            <button className='px-1 font-dm_sans text-[15px] opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'>
+              Showcase
+            </button>
+          </Link>
+
+          <div className='mx-auto mt-[6px] h-[3px] w-0 bg-brand-orange group-data-[state=active]:w-full rounded-t-full transition-all' />
+        </div>
+
+        <div
           data-state={feedSource === 'all' ? 'active' : 'inactive'}
           className='group'
         >
           <Link href='/feed?source=all'>
             <button className='px-1 font-dm_sans text-[15px] opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'>
-              Feed
+              Latest
             </button>
           </Link>
 
@@ -100,20 +113,18 @@ export const FeedNavigation = ({
 
           <div className='mx-auto mt-[6px] h-[3px] w-0 bg-brand-orange group-data-[state=active]:w-full rounded-t-full transition-all' />
         </div>
-
-        <div
-          data-state={feedSource === 'news' ? 'active' : 'inactive'}
-          className='group'
-        >
-          <Link href='/feed?source=news'>
-            <button className='px-1 font-dm_sans text-[15px] opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'>
-              News Center
-            </button>
-          </Link>
-
-          <div className='mx-auto mt-[6px] h-[3px] w-0 bg-brand-orange group-data-[state=active]:w-full rounded-t-full transition-all' />
-        </div>
       </div>
+
+      {showRightButton && (
+        <div className='absolute top-0 right-0 pl-[30px] bg-gradient-to-l from-background-light dark:from-background-dark from-[10%] z-10'>
+          <button
+            onClick={() => scrollTabs('right')}
+            className='pl-0 p-1 opacity-100 hover:opacity-80'
+          >
+            <Icon name='RiArrowUpS' className='rotate-90' />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { FeedNavigation } from './components/FeedNavigation';
 import { BlogFeed } from './components/blogFeed/BlogFeed';
 import { FollowingFeed } from './components/followingFeed/FollowingFeed';
-import { NewsFeed } from './components/news/NewsFeed';
+import { ShowcaseFeed } from './components/showcaseFeed/ShowcaseFeed';
 
 export async function generateMetadata({
   searchParams,
@@ -28,7 +28,7 @@ const BlogFeedPage = ({
 }: {
   searchParams: { source: string };
 }) => {
-  const feedSource = searchParams.source || 'all';
+  const feedSource = searchParams.source || 'feed';
 
   return (
     <div>
@@ -37,7 +37,7 @@ const BlogFeedPage = ({
       <div className='min-h-screen'>
         {feedSource === 'all' && <BlogFeed />}
         {feedSource === 'following' && <FollowingFeed />}
-        {feedSource === 'news' && <NewsFeed />}
+        {feedSource === 'feed' && <ShowcaseFeed />}
       </div>
     </div>
   );
