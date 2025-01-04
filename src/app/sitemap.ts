@@ -1,9 +1,11 @@
+import { MetadataRoute } from 'next';
+
 import { baseUrl } from '@/constants/baseUrl';
 import axiosInstance from '@/services/api/axiosInstance';
 import { Blog } from '@/services/blog/blogTypes';
 
 // Fetch blog posts from the API
-async function fetchBlogPosts() {
+async function fetchBlogPosts(): Promise<Blog[]> {
   try {
     const response = await axiosInstance.post('/blog/latest');
     return response.data?.blogs || [];
@@ -13,10 +15,10 @@ async function fetchBlogPosts() {
   }
 }
 
-export default async function sitemap() {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const blogPosts = await fetchBlogPosts();
 
-  const staticUrls = [
+  const staticUrls: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}`,
       changeFrequency: 'monthly',
@@ -34,7 +36,7 @@ export default async function sitemap() {
     },
   ];
 
-  const blogUrls = blogPosts.map((post: Blog) => ({
+  const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: Blog) => ({
     url: `${baseUrl}/blog/${post.blog_id}`,
     changeFrequency: 'weekly',
     priority: 0.8,
