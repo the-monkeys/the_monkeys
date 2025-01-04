@@ -2,6 +2,8 @@
 
 import { ChangeEvent, useEffect, useState } from 'react';
 
+import Link from 'next/link';
+
 import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
 import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
@@ -33,14 +35,19 @@ export const SearchInput = ({ className }: { className?: string }) => {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if (
+      !e.relatedTarget ||
+      !e.relatedTarget.closest('.search-results-container')
+    ) {
+      setFocused(false);
+    }
+  };
+
   return (
-    <div className={twMerge(className, 'relative')}>
-      <div className='group relative px-5 flex items-center gap-2 border-1 border-border-light/50 dark:border-border-dark/50 focus-within:border-border-light dark:focus-within:border-border-light rounded-full'>
-        <Icon
-          name='RiSearch'
-          size={18}
-          className='opacity-25 group-focus-within:opacity-100'
-        />
+    <div className={twMerge(className)}>
+      <div className='relative px-5 flex items-center gap-2 border-1 border-border-light/50 dark:border-border-dark/50 focus-within:border-border-light dark:focus-within:border-border-light rounded-full'>
+        <Icon name='RiSearch' size={18} />
 
         <Input
           value={searchQuery}
@@ -54,7 +61,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
           onChange={handleInputChange}
           disabled={status === 'unauthenticated'}
           onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onBlur={handleBlur}
         />
 
         {searchQuery.trim() && (
@@ -65,25 +72,36 @@ export const SearchInput = ({ className }: { className?: string }) => {
             <Icon name='RiClose' size={16} />
           </button>
         )}
+
+        {debouncedQuery.trim() && focused && (
+          <div className='absolute top-full left-0 w-full px-[6px] pt-1 z-20 search-results-container'>
+            <div className='bg-background-light dark:bg-background-dark border-1 border-border-light/50 dark:border-border-dark/50 rounded-lg shadow-sm'>
+              {searchUsersLoading ? (
+                <SearchResultSkeleton />
+              ) : (
+                <SearchUsers users={searchUsers?.users} />
+              )}
+
+              {searchUsersError && (
+                <p className='text-sm opacity-80 text-center'>
+                  Failed to load search results.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
-      {debouncedQuery.trim() && focused && (
-        <div className='absolute top-full left-0 w-full px-[6px] pt-1 z-20'>
-          <div className='bg-background-light dark:bg-background-dark border-1 border-border-light/50 dark:border-border-dark/50 rounded-lg shadow-sm'>
-            {searchUsersLoading ? (
-              <SearchResultSkeleton />
-            ) : (
-              <SearchUsers users={searchUsers?.users} />
-            )}
+      <div className='px-1 pt-2 flex items-center gap-2'>
+        <p className='text-sm opacity-80'>Quick links:</p>
 
-            {searchUsersError && (
-              <p className='text-sm opacity-80 text-center'>
-                Failed to load search results.
-              </p>
-            )}
-          </div>
-        </div>
-      )}
+        <Link
+          href='/topics/explore'
+          className='font-dm_sans text-sm underline underline-offset-2 decoration-1 hover:opacity-80'
+        >
+          Explore topics
+        </Link>
+      </div>
     </div>
   );
 };

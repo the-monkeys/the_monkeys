@@ -103,10 +103,18 @@ export const NewsCategories = () => {
 
         <SelectContent>
           <SelectItem value='all'>All</SelectItem>
-          <SelectItem value='sports'>Sports</SelectItem>
-          <SelectItem value='business'>Business</SelectItem>
-          <SelectItem value='science'>Science</SelectItem>
-          <SelectItem value='entertainment'>Entertainment</SelectItem>
+          {sportsNews.length > 0 && (
+            <SelectItem value='sports'>Sports</SelectItem>
+          )}
+          {businessNews.length > 0 && (
+            <SelectItem value='business'>Business</SelectItem>
+          )}
+          {scienceNews.length > 0 && (
+            <SelectItem value='science'>Science</SelectItem>
+          )}
+          {entertainmentNews.length > 0 && (
+            <SelectItem value='entertainment'>Entertainment</SelectItem>
+          )}
         </SelectContent>
       </Select>
 

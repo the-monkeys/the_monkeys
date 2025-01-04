@@ -67,7 +67,12 @@ export const BlogsByTopic = ({ topic }: { topic: string }) => {
           <p className='text-sm opacity-80 text-center'>
             No blogs available for selected topic.
           </p>
-          <Button size='sm' className='rounded-full' asChild>
+          <Button
+            variant='secondary'
+            size='sm'
+            className='rounded-full'
+            asChild
+          >
             <Link href='/create'>
               <Icon name='RiPencil' className='mr-1' />
               Write Your Own
