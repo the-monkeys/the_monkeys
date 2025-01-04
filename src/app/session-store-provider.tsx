@@ -2,44 +2,13 @@
 
 import { createContext, useContext, useRef } from 'react';
 
-import { createStore, useStore } from 'zustand';
-
-import { User } from '../types';
-
-type SessionState =
-  | {
-      status: 'unauthenticated';
-      data: null;
-    }
-  | {
-      status: 'authenticated';
-      data: {
-        user: User;
-      };
-    }
-  | {
-      status: 'loading';
-      data: {
-        user: User;
-      } | null;
-    };
-
-type SessionAction = {
-  update: (state: Partial<SessionState>) => void;
-};
-
-type SessionStore = SessionState & SessionAction;
-
-const createSessionStore = (
-  initState: SessionState = { status: 'unauthenticated', data: null }
-) => {
-  return createStore<SessionStore>()((set) => ({
-    ...initState,
-    update: (state) => set(state),
-  }));
-};
-
-type SessionStoreApi = ReturnType<typeof createSessionStore>;
+import {
+  SessionState,
+  SessionStoreApi,
+  createSessionStore,
+} from '@/lib/store/useSession';
+import { User } from '@/lib/types';
+import { useStore } from 'zustand';
 
 const SessionStoreContext = createContext<SessionStoreApi | undefined>(
   undefined

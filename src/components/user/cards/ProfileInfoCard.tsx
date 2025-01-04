@@ -1,9 +1,9 @@
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
-import { useSession } from '@/lib/store/useSession';
 import { twMerge } from 'tailwind-merge';
 
 import { FollowButtonSecondary } from '../buttons/followButton';

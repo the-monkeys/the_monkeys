@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
-import { useSession } from '@/lib/store/useSession';
 
 import { FollowingBlogs } from './components/FollowingBlogs';
 import { LatestBlogs } from './components/LatestBlogs';

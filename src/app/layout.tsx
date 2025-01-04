@@ -5,11 +5,11 @@ import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
-import { SessionStoreProvider } from '@/lib/store/useSession';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 import { getAuthData } from './action';
 import './globals.css';
+import { SessionStoreProvider } from './session-store-provider';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 

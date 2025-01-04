@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 
 import { updateAuthCookie } from '@/app/action';
+import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,7 +17,6 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { API_URL } from '@/constants/api';
 import { updateUsername } from '@/lib/schema/settings';
-import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';

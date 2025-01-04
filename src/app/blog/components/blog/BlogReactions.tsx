@@ -1,9 +1,9 @@
+import { useSession } from '@/app/session-store-provider';
 import { LikesCount } from '@/components/blog/LikesCount';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { Separator } from '@/components/ui/separator';
-import { useSession } from '@/lib/store/useSession';
 import { twMerge } from 'tailwind-merge';
 
 export const BlogReactions = ({

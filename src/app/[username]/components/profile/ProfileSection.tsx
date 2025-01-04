@@ -4,9 +4,9 @@ import React from 'react';
 
 import { useParams } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import { ProfileCard } from '@/components/user/cards/ProfileCard';
-import { useSession } from '@/lib/store/useSession';
 
 import { ProfileActionsDropdown } from './ProfileActionsDropdown';
 import { TopicsCard } from './TopicsCard';

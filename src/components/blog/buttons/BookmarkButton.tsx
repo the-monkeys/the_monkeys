@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
-import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { mutate } from 'swr';
 

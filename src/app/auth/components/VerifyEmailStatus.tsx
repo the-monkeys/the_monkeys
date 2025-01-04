@@ -3,11 +3,11 @@
 import { Suspense, useCallback, useEffect, useState } from 'react';
 
 import { updateAuthCookie } from '@/app/action';
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toast } from '@/components/ui/use-toast';
-import { useSession } from '@/lib/store/useSession';
 import { verifyEmailVerificationToken } from '@/services/auth/auth';
 
 import { SearchParamsComponent } from './SearchParams';

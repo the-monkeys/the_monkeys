@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { Button } from '@/components/ui/button';
@@ -21,7 +22,6 @@ import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDial
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialgo';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
-import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';

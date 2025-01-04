@@ -2,8 +2,8 @@
 
 import { ChangeEvent, useEffect, useState } from 'react';
 
+import { useSession } from '@/app/session-store-provider';
 import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
-import { useSession } from '@/lib/store/useSession';
 import { twMerge } from 'tailwind-merge';
 
 import Icon from '../icon';

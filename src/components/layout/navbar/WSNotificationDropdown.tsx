@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,7 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { WSS_URL } from '@/constants/api';
-import { useSession } from '@/lib/store/useSession';
 import {
   Notification,
   WSNotification,

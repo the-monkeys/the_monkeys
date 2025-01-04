@@ -6,12 +6,12 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { letters } from '@/constants/topics';
 import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
-import { useSession } from '@/lib/store/useSession';
 
 import { AddTopicForm } from './components/AddTopicDialog';
 import { TopicsList } from './components/TopicsList';

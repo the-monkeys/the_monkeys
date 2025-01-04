@@ -2,10 +2,10 @@
 
 import { useParams } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
-import { useSession } from '@/lib/store/useSession';
 
 export const Drafts = () => {
   const { data: session, status } = useSession();

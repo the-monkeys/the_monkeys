@@ -11,13 +11,13 @@ import React, {
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { WSS_URL } from '@/constants/api';
-import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
 
@@ -127,12 +127,6 @@ const CreatePage = () => {
     [selectedTags]
   );
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.replace('/auth/login');
-    }
-  }, []);
-
   // Load the Editor component dynamically
   useEffect(() => {
     const loadEditor = async () => {
@@ -189,7 +183,7 @@ const CreatePage = () => {
       return; // Ensure data is not null and has a title block
     }
 
-    const formattedData = formatData(data, session?.user!.account_id);
+    const formattedData = formatData(data, session?.user.account_id);
 
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
@@ -221,14 +215,19 @@ const CreatePage = () => {
       webSocket &&
       webSocket.readyState === WebSocket.OPEN
     ) {
-      const formattedData = formatData(data, session?.user!.account_id);
+      const formattedData = formatData(data, session?.user.account_id);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
   }, [data, webSocket, formatData]);
 
+  if (status === 'unauthenticated') {
+    router.replace('/auth/login');
+    return;
+  }
+
   return (
-    <Suspense>
+    <>
       <div className='space-y-4'>
         <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
           {isSaving ? (
@@ -256,7 +255,7 @@ const CreatePage = () => {
           publishedBlogLoading={publishedBlogLoading}
         />
       )}
-    </Suspense>
+    </>
   );
 };
 

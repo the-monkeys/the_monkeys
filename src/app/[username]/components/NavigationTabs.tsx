@@ -1,7 +1,7 @@
 'use client';
 
+import { useSession } from '@/app/session-store-provider';
 import { TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useSession } from '@/lib/store/useSession';
 
 export const NavigationTabs = ({ username }: { username: string }) => {
   const { data } = useSession();

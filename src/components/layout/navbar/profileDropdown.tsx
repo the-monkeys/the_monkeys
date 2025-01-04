@@ -2,15 +2,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { logOut } from '@/app/action';
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useSession } from '@/lib/store/useSession';
 
 const ProfileDropdown = () => {
   const { status, data } = useSession();

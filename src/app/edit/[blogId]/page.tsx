@@ -5,6 +5,7 @@ import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import { EditorProps } from '@/components/editor';
 import Container from '@/components/layout/Container';
 import { Loader } from '@/components/loader';
@@ -14,7 +15,6 @@ import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL } from '@/constants/api';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
-import { useSession } from '@/lib/store/useSession';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { mutate } from 'swr';
@@ -137,7 +137,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Send data to WebSocket when data changes
   useEffect(() => {
     if (webSocket && webSocket.readyState === WebSocket.OPEN && data) {
-      const formattedData = formatData(data, session?.user!.account_id);
+      const formattedData = formatData(data, session?.user.account_id);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
@@ -154,7 +154,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       return; // Ensure data is not null and not empty
     }
 
-    const formattedData = formatData(data, session?.user!.account_id);
+    const formattedData = formatData(data, session?.user.account_id);
 
     setBlogPublishLoading(true);
 

@@ -33,6 +33,10 @@ export default function LoginForm() {
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
@@ -81,6 +85,7 @@ export default function LoginForm() {
                   className={cn(
                     !!fieldState.error && 'dark:border-red-500 border-red-600'
                   )}
+                  autoFocus
                   {...field}
                 />
               </FormControl>
