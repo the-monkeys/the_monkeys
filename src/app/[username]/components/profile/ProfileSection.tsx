@@ -30,7 +30,7 @@ export const ProfileSection = () => {
             <FollowButton username={params.username} />
           )}
 
-        {isAuthenticated && <UpdateDialog />}
+        {isAuthenticated && <UpdateDialog data={session} />}
       </div>
 
       <ProfileCard isAuthenticated={isAuthenticated} />

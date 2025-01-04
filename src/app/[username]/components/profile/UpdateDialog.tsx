@@ -28,7 +28,7 @@ import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDial
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
+import { Session } from 'next-auth';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
 import { z } from 'zod';
@@ -40,10 +40,9 @@ const updateProfileSchema = z.object({
   bio: z.string().optional(),
 });
 
-export const UpdateDialog = () => {
-  const { data } = useSession();
+export const UpdateDialog = ({ data }: { data: Session }) => {
   const { user, isLoading, isError } = useGetAuthUserProfile(
-    data?.user.username
+    data.user.username
   );
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -74,7 +73,7 @@ export const UpdateDialog = () => {
     setLoading(true);
 
     try {
-      await axiosInstance.put(`/user/${data?.user.username}`, {
+      await axiosInstance.put(`/user/${data.user.username}`, {
         values,
       });
 
@@ -86,10 +85,10 @@ export const UpdateDialog = () => {
 
       setOpen(false);
 
-      mutate(`/user/public/${data?.user.username}`, `${data?.user.username}`, {
+      mutate(`/user/public/${data.user.username}`, `${data.user.username}`, {
         revalidate: true,
       });
-      mutate(`/user/${data?.user.username}`, `${data?.user.username}`, {
+      mutate(`/user/${data.user.username}`, `${data.user.username}`, {
         revalidate: true,
       });
     } catch (err) {
@@ -135,7 +134,7 @@ export const UpdateDialog = () => {
                 <p className='w-full text-sm'>Profile Photo</p>
 
                 <ProfileFrame className='size-24 sm:size-28'>
-                  {data?.user && <ProfileImage username={data.user.username} />}
+                  {data.user && <ProfileImage username={data.user.username} />}
                 </ProfileFrame>
 
                 <div className='space-x-2'>

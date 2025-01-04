@@ -4,7 +4,6 @@ import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const LikeButton = ({
@@ -16,7 +15,6 @@ export const LikeButton = ({
   size?: number;
   isDisable?: boolean;
 }) => {
-  const { data } = useSession();
   const { likeStatus, isLoading, isError } = useIsPostLiked(blogId);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -74,7 +72,7 @@ export const LikeButton = ({
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {
@@ -109,7 +107,7 @@ export const LikeButton = ({
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {
