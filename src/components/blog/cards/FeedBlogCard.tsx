@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { UserInfoCard } from '@/components/user/userInfo';
 import { Blog } from '@/services/blog/blogTypes';
 
@@ -20,14 +21,20 @@ export const FeedBlogCard = ({
   const date = blog?.published_time || blog?.blog?.time;
 
   const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
-
+  const blogTitle = blog?.blog?.blocks[0]?.data?.text;
+  const blogSlug = generateSlug(blogTitle);
   return (
     <div className='w-full px-0 lg:px-6'>
       <div className='space-y-3'>
         <UserInfoCard id={authorId} date={date} />
 
         <Link
-          href={`/blog?id=${blogId}`}
+          href={{
+            pathname: `/blog/${blogSlug}?id=${blogId}`,
+            query: {
+              id: blogId,
+            },
+          }}
           className='group flex flex-col sm:flex-row gap-2 sm:gap-4'
         >
           <div className='flex-1 flex flex-col space-y-1 sm:space-y-2 overflow-hidden'>

@@ -13,9 +13,9 @@ import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCard } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 
-import { BlogReactionsContainer } from './components/blog/BlogReactions';
-import { BlogRecommendations } from './components/blog/BlogRecommendations';
-import { BlogTopics } from './components/blog/BlogTopics';
+import { BlogReactionsContainer } from '../components/blog/BlogReactions';
+import { BlogRecommendations } from '../components/blog/BlogRecommendations';
+import { BlogTopics } from '../components/blog/BlogTopics';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -32,6 +32,8 @@ const BlogPage = ({
   const { blog, isError, isLoading } = useGetPublishedBlogDetailByBlogId(
     searchParams.id
   );
+
+  console.log(searchParams.id);
 
   const blogId = blog?.blog_id;
   const authorId = blog?.owner_account_id;

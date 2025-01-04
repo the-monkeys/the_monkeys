@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { generateSlug } from '@/app/blog/utils/generateSlug';
 import Icon from '@/components/icon';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { Blog } from '@/services/blog/blogTypes';
@@ -35,7 +36,9 @@ export const BlogCard: FC<BlogCardProps> = ({
     blog,
     isDraft,
   });
-
+  // Generate the slug for the blog title
+  const blogTitle = blog?.blog?.blocks[0]?.data?.text;
+  const blogSlug = generateSlug(blogTitle);
   const handleEdit = (blogId: string) => {
     router.push(`/edit/${blogId}`);
   };
@@ -59,8 +62,13 @@ export const BlogCard: FC<BlogCardProps> = ({
             )}
           </div>
         ) : (
+          //  href={`/blog?id=${blogId}`}
+
           <Link
-            href={`/blog?id=${blogId}`}
+            href={{
+              pathname: `/blog/${blogSlug}?id=${blogId}`,
+              query: { blogId }, // the data
+            }}
             className='group flex flex-col sm:flex-row gap-4'
           >
             <div className='flex-1 space-y-1 sm:space-y-2'>

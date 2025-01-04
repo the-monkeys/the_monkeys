@@ -19,7 +19,7 @@ async function fetchBlogPosts(): Promise<Blog[]> {
     }
 
     const data = await response.json();
-    console.log('response', data);
+
     return data?.the_blogs || [];
   } catch (error) {
     console.error('Error fetching blog posts:', error);
@@ -41,18 +41,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 1,
     },
-    {
-      url: `${baseUrl}/news`,
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
   ];
 
-  const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: Blog) => ({
-    url: `${baseUrl}/blog/${post.blog_id}`,
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  }));
+  const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: Blog) => {
+    // Extract the title from the blog's content
+    const title = post?.blog?.blocks[0]?.data?.text || 'untitled';
+
+    // Generate a slug from the title
+    const slug = title
+      .toLowerCase() // Convert to lowercase
+      .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
+      .replace(/^-+|-+$/g, ''); // Trim leading and trailing hyphens
+
+    return {
+      url: `${baseUrl}/blog/${slug || 'untitled'}`, // Fallback to 'untitled' if slug is empty
+      changeFrequency: 'daily', // Updated for regular additions
+      priority: 0.8,
+    };
+  });
 
   return [...staticUrls, ...blogUrls];
 }
