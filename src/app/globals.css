@@ -139,17 +139,19 @@ li.cdx-list__item {
   padding: 6px 0 6px 18px !important;
   margin: 0 0 30px !important;
   position: relative;
-  border-left: 4px solid #d9d9d9;
+  background-color: #d9d9d9;
+  border-left: 4px solid #878787;
 }
 
 .dark .cdx-quote {
-  border-left: 4px solid #2c2c2c;
+  background-color: #2c2c2c;
+  border-left: 4px solid #696969;
 }
 
 .cdx-quote__text {
   padding: 0 !important;
   font-size: var(--blog-quote-text-size);
-  font-weight: 500;
+  font-weight: 400;
   line-height: var(--blog-text-height) !important;
   border-radius: 0px !important;
 }
