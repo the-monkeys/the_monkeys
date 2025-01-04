@@ -1,14 +1,25 @@
 import { MetadataRoute } from 'next';
 
 import { baseUrl } from '@/constants/baseUrl';
-import axiosInstance from '@/services/api/axiosInstance';
 import { Blog } from '@/services/blog/blogTypes';
 
-// Fetch blog posts from the API
+// Fetch blog posts from the API using fetch
 async function fetchBlogPosts(): Promise<Blog[]> {
   try {
-    const response = await axiosInstance.post('/blog/latest');
-    return response.data?.blogs || [];
+    const response = await fetch('https://monkeys.support/api/v1/blog/latest', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.error(`Failed to fetch blog posts: ${response.statusText}`);
+      return [];
+    }
+
+    const data = await response.json();
+    return data?.blogs || [];
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];
