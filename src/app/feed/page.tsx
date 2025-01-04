@@ -10,12 +10,9 @@ export async function generateMetadata({
 }: {
   searchParams: { source: string };
 }): Promise<Metadata> {
-  const title = searchParams.source === 'news' ? 'News' : null;
+  const title = searchParams.source === 'following' ? 'Following' : null;
   const description =
-    searchParams.source ===
-    'Stay in the loop with the latest headlines and breaking news on business, sports, politics, technology and stock market from around the world on Monkeys.'
-      ? 'News'
-      : null;
+    'Stay in the loop with the latest blogs and news on business, sports, politics, technology from around the world on Monkeys.';
 
   return {
     title: title,

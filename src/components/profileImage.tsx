@@ -30,7 +30,17 @@ export const ProfileFrame = ({
 export const ProfileImage = ({ username }: { username?: string }) => {
   const { imageUrl, isLoading, isError } = useProfileImage(username);
 
-  if (isLoading) return <Skeleton className='size-32' />;
+  if (isLoading)
+    return (
+      <Image
+        src='/default-profile.svg'
+        alt={`Profile: ${username}`}
+        title={`Profile: ${username}`}
+        width={32}
+        height={32}
+        className='w-full h-full object-cover'
+      />
+    );
 
   if (isError)
     return (
