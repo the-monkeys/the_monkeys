@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useParams } from 'next/navigation';
 
 import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import Container from '@/components/layout/Container';
@@ -22,29 +23,21 @@ const Editor = dynamic(() => import('@/components/editor/preview'), {
   loading: () => <EditorBlockSkeleton />,
 });
 
-const BlogPage = ({
-  searchParams,
-}: {
-  searchParams: {
-    id: string;
-  };
-}) => {
-  const { blog, isError, isLoading } = useGetPublishedBlogDetailByBlogId(
-    searchParams.id
-  );
+const BlogPage = () => {
+  const params = useParams();
 
-  console.log(searchParams.id);
+  // Assuming your route is `/blog/[slug]`, `params.slug` will contain the full slug.
+  const fullSlug = params?.slug || '';
+  const blogId = typeof fullSlug === 'string' ? fullSlug.split('-').pop() : ''; // Extract the blog ID from the slug
 
-  const blogId = blog?.blog_id;
-  const authorId = blog?.owner_account_id;
-  const date = blog?.published_time || blog?.blog?.time;
-  const tags = blog?.tags;
+  const { blog, isError, isLoading } =
+    useGetPublishedBlogDetailByBlogId(blogId);
 
   if (isLoading) {
     return <PublishedBlogSkeleton />;
   }
 
-  if (isError)
+  if (isError || !blog) {
     return (
       <Container className='min-h-screen'>
         <p className='py-4 text-sm text-alert-red text-center'>
@@ -52,14 +45,20 @@ const BlogPage = ({
         </p>
       </Container>
     );
+  }
+
+  const blogIdfromAPI = blog?.blog_id;
+  const authorId = blog?.owner_account_id;
+  const date = blog?.published_time || blog?.blog?.time;
+  const tags = blog?.tags;
 
   return (
-    <Container className='px-4 py-5 grid grid-cols-3 gap-6 lg:gap-8'>
+    <>
       <div className='relative col-span-3 lg:col-span-2'>
         <div className='mb-2 flex justify-between items-center'>
           <UserInfoCard id={authorId} date={date} />
 
-          <BlogActionsDropdown blogId={blogId} />
+          <BlogActionsDropdown blogId={blogIdfromAPI} />
         </div>
 
         <Separator className='mt-4' />
@@ -68,7 +67,7 @@ const BlogPage = ({
           <Editor key={blogId} data={blog?.blog} />
         </div>
 
-        <BlogReactionsContainer blogId={blogId} />
+        <BlogReactionsContainer blogId={blogIdfromAPI} />
       </div>
 
       <div className='col-span-3 lg:col-span-1 space-y-6'>
@@ -82,7 +81,7 @@ const BlogPage = ({
 
         <BlogRecommendations />
       </div>
-    </Container>
+    </>
   );
 };
 

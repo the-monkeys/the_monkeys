@@ -66,8 +66,7 @@ export const BlogCard: FC<BlogCardProps> = ({
 
           <Link
             href={{
-              pathname: `/blog/${blogSlug}?id=${blogId}`,
-              query: { blogId }, // the data
+              pathname: `/blog/${blogSlug}-${blogId}`,
             }}
             className='group flex flex-col sm:flex-row gap-4'
           >

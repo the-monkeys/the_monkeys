@@ -14,7 +14,7 @@ export const EditorBlockSkeleton = () => {
 
 export const PublishedBlogSkeleton = () => {
   return (
-    <Container className='pb-12 min-h-screen grid grid-cols-3 gap-4'>
+    <Container className='pb-12  min-h-screen grid grid-cols-3 gap-4'>
       <div className='p-4 col-span-3 lg:col-span-2'>
         <UserInfoCardSkeleton />
 

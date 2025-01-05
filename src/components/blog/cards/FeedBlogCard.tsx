@@ -30,10 +30,7 @@ export const FeedBlogCard = ({
 
         <Link
           href={{
-            pathname: `/blog/${blogSlug}?id=${blogId}`,
-            query: {
-              id: blogId,
-            },
+            pathname: `/blog/${blogSlug}-${blogId}`,
           }}
           className='group flex flex-col sm:flex-row gap-2 sm:gap-4'
         >
