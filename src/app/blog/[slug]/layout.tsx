@@ -37,10 +37,10 @@ export async function generateMetadata(
   const previousImages = parentMetadata?.openGraph?.images || [];
 
   return {
-    title: blocks[0]?.data?.text || 'Untitled Blog',
+    title: blocks[0]?.data?.text || 'Monkeys Blog',
     description: descriptionBlock?.data?.text || 'No description available.',
     openGraph: {
-      title: id || 'Untitled Blog',
+      title: blocks[0]?.data?.text || 'Monkeys Blog',
       description: descriptionBlock?.data?.text || 'No description available.',
       images: imageUrl ? [imageUrl, ...previousImages] : previousImages,
       //   url: `https://yourdomain.com/blog/${id}`,
