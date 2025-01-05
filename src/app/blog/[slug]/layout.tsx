@@ -28,20 +28,22 @@ export async function generateMetadata(
   // Extract OpenGraph image
   const blocks = blog?.blog?.blocks || [];
   const imageBlock = blocks.find((block) => block.type === 'image');
-  const imageUrl = imageBlock?.data?.url;
+  const imageUrl = imageBlock?.data?.file?.url;
+  const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
+  console.log(imageUrl, 'imageBlock');
 
   // Extend parent metadata if available
   const parentMetadata = await parent;
   const previousImages = parentMetadata?.openGraph?.images || [];
 
   return {
-    title: id || 'Untitled Blog',
-    description: id || 'No description available.',
+    title: blocks[0]?.data?.text || 'Untitled Blog',
+    description: descriptionBlock?.data?.text || 'No description available.',
     openGraph: {
       title: id || 'Untitled Blog',
-      description: id || 'No description available.',
+      description: descriptionBlock?.data?.text || 'No description available.',
       images: imageUrl ? [imageUrl, ...previousImages] : previousImages,
-      url: `https://yourdomain.com/blog/${id}`,
+      //   url: `https://yourdomain.com/blog/${id}`,
     },
   };
 }
