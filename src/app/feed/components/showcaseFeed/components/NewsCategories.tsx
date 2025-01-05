@@ -17,7 +17,6 @@ type CategoryItems = NewsSource1[] | [];
 export const NewsCategories = () => {
   const { news, isLoading, error } = useGetAllNews1();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [visibleCount, setVisibleCount] = useState<number>(10);
 
   const newsData = (news?.data as NewsSource1[]) || [];
 
@@ -86,10 +85,6 @@ export const NewsCategories = () => {
 
   const filteredNews: CategoryItems = categoryMap.get(selectedCategory) || [];
 
-  const handleLoadMoreNews = () => {
-    setVisibleCount((prevCount) => prevCount + 6);
-  };
-
   return (
     <div className='space-y-3'>
       <Select onValueChange={(value) => setSelectedCategory(value)}>
@@ -118,27 +113,13 @@ export const NewsCategories = () => {
         </SelectContent>
       </Select>
 
-      <div className='divide-y-2 divide-background-light dark:divide-background-dark'>
+      <div className='divide-y-[3px] divide-background-light dark:divide-background-dark'>
         {filteredNews.length > 0 ? (
-          <>
-            {filteredNews.slice(0, visibleCount).map((newsItem, index) => (
-              <NewsCategoryCard
-                key={`${newsItem.published_at}_${newsItem.source}`}
-                {...newsItem}
-              />
-            ))}
-
-            <div className='py-4 col-span-2 sm:col-span-1 flex items-center justify-center'>
-              {filteredNews.length > visibleCount && (
-                <button
-                  className='font-dm_sans text-sm opacity-80 hover:opacity-100'
-                  onClick={handleLoadMoreNews}
-                >
-                  Show more
-                </button>
-              )}
-            </div>
-          </>
+          filteredNews
+            .slice(0, 10)
+            .map((newsItem) => (
+              <NewsCategoryCard key={newsItem.url} {...newsItem} />
+            ))
         ) : (
           <p className='text-sm opacity-60'>
             No news available in this category.

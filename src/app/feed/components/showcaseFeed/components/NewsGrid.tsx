@@ -31,7 +31,7 @@ export const NewsGrid = () => {
     <div className='space-y-5'>
       <h4 className='font-dm_sans font-medium text-xl'>All News</h4>
 
-      <div className='grid grid-cols-2 gap-x-6 gap-y-8'>
+      <div className='grid grid-cols-2 gap-6'>
         {newsData
           ?.slice(0, visibleCount)
           .map((newsItem) => (
