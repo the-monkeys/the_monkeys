@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
+import { FEED_ROUTE } from '@/constants/routeConstants';
 import { useSession } from 'next-auth/react';
 
 import { FollowingBlogs } from './components/FollowingBlogs';
@@ -89,7 +90,7 @@ const BlogFeedPage = ({
             data-state={activeTab === 'all' ? 'active' : 'inactive'}
             className='group'
           >
-            <Link href='/feed?source=all'>
+            <Link href={`${FEED_ROUTE}?source=all`}>
               <button
                 onClick={() => setActiveTab('all')}
                 className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap capitalize'
@@ -105,7 +106,7 @@ const BlogFeedPage = ({
             data-state={activeTab === 'following' ? 'active' : 'inactive'}
             className='group'
           >
-            <Link href='/feed?source=following'>
+            <Link href={`${FEED_ROUTE}?source=following`}>
               <button
                 onClick={() => setActiveTab('following')}
                 className='font-dm_sans opacity-80 hover:opacity-100 group-data-[state=active]:opacity-100 whitespace-nowrap'

@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 
 import { baseUrl } from '@/constants/baseUrl';
+import { FEED_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
 // Fetch blog posts from the API using fetch
@@ -37,7 +38,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1,
     },
     {
-      url: `${baseUrl}/feed`,
+      url: `${baseUrl}/${FEED_ROUTE}`,
       changeFrequency: 'monthly',
       priority: 1,
     },

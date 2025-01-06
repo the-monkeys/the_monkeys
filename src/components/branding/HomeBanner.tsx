@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { CREATE_ROUTE } from '@/constants/routeConstants';
+
 import Icon from '../icon';
 import { Button } from '../ui/button';
 import { BackgroundBanner } from './BackgroundBanner';
@@ -30,7 +32,7 @@ const HomeBanner = () => {
           title='Create Blog'
           asChild
         >
-          <Link href='/create'>
+          <Link href={`${CREATE_ROUTE}`}>
             <div>
               <Icon
                 name='RiPencil'

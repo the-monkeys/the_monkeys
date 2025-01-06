@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { CreateButton } from '@/components/buttons/createButton';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
+import { FEED_ROUTE } from '@/constants/routeConstants';
 import { twMerge } from 'tailwind-merge';
 
 import Container from '../Container';
@@ -47,7 +48,7 @@ const MobileNav = () => {
         )}
       >
         <Container className='w-full px-4 py-[14px] flex items-center justify-between'>
-          <Link href='/feed'>
+          <Link href={FEED_ROUTE}>
             <Logo />
           </Link>
 

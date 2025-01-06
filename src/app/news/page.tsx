@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Separator } from '@/components/ui/separator';
+import { FEED_ROUTE } from '@/constants/routeConstants';
 import moment from 'moment';
 
 import { NewsSection1 } from './components/NewsSection1';
@@ -21,7 +22,7 @@ const NewsPage = () => {
 
   return (
     <Container className='mb-20 min-h-screen p-4 space-y-2'>
-      <LinksRedirectArrow position='Left' link='/feed' className='w-fit'>
+      <LinksRedirectArrow position='Left' link={FEED_ROUTE} className='w-fit'>
         <p className='font-dm_sans text-xs sm:text-sm'>Monkeys Blog</p>
       </LinksRedirectArrow>
 

@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { FEED_ROUTE } from '@/constants/routeConstants';
+
 import Icon from '../icon';
 import { Button } from '../ui/button';
 
@@ -22,7 +24,7 @@ export const LinksSection = () => {
           className='group w-fit pl-6 pr-4 self-end rounded-full'
           asChild
         >
-          <Link href='/feed' title='Monkeys Blog'>
+          <Link href={FEED_ROUTE} title='Monkeys Blog'>
             Discover
             <Icon
               name='RiArrowRight'

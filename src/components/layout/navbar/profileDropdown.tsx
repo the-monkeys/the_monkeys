@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
+import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
 import { signOut, useSession } from 'next-auth/react';
 
 const ProfileDropdown = () => {
@@ -59,7 +60,7 @@ const ProfileDropdown = () => {
 
           <DropdownMenuItem asChild>
             <Link
-              href='/library?source=bookmarks'
+              href={`${LIBRARY_ROUTE}?source=bookmarks`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiBookmark' size={18} />
@@ -76,7 +77,7 @@ const ProfileDropdown = () => {
 
           <DropdownMenuItem asChild>
             <Link
-              href={`/activity?user=${data?.user?.username}`}
+              href={`/${ACTIVITY_ROUTE}?user=${data?.user?.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiHistory' size={18} />
