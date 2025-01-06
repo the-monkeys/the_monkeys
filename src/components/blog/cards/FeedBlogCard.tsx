@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { UserInfoCard } from '@/components/user/userInfo';
+import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
 import { LikesCount } from '../LikesCount';
@@ -30,7 +31,7 @@ export const FeedBlogCard = ({
 
         <Link
           href={{
-            pathname: `/blog/${blogSlug}-${blogId}`,
+            pathname: `${BLOG_ROUTE}/${blogSlug}-${blogId}`,
           }}
           className='group flex flex-col sm:flex-row gap-2 sm:gap-4'
         >
@@ -61,7 +62,7 @@ export const FeedBlogCard = ({
         <div className='flex items-center gap-1'>
           {status === 'authenticated' && <BookmarkButton blogId={blogId} />}
 
-          <BlogActionsDropdown blogId={blogId} />
+          <BlogActionsDropdown blogURL={blogSlug} />
         </div>
       </div>
     </div>

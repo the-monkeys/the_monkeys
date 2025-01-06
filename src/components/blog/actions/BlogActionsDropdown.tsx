@@ -8,10 +8,14 @@ import {
 import { toast } from '@/components/ui/use-toast';
 import { LIVE_URL } from '@/constants/api';
 
-export const BlogActionsDropdown = ({ blogId }: { blogId?: string }) => {
+export const BlogActionsDropdown = ({
+  blogURL,
+}: {
+  blogURL?: string | string[];
+}) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(`${LIVE_URL}/blog/${blogId}`).then(
+      navigator.clipboard.writeText(`${LIVE_URL}${blogURL}`).then(
         () => {
           toast({
             variant: 'default',

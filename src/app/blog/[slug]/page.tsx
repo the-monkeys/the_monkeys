@@ -58,7 +58,7 @@ const BlogPage = () => {
         <div className='mb-2 flex justify-between items-center'>
           <UserInfoCard id={authorId} date={date} />
 
-          <BlogActionsDropdown blogId={blogIdfromAPI} />
+          <BlogActionsDropdown blogURL={fullSlug} />
         </div>
 
         <Separator className='mt-4' />

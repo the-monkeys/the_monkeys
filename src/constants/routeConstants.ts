@@ -1,0 +1,12 @@
+export const HOME_ROUTE = '/';
+export const CREATE_ROUTE = '/create';
+export const FEED_ROUTE = '/feed';
+export const ACTIVITY_ROUTE = '/activity';
+export const LIBRARY_ROUTE = '/library';
+export const AUTH_ROUTE = '/auth';
+export const AUTH_LOGIN_ROUTE = '/auth/login';
+export const AUTH_REGISTER_ROUTE = '/auth/register';
+export const AUTH_FORGOT_PASSWORD_ROUTE = '/auth/forgot-password';
+export const AUTH_VERIFY_EMAIL_ROUTE = '/auth/verify-email';
+export const AUTH_RESET_PASSWORD_ROUTE = '/auth/reset-password';
+export const BLOG_ROUTE = '/blog';

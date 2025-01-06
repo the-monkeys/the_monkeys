@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import Icon from '@/components/icon';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
+import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
@@ -62,11 +63,9 @@ export const BlogCard: FC<BlogCardProps> = ({
             )}
           </div>
         ) : (
-          //  href={`/blog?id=${blogId}`}
-
           <Link
             href={{
-              pathname: `/blog/${blogSlug}-${blogId}`,
+              pathname: `${BLOG_ROUTE}/${blogSlug}-${blogId}`,
             }}
             className='group flex flex-col sm:flex-row gap-4'
           >
@@ -116,7 +115,7 @@ export const BlogCard: FC<BlogCardProps> = ({
 
           {!isDraft && <BookmarkButton blogId={blogId} />}
 
-          {!isDraft && <BlogActionsDropdown blogId={blogId} />}
+          {!isDraft && <BlogActionsDropdown blogURL={blogSlug} />}
         </div>
       </div>
     </div>
