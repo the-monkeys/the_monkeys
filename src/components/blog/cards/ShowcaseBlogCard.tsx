@@ -39,7 +39,7 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
               <p
                 key={index}
                 style={{ color: tagColorCode[index] }}
-                className='text-sm whitespace-nowrap'
+                className='text-sm whitespace-nowrap opacity-80'
               >
                 <span>#</span>
                 {tag}

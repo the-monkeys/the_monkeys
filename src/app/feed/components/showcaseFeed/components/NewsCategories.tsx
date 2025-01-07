@@ -101,7 +101,7 @@ export const NewsCategories = () => {
   });
 
   return (
-    <div className='mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6'>
+    <div className='mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6'>
       {sportsNews.length > 0 && (
         <CategorySection heading='Sports' newsList={sportsNews} />
       )}

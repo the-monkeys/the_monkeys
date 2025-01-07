@@ -24,16 +24,22 @@ export const ShowcaseBlogs = () => {
   });
 
   return (
-    <div className='mt-4 space-y-10'>
+    <div className='space-y-6'>
+      <div>
+        <h4 className='font-dm_sans font-medium text-lg'>
+          Latest on <span className='text-brand-orange'>Monkeys</span>
+        </h4>
+
+        <LinksRedirectArrow link='/feed?source=all' className='w-fit'>
+          <p className='text-sm opacity-80'>explore all</p>
+        </LinksRedirectArrow>
+      </div>
+
       <div className='grid grid-cols-2 md:grid-cols-3 gap-y-8 sm:gap-y-10 gap-x-6'>
-        {filteredBlogs?.slice(0, 15)?.map((blog) => {
+        {filteredBlogs?.slice(0, 6)?.map((blog) => {
           return <ShowcaseBlogCard key={blog.blog_id} blog={blog} />;
         })}
       </div>
-
-      <LinksRedirectArrow link='/feed?source=all' className='mx-auto w-fit'>
-        <p>Explore all blogs</p>
-      </LinksRedirectArrow>
     </div>
   );
 };
