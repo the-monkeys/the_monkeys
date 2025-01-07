@@ -6,8 +6,8 @@ export const NewsGridCard: FC<NewsSource2> = React.memo((props) => {
   const { source, author, title, urlToImage } = props;
 
   return (
-    <div className='relative group h-[250px] sm:h-[280px] col-span-2 sm:col-span-1 flex flex-col justify-end rounded-md overflow-hidden'>
-      <div className='absolute top-0 left-0 w-full h-full bg-foreground-light dark:bg-foreground-dark rounded-lg overflow-hidden'>
+    <div className='relative group h-[220px] sm:h-[250px] col-span-2 sm:col-span-1 flex flex-col justify-end overflow-hidden'>
+      <div className='absolute top-0 left-0 w-full h-full bg-foreground-light dark:bg-foreground-dark'>
         <img
           src={urlToImage || ''}
           alt={title}
@@ -16,10 +16,10 @@ export const NewsGridCard: FC<NewsSource2> = React.memo((props) => {
         />
       </div>
 
-      <div className='px-2 py-4 space-y-1 bg-background-dark/50 dark:bg-background-light/50 text-text-dark dark:text-text-light group-hover:backdrop-blur-md z-10 transition-all cursor-default'>
-        <p className='font-medium text-sm opacity-80'>{`${source.name} | ${author}`}</p>
+      <div className='p-3 space-y-1 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm z-10'>
+        <p className='font-dm_sans text-xs'>{`${source.name} | ${author}`}</p>
 
-        <h2 className='font-semibold text-lg line-clamp-2'>{title}</h2>
+        <h2 className='font-medium line-clamp-2'>{title}</h2>
       </div>
     </div>
   );

@@ -5,41 +5,33 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 
 export const NewsCategoryCard: FC<NewsSource1> = React.memo((props) => {
-  const { source, title, published_at, image } = props;
+  const { category, source, title, published_at, image } = props;
 
   return (
-    <div className='p-4 bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-2 rounded-md'>
-      <div className='space-y-2'>
-        {image && image.endsWith('.mp4') && (
-          <div className='w-full rounded-md overflow-hidden'>
-            <video
-              src={image}
-              autoPlay
-              controls
-              controlsList='nodownload'
-              muted
-              className='h-full w-full object-cover'
-              aria-label='News video'
-            >
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        )}
+    <div className='p-3 bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-2'>
+      <p className='font-dm_sans text-sm opacity-80 line-clamp-1'>{source}</p>
 
-        <div className='flex flex-col gap-1'>
-          <p className='text-sm font-medium opacity-80'>{source}</p>
-
-          <h4
+      <div className='h-[60px] sm:h-[80px] flex gap-2'>
+        <div className='flex-1 space-y-1'>
+          <div
             dangerouslySetInnerHTML={{
               __html: purifyHTMLString(title),
             }}
-            className='font-medium'
-          ></h4>
-
-          <p className='self-end font-dm_sans text-xs opacity-80'>
-            {`- ${moment(published_at).fromNow()}`}
-          </p>
+            className='font-medium text-base line-clamp-2'
+          ></div>
         </div>
+
+        {image && !image.endsWith('.mp4') && (
+          <div className='size-16 rounded-lg overflow-hidden'>
+            <img src={image} className='w-full h-full object-cover' />
+          </div>
+        )}
+      </div>
+
+      <div className='flex items-center gap-1'>
+        <p className='text-xs sm:text-sm'>{moment(published_at).fromNow()}</p>
+        <span className='text-sm'>·</span>
+        <p className='text-xs sm:text-sm capitalize'>{category}</p>
       </div>
     </div>
   );

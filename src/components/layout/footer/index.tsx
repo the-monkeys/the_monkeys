@@ -80,7 +80,14 @@ const Footer = () => {
 
         <div className='pb-8 space-y-2'>
           <p className='text-xs sm:text-sm text-center opacity-80'>
-            2025, Monkeys, All Rights Reserved
+            2025,{' '}
+            <Link
+              href='/feed'
+              className='font-medium text-brand-orange hover:underline'
+            >
+              Monkeys
+            </Link>
+            , All Rights Reserved
           </p>
         </div>
       </footer>

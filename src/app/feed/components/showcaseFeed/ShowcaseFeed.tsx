@@ -4,31 +4,28 @@ import moment from 'moment';
 
 import { NewsCategories } from './components/NewsCategories';
 import { NewsGrid } from './components/NewsGrid';
+import { ShowcaseBlogs } from './components/ShowcaseBlogs';
 
 export const ShowcaseFeed = () => {
   const currDate = new Date();
 
   return (
-    <div className='pb-12 space-y-10'>
-      <div className='py-6 space-y-1 text-center md:text-left'>
-        <p className='font-dm_sans text-xs opacity-80'>
-          {moment(currDate).format('dddd, MMMM DD, YYYY')}
+    <div className='pb-12'>
+      <div className='py-6'>
+        <p className='font-dm_sans font-medium text-sm'>
+          {moment(currDate).format('dddd')}
         </p>
 
-        <h2 className='font-arvo text-2xl'>
-          Monkeys <span className='text-brand-orange'>Showcase</span>
-        </h2>
+        <p className='text-sm opacity-80'>
+          {`${moment(currDate).format('MMM DD, YYYY')} | ${moment(currDate).utc().format('hh:mm')} UTC`}
+        </p>
       </div>
 
-      <div className='grid grid-cols-3 gap-6'>
-        <div className='col-span-3 md:col-span-1'>
-          <NewsCategories />
-        </div>
+      <ShowcaseBlogs />
 
-        <div className='col-span-3 md:col-span-2'>
-          <NewsGrid />
-        </div>
-      </div>
+      <NewsCategories />
+
+      <NewsGrid />
     </div>
   );
 };

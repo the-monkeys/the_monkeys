@@ -1,44 +1,72 @@
 import { useState } from 'react';
 
+import Icon from '@/components/icon';
 import { NewsCategoryCard } from '@/components/news/cards/CategoryCard';
-import { NewsCategoriesSkeleton } from '@/components/skeletons/newsSkeleton';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { useGetAllNews1 } from '@/hooks/blog/useGetAllNews';
 import { NewsSource1 } from '@/services/news/newsTypes';
+import { twMerge } from 'tailwind-merge';
 
-type CategoryItems = NewsSource1[] | [];
+const CategorySection = ({
+  heading,
+  newsList,
+}: {
+  heading: string;
+  newsList: NewsSource1[];
+}) => {
+  const [expandStatus, setExapandStatus] = useState<boolean>(true);
+
+  const handleExpandStatus = () => {
+    setExapandStatus((prevStatus) => !prevStatus);
+  };
+
+  return (
+    <div className='col-span-1 space-y-3'>
+      <div className='flex justify-between gap-3'>
+        <h4 className='px-1 font-dm_sans font-medium'>{heading}</h4>
+
+        <button
+          onClick={handleExpandStatus}
+          className='block sm:hidden opacity-80 hover:opacity-100'
+        >
+          <Icon
+            name='RiArrowDownS'
+            className={twMerge(
+              'transition-all',
+              expandStatus ? 'rotate-180' : 'rotate-0'
+            )}
+          />
+        </button>
+      </div>
+
+      <div
+        className={twMerge(
+          'sm:block divide-y-4 divide-background-light dark:divide-background-dark',
+          expandStatus ? 'block' : 'hidden'
+        )}
+      >
+        {newsList.slice(0, 5).map((newsItem) => (
+          <NewsCategoryCard key={newsItem.url} {...newsItem} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const NewsCategories = () => {
   const { news, isLoading, error } = useGetAllNews1();
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
 
   const newsData = (news?.data as NewsSource1[]) || [];
 
-  if (isLoading) return <NewsCategoriesSkeleton />;
-
-  if (error)
-    return (
-      <div className='py-4 min-h-screen'>
-        <p className='w-full text-sm opacity-80 text-center'>
-          Unable to fetch content. Please try again later.
-        </p>
-      </div>
-    );
+  if (isLoading || error) return null;
 
   const sportsTitles = new Set();
   const businessTitles = new Set();
-  const scienceTitles = new Set();
+  const technologyTitles = new Set();
   const entertainmentTitles = new Set();
 
   const sportsNews: NewsSource1[] = [];
   const businessNews: NewsSource1[] = [];
-  const scienceNews: NewsSource1[] = [];
+  const technologyNews: NewsSource1[] = [];
   const entertainmentNews: NewsSource1[] = [];
 
   newsData.forEach((item) => {
@@ -57,10 +85,10 @@ export const NewsCategories = () => {
           businessNews.push(item);
         }
         break;
-      case 'science':
-        if (!scienceTitles.has(item.title)) {
-          scienceTitles.add(item.title);
-          scienceNews.push(item);
+      case 'technology':
+        if (!technologyTitles.has(item.title)) {
+          technologyTitles.add(item.title);
+          technologyNews.push(item);
         }
         break;
       case 'entertainment':
@@ -72,60 +100,23 @@ export const NewsCategories = () => {
     }
   });
 
-  const categoryMap = new Map<string, CategoryItems>([
-    [
-      'all',
-      [...sportsNews, ...businessNews, ...scienceNews, ...entertainmentNews],
-    ],
-    ['sports', sportsNews],
-    ['business', businessNews],
-    ['science', scienceNews],
-    ['entertainment', entertainmentNews],
-  ]);
-
-  const filteredNews: CategoryItems = categoryMap.get(selectedCategory) || [];
-
   return (
-    <div className='space-y-3'>
-      <Select onValueChange={(value) => setSelectedCategory(value)}>
-        <div className='flex justify-between items-center gap-3'>
-          <h4 className='px-1 font-dm_sans font-medium text-xl'>Latest</h4>
+    <div className='mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6'>
+      {sportsNews.length > 0 && (
+        <CategorySection heading='Sports' newsList={sportsNews} />
+      )}
 
-          <SelectTrigger className='px-4 w-[180px] rounded-full'>
-            <SelectValue placeholder='Category' />
-          </SelectTrigger>
-        </div>
+      {businessNews.length > 0 && (
+        <CategorySection heading='Business' newsList={businessNews} />
+      )}
 
-        <SelectContent>
-          <SelectItem value='all'>All</SelectItem>
-          {sportsNews.length > 0 && (
-            <SelectItem value='sports'>Sports</SelectItem>
-          )}
-          {businessNews.length > 0 && (
-            <SelectItem value='business'>Business</SelectItem>
-          )}
-          {scienceNews.length > 0 && (
-            <SelectItem value='science'>Science</SelectItem>
-          )}
-          {entertainmentNews.length > 0 && (
-            <SelectItem value='entertainment'>Entertainment</SelectItem>
-          )}
-        </SelectContent>
-      </Select>
+      {entertainmentNews.length > 0 && (
+        <CategorySection heading='Entertainment' newsList={entertainmentNews} />
+      )}
 
-      <div className='divide-y-[3px] divide-background-light dark:divide-background-dark'>
-        {filteredNews.length > 0 ? (
-          filteredNews
-            .slice(0, 10)
-            .map((newsItem) => (
-              <NewsCategoryCard key={newsItem.url} {...newsItem} />
-            ))
-        ) : (
-          <p className='text-sm opacity-60'>
-            No news available in this category.
-          </p>
-        )}
-      </div>
+      {technologyNews.length > 0 && (
+        <CategorySection heading='Technology' newsList={technologyNews} />
+      )}
     </div>
   );
 };

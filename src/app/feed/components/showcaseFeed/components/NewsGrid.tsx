@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { NewsGridCard } from '@/components/news/cards/GridCard';
-import { NewsGridSkeleton } from '@/components/skeletons/newsSkeleton';
 import { useGetAllNews2 } from '@/hooks/blog/useGetAllNews';
 import { NewsSource2 } from '@/services/news/newsTypes';
 
@@ -12,34 +11,18 @@ export const NewsGrid = () => {
 
   const [visibleCount, setVisibleCount] = useState<number>(19);
 
-  if (isLoading) return <NewsGridSkeleton />;
-
-  if (error)
-    return (
-      <div className='py-4 min-h-screen'>
-        <p className='w-full text-sm opacity-80 text-center'>
-          Unable to load news. Please try again later.
-        </p>
-      </div>
-    );
+  if (isLoading || error) return null;
 
   function handleLoadMoreNews() {
     setVisibleCount((prev) => prev + 10);
   }
 
   return (
-    <div className='space-y-5'>
-      <h4 className='font-dm_sans font-medium text-xl'>All News</h4>
-
-      <div className='grid grid-cols-2 gap-6'>
+    <div className='mt-10 space-y-5'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2'>
         {newsData
           ?.slice(0, visibleCount)
-          .map((newsItem) => (
-            <NewsGridCard
-              key={`${newsItem.publishedAt}_${newsItem.author}`}
-              {...newsItem}
-            />
-          ))}
+          .map((newsItem) => <NewsGridCard key={newsItem.url} {...newsItem} />)}
 
         <div className='py-4 col-span-2 sm:col-span-1 flex items-center justify-center'>
           <button
