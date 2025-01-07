@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
 import { LIVE_URL } from '@/constants/api';
+import { BLOG_ROUTE } from '@/constants/routeConstants';
 
 export const BlogActionsDropdown = ({
   blogURL,
@@ -15,7 +16,7 @@ export const BlogActionsDropdown = ({
 }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(`${LIVE_URL}${blogURL}`).then(
+      navigator.clipboard.writeText(`${LIVE_URL}${BLOG_ROUTE}/${blogURL}`).then(
         () => {
           toast({
             variant: 'default',
