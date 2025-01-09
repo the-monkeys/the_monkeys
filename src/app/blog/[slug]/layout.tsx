@@ -43,7 +43,12 @@ export async function generateMetadata(
       title: blocks[0]?.data?.text || 'Monkeys Blog',
       description: descriptionBlock?.data?.text || 'No description available.',
       images: imageUrl ? [imageUrl, ...previousImages] : previousImages,
-      //   url: `https://yourdomain.com/blog/${id}`,
+    },
+    twitter: {
+      title: blocks[0]?.data?.text || 'Monkeys Blog',
+      card: 'summary_large_image',
+      description: descriptionBlock?.data?.text || 'No description available.',
+      images: imageUrl ? [imageUrl, ...previousImages] : previousImages,
     },
   };
 }
