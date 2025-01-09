@@ -50,6 +50,7 @@ export type IconName =
   | 'RiDiscord'
   | 'RiGoogle'
   | 'RiMeta'
+  | 'RiWhatsapp'
   | 'RiInstagram'
   | 'RiLinkedin'
   | 'RiCheck'

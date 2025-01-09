@@ -14,9 +14,9 @@ import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCard } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 
-import { BlogReactionsContainer } from '../components/blog/BlogReactions';
-import { BlogRecommendations } from '../components/blog/BlogRecommendations';
-import { BlogTopics } from '../components/blog/BlogTopics';
+import { BlogReactionsContainer } from '../components/BlogReactions';
+import { BlogRecommendations } from '../components/BlogRecommendations';
+import { BlogTopics } from '../components/BlogTopics';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -67,7 +67,7 @@ const BlogPage = () => {
           <Editor key={blogId} data={blog?.blog} />
         </div>
 
-        <BlogReactionsContainer blogId={blogIdfromAPI} />
+        <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />
       </div>
 
       <div className='col-span-3 lg:col-span-1 space-y-6'>
