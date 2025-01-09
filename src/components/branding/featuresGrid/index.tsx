@@ -1,7 +1,7 @@
 import { AI } from './AI';
 import { CollaborativeBlogging } from './CollaborativeBlogging';
 import { DiverseTopics } from './DiscoverDiversity';
-import { News } from './News';
+import { Showcase } from './Showcase';
 import { VersionControl } from './VersionControl';
 
 const FeaturesGrid = () => {
@@ -15,7 +15,7 @@ const FeaturesGrid = () => {
 
       <VersionControl />
 
-      <News />
+      <Showcase />
     </div>
   );
 };

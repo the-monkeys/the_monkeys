@@ -18,12 +18,12 @@ const FooterList = ({
   }[];
 }) => {
   return (
-    <div className='space-y-2'>
-      <h2 className='font-dm_sans font-medium text-base'>{heading}</h2>
+    <div className='space-y-4'>
+      <h4 className='font-dm_sans font-semibold'>{heading}</h4>
 
       <ul className='space-y-2'>
         {items.map((item, index) => (
-          <li className='text-sm opacity-80 hover:opacity-100' key={index}>
+          <li className='text-sm hover:opacity-80' key={index}>
             <Link href={item.link}>{item.text}</Link>
           </li>
         ))}
@@ -35,44 +35,59 @@ const FooterList = ({
 const Footer = () => {
   return (
     <Container className='px-4 py-12'>
-      <footer className='space-y-6'>
-        <Logo showSubHeading={true} />
+      <footer className='space-y-10'>
+        <div className='flex flex-col sm:flex-row justify-between flex-wrap gap-10'>
+          <div className='space-y-6'>
+            <Logo showSubHeading={true} />
 
-        <div className='w-full pt-4 flex flex-col sm:flex-row justify-between gap-8'>
-          {footerList.map((listItem, index) => {
-            return <FooterList {...listItem} key={index} />;
-          })}
+            <div>
+              <p className='pb-1 font-dm_sans text-xs'>Connect with us</p>
+
+              <div className='flex items-center gap-3'>
+                <Link
+                  className='opacity-80 hover:opacity-100'
+                  href={MONKEYS_DISCORD}
+                  target='_blank'
+                >
+                  <Icon name='RiDiscord' type='Fill' />
+                </Link>
+
+                <Link
+                  className='opacity-80 hover:opacity-100'
+                  href={MONKEYS_GITHUB}
+                  target='_blank'
+                >
+                  <Icon name='RiGithub' type='Fill' />
+                </Link>
+
+                <Link
+                  className='opacity-80 hover:opacity-100'
+                  href={MONKEYS_X}
+                  target='_blank'
+                >
+                  <Icon name='RiTwitterX' type='Fill' />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className='flex flex-wrap gap-12'>
+            {footerList.map((listItem, index) => {
+              return <FooterList {...listItem} key={index} />;
+            })}
+          </div>
         </div>
 
         <div className='pb-8 space-y-2'>
-          <div className='flex items-center justify-center gap-4'>
-            <Link
-              className='opacity-80 hover:opacity-100'
-              href={MONKEYS_DISCORD}
-              target='_blank'
-            >
-              <Icon name='RiDiscord' type='Fill' size={18} />
-            </Link>
-
-            <Link
-              className='opacity-80 hover:opacity-100'
-              href={MONKEYS_GITHUB}
-              target='_blank'
-            >
-              <Icon name='RiGithub' type='Fill' size={18} />
-            </Link>
-
-            <Link
-              className='opacity-80 hover:opacity-100'
-              href={MONKEYS_X}
-              target='_blank'
-            >
-              <Icon name='RiTwitterX' type='Fill' size={18} />
-            </Link>
-          </div>
-
           <p className='text-xs sm:text-sm text-center opacity-80'>
-            Monkeys, All Rights Reserved
+            2025,{' '}
+            <Link
+              href='/feed'
+              className='font-medium text-brand-orange hover:underline'
+            >
+              Monkeys
+            </Link>
+            , All Rights Reserved
           </p>
         </div>
       </footer>

@@ -24,11 +24,11 @@ export const TopicsCard = () => {
   return (
     <div className='mt-6'>
       <div className='flex flex-col'>
-        <h4 className='px-1 font-dm_sans font-medium text-base md:text-lg'>
+        <h4 className='font-dm_sans font-medium text-base md:text-lg'>
           Topics of interest
         </h4>
 
-        <LinksRedirectArrow link='/topics/explore' className='w-fit px-[6px]'>
+        <LinksRedirectArrow link='/topics/explore' className='w-fit'>
           <p className='font-dm_sans text-sm opacity-80'>explore topics</p>
         </LinksRedirectArrow>
       </div>

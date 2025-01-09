@@ -24,17 +24,15 @@ export const FollowingBlogs = ({
     );
 
   return (
-    <div className='flex flex-col gap-8 lg:gap-10'>
+    <div className='mx-auto max-w-3xl flex flex-col gap-8 lg:gap-10'>
       {isLoading ? (
         <FeedBlogCardListSkeleton />
       ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
         <p className='text-sm text-center opacity-80'>No blogs available.</p>
       ) : (
-        blogs?.blogs.map((blog) => {
-          return blog.blog.blocks.length < 5 ? null : (
-            <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
-          );
-        })
+        blogs?.blogs.map((blog) => (
+          <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
+        ))
       )}
     </div>
   );

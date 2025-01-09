@@ -7,7 +7,7 @@ export const useIsPostLiked = (blogId: string | undefined) => {
     `/user/is-liked/${blogId}`,
     authFetcher,
     {
-      refreshInterval: 0,
+      refreshInterval: 2000,
     }
   );
 
@@ -21,7 +21,10 @@ export const useIsPostLiked = (blogId: string | undefined) => {
 export const useGetLikesCount = (blogId: string | undefined) => {
   const { data, isLoading, error } = useSWR<likesCountResponse>(
     `/user/count-likes/${blogId}`,
-    authFetcher
+    authFetcher,
+    {
+      refreshInterval: 2000,
+    }
   );
 
   return {

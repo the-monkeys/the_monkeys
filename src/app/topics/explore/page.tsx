@@ -38,13 +38,6 @@ const ExploreTopicsPage = () => {
   return (
     <div className='space-y-8'>
       <div className='mx-auto max-w-4xl flex justify-center items-center flex-wrap gap-2'>
-        {status === 'authenticated' && (
-          <AddTopicForm
-            categories={categories || {}}
-            categoriesLoading={isLoading}
-          />
-        )}
-
         {letters.map((letter, index) => (
           <Button
             key={index}
@@ -59,6 +52,13 @@ const ExploreTopicsPage = () => {
             <p className='text-sm sm:text-base'>{letter}</p>
           </Button>
         ))}
+
+        {status === 'authenticated' && (
+          <AddTopicForm
+            categories={categories || {}}
+            categoriesLoading={isLoading}
+          />
+        )}
       </div>
 
       {isLoading ? (

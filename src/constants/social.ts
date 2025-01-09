@@ -29,9 +29,9 @@ export const notFoundList = [
     link: MONKEYS_X,
   },
   {
-    title: 'Monkeys News',
-    text: 'Check out Monkeys News for global headlines and updates.',
+    title: 'Monkeys Showcase',
+    text: 'Check out latest blogs and news from around the world.',
     icon: 'RiNewspaper' as IconName,
-    link: '/news',
+    link: '/feed',
   },
 ];

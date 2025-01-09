@@ -32,10 +32,7 @@ export const BlogReactions = ({
       <div className='flex items-center gap-2'>
         <CommentButton size={20} isDisable={true} />
 
-        <Separator
-          orientation='vertical'
-          className='w-[2px] h-4 rounded-full'
-        />
+        <div className='size-[4px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
 
         <BookmarkButton blogId={blogId} size={20} />
       </div>
@@ -45,7 +42,7 @@ export const BlogReactions = ({
 
 export const BlogReactionsContainer = ({ blogId }: { blogId?: string }) => {
   return (
-    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-fit px-8 py-[10px] bg-background-light/80  dark:bg-background-dark/80 backdrop-blur-md border-1 border-border-light/50 dark:border-border-dark/50 shadow-md z-20 rounded-full'>
+    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-fit px-8 py-[10px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light border-1 border-border-light dark:border-border-dark shadow-md z-20 rounded-full'>
       <BlogReactions blogId={blogId} />
     </div>
   );

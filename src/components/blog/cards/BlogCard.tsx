@@ -40,6 +40,9 @@ export const BlogCard: FC<BlogCardProps> = ({
     router.push(`/edit/${blogId}`);
   };
 
+  const showModificationOptions =
+    status === 'authenticated' && modificationEnable;
+
   return (
     <div className='relative w-full md:px-6'>
       <div className='space-y-3'>
@@ -89,11 +92,11 @@ export const BlogCard: FC<BlogCardProps> = ({
         </div>
 
         <div className='flex items-center gap-1'>
-          {status === 'authenticated' && modificationEnable && !isDraft && (
+          {showModificationOptions && !isDraft && (
             <EditBlogDialog blogId={blogId} />
           )}
 
-          {status === 'authenticated' && modificationEnable && isDraft && (
+          {showModificationOptions && isDraft && (
             <button
               onClick={() => handleEdit(blogId)}
               className='p-1 flex items-center justify-center cursor-pointer opacity-100 hover:opacity-80'
@@ -103,7 +106,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             </button>
           )}
 
-          {status === 'authenticated' && modificationEnable && (
+          {showModificationOptions && (
             <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
           )}
 

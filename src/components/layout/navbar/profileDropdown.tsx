@@ -6,14 +6,13 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
 import { signOut, useSession } from 'next-auth/react';
 
 const ProfileDropdown = () => {
-  const { status, data } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   return (
@@ -49,7 +48,7 @@ const ProfileDropdown = () => {
         <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44 space-y-1'>
           <DropdownMenuItem asChild>
             <Link
-              href={`/${data?.user?.username}`}
+              href={`/${session?.user?.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiUser' size={18} />
@@ -76,7 +75,7 @@ const ProfileDropdown = () => {
 
           <DropdownMenuItem asChild>
             <Link
-              href={`/activity?user=${data?.user?.username}`}
+              href={`/activity?user=${session?.user?.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiHistory' size={18} />
