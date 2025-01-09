@@ -7,6 +7,7 @@ import { ContributeAndSponsorCard } from '@/components/branding/sponsor/Contribu
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { Button } from '@/components/ui/button';
+import { CREATE_ROUTE } from '@/constants/routeConstants';
 
 const LandingPage = () => {
   return (
@@ -44,7 +45,7 @@ const LandingPage = () => {
           title='Create Blog'
           asChild
         >
-          <Link href='/create'>
+          <Link href={`${CREATE_ROUTE}`}>
             <div>
               <Icon
                 name='RiPencil'

@@ -1,20 +1,26 @@
 import { LikesCount } from '@/components/blog/LikesCount';
-import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { Separator } from '@/components/ui/separator';
+import { LIVE_URL } from '@/constants/api';
+import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
+
+import SocialMediaSharePopup from './SocialMediaSharePopup';
 
 export const BlogReactions = ({
   className,
   blogId,
+  blogURL,
 }: {
   className?: string;
+  blogURL?: string | string[];
   blogId?: string;
 }) => {
   const { status } = useSession();
+  const blogUrl = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   if (status === 'unauthenticated')
     return <p className='text-sm opacity-80'>Log in to interact with blogs.</p>;
@@ -29,21 +35,29 @@ export const BlogReactions = ({
         {status === 'authenticated' && <LikesCount blogId={blogId} />}
       </div>
 
-      <div className='flex items-center gap-2'>
+      <div className='flex items-center gap-1'>
         <CommentButton size={20} isDisable={true} />
-
         <div className='size-[4px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
 
         <BookmarkButton blogId={blogId} size={20} />
+        <div className='size-[4px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
+
+        <SocialMediaSharePopup blogURL={blogUrl} />
       </div>
     </div>
   );
 };
 
-export const BlogReactionsContainer = ({ blogId }: { blogId?: string }) => {
+export const BlogReactionsContainer = ({
+  blogId,
+  blogURL,
+}: {
+  blogId?: string;
+  blogURL: string | string[];
+}) => {
   return (
     <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-fit px-8 py-[10px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light border-1 border-border-light dark:border-border-dark shadow-md z-20 rounded-full'>
-      <BlogReactions blogId={blogId} />
+      <BlogReactions blogURL={blogURL} blogId={blogId} />
     </div>
   );
 };

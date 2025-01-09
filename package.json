@@ -60,6 +60,7 @@
     "react-hook-form": "^7.51.4",
     "react-icons": "^5.0.1",
     "react-select": "^5.8.1",
+    "react-share": "^5.1.2",
     "socket.io-client": "^4.7.5",
     "sockjs-client": "^1.6.1",
     "swr": "^2.2.5",

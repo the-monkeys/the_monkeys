@@ -7,29 +7,33 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
 import { LIVE_URL } from '@/constants/api';
+import { BLOG_ROUTE } from '@/constants/routeConstants';
 
-export const BlogActionsDropdown = ({ blogId }: { blogId?: string }) => {
-  const copyToClipboard = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(`${LIVE_URL}/blog?id=${blogId}`).then(
-        () => {
-          toast({
-            variant: 'default',
-            title: 'Blog Link Copied',
-            description: 'The blog link has been copied.',
-          });
-        },
-        () => {
-          toast({
-            variant: 'error',
-            title: 'Copy Failed',
-            description: 'Unable to copy the blog link.',
-          });
-        }
-      );
-    }
-  };
-
+export const copyToClipboard = (blogURL: string) => {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(`${LIVE_URL}${BLOG_ROUTE}/${blogURL}`).then(
+      () => {
+        toast({
+          variant: 'default',
+          title: 'Blog Link Copied',
+          description: 'The blog link has been copied.',
+        });
+      },
+      () => {
+        toast({
+          variant: 'error',
+          title: 'Copy Failed',
+          description: 'Unable to copy the blog link.',
+        });
+      }
+    );
+  }
+};
+export const BlogActionsDropdown = ({
+  blogURL,
+}: {
+  blogURL?: string | string[];
+}) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,7 +45,7 @@ export const BlogActionsDropdown = ({ blogId }: { blogId?: string }) => {
       <DropdownMenuContent className='mx-2 w-32 sm:w-36'>
         <DropdownMenuItem asChild>
           <button
-            onClick={copyToClipboard}
+            onClick={() => copyToClipboard(blogURL as string)}
             className='flex w-full items-center gap-2'
           >
             <Icon name='RiClipboard' size={18} />

@@ -1,7 +1,9 @@
 import Link from 'next/link';
 
+import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { Badge } from '@/components/ui/badge';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
+import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
 import { getCardContent } from '../getBlogContent';
@@ -10,7 +12,9 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time || blog?.blog?.time;
-
+  // Generate the slug for the blog title
+  const blogTitle = blog?.blog?.blocks[0]?.data?.text;
+  const blogSlug = generateSlug(blogTitle);
   const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
 
   if (!imageDiv) return null;
@@ -22,7 +26,10 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
       <UserInfoCardCompact id={authorId} date={date} />
 
       <div className='flex-1 flex flex-col justify-between gap-5'>
-        <Link href={`/blog?id=${blogId}`} className='group flex flex-col gap-2'>
+        <Link
+          href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
+          className='group flex flex-col gap-2'
+        >
           <div className='h-[185px] w-full overflow-hidden rounded-md'>
             {imageDiv}
           </div>

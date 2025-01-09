@@ -83,6 +83,7 @@ export const getCardContent = ({
     titleDiv,
     recommendationTitleDiv,
     descriptionDiv,
+
     imageDiv,
   };
 };

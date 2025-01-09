@@ -21,11 +21,11 @@ axiosInstanceV2.interceptors.request.use(
     config.headers['Ip'] = ip;
 
     // Detect client browser and OS
-    const browser = Bowser.getParser(window.navigator.userAgent);
-    const client = browser.getBrowserName();
-    const os = browser.getOSName();
-    config.headers['Client'] = client;
-    config.headers['OS'] = os;
+    // const browser = Bowser.getParser(window.navigator.userAgent);
+    // const client = browser.getBrowserName();
+    // const os = browser.getOSName();
+    // config.headers['Client'] = client;
+    // config.headers['OS'] = os;
 
     return config;
   },

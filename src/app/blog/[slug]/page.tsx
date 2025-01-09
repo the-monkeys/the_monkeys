@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useParams } from 'next/navigation';
 
 import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import Container from '@/components/layout/Container';
@@ -13,36 +14,30 @@ import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCard } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 
-import { BlogReactionsContainer } from './components/blog/BlogReactions';
-import { BlogRecommendations } from './components/blog/BlogRecommendations';
-import { BlogTopics } from './components/blog/BlogTopics';
+import { BlogReactionsContainer } from '../components/BlogReactions';
+import { BlogRecommendations } from '../components/BlogRecommendations';
+import { BlogTopics } from '../components/BlogTopics';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
   loading: () => <EditorBlockSkeleton />,
 });
 
-const BlogPage = ({
-  searchParams,
-}: {
-  searchParams: {
-    id: string;
-  };
-}) => {
-  const { blog, isError, isLoading } = useGetPublishedBlogDetailByBlogId(
-    searchParams.id
-  );
+const BlogPage = () => {
+  const params = useParams();
 
-  const blogId = blog?.blog_id;
-  const authorId = blog?.owner_account_id;
-  const date = blog?.published_time || blog?.blog?.time;
-  const tags = blog?.tags;
+  // Assuming your route is `/blog/[slug]`, `params.slug` will contain the full slug.
+  const fullSlug = params?.slug || '';
+  const blogId = typeof fullSlug === 'string' ? fullSlug.split('-').pop() : ''; // Extract the blog ID from the slug
+
+  const { blog, isError, isLoading } =
+    useGetPublishedBlogDetailByBlogId(blogId);
 
   if (isLoading) {
     return <PublishedBlogSkeleton />;
   }
 
-  if (isError)
+  if (isError || !blog) {
     return (
       <Container className='min-h-screen'>
         <p className='py-4 text-sm text-alert-red text-center'>
@@ -50,14 +45,20 @@ const BlogPage = ({
         </p>
       </Container>
     );
+  }
+
+  const blogIdfromAPI = blog?.blog_id;
+  const authorId = blog?.owner_account_id;
+  const date = blog?.published_time || blog?.blog?.time;
+  const tags = blog?.tags;
 
   return (
-    <Container className='px-4 py-5 grid grid-cols-3 gap-6 lg:gap-8'>
+    <>
       <div className='relative col-span-3 lg:col-span-2'>
         <div className='mb-2 flex justify-between items-center'>
           <UserInfoCard id={authorId} date={date} />
 
-          <BlogActionsDropdown blogId={blogId} />
+          <BlogActionsDropdown blogURL={fullSlug} />
         </div>
 
         <Separator className='mt-4' />
@@ -66,7 +67,7 @@ const BlogPage = ({
           <Editor key={blogId} data={blog?.blog} />
         </div>
 
-        <BlogReactionsContainer blogId={blogId} />
+        <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />
       </div>
 
       <div className='col-span-3 lg:col-span-1 space-y-6'>
@@ -80,7 +81,7 @@ const BlogPage = ({
 
         <BlogRecommendations />
       </div>
-    </Container>
+    </>
   );
 };
 

@@ -5,11 +5,11 @@ import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { CREATE_ROUTE } from '@/constants/routeConstants';
 import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
 export const BlogRecommendations = () => {
   const { blogs, isLoading, isError } = useGetLatest100Blogs();
-
   if (isLoading)
     return (
       <div className='pb-6 bg-foreground-light/50 dark:bg-foreground-dark/50 rounded-lg'>
@@ -45,7 +45,7 @@ export const BlogRecommendations = () => {
             </p>
 
             <Button size='sm' className='rounded-full ' asChild>
-              <Link href='/create'>
+              <Link href={`${CREATE_ROUTE}`}>
                 <Icon name='RiPencil' className='mr-1' />
                 Write Your Own
               </Link>

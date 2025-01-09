@@ -8,6 +8,7 @@ import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import Icon from '@/components/icon';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { Button } from '@/components/ui/button';
+import { CREATE_ROUTE } from '@/constants/routeConstants';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
 import { GetBlogsByTopics } from '@/services/blog/blogTypes';
@@ -73,7 +74,7 @@ export const BlogsByTopic = ({ topic }: { topic: string }) => {
             className='rounded-full'
             asChild
           >
-            <Link href='/create'>
+            <Link href={`${CREATE_ROUTE}`}>
               <Icon name='RiPencil' className='mr-1' />
               Write Your Own
             </Link>
