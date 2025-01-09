@@ -10,7 +10,6 @@ import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
 export const BlogRecommendations = () => {
   const { blogs, isLoading, isError } = useGetLatest100Blogs();
-
   if (isLoading)
     return (
       <div className='pb-6 bg-foreground-light/50 dark:bg-foreground-dark/50 rounded-lg'>

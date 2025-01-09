@@ -4,3 +4,4 @@ export const FEED_ROUTE = '/feed';
 export const ACTIVITY_ROUTE = '/activity';
 export const LIBRARY_ROUTE = '/library';
 export const BLOG_ROUTE = '/blog';
+export const EXPLORE_TOPICS_ROUTE = '/topics/explore';
