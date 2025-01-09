@@ -5,7 +5,6 @@ import { UserInfoCard } from '@/components/user/userInfo';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
-import { LikesCount } from '../LikesCount';
 import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
 import { BookmarkButton } from '../buttons/BookmarkButton';
 import { getCardContent } from '../getBlogContent';

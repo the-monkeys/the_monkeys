@@ -11,7 +11,7 @@ export const useIsPostBookmarked = (blogId: string | undefined) => {
     authFetcher,
     {
       revalidateIfStale: false,
-      refreshInterval: 0,
+      refreshInterval: 2000,
     }
   );
 
@@ -29,7 +29,7 @@ export const useGetBookmarksCount = (blogId: string | undefined) => {
     {
       revalidateOnFocus: false,
       revalidateIfStale: false,
-      refreshInterval: 0,
+      refreshInterval: 2000,
     }
   );
 

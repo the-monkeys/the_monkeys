@@ -1,4 +1,3 @@
-import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import Container from '@/components/layout/Container';
 import { SearchInput } from '@/components/search/SearchInput';
 
@@ -8,16 +7,12 @@ const BlogFeedPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='grid grid-cols-3 gap-6 lg:gap-8 px-4 py-5 pb-12'>
-      <div className='min-h-screen col-span-3 lg:col-span-2 order-2 lg:order-1'>
-        {children}
+    <Container className='gap-6 lg:gap-8 p-4 pb-12 space-y-6'>
+      <div>
+        <SearchInput className='flex-1 mx-auto w-full sm:max-w-[500px]' />
       </div>
 
-      <div className='mx-auto max-w-3xl w-full h-fit col-span-3 lg:col-span-1 order-1 lg:order-2'>
-        <ContributeAndSponsorCard className='mb-4' />
-
-        <SearchInput />
-      </div>
+      <div className='min-h-screen'>{children}</div>
     </Container>
   );
 };

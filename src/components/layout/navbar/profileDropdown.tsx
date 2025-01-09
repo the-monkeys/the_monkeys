@@ -13,7 +13,7 @@ import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
 import { signOut, useSession } from 'next-auth/react';
 
 const ProfileDropdown = () => {
-  const { status, data } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   return (
@@ -49,7 +49,7 @@ const ProfileDropdown = () => {
         <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44 space-y-1'>
           <DropdownMenuItem asChild>
             <Link
-              href={`/${data?.user?.username}`}
+              href={`/${session?.user?.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiUser' size={18} />
@@ -76,7 +76,7 @@ const ProfileDropdown = () => {
 
           <DropdownMenuItem asChild>
             <Link
-              href={`${ACTIVITY_ROUTE}?user=${data?.user?.username}`}
+              href={`${ACTIVITY_ROUTE}?user=${session?.user?.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiHistory' size={18} />
