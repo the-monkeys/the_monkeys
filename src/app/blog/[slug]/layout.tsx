@@ -30,7 +30,6 @@ export async function generateMetadata(
   const imageBlock = blocks.find((block) => block.type === 'image');
   const imageUrl = imageBlock?.data?.file?.url;
   const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
-  console.log(imageUrl, 'imageBlock');
 
   // Extend parent metadata if available
   const parentMetadata = await parent;
