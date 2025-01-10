@@ -1,4 +1,4 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
@@ -8,10 +8,7 @@ type Props = {
   params: { slug: string }; // Fixed the type to remove unnecessary `Promise`
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.slug; // Extract slug directly
 
   // Fetch blog data
@@ -30,11 +27,10 @@ export async function generateMetadata(
   const imageBlock = blocks.find((block) => block.type === 'image');
   const imageUrl = imageBlock?.data?.file?.url;
   const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
-  console.log(imageUrl, 'imageBlock');
 
   // Extend parent metadata if available
-  const parentMetadata = await parent;
-  const previousImages = parentMetadata?.openGraph?.images || [];
+  // const parentMetadata = await parent;
+  // const previousImages = parentMetadata?.openGraph?.images || [];
 
   return {
     title: blocks[0]?.data?.text || 'Monkeys Blog',
@@ -42,8 +38,13 @@ export async function generateMetadata(
     openGraph: {
       title: blocks[0]?.data?.text || 'Monkeys Blog',
       description: descriptionBlock?.data?.text || 'No description available.',
-      images: imageUrl ? [imageUrl, ...previousImages] : previousImages,
-      //   url: `https://yourdomain.com/blog/${id}`,
+      images: imageUrl,
+    },
+    twitter: {
+      title: blocks[0]?.data?.text || 'Monkeys Blog',
+      card: 'summary_large_image',
+      description: descriptionBlock?.data?.text || 'No description available.',
+      images: imageUrl,
     },
   };
 }

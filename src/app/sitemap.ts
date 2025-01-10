@@ -55,9 +55,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .replace(/^-+|-+$/g, ''); // Trim leading and trailing hyphens
 
     return {
-      url: `${baseUrl}/blog/${slug || 'untitled'}`, // Fallback to 'untitled' if slug is empty
+      url: `${baseUrl}/blog/${slug || 'untitled'}-${post?.blog_id}`, // Fallback to 'untitled' if slug is empty
       changeFrequency: 'daily', // Updated for regular additions
-      priority: 0.8,
+      priority: 1,
     };
   });
 
