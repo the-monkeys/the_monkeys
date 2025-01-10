@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { CREATE_ROUTE } from '@/constants/routeConstants';
 import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
-export const BlogRecommendations = () => {
+export const BlogRecommendations = ({ blogId }: { blogId: string }) => {
   const { blogs, isLoading, isError } = useGetLatest100Blogs();
   if (isLoading)
     return (
@@ -33,11 +33,14 @@ export const BlogRecommendations = () => {
 
       <div className='flex flex-col gap-6'>
         {blogs?.blogs.length ? (
-          blogs?.blogs.slice(0, 5).map((blog) => {
-            return blog?.blog?.blocks.length < 5 ? null : (
-              <BlogRecommendationCard key={blog?.blog_id} blog={blog} />
-            );
-          })
+          blogs?.blogs
+            .filter((blog) => blog?.blog_id !== blogId)
+            .slice(0, 5)
+            .map((blog) => {
+              return blog?.blog?.blocks.length < 5 ? null : (
+                <BlogRecommendationCard key={blog?.blog_id} blog={blog} />
+              );
+            })
         ) : (
           <div className='py-2 flex flex-col items-center gap-4'>
             <p className='text-sm opacity-80 text-center'>
