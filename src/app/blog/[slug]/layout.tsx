@@ -42,7 +42,7 @@ export async function generateMetadata(
     openGraph: {
       title: blocks[0]?.data?.text || 'Monkeys Blog',
       description: descriptionBlock?.data?.text || 'No description available.',
-      images: imageUrl ? [imageUrl, ...previousImages] : previousImages,
+      images: imageUrl,
     },
     twitter: {
       title: blocks[0]?.data?.text || 'Monkeys Blog',
