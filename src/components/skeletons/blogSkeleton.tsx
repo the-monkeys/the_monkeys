@@ -18,7 +18,7 @@ export const PublishedBlogSkeleton = () => {
       <div className='col-span-3 lg:col-span-2'>
         <UserInfoCardSkeleton />
 
-        <Separator className='mt-4 mb-8' />
+        <Separator className='mt-2 mb-8' />
 
         <EditorBlockSkeleton />
       </div>

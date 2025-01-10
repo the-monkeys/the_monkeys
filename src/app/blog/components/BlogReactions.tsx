@@ -2,13 +2,12 @@ import { LikesCount } from '@/components/blog/LikesCount';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
-import { Separator } from '@/components/ui/separator';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
-import SocialMediaSharePopup from './SocialMediaSharePopup';
+import { BlogShareDialog } from './BlogShareDialog';
 
 export const BlogReactions = ({
   className,
@@ -27,7 +26,7 @@ export const BlogReactions = ({
 
   return (
     <div
-      className={twMerge(className, 'flex justify-between items-center gap-8')}
+      className={twMerge(className, 'flex justify-between items-center gap-10')}
     >
       <div className='flex items-center'>
         <LikeButton blogId={blogId} size={20} />
@@ -35,14 +34,16 @@ export const BlogReactions = ({
         {status === 'authenticated' && <LikesCount blogId={blogId} />}
       </div>
 
-      <div className='flex items-center gap-1'>
+      <div className='flex items-center gap-[2px]'>
         <CommentButton size={20} isDisable={true} />
-        <div className='size-[4px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
+
+        <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
 
         <BookmarkButton blogId={blogId} size={20} />
-        <div className='size-[4px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
 
-        <SocialMediaSharePopup blogURL={blogUrl} />
+        <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
+
+        <BlogShareDialog blogURL={blogUrl} />
       </div>
     </div>
   );
@@ -56,7 +57,7 @@ export const BlogReactionsContainer = ({
   blogURL: string | string[];
 }) => {
   return (
-    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-fit px-8 py-[10px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light border-1 border-border-light dark:border-border-dark shadow-md z-20 rounded-full'>
+    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-fit px-6 py-[10px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light shadow-md z-20 rounded-full'>
       <BlogReactions blogURL={blogURL} blogId={blogId} />
     </div>
   );

@@ -39,11 +39,11 @@ const BlogPage = () => {
 
   if (isError || !blog) {
     return (
-      <Container className='min-h-screen'>
+      <div className='col-span-3 min-h-screen'>
         <p className='py-4 text-sm text-alert-red text-center'>
           Error fetching blog content. Try again.
         </p>
-      </Container>
+      </div>
     );
   }
 
@@ -58,10 +58,10 @@ const BlogPage = () => {
         <div className='mb-2 flex justify-between items-center'>
           <UserInfoCard id={authorId} date={date} />
 
-          <BlogActionsDropdown blogURL={fullSlug} />
+          {/* <BlogActionsDropdown blogURL={fullSlug} /> */}
         </div>
 
-        <Separator className='mt-4' />
+        <Separator className='mt-2' />
 
         <div className='pb-10 min-h-screen overflow-hidden'>
           <Editor key={blogId} data={blog?.blog} />
