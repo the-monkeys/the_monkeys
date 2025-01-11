@@ -118,7 +118,7 @@ const BlogPage = () => {
           <ProfileInfoCard userId={authorId} className='max-w-[500px]' />
         </div>
 
-        <BlogRecommendations />
+        <BlogRecommendations blogId={blogIdfromAPI} />
       </div>
     </>
   );
