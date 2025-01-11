@@ -3,10 +3,10 @@ import type { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 
 export const metadata: Metadata = {
-  title: 'Creating Blog',
+  title: 'Editing Blog',
 };
 
-const CreatePageLayout = ({
+const EditPageLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -18,4 +18,4 @@ const CreatePageLayout = ({
   );
 };
 
-export default CreatePageLayout;
+export default EditPageLayout;
