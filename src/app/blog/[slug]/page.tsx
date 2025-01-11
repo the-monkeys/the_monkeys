@@ -25,7 +25,7 @@ const Editor = dynamic(() => import('@/components/editor/preview'), {
 const BlogPage = () => {
   const params = useParams();
 
-  // Assuming your route is `/blog/[slug]`, `params.slug` will contain the full slug.
+  // Assuming route is `/blog/[slug]`, `params.slug` will contain the full slug.
   const fullSlug = params?.slug || '';
   const blogId = typeof fullSlug === 'string' ? fullSlug.split('-').pop() : ''; // Extract the blog ID from the slug
 
@@ -57,20 +57,50 @@ const BlogPage = () => {
     blocks: blog?.blog.blocks.slice(1),
   };
 
+  const tagColorCode = ['#5A9BD5', '#70AD47', '#FF5733', '#4472C4', '#8E44AD'];
+
   return (
     <>
       <div className='relative col-span-3 lg:col-span-2'>
-        <h2 className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.4]'>
-          {blogTitle}
-        </h2>
+        <div className='space-y-[6px]'>
+          <div className='flex justify-between items-center'>
+            <UserInfoCard id={authorId} date={date} />
 
-        <div className='mt-4 py-2 flex justify-between items-center'>
-          <UserInfoCard id={authorId} date={date} />
-
-          {/* <BlogActionsDropdown blogURL={fullSlug} /> */}
+            {/* <BlogActionsDropdown blogURL={fullSlug} /> */}
+          </div>
         </div>
 
-        <Separator />
+        <Separator className='mt-2 mb-4 opacity-80' />
+
+        <div>
+          <h1 className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.3]'>
+            {blogTitle}
+          </h1>
+
+          <div className='mt-2 relative flex gap-1 flex-wrap'>
+            {blog?.tags.map((tag, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: tagColorCode[index] + '25',
+                    borderColor: tagColorCode[index],
+                  }}
+                  className='px-2 py-[1px] border-1 rounded-full'
+                >
+                  <p
+                    style={{
+                      color: tagColorCode[index],
+                    }}
+                    className='font-dm_sans text-xs whitespace-nowrap'
+                  >
+                    {tag}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
         <div className='pb-10 min-h-screen overflow-hidden'>
           <Editor key={blogId} data={blogDataWithoutHeading} />

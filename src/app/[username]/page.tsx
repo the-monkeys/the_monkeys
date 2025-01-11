@@ -26,11 +26,11 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
 
         <div className='w-full'>
           <TabsContent className='w-full' value='blogs'>
-            <Blogs />
+            <Blogs username={params.username} />
           </TabsContent>
 
           <TabsContent className='w-full' value='drafts'>
-            <Drafts />
+            <Drafts username={params.username} />
           </TabsContent>
         </div>
       </Tabs>

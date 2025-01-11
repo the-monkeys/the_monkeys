@@ -3,19 +3,17 @@
 import React from 'react';
 
 import Link from 'next/link';
-import { notFound, useParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
-import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import {
   GITHUB_URL,
   INSTAGRAM_URL,
   LINKEDIN_URL,
   X_URL,
 } from '@/constants/social';
-import useUser from '@/hooks/user/useUser';
 import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
+import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import moment from 'moment';
 
 import { ConnectionsDialog } from '../dialogs/ConnectionsDialog';
@@ -23,22 +21,13 @@ import { UpdateUsernameDialog } from '../dialogs/UpdateUsernameDialog';
 
 export const ProfileCard = ({
   isAuthenticated,
+  user,
 }: {
   isAuthenticated: boolean;
+  user?: GetPublicUserProfileApiResponse;
 }) => {
-  const params = useParams<{ username: string }>();
-
-  const { user, isLoading, isError } = useUser(params.username);
   const { connections, connectionsLoading, connectionsError } =
-    useGetConnectionCount(params.username);
-
-  if (isError) {
-    notFound();
-  }
-
-  if (isLoading) {
-    return <ProfileCardSkeleton />;
-  }
+    useGetConnectionCount(user?.username);
 
   const joinedDate = user?.created_at
     ? moment.unix(user?.created_at.seconds).format('MMM, YYYY')

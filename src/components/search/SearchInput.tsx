@@ -55,7 +55,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
           placeholder={
             status === 'authenticated'
               ? 'Search for authors'
-              : 'You are not logged in'
+              : 'Login to search'
           }
           className='px-1 rounded-none focus-visible:shadow-none'
           onChange={handleInputChange}
