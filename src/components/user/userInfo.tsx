@@ -72,7 +72,7 @@ export const UserInfoCard = ({
   return (
     <div className='w-full flex items-center gap-2'>
       <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-10'>
+        <ProfileFrame className='size-[35px]'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
       </Link>

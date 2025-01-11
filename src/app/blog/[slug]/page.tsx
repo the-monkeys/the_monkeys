@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
 import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
-import Container from '@/components/layout/Container';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
@@ -52,19 +51,29 @@ const BlogPage = () => {
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
+  const blogTitle = blog?.blog.blocks[0].data.text;
+  const blogDataWithoutHeading = {
+    ...blog.blog,
+    blocks: blog?.blog.blocks.slice(1),
+  };
+
   return (
     <>
       <div className='relative col-span-3 lg:col-span-2'>
-        <div className='mb-2 flex justify-between items-center'>
+        <h2 className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.4]'>
+          {blogTitle}
+        </h2>
+
+        <div className='mt-4 py-2 flex justify-between items-center'>
           <UserInfoCard id={authorId} date={date} />
 
           {/* <BlogActionsDropdown blogURL={fullSlug} /> */}
         </div>
 
-        <Separator className='mt-2' />
+        <Separator />
 
         <div className='pb-10 min-h-screen overflow-hidden'>
-          <Editor key={blogId} data={blog?.blog} />
+          <Editor key={blogId} data={blogDataWithoutHeading} />
         </div>
 
         <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />

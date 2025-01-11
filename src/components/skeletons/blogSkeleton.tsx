@@ -16,9 +16,14 @@ export const PublishedBlogSkeleton = () => {
   return (
     <>
       <div className='col-span-3 lg:col-span-2'>
+        <div className='mb-6 space-y-1'>
+          <Skeleton className='w-full h-8' />
+          <Skeleton className='w-1/2 h-8' />
+        </div>
+
         <UserInfoCardSkeleton />
 
-        <Separator className='mt-2 mb-8' />
+        <Separator className='mt-2 mb-6' />
 
         <EditorBlockSkeleton />
       </div>

@@ -53,7 +53,7 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({ blogURL }) => {
           <DialogDescription></DialogDescription>
         </DialogHeader>
 
-        <div className='pb-3 flex items-center justify-center gap-4 flex-wrap'>
+        <div className='pb-3 flex items-center justify-evenly gap-4 flex-wrap'>
           <BlogShareButtonContainer label='Facebook'>
             <BlogShareButton type='Facebook' blogURL={blogURL} />
           </BlogShareButtonContainer>
@@ -78,6 +78,7 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({ blogURL }) => {
 
           <Button
             variant='secondary'
+            size='sm'
             className='rounded-full'
             onClick={copyToClipboard}
           >
