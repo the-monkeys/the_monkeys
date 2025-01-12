@@ -57,12 +57,9 @@ export const getCardContent = ({
     if (!imageDiv && block.type === 'image') {
       imageContent = block?.data?.file?.url || '';
       imageDiv = (
-        <Image
+        <img
           src={imageContent}
-          alt={titleContent}
-          height={500}
-          width={500}
-          quality={80}
+          alt='Blog Image'
           loading='lazy'
           className='h-full w-full object-cover'
         />
@@ -88,7 +85,6 @@ export const getCardContent = ({
     titleDiv,
     recommendationTitleDiv,
     descriptionDiv,
-
     imageDiv,
   };
 };
