@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
@@ -55,9 +57,11 @@ export const getCardContent = ({
     if (!imageDiv && block.type === 'image') {
       imageContent = block?.data?.file?.url || '';
       imageDiv = (
-        <img
+        <Image
           src={imageContent}
-          alt='Blog Image'
+          alt={titleContent}
+          height={200}
+          width={200}
           loading='lazy'
           className='h-full w-full object-cover'
         />
