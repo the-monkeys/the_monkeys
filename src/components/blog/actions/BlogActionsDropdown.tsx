@@ -7,9 +7,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export const BlogActionsDropdown = ({
-  blogURL,
+  blogId,
+  size = 18,
 }: {
-  blogURL?: string | string[];
+  blogId: string;
+  size?: number;
 }) => {
   return (
     <DropdownMenu>
@@ -25,7 +27,11 @@ export const BlogActionsDropdown = ({
             className='flex w-full items-center gap-2 opacity-80 cursor-not-allowed'
             disabled
           >
-            <Icon name='RiErrorWarning' size={18} className='text-alert-red' />
+            <Icon
+              name='RiErrorWarning'
+              size={size}
+              className='text-alert-red'
+            />
             <p className='font-dm_sans text-sm sm:text-base text-alert-red'>
               Report Blog
             </p>

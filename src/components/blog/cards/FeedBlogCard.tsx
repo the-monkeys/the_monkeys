@@ -2,20 +2,14 @@ import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { UserInfoCard } from '@/components/user/userInfo';
+import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
-import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
-import { BookmarkButton } from '../buttons/BookmarkButton';
+import { BlogShareDialog } from '../actions/BlogShareDialog';
 import { getCardContent } from '../getBlogContent';
 
-export const FeedBlogCard = ({
-  blog,
-  status,
-}: {
-  blog: Blog;
-  status: 'authenticated' | 'loading' | 'unauthenticated';
-}) => {
+export const FeedBlogCard = ({ blog }: { blog: Blog }) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time || blog?.blog?.time;
@@ -23,6 +17,7 @@ export const FeedBlogCard = ({
   const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
   const blogTitle = blog?.blog?.blocks[0]?.data?.text;
   const blogSlug = generateSlug(blogTitle);
+
   return (
     <div className='w-full px-0 lg:px-6'>
       <div className='space-y-3'>
@@ -59,9 +54,9 @@ export const FeedBlogCard = ({
         </div>
 
         <div className='flex items-center gap-1'>
-          {status === 'authenticated' && <BookmarkButton blogId={blogId} />}
-
-          <BlogActionsDropdown blogURL={blogSlug} />
+          <BlogShareDialog
+            blogURL={`${LIVE_URL}${BLOG_ROUTE}/${blogSlug}-${blogId}`}
+          />
         </div>
       </div>
     </div>

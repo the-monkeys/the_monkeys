@@ -1,7 +1,6 @@
 import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
-import { Badge } from '@/components/ui/badge';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';

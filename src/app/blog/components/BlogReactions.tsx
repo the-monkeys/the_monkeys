@@ -1,4 +1,5 @@
 import { LikesCount } from '@/components/blog/LikesCount';
+import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
@@ -6,8 +7,6 @@ import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
-
-import { BlogShareDialog } from './BlogShareDialog';
 
 export const BlogReactions = ({
   className,
@@ -26,7 +25,10 @@ export const BlogReactions = ({
 
   return (
     <div
-      className={twMerge(className, 'flex justify-between items-center gap-10')}
+      className={twMerge(
+        className,
+        'flex justify-between items-center gap-[80px]'
+      )}
     >
       <div className='flex items-center'>
         <LikeButton blogId={blogId} size={20} />
@@ -35,15 +37,15 @@ export const BlogReactions = ({
       </div>
 
       <div className='flex items-center gap-[2px]'>
-        <CommentButton size={20} isDisable={true} />
+        {/* <CommentButton size={20} isDisable={true} />
 
-        <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
+        <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' /> */}
 
         <BookmarkButton blogId={blogId} size={20} />
 
         <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
 
-        <BlogShareDialog blogURL={blogUrl} />
+        <BlogShareDialog blogURL={blogUrl} size={20} />
       </div>
     </div>
   );
@@ -57,7 +59,7 @@ export const BlogReactionsContainer = ({
   blogURL: string | string[];
 }) => {
   return (
-    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-fit px-6 py-[10px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light shadow-md z-20 rounded-full'>
+    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-fit px-6 py-[8px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light shadow-md z-20 rounded-full'>
       <BlogReactions blogURL={blogURL} blogId={blogId} />
     </div>
   );

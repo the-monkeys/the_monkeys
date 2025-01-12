@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
-import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
@@ -65,8 +64,6 @@ const BlogPage = () => {
         <div className='space-y-[6px]'>
           <div className='flex justify-between items-center'>
             <UserInfoCard id={authorId} date={date} />
-
-            {/* <BlogActionsDropdown blogURL={fullSlug} /> */}
           </div>
         </div>
 

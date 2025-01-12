@@ -6,13 +6,13 @@ import { useRouter } from 'next/navigation';
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import Icon from '@/components/icon';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
+import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
-import { BlogActionsDropdown } from '../actions/BlogActionsDropdown';
+import { BlogShareDialog } from '../actions/BlogShareDialog';
 import { DeleteBlogDialog } from '../actions/DeleteBlogDialog';
 import { EditBlogDialog } from '../actions/EditBlogDialog';
-import { BookmarkButton } from '../buttons/BookmarkButton';
 import { getCardContent } from '../getBlogContent';
 
 interface BlogCardProps {
@@ -116,9 +116,11 @@ export const BlogCard: FC<BlogCardProps> = ({
             <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
           )}
 
-          {!isDraft && <BookmarkButton blogId={blogId} />}
-
-          {!isDraft && <BlogActionsDropdown blogURL={blogSlug} />}
+          {!isDraft && (
+            <BlogShareDialog
+              blogURL={`${LIVE_URL}${BLOG_ROUTE}/${blogSlug}-${blogId}`}
+            />
+          )}
         </div>
       </div>
     </div>

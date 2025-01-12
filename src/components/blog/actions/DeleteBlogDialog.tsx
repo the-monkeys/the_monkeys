@@ -20,9 +20,11 @@ import { mutate } from 'swr';
 export const DeleteBlogDialog = ({
   blogId,
   isDraft,
+  size = 18,
 }: {
   blogId: string;
   isDraft?: boolean;
+  size?: number;
 }) => {
   const { data: session } = useSession();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -80,7 +82,7 @@ export const DeleteBlogDialog = ({
           className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
           title='Delete Blog'
         >
-          <Icon name='RiDeleteBin6' size={18} className='text-alert-red' />
+          <Icon name='RiDeleteBin6' size={size} className='text-alert-red' />
         </button>
       </DialogTrigger>
 
