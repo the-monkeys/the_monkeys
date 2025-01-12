@@ -10,13 +10,16 @@ export async function generateMetadata({
 }: {
   searchParams: { source: string };
 }): Promise<Metadata> {
-  const title = searchParams.source === 'following' ? 'Following' : null;
+  const title = 'Latest Blog Feed';
   const description =
     'Stay in the loop with the latest blogs and news on business, sports, politics, technology from around the world on Monkeys.';
 
   return {
     title: title,
     description: description,
+    alternates: {
+      canonical: '/feed',
+    },
   };
 }
 
