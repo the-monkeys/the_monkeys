@@ -38,8 +38,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/${FEED_ROUTE}`,
-      changeFrequency: 'monthly',
+      url: `${baseUrl}${FEED_ROUTE}`,
+      changeFrequency: 'weekly',
       priority: 1,
     },
   ];
