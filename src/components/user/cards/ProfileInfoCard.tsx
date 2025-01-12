@@ -47,24 +47,26 @@ export const ProfileInfoCard = ({
         </div>
       </div>
 
-      <div className='mt-[20px] px-4'>
-        <div className='mb-2 flex items-center gap-3'>
-          <p>
-            {user?.followers ? user.followers : '-'}{' '}
-            <span className='text-sm opacity-80'>Followers</span>
-          </p>
-
-          <p>
-            {user?.followers ? user.following : '-'}{' '}
-            <span className='text-sm opacity-80'>Following</span>
-          </p>
-        </div>
-
+      <div className='mt-[20px] px-4 space-y-2'>
         {userData?.bio && (
-          <p className='py-2 text-sm leading-tight break-words'>
-            {userData.bio}
-          </p>
+          <p className='py-1 leading-tight break-words'>{userData.bio}</p>
         )}
+
+        <div className='flex items-center gap-2'>
+          <div className='flex gap-1'>
+            <p className='text-sm font-medium'>
+              {user?.followers ? user.followers : '0'}
+            </p>
+            <p className='text-sm opacity-80'>Followers</p>
+          </div>
+
+          <div className='flex gap-1'>
+            <p className='text-sm font-medium'>
+              {user?.followers ? user.following : '0'}
+            </p>
+            <p className='text-sm opacity-80'>Following</p>
+          </div>
+        </div>
 
         {userData?.location && (
           <div className='flex items-center gap-1'>

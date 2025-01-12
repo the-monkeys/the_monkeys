@@ -50,7 +50,7 @@ export const ConnectionsDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className='text-sm opacity-80 hover:opacity-100 hover:underline capitalize'>
+        <button className='opacity-80 hover:opacity-100 hover:underline capitalize'>
           {label}
         </button>
       </DialogTrigger>
