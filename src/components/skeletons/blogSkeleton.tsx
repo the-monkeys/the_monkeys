@@ -1,4 +1,3 @@
-import Container from '../layout/Container';
 import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
 import {
@@ -14,11 +13,11 @@ export const EditorBlockSkeleton = () => {
 
 export const PublishedBlogSkeleton = () => {
   return (
-    <Container className='pb-12 w-screen  min-h-screen grid grid-cols-3 gap-4'>
-      <div className='p-4 col-span-3 lg:col-span-2'>
+    <>
+      <div className='col-span-3 lg:col-span-2'>
         <UserInfoCardSkeleton />
 
-        <Separator className='mt-4 mb-8' />
+        <Separator className='mt-2 mb-6' />
 
         <EditorBlockSkeleton />
       </div>
@@ -26,7 +25,7 @@ export const PublishedBlogSkeleton = () => {
       <div className='hidden lg:block px-4 col-span-3 lg:col-span-1 space-y-4'>
         <div className='h-64 w-full bg-gradient-to-b from-foreground-light dark:from-foreground-dark from-[20%] rounded-t-md animate-opacity-pulse' />
       </div>
-    </Container>
+    </>
   );
 };
 

@@ -43,14 +43,23 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
         <div className='relative flex gap-2 overflow-hidden'>
           {blog?.tags.map((tag, index) => {
             return (
-              <p
+              <div
                 key={index}
-                style={{ color: tagColorCode[index] }}
-                className='text-sm whitespace-nowrap opacity-80'
+                style={{
+                  backgroundColor: tagColorCode[index] + '25',
+                  borderColor: tagColorCode[index],
+                }}
+                className='px-2 py-[1px] border-1 rounded-full'
               >
-                <span>#</span>
-                {tag}
-              </p>
+                <p
+                  style={{
+                    color: tagColorCode[index],
+                  }}
+                  className='font-dm_sans text-xs whitespace-nowrap'
+                >
+                  {tag}
+                </p>
+              </div>
             );
           })}
 

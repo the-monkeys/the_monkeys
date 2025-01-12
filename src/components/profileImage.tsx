@@ -5,8 +5,17 @@ import Image from 'next/image';
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import { twMerge } from 'tailwind-merge';
 
-import Icon from './icon';
-import { Skeleton } from './ui/skeleton';
+export const DefaultProfile = () => {
+  return (
+    <Image
+      src='/default-profile.svg'
+      alt='User not found'
+      height={100}
+      width={100}
+      className='w-full h-full object-cover'
+    />
+  );
+};
 
 export const ProfileFrame = ({
   className,

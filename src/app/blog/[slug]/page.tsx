@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
 import { BlogActionsDropdown } from '@/components/blog/actions/BlogActionsDropdown';
-import Container from '@/components/layout/Container';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
@@ -26,7 +25,7 @@ const Editor = dynamic(() => import('@/components/editor/preview'), {
 const BlogPage = () => {
   const params = useParams();
 
-  // Assuming your route is `/blog/[slug]`, `params.slug` will contain the full slug.
+  // Assuming route is `/blog/[slug]`, `params.slug` will contain the full slug.
   const fullSlug = params?.slug || '';
   const blogId = typeof fullSlug === 'string' ? fullSlug.split('-').pop() : ''; // Extract the blog ID from the slug
 
@@ -39,11 +38,11 @@ const BlogPage = () => {
 
   if (isError || !blog) {
     return (
-      <Container className='min-h-screen'>
+      <div className='col-span-3 min-h-screen'>
         <p className='py-4 text-sm text-alert-red text-center'>
           Error fetching blog content. Try again.
         </p>
-      </Container>
+      </div>
     );
   }
 
@@ -52,19 +51,59 @@ const BlogPage = () => {
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
+  const blogTitle = blog?.blog.blocks[0].data.text;
+  const blogDataWithoutHeading = {
+    ...blog.blog,
+    blocks: blog?.blog.blocks.slice(1),
+  };
+
+  const tagColorCode = ['#5A9BD5', '#70AD47', '#FF5733', '#4472C4', '#8E44AD'];
+
   return (
     <>
       <div className='relative col-span-3 lg:col-span-2'>
-        <div className='mb-2 flex justify-between items-center'>
-          <UserInfoCard id={authorId} date={date} />
+        <div className='space-y-[6px]'>
+          <div className='flex justify-between items-center'>
+            <UserInfoCard id={authorId} date={date} />
 
-          <BlogActionsDropdown blogURL={fullSlug} />
+            {/* <BlogActionsDropdown blogURL={fullSlug} /> */}
+          </div>
         </div>
 
-        <Separator className='mt-4' />
+        <Separator className='mt-2 mb-4 opacity-80' />
+
+        <div>
+          <h1 className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.3]'>
+            {blogTitle}
+          </h1>
+
+          <div className='mt-2 relative flex gap-1 flex-wrap'>
+            {blog?.tags.map((tag, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: tagColorCode[index] + '25',
+                    borderColor: tagColorCode[index],
+                  }}
+                  className='px-2 py-[1px] border-1 rounded-full'
+                >
+                  <p
+                    style={{
+                      color: tagColorCode[index],
+                    }}
+                    className='font-dm_sans text-xs whitespace-nowrap'
+                  >
+                    {tag}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
         <div className='pb-10 min-h-screen overflow-hidden'>
-          <Editor key={blogId} data={blog?.blog} />
+          <Editor key={blogId} data={blogDataWithoutHeading} />
         </div>
 
         <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />

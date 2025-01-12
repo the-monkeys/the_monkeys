@@ -1,15 +1,12 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 import { useSession } from 'next-auth/react';
 
-export const Drafts = () => {
+export const Drafts = ({ username }: { username: string }) => {
   const { data: session, status } = useSession();
-  const params = useParams<{ username: string }>();
   const { blogs, isLoading, isError } = useGetAllDraftBlogs();
 
   if (isError)
@@ -38,7 +35,7 @@ export const Drafts = () => {
                 key={blog?.blog_id}
                 blog={blog}
                 status={status}
-                modificationEnable={session?.user.username === params.username}
+                modificationEnable={session?.user.username === username}
               />
             );
           })
