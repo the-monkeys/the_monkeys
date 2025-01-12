@@ -25,16 +25,16 @@ export const BookmarkButton = ({
 
   if (isLoading) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
-        <Icon name='RiBookmark' type='Fill' size={size} />
+      <div className='p-1 flex items-center justify-center opacity-50 cursor-default'>
+        <Icon name='RiBookmark' size={size} />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
-        <Icon name='RiBookmark' type='Fill' size={size} />
+      <div className='p-1 flex items-center justify-center text-alert-red opacity-50 cursor-default'>
+        <Icon name='RiBookmark' size={size} />
       </div>
     );
   }
@@ -138,20 +138,20 @@ export const BookmarkButton = ({
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
             loading || isDisable
-              ? 'cursor-not-allowed opacity-80'
+              ? 'cursor-default opacity-80'
               : 'cursor-pointer'
           }`}
           onClick={onPostRemoveBookmark}
           disabled={loading || isDisable}
           title='Remove Bookmark'
         >
-          <Icon name='RiBookmark2' type='Fill' size={size} />
+          <Icon name='RiBookmark' type='Fill' size={size} />
         </button>
       ) : (
         <button
           className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
             loading || isDisable
-              ? 'cursor-not-allowed opacity-80'
+              ? 'cursor-default opacity-80'
               : 'cursor-pointer'
           }`}
           onClick={onPostBookmark}

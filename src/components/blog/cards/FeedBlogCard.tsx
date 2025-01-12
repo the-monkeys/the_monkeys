@@ -6,6 +6,7 @@ import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
+import { ReactionsInfo } from '../ReactionsInfo';
 import { BlogShareDialog } from '../actions/BlogShareDialog';
 import { getCardContent } from '../getBlogContent';
 
@@ -17,6 +18,9 @@ export const FeedBlogCard = ({ blog }: { blog: Blog }) => {
   const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
   const blogTitle = blog?.blog?.blocks[0]?.data?.text;
   const blogSlug = generateSlug(blogTitle);
+
+  const likesCount = blog?.LikeCount || blog?.like_count;
+  const bookmarksCount = blog?.BookmarkCount || blog?.bookmark_count;
 
   return (
     <div className='w-full px-0 lg:px-6'>
@@ -43,15 +47,10 @@ export const FeedBlogCard = ({ blog }: { blog: Blog }) => {
       </div>
 
       <div className='mt-3 flex justify-between items-center gap-4'>
-        <div className='flex items-center gap-1'>
-          <p className='font-dm_sans text-sm opacity-80'>
-            {blog?.LikeCount || blog?.like_count || '0'} likes
-          </p>
-          <span className='text-sm cursor-default'>·</span>
-          <p className='font-dm_sans text-sm opacity-80'>
-            {blog?.BookmarkCount || blog?.bookmark_count || '0'} saves
-          </p>
-        </div>
+        <ReactionsInfo
+          likesCount={likesCount}
+          bookmarksCount={bookmarksCount}
+        />
 
         <div className='flex items-center gap-1'>
           <BlogShareDialog
