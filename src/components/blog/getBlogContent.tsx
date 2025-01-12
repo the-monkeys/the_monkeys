@@ -60,8 +60,9 @@ export const getCardContent = ({
         <Image
           src={imageContent}
           alt={titleContent}
-          height={200}
-          width={200}
+          height={500}
+          width={500}
+          quality={80}
           loading='lazy'
           className='h-full w-full object-cover'
         />
