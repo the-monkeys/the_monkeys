@@ -26,9 +26,9 @@ export const ShowcaseBlogs = () => {
   return (
     <div className='space-y-6'>
       <div>
-        <h4 className='font-dm_sans font-medium text-lg'>
-          Latest on <span className='text-brand-orange'>Monkeys</span>
-        </h4>
+        <h1 className='font-dm_sans font-medium text-lg'>
+          Latest Blogs on <span className='text-brand-orange'>Monkeys</span>
+        </h1>
 
         <LinksRedirectArrow link='/feed?source=all' className='w-fit'>
           <p className='text-sm opacity-80'>explore all</p>

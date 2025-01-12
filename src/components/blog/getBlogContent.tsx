@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
@@ -57,7 +59,7 @@ export const getCardContent = ({
       imageDiv = (
         <img
           src={imageContent}
-          alt='Blog Image'
+          alt={titleContent}
           loading='lazy'
           className='h-full w-full object-cover'
         />
@@ -83,7 +85,6 @@ export const getCardContent = ({
     titleDiv,
     recommendationTitleDiv,
     descriptionDiv,
-
     imageDiv,
   };
 };

@@ -1,6 +1,7 @@
-import { Metadata } from 'next';
+import { Metadata, ResolvingMetadata } from 'next';
 
 import Container from '@/components/layout/Container';
+import { baseUrl } from '@/constants/baseUrl';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { Blog } from '@/services/blog/blogTypes';
 
@@ -8,7 +9,10 @@ type Props = {
   params: { slug: string }; // Fixed the type to remove unnecessary `Promise`
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
   const id = params.slug; // Extract slug directly
 
   // Fetch blog data
@@ -27,24 +31,42 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const imageBlock = blocks.find((block) => block.type === 'image');
   const imageUrl = imageBlock?.data?.file?.url;
   const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
+  const fullDescription =
+    descriptionBlock?.data?.text || 'No description available.';
 
-  // Extend parent metadata if available
-  // const parentMetadata = await parent;
-  // const previousImages = parentMetadata?.openGraph?.images || [];
+  // Truncate description to a maximum of 160 characters
+  const truncateDescription = (text: string, maxLength: number): string => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength).trim() + '...';
+  };
+
+  const metaDescription = truncateDescription(fullDescription, 157);
+  const parentMetadata = await parent;
+  // Construct the canonical URL
+
+  const canonicalUrl = `${baseUrl}/blog/${id}`;
 
   return {
-    title: blocks[0]?.data?.text || 'Monkeys Blog',
-    description: descriptionBlock?.data?.text || 'No description available.',
+    title: blocks[0]?.data?.text || parentMetadata.title,
+    description: metaDescription,
     openGraph: {
-      title: blocks[0]?.data?.text || 'Monkeys Blog',
-      description: descriptionBlock?.data?.text || 'No description available.',
+      title: blocks[0]?.data?.text || parentMetadata.description,
+      description: metaDescription,
       images: imageUrl,
+      url: canonicalUrl,
     },
     twitter: {
       title: blocks[0]?.data?.text || 'Monkeys Blog',
       card: 'summary_large_image',
-      description: descriptionBlock?.data?.text || 'No description available.',
+      description: metaDescription,
       images: imageUrl,
+    },
+    alternates: {
+      canonical: canonicalUrl,
+      languages: {
+        'en-US': '/en-US',
+        'de-DE': '/de-DE',
+      },
     },
   };
 }
