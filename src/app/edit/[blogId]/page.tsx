@@ -6,13 +6,12 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
-import Container from '@/components/layout/Container';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
-import { WSS_URL } from '@/constants/api';
+import { WSS_URL_V2 } from '@/constants/api';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
@@ -45,7 +44,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Function to create and manage WebSocket connection
   const createWebSocket = useCallback((blogId: string, token: string) => {
-    const ws = new WebSocket(`${WSS_URL}/blog/draft/${blogId}?token=${token}`);
+    const ws = new WebSocket(
+      `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
+    );
 
     ws.onopen = () => {
       console.log('WebSocket connection opened');
@@ -181,7 +182,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   }, [data, session?.user.account_id, blogId, formatData, router]);
 
   return (
-    <Container className='min-h-screen px-4 py-5 pb-12'>
+    <>
       {isLoading ? (
         <Loader className='mx-auto' />
       ) : (
@@ -217,7 +218,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           )}
         </div>
       )}
-    </Container>
+    </>
   );
 };
 

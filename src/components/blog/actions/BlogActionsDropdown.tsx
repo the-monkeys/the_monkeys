@@ -5,30 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { toast } from '@/components/ui/use-toast';
-import { LIVE_URL } from '@/constants/api';
-import { BLOG_ROUTE } from '@/constants/routeConstants';
 
-export const copyToClipboard = (blogURL: string) => {
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(`${LIVE_URL}${BLOG_ROUTE}/${blogURL}`).then(
-      () => {
-        toast({
-          variant: 'default',
-          title: 'Blog Link Copied',
-          description: 'The blog link has been copied.',
-        });
-      },
-      () => {
-        toast({
-          variant: 'error',
-          title: 'Copy Failed',
-          description: 'Unable to copy the blog link.',
-        });
-      }
-    );
-  }
-};
 export const BlogActionsDropdown = ({
   blogURL,
 }: {
@@ -42,14 +19,16 @@ export const BlogActionsDropdown = ({
         </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='mx-2 w-32 sm:w-36'>
+      <DropdownMenuContent className='w-32 sm:w-36' align='end'>
         <DropdownMenuItem asChild>
           <button
-            onClick={() => copyToClipboard(blogURL as string)}
-            className='flex w-full items-center gap-2'
+            className='flex w-full items-center gap-2 opacity-80 cursor-not-allowed'
+            disabled
           >
-            <Icon name='RiClipboard' size={18} />
-            <p className='font-dm_sans text-sm sm:text-base'>Copy Link</p>
+            <Icon name='RiErrorWarning' size={18} className='text-alert-red' />
+            <p className='font-dm_sans text-sm sm:text-base text-alert-red'>
+              Report Blog
+            </p>
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

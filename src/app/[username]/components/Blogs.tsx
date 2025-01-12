@@ -1,18 +1,13 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
 import { useSession } from 'next-auth/react';
 
-export const Blogs = () => {
+export const Blogs = ({ username }: { username: string }) => {
   const { data: session, status } = useSession();
-  const params = useParams<{ username: string }>();
-  const { blogs, isLoading, isError } = useGetPublishedBlogByUsername(
-    params.username
-  );
+  const { blogs, isLoading, isError } = useGetPublishedBlogByUsername(username);
 
   if (isError)
     return (
@@ -40,7 +35,7 @@ export const Blogs = () => {
                 key={blog?.blog_id}
                 blog={blog}
                 status={status}
-                modificationEnable={session?.user.username === params.username}
+                modificationEnable={session?.user.username === username}
               />
             );
           })

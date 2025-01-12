@@ -72,7 +72,7 @@ export const UserInfoCard = ({
   return (
     <div className='w-full flex items-center gap-2'>
       <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-10'>
+        <ProfileFrame className='size-[35px]'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
       </Link>
@@ -87,7 +87,7 @@ export const UserInfoCard = ({
 
         <div className='flex gap-1'>
           <p className='font-dm_sans text-[13px] opacity-80 cursor-default'>
-            {moment(date).format('MMM DD, yyyy')}
+            {moment(date).format('MMMM DD, yyyy')}
           </p>
 
           <span className='hidden sm:block text-sm cursor-default'>·</span>
