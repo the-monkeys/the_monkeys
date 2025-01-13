@@ -40,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}${FEED_ROUTE}`,
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
       priority: 1,
     },
   ];
@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return {
       url: `${baseUrl}/blog/${slug || 'untitled'}-${post?.blog_id}`, // Fallback to 'untitled' if slug is empty
-      changeFrequency: 'daily', // Updated for regular additions
+      changeFrequency: 'monthly', // Updated for regular additions
       priority: 1,
     };
   });
