@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import { TopicBadgeShowcase } from '@/components/badges/topicBadge';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
@@ -77,23 +78,11 @@ const BlogPage = () => {
           <div className='mt-2 relative flex gap-1 flex-wrap'>
             {blog?.tags.map((tag, index) => {
               return (
-                <div
+                <TopicBadgeShowcase
                   key={index}
-                  style={{
-                    backgroundColor: tagColorCode[index] + '25',
-                    borderColor: tagColorCode[index],
-                  }}
-                  className='px-2 py-[1px] border-1 rounded-full'
-                >
-                  <p
-                    style={{
-                      color: tagColorCode[index],
-                    }}
-                    className='font-dm_sans text-xs whitespace-nowrap'
-                  >
-                    {tag}
-                  </p>
-                </div>
+                  topic={tag}
+                  colorCode={tagColorCode[index]}
+                />
               );
             })}
           </div>
