@@ -1,5 +1,3 @@
-import Icon from '../icon';
-
 export const ReactionsInfo = ({
   likesCount,
   bookmarksCount,
@@ -20,7 +18,10 @@ export const ReactionsInfo = ({
 
       <div className='flex items-center gap-1'>
         <p className='text-sm'>
-          {bookmarksCount || '0'} <span className='opacity-80'>saves</span>
+          {bookmarksCount || '0'}{' '}
+          <span className='opacity-80'>
+            {bookmarksCount !== 1 ? 'saves' : 'save'}
+          </span>
         </p>
       </div>
     </div>

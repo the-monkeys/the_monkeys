@@ -2,11 +2,7 @@ import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
-export const LatestBlogs = ({
-  status,
-}: {
-  status: 'authenticated' | 'loading' | 'unauthenticated';
-}) => {
+export const LatestBlogs = () => {
   const { blogs, isLoading, isError } = useGetLatest100Blogs();
 
   if (isError)
@@ -25,7 +21,7 @@ export const LatestBlogs = ({
       ) : (
         blogs?.blogs.map((blog) => {
           return blog.blog.blocks.length < 5 ? null : (
-            <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
+            <FeedBlogCard key={blog.blog_id} blog={blog} />
           );
         })
       )}

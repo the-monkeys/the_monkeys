@@ -21,7 +21,9 @@ export const BlogReactions = ({
   const blogUrl = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   if (status === 'unauthenticated')
-    return <p className='text-sm opacity-80'>Log in to interact with blogs.</p>;
+    return (
+      <p className='p-1 text-sm opacity-80'>Log in to interact with blogs.</p>
+    );
 
   return (
     <div

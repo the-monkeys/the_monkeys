@@ -8,9 +8,16 @@ import { Blog } from '@/services/blog/blogTypes';
 
 import { ReactionsInfo } from '../ReactionsInfo';
 import { BlogShareDialog } from '../actions/BlogShareDialog';
+import { RemoveBookmarkButton } from '../buttons/RemoveBookmarkButton';
 import { getCardContent } from '../getBlogContent';
 
-export const FeedBlogCard = ({ blog }: { blog: Blog }) => {
+export const FeedBlogCard = ({
+  blog,
+  removeBookmarkOption = false,
+}: {
+  blog: Blog;
+  removeBookmarkOption?: boolean;
+}) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time || blog?.blog?.time;
@@ -53,6 +60,10 @@ export const FeedBlogCard = ({ blog }: { blog: Blog }) => {
         />
 
         <div className='flex items-center gap-1'>
+          {removeBookmarkOption && (
+            <RemoveBookmarkButton blogId={blog?.blog_id} />
+          )}
+
           <BlogShareDialog
             blogURL={`${LIVE_URL}${BLOG_ROUTE}/${blogSlug}-${blogId}`}
           />

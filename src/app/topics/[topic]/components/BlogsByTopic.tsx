@@ -12,10 +12,8 @@ import { CREATE_ROUTE } from '@/constants/routeConstants';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
 import { GetBlogsByTopics } from '@/services/blog/blogTypes';
-import { useSession } from 'next-auth/react';
 
 export const BlogsByTopic = ({ topic }: { topic: string }) => {
-  const { status } = useSession();
   const [blogs, setBlogs] = useState<GetBlogsByTopics>({ blogs: [] });
   const [blogsLoading, setBlogsLoading] = useState(false);
   const [blogsError, setBlogsError] = useState(false);
@@ -61,7 +59,7 @@ export const BlogsByTopic = ({ topic }: { topic: string }) => {
     <div className='flex flex-col gap-6 sm:gap-8'>
       {blogs.blogs ? (
         blogs.blogs.map((blog) => (
-          <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
+          <FeedBlogCard key={blog.blog_id} blog={blog} />
         ))
       ) : (
         <div className='flex flex-col items-center gap-4'>
