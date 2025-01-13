@@ -31,7 +31,7 @@ export const FollowingBlogs = ({
         <p className='text-sm text-center opacity-80'>No blogs available.</p>
       ) : (
         blogs?.blogs.map((blog) => (
-          <FeedBlogCard key={blog.blog_id} blog={blog} status={status} />
+          <FeedBlogCard key={blog.blog_id} blog={blog} />
         ))
       )}
     </div>

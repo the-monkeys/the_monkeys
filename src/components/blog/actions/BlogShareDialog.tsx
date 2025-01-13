@@ -18,9 +18,13 @@ import { toast } from '@/components/ui/use-toast';
 
 interface BlogShareDialogProps {
   blogURL: string;
+  size?: number;
 }
 
-export const BlogShareDialog: FC<BlogShareDialogProps> = ({ blogURL }) => {
+export const BlogShareDialog: FC<BlogShareDialogProps> = ({
+  blogURL,
+  size = 18,
+}) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
       navigator.clipboard.writeText(`${blogURL}`).then(
@@ -43,14 +47,19 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({ blogURL }) => {
   };
   return (
     <Dialog>
-      <DialogTrigger className='p-1 hover:opacity-80' title='Share Blog'>
-        <Icon name='RiShareForward' size={22} />
+      <DialogTrigger asChild>
+        <button
+          className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
+          title='Share Blog'
+        >
+          <Icon name='RiShareForward' size={size} />
+        </button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Invite to Read</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
         <div className='pb-3 flex items-center justify-evenly gap-4 flex-wrap'>

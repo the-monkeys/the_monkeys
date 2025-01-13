@@ -54,31 +54,37 @@ export const ProfileCard = ({
       </div>
 
       {user?.bio && (
-        <p className='py-1 text-base leading-tight break-words'>{user.bio}</p>
+        <p className='py-1 leading-tight break-words'>{user.bio}</p>
       )}
 
       <div className='mb-4 flex items-center flex-wrap gap-x-2'>
-        <p>
-          {connectionsLoading || connectionsError
-            ? '-'
-            : connections?.followers || 0}{' '}
+        <div className='flex items-center gap-1'>
+          <p className='font-medium'>
+            {connectionsLoading || connectionsError
+              ? '-'
+              : connections?.followers || 0}
+          </p>
+
           {isAuthenticated ? (
             <ConnectionsDialog label='followers' />
           ) : (
-            <span className='text-sm opacity-80'>Followers</span>
+            <p className='opacity-80'>Followers</p>
           )}
-        </p>
+        </div>
 
-        <p>
-          {connectionsLoading || connectionsError
-            ? '-'
-            : connections?.following || 0}{' '}
+        <div className='flex items-center gap-1'>
+          <p className='font-medium'>
+            {connectionsLoading || connectionsError
+              ? '-'
+              : connections?.following || 0}
+          </p>
+
           {isAuthenticated ? (
             <ConnectionsDialog label='following' />
           ) : (
-            <span className='text-sm opacity-80'>Following</span>
+            <p className='opacity-80'>Following</p>
           )}
-        </p>
+        </div>
       </div>
 
       <div className='flex items-center flex-wrap gap-x-2 gap-y-1'>

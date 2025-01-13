@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
-import { Badge } from '@/components/ui/badge';
+import { TopicBadgeShowcase } from '@/components/badges/topicBadge';
 import { UserInfoCardCompact } from '@/components/user/userInfo';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
@@ -40,26 +40,14 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
           </div>
         </Link>
 
-        <div className='relative flex gap-2 overflow-hidden'>
+        <div className='relative flex gap-1 overflow-hidden'>
           {blog?.tags.map((tag, index) => {
             return (
-              <div
+              <TopicBadgeShowcase
                 key={index}
-                style={{
-                  backgroundColor: tagColorCode[index] + '25',
-                  borderColor: tagColorCode[index],
-                }}
-                className='px-2 py-[1px] border-1 rounded-full'
-              >
-                <p
-                  style={{
-                    color: tagColorCode[index],
-                  }}
-                  className='font-dm_sans text-xs whitespace-nowrap'
-                >
-                  {tag}
-                </p>
-              </div>
+                topic={tag}
+                colorCode={tagColorCode[index]}
+              />
             );
           })}
 

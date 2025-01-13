@@ -21,3 +21,31 @@ export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
     </Link>
   );
 };
+
+export const TopicBadgeShowcase = ({
+  topic,
+  colorCode,
+}: {
+  topic: string;
+  colorCode: string;
+}) => {
+  return (
+    <Link
+      href={`/topics/${topic}`}
+      style={{
+        backgroundColor: colorCode + '25',
+        borderColor: colorCode,
+      }}
+      className='px-2 py-[1px] border-1 rounded-full hover:opacity-80'
+    >
+      <p
+        style={{
+          color: colorCode,
+        }}
+        className='font-dm_sans text-xs whitespace-nowrap'
+      >
+        {topic}
+      </p>
+    </Link>
+  );
+};
