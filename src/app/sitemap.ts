@@ -2,12 +2,12 @@ import { MetadataRoute } from 'next';
 
 import { baseUrl } from '@/constants/baseUrl';
 import { FEED_ROUTE } from '@/constants/routeConstants';
-import { Blog } from '@/services/blog/blogTypes';
+import { Blog, GetLatest100BlogsResponse } from '@/services/blog/blogTypes';
 
 // Fetch blog posts from the API using fetch
 async function fetchBlogPosts(): Promise<Blog[]> {
   try {
-    const response = await fetch('https://monkeys.support/api/v1/blog/latest', {
+    const response = await fetch('https://monkeys.support/api/v2/blog/feed', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -19,9 +19,10 @@ async function fetchBlogPosts(): Promise<Blog[]> {
       return [];
     }
 
-    const data = await response.json();
+    const data: GetLatest100BlogsResponse = await response.json();
+    console.log(data);
 
-    return data?.the_blogs || [];
+    return data?.blogs || [];
   } catch (error) {
     console.error('Error fetching blog posts:', error);
     return [];
@@ -39,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${baseUrl}${FEED_ROUTE}`,
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
       priority: 1,
     },
   ];
@@ -56,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return {
       url: `${baseUrl}/blog/${slug || 'untitled'}-${post?.blog_id}`, // Fallback to 'untitled' if slug is empty
-      changeFrequency: 'daily', // Updated for regular additions
+      changeFrequency: 'monthly', // Updated for regular additions
       priority: 1,
     };
   });
