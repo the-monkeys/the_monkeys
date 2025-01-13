@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -19,29 +21,53 @@ import { mutate } from 'swr';
 
 export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
   const { data: session } = useSession();
-  const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<{
+    button1: boolean;
+    button2: boolean;
+  }>({
+    button1: false,
+    button2: false,
+  });
   const [open, setOpen] = React.useState<boolean>(false);
+
+  const router = useRouter();
 
   const username = session?.user.username;
 
-  async function deleteBlogById(blogId?: string) {
-    setLoading(true);
+  const handleEdit = (blogId: string) => {
+    router.push(`/edit/${blogId}`);
+  };
+
+  async function editBlogById({
+    blogId,
+    buttonType,
+    edit = false,
+  }: {
+    blogId: string;
+    buttonType: 'M' | 'ME'; // M -> move to draft | ME -> move and edit
+    edit?: boolean;
+  }) {
+    setIsLoading((prev) => ({
+      ...prev,
+      [buttonType === 'ME' ? 'button1' : 'button2']: true,
+    }));
 
     try {
       const response = await axiosInstanceV2.post(`/blog/to-draft/${blogId}`);
-
       if (response.status === 200) {
         toast({
           title: 'Success',
           description: 'Converted to draft successfully',
         });
-
         setOpen(false);
       }
-
       mutate(`/blog/all/${username}`, undefined, {
         revalidate: true,
       });
+
+      if (edit) {
+        handleEdit(blogId);
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
@@ -57,7 +83,10 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
         });
       }
     } finally {
-      setLoading(false);
+      setIsLoading({
+        button1: false,
+        button2: false,
+      });
     }
   }
 
@@ -73,28 +102,40 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
       </DialogTrigger>
 
       <DialogContent>
-        <DialogTitle>Convert to Draft?</DialogTitle>
+        <DialogTitle>Move to Draft?</DialogTitle>
 
         <DialogDescription className='hidden'></DialogDescription>
 
         <p className='opacity-80'>
-          Converting this blog to a draft will remove all reactions it has
+          Moving this blog to drafts will remove all the reactions it has
           received. Are you sure you want to proceed?
         </p>
 
-        <div className='pt-4'>
+        <div className='pt-4 flex flex-col items-end gap-2'>
+          <Button
+            type='button'
+            variant='secondary'
+            className='w-fit float-right'
+            onClick={() =>
+              editBlogById({ blogId, buttonType: 'ME', edit: true })
+            }
+            disabled={isLoading.button1 || isLoading.button2}
+          >
+            {isLoading.button1 && <Loader />}
+            Move and Edit
+          </Button>
+
           <Button
             type='button'
             className='w-fit float-right'
-            onClick={() => deleteBlogById(blogId)}
-            disabled={isLoading}
+            onClick={() => editBlogById({ blogId, buttonType: 'M' })}
+            disabled={isLoading.button1 || isLoading.button2}
           >
-            {isLoading && <Loader />}
-            Yes, Convert
+            {isLoading.button2 && <Loader />}
+            Move to Drafts
           </Button>
         </div>
       </DialogContent>
     </Dialog>
   );
 };
-// );

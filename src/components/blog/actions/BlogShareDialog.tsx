@@ -59,7 +59,7 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Invite to Read</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
         <div className='pb-3 flex items-center justify-evenly gap-4 flex-wrap'>
