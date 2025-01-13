@@ -1,5 +1,8 @@
 'use client';
 
+import { Suspense } from 'react';
+
+import { ShowcaseBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import moment from 'moment';
 
 import { NewsCategories } from './components/NewsCategories';
@@ -21,11 +24,17 @@ export const ShowcaseFeed = () => {
         </p>
       </div>
 
-      <ShowcaseBlogs />
+      <Suspense fallback={<ShowcaseBlogCardListSkeleton />}>
+        <ShowcaseBlogs />
+      </Suspense>
 
-      <NewsCategories />
+      <Suspense fallback={null}>
+        <NewsCategories />
+      </Suspense>
 
-      <NewsGrid />
+      <Suspense fallback={null}>
+        <NewsGrid />
+      </Suspense>
     </div>
   );
 };
