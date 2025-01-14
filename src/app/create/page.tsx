@@ -26,7 +26,6 @@ const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
 });
 
-// Initial data structure for the editor with a title block by default
 const initial_data = {
   time: new Date().getTime(),
   blocks: [
@@ -34,10 +33,10 @@ const initial_data = {
       id: 'title',
       type: 'header',
       data: {
-        text: 'Give your blog a title',
+        text: 'Untitled Blog',
         level: 1,
         config: {
-          placeholder: 'pen your thoughts ...',
+          placeholder: 'pen your thoughts...',
         },
       },
     },
@@ -84,7 +83,7 @@ const CreatePage = () => {
     );
 
     ws.onopen = () => {
-      console.log('WebSocket connection opened');
+      console.log('websocket connection 🟢');
     };
 
     ws.onmessage = (event) => {
@@ -93,11 +92,11 @@ const CreatePage = () => {
     };
 
     ws.onclose = () => {
-      console.log('WebSocket connection closed');
+      console.log('websocket connection 🔴');
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      console.error('websocket error ⭕', error);
     };
 
     setWebSocket(ws);
@@ -129,6 +128,44 @@ const CreatePage = () => {
     [selectedTags]
   );
 
+  const handlePublishStep = useCallback(() => {
+    setPublishedBlogLoading(true);
+    if (!data || data.blocks.length === 0 || data.blocks[0].type !== 'header') {
+      setPublishedBlogLoading(false);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Blog must have a title.',
+      });
+
+      return; // Ensure data is not null and has a title block
+    }
+
+    const formattedData = formatData(data, session?.user.account_id);
+
+    axiosInstance
+      .post(`/blog/publish/${blogId}`, formattedData)
+      .then((res) => {
+        toast({
+          variant: 'success',
+          title: 'Blog Published successfully',
+          description: 'success',
+        });
+
+        setPublishedBlogLoading(false);
+        router.push(`/${session?.user?.username}`);
+      })
+      .catch((err) => {
+        setPublishedBlogLoading(false);
+
+        toast({
+          variant: 'destructive',
+          title: 'Error publishing blog',
+          description: 'error',
+        });
+      });
+  }, [data, session?.user.account_id, blogId, formatData, router]);
+
   // Load the Editor component dynamically
   useEffect(() => {
     const loadEditor = async () => {
@@ -144,7 +181,6 @@ const CreatePage = () => {
     if (typeof window !== 'undefined' && authToken) {
       const cleanup = createWebSocket(blogId, authToken);
 
-      // Listen for beforeunload event to close the WebSocket connection
       const handleBeforeUnload = () => {
         cleanup();
       };
@@ -172,44 +208,6 @@ const CreatePage = () => {
     }
   }, [blogId]);
 
-  // Handle the publish action
-  const handlePublishStep = useCallback(() => {
-    setPublishedBlogLoading(true);
-    if (!data || data.blocks.length === 0 || data.blocks[0].type !== 'header') {
-      setPublishedBlogLoading(false);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Blog must have a title.',
-      });
-      return; // Ensure data is not null and has a title block
-    }
-
-    const formattedData = formatData(data, session?.user.account_id);
-
-    axiosInstance
-      .post(`/blog/publish/${blogId}`, formattedData)
-      .then((res) => {
-        // console.log(res);
-        toast({
-          variant: 'success',
-          title: 'Blog Published successfully',
-          description: 'success',
-        });
-        setPublishedBlogLoading(false);
-        router.push(`/${session?.user?.username}`);
-      })
-      .catch((err) => {
-        // console.log(err);
-        setPublishedBlogLoading(false);
-        toast({
-          variant: 'destructive',
-          title: 'Error publishing blog',
-          description: 'error',
-        });
-      });
-  }, [data, session?.user.account_id, blogId, formatData, router]);
-
   // Send data to WebSocket when data changes
   useEffect(() => {
     if (
@@ -221,26 +219,56 @@ const CreatePage = () => {
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
+
+    if (
+      webSocket &&
+      webSocket.readyState === WebSocket.CLOSED &&
+      data &&
+      authToken
+    ) {
+      setTimeout(() => {
+        const cleanup = createWebSocket(blogId, authToken);
+
+        return () => {
+          cleanup();
+        };
+      }, 1200);
+    }
   }, [data, webSocket, session?.user.account_id, formatData]);
 
   return (
     <>
       <div className='space-y-4'>
-        <div className='mx-auto w-full sm:w-4/5 flex justify-between items-end'>
-          {isSaving ? (
-            <p className='text-xs sm:text-sm opacity-80'>Saving ...</p>
-          ) : (
-            <p className='text-xs sm:text-sm opacity-80'>Saved</p>
-          )}
-
-          <Button onClick={() => setShowModal(true)}>Publish</Button>
+        <div className='py-1 mx-auto w-full sm:w-4/5 flex justify-end items-center'>
+          <Button size='sm' onClick={() => setShowModal(true)}>
+            Publish
+          </Button>
         </div>
 
-        <Suspense fallback={<Loader />}>
-          {editor && data && editorConfig && (
-            <Editor data={data} onChange={setData} config={editorConfig} />
+        <div className='mt-4 min-h-screen'>
+          <Suspense fallback={<Loader />}>
+            {editor && data && editorConfig && (
+              <Editor data={data} onChange={setData} config={editorConfig} />
+            )}
+          </Suspense>
+        </div>
+      </div>
+
+      <div className='sticky left-0 bottom-[53px] md:bottom-[0px] py-1 flex justify-between items-center bg-background-light dark:bg-background-dark border-t-1 border-foreground-light dark:border-foreground-dark z-50'>
+        <div>
+          {webSocket && isSaving ? (
+            <p className='p-1 text-sm text-center'>Saving...</p>
+          ) : (
+            <p className='p-1 text-sm text-center'>Saved</p>
           )}
-        </Suspense>
+        </div>
+
+        <p className='font-dm_sans text-sm text-center'>
+          Creating as{' '}
+          <span className='font-dm_sans font-medium'>
+            {session?.user.first_name}
+          </span>
+        </p>
       </div>
 
       {showModal && (

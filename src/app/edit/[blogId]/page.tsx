@@ -18,15 +18,9 @@ import { OutputData } from '@editorjs/editorjs';
 import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
-// Dynamically import the Editor component to avoid server-side rendering issues
 const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
 });
-
-const initial_data = {
-  time: new Date().getTime(),
-  blocks: [],
-};
 
 const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
@@ -42,32 +36,33 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   const { blog, isLoading } = useGetDraftBlogDetail(blogId);
 
-  // Function to create and manage WebSocket connection
+  const authToken = session?.user.token;
+  const accountId = session?.user.account_id;
+
   const createWebSocket = useCallback((blogId: string, token: string) => {
     const ws = new WebSocket(
       `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
     );
 
     ws.onopen = () => {
-      console.log('WebSocket connection opened');
+      console.log('websocket connection 🟢');
     };
 
     ws.onmessage = (event) => {
-      console.log('WebSocket message received');
+      console.log('websocket message 📜');
       setIsSaving(false); // Reset saving status when message is received
     };
 
     ws.onclose = () => {
-      console.log('WebSocket connection closed');
+      console.log('websocket connection 🔴');
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      console.error('websocket error ⭕', error);
     };
 
     setWebSocket(ws);
 
-    // Cleanup function to close the WebSocket connection
     return () => {
       ws.close();
     };
@@ -94,6 +89,44 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     [selectedTags]
   );
 
+  const handlePublishStep = useCallback(async () => {
+    if (!data || data.blocks.length === 0) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Blog content cannot be empty.',
+      });
+
+      return; // Ensure data is not null and not empty
+    }
+
+    const formattedData = formatData(data, accountId);
+
+    setBlogPublishLoading(true);
+
+    try {
+      await axiosInstance.post(`/blog/publish/${blogId}`, formattedData);
+
+      toast({
+        variant: 'success',
+        title: 'Blog Published successfully',
+        description: 'Your blog has been published successfully!',
+      });
+
+      setBlogPublishLoading(false);
+      router.push(`/${session?.user?.username}`);
+    } catch (err) {
+      toast({
+        variant: 'destructive',
+        title: 'Error publishing blog',
+        description:
+          'There was an error while publishing your blog. Please try again.',
+      });
+    } finally {
+      setBlogPublishLoading(false);
+    }
+  }, [data, accountId, blogId, formatData, router]);
+
   // Load the Editor component dynamically
   useEffect(() => {
     const loadEditor = async () => {
@@ -111,10 +144,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Create WebSocket connection when authToken is available
   useEffect(() => {
-    if (session?.user.token) {
-      const cleanup = createWebSocket(blogId, session.user.token);
+    if (authToken) {
+      const cleanup = createWebSocket(blogId, authToken);
 
-      // Listen for beforeunload event to close the WebSocket connection
       const handleBeforeUnload = () => {
         cleanup();
       };
@@ -126,7 +158,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }
-  }, [session?.user.token, blogId, createWebSocket]);
+  }, [authToken, blogId, createWebSocket]);
 
   // Set editor data based on the source
   useEffect(() => {
@@ -138,74 +170,70 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Send data to WebSocket when data changes
   useEffect(() => {
     if (webSocket && webSocket.readyState === WebSocket.OPEN && data) {
-      const formattedData = formatData(data, session?.user.account_id);
+      const formattedData = formatData(data, accountId);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
-  }, [data, webSocket, session?.user.account_id, formatData]);
 
-  // Handle the publish action
-  const handlePublishStep = useCallback(async () => {
-    if (!data || data.blocks.length === 0) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Blog content cannot be empty.',
-      });
-      return; // Ensure data is not null and not empty
+    if (
+      webSocket &&
+      webSocket.readyState === WebSocket.CLOSED &&
+      data &&
+      authToken
+    ) {
+      setTimeout(() => {
+        const cleanup = createWebSocket(blogId, authToken);
+
+        return () => {
+          cleanup();
+        };
+      }, 1200);
     }
-
-    const formattedData = formatData(data, session?.user.account_id);
-
-    setBlogPublishLoading(true);
-
-    try {
-      await axiosInstance.post(`/blog/publish/${blogId}`, formattedData);
-      toast({
-        variant: 'success',
-        title: 'Blog Published successfully',
-        description: 'Your blog has been published successfully!',
-      });
-      setBlogPublishLoading(false);
-      router.push(`/${session?.user?.username}`);
-    } catch (err) {
-      console.error(err); // Optional: Log the error for debugging purposes
-      toast({
-        variant: 'destructive',
-        title: 'Error publishing blog',
-        description:
-          'There was an error while publishing your blog. Please try again.',
-      });
-    } finally {
-      setBlogPublishLoading(false);
-    }
-  }, [data, session?.user.account_id, blogId, formatData, router]);
+  }, [data, webSocket, accountId, formatData]);
 
   return (
     <>
       {isLoading ? (
-        <Loader className='mx-auto' />
+        <div className='min-h-screen flex flex-col items-center gap-2'>
+          <Loader />
+          <p className='opacity-80'>Almost there! Preparing your editor...</p>
+        </div>
       ) : (
-        <div className='space-y-4'>
-          <div className='mx-auto w-full sm:w-4/5 flex justify-between items-center sm:items-end'>
-            {isSaving ? (
-              <p className='text-xs sm:text-sm opacity-80'>Saving ...</p>
-            ) : (
-              <p className='text-xs sm:text-sm opacity-80'>Saved</p>
-            )}
-
-            <Button onClick={() => setShowModal(true)}>Publish</Button>
+        <div className='relative min-h-screen'>
+          <div className='py-1 mx-auto w-full sm:w-4/5 flex justify-end items-center'>
+            <Button size='sm' onClick={() => setShowModal(true)}>
+              Publish
+            </Button>
           </div>
 
-          <Suspense fallback={<Loader />}>
-            {editor && data && (
-              <Editor
-                data={data}
-                onChange={setData}
-                config={getEditorConfig(blogId)}
-              />
-            )}
-          </Suspense>
+          <div className='mt-4 min-h-screen'>
+            <Suspense fallback={<Loader />}>
+              {editor && data && (
+                <Editor
+                  data={data}
+                  onChange={setData}
+                  config={getEditorConfig(blogId)}
+                />
+              )}
+            </Suspense>
+          </div>
+
+          <div className='sticky left-0 bottom-[53px] md:bottom-[0px] py-1 flex justify-between items-center bg-background-light dark:bg-background-dark border-t-1 border-foreground-light dark:border-foreground-dark z-50'>
+            <div>
+              {webSocket && isSaving ? (
+                <p className='p-1 text-sm text-center'>Saving...</p>
+              ) : (
+                <p className='p-1 text-sm text-center'>Saved</p>
+              )}
+            </div>
+
+            <p className='font-dm_sans text-sm text-center'>
+              Editing as{' '}
+              <span className='font-dm_sans font-medium'>
+                {session?.user.first_name}
+              </span>
+            </p>
+          </div>
 
           {showModal && (
             <PublishModal
