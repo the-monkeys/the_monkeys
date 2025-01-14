@@ -5,31 +5,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { toast } from '@/components/ui/use-toast';
-import { LIVE_URL } from '@/constants/api';
 
 export const ProfileActionsDropdown = ({ username }: { username: string }) => {
-  const copyToClipboard = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(`${LIVE_URL}/${username}`).then(
-        () => {
-          toast({
-            variant: 'default',
-            title: 'Profile Link Copied',
-            description: 'The profile link has been copied.',
-          });
-        },
-        () => {
-          toast({
-            variant: 'error',
-            title: 'Copy Failed',
-            description: 'Unable to copy the profile link.',
-          });
-        }
-      );
-    }
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -41,11 +18,13 @@ export const ProfileActionsDropdown = ({ username }: { username: string }) => {
       <DropdownMenuContent className='m-2 w-36 sm:w-40'>
         <DropdownMenuItem asChild>
           <button
-            onClick={copyToClipboard}
-            className='flex w-full items-center gap-2'
+            className='flex w-full items-center gap-2 opacity-80 cursor-not-allowed'
+            disabled
           >
-            <Icon name='RiClipboard' size={18} />
-            <p className='font-dm_sans text-sm sm:text-base'>Copy Link</p>
+            <Icon name='RiErrorWarning' className='text-alert-red' />
+            <p className='font-dm_sans text-sm sm:text-base text-alert-red'>
+              Report Profile
+            </p>
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -7,12 +7,12 @@ import {
 
 import Icon from '../icon';
 
-export const BlogShareButton = ({
+export const ShareButton = ({
   type,
-  blogURL,
+  url,
 }: {
   type: 'X' | 'LinkedIn' | 'WhatsApp' | 'Facebook';
-  blogURL: string;
+  url: string;
 }): React.ReactElement | null => {
   const buttonType = type;
   const buttonStyles = 'rounded-xl overflow-hidden hover:opacity-80';
@@ -20,7 +20,7 @@ export const BlogShareButton = ({
   switch (buttonType) {
     case 'X':
       return (
-        <TwitterShareButton url={blogURL} className={buttonStyles}>
+        <TwitterShareButton url={url} className={buttonStyles}>
           <div className='size-12 flex justify-center items-center bg-[#000000]'>
             <Icon
               name='RiTwitterX'
@@ -34,7 +34,7 @@ export const BlogShareButton = ({
 
     case 'Facebook':
       return (
-        <FacebookShareButton url={blogURL} className={buttonStyles}>
+        <FacebookShareButton url={url} className={buttonStyles}>
           <div className='size-12 flex justify-center items-center bg-[#1877F2]'>
             <Icon
               name='RiMeta'
@@ -48,7 +48,7 @@ export const BlogShareButton = ({
 
     case 'LinkedIn':
       return (
-        <LinkedinShareButton url={blogURL} className={buttonStyles}>
+        <LinkedinShareButton url={url} className={buttonStyles}>
           <div className='size-12 flex justify-center items-center bg-[#0a66c2]'>
             <Icon
               name='RiLinkedin'
@@ -62,7 +62,7 @@ export const BlogShareButton = ({
 
     case 'WhatsApp':
       return (
-        <WhatsappShareButton url={blogURL} className={buttonStyles}>
+        <WhatsappShareButton url={url} className={buttonStyles}>
           <div className='size-12 flex justify-center items-center bg-[#25D366]'>
             <Icon name='RiWhatsapp' size={24} className='text-text-dark' />
           </div>
@@ -74,7 +74,7 @@ export const BlogShareButton = ({
   }
 };
 
-export const BlogShareButtonContainer = ({
+export const ShareButtonContainer = ({
   children,
   label,
 }: {

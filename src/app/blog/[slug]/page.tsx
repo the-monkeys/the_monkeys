@@ -76,15 +76,34 @@ const BlogPage = () => {
           </h1>
 
           <div className='mt-2 relative flex gap-1 flex-wrap'>
-            {blog?.tags.map((tag, index) => {
-              return (
-                <TopicBadgeShowcase
-                  key={index}
-                  topic={tag}
-                  colorCode={tagColorCode[index]}
-                />
-              );
-            })}
+            {blog?.tags.length ? (
+              blog?.tags.map((tag, index) => {
+                return (
+                  <TopicBadgeShowcase
+                    key={index}
+                    topic={tag}
+                    colorCode={tagColorCode[index]}
+                  />
+                );
+              })
+            ) : (
+              <div
+                style={{
+                  backgroundColor: '#696969' + '25',
+                  borderColor: '#696969',
+                }}
+                className='px-2 py-[1px] border-1 rounded-full'
+              >
+                <p
+                  style={{
+                    color: '#696969',
+                  }}
+                  className='font-dm_sans text-xs whitespace-nowrap'
+                >
+                  no topics available
+                </p>
+              </div>
+            )}
           </div>
         </div>
 
