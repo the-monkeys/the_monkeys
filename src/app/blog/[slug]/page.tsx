@@ -12,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCard } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
@@ -71,9 +72,12 @@ const BlogPage = () => {
         <Separator className='mt-2 mb-4 opacity-80' />
 
         <div>
-          <h1 className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.3]'>
-            {blogTitle}
-          </h1>
+          <h1
+            dangerouslySetInnerHTML={{
+              __html: purifyHTMLString(blogTitle),
+            }}
+            className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.3]'
+          ></h1>
 
           <div className='mt-2 relative flex gap-1 flex-wrap'>
             {blog?.tags.length ? (
