@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/input';
 import { Popover } from '@/components/ui/popover';
 import { toast } from '@/components/ui/use-toast';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
-import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialgo';
+import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';

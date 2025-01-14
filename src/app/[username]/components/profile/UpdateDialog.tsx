@@ -24,7 +24,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
-import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialgo';
+import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
