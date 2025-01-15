@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 
-import { logOut } from '@/app/action';
+import { useRouter } from 'next/navigation';
+
 import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -18,7 +19,8 @@ import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
 
 export const Danger = () => {
-  const { data } = useSession();
+  const { data, update } = useSession();
+  const router = useRouter();
 
   const [deleteMessage, setDeleteMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,19 +29,16 @@ export const Danger = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.delete(
-        `/user/${data?.user.username}`
-      );
+      await axiosInstance.delete(`/user/${data?.user.username}`);
 
-      if (response.status === 200) {
-        await logOut();
+      update({ status: 'unauthenticated', data: null });
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your account has been deleted successfully.',
+      });
 
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Your account has been deleted successfully.',
-        });
-      }
+      router.replace('/');
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
@@ -51,7 +50,7 @@ export const Danger = () => {
         toast({
           variant: 'error',
           title: 'Error',
-          description: 'An unknown error occured.',
+          description: 'An unknown error occurred.',
         });
       }
     } finally {

@@ -5,7 +5,6 @@ import Image from 'next/image';
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import { twMerge } from 'tailwind-merge';
 
-import Icon from './icon';
 import { Skeleton } from './ui/skeleton';
 
 export const ProfileFrame = ({

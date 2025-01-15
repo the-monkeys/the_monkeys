@@ -53,7 +53,7 @@ export default function RegisterUserForm() {
         title: 'Account created successfully',
       });
 
-      router.replace('/');
+      router.replace('/auth/login');
     } catch (err) {
       console.log(err);
 

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 
-import { updateAuthCookie } from '@/app/action';
 import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
@@ -19,12 +18,13 @@ import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { updateEmailSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
+import { User } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export const Email = () => {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
   const [updateLoading, setUpdateLoading] = useState<boolean>(false);
@@ -36,14 +36,6 @@ export const Email = () => {
     },
   });
 
-  const updateUserSession = async (token: string) => {
-    await updateAuthCookie({
-      ...session?.user,
-      token: token,
-      email: form.getValues('email'),
-    });
-  };
-
   async function reqVerification() {
     setVerifyLoading(true);
 
@@ -51,17 +43,19 @@ export const Email = () => {
       const response = await axiosInstance.post(
         `/auth/req-email-verification`,
         {
-          email: session?.user?.email,
+          email: session?.user.email,
         }
       );
 
-      if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Email verification request has been sent successfully.',
-        });
-      }
+      update({
+        status: 'authenticated',
+        data: { user: new User(response.data) },
+      });
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Email verification request has been sent successfully.',
+      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
@@ -92,14 +86,15 @@ export const Email = () => {
         }
       );
 
-      if (response.status === 200) {
-        updateUserSession(response.data.token);
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Your email address has been updated successfully.',
-        });
-      }
+      update({
+        status: 'authenticated',
+        data: { user: new User(response.data) },
+      });
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your email address has been updated successfully.',
+      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
@@ -126,7 +121,7 @@ export const Email = () => {
       </p>
 
       {!session?.user?.email_verification_status ||
-      session?.user?.email_verification_status !== 'Verified' ? (
+      session?.user.email_verification_status !== 'Verified' ? (
         <Button
           type='button'
           size='lg'

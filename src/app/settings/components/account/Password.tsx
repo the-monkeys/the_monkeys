@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 
-import { logOut } from '@/app/action';
+import { useRouter } from 'next/navigation';
+
 import { useSession } from '@/app/session-store-provider';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
@@ -30,6 +31,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export const Password = () => {
+  const router = useRouter();
   const { data } = useSession();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -46,7 +48,7 @@ export const Password = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.put(
+      await axiosInstance.put(
         `/auth/settings/password/${data?.user.username}`,
         {
           current_password: values.currentPassword,
@@ -54,15 +56,13 @@ export const Password = () => {
         }
       );
 
-      if (response.status === 200) {
-        await logOut();
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your password has been updated successfully.',
+      });
 
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Your password has been updated successfully.',
-        });
-      }
+      router.replace('/auth/login');
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

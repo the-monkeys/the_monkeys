@@ -2,7 +2,6 @@
 
 import { Suspense, useCallback, useEffect, useState } from 'react';
 
-import { updateAuthCookie } from '@/app/action';
 import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
@@ -13,7 +12,7 @@ import { verifyEmailVerificationToken } from '@/services/auth/auth';
 import { SearchParamsComponent } from './SearchParams';
 
 export const VerifyEmailStatus = () => {
-  const { data: session } = useSession();
+  const { update } = useSession();
 
   const [searchParams, setSearchParams] = useState<{
     username: string;
@@ -36,13 +35,6 @@ export const VerifyEmailStatus = () => {
     []
   );
 
-  const updateUserSession = async () => {
-    await updateAuthCookie({
-      ...session!.user,
-      email_verification_status: 'Verified',
-    });
-  };
-
   useEffect(() => {
     if (searchParams.username !== '' && searchParams.evpw !== '') {
       verifyEmailVerificationToken({
@@ -63,7 +55,7 @@ export const VerifyEmailStatus = () => {
               'Email verification successful. You can now continue using our services without any interruptions.',
           });
 
-          updateUserSession();
+          update({ data: { user: res.data } });
         })
         .catch((err) => {
           toast({

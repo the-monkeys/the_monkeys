@@ -7,7 +7,7 @@ import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 
-import { getAuthData } from './action';
+import { validate } from './actions/auth';
 import './globals.css';
 import { SessionStoreProvider } from './session-store-provider';
 import SWRProvider from './swr-provider';
@@ -61,7 +61,7 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const authData = await getAuthData();
+  const authData = await validate();
 
   return (
     <html lang='en' suppressHydrationWarning>

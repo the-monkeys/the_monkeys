@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --hostname local.monkeys.com.co",
     "test": "vitest --run",
     "test:watch": "vitest",
     "coverage": "vitest --coverage --run",

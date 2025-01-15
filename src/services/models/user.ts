@@ -21,7 +21,8 @@ export class User implements IUser {
   constructor(values: any) {
     this.account_id = values.account_id;
     this.email = values.email;
-    this.email_verification_status = values?.email_verification_status;
+    this.email_verification_status =
+      values?.email_verification_status || values?.email_verified;
     this.first_name = values?.first_name;
     this.last_name = values?.last_name;
     this.username = values?.username || values?.user_name;

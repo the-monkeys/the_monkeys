@@ -1,7 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { logOut } from '@/app/action';
 import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import {
@@ -10,13 +11,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import axiosInstance from '@/services/api/axiosInstance';
 
 const ProfileDropdown = () => {
-  const { status, data } = useSession();
+  const { status, data, update } = useSession();
   const router = useRouter();
 
   const handleSignout = async () => {
-    await logOut();
+    axiosInstance.get('/auth/logout');
+
+    update({ status: 'unauthenticated', data: null });
     router.replace('/');
   };
 
@@ -53,7 +57,7 @@ const ProfileDropdown = () => {
         <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44 space-y-1'>
           <DropdownMenuItem asChild>
             <Link
-              href={`/${data?.user?.username}`}
+              href={`/${data?.user.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiUser' size={18} />

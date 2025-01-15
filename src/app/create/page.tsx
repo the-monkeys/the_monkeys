@@ -221,10 +221,14 @@ const CreatePage = () => {
     }
   }, [data, webSocket, formatData]);
 
-  if (status === 'unauthenticated') {
-    router.replace('/auth/login');
-    return;
-  }
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      const url = new URL('/auth/login', location.href);
+      url.searchParams.set('callbackURL', location.href);
+
+      router.replace(url.pathname + url.search);
+    }
+  }, []);
 
   return (
     <>

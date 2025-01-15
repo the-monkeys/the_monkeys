@@ -26,8 +26,8 @@ import { toast } from '@/components/ui/use-toast';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialgo';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
-import { User } from '@/lib/types';
 import axiosInstance from '@/services/api/axiosInstance';
+import { IUser } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
@@ -40,7 +40,7 @@ const updateProfileSchema = z.object({
   bio: z.string().optional(),
 });
 
-export const UpdateDialog = ({ data }: { data: { user: User } }) => {
+export const UpdateDialog = ({ data }: { data: { user: IUser } }) => {
   const { user, isLoading, isError } = useGetAuthUserProfile(
     data?.user.username
   );

@@ -1,6 +1,5 @@
+import { IUser } from '@/services/models/user';
 import { createStore } from 'zustand';
-
-import { User } from '../types';
 
 export type SessionState =
   | {
@@ -10,13 +9,13 @@ export type SessionState =
   | {
       status: 'authenticated';
       data: {
-        user: User;
+        user: Partial<IUser>;
       };
     }
   | {
       status: 'loading';
       data: {
-        user: User;
+        user: IUser;
       } | null;
     };
 

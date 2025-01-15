@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { updateAuthCookie } from '@/app/action';
 import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
@@ -43,13 +42,7 @@ export const UpdateUsernameDialog = () => {
     },
   });
 
-  const updateUserSession = async (token: string) => {
-    await updateAuthCookie({
-      ...session?.user,
-      token: token,
-      username: form.getValues('username'),
-    });
-  };
+  const updateUserSession = async (token: string) => {};
 
   const onSubmit = async (values: z.infer<typeof updateUsername>) => {
     setLoading(true);

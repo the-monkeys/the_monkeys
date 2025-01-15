@@ -7,7 +7,7 @@ import {
   SessionStoreApi,
   createSessionStore,
 } from '@/lib/store/useSession';
-import { User } from '@/lib/types';
+import { UserJWT } from '@/services/models/user';
 import { useStore } from 'zustand';
 
 const SessionStoreContext = createContext<SessionStoreApi | undefined>(
@@ -19,13 +19,20 @@ export const SessionStoreProvider = ({
   value,
 }: {
   children: React.ReactNode;
-  value?: User | null;
+  value?: UserJWT | null;
 }) => {
   const storeRef = useRef<SessionStoreApi>();
   if (!storeRef.current) {
     let initialState: SessionState | undefined;
     if (value) {
-      initialState = { status: 'authenticated', data: { user: value } };
+      initialState = {
+        status: 'authenticated',
+        data: {
+          user: {
+            ...value,
+          },
+        },
+      };
     }
 
     storeRef.current = createSessionStore(initialState);
