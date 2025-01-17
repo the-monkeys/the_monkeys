@@ -15,31 +15,34 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
+import { LIVE_URL } from '@/constants/api';
 
-interface BlogShareDialogProps {
-  blogURL: string;
+interface ShareProfileDialogProps {
+  username: string;
   size?: number;
 }
 
-export const BlogShareDialog: FC<BlogShareDialogProps> = ({
-  blogURL,
+export const ShareProfileDialog: FC<ShareProfileDialogProps> = ({
+  username,
   size = 18,
 }) => {
+  const profileURL = `${LIVE_URL}/${username}`;
+
   const copyToClipboard = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(`${blogURL}`).then(
+      navigator.clipboard.writeText(profileURL).then(
         () => {
           toast({
             variant: 'default',
-            title: 'Blog Link Copied',
-            description: 'The blog link has been copied.',
+            title: 'Profile Link Copied',
+            description: 'The profile link has been copied.',
           });
         },
         () => {
           toast({
             variant: 'error',
             title: 'Copy Failed',
-            description: 'Unable to copy the blog link.',
+            description: 'Unable to copy the profile link.',
           });
         }
       );
@@ -50,7 +53,7 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
       <DialogTrigger asChild>
         <button
           className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
-          title='Share Blog'
+          title='Share Profile'
         >
           <Icon name='RiShareForward' size={size} />
         </button>
@@ -58,31 +61,31 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Invite to Read</DialogTitle>
+          <DialogTitle>Showcase your Profile</DialogTitle>
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
         <div className='pb-3 flex items-center justify-evenly gap-4 flex-wrap'>
           <ShareButtonContainer label='Facebook'>
-            <ShareButton type='Facebook' url={blogURL} />
+            <ShareButton type='Facebook' url={profileURL} />
           </ShareButtonContainer>
 
           <ShareButtonContainer label='X'>
-            <ShareButton type='X' url={blogURL} />
+            <ShareButton type='X' url={profileURL} />
           </ShareButtonContainer>
 
           <ShareButtonContainer label='LinkedIn'>
-            <ShareButton type='LinkedIn' url={blogURL} />
+            <ShareButton type='LinkedIn' url={profileURL} />
           </ShareButtonContainer>
 
           <ShareButtonContainer label='WhatsApp'>
-            <ShareButton type='WhatsApp' url={blogURL} />
+            <ShareButton type='WhatsApp' url={profileURL} />
           </ShareButtonContainer>
         </div>
 
         <div className='p-2 flex items-center gap-1 rounded-full border-1 border-foreground-light dark:border-foreground-dark overflow-hidden'>
           <div className='pl-2 flex-1 overflow-hidden'>
-            <p className='text-sm truncate opacity-80'>{blogURL}</p>
+            <p className='text-sm truncate opacity-80'>{profileURL}</p>
           </div>
 
           <Button

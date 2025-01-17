@@ -7,6 +7,7 @@ import { useParams } from 'next/navigation';
 import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import { ProfileCard } from '@/components/user/cards/ProfileCard';
+import { ShareProfileDialog } from '@/components/user/dialogs/ShareProfileDialog';
 import useUser from '@/hooks/user/useUser';
 import { useSession } from 'next-auth/react';
 
@@ -34,15 +35,17 @@ export const ProfileSection = () => {
 
   return (
     <>
-      <div className='mb-2 flex gap-1 items-center justify-end'>
-        <ProfileActionsDropdown username={params.username} />
-
+      <div className='mb-2 flex gap-2 items-center justify-end'>
         {params.username !== session?.user.username &&
           status === 'authenticated' && (
             <FollowButton username={params.username} />
           )}
 
         {isAuthenticated && <UpdateDialog data={session} />}
+
+        <ShareProfileDialog username={params.username} size={20} />
+
+        {/* <ProfileActionsDropdown username={params.username} /> */}
       </div>
 
       <ProfileCard isAuthenticated={isAuthenticated} user={user} />

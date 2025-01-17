@@ -11,11 +11,7 @@ const CreatePageLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  return (
-    <Container className='min-h-screen px-4 py-2 pb-[500px]'>
-      {children}
-    </Container>
-  );
+  return <Container className='px-4 pb-12'>{children}</Container>;
 };
 
 export default CreatePageLayout;

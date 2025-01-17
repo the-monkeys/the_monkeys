@@ -30,7 +30,7 @@ export const DeleteBlogDialog = ({
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
 
-  const accountId = session?.user.account_id;
+  const username = session?.user.username;
 
   async function deleteBlogById(blogId?: string) {
     setLoading(true);
@@ -44,17 +44,9 @@ export const DeleteBlogDialog = ({
           description: 'Deleted successfully',
         });
 
-        setOpen(false);
-      }
-
-      {
-        isDraft
-          ? mutate(`/blog/all/drafts/${accountId}`, undefined, {
-              revalidate: true,
-            })
-          : mutate(`/blog/all/publishes/${accountId}`, undefined, {
-              revalidate: true,
-            });
+        {
+          isDraft ? mutate(`/blog/my-drafts`) : mutate(`blog/all/${username}`);
+        }
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -71,6 +63,7 @@ export const DeleteBlogDialog = ({
         });
       }
     } finally {
+      setOpen(false);
       setLoading(false);
     }
   }
