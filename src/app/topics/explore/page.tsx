@@ -9,7 +9,7 @@ import { notFound } from 'next/navigation';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { letters } from '@/constants/topics';
+import { CATEGORY_INITIAL_LETTERS } from '@/constants/topics';
 import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
 import { useSession } from 'next-auth/react';
 
@@ -38,7 +38,7 @@ const ExploreTopicsPage = () => {
   return (
     <div className='space-y-8'>
       <div className='mx-auto max-w-4xl flex justify-center items-center flex-wrap gap-2'>
-        {letters.map((letter, index) => (
+        {CATEGORY_INITIAL_LETTERS.map((letter, index) => (
           <Button
             key={index}
             variant='outline'

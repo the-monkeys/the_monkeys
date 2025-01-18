@@ -1,4 +1,4 @@
-export const letters = [
+export const CATEGORY_INITIAL_LETTERS = [
   '#',
   'A',
   'B',
@@ -27,3 +27,5 @@ export const letters = [
   'Y',
   'Z',
 ];
+
+export const BLOG_TOPICS_MAX_COUNT = 15;

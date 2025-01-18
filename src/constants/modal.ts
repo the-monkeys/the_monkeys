@@ -28,6 +28,6 @@ export const publishSteps: PublishStep[] = [
   {
     id: 1,
     heading: 'Add Topics',
-    subHeading: 'Add suitable topics to your blog (at most 5)',
+    subHeading: 'Add upto 15 suitable topics to your blog',
   },
 ];
