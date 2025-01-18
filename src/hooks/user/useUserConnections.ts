@@ -25,12 +25,7 @@ export const useGetConnectionCount = (username: string | undefined) => {
 export const useGetFollowers = () => {
   const { data, error, isLoading } = useSWR<FollowDataResponse>(
     `/user/followers`,
-    authFetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      refreshInterval: 0,
-    }
+    authFetcher
   );
 
   return {
@@ -43,12 +38,7 @@ export const useGetFollowers = () => {
 export const useGetFollowing = () => {
   const { data, error, isLoading } = useSWR<FollowDataResponse>(
     `/user/following`,
-    authFetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      refreshInterval: 0,
-    }
+    authFetcher
   );
 
   return {
