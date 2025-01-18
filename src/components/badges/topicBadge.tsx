@@ -44,7 +44,7 @@ export const TopicBadgeShowcase = ({
           color: TOPICS_COLOR_CODE[colorCodeIndex],
         }}
       >
-        <Icon name='RiPriceTag3' type='Fill' size={16} />
+        <Icon name='RiHashtag' type='NIL' size={16} />
       </div>
 
       <Link href={`/topics/${topic}`} className='opacity-80 hover:opacity-100'>

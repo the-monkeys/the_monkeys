@@ -19,7 +19,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
-import { BlogTopics } from '../components/BlogTopics';
+import { BlogTopics, BlogTopicsCompact } from '../components/BlogTopics';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -80,21 +80,7 @@ const BlogPage = () => {
             className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.3]'
           ></h1>
 
-          <div className='mt-3 relative flex gap-2 flex-wrap'>
-            {blog?.tags.length ? (
-              blog?.tags.map((tag, index) => {
-                return (
-                  <TopicBadgeShowcase
-                    key={index}
-                    topic={tag}
-                    colorCodeIndex={index}
-                  />
-                );
-              })
-            ) : (
-              <TopicBadgeShowcaseDefault />
-            )}
-          </div>
+          <BlogTopicsCompact topics={blog?.tags} />
         </div>
 
         <div className='pb-10 min-h-screen overflow-hidden'>
