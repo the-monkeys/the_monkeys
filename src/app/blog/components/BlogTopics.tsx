@@ -3,7 +3,6 @@ import { useState } from 'react';
 import {
   TopicBadgeBlog,
   TopicBadgeShowcase,
-  TopicBadgeShowcaseDefault,
 } from '@/components/badges/topicBadge';
 
 export const BlogTopics = ({ topics }: { topics: string[] }) => {
@@ -18,7 +17,7 @@ export const BlogTopics = ({ topics }: { topics: string[] }) => {
           ))
         ) : (
           <p className='w-full text-sm opacity-80 text-center'>
-            No topics available.
+            No topics added so far.
           </p>
         )}
       </div>
@@ -42,7 +41,7 @@ export const BlogTopicsCompact = ({ topics }: { topics: string[] }) => {
           );
         })
       ) : (
-        <TopicBadgeShowcaseDefault />
+        <p className='text-sm opacity-80'>No topics added so far.</p>
       )}
 
       {topics.length > 6 && (

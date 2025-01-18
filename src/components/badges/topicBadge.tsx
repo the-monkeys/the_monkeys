@@ -7,7 +7,7 @@ import { Badge } from '../ui/badge';
 
 export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
   return (
-    <Link href={`/topics/${topic}`}>
+    <Link href={`/topics/${topic}`} target='_blank'>
       <Badge variant='secondary' className='py-1 cursor-pointer rounded-md'>
         {topic}
       </Badge>
@@ -17,7 +17,7 @@ export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
 
 export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
   return (
-    <Link href={`/topics/${topic}`} className='group'>
+    <Link href={`/topics/${topic}`} className='group' target='_blank'>
       <Badge variant='secondary' className='px-4 py-1 cursor-pointer'>
         {topic}{' '}
         <Icon
@@ -47,27 +47,13 @@ export const TopicBadgeShowcase = ({
         <Icon name='RiHashtag' type='NIL' size={16} />
       </div>
 
-      <Link href={`/topics/${topic}`} className='opacity-80 hover:opacity-100'>
+      <Link
+        href={`/topics/${topic}`}
+        className='opacity-80 hover:opacity-100'
+        target='_blank'
+      >
         <p className='text-sm whitespace-nowrap'>{topic}</p>
       </Link>
-    </div>
-  );
-};
-
-export const TopicBadgeShowcaseDefault = () => {
-  return (
-    <div className='flex items-center gap-1'>
-      <div
-        style={{
-          color: '#696969',
-        }}
-      >
-        <Icon name='RiPriceTag3' type='Fill' size={16} />
-      </div>
-
-      <p className='text-sm opacity-80 whitespace-nowrap'>
-        no topics available
-      </p>
     </div>
   );
 };

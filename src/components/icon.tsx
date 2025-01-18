@@ -39,7 +39,6 @@ export type IconName =
   | 'RiSettings3'
   | 'RiHistory'
   | 'RiShareForward'
-  | 'RiPriceTag3'
   | 'RiEdit2'
   | 'RiHeart3'
   | 'RiCalendar'
