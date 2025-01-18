@@ -4,10 +4,6 @@ import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
 import {
-  TopicBadgeShowcase,
-  TopicBadgeShowcaseDefault,
-} from '@/components/badges/topicBadge';
-import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
