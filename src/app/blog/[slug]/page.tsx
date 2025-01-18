@@ -3,7 +3,10 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
-import { TopicBadgeShowcase } from '@/components/badges/topicBadge';
+import {
+  TopicBadgeShowcase,
+  TopicBadgeShowcaseDefault,
+} from '@/components/badges/topicBadge';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
@@ -58,8 +61,6 @@ const BlogPage = () => {
     blocks: blog?.blog.blocks.slice(1),
   };
 
-  const tagColorCode = ['#5A9BD5', '#70AD47', '#FF5733', '#4472C4', '#8E44AD'];
-
   return (
     <>
       <div className='relative col-span-3 lg:col-span-2'>
@@ -79,34 +80,19 @@ const BlogPage = () => {
             className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.3]'
           ></h1>
 
-          <div className='mt-2 relative flex gap-1 flex-wrap'>
+          <div className='mt-3 relative flex gap-2 flex-wrap'>
             {blog?.tags.length ? (
               blog?.tags.map((tag, index) => {
                 return (
                   <TopicBadgeShowcase
                     key={index}
                     topic={tag}
-                    colorCode={tagColorCode[index]}
+                    colorCodeIndex={index}
                   />
                 );
               })
             ) : (
-              <div
-                style={{
-                  backgroundColor: '#696969' + '25',
-                  borderColor: '#696969',
-                }}
-                className='px-2 py-[1px] border-1 rounded-full'
-              >
-                <p
-                  style={{
-                    color: '#696969',
-                  }}
-                  className='font-dm_sans text-xs whitespace-nowrap'
-                >
-                  no topics available
-                </p>
-              </div>
+              <TopicBadgeShowcaseDefault />
             )}
           </div>
         </div>
@@ -116,11 +102,13 @@ const BlogPage = () => {
         </div>
 
         <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />
+
+        <div className='mt-8'>
+          <BlogTopics topics={tags || []} />
+        </div>
       </div>
 
       <div className='col-span-3 lg:col-span-1 space-y-6'>
-        <BlogTopics topics={tags || []} />
-
         <div className='space-y-1'>
           <h4 className='px-1 font-dm_sans font-medium'>About Author</h4>
 

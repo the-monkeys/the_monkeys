@@ -1,5 +1,8 @@
 import Link from 'next/link';
 
+import { TOPICS_COLOR_CODE } from '@/constants/topics';
+
+import Icon from '../icon';
 import { Badge } from '../ui/badge';
 
 export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
@@ -14,9 +17,14 @@ export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
 
 export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
   return (
-    <Link href={`/topics/${topic}`}>
+    <Link href={`/topics/${topic}`} className='group'>
       <Badge variant='secondary' className='px-4 py-1 cursor-pointer'>
-        {topic}
+        {topic}{' '}
+        <Icon
+          name='RiArrowRightUp'
+          size={16}
+          className='ml-1 opacity-50 group-hover:opacity-100'
+        />
       </Badge>
     </Link>
   );
@@ -24,28 +32,42 @@ export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
 
 export const TopicBadgeShowcase = ({
   topic,
-  colorCode,
+  colorCodeIndex,
 }: {
   topic: string;
-  colorCode: string;
+  colorCodeIndex: number;
 }) => {
   return (
-    <Link
-      href={`/topics/${topic}`}
-      style={{
-        backgroundColor: colorCode + '25',
-        borderColor: colorCode,
-      }}
-      className='px-2 py-[1px] border-1 rounded-full hover:opacity-80'
-    >
-      <p
+    <div className='flex items-center gap-1'>
+      <div
         style={{
-          color: colorCode,
+          color: TOPICS_COLOR_CODE[colorCodeIndex],
         }}
-        className='font-dm_sans text-xs whitespace-nowrap'
       >
-        {topic}
+        <Icon name='RiPriceTag3' type='Fill' size={16} />
+      </div>
+
+      <Link href={`/topics/${topic}`} className='opacity-80 hover:opacity-100'>
+        <p className='text-sm whitespace-nowrap'>{topic}</p>
+      </Link>
+    </div>
+  );
+};
+
+export const TopicBadgeShowcaseDefault = () => {
+  return (
+    <div className='flex items-center gap-1'>
+      <div
+        style={{
+          color: '#696969',
+        }}
+      >
+        <Icon name='RiPriceTag3' type='Fill' size={16} />
+      </div>
+
+      <p className='text-sm opacity-80 whitespace-nowrap'>
+        no topics available
       </p>
-    </Link>
+    </div>
   );
 };
