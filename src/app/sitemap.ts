@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { unstable_noStore as noStore } from 'next/cache';
 
 import { baseUrl } from '@/constants/baseUrl';
 import { FEED_ROUTE } from '@/constants/routeConstants';
@@ -30,6 +31,7 @@ async function fetchBlogPosts(): Promise<Blog[]> {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  noStore();
   const blogPosts = await fetchBlogPosts();
 
   const staticUrls: MetadataRoute.Sitemap = [

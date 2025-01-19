@@ -16,9 +16,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { publishSteps } from '@/constants/modal';
+import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';
 
 import Modal from '..';
@@ -33,9 +35,9 @@ export type PublishStep = {
 };
 
 const formSchema = z.object({
-  topics: z
-    .array(z.string())
-    .max(5, { message: 'Please select at most 5 topics' }),
+  topics: z.array(z.string()).max(BLOG_TOPICS_MAX_COUNT, {
+    message: `Please select at most ${BLOG_TOPICS_MAX_COUNT} topics`,
+  }),
 });
 
 const PublishModal = ({
@@ -114,7 +116,7 @@ const PublishModal = ({
       </ModalHeader>
 
       <ModalContent className='space-y-4'>
-        {selectedTopics.length ? (
+        {/* {selectedTopics.length ? (
           <div className='flex items-center gap-x-1 gap-y-2 flex-wrap'>
             {selectedTopics.map((topic) => (
               <Badge
@@ -126,7 +128,7 @@ const PublishModal = ({
               </Badge>
             ))}
           </div>
-        ) : null}
+        ) : null} */}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-3'>
@@ -136,7 +138,22 @@ const PublishModal = ({
               render={({ field }) => {
                 return (
                   <FormItem className='space-y-1 flex flex-col justify-start'>
-                    <FormLabel className='text-sm'>Choose Topics*</FormLabel>
+                    <div className='flex items-center justify-between'>
+                      <FormLabel className='text-sm'>Choose Topics</FormLabel>
+
+                      <p className='font-dm_sans text-sm'>
+                        <span
+                          className={twMerge(
+                            selectedTopics.length > BLOG_TOPICS_MAX_COUNT &&
+                              'text-alert-red'
+                          )}
+                        >
+                          {selectedTopics.length}
+                        </span>
+                        {' / '}
+                        {BLOG_TOPICS_MAX_COUNT}
+                      </p>
+                    </div>
 
                     <FormDescription></FormDescription>
 

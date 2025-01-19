@@ -30,6 +30,7 @@ export type IconName =
   | 'RiNewspaper'
   | 'RiSparkling'
   | 'RiAdd'
+  | 'RiHashtag'
   | 'RiSubtract'
   | 'RiClipboard'
   | 'RiUpload2'
@@ -63,7 +64,7 @@ export type IconName =
 
 export type IconProps = {
   name: IconName;
-  type?: 'Fill' | 'Line';
+  type?: 'Fill' | 'Line' | 'NIL';
   size?: number;
   className?: string;
 };
@@ -74,7 +75,7 @@ const Icon: React.FC<IconProps> = ({
   size = 20,
   className,
 }) => {
-  const iconName = `${name}${type}`;
+  const iconName = type !== 'NIL' ? `${name}${type}` : name;
 
   const DynamicIcon = RemixIcons[iconName as keyof typeof RemixIcons];
 

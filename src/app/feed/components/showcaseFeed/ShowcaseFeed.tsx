@@ -12,12 +12,12 @@ export const ShowcaseFeed = () => {
   return (
     <div className='pb-12'>
       <div className='py-6'>
-        <p className='font-dm_sans font-medium text-sm text-right'>
+        <p className='font-dm_sans font-medium text-right'>
           {moment(currDate).format('dddd')}
         </p>
 
         <p className='text-xs md:text-sm opacity-80 text-right'>
-          {`${moment(currDate).format('MMM DD, YYYY')} | ${moment(currDate).utc().format('hh:mm')} UTC`}
+          {`${moment(currDate).format('MMMM DD, YYYY')} | ${moment(currDate).utc().format('hh:mm')} UTC`}
         </p>
       </div>
 

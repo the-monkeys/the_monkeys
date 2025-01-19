@@ -6,6 +6,7 @@ import moment from 'moment';
 import ProfileImage, { ProfileFrame } from '../profileImage';
 import {
   UserInfoCardCompactSkeleton,
+  UserInfoCardShowcaseSkeleton,
   UserInfoCardSkeleton,
 } from '../skeletons/userSkeleton';
 
@@ -46,6 +47,49 @@ export const UserInfoCardCompact = ({
 
         <p className='font-dm_sans text-[13px] opacity-80 cursor-default'>
           {moment(date).format('MMM DD')}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export const UserInfoCardShowcase = ({
+  id,
+  date,
+}: {
+  id?: string;
+  date?: number | string;
+}) => {
+  const { user, isLoading, isError } = useGetProfileInfoById(id);
+
+  if (isLoading) return <UserInfoCardShowcaseSkeleton />;
+
+  if (isError) {
+    return <p className='mb-4 text-sm opacity-80'>User not available</p>;
+  }
+
+  const userData = user?.user;
+
+  return (
+    <div className='w-full flex items-end gap-2'>
+      <Link href={`/${userData?.username}`} className='hover:opacity-80'>
+        <ProfileFrame className='size-9 !ring-0 !rounded-none'>
+          <ProfileImage username={userData?.username} />
+        </ProfileFrame>
+      </Link>
+
+      <div className='flex flex-col justify-center overflow-hidden'>
+        <Link
+          href={`/${userData?.username}`}
+          className='font-dm_sans font-medium text-sm hover:underline decoration-1'
+        >
+          {userData?.first_name} {userData?.last_name}
+        </Link>
+
+        <p className='font-dm_sans text-[13px] opacity-80 cursor-default'>
+          {moment(date).format('MMM DD, yyyy')}
+          {' at '}
+          {moment(date).utc().format('hh:mm')} UTC
         </p>
       </div>
     </div>

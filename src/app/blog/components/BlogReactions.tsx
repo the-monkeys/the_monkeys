@@ -11,28 +11,21 @@ import { twMerge } from 'tailwind-merge';
 export const BlogReactions = ({
   className,
   blogId,
-  blogURL,
 }: {
   className?: string;
   blogURL?: string | string[];
   blogId?: string;
 }) => {
   const { status } = useSession();
-  const blogUrl = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   if (status === 'unauthenticated')
     return (
-      <p className='p-1 text-sm opacity-80'>Log in to interact with blogs.</p>
+      <p className='p-1 text-sm opacity-80 text-center'>Log in to interact</p>
     );
 
   return (
-    <div
-      className={twMerge(
-        className,
-        'flex justify-between items-center gap-[80px]'
-      )}
-    >
-      <div className='flex items-center'>
+    <div className={twMerge(className, 'flex justify-between items-center')}>
+      <div className='flex-1 flex items-center'>
         <LikeButton blogId={blogId} size={20} />
 
         {status === 'authenticated' && <LikesCount blogId={blogId} />}
@@ -44,10 +37,6 @@ export const BlogReactions = ({
         <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' /> */}
 
         <BookmarkButton blogId={blogId} size={20} />
-
-        <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' />
-
-        <BlogShareDialog blogURL={blogUrl} size={20} />
       </div>
     </div>
   );
@@ -60,9 +49,17 @@ export const BlogReactionsContainer = ({
   blogId?: string;
   blogURL: string | string[];
 }) => {
+  const url = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
+
   return (
-    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-fit px-6 py-[8px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light shadow-md z-20 rounded-full'>
-      <BlogReactions blogURL={blogURL} blogId={blogId} />
+    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-full max-w-[320px] flex items-center gap-2 z-20'>
+      <div className='flex-1 px-6 py-[8px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light shadow-md rounded-full'>
+        <BlogReactions blogURL={blogURL} blogId={blogId} />
+      </div>
+
+      <div className='px-3 py-[8px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light shadow-md rounded-full'>
+        <BlogShareDialog blogURL={url} size={20} />
+      </div>
     </div>
   );
 };
