@@ -14,7 +14,12 @@ import { ReactionsInfo } from '../ReactionsInfo';
 import { BlogShareDialog } from '../actions/BlogShareDialog';
 import { DeleteBlogDialog } from '../actions/DeleteBlogDialog';
 import { EditBlogDialog } from '../actions/EditBlogDialog';
-import { getCardContent } from '../getBlogContent';
+import {
+  BlogDescription,
+  BlogImage,
+  BlogTitle,
+  getCardContent,
+} from '../getBlogContent';
 
 interface BlogCardProps {
   blog: Blog;
@@ -34,9 +39,8 @@ export const BlogCard: FC<BlogCardProps> = ({
   const date = blog?.published_time || blog?.blog?.time;
   const isDraft = blog?.is_draft;
 
-  const { titleDiv, descriptionDiv, imageDiv } = getCardContent({
+  const { titleContent, descriptionContent, imageContent } = getCardContent({
     blog,
-    isDraft,
   });
   // Generate the slug for the blog title
   const blogTitle = blog?.blog?.blocks[0]?.data?.text;
@@ -57,15 +61,21 @@ export const BlogCard: FC<BlogCardProps> = ({
         <UserInfoCardCompact id={authorId} date={date} />
 
         {isDraft ? (
-          <div className='group flex flex-col sm:flex-row gap-4'>
+          <div className='flex flex-col sm:flex-row gap-4'>
             <div className='flex-1 space-y-1 sm:space-y-2'>
-              {titleDiv}
-              {descriptionDiv}
+              <BlogTitle
+                title={titleContent}
+                className='font-bold text-xl lg:text-[22px] line-clamp-3'
+              />
+              <BlogDescription
+                description={descriptionContent}
+                className='line-clamp-2 opacity-80'
+              />
             </div>
 
-            {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-md'>
-                {imageDiv}
+            {imageContent && (
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden'>
+                <BlogImage image={imageContent} title={titleContent} />
               </div>
             )}
           </div>
@@ -77,13 +87,19 @@ export const BlogCard: FC<BlogCardProps> = ({
             className='group flex flex-col sm:flex-row gap-4'
           >
             <div className='flex-1 space-y-1 sm:space-y-2'>
-              {titleDiv}
-              {descriptionDiv}
+              <BlogTitle
+                title={titleContent}
+                className='font-bold text-xl lg:text-[22px] line-clamp-3 group-hover:opacity-80'
+              />
+              <BlogDescription
+                description={descriptionContent}
+                className='line-clamp-2 opacity-80'
+              />
             </div>
 
-            {imageDiv && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-md'>
-                {imageDiv}
+            {imageContent && (
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden group-hover:opacity-80'>
+                <BlogImage image={imageContent} title={titleContent} />
               </div>
             )}
           </Link>
@@ -101,6 +117,10 @@ export const BlogCard: FC<BlogCardProps> = ({
             <EditBlogDialog blogId={blogId} />
           )}
 
+          {showModificationOptions && (
+            <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
+          )}
+
           {showModificationOptions && isDraft && (
             <button
               onClick={() => handleEdit(blogId)}
@@ -109,10 +129,6 @@ export const BlogCard: FC<BlogCardProps> = ({
             >
               <Icon name='RiEdit2' size={18} />
             </button>
-          )}
-
-          {showModificationOptions && (
-            <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
           )}
 
           {!isDraft && (

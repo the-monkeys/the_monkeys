@@ -4,8 +4,14 @@ import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
+import moment from 'moment';
 
-import { getCardContent } from '../getBlogContent';
+import {
+  BlogDescription,
+  BlogImage,
+  BlogTitle,
+  getCardContent,
+} from '../getBlogContent';
 
 export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
   const authorId = blog?.owner_account_id;
@@ -14,29 +20,43 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
   // Generate the slug for the blog title
   const blogTitle = blog?.blog?.blocks[0]?.data?.text;
   const blogSlug = generateSlug(blogTitle);
-  const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
+  const { titleContent, descriptionContent, imageContent } = getCardContent({
+    blog,
+  });
 
-  if (!imageDiv) return null;
+  if (!imageContent) return null;
 
   return (
-    <div className='col-span-2 sm:col-span-1 flex flex-col gap-3'>
-      <div className='h-[180px] sm:h-[220px] w-full overflow-hidden rounded-sm'>
-        {imageDiv}
+    <div className='col-span-2 sm:col-span-1 flex flex-col'>
+      <div className='h-[200px] sm:h-[250px] w-full overflow-hidden'>
+        <BlogImage title={titleContent} image={imageContent} />
       </div>
 
-      <UserInfoCardShowcase id={authorId} date={date} />
-
-      <div className='flex-1 flex flex-col justify-between gap-5'>
-        <Link
-          href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-          className='group flex flex-col gap-2'
-        >
-          <div className='space-y-1'>
-            {titleDiv}
-            {descriptionDiv}
-          </div>
-        </Link>
+      <div className='mt-1 mb-4'>
+        <p className='text-xs text-right opacity-80'>
+          {moment(date).format('MMMM DD, 2025')}
+          {' | '}
+          {moment(date).utc().format('hh:mm')} UTC
+        </p>
       </div>
+
+      <Link
+        href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
+        className='mb-2 flex-1 group'
+      >
+        <div className='space-y-1'>
+          <BlogTitle
+            title={titleContent}
+            className='font-bold text-xl lg:text-[22px] group-hover:opacity-80 line-clamp-3'
+          />
+          <BlogDescription
+            description={descriptionContent}
+            className='line-clamp-2 opacity-80'
+          />
+        </div>
+      </Link>
+
+      <UserInfoCardShowcase id={authorId} />
     </div>
   );
 };

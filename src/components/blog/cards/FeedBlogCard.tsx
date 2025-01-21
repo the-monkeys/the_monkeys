@@ -9,7 +9,12 @@ import { Blog } from '@/services/blog/blogTypes';
 import { ReactionsInfo } from '../ReactionsInfo';
 import { BlogShareDialog } from '../actions/BlogShareDialog';
 import { RemoveBookmarkButton } from '../buttons/RemoveBookmarkButton';
-import { getCardContent } from '../getBlogContent';
+import {
+  BlogDescription,
+  BlogImage,
+  BlogTitle,
+  getCardContent,
+} from '../getBlogContent';
 
 export const FeedBlogCard = ({
   blog,
@@ -22,7 +27,9 @@ export const FeedBlogCard = ({
   const blogId = blog?.blog_id;
   const date = blog?.published_time || blog?.blog?.time;
 
-  const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
+  const { titleContent, descriptionContent, imageContent } = getCardContent({
+    blog,
+  });
   const blogTitle = blog?.blog?.blocks[0]?.data?.text;
   const blogSlug = generateSlug(blogTitle);
 
@@ -41,13 +48,19 @@ export const FeedBlogCard = ({
           className='group flex flex-col sm:flex-row gap-2 sm:gap-4'
         >
           <div className='flex-1 flex flex-col space-y-1 sm:space-y-2 overflow-hidden'>
-            {titleDiv}
-            {descriptionDiv}
+            <BlogTitle
+              title={titleContent}
+              className='font-bold text-xl lg:text-[22px] line-clamp-3 group-hover:opacity-80'
+            />
+            <BlogDescription
+              description={descriptionContent}
+              className='line-clamp-2 opacity-80'
+            />
           </div>
 
-          {imageDiv && (
-            <div className='h-[185px] sm:h-[120px] w-full sm:w-[165px] overflow-hidden rounded-md'>
-              {imageDiv}
+          {imageContent && (
+            <div className='h-[185px] sm:h-[120px] w-full sm:w-[165px] overflow-hidden group-hover:opacity-90'>
+              <BlogImage image={imageContent} title={titleContent} />
             </div>
           )}
         </Link>

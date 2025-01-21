@@ -2,7 +2,6 @@ import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
 import {
   UserInfoCardCompactSkeleton,
-  UserInfoCardShowcaseSkeleton,
   UserInfoCardSkeleton,
 } from './userSkeleton';
 
@@ -52,13 +51,11 @@ export const BlogCardSkeleton = () => {
 export const ShowcaseBlogCardSkeleton = () => {
   return (
     <div className='col-span-2 sm:col-span-1 space-y-3'>
-      <Skeleton className='h-[180px] sm:h-[220px] w-full' />
-
-      <UserInfoCardShowcaseSkeleton />
+      <Skeleton className='h-[180px] sm:h-[220px] w-full !rounded-none' />
 
       <div className='space-y-1'>
-        <Skeleton className='h-4 w-full rounded-full' />
-        <Skeleton className='h-4 w-4/5 rounded-full' />
+        <Skeleton className='h-6 w-full' />
+        <Skeleton className='h-6 w-4/5' />
       </div>
     </div>
   );
