@@ -85,9 +85,10 @@ export const FollowButton = ({
     <>
       {followStatus?.isFollowing ? (
         <Button
+          size='sm'
           disabled={loading}
           onClick={onUserUnfollow}
-          className={twMerge(className, 'rounded-full')}
+          className={twMerge(className, '!text-base rounded-full')}
         >
           {loading && <Loader />}
           Unfollow
@@ -95,9 +96,10 @@ export const FollowButton = ({
       ) : (
         <Button
           variant='brand'
+          size='sm'
           disabled={loading}
           onClick={onUserFollow}
-          className={twMerge(className, 'rounded-full')}
+          className={twMerge(className, '!text-base rounded-full')}
         >
           {loading && <Loader />}
           Follow
@@ -184,7 +186,6 @@ export const FollowButtonSecondary = ({
     <>
       {followStatus?.isFollowing ? (
         <Button
-          variant='secondary'
           size='sm'
           disabled={loading}
           onClick={onUserUnfollow}
@@ -195,6 +196,7 @@ export const FollowButtonSecondary = ({
         </Button>
       ) : (
         <Button
+          variant='brand'
           size='sm'
           disabled={loading}
           onClick={onUserFollow}

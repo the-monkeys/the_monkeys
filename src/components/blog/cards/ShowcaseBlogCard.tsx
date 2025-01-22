@@ -4,7 +4,6 @@ import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
-import moment from 'moment';
 
 import {
   BlogDescription,
@@ -28,21 +27,13 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
 
   return (
     <div className='col-span-2 sm:col-span-1 flex flex-col'>
-      <div className='h-[200px] sm:h-[250px] w-full overflow-hidden'>
+      <div className='mb-4 h-[200px] sm:h-[250px] w-full overflow-hidden'>
         <BlogImage title={titleContent} image={imageContent} />
-      </div>
-
-      <div className='mt-1 mb-4'>
-        <p className='text-xs text-right opacity-80'>
-          {moment(date).format('MMMM DD, 2025')}
-          {' | '}
-          {moment(date).utc().format('hh:mm')} UTC
-        </p>
       </div>
 
       <Link
         href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-        className='mb-2 flex-1 group'
+        className='mb-3 flex-1 group'
       >
         <div className='space-y-1'>
           <BlogTitle
@@ -56,7 +47,7 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
         </div>
       </Link>
 
-      <UserInfoCardShowcase id={authorId} />
+      <UserInfoCardShowcase id={authorId} date={date} />
     </div>
   );
 };

@@ -1,7 +1,9 @@
+import Link from 'next/link';
+
 import Icon from '@/components/icon';
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import { Button } from '@/components/ui/button';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
@@ -28,11 +30,11 @@ export const ProfileInfoCard = ({
     <div
       className={twMerge(
         className,
-        'border-1 border-foreground-light/50 dark:border-foreground-dark/50 shadow-md rounded-lg overflow-hidden'
+        'border-1 border-foreground-light/50 dark:border-foreground-dark/50 rounded-sm overflow-hidden'
       )}
     >
       <div className='mb-[20px] px-4 pt-8 pb-2 w-full flex items-end gap-3 bg-foreground-light/50 dark:bg-foreground-dark/50'>
-        <ProfileFrame className='-mb-[20px] size-[85px] !ring-2'>
+        <ProfileFrame className='-mb-[20px] size-[85px] ring-2 ring-foreground-light/50 dark:ring-foreground-dark/50'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
 
@@ -79,22 +81,21 @@ export const ProfileInfoCard = ({
         )}
       </div>
 
-      <div className='mt-4 p-4 pt-0 flex flex-col items-center gap-3'>
-        <LinksRedirectArrow link={`/${userData?.username}`}>
-          <p className='font-dm_sans text-sm'>
-            Visit{' '}
-            <span className='font-medium text-brand-orange'>{`${userData?.first_name}`}</span>
-            &apos;s profile
-          </p>
-        </LinksRedirectArrow>
-
+      <div className='mt-4 p-4 pt-0 flex items-center gap-2'>
         {userData?.username !== session?.user.username &&
           status === 'authenticated' && (
             <FollowButtonSecondary
               username={userData?.username}
-              className='w-full !rounded-md'
+              className='flex-1 !rounded-md'
             />
           )}
+
+        <Button variant='secondary' size='sm' className='flex-1' asChild>
+          <Link href={`/${userData?.username}`}>
+            Visit Profile{' '}
+            <Icon name='RiArrowRightUp' size={18} className='ml-1' />
+          </Link>
+        </Button>
       </div>
     </div>
   );

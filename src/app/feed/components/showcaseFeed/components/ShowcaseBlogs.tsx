@@ -29,16 +29,18 @@ export const ShowcaseBlogs = () => {
         <h1 className='font-dm_sans font-medium text-lg'>
           Latest Blogs on <span className='text-brand-orange'>Monkeys</span>
         </h1>
-
-        <LinksRedirectArrow link='/feed?source=all' className='w-fit'>
-          <p className='text-sm opacity-80'>explore all</p>
-        </LinksRedirectArrow>
       </div>
 
       <div className='grid grid-cols-2 md:grid-cols-3 gap-y-8 sm:gap-y-10 gap-x-6'>
-        {filteredBlogs?.slice(0, 6)?.map((blog) => {
+        {filteredBlogs?.slice(0, 12)?.map((blog) => {
           return <ShowcaseBlogCard key={blog.blog_id} blog={blog} />;
         })}
+      </div>
+
+      <div className='py-4'>
+        <LinksRedirectArrow link='/feed?source=all' className='mx-auto w-fit'>
+          <p className='font-dm_sans font-medium opacity-80'>Explore All</p>
+        </LinksRedirectArrow>
       </div>
     </div>
   );

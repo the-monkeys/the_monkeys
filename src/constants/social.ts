@@ -8,6 +8,7 @@ export const INSTAGRAM_URL = 'https://www.instagram.com';
 export const MONKEYS_DISCORD = 'https://discord.gg/6fK9YuV8FV';
 export const MONKEYS_GITHUB = 'https://github.com/the-monkeys';
 export const MONKEYS_X = 'https://x.com/MonkeysInsight';
+export const MONKEYS_INSTAGRAM = 'https://www.instagram.com/monkeys_com_co/';
 
 export const notFoundList = [
   {
@@ -23,7 +24,7 @@ export const notFoundList = [
     link: MONKEYS_GITHUB,
   },
   {
-    title: 'Join our Discord',
+    title: 'Follow us on X',
     text: 'Follow us on X for the latest updates and news highlights.',
     icon: 'RiTwitterX' as IconName,
     link: MONKEYS_X,

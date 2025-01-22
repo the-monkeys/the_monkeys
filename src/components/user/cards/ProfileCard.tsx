@@ -35,21 +35,23 @@ export const ProfileCard = ({
 
   return (
     <div className='mt-2 space-y-2'>
-      <ProfileFrame className='size-[80px] md:size-[100px]'>
-        <ProfileImage username={user?.username} />
-      </ProfileFrame>
+      <div className='flex gap-2 items-end'>
+        <ProfileFrame className='size-[80px] !rounded-none'>
+          <ProfileImage username={user?.username} />
+        </ProfileFrame>
 
-      <div>
-        <h2 className='w-full font-dm_sans font-medium text-xl md:text-2xl capitalize'>
-          {`${user?.first_name} ${user?.last_name}`}
-        </h2>
+        <div className='flex-1 overflow-hidden'>
+          <div className='flex item-center gap-1'>
+            <p className='font-dm_sans text-xs sm:text-sm opacity-80 truncate'>
+              {`@${user?.username}`}
+            </p>
 
-        <div className='flex item-center gap-1'>
-          <p className='font-dm_sans text-xs sm:text-sm opacity-80 truncate'>
-            {`@${user?.username}`}
-          </p>
+            {isAuthenticated && <UpdateUsernameDialog />}
+          </div>
 
-          {isAuthenticated && <UpdateUsernameDialog />}
+          <h2 className='w-full font-dm_sans font-medium text-xl capitalize'>
+            {`${user?.first_name} ${user?.last_name}`}
+          </h2>
         </div>
       </div>
 
@@ -87,7 +89,7 @@ export const ProfileCard = ({
         </div>
       </div>
 
-      <div className='flex items-center flex-wrap gap-x-2 gap-y-1'>
+      <div className='gap-y-1'>
         <div className='flex items-center gap-1'>
           <Icon name='RiCalendar' size={16} className='opacity-80' />
 

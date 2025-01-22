@@ -3,19 +3,22 @@ import { Skeleton } from '../ui/skeleton';
 export const ProfileCardSkeleton = () => {
   return (
     <div className='space-y-2'>
-      <Skeleton className='size-[80px] md:size-[100px] rounded-full' />
+      <div className='flex items-end gap-2'>
+        <Skeleton className='size-[80px] rounded-none' />
 
-      <div className='space-y-1'>
-        <Skeleton className='h-6 w-44' />
-        <Skeleton className='h-3 w-36' />
+        <div className='space-y-1'>
+          <Skeleton className='h-6 w-44' />
+          <Skeleton className='h-3 w-36' />
+        </div>
+      </div>
+
+      <div className='py-2 space-y-1'>
+        <Skeleton className='h-3 w-full' />
+        <Skeleton className='h-3 w-full' />
+        <Skeleton className='h-3 w-1/2' />
       </div>
 
       <div className='space-y-1'>
-        <Skeleton className='h-3 w-full' />
-        <Skeleton className='h-3 w-full' />
-      </div>
-
-      <div className='flex gap-2'>
         <Skeleton className='h-4 w-28' />
         <Skeleton className='h-4 w-28' />
       </div>

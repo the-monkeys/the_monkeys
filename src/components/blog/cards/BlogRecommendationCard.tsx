@@ -15,7 +15,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
   const { titleContent } = getCardContent({ blog });
 
   return (
-    <div className='px-4 flex flex-col space-y-1'>
+    <div className='pt-4 pb-6 px-1 flex flex-col space-y-1'>
       <Link
         href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
         target='_blank'
@@ -23,12 +23,13 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
       >
         <BlogTitle
           title={titleContent}
-          className='font-semibold text-base md:text-lg'
+          className='font-semibold text-base md:text-lg opacity-90 group-hover:opacity-100'
         />
       </Link>
 
       <p className='font-dm_sans text-[13px] opacity-80'>
-        {moment(date).format('MMMM DD, 2025')}
+        {moment(date).format('MMM DD, 2025')} at{' '}
+        {moment(date).utc().format('hh:mm')} UTC
       </p>
     </div>
   );

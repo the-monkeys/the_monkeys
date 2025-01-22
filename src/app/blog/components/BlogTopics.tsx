@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import {
   TopicBadgeBlog,
-  TopicBadgeShowcase,
+  TopicBadgeBlogCompact,
 } from '@/components/badges/topicBadge';
 
 export const BlogTopics = ({ topics }: { topics: string[] }) => {
@@ -29,11 +29,11 @@ export const BlogTopicsCompact = ({ topics }: { topics: string[] }) => {
   const [showAllTopics, setShowAllTopics] = useState<boolean>(false);
 
   return (
-    <div className='mt-3 relative flex gap-2 flex-wrap'>
+    <div className='relative flex gap-x-2 gap-y-1 flex-wrap'>
       {topics.length ? (
         (showAllTopics ? topics : topics.slice(0, 5)).map((tag, index) => {
           return (
-            <TopicBadgeShowcase
+            <TopicBadgeBlogCompact
               key={index}
               topic={tag}
               colorCodeIndex={index}
@@ -46,10 +46,10 @@ export const BlogTopicsCompact = ({ topics }: { topics: string[] }) => {
 
       {topics.length > 6 && (
         <button
-          className='px-1 text-sm opacity-80 hover:opacity-100 underline underline-offset-1 decoration-1'
+          className='px-1 text-sm hover:opacity-80 underline underline-offset-2 decoration-1'
           onClick={() => setShowAllTopics(!showAllTopics)}
         >
-          {showAllTopics ? 'Show Less' : `Show All (${topics.length})`}
+          {showAllTopics ? 'show less' : 'show more'}
         </button>
       )}
     </div>

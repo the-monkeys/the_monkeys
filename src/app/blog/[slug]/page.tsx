@@ -9,7 +9,7 @@ import {
 } from '@/components/skeletons/blogSkeleton';
 import { Separator } from '@/components/ui/separator';
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
-import { UserInfoCard } from '@/components/user/userInfo';
+import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
@@ -60,20 +60,20 @@ const BlogPage = () => {
   return (
     <>
       <div className='relative col-span-3 lg:col-span-2'>
-        <div className='space-y-[6px]'>
+        <div>
           <div className='flex justify-between items-center'>
-            <UserInfoCard id={authorId} date={date} />
+            <UserInfoCardBlogPage id={authorId} date={date} />
           </div>
         </div>
 
-        <Separator className='mt-2 mb-4 opacity-80' />
+        <Separator className='mt-2 mb-5 opacity-80' />
 
-        <div>
+        <div className='space-y-3'>
           <h1
             dangerouslySetInnerHTML={{
               __html: purifyHTMLString(blogTitle),
             }}
-            className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.3]'
+            className='font-dm_sans font-bold text-[30px] md:text-[34px] leading-[1.3]'
           ></h1>
 
           <BlogTopicsCompact topics={blog?.tags} />
@@ -90,9 +90,9 @@ const BlogPage = () => {
         </div>
       </div>
 
-      <div className='col-span-3 lg:col-span-1 space-y-6'>
+      <div className='col-span-3 lg:col-span-1 space-y-8'>
         <div className='space-y-1'>
-          <h4 className='px-1 font-dm_sans font-medium'>About Author</h4>
+          <h4 className='px-1 font-dm_sans font-medium'>Author Spotlight</h4>
 
           <ProfileInfoCard userId={authorId} className='max-w-[500px]' />
         </div>
