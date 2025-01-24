@@ -22,7 +22,7 @@ export const PublishedBlogSkeleton = () => {
         <EditorBlockSkeleton />
       </div>
 
-      <div className='hidden lg:block px-4 col-span-3 lg:col-span-1 space-y-4'>
+      <div className='hidden lg:block col-span-3 lg:col-span-1 space-y-4'>
         <div className='h-64 w-full bg-gradient-to-b from-foreground-light dark:from-foreground-dark from-[20%] rounded-t-md animate-opacity-pulse' />
       </div>
     </>
