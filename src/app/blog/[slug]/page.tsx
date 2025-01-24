@@ -86,7 +86,7 @@ const BlogPage = () => {
       </div>
 
       <div className='col-span-3 lg:col-span-1 space-y-8'>
-        <div className='space-y-1'>
+        <div className='space-y-2'>
           <h4 className='px-1 font-dm_sans font-medium'>Author Spotlight</h4>
 
           <ProfileInfoCard userId={authorId} className='max-w-[500px]' />

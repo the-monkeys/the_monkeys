@@ -27,7 +27,7 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
 
   return (
     <div className='col-span-2 sm:col-span-1 flex flex-col'>
-      <div className='mb-2 h-[200px] sm:h-[250px] w-full overflow-hidden rounded-md'>
+      <div className='mb-2 h-[200px] lg:h-[250px] w-full overflow-hidden rounded-md'>
         <BlogImage title={titleContent} image={imageContent} />
       </div>
 

@@ -89,6 +89,12 @@ export const ShowcaseBlogCardListSkeleton = () => {
       <ShowcaseBlogCardSkeleton />
       <ShowcaseBlogCardSkeleton />
       <ShowcaseBlogCardSkeleton />
+      <ShowcaseBlogCardSkeleton />
+      <ShowcaseBlogCardSkeleton />
+      <ShowcaseBlogCardSkeleton />
+      <ShowcaseBlogCardSkeleton />
+      <ShowcaseBlogCardSkeleton />
+      <ShowcaseBlogCardSkeleton />
     </div>
   );
 };

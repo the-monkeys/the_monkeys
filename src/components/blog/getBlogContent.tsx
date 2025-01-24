@@ -65,8 +65,6 @@ export const BlogDescription = ({
   description: string;
   className?: string;
 }) => {
-  console.log(typeof description);
-
   return (
     <p
       className={twMerge(className, 'leading-[1.4]')}

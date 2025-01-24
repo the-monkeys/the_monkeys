@@ -15,7 +15,7 @@ export const BlogRecommendationCard = ({ blog }: { blog: Blog }) => {
   const { titleContent } = getCardContent({ blog });
 
   return (
-    <div className='pt-4 pb-6 px-1 flex flex-col space-y-1'>
+    <div className='pt-4 pb-6 px-2 flex flex-col space-y-1'>
       <Link
         href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
         target='_blank'

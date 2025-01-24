@@ -74,7 +74,7 @@ export const BlogCard: FC<BlogCardProps> = ({
             </div>
 
             {imageContent && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:rounded-md w-[160px] overflow-hidden'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] rounded-md overflow-hidden'>
                 <BlogImage image={imageContent} title={titleContent} />
               </div>
             )}

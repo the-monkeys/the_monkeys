@@ -4,7 +4,7 @@
 
 :root {
   --blog-h1-text-size: 30px;
-  --blog-h2-text-size: 26px;
+  --blog-h2-text-size: 28px;
   --blog-h3-text-size: 24px;
   --blog-p-text-size: 18px;
   --blog-list-text-size: 18px;
@@ -96,6 +96,7 @@ h3.ce-header {
   font-size: var(--blog-p-text-size);
   font-weight: 400;
   line-height: var(--blog-text-height) !important;
+  opacity: 0.92;
 }
 
 .codex-editor__redactor {
@@ -128,10 +129,11 @@ h3.ce-header {
 }
 
 li.cdx-list__item {
-  padding: 0 0 10px 0 !important;
+  padding: 0 0 8px 0 !important;
   font-size: var(--blog-list-text-size);
   font-weight: 400;
   line-height: var(--blog-text-height) !important;
+  opacity: 0.92;
 }
 
 /* quote tool */

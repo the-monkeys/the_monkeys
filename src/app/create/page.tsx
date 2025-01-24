@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import { EditorProps } from '@/components/editor';
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
@@ -240,8 +241,13 @@ const CreatePage = () => {
     <>
       <div className='space-y-4'>
         <div className='py-1 mx-auto w-full sm:w-4/5 flex justify-end items-center'>
-          <Button size='sm' onClick={() => setShowModal(true)}>
-            Publish
+          <Button
+            size='icon'
+            onClick={() => setShowModal(true)}
+            title='Publish Blog'
+            className='rounded-full'
+          >
+            <Icon name='RiArrowRight' />
           </Button>
         </div>
 
@@ -254,22 +260,13 @@ const CreatePage = () => {
         </div>
       </div>
 
-      <div className='sticky left-0 bottom-[53px] md:bottom-[0px] py-1 flex justify-between items-center bg-background-light dark:bg-background-dark border-t-1 border-foreground-light dark:border-foreground-dark z-50'>
-        <div>
-          {webSocket && isSaving ? (
-            <p className='p-1 text-sm text-center'>Saving...</p>
-          ) : (
-            <p className='p-1 text-sm text-center'>Saved</p>
-          )}
+      {webSocket && isSaving && (
+        <div className='sticky w-fit left-[50%] -translate-x-[50%] bottom-[53px] md:bottom-4 p-2 z-[99]'>
+          <div className='px-[10px] py-1 bg-foreground-light dark:bg-foreground-dark rounded-md'>
+            <p className='text-sm text-center'>Saving blog...</p>
+          </div>
         </div>
-
-        <p className='font-dm_sans text-sm text-center'>
-          Creating as{' '}
-          <span className='font-dm_sans font-medium'>
-            {session?.user.first_name}
-          </span>
-        </p>
-      </div>
+      )}
 
       {showModal && (
         <PublishModal

@@ -73,19 +73,15 @@ export const ProfileInfoCard = ({
         )}
 
         <div className='flex items-center gap-2'>
-          <div className='flex gap-1'>
-            <p className='text-sm font-medium'>
-              {user?.followers ? user.followers : '0'}
-            </p>
-            <p className='text-sm opacity-80'>Followers</p>
-          </div>
+          <p className='font-medium'>
+            {user?.followers ? user.followers : '0'}{' '}
+            <span className='font-normal opacity-80'>Followers</span>
+          </p>
 
-          <div className='flex gap-1'>
-            <p className='text-sm font-medium'>
-              {user?.followers ? user.following : '0'}
-            </p>
-            <p className='text-sm opacity-80'>Following</p>
-          </div>
+          <p className='font-medium'>
+            {user?.following ? user.following : '0'}{' '}
+            <span className='font-normal opacity-80'>Followers</span>
+          </p>
         </div>
       </div>
     </div>

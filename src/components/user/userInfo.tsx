@@ -109,25 +109,24 @@ export const UserInfoCardBlogPage = ({
     <div className='w-full flex items-center gap-2'>
       <div className='flex items-center gap-[6px]'>
         <div>
-          <ProfileFrame className='size-10 !rounded-none'>
+          <ProfileFrame className='size-[38px] !rounded-none'>
             <ProfileImage username={userData?.username} />
           </ProfileFrame>
         </div>
 
         <div className='flex flex-col justify-center overflow-hidden space-y-[2px]'>
-          <div className='flex items-end text-sm gap-1'>
-            <p className='opacity-80'>By:</p>
+          <div>
             <Link
               href={`/${userData?.username}`}
-              className='font-medium hover:underline decoration-1'
+              className='font-dm_sans font-medium text-sm hover:underline decoration-1'
             >
               {userData?.first_name} {userData?.last_name}
             </Link>
           </div>
 
-          <div className='flex items-end text-[13px] gap-1'>
-            <p className='opacity-80'>Posted:</p>
-            <p className='font-medium opacity-80'>
+          <div className='flex items-end text-sm gap-1'>
+            <p className='opacity-80'>Posted on:</p>
+            <p className='opacity-80'>
               {moment(date).format('MMM DD, yyyy')}
               {' / '}
               {moment(date).utc().format('hh:mm A')} UTC
