@@ -30,7 +30,7 @@ export const UserInfoCardCompact = ({
   return (
     <div className='w-full flex items-center gap-2'>
       <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-5 border-none'>
+        <ProfileFrame className='size-5 !rounded-sm'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
       </Link>
@@ -109,7 +109,7 @@ export const UserInfoCardBlogPage = ({
     <div className='w-full flex items-center gap-2'>
       <div className='flex items-center gap-[6px]'>
         <div>
-          <ProfileFrame className='size-[38px] !rounded-none'>
+          <ProfileFrame className='size-[38px] !rounded-md'>
             <ProfileImage username={userData?.username} />
           </ProfileFrame>
         </div>
@@ -158,7 +158,7 @@ export const UserInfoCard = ({
   return (
     <div className='w-full flex items-center gap-2'>
       <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-[35px]'>
+        <ProfileFrame className='size-[35px] !rounded-md'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
       </Link>

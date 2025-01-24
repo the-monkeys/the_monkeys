@@ -133,7 +133,7 @@ export const UpdateDialog = ({ data }: { data: Session }) => {
               <div className='flex flex-wrap items-end gap-2'>
                 <p className='w-full text-sm'>Profile Photo</p>
 
-                <ProfileFrame className='size-24 sm:size-28'>
+                <ProfileFrame className='size-24'>
                   {data.user && <ProfileImage username={data.user.username} />}
                 </ProfileFrame>
 

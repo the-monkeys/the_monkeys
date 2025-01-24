@@ -42,7 +42,7 @@ export const ProfileCard = ({
 
         <div className='flex-1 overflow-hidden'>
           <div className='flex item-center gap-1'>
-            <p className='font-dm_sans text-xs sm:text-sm opacity-80 truncate'>
+            <p className='font-dm_sans text-sm opacity-80 truncate'>
               {`@${user?.username}`}
             </p>
 

@@ -3,7 +3,7 @@ import { Skeleton } from '../ui/skeleton';
 export const UserInfoCardSkeleton = () => {
   return (
     <div className='flex items-center gap-2'>
-      <Skeleton className='size-10 rounded-full' />
+      <Skeleton className='size-10' />
 
       <div className='space-y-1'>
         <Skeleton className='h-4 w-32' />
@@ -17,7 +17,7 @@ export const UserInfoCardSkeleton = () => {
 export const UserInfoCardCompactSkeleton = () => {
   return (
     <div className='flex items-center gap-2'>
-      <Skeleton className='size-6 rounded-full' />
+      <Skeleton className='size-6 rounded-sm' />
 
       <Skeleton className='h-4 w-32' />
     </div>
