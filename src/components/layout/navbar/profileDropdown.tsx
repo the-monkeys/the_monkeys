@@ -29,8 +29,15 @@ const ProfileDropdown = () => {
           <DropdownMenuItem asChild>
             <button
               onClick={() => {
-                if (window.location.pathname === '/login') {
+                const currentPath = window.location.pathname;
+
+                if (currentPath === '/login') {
                   window.location.reload();
+                  return;
+                }
+
+                if (currentPath.startsWith('/blog/')) {
+                  router.push('/');
                   return;
                 }
 

@@ -69,12 +69,12 @@ export const BlogCard: FC<BlogCardProps> = ({
               />
               <BlogDescription
                 description={descriptionContent}
-                className='line-clamp-2 opacity-80'
+                className='line-clamp-2 opacity-65'
               />
             </div>
 
             {imageContent && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:rounded-md w-[160px] overflow-hidden'>
                 <BlogImage image={imageContent} title={titleContent} />
               </div>
             )}
@@ -93,12 +93,12 @@ export const BlogCard: FC<BlogCardProps> = ({
               />
               <BlogDescription
                 description={descriptionContent}
-                className='line-clamp-2 opacity-80'
+                className='line-clamp-2 opacity-65'
               />
             </div>
 
             {imageContent && (
-              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden group-hover:opacity-80'>
+              <div className='h-[180px] sm:h-[120px] w-full sm:w-[160px] overflow-hidden rounded-md group-hover:opacity-80'>
                 <BlogImage image={imageContent} title={titleContent} />
               </div>
             )}

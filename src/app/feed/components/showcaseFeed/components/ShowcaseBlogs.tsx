@@ -24,14 +24,14 @@ export const ShowcaseBlogs = () => {
   });
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-4'>
       <div>
         <h1 className='font-dm_sans font-medium text-lg'>
           Latest Blogs on <span className='text-brand-orange'>Monkeys</span>
         </h1>
       </div>
 
-      <div className='grid grid-cols-2 md:grid-cols-3 gap-y-8 sm:gap-y-10 gap-x-6'>
+      <div className='grid grid-cols-2 md:grid-cols-3 gap-y-8 sm:gap-y-10 gap-x-8'>
         {filteredBlogs?.slice(0, 12)?.map((blog) => {
           return <ShowcaseBlogCard key={blog.blog_id} blog={blog} />;
         })}

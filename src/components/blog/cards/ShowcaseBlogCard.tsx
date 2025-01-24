@@ -27,13 +27,13 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
 
   return (
     <div className='col-span-2 sm:col-span-1 flex flex-col'>
-      <div className='mb-4 h-[200px] sm:h-[250px] w-full overflow-hidden'>
+      <div className='mb-2 h-[200px] sm:h-[250px] w-full overflow-hidden rounded-md'>
         <BlogImage title={titleContent} image={imageContent} />
       </div>
 
       <Link
         href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-        className='mb-3 flex-1 group'
+        className='mb-4 flex-1 group'
       >
         <div className='space-y-1'>
           <BlogTitle
@@ -42,7 +42,7 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
           />
           <BlogDescription
             description={descriptionContent}
-            className='line-clamp-2 opacity-80'
+            className='line-clamp-2 opacity-65'
           />
         </div>
       </Link>

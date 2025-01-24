@@ -52,12 +52,12 @@ export const BlogReactionsContainer = ({
   const url = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   return (
-    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-full max-w-[320px] flex items-center gap-2 z-20'>
-      <div className='flex-1 px-6 py-[8px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light shadow-md rounded-full'>
+    <div className='sticky left-0 bottom-[60px] md:bottom-[30px] mx-auto w-full max-w-full sm:max-w-[320px] flex items-center gap-[6px] z-20'>
+      <div className='flex-1 px-4 py-[6px] bg-foreground-light dark:bg-foreground-dark rounded-full border-1 border-border-light/80 dark:border-border-dark/80'>
         <BlogReactions blogURL={blogURL} blogId={blogId} />
       </div>
 
-      <div className='px-3 py-[8px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light shadow-md rounded-full'>
+      <div className='px-3 py-[6px] bg-foreground-light dark:bg-foreground-dark rounded-full border-1 border-border-light/80 dark:border-border-dark/80'>
         <BlogShareDialog blogURL={url} size={20} />
       </div>
     </div>

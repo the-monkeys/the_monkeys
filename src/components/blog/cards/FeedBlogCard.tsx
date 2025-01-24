@@ -54,12 +54,12 @@ export const FeedBlogCard = ({
             />
             <BlogDescription
               description={descriptionContent}
-              className='line-clamp-2 opacity-80'
+              className='line-clamp-2 opacity-65'
             />
           </div>
 
           {imageContent && (
-            <div className='h-[185px] sm:h-[120px] w-full sm:w-[165px] overflow-hidden group-hover:opacity-90'>
+            <div className='h-[185px] sm:h-[120px] w-full sm:w-[165px] overflow-hidden rounded-md group-hover:opacity-90'>
               <BlogImage image={imageContent} title={titleContent} />
             </div>
           )}

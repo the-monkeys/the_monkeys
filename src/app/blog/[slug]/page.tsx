@@ -7,7 +7,6 @@ import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import { Separator } from '@/components/ui/separator';
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
@@ -60,15 +59,11 @@ const BlogPage = () => {
   return (
     <>
       <div className='relative col-span-3 lg:col-span-2'>
-        <div>
-          <div className='flex justify-between items-center'>
-            <UserInfoCardBlogPage id={authorId} date={date} />
-          </div>
+        <div className='mb-6'>
+          <UserInfoCardBlogPage id={authorId} date={date} />
         </div>
 
-        <Separator className='mt-2 mb-5 opacity-80' />
-
-        <div className='space-y-3'>
+        <div className='space-y-2'>
           <h1
             dangerouslySetInnerHTML={{
               __html: purifyHTMLString(blogTitle),
@@ -85,7 +80,7 @@ const BlogPage = () => {
 
         <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />
 
-        <div className='mt-8'>
+        <div className='mt-[50px]'>
           <BlogTopics topics={tags || []} />
         </div>
       </div>

@@ -36,7 +36,7 @@ export const ProfileCard = ({
   return (
     <div className='mt-2 space-y-2'>
       <div className='flex gap-2 items-end'>
-        <ProfileFrame className='size-[80px] !rounded-none'>
+        <ProfileFrame className='size-[80px]'>
           <ProfileImage username={user?.username} />
         </ProfileFrame>
 
