@@ -3,6 +3,8 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import Icon from '@/components/icon';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
@@ -38,9 +40,24 @@ const BlogPage = () => {
   if (isError || !blog) {
     return (
       <div className='col-span-3 min-h-screen'>
-        <p className='py-4 text-sm text-alert-red text-center'>
-          Error fetching blog content. Try again.
-        </p>
+        <div className='py-5 flex flex-col items-center space-y-1'>
+          <div className='p-2'>
+            <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
+          </div>
+
+          <p className='text-lg text-center'>
+            The blog content isn&apos;t available.
+          </p>
+
+          <p className='text-center opacity-80'>
+            It might have been removed by the owner or is temporarily
+            inaccessible.
+          </p>
+        </div>
+
+        <LinksRedirectArrow link='/feed' className='py-4 mx-auto w-fit'>
+          <p className='font-dm_sans'>Visit Our Showcase</p>
+        </LinksRedirectArrow>
       </div>
     );
   }

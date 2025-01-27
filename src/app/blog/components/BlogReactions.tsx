@@ -20,7 +20,9 @@ export const BlogReactions = ({
 
   if (status === 'unauthenticated')
     return (
-      <p className='p-1 text-sm opacity-80 text-center'>Log in to interact</p>
+      <p className='p-1 text-sm opacity-80 text-center'>
+        You are not logged in.
+      </p>
     );
 
   return (
