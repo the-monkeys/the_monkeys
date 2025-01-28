@@ -139,7 +139,7 @@ li.cdx-list__item {
 /* quote tool */
 
 .cdx-quote {
-  padding: 6px 8px 6px 16px !important;
+  padding: 10px 8px 10px 16px !important;
   margin: 0 0 30px !important;
   position: relative;
   background-color: #d9d9d97f;
@@ -515,7 +515,7 @@ li.cdx-list__item {
   }
 
   .cdx-quote {
-    padding: 4px 6px 4px 14px !important;
+    padding: 8px 6px 8px 14px !important;
   }
 
   .cdx-quote__text {

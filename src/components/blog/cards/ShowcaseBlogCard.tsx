@@ -33,6 +33,7 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
 
       <Link
         href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
+        target='_blank'
         className='mb-4 flex-1 group'
       >
         <div className='space-y-1'>
