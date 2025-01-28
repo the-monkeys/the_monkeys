@@ -66,7 +66,7 @@ const Modal: FC<PropsWithChildren<ModalProps>> = ({ children, setModal }) => {
           </button>
         </div>
 
-        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col overflow-auto rounded-md bg-background-light transition-all dark:bg-background-dark sm:min-h-[300px] sm:self-center'>
+        <div className='space-y-6 max-h-[60vh] sm:max-h-[80vh] w-full flex-col overflow-auto rounded-xl bg-background-light transition-all dark:bg-background-dark sm:min-h-[300px] sm:self-center'>
           {children}
         </div>
       </div>

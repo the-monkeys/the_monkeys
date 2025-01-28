@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
@@ -87,7 +88,7 @@ export const FollowButton = ({
         <Button
           disabled={loading}
           onClick={onUserUnfollow}
-          className={twMerge(className, 'rounded-full')}
+          className={twMerge(className, '!text-base rounded-full')}
         >
           {loading && <Loader />}
           Unfollow
@@ -97,7 +98,7 @@ export const FollowButton = ({
           variant='brand'
           disabled={loading}
           onClick={onUserFollow}
-          className={twMerge(className, 'rounded-full')}
+          className={twMerge(className, '!text-base rounded-full')}
         >
           {loading && <Loader />}
           Follow
@@ -107,7 +108,7 @@ export const FollowButton = ({
   );
 };
 
-export const FollowButtonSecondary = ({
+export const FollowButtonIcon = ({
   username,
   className,
 }: {
@@ -184,24 +185,22 @@ export const FollowButtonSecondary = ({
     <>
       {followStatus?.isFollowing ? (
         <Button
-          variant='secondary'
-          size='sm'
+          size='icon'
           disabled={loading}
           onClick={onUserUnfollow}
-          className={twMerge(className, 'rounded-full')}
+          className={twMerge(className)}
         >
-          {loading && <Loader />}
-          Unfollow
+          {loading ? <Loader /> : <Icon name='RiUserUnfollow' size={18} />}
         </Button>
       ) : (
         <Button
-          size='sm'
+          variant='brand'
+          size='icon'
           disabled={loading}
           onClick={onUserFollow}
-          className={twMerge(className, 'rounded-full')}
+          className={twMerge(className)}
         >
-          {loading && <Loader />}
-          Follow
+          {loading ? <Loader /> : <Icon name='RiUserFollow' size={18} />}
         </Button>
       )}
     </>

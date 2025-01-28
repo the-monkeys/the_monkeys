@@ -28,7 +28,7 @@ export const ProfileFrame = ({
     <div
       className={twMerge(
         className,
-        'bg-background-light dark:bg-background-dark ring-1 ring-border-light/25 dark:ring-border-dark/25 flex items-center justify-center overflow-hidden rounded-full'
+        'flex items-center justify-center overflow-hidden rounded-full'
       )}
     >
       {children}
@@ -43,8 +43,8 @@ export const ProfileImage = ({ username }: { username?: string }) => {
     return (
       <Image
         src='/default-profile.svg'
-        alt={`Profile: ${username}`}
-        title={`Profile: ${username}`}
+        alt={`Author: ${username}`}
+        title={`Author: ${username}`}
         width={32}
         height={32}
         className='w-full h-full object-cover'
@@ -55,8 +55,8 @@ export const ProfileImage = ({ username }: { username?: string }) => {
     return (
       <Image
         src='/default-profile.svg'
-        alt={`Profile: ${username}`}
-        title={`Profile: ${username}`}
+        alt={`Author: ${username}`}
+        title={`Author: ${username}`}
         width={32}
         height={32}
         className='w-full h-full object-cover'
@@ -66,8 +66,8 @@ export const ProfileImage = ({ username }: { username?: string }) => {
   return (
     <Image
       src={imageUrl}
-      alt={`Profile: ${username}`}
-      title={`Profile: ${username}`}
+      alt={`Author: ${username}`}
+      title={`Author: ${username}`}
       width={32}
       height={32}
       className='w-full h-full object-cover'

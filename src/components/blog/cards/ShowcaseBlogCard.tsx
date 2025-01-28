@@ -5,7 +5,12 @@ import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { Blog } from '@/services/blog/blogTypes';
 
-import { getCardContent } from '../getBlogContent';
+import {
+  BlogDescription,
+  BlogImage,
+  BlogTitle,
+  getCardContent,
+} from '../getBlogContent';
 
 export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
   const authorId = blog?.owner_account_id;
@@ -14,29 +19,36 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
   // Generate the slug for the blog title
   const blogTitle = blog?.blog?.blocks[0]?.data?.text;
   const blogSlug = generateSlug(blogTitle);
-  const { titleDiv, descriptionDiv, imageDiv } = getCardContent({ blog });
+  const { titleContent, descriptionContent, imageContent } = getCardContent({
+    blog,
+  });
 
-  if (!imageDiv) return null;
+  if (!imageContent) return null;
 
   return (
-    <div className='col-span-2 sm:col-span-1 flex flex-col gap-3'>
-      <div className='h-[180px] sm:h-[220px] w-full overflow-hidden rounded-sm'>
-        {imageDiv}
+    <div className='col-span-2 sm:col-span-1 flex flex-col'>
+      <div className='mb-2 h-[200px] lg:h-[250px] w-full overflow-hidden rounded-md'>
+        <BlogImage title={titleContent} image={imageContent} />
       </div>
+
+      <Link
+        href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
+        target='_blank'
+        className='mb-4 flex-1 group'
+      >
+        <div className='space-y-1'>
+          <BlogTitle
+            title={titleContent}
+            className='font-bold text-xl lg:text-[22px] group-hover:opacity-80 line-clamp-3'
+          />
+          <BlogDescription
+            description={descriptionContent}
+            className='line-clamp-2 opacity-65'
+          />
+        </div>
+      </Link>
 
       <UserInfoCardShowcase id={authorId} date={date} />
-
-      <div className='flex-1 flex flex-col justify-between gap-5'>
-        <Link
-          href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-          className='group flex flex-col gap-2'
-        >
-          <div className='space-y-1'>
-            {titleDiv}
-            {descriptionDiv}
-          </div>
-        </Link>
-      </div>
     </div>
   );
 };

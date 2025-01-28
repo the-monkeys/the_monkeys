@@ -35,7 +35,7 @@ export const ProfileSection = () => {
 
   return (
     <>
-      <div className='mb-2 flex gap-2 items-center justify-end'>
+      <div className='mb-3 flex gap-2 items-center justify-end'>
         {params.username !== session?.user.username &&
           status === 'authenticated' && (
             <FollowButton username={params.username} />

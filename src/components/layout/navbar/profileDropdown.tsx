@@ -29,8 +29,15 @@ const ProfileDropdown = () => {
           <DropdownMenuItem asChild>
             <button
               onClick={() => {
-                if (window.location.pathname === '/login') {
+                const currentPath = window.location.pathname;
+
+                if (currentPath === '/login') {
                   window.location.reload();
+                  return;
+                }
+
+                if (currentPath.startsWith('/blog/')) {
+                  router.push('/');
                   return;
                 }
 
@@ -53,7 +60,11 @@ const ProfileDropdown = () => {
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiUser' size={18} />
-              <p className='font-dm_sans text-sm sm:text-base'>Profile</p>
+              <p className='flex-1 font-dm_sans text-sm sm:text-base truncate'>
+                {session?.user
+                  ? `${session.user.first_name} ${session.user.last_name}`
+                  : 'Profile'}
+              </p>
             </Link>
           </DropdownMenuItem>
 

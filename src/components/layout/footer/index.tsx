@@ -3,7 +3,12 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { footerList } from '@/constants/footer';
-import { MONKEYS_DISCORD, MONKEYS_GITHUB, MONKEYS_X } from '@/constants/social';
+import {
+  MONKEYS_DISCORD,
+  MONKEYS_GITHUB,
+  MONKEYS_INSTAGRAM,
+  MONKEYS_X,
+} from '@/constants/social';
 
 import Container from '../Container';
 
@@ -46,6 +51,14 @@ const Footer = () => {
               <div className='flex items-center gap-3'>
                 <Link
                   className='opacity-80 hover:opacity-100'
+                  href={MONKEYS_X}
+                  target='_blank'
+                >
+                  <Icon name='RiTwitterX' type='Fill' />
+                </Link>
+
+                <Link
+                  className='opacity-80 hover:opacity-100'
                   href={MONKEYS_DISCORD}
                   target='_blank'
                 >
@@ -62,10 +75,10 @@ const Footer = () => {
 
                 <Link
                   className='opacity-80 hover:opacity-100'
-                  href={MONKEYS_X}
+                  href={MONKEYS_INSTAGRAM}
                   target='_blank'
                 >
-                  <Icon name='RiTwitterX' type='Fill' />
+                  <Icon name='RiInstagram' type='Fill' />
                 </Link>
               </div>
             </div>

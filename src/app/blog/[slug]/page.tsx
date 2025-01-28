@@ -3,13 +3,14 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import Icon from '@/components/icon';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import { Separator } from '@/components/ui/separator';
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
-import { UserInfoCard } from '@/components/user/userInfo';
+import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
@@ -39,9 +40,24 @@ const BlogPage = () => {
   if (isError || !blog) {
     return (
       <div className='col-span-3 min-h-screen'>
-        <p className='py-4 text-sm text-alert-red text-center'>
-          Error fetching blog content. Try again.
-        </p>
+        <div className='py-5 flex flex-col items-center space-y-1'>
+          <div className='p-2'>
+            <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
+          </div>
+
+          <p className='text-lg text-center'>
+            The blog content isn&apos;t available.
+          </p>
+
+          <p className='text-center opacity-80'>
+            It might have been removed by the owner or is temporarily
+            inaccessible.
+          </p>
+        </div>
+
+        <LinksRedirectArrow link='/feed' className='py-4 mx-auto w-fit'>
+          <p className='font-dm_sans'>Visit Our Showcase</p>
+        </LinksRedirectArrow>
       </div>
     );
   }
@@ -60,20 +76,16 @@ const BlogPage = () => {
   return (
     <>
       <div className='relative col-span-3 lg:col-span-2'>
-        <div className='space-y-[6px]'>
-          <div className='flex justify-between items-center'>
-            <UserInfoCard id={authorId} date={date} />
-          </div>
+        <div className='mb-6'>
+          <UserInfoCardBlogPage id={authorId} date={date} />
         </div>
 
-        <Separator className='mt-2 mb-4 opacity-80' />
-
-        <div>
+        <div className='space-y-2'>
           <h1
             dangerouslySetInnerHTML={{
               __html: purifyHTMLString(blogTitle),
             }}
-            className='font-dm_sans font-semibold text-[30px] sm:text-[32px] leading-[1.3]'
+            className='font-dm_sans font-bold text-[30px] md:text-[34px] leading-[1.3]'
           ></h1>
 
           <BlogTopicsCompact topics={blog?.tags} />
@@ -85,14 +97,14 @@ const BlogPage = () => {
 
         <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />
 
-        <div className='mt-8'>
+        <div className='mt-[50px]'>
           <BlogTopics topics={tags || []} />
         </div>
       </div>
 
-      <div className='col-span-3 lg:col-span-1 space-y-6'>
-        <div className='space-y-1'>
-          <h4 className='px-1 font-dm_sans font-medium'>About Author</h4>
+      <div className='col-span-3 lg:col-span-1 space-y-8'>
+        <div className='space-y-2'>
+          <h4 className='px-1 font-dm_sans font-medium'>Author Spotlight</h4>
 
           <ProfileInfoCard userId={authorId} className='max-w-[500px]' />
         </div>

@@ -86,7 +86,12 @@ export const UpdateUsernameDialog = () => {
     <Dialog>
       <DialogTrigger asChild>
         <button className='opcity-100 hover:opacity-80'>
-          <Icon name='RiPencil' size={16} type='Fill' />
+          <Icon
+            name='RiPencil'
+            size={16}
+            type='Fill'
+            className='text-brand-orange'
+          />
         </button>
       </DialogTrigger>
 

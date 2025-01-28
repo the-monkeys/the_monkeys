@@ -117,7 +117,7 @@ export const UpdateDialog = ({ data }: { data: Session }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className='rounded-full'>Update</Button>
+        <Button className='!text-base rounded-full'>Update</Button>
       </DialogTrigger>
 
       <DialogContent className='max-h-[60vh] sm:max-h-[80vh] overflow-auto'>
@@ -133,7 +133,7 @@ export const UpdateDialog = ({ data }: { data: Session }) => {
               <div className='flex flex-wrap items-end gap-2'>
                 <p className='w-full text-sm'>Profile Photo</p>
 
-                <ProfileFrame className='size-24 sm:size-28'>
+                <ProfileFrame className='size-24'>
                   {data.user && <ProfileImage username={data.user.username} />}
                 </ProfileFrame>
 

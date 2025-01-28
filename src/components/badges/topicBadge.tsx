@@ -8,7 +8,7 @@ import { Badge } from '../ui/badge';
 export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
   return (
     <Link href={`/topics/${topic}`} target='_blank'>
-      <Badge variant='secondary' className='py-1 cursor-pointer rounded-md'>
+      <Badge variant='secondary' className='py-1 cursor-pointer rounded-full'>
         {topic}
       </Badge>
     </Link>
@@ -18,7 +18,7 @@ export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
 export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
   return (
     <Link href={`/topics/${topic}`} className='group' target='_blank'>
-      <Badge variant='secondary' className='px-4 py-1 cursor-pointer'>
+      <Badge variant='outline' className='px-4 py-1 cursor-pointer'>
         {topic}{' '}
         <Icon
           name='RiArrowRightUp'
@@ -30,7 +30,7 @@ export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
   );
 };
 
-export const TopicBadgeShowcase = ({
+export const TopicBadgeBlogCompact = ({
   topic,
   colorCodeIndex,
 }: {
@@ -38,7 +38,7 @@ export const TopicBadgeShowcase = ({
   colorCodeIndex: number;
 }) => {
   return (
-    <div className='flex items-center gap-1'>
+    <div className='flex items-center'>
       <div
         style={{
           color: TOPICS_COLOR_CODE[colorCodeIndex],
