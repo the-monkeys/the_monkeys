@@ -25,6 +25,10 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
     alignItems: 'center',
     cursor: 'pointer',
   }),
+  valueContainer: (provided: any) => ({
+    ...provided,
+    padding: '6px',
+  }),
   menu: (provided: any) => ({
     ...provided,
     backgroundColor: isDarkTheme ? '#1f1f1f' : '#ffffff', // Black for dark, white for light
@@ -71,6 +75,18 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
     ...provided,
     color: isDarkTheme ? '#f5f5f5' : '#333333', // White for dark, black for light
     fontSize: '0.875rem',
+  }),
+  multiValue: (provided: any) => ({
+    ...provided,
+    overflow: 'hidden',
+    padding: '0px 0px 0px 4px',
+    color: isDarkTheme ? '#f5f5f5' : '#333333', // White for dark, black for light
+    borderRadius: '12px',
+  }),
+  multiValueRemove: (provided: any) => ({
+    ...provided,
+    padding: '0px 6px',
+    color: '#EF4444',
   }),
   input: (provided: any) => ({
     ...provided,
