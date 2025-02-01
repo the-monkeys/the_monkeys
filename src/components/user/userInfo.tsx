@@ -125,7 +125,6 @@ export const UserInfoCardBlogPage = ({
           </div>
 
           <div className='flex items-end text-sm gap-1'>
-            <p className='opacity-80'>Posted on:</p>
             <p className='opacity-80'>
               {moment(date).format('MMM DD, yyyy')}
               {' / '}
