@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
+import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { ChooseTopicDialog } from '@/components/topics/dialogs/ChooseTopicDialog';
 import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
@@ -177,9 +178,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   return (
     <>
       {isLoading ? (
-        <div className='min-h-screen flex flex-col items-center gap-2'>
-          <Loader />
-          <p className='opacity-80'>Almost there! Preparing your editor...</p>
+        <div className='mx-auto w-full sm:w-4/5'>
+          <EditorBlockSkeleton />
         </div>
       ) : (
         <div className='relative min-h-screen space-y-4'>

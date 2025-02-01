@@ -105,13 +105,15 @@ export const BlogCard: FC<BlogCardProps> = ({
         )}
       </div>
 
-      <div className='mt-3 flex justify-between items-center gap-4'>
-        <ReactionsInfo
-          likesCount={likesCount}
-          bookmarksCount={bookmarksCount}
-        />
+      <div className='mt-3 flex justify-end items-center gap-4'>
+        {!isDraft && (
+          <ReactionsInfo
+            likesCount={likesCount}
+            bookmarksCount={bookmarksCount}
+          />
+        )}
 
-        <div className='flex items-center gap-1'>
+        <div className='flex-1 flex justify-end items-center gap-1'>
           {showModificationOptions && !isDraft && (
             <EditBlogDialog blogId={blogId} />
           )}
