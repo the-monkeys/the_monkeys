@@ -109,7 +109,15 @@ export default function LoginForm() {
                   onChange={field.onChange}
                 />
               </FormControl>
-              <FormMessage />
+              <div className='flex justify-between'>
+                <FormMessage />
+                <Link
+                  href='/auth/forgot-password'
+                  className='font-dm_sans text-sm hover:underline opacity-80 text-blue-600 dark:text-blue-400 ml-auto'
+                >
+                  Forgot your password?
+                </Link>
+              </div>
             </FormItem>
           )}
         />
@@ -124,15 +132,6 @@ export default function LoginForm() {
           </Button>
         </div>
       </form>
-
-      <div className='mt-4 text-center'>
-        <Link
-          href='/auth/forgot-password'
-          className='font-dm_sans text-sm hover:underline opacity-80 text-blue-600 dark:text-blue-400'
-        >
-          Forgot your password?
-        </Link>
-      </div>
     </Form>
   );
 }
