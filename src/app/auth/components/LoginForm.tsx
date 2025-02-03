@@ -54,6 +54,7 @@ export default function LoginForm() {
 
       if (callbackURL) {
         router.replace(callbackURL);
+        return;
       }
 
       toast({
