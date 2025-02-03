@@ -1,8 +1,9 @@
 import { API_URL } from '@/constants/api';
-import { User } from '@/lib/types';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import axiosInstanceNoAuth from '../api/axiosInstanceNoAuth';
+import { User } from '../models/user';
+import { LoginResponse } from './authApiTypes';
 
 const APIEndpoint = {
   LOGIN: '/auth/login',
@@ -30,7 +31,7 @@ export async function getResetPasswordToken(
 }
 
 export async function verifyEmailVerificationToken(
-  req: getResetPasswordTokenRequest,
+  req: { user: string; evpw: string },
   config?: AxiosRequestConfig
 ): Promise<verifyEmailVerificationTokenApiResponse> {
   const response =
@@ -48,7 +49,7 @@ export async function verifyEmailVerificationToken(
 }
 
 export async function login(credentials: { email: string; password: string }) {
-  const authResponse = await axios.post(
+  const authResponse = await axios.post<LoginResponse>(
     `${API_URL}/auth/login`,
     {
       email: credentials.email,
@@ -58,10 +59,11 @@ export async function login(credentials: { email: string; password: string }) {
       headers: {
         'Content-Type': 'application/json',
       },
+      withCredentials: true,
     }
   );
 
-  return authResponse.data as User;
+  return new User(authResponse.data);
 }
 
 export async function register(user: {
@@ -84,5 +86,5 @@ export async function register(user: {
     }
   );
 
-  return authResponse.data as User;
+  return new User(authResponse.data);
 }

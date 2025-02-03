@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 
+import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,8 +17,8 @@ import { toast } from '@/components/ui/use-toast';
 import { API_URL } from '@/constants/api';
 import { updateUsername } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
+import { User } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -32,43 +33,46 @@ export const Username = () => {
     },
   });
 
-  const updateUserSession = async (token: string) => {
-    await update({
-      ...session,
-      user: {
-        ...session?.user,
-        token: token,
-        username: form.getValues('username'),
-      },
-    });
-  };
-
   const onSubmit = async (values: z.infer<typeof updateUsername>) => {
     setLoading(true);
 
-    axiosInstance
-      .put(`${API_URL}/auth/settings/username/${session?.user?.username}`, {
-        username: values.username,
-      })
-      .then((res) => {
-        updateUserSession(res.data.token);
-        form.reset();
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Username updated successfully.',
-        });
-      })
-      .catch((err) => {
+    try {
+      const res = await axiosInstance.put(
+        `${API_URL}/auth/settings/username/${session?.user?.username}`,
+        {
+          username: values.username,
+        }
+      );
+
+      update({
+        data: {
+          user: new User(res.data),
+        },
+      });
+
+      form.reset();
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Username updated successfully.',
+      });
+    } catch (err) {
+      if (err instanceof Error) {
         toast({
           variant: 'error',
           title: 'Error',
-          description: err.message || 'Failed to update username.',
+          description: err.message || 'Failed to send verification request.',
         });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occurred.',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,8 +94,8 @@ export const Username = () => {
                     <FormControl>
                       <Input
                         placeholder={
-                          session?.user?.username
-                            ? `${session?.user?.username}`
+                          session?.user.username
+                            ? `${session?.user.username}`
                             : 'Enter username'
                         }
                         {...field}

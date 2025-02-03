@@ -1,10 +1,10 @@
 import React from 'react';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 interface TopicButtonProps {

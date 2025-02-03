@@ -1,9 +1,9 @@
 'use client';
 
+import { useSession } from '@/app/session-store-provider';
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
-import { useSession } from 'next-auth/react';
 
 export const Drafts = ({ username }: { username: string }) => {
   const { data: session, status } = useSession();

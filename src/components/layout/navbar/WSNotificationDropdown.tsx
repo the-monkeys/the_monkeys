@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,7 +16,6 @@ import {
   Notification,
   WSNotification,
 } from '@/services/notification/notificationTypes';
-import { useSession } from 'next-auth/react';
 
 const WSNotificationDropdown = () => {
   const { data: session, status } = useSession();

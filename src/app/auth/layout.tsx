@@ -18,9 +18,7 @@ export default async function AuthLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const authCookie = cookieStore.get('monkeys-auth-token');
-
-  if (authCookie && authCookie.value) {
+  if (cookieStore.get('mat')) {
     redirect('/');
   }
 

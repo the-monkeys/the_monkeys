@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
+import { useSession } from '@/app/session-store-provider';
 import { Button } from '@/components/ui/button';
 import useUser from '@/hooks/user/useUser';
-import { useSession } from 'next-auth/react';
 
 import { TopicButton } from './TopicButton';
 

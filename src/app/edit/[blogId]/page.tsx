@@ -5,6 +5,7 @@ import React, { Suspense, useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
@@ -16,7 +17,6 @@ import { WSS_URL_V2 } from '@/constants/api';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -190,7 +190,36 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         };
       }, 1200);
     }
-  }, [data, webSocket, accountId, formatData]);
+
+    const formattedData = formatData(data, session?.user.account_id);
+
+    setBlogPublishLoading(true);
+
+    try {
+      await axiosInstance.post(`/blog/publish/${blogId}`, formattedData);
+      toast({
+        variant: 'success',
+        title: 'Blog Published successfully',
+        description: 'Your blog has been published successfully!',
+      });
+      setBlogPublishLoading(false);
+      router.push(`/${session?.user?.username}`);
+    } catch (err) {
+      console.error(err); // Optional: Log the error for debugging purposes
+      toast({
+        variant: 'destructive',
+        title: 'Error publishing blog',
+        description:
+          'There was an error while publishing your blog. Please try again.',
+      });
+    } finally {
+      setBlogPublishLoading(false);
+    }
+  }, [data, blogId, formatData]);
+
+  if (!session) {
+    router.replace('/auth/login');
+  }
 
   return (
     <>

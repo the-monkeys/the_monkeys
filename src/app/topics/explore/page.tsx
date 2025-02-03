@@ -6,15 +6,14 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CATEGORY_INITIAL_LETTERS } from '@/constants/topics';
 import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
-import { useSession } from 'next-auth/react';
 
 import { AddTopicForm } from './components/AddTopicDialog';
-import { CategoryButton } from './components/CategoryButton';
 import { TopicsList } from './components/TopicsList';
 
 const ExploreTopicsPage = () => {

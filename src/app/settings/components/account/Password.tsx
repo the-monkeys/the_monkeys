@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
+import { useSession } from '@/app/session-store-provider';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -24,11 +27,11 @@ import { toast } from '@/components/ui/use-toast';
 import { updatePasswordSchema } from '@/lib/schema/auth';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signOut, useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export const Password = () => {
+  const router = useRouter();
   const { data } = useSession();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -45,7 +48,7 @@ export const Password = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.put(
+      await axiosInstance.put(
         `/auth/settings/password/${data?.user.username}`,
         {
           current_password: values.currentPassword,
@@ -53,15 +56,13 @@ export const Password = () => {
         }
       );
 
-      if (response.status === 200) {
-        signOut();
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your password has been updated successfully.',
+      });
 
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Your password has been updated successfully.',
-        });
-      }
+      router.replace('/auth/login');
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

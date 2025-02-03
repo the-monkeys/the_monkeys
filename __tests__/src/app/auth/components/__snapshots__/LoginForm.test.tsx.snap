@@ -1,0 +1,85 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LoginForm Snapshot > Desktop 1`] = `
+<DocumentFragment>
+  <form
+    class="space-y-2"
+  >
+    <div
+      class="space-y-1"
+    >
+      <label
+        class="text-text-light dark:text-text-dark peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-roboto text-sm"
+        for=":r0:-form-item"
+      >
+        Email
+      </label>
+      <input
+        aria-describedby=":r0:-form-item-description"
+        aria-invalid="false"
+        class="h-10 flex w-full px-4 text-sm sm:text-base rounded-md file:border-0 file:rounded-sm file:mr-4 file:text-sm focus-visible:outline-none focus-visible:border-2 focus-visible:shadow-sm disabled:cursor-not-allowed disabled:opacity-50 bg-background-light dark:bg-background-dark border-1 border-foreground-light/80 dark:border-foreground-dark/80 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark"
+        id=":r0:-form-item"
+        name="email"
+        placeholder="Enter email address"
+        value=""
+      />
+    </div>
+    <div
+      class="space-y-1"
+    >
+      <label
+        class="text-text-light dark:text-text-dark peer-disabled:cursor-not-allowed peer-disabled:opacity-70 font-roboto text-sm"
+        for=":r1:-form-item"
+      >
+        Password
+      </label>
+      <div
+        class="relative"
+      >
+        <input
+          class="h-10 flex w-full px-4 text-sm sm:text-base rounded-md file:border-0 file:rounded-sm file:mr-4 file:text-sm focus-visible:outline-none focus-visible:border-2 focus-visible:shadow-sm disabled:cursor-not-allowed disabled:opacity-50 bg-background-light dark:bg-background-dark border-1 border-foreground-light/80 dark:border-foreground-dark/80 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark peer"
+          placeholder="Enter password"
+          type="password"
+          value=""
+        />
+        <button
+          class="absolute inset-y-0 right-0 pr-3 opacity-25 peer-focus:opacity-100"
+          type="button"
+        >
+          <svg
+            class="remixicon "
+            fill="currentColor"
+            height="16"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M9.34268 18.7819L7.41083 18.2642L8.1983 15.3254C7.00919 14.8874 5.91661 14.2498 4.96116 13.4534L2.80783 15.6067L1.39362 14.1925L3.54695 12.0392C2.35581 10.6103 1.52014 8.87466 1.17578 6.96818L3.14386 6.61035C3.90289 10.8126 7.57931 14.0001 12.0002 14.0001C16.4211 14.0001 20.0976 10.8126 20.8566 6.61035L22.8247 6.96818C22.4803 8.87466 21.6446 10.6103 20.4535 12.0392L22.6068 14.1925L21.1926 15.6067L19.0393 13.4534C18.0838 14.2498 16.9912 14.8874 15.8021 15.3254L16.5896 18.2642L14.6578 18.7819L13.87 15.8418C13.2623 15.9459 12.6376 16.0001 12.0002 16.0001C11.3629 16.0001 10.7381 15.9459 10.1305 15.8418L9.34268 18.7819Z"
+            />
+          </svg>
+        </button>
+      </div>
+      <div
+        class="flex justify-between"
+      >
+        <a
+          class="font-dm_sans text-sm hover:underline opacity-80 text-blue-600 dark:text-blue-400 ml-auto"
+          href="/auth/forgot-password"
+        >
+          Forgot your password?
+        </a>
+      </div>
+    </div>
+    <div
+      class="pt-6 flex gap-2 items-center"
+    >
+      <button
+        class="inline-flex items-center justify-center whitespace-nowrap rounded-md font-dm_sans disabled:pointer-events-none disabled:opacity-50 text-base bg-brand-orange text-text-dark light border-2 border-brand-orange hover:text-brand-orange hover:bg-opacity-0 h-9 px-4 py-2 flex-1 order-1 transition-colors duration-300"
+      >
+         Login
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
