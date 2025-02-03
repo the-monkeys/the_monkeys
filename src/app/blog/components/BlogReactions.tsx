@@ -1,3 +1,4 @@
+import { useSession } from '@/app/session-store-provider';
 import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
@@ -5,7 +6,6 @@ import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
-import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
 export const BlogReactions = ({

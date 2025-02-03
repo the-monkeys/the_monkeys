@@ -1,7 +1,7 @@
 'use client';
 
+import { useSession } from '@/app/session-store-provider';
 import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
-import { useSession } from 'next-auth/react';
 
 import { FollowingBlogs } from './FollowingBlogs';
 
