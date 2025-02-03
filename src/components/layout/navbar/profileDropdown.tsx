@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
 import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
-
 import axiosInstance from '@/services/api/axiosInstance';
 
 const ProfileDropdown = () => {

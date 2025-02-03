@@ -40,7 +40,7 @@ const updateProfileSchema = z.object({
   bio: z.string().optional(),
 });
 
-export const UpdateDialog = ({ data }: { data: { user: IUser } }) => {
+export const UpdateDialog = ({ data }: { data: { user: Partial<IUser> } }) => {
   const { user, isLoading, isError } = useGetAuthUserProfile(
     data.user.username
   );

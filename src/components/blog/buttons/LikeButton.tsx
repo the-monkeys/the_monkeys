@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';

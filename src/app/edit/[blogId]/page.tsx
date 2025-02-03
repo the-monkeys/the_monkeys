@@ -173,6 +173,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     if (webSocket && webSocket.readyState === WebSocket.OPEN && data) {
       const formattedData = formatData(data, accountId);
       webSocket.send(JSON.stringify(formattedData));
+
       setIsSaving(true); // Set saving status when data is sent
     }
 
@@ -190,36 +191,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         };
       }, 1200);
     }
-
-    const formattedData = formatData(data, session?.user.account_id);
-
-    setBlogPublishLoading(true);
-
-    try {
-      await axiosInstance.post(`/blog/publish/${blogId}`, formattedData);
-      toast({
-        variant: 'success',
-        title: 'Blog Published successfully',
-        description: 'Your blog has been published successfully!',
-      });
-      setBlogPublishLoading(false);
-      router.push(`/${session?.user?.username}`);
-    } catch (err) {
-      console.error(err); // Optional: Log the error for debugging purposes
-      toast({
-        variant: 'destructive',
-        title: 'Error publishing blog',
-        description:
-          'There was an error while publishing your blog. Please try again.',
-      });
-    } finally {
-      setBlogPublishLoading(false);
-    }
-  }, [data, blogId, formatData]);
-
-  if (!session) {
-    router.replace('/auth/login');
-  }
+  }, [data, webSocket, accountId, formatData]);
 
   return (
     <>

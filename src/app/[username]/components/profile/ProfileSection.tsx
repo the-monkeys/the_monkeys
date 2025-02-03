@@ -31,7 +31,7 @@ export const ProfileSection = () => {
   }
 
   const isAuthenticated =
-    session?.user?.username === params.username && status === 'authenticated';
+    session?.user.username === params.username && status === 'authenticated';
 
   return (
     <>
