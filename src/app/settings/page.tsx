@@ -1,4 +1,6 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 import Container from '@/components/layout/Container';
 import {
@@ -19,7 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const SettingsPage = () => {
+const SettingsPage = async () => {
+  const cookieStore = await cookies();
+  if (!cookieStore.get('mat')) {
+    redirect('/');
+  }
+
   return (
     <Container className='pb-12 space-y-4 md:space-y-6'>
       <PageHeader>

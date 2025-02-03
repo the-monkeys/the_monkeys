@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const BookmarkButton = ({

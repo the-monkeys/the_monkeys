@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
+import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { Button } from '@/components/ui/button';
@@ -25,7 +26,6 @@ import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
 import { format } from 'date-fns';
-import { useSession } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

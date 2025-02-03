@@ -1,5 +1,5 @@
 import { GetDraftBlogResponse } from '@/services/blog/blogTypes';
-import { authFetcher, fetcherV2 } from '@/services/fetcher';
+import { fetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 
 const useGetPublishedBlogByUsername = (username: string | undefined) => {

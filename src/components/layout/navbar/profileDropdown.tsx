@@ -1,6 +1,9 @@
+'use client';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import {
   DropdownMenu,
@@ -10,11 +13,19 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { toast } from '@/components/ui/use-toast';
 import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
-import { signOut, useSession } from 'next-auth/react';
+
+import axiosInstance from '@/services/api/axiosInstance';
 
 const ProfileDropdown = () => {
-  const { data: session, status } = useSession();
+  const { status, data, update } = useSession();
   const router = useRouter();
+
+  const handleSignout = async () => {
+    axiosInstance.get('/auth/logout');
+
+    update({ status: 'unauthenticated', data: null });
+    router.replace('/');
+  };
 
   return (
     <DropdownMenu>
@@ -41,7 +52,7 @@ const ProfileDropdown = () => {
                   return;
                 }
 
-                router.push('api/auth/signin');
+                router.push('auth/login');
               }}
               className='flex w-full items-center gap-2'
             >
@@ -56,7 +67,7 @@ const ProfileDropdown = () => {
         <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44 space-y-1'>
           <DropdownMenuItem asChild>
             <Link
-              href={`/${session?.user?.username}`}
+              href={`/${data?.user.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiUser' size={18} />
@@ -97,15 +108,7 @@ const ProfileDropdown = () => {
 
           <DropdownMenuItem asChild>
             <button
-              onClick={() => {
-                signOut();
-                toast({
-                  variant: 'success',
-                  title: ' Logout Successful',
-                  description:
-                    'You have successfully logged out. See you next time!',
-                });
-              }}
+              onClick={handleSignout}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiLogoutBoxR' size={18} className='text-alert-red' />

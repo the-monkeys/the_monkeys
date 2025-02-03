@@ -27,8 +27,8 @@ import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDial
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import axiosInstance from '@/services/api/axiosInstance';
+import { IUser } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Session } from 'next-auth';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
 import { z } from 'zod';
@@ -40,7 +40,7 @@ const updateProfileSchema = z.object({
   bio: z.string().optional(),
 });
 
-export const UpdateDialog = ({ data }: { data: Session }) => {
+export const UpdateDialog = ({ data }: { data: { user: IUser } }) => {
   const { user, isLoading, isError } = useGetAuthUserProfile(
     data.user.username
   );

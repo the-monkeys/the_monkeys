@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import { Button } from '@/components/ui/button';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
-import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
 import { FollowButton } from '../buttons/followButton';

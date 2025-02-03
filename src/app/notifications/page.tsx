@@ -1,8 +1,8 @@
 'use client';
 
+import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
-import { useSession } from 'next-auth/react';
 
 import { MarkReadButton } from './components/MarkReadButton';
 import { NotificationCard } from './components/NotificationCard';

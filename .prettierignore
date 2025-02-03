@@ -29,3 +29,6 @@ certs/
 
 README.md
 LICENSE.md
+
+**/*.snap
+.gitignore

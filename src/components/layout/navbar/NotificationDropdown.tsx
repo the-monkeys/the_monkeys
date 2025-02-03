@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,7 +12,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
-import { useSession } from 'next-auth/react';
 
 const NotificationDropdown = () => {
   const { status } = useSession();

@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import Image from 'next/image';
 
+import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -17,7 +18,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import axiosFileInstance from '@/services/api/axiosFileInstance';
-import { useSession } from 'next-auth/react';
 import { useDropzone } from 'react-dropzone';
 import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';

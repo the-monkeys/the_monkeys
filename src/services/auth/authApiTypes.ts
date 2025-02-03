@@ -1,7 +1,10 @@
-interface getResetPasswordTokenRequest {
-  user: string;
-  evpw: string;
-}
+import { IUser } from '../models/user';
+
+export type Response = { status: number };
+
+export type LoginResponse = Required<IUser> & Response;
+
+export type ValidateResponse = Response & IUser;
 
 interface verifyEmailVerificationTokenRequest {
   user: string;

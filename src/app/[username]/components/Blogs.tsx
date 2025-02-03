@@ -1,9 +1,9 @@
 'use client';
 
+import { useSession } from '@/app/session-store-provider';
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
-import { useSession } from 'next-auth/react';
 
 export const Blogs = ({ username }: { username: string }) => {
   const { data: session, status } = useSession();

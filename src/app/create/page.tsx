@@ -11,6 +11,7 @@ import React, {
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
+import { useSession } from '@/app/session-store-provider';
 import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
@@ -20,7 +21,6 @@ import { toast } from '@/components/ui/use-toast';
 import { WSS_URL_V2 } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
-import { useSession } from 'next-auth/react';
 
 // Dynamically import the Editor component to avoid server-side rendering issues
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -68,9 +68,9 @@ const CreatePage = () => {
   const [publishedBlogLoading, setPublishedBlogLoading] =
     useState<boolean>(false);
   // Get the session data
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
-  const authToken = session?.user.token;
+  const authToken = session?.user?.token;
   const router = useRouter();
 
   // Use useRef to store the blog ID
@@ -236,6 +236,15 @@ const CreatePage = () => {
       }, 1200);
     }
   }, [data, webSocket, session?.user.account_id, formatData]);
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      const url = new URL('/auth/login', location.href);
+      url.searchParams.set('callbackURL', location.href);
+
+      router.replace(url.pathname + url.search);
+    }
+  }, []);
 
   return (
     <>

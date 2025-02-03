@@ -2,6 +2,9 @@
 
 import React, { useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
+import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,10 +17,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
-import { signOut, useSession } from 'next-auth/react';
 
 export const Danger = () => {
-  const { data } = useSession();
+  const { data, update } = useSession();
+  const router = useRouter();
 
   const [deleteMessage, setDeleteMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -26,19 +29,16 @@ export const Danger = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.delete(
-        `/user/${data?.user.username}`
-      );
+      await axiosInstance.delete(`/user/${data?.user.username}`);
 
-      if (response.status === 200) {
-        signOut();
+      update({ status: 'unauthenticated', data: null });
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your account has been deleted successfully.',
+      });
 
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Your account has been deleted successfully.',
-        });
-      }
+      router.replace('/');
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
