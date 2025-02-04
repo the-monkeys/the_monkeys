@@ -89,7 +89,7 @@ export const FeedBlogCardSkeleton = () => {
 
 export const ShowcaseBlogCardListSkeleton = () => {
   return (
-    <div className='grid grid-cols-2 md:grid-cols-3 gap-y-8 sm:gap-y-10 gap-x-6'>
+    <div className='grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-6'>
       <ShowcaseBlogCardSkeleton />
       <ShowcaseBlogCardSkeleton />
       <ShowcaseBlogCardSkeleton />
@@ -108,7 +108,7 @@ export const ShowcaseBlogCardListSkeleton = () => {
 
 export const BlogCardListSkeleton = () => {
   return (
-    <div className='w-full space-y-6 md:space-y-8'>
+    <div className='w-full space-y-8'>
       <BlogCardSkeleton />
       <BlogCardSkeleton />
       <BlogCardSkeleton />
@@ -120,7 +120,7 @@ export const BlogCardListSkeleton = () => {
 
 export const FeedBlogCardListSkeleton = () => {
   return (
-    <div className='w-full space-y-6 md:space-y-8'>
+    <div className='w-full space-y-8'>
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />

@@ -24,7 +24,7 @@ export const FollowingBlogs = ({
     );
 
   return (
-    <div className='mx-auto max-w-3xl flex flex-col gap-8 lg:gap-10'>
+    <div className='mx-auto max-w-3xl flex flex-col gap-10'>
       {isLoading ? (
         <FeedBlogCardListSkeleton />
       ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (

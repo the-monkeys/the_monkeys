@@ -5,20 +5,10 @@ import { TOPICS_COLOR_CODE } from '@/constants/topics';
 import Icon from '../icon';
 import { Badge } from '../ui/badge';
 
-export const TopicBadgeProfile = ({ topic }: { topic: string }) => {
-  return (
-    <Link href={`/topics/${topic}`} target='_blank'>
-      <Badge variant='secondary' className='py-1 cursor-pointer rounded-full'>
-        {topic}
-      </Badge>
-    </Link>
-  );
-};
-
-export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
+export const TopicLabelLink = ({ topic }: { topic: string }) => {
   return (
     <Link href={`/topics/${topic}`} className='group' target='_blank'>
-      <Badge variant='outline' className='px-4 py-1 cursor-pointer'>
+      <Badge variant='outline' className='px-4 py-1 cursor-pointer !rounded-md'>
         {topic}{' '}
         <Icon
           name='RiArrowRightUp'
@@ -30,7 +20,7 @@ export const TopicBadgeBlog = ({ topic }: { topic: string }) => {
   );
 };
 
-export const TopicBadgeBlogCompact = ({
+export const TopicLabelLinkHash = ({
   topic,
   colorCodeIndex,
 }: {
@@ -44,7 +34,7 @@ export const TopicBadgeBlogCompact = ({
           color: TOPICS_COLOR_CODE[colorCodeIndex],
         }}
       >
-        <Icon name='RiHashtag' type='NIL' size={16} />
+        <Icon name='RiHashtag' type='NIL' size={18} />
       </div>
 
       <Link

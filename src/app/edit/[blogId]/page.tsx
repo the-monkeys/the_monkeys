@@ -9,7 +9,7 @@ import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
-import { ChooseTopicDialog } from '@/components/topics/dialogs/ChooseTopicDialog';
+import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL_V2 } from '@/constants/api';
