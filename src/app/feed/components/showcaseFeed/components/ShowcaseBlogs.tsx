@@ -31,7 +31,7 @@ export const ShowcaseBlogs = () => {
         </h1>
       </div>
 
-      <div className='grid grid-cols-2 md:grid-cols-3 gap-y-8 sm:gap-y-10 gap-x-6 lg:gap-x-8'>
+      <div className='grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-6 lg:gap-x-8'>
         {filteredBlogs?.slice(0, 12)?.map((blog) => {
           return <ShowcaseBlogCard key={blog.blog_id} blog={blog} />;
         })}

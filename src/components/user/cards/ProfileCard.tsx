@@ -98,11 +98,9 @@ export const ProfileCard = ({
 
         {user?.address && (
           <div className='flex items-center gap-1'>
-            <div className='flex items-center gap-1'>
-              <Icon name='RiMapPinUser' size={16} className='opacity-80' />
+            <Icon name='RiMapPinUser' size={16} className='opacity-80' />
 
-              <p className='text-sm opacity-80'>{user.address}</p>
-            </div>
+            <p className='text-sm opacity-80'>{user.address}</p>
           </div>
         )}
       </div>

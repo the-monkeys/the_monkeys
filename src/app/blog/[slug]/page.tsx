@@ -9,6 +9,10 @@ import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
+import {
+  HashTopicLinksContainer,
+  TopicLinksContainer,
+} from '@/components/topics/topicsContainer';
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
@@ -16,7 +20,6 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
-import { BlogTopics, BlogTopicsCompact } from '../components/BlogTopics';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -88,7 +91,7 @@ const BlogPage = () => {
             className='font-dm_sans font-bold text-[30px] md:text-[34px] leading-[1.3]'
           ></h1>
 
-          <BlogTopicsCompact topics={blog?.tags} />
+          <HashTopicLinksContainer topics={blog?.tags} />
         </div>
 
         <div className='pb-10 min-h-screen overflow-hidden'>
@@ -98,7 +101,7 @@ const BlogPage = () => {
         <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />
 
         <div className='mt-[50px]'>
-          <BlogTopics topics={tags || []} />
+          <TopicLinksContainer topics={tags} />
         </div>
       </div>
 

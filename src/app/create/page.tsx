@@ -14,7 +14,7 @@ import { useRouter } from 'next/navigation';
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
-import { ChooseTopicDialog } from '@/components/topics/dialogs/ChooseTopicDialog';
+import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { toast } from '@/components/ui/use-toast';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';

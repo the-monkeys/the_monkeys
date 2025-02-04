@@ -68,7 +68,7 @@ export const ProfileInfoCard = ({
 
       <div className='mt-[20px] px-4 pb-4 space-y-1'>
         {userData?.bio && (
-          <p className='py-1 leading-tight break-words'>{userData.bio}</p>
+          <p className='py-2 leading-tight break-words'>{userData.bio}</p>
         )}
 
         <div className='flex items-center gap-2'>
@@ -77,10 +77,13 @@ export const ProfileInfoCard = ({
             <span className='font-normal opacity-80'>Followers</span>
           </p>
 
-          <p className='font-medium'>
-            {user?.following ? user.following : '0'}{' '}
-            <span className='font-normal opacity-80'>Followers</span>
-          </p>
+          {userData?.location && (
+            <div className='flex items-center gap-1'>
+              <Icon name='RiMapPinUser' size={18} />
+
+              <p className='opacity-80'>{userData.location}</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

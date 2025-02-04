@@ -29,6 +29,8 @@ export const CATEGORY_INITIAL_LETTERS = [
 ];
 
 export const BLOG_TOPICS_MAX_COUNT = 15;
+export const BLOG_TOPICS_SHOW_MAX_COUNT = 6;
+export const PROFILE_TOPICS_SHOW_MAX_COUNT = 6;
 
 export const TOPICS_COLOR_CODE = [
   '#5A9BD5', // Light Blue

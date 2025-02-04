@@ -25,7 +25,7 @@ export const Drafts = ({
 
   return (
     <div className='min-h-screen'>
-      <div className='flex flex-col gap-8 lg:gap-10'>
+      <div className='flex flex-col gap-10'>
         {isLoading ? (
           <BlogCardListSkeleton />
         ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (

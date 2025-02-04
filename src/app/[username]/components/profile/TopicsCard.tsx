@@ -1,7 +1,7 @@
 import { useParams } from 'next/navigation';
 
-import { TopicBadgeProfile } from '@/components/badges/topicBadge';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
+import { TopicLinksContainer } from '@/components/topics/topicsContainer';
 import { Separator } from '@/components/ui/separator';
 import useUser from '@/hooks/user/useUser';
 
@@ -18,9 +18,6 @@ export const TopicsCard = () => {
     return null;
   }
 
-  const topicsCount = user?.topics?.length || 0;
-  const maxTopicsShow = 6;
-
   return (
     <div className='mt-6'>
       <div className='flex flex-col'>
@@ -35,25 +32,7 @@ export const TopicsCard = () => {
 
       <Separator className='mt-1 mb-3' />
 
-      {user && user.topics && user.topics.length > 0 ? (
-        <div className='mt-2 flex flex-wrap gap-1'>
-          {user.topics
-            ?.slice(0, maxTopicsShow)
-            .map((topic, index) => (
-              <TopicBadgeProfile key={index} topic={topic} />
-            ))}
-
-          {topicsCount > maxTopicsShow ? (
-            <p className='px-1 self-center text-xs md:text-sm opacity-80'>
-              {`+${topicsCount - maxTopicsShow} more`}
-            </p>
-          ) : null}
-        </div>
-      ) : (
-        <p className='text-sm opacity-80 text-center'>
-          No topics have been added.
-        </p>
-      )}
+      {user && <TopicLinksContainer maxShow={true} topics={user.topics} />}
     </div>
   );
 };
