@@ -1,13 +1,17 @@
 import LoginForm from '@/app/auth/components/LoginForm';
 import { SessionStoreProvider } from '@/app/session-store-provider';
+import { Toaster } from '@/components/ui/toaster';
 import * as Services from '@/services/auth/auth';
 import { User } from '@/services/models/user';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
 const withProviders = (children: React.ReactNode) => (
-  <SessionStoreProvider>{children}</SessionStoreProvider>
+  <>
+    <Toaster />
+    <SessionStoreProvider>{children}</SessionStoreProvider>
+  </>
 );
 
 let routerReplaceStub = vi.fn();
@@ -145,6 +149,9 @@ describe('LoginForm', () => {
     await userEvent.keyboard('John1spassword');
     await userEvent.click(submitButton);
 
-    expect(spy).toThrowError();
+    expect(spy).toHaveBeenCalled();
+    await waitFor(() => {
+      screen.getByText('Login Error');
+    });
   });
 });

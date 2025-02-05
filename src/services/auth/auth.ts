@@ -88,3 +88,11 @@ export async function register(user: {
 
   return new User(authResponse.data);
 }
+
+export async function forgotPass({ email }: { email: string }) {
+  const response = await axiosInstanceNoAuth.post(`/auth/forgot-pass`, {
+    email,
+  });
+
+  return response;
+}
