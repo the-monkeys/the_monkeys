@@ -1,6 +1,7 @@
 import { API_URL } from '@/constants/api';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
+import axiosInstance from '../api/axiosInstance';
 import axiosInstanceNoAuth from '../api/axiosInstanceNoAuth';
 import { User } from '../models/user';
 import { LoginResponse } from './authApiTypes';
@@ -9,6 +10,8 @@ const APIEndpoint = {
   LOGIN: '/auth/login',
   RESET_PASSWORD: '/auth/reset-password',
   VERIFY_EMAIL: '/auth/verify-email',
+  REGISTER: '/auth/register',
+  FORGOT_PASS: '/auth/forgot-pass',
 } as const;
 
 // const getResetPasswordTokenAPIEndpoint = '/auth/reset-password';
@@ -16,7 +19,7 @@ const APIEndpoint = {
 export async function getResetPasswordToken(
   req: getResetPasswordTokenRequest,
   config?: AxiosRequestConfig
-): Promise<getResetPasswordTokenApiResponse> {
+) {
   const response = await axiosInstanceNoAuth<getResetPasswordTokenApiResponse>(
     APIEndpoint.RESET_PASSWORD,
     {
@@ -33,7 +36,7 @@ export async function getResetPasswordToken(
 export async function verifyEmailVerificationToken(
   req: { user: string; evpw: string },
   config?: AxiosRequestConfig
-): Promise<verifyEmailVerificationTokenApiResponse> {
+) {
   const response =
     await axiosInstanceNoAuth<verifyEmailVerificationTokenApiResponse>(
       APIEndpoint.VERIFY_EMAIL,
@@ -49,8 +52,8 @@ export async function verifyEmailVerificationToken(
 }
 
 export async function login(credentials: { email: string; password: string }) {
-  const authResponse = await axios.post<LoginResponse>(
-    `${API_URL}/auth/login`,
+  const authResponse = await axiosInstance.post<LoginResponse>(
+    APIEndpoint.LOGIN,
     {
       email: credentials.email,
       password: credentials.password,
@@ -72,8 +75,8 @@ export async function register(user: {
   email: string;
   password: string;
 }) {
-  const authResponse = await axios.post(
-    `${API_URL}/auth/register`,
+  const authResponse = await axiosInstance.post(
+    APIEndpoint.REGISTER,
     {
       first_name: user.first_name,
       last_name: user.last_name,
@@ -90,7 +93,10 @@ export async function register(user: {
 }
 
 export async function forgotPass({ email }: { email: string }) {
-  const response = await axiosInstanceNoAuth.post(`/auth/forgot-pass`, {
+  const response = await axiosInstance.post<{
+    message: string;
+    status: number;
+  }>(APIEndpoint.FORGOT_PASS, {
     email,
   });
 

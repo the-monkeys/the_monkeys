@@ -43,7 +43,8 @@ export default function ForgotPasswordForm() {
 
       setSubmitSuccess(true);
       setSubmitError(false);
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       setSubmitSuccess(false);
       setSubmitError(true);
     } finally {
