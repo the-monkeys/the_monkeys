@@ -25,16 +25,7 @@ export const TopicButton = ({
   if (status === 'unauthenticated') return null;
 
   const handleCategoryClick = async () => {
-    const token = session?.user?.token;
     const username = session?.user?.username;
-
-    if (!token) {
-      toast({
-        title: 'Error',
-        description: 'Authorization token is missing.',
-      });
-      return;
-    }
 
     if (!username) {
       toast({
@@ -63,16 +54,7 @@ export const TopicButton = ({
   };
 
   const handleUnfollowCategory = async () => {
-    const token = session?.user?.token;
     const username = session?.user?.username;
-
-    if (!token || !username) {
-      toast({
-        title: 'Error',
-        description: 'Authorization token or username is missing.',
-      });
-      return;
-    }
 
     try {
       await axiosInstance.put(`/user/un-follow-topics/${username}`, {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import React from 'react';
 
 import { useSession } from '@/app/session-store-provider';
@@ -42,16 +42,7 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
   // }, [user, topics]);
 
   const handleCategoryClick = async () => {
-    const token = session?.user?.token;
     const username = session?.user?.username;
-
-    if (!token) {
-      toast({
-        title: 'Error',
-        description: 'Authorization token is missing.',
-      });
-      return;
-    }
 
     if (!username) {
       toast({
@@ -87,16 +78,7 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
   };
 
   const handleUnfollowCategory = async () => {
-    const token = session?.user?.token;
     const username = session?.user?.username;
-
-    if (!token || !username) {
-      toast({
-        title: 'Error',
-        description: 'Authorization token or username is missing.',
-      });
-      return;
-    }
 
     try {
       setLoading(true);

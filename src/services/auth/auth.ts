@@ -1,10 +1,9 @@
-import { API_URL } from '@/constants/api';
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosRequestConfig } from 'axios';
 
 import axiosInstance from '../api/axiosInstance';
 import axiosInstanceNoAuth from '../api/axiosInstanceNoAuth';
 import { User } from '../models/user';
-import { LoginResponse } from './authApiTypes';
+import { IUser } from '../models/user';
 
 const APIEndpoint = {
   LOGIN: '/auth/login',
@@ -14,10 +13,22 @@ const APIEndpoint = {
   FORGOT_PASS: '/auth/forgot-pass',
 } as const;
 
-// const getResetPasswordTokenAPIEndpoint = '/auth/reset-password';
+interface getResetPasswordTokenApiResponse {
+  response: UserInfo;
+}
+
+interface UserInfo {
+  status_code: number;
+  token: string;
+  user_id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
 
 export async function getResetPasswordToken(
-  req: getResetPasswordTokenRequest,
+  req: { user: string; evpw: string },
   config?: AxiosRequestConfig
 ) {
   const response = await axiosInstanceNoAuth<getResetPasswordTokenApiResponse>(
@@ -37,22 +48,21 @@ export async function verifyEmailVerificationToken(
   req: { user: string; evpw: string },
   config?: AxiosRequestConfig
 ) {
-  const response =
-    await axiosInstanceNoAuth<verifyEmailVerificationTokenApiResponse>(
-      APIEndpoint.VERIFY_EMAIL,
-      {
-        params: {
-          ...req,
-        },
-        ...config,
-      }
-    );
+  const response = await axiosInstance<{
+    message: string;
+    status: number;
+  }>(APIEndpoint.VERIFY_EMAIL, {
+    params: {
+      ...req,
+    },
+    ...config,
+  });
 
-  return response.data;
+  return response;
 }
 
 export async function login(credentials: { email: string; password: string }) {
-  const authResponse = await axiosInstance.post<LoginResponse>(
+  const authResponse = await axiosInstance.post<Required<IUser>>(
     APIEndpoint.LOGIN,
     {
       email: credentials.email,

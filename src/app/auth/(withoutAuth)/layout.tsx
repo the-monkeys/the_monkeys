@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 import Container from '@/components/layout/Container';
 
@@ -15,5 +17,10 @@ export default async function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  if (cookieStore.get('mat')) {
+    redirect('/');
+  }
+
   return <Container className='mb-20'>{children}</Container>;
 }

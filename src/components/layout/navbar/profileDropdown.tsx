@@ -51,7 +51,7 @@ const ProfileDropdown = () => {
                   return;
                 }
 
-                router.push('auth/login');
+                router.push('/auth/login');
               }}
               className='flex w-full items-center gap-2'
             >

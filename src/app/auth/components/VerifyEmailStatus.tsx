@@ -12,21 +12,16 @@ import { verifyEmailVerificationToken } from '@/services/auth/auth';
 import { SearchParamsComponent } from './SearchParams';
 
 export const VerifyEmailStatus = () => {
-  const { update } = useSession();
+  const { status, update } = useSession();
+
+  const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const [searchParams, setSearchParams] = useState<{
     username: string;
     evpw: string;
   }>({ username: '', evpw: '' });
-  const [verificationStatus, setVerificationStatus] = useState<{
-    loading: boolean;
-    status: boolean;
-    message: string;
-  }>({
-    loading: true,
-    status: false,
-    message: '',
-  });
 
   const updateSearchParams = useCallback(
     (params: { username: string; evpw: string }) => {
@@ -37,25 +32,26 @@ export const VerifyEmailStatus = () => {
 
   useEffect(() => {
     if (searchParams.username !== '' && searchParams.evpw !== '') {
+      setLoading(true);
+
       verifyEmailVerificationToken({
         user: searchParams.username,
         evpw: searchParams.evpw,
       })
-        .then((res) => {
+        .then(() => {
           toast({
             variant: 'success',
             title: 'Success',
             description: 'Email verification successful!',
           });
 
-          setVerificationStatus({
-            loading: false,
-            status: true,
-            message:
-              'Email verification successful. You can now continue using our services without any interruptions.',
-          });
+          if (status === 'authenticated') {
+            update({
+              data: { user: { email_verification_status: 'Verified' } },
+            });
+          }
 
-          update({ data: { user: res.data } });
+          setIsSuccess(true);
         })
         .catch((err) => {
           toast({
@@ -65,11 +61,10 @@ export const VerifyEmailStatus = () => {
               err.message || 'An error occurred during verification.',
           });
 
-          setVerificationStatus({
-            loading: false,
-            status: false,
-            message: 'Email verification failed. Please try again.',
-          });
+          setIsError(true);
+        })
+        .finally(() => {
+          setLoading(false);
         });
     }
   }, [searchParams]);
@@ -86,19 +81,22 @@ export const VerifyEmailStatus = () => {
         <SearchParamsComponent setSearchParams={updateSearchParams} />
       </Suspense>
 
-      {verificationStatus.loading ? (
-        <Loader size={32} />
-      ) : (
+      {loading && <Loader size={32} />}
+
+      {(isSuccess || isError) && (
         <Alert
-          variant={verificationStatus.status ? 'constructive' : 'destructive'}
+          variant={isSuccess ? 'constructive' : 'destructive'}
           className='w-full sm:w-1/2'
         >
           <Icon name='RiErrorWarning' />
           <AlertTitle>
-            {verificationStatus.status ? 'Success' : 'Error'}
+            {isSuccess && 'Success'}
+            {isError && 'Failed'}
           </AlertTitle>
           <AlertDescription className='text-base'>
-            {verificationStatus.message}
+            {isError && 'An error occurred during verification.'}
+            {isSuccess &&
+              'Email verification successful. You can now continue using our services without any interruptions.'}
           </AlertDescription>
         </Alert>
       )}

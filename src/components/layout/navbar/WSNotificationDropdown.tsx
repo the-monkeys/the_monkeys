@@ -18,16 +18,14 @@ import {
 } from '@/services/notification/notificationTypes';
 
 const WSNotificationDropdown = () => {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [open, setOpen] = useState<boolean>(false);
   const [notifications, setNotifications] = useState<
     Map<number, Notification & { time: Date }>
   >(new Map());
 
-  const createWebSocket = useCallback((token: string) => {
-    const ws = new WebSocket(
-      `${WSS_URL}/notification/ws-notification?token=${token}`
-    );
+  const createWebSocket = useCallback(() => {
+    const ws = new WebSocket(`${WSS_URL}/notification/ws-notification`);
 
     ws.onopen = () => {
       console.log('I feel a connection here 🤔');
@@ -76,26 +74,24 @@ const WSNotificationDropdown = () => {
     //   }
     // };
 
-    if (session?.user?.token) {
-      cleanup = createWebSocket(session.user.token);
+    cleanup = createWebSocket();
 
-      // document.addEventListener('visibilitychange', handleVisibilityChange);
+    // document.addEventListener('visibilitychange', handleVisibilityChange);
 
-      const handleBeforeUnload = () => {
-        if (cleanup) cleanup();
-      };
-      window.addEventListener('beforeunload', handleBeforeUnload);
+    const handleBeforeUnload = () => {
+      if (cleanup) cleanup();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
-      return () => {
-        if (cleanup) cleanup();
-        // document.removeEventListener(
-        //   'visibilitychange',
-        //   handleVisibilityChange
-        // );
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }
-  }, [session?.user?.token, createWebSocket]);
+    return () => {
+      if (cleanup) cleanup();
+      // document.removeEventListener(
+      //   'visibilitychange',
+      //   handleVisibilityChange
+      // );
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [createWebSocket]);
 
   // Logic to remove notifications
   // Periodically check every 5 seconds to remove all notifications older than 8 seconds
