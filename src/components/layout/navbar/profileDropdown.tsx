@@ -16,7 +16,7 @@ import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
 import axiosInstance from '@/services/api/axiosInstance';
 
 const ProfileDropdown = () => {
-  const { status, data, update } = useSession();
+  const { status, data: session, update } = useSession();
   const router = useRouter();
 
   const handleSignout = async () => {
@@ -66,14 +66,12 @@ const ProfileDropdown = () => {
         <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44 space-y-1'>
           <DropdownMenuItem asChild>
             <Link
-              href={`/${data?.user.username}`}
+              href={`/${session?.user.username}`}
               className='flex w-full items-center gap-2'
             >
               <Icon name='RiUser' size={18} />
               <p className='flex-1 font-dm_sans text-sm sm:text-base truncate'>
-                {session?.user
-                  ? `${session.user.first_name} ${session.user.last_name}`
-                  : 'Profile'}
+                Profile
               </p>
             </Link>
           </DropdownMenuItem>
