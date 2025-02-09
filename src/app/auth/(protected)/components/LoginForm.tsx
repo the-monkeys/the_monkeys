@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import { useSession } from '@/app/session-store-provider';
 import PasswordInput from '@/components/input/PasswordInput';
@@ -28,7 +28,6 @@ import { z } from 'zod';
 
 export default function LoginForm() {
   const router = useRouter();
-  const params = useSearchParams();
   const { update } = useSession();
 
   const [loading, setLoading] = useState(false);
@@ -44,7 +43,6 @@ export default function LoginForm() {
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     setLoading(true);
 
-    const callbackURL = params.get('callbackURL');
     try {
       const loginResponse = await login(values);
       update({
@@ -52,18 +50,13 @@ export default function LoginForm() {
         data: { user: loginResponse },
       });
 
-      if (callbackURL) {
-        router.replace(callbackURL);
-        return;
-      }
-
       toast({
         variant: 'success',
         title: 'Login Successful',
         description: 'You have successfully logged in. Welcome back!',
       });
 
-      router.replace('/feed');
+      //router.replace('/feed');
     } catch (err) {
       console.log(err);
       toast({

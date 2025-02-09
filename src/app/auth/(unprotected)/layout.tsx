@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description,
 };
 
-export default async function AuthLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;

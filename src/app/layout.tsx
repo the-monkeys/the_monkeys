@@ -12,6 +12,7 @@ import './globals.css';
 import { SessionStoreProvider } from './session-store-provider';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
+import ValidateSession from './validate-session';
 
 const arvo = Arvo({
   weight: ['400', '700'],
@@ -61,8 +62,6 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const authData = await validate();
-
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
@@ -73,7 +72,8 @@ const RootLayout = async ({
       >
         <Toaster />
         <SWRProvider>
-          <SessionStoreProvider value={authData}>
+          <SessionStoreProvider>
+            <ValidateSession />
             <ThemeProviders>
               <TooltipProvider>
                 <Navbar />
