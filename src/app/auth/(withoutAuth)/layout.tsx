@@ -1,10 +1,8 @@
-import { Suspense } from 'react';
-
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 import Container from '@/components/layout/Container';
-
-import Protected from './protected';
 
 const title = 'Authentication';
 const description = 'We are The Monkeys! A blogging and educational platform.';
@@ -14,15 +12,15 @@ export const metadata: Metadata = {
   description,
 };
 
-export default function AuthLayout({
+export default async function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <Suspense>
-      <Protected />
-      <Container className='mb-20'>{children}</Container>
-    </Suspense>
-  );
+  const cookieStore = await cookies();
+  if (cookieStore.get('mat')) {
+    redirect('/');
+  }
+
+  return <Container className='mb-20'>{children}</Container>;
 }

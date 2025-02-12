@@ -15,7 +15,7 @@ export const ShowcaseBlogs = () => {
       </p>
     );
 
-  const filteredBlogs = blogs?.blogs?.filter((blog) => {
+  const filteredBlogs = blogs?.blogs.filter((blog) => {
     if (!blog?.tags?.length) return false;
 
     if (blog?.blog?.blocks.length < 5) return false;

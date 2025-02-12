@@ -11,7 +11,6 @@ const APIEndpoint = {
   VERIFY_EMAIL: '/auth/verify-email',
   REGISTER: '/auth/register',
   FORGOT_PASS: '/auth/forgot-pass',
-  VALIDATE_SESSION: '/auth/validate-session',
 } as const;
 
 interface getResetPasswordTokenApiResponse {
@@ -110,12 +109,6 @@ export async function forgotPass({ email }: { email: string }) {
   }>(APIEndpoint.FORGOT_PASS, {
     email,
   });
-
-  return response;
-}
-
-export async function validateSession() {
-  const response = await axiosInstance.get<IUser>(APIEndpoint.VALIDATE_SESSION);
 
   return response;
 }

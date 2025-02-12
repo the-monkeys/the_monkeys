@@ -7,25 +7,24 @@ import {
   PageSubheading,
 } from '@/components/layout/pageHeading';
 
-import ForgotPasswordForm from '../components/ForgotPasswordForm';
+import RegisterUserForm from '../../components/RegisterUserForm';
 
-export default function ForgotPassword() {
+export default function Register() {
   return (
     <>
       <PageHeader className='mt-8'>
-        <PageHeading heading='Forgot Password' />
-        <PageSubheading subheading='Enter your email to reset your password' />
+        <PageHeading heading='Join Monkeys' />
+        <PageSubheading subheading='Create your Monkeys account' />
       </PageHeader>
       <Container className='max-w-screen-sm my-8 px-3 flex flex-col gap-8'>
-        <ForgotPasswordForm />
-
+        <RegisterUserForm />
         <div className='mt-4 text-center'>
-          <span className='font-dm_sans'>Go back to </span>
+          <span className='font-dm_sans'>Already have an account? </span>
           <Link
             href='/auth/login'
             className='font-dm_sans hover:underline opacity-80 text-brand-orange'
           >
-            Login
+            Login instead
           </Link>
         </div>
       </Container>
