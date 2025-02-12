@@ -1,4 +1,5 @@
-import ForgotPasswordForm from '@/app/auth/(protected)/components/ForgotPasswordForm';
+import ForgotPasswordForm from '@/app/auth/components/ForgotPasswordForm';
+import { Toaster } from '@/components/ui/toaster';
 import * as Services from '@/services/auth/auth';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

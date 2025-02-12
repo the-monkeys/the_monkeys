@@ -1,4 +1,4 @@
-import LoginForm from '@/app/auth/(protected)/components/LoginForm';
+import LoginForm from '@/app/auth/components/LoginForm';
 import { SessionStoreProvider } from '@/app/session-store-provider';
 import { Toaster } from '@/components/ui/toaster';
 import * as Services from '@/services/auth/auth';
@@ -107,6 +107,8 @@ describe('LoginForm', () => {
       email: 'john@doe.com',
       password: 'John1spassword',
     });
+    expect(routerReplaceStub).toHaveBeenCalled();
+    expect(routerReplaceStub).toHaveBeenCalledWith('/feed');
   });
 
   it('Successful login - with callback url', async () => {
@@ -130,6 +132,8 @@ describe('LoginForm', () => {
       email: 'john@doe.com',
       password: 'John1spassword',
     });
+    expect(routerReplaceStub).toHaveBeenCalled();
+    expect(routerReplaceStub).toHaveBeenCalledWith('https://monkeys.com/');
   });
 
   it('Error login', async () => {
