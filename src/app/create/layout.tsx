@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 
 export const metadata: Metadata = {
-  title: 'Creating Blog',
+  title: 'Creating',
 };
 
 const CreatePageLayout = ({

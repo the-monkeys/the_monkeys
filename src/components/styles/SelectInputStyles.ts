@@ -26,7 +26,7 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
   }),
   valueContainer: (provided: any) => ({
     ...provided,
-    padding: '0.5rem',
+    padding: '6px',
   }),
   menu: (provided: any) => ({
     ...provided,
@@ -78,7 +78,7 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
     overflow: 'hidden',
     padding: '0px 0px 0px 4px',
     color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
-    borderRadius: '8px',
+    borderRadius: '4px',
   }),
   multiValueRemove: (provided: any) => ({
     ...provided,

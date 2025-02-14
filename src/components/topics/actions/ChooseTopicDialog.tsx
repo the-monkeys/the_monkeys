@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
 import { twMerge } from 'tailwind-merge';
@@ -56,34 +57,36 @@ export const ChooseTopicDialog = ({
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Choose Topics</DialogTitle>
+          <DialogTitle>Add / Choose Topics</DialogTitle>
 
           <DialogDescription className='!text-sm'>
-            You can add upto 15 suitable topics to your blog.
+            You can add up to 15 topics to your blog. Choose from the list or
+            add your own.
           </DialogDescription>
         </DialogHeader>
 
         <div className='space-y-1'>
-          <div className='flex items-center justify-end'>
-            <p className='px-1 text-sm'>
-              <span
-                className={twMerge(
-                  blogTopics.length > BLOG_TOPICS_MAX_COUNT && 'text-alert-red'
-                )}
-              >
-                {blogTopics.length}
-              </span>
-              {' / '}
-              {BLOG_TOPICS_MAX_COUNT}
-            </p>
-          </div>
-
+          <Label className='px-1 text-sm'>Choose Topics</Label>
           <FormSearchSelect
             defaultSelected={defaultTopics}
             onChange={handleTopicChange}
             options={formatTopics() || []}
             placeholder='Choose suitable topics'
           />
+        </div>
+
+        <div className='flex items-center justify-end'>
+          <p className='px-1 text-sm'>
+            Topics added:{' '}
+            <span
+              className={twMerge(
+                'font-dm_sans font-medium',
+                blogTopics.length > BLOG_TOPICS_MAX_COUNT && 'text-alert-red'
+              )}
+            >
+              {blogTopics.length}
+            </span>
+          </p>
         </div>
       </DialogContent>
     </Dialog>
