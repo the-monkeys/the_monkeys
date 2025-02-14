@@ -4,6 +4,7 @@ import React from 'react';
 
 import { useTheme } from 'next-themes';
 import Select from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
 import { SelectInputStyles } from './styles/SelectInputStyles';
 
@@ -24,13 +25,15 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
 }) => {
   const { theme } = useTheme();
 
+  const handleChange = (selectedOptions: any) => {
+    onChange(selectedOptions as { value: string; label: string }[]);
+  };
+
   return (
-    <Select
+    <CreatableSelect
       isMulti
       defaultValue={defaultSelected}
-      onChange={(selectedOptions) =>
-        onChange(selectedOptions as { value: string; label: string }[])
-      }
+      onChange={handleChange}
       onInputChange={onInputChange}
       options={options}
       placeholder={placeholder}
