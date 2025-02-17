@@ -7,8 +7,8 @@ import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 
-import { validate } from './actions/auth';
 import './globals.css';
+import { QueryClientMount } from './query-client-mount';
 import { SessionStoreProvider } from './session-store-provider';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
@@ -61,8 +61,6 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const authData = await validate();
-
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
@@ -73,15 +71,17 @@ const RootLayout = async ({
       >
         <Toaster />
         <SWRProvider>
-          <SessionStoreProvider value={authData}>
-            <ThemeProviders>
-              <TooltipProvider>
-                <Navbar />
-                <main>{children}</main>
-                <Footer />
-              </TooltipProvider>
-            </ThemeProviders>
-          </SessionStoreProvider>
+          <QueryClientMount>
+            <SessionStoreProvider>
+              <ThemeProviders>
+                <TooltipProvider>
+                  <Navbar />
+                  <main>{children}</main>
+                  <Footer />
+                </TooltipProvider>
+              </ThemeProviders>
+            </SessionStoreProvider>
+          </QueryClientMount>
         </SWRProvider>
       </body>
     </html>

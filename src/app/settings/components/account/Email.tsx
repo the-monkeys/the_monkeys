@@ -1,8 +1,5 @@
 'use client';
 
-import React, { useState } from 'react';
-
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -17,46 +14,24 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { updateEmailSchema } from '@/lib/schema/settings';
-import axiosInstance from '@/services/api/axiosInstance';
-import { User } from '@/services/models/user';
+import { IUser } from '@/services/models/user';
+import { requestEmailVerification, updateEmail } from '@/services/user/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export const Email = () => {
-  const { data: session, update } = useSession();
-
-  const [verifyLoading, setVerifyLoading] = useState<boolean>(false);
-  const [updateLoading, setUpdateLoading] = useState<boolean>(false);
-
-  const form = useForm<z.infer<typeof updateEmailSchema>>({
-    resolver: zodResolver(updateEmailSchema),
-    defaultValues: {
-      email: '',
-    },
-  });
-
-  async function reqVerification() {
-    setVerifyLoading(true);
-
-    try {
-      const response = await axiosInstance.post(
-        `/auth/req-email-verification`,
-        {
-          email: session?.user.email,
-        }
-      );
-
-      update({
-        status: 'authenticated',
-        data: { user: new User(response.data) },
-      });
+export const Email = ({ data }: { data: IUser }) => {
+  const requestVerificationMutation = useMutation({
+    mutationFn: requestEmailVerification,
+    onSuccess: () => {
       toast({
         variant: 'success',
         title: 'Success',
         description: 'Email verification request has been sent successfully.',
       });
-    } catch (err: unknown) {
+    },
+    onError: (err) => {
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -70,32 +45,30 @@ export const Email = () => {
           description: 'An unknown error occurred.',
         });
       }
-    } finally {
-      setVerifyLoading(false);
-    }
+    },
+  });
+
+  const form = useForm<z.infer<typeof updateEmailSchema>>({
+    resolver: zodResolver(updateEmailSchema),
+    defaultValues: {
+      email: '',
+    },
+  });
+
+  async function reqVerification() {
+    requestVerificationMutation.mutate(data.email);
   }
 
-  const onSubmit = async (values: z.infer<typeof updateEmailSchema>) => {
-    setUpdateLoading(true);
-
-    try {
-      const response = await axiosInstance.put(
-        `/auth/settings/email/${session?.user.username}`,
-        {
-          email: values.email,
-        }
-      );
-
-      update({
-        status: 'authenticated',
-        data: { user: new User(response.data) },
-      });
+  const updateEmailMutation = useMutation({
+    mutationFn: updateEmail,
+    onSuccess: () => {
       toast({
         variant: 'success',
         title: 'Success',
         description: 'Your email address has been updated successfully.',
       });
-    } catch (err: unknown) {
+    },
+    onError: (err) => {
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -109,27 +82,28 @@ export const Email = () => {
           description: 'An unknown error occurred.',
         });
       }
-    } finally {
-      setUpdateLoading(false);
-    }
+    },
+  });
+  const onSubmit = async (values: z.infer<typeof updateEmailSchema>) => {
+    updateEmailMutation.mutate({
+      username: data.username,
+      email: values.email,
+    });
   };
 
   return (
     <div className='p-1 space-y-2'>
-      <p className='text-sm opacity-80'>
-        Registered Email: {session?.user?.email}
-      </p>
+      <p className='text-sm opacity-80'>Registered Email: {data.email}</p>
 
-      {!session?.user?.email_verification_status ||
-      session?.user.email_verification_status !== 'Verified' ? (
+      {data.email_verification_status !== 'Verified' ? (
         <Button
           type='button'
           size='lg'
           className='mt-4'
           onClick={reqVerification}
-          disabled={verifyLoading ? true : false}
+          disabled={requestVerificationMutation.isPending ? true : false}
         >
-          {verifyLoading && <Loader />} Verify Email
+          {requestVerificationMutation.isPending && <Loader />} Verify Email
         </Button>
       ) : (
         <div className='mt-4 flex items-center gap-2'>
@@ -156,9 +130,7 @@ export const Email = () => {
                     <FormMessage />
                     <FormControl>
                       <Input
-                        placeholder={
-                          `${session?.user?.email}` || 'yourmail@monkeys.xyz'
-                        }
+                        placeholder={`${data.email}` || 'yourmail@monkeys.xyz'}
                         {...field}
                       />
                     </FormControl>
@@ -170,9 +142,9 @@ export const Email = () => {
             <Button
               size='lg'
               type='submit'
-              disabled={updateLoading ? true : false}
+              disabled={updateEmailMutation.isPending}
             >
-              {updateLoading && <Loader />} Update
+              {updateEmailMutation.isPending && <Loader />} Update
             </Button>
           </div>
         </form>

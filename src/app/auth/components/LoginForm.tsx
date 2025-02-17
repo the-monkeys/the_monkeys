@@ -1,11 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-import { useSession } from '@/app/session-store-provider';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -23,35 +20,21 @@ import { loginSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import { login } from '@/services/auth/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const { update } = useSession();
+  const queryClient = useQueryClient();
 
-  const [loading, setLoading] = useState(false);
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
 
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
-    setLoading(true);
-
-    const callbackURL = params.get('callbackURL');
-    try {
-      const loginResponse = await login(values);
-      update({
-        status: 'authenticated',
-        data: { user: loginResponse },
-      });
-
+      const callbackURL = params.get('callbackURL');
       if (callbackURL) {
         router.replace(callbackURL);
         return;
@@ -62,9 +45,9 @@ export default function LoginForm() {
         title: 'Login Successful',
         description: 'You have successfully logged in. Welcome back!',
       });
-
       router.replace('/feed');
-    } catch (err) {
+    },
+    onError: (err) => {
       console.log(err);
       toast({
         variant: 'error',
@@ -72,9 +55,19 @@ export default function LoginForm() {
         description:
           'There was an error registering in. Please check your credentials and try again.',
       });
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+    mutation.mutate(values);
   };
 
   return (
@@ -134,9 +127,9 @@ export default function LoginForm() {
           <Button
             variant='brand'
             className='flex-1 order-1 transition-colors duration-300'
-            disabled={loading ? true : false}
+            disabled={mutation.isPending}
           >
-            {loading && <Loader />} Login
+            {mutation.isPending && <Loader />} Login
           </Button>
         </div>
       </form>

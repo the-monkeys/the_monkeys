@@ -1,10 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-
 import { useRouter } from 'next/navigation';
 
-import { useSession } from '@/app/session-store-provider';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -25,37 +22,19 @@ import {
 } from '@/components/ui/form';
 import { toast } from '@/components/ui/use-toast';
 import { updatePasswordSchema } from '@/lib/schema/auth';
-import axiosInstance from '@/services/api/axiosInstance';
+import { IUser } from '@/services/models/user';
+import { updatePassword } from '@/services/user/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export const Password = () => {
+export const Password = ({ data }: { data: IUser }) => {
   const router = useRouter();
-  const { data } = useSession();
 
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const form = useForm<z.infer<typeof updatePasswordSchema>>({
-    resolver: zodResolver(updatePasswordSchema),
-    defaultValues: {
-      password: '',
-      confirmPassword: '',
-    },
-  });
-
-  const onSubmit = async (values: z.infer<typeof updatePasswordSchema>) => {
-    setLoading(true);
-
-    try {
-      await axiosInstance.put(
-        `/auth/settings/password/${data?.user.username}`,
-        {
-          current_password: values.currentPassword,
-          new_password: values.password,
-        }
-      );
-
+  const mutation = useMutation({
+    mutationFn: updatePassword,
+    onSuccess: () => {
       toast({
         variant: 'success',
         title: 'Success',
@@ -63,7 +42,8 @@ export const Password = () => {
       });
 
       router.replace('/auth/login');
-    } catch (err: unknown) {
+    },
+    onError: (err) => {
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -77,9 +57,19 @@ export const Password = () => {
           description: 'An unknown error occurred.',
         });
       }
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const form = useForm<z.infer<typeof updatePasswordSchema>>({
+    resolver: zodResolver(updatePasswordSchema),
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof updatePasswordSchema>) => {
+    mutation.mutate({ username: data.username, ...values });
   };
 
   return (
@@ -172,8 +162,8 @@ export const Password = () => {
               </ul>
 
               <div className='pt-6'>
-                <Button className='float-right' disabled={loading}>
-                  {loading && <Loader />}
+                <Button className='float-right' disabled={mutation.isPending}>
+                  {mutation.isPending && <Loader />}
                   Update
                 </Button>
               </div>

@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,49 +13,35 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import { API_URL } from '@/constants/api';
-import { updateUsername } from '@/lib/schema/settings';
-import axiosInstance from '@/services/api/axiosInstance';
-import { User } from '@/services/models/user';
+import { updateUsername as updateUsernameSchema } from '@/lib/schema/settings';
+import { IUser } from '@/services/models/user';
+import { updateUserName } from '@/services/user/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export const Username = () => {
-  const { data: session, update } = useSession();
-  const [loading, setLoading] = useState<boolean>(false);
+export const Username = ({ data }: { data: IUser }) => {
+  const router = useRouter();
 
-  const form = useForm<z.infer<typeof updateUsername>>({
-    resolver: zodResolver(updateUsername),
+  const form = useForm<z.infer<typeof updateUsernameSchema>>({
+    resolver: zodResolver(updateUsernameSchema),
     defaultValues: {
       username: '',
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof updateUsername>) => {
-    setLoading(true);
-
-    try {
-      const res = await axiosInstance.put(
-        `${API_URL}/auth/settings/username/${session?.user?.username}`,
-        {
-          username: values.username,
-        }
-      );
-
-      update({
-        data: {
-          user: new User(res.data),
-        },
-      });
-
+  const mutation = useMutation({
+    mutationFn: updateUserName,
+    onSuccess: () => {
       form.reset();
       toast({
         variant: 'success',
         title: 'Success',
         description: 'Username updated successfully.',
       });
-    } catch (err) {
+    },
+    onError: (err) => {
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -70,9 +55,13 @@ export const Username = () => {
           description: 'An unknown error occurred.',
         });
       }
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const onSubmit = async (values: z.infer<typeof updateUsernameSchema>) => {
+    if (!data) return;
+
+    mutation.mutate({ username: data.username, newUsername: values.username });
   };
 
   return (
@@ -94,9 +83,7 @@ export const Username = () => {
                     <FormControl>
                       <Input
                         placeholder={
-                          session?.user.username
-                            ? `${session?.user.username}`
-                            : 'Enter username'
+                          data?.username ? `${data.username}` : 'Enter username'
                         }
                         {...field}
                       />
@@ -106,8 +93,8 @@ export const Username = () => {
               />
             </div>
 
-            <Button size='lg' disabled={loading ? true : false} type='submit'>
-              {loading && <Loader />} Update
+            <Button size='lg' disabled={mutation.isPending} type='submit'>
+              {mutation.isPending && <Loader />} Update
             </Button>
           </div>
         </form>

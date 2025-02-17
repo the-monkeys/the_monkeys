@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 
-import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { Button } from '@/components/ui/button';
@@ -20,6 +19,7 @@ import { Popover } from '@/components/ui/popover';
 import { toast } from '@/components/ui/use-toast';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -33,10 +33,9 @@ import { Section } from './Section';
 import { parseDateTime } from './profile/parseDate';
 
 export const Profile = () => {
-  const { data } = useSession();
-  const { user, isLoading, isError } = useGetAuthUserProfile(
-    data?.user.username
-  );
+  const { data } = useAuth();
+
+  const { data: user } = useGetAuthUserProfile(data?.username);
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
@@ -58,7 +57,7 @@ export const Profile = () => {
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
     setLoading(true);
     axiosInstance
-      .put(`/user/${data?.user.username}`, {
+      .put(`/user/${data?.username}`, {
         values,
       })
       .then((res) => {
@@ -100,7 +99,7 @@ export const Profile = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <Section sectionTitle='Basic Infomation'>
+        <Section sectionTitle='Basic Information'>
           <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
               <p className='w-full col-span-1 sm:col-span-2 text-sm'>
@@ -108,7 +107,7 @@ export const Profile = () => {
               </p>
 
               <ProfileFrame className='size-28 sm:size-32'>
-                {data?.user && <ProfileImage username={data.user?.username} />}
+                {data?.username && <ProfileImage username={data.username} />}
               </ProfileFrame>
 
               <div className='space-x-2'>
@@ -240,10 +239,10 @@ export const Profile = () => {
                           }
                           onSelect={(date) => {
                             if (date) {
-                              const formatedDate = parseDateTime(
+                              const formattedDate = parseDateTime(
                                 format(date, 'yyyy-MM-dd')
                               );
-                              field.onChange(formatedDate);
+                              field.onChange(formattedDate);
                             }
                           }}
                           captionLayout='dropdown-buttons'
