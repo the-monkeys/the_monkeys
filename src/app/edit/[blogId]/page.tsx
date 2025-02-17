@@ -1,11 +1,10 @@
 'use client';
 
-import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
@@ -13,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL_V2 } from '@/constants/api';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
@@ -29,13 +29,13 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [showModal, setShowModal] = useState(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const { data: session } = useSession();
+  const { data: session } = useAuth();
   const router = useRouter();
   const blogId = params.blogId;
 
   const { blog, isLoading } = useGetDraftBlogDetail(blogId);
 
-  const accountId = session?.user.account_id;
+  const accountId = session?.account_id;
 
   const createWebSocket = useCallback((blogId: string) => {
     const ws = new WebSocket(`${WSS_URL_V2}/blog/draft/${blogId}`);
@@ -110,7 +110,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       });
 
       setBlogPublishLoading(false);
-      router.push(`/${session?.user?.username}`);
+      router.push(`/${session?.username}`);
     } catch (err) {
       toast({
         variant: 'destructive',
