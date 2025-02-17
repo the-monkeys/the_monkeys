@@ -2,12 +2,16 @@
 
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
-import useAuth from '@/hooks/auth/useAuth';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
+import { IUser } from '@/services/models/user';
 
-export const Drafts = ({ username }: { username: string }) => {
-  const { data: session, isSuccess } = useAuth();
-
+export const Drafts = ({
+  username,
+  user,
+}: {
+  username: string;
+  user?: IUser;
+}) => {
   const { blogs, isLoading, isError } = useGetAllDraftBlogs();
 
   if (isError)
@@ -35,8 +39,8 @@ export const Drafts = ({ username }: { username: string }) => {
               <BlogCard
                 key={blog?.blog_id}
                 blog={blog}
-                isAuthenticated={isSuccess}
-                modificationEnable={session?.username === username}
+                isAuthenticated={!!user}
+                modificationEnable={user?.username === username}
               />
             );
           })
