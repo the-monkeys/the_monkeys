@@ -40,10 +40,12 @@ const updateProfileSchema = z.object({
   bio: z.string().optional(),
 });
 
-export const UpdateDialog = ({ data }: { data: { user: Partial<IUser> } }) => {
-  const { user, isLoading, isError } = useGetAuthUserProfile(
-    data.user.username
-  );
+export const UpdateDialog = ({ data }: { data: IUser }) => {
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useGetAuthUserProfile(data.username);
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
@@ -73,7 +75,7 @@ export const UpdateDialog = ({ data }: { data: { user: Partial<IUser> } }) => {
     setLoading(true);
 
     try {
-      await axiosInstance.put(`/user/${data.user.username}`, {
+      await axiosInstance.put(`/user/${data.username}`, {
         values,
       });
 
@@ -85,10 +87,10 @@ export const UpdateDialog = ({ data }: { data: { user: Partial<IUser> } }) => {
 
       setOpen(false);
 
-      mutate(`/user/public/${data.user.username}`, `${data.user.username}`, {
+      mutate(`/user/public/${data.username}`, `${data.username}`, {
         revalidate: true,
       });
-      mutate(`/user/${data.user.username}`, `${data.user.username}`, {
+      mutate(`/user/${data.username}`, `${data.username}`, {
         revalidate: true,
       });
     } catch (err) {
@@ -134,7 +136,7 @@ export const UpdateDialog = ({ data }: { data: { user: Partial<IUser> } }) => {
                 <p className='w-full text-sm'>Profile Photo</p>
 
                 <ProfileFrame className='size-24'>
-                  {data.user && <ProfileImage username={data.user.username} />}
+                  {data && <ProfileImage username={data.username} />}
                 </ProfileFrame>
 
                 <div className='space-x-2'>

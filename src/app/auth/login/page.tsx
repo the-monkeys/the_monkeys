@@ -15,8 +15,8 @@ import {
 import { Button } from '@/components/ui/button';
 import useAuth from '@/hooks/auth/useAuth';
 
-import LoginForm from '../../components/LoginForm';
-import { LoginFormSkeleton } from '../../components/LoginFormSkeleton';
+import LoginForm from '../components/LoginForm';
+import { LoginFormSkeleton } from '../components/LoginFormSkeleton';
 
 export default function LoginPage() {
   const { isSuccess, isLoading } = useAuth();

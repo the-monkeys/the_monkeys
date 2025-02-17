@@ -1,12 +1,13 @@
 'use client';
 
-import { useSession } from '@/app/session-store-provider';
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 
 export const Drafts = ({ username }: { username: string }) => {
-  const { data: session, status } = useSession();
+  const { data: session, isSuccess } = useAuth();
+
   const { blogs, isLoading, isError } = useGetAllDraftBlogs();
 
   if (isError)
@@ -34,8 +35,8 @@ export const Drafts = ({ username }: { username: string }) => {
               <BlogCard
                 key={blog?.blog_id}
                 blog={blog}
-                status={status}
-                modificationEnable={session?.user.username === username}
+                isAuthenticated={isSuccess}
+                modificationEnable={session?.username === username}
               />
             );
           })

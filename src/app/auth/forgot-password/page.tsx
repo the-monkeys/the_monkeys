@@ -7,7 +7,7 @@ import {
   PageSubheading,
 } from '@/components/layout/pageHeading';
 
-import ForgotPasswordForm from '../../components/ForgotPasswordForm';
+import ForgotPasswordForm from '../components/ForgotPasswordForm';
 
 export default function ForgotPassword() {
   return (

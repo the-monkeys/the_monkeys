@@ -11,13 +11,13 @@ import React, {
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { WSS_URL_V2 } from '@/constants/api';
+import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
 
@@ -62,7 +62,7 @@ const CreatePage = () => {
   const [publishedBlogLoading, setPublishedBlogLoading] =
     useState<boolean>(false);
   // Get the session data
-  const { data: session, status } = useSession();
+  const { data: session, isError } = useAuth();
 
   const router = useRouter();
 
@@ -133,7 +133,7 @@ const CreatePage = () => {
       return; // Ensure data is not null and has a title block
     }
 
-    const formattedData = formatData(data, session?.user.account_id);
+    const formattedData = formatData(data, session?.account_id);
 
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
@@ -145,7 +145,7 @@ const CreatePage = () => {
         });
 
         setPublishedBlogLoading(false);
-        router.push(`/${session?.user?.username}`);
+        router.push(`/${session?.username}`);
       })
       .catch((err) => {
         setPublishedBlogLoading(false);
@@ -156,18 +156,18 @@ const CreatePage = () => {
           description: 'error',
         });
       });
-  }, [data, session?.user.account_id, blogId, formatData, router]);
+  }, [data, session?.account_id, blogId, formatData, router]);
 
   // Load the Editor component dynamically
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
+    if (isError) {
       const url = new URL('/auth/login', location.href);
       url.searchParams.set('callbackURL', location.href);
 
       router.replace(url.pathname + url.search);
     }
-  }, []);
+  }, [isError]);
 
   // Create WebSocket connection when authToken is available
   useEffect(() => {
@@ -208,7 +208,7 @@ const CreatePage = () => {
       webSocket &&
       webSocket.readyState === WebSocket.OPEN
     ) {
-      const formattedData = formatData(data, session?.user.account_id);
+      const formattedData = formatData(data, session?.account_id);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
@@ -222,7 +222,7 @@ const CreatePage = () => {
         };
       }, 1200);
     }
-  }, [data, webSocket, session?.user.account_id, formatData]);
+  }, [data, webSocket, session?.account_id, formatData]);
 
   return (
     <>

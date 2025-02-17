@@ -7,7 +7,7 @@ import {
   PageSubheading,
 } from '@/components/layout/pageHeading';
 
-import RegisterUserForm from '../../components/RegisterUserForm';
+import RegisterUserForm from '../components/RegisterUserForm';
 
 export default function Register() {
   return (
