@@ -1,3 +1,4 @@
+// TODO: Delete this file in future
 import { IUser } from '@/services/models/user';
 import { createStore } from 'zustand';
 

@@ -19,7 +19,7 @@ import LoginForm from '../components/LoginForm';
 import { LoginFormSkeleton } from '../components/LoginFormSkeleton';
 
 export default function LoginPage() {
-  const { isSuccess, isLoading } = useAuth();
+  const { isSuccess, isLoading, isFetching } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function LoginPage() {
       </PageHeader>
 
       <Container className='max-w-screen-sm my-8 px-3 flex flex-col gap-8'>
-        {isLoading ? (
+        {isLoading || isFetching ? (
           <LoginFormSkeleton />
         ) : (
           <>

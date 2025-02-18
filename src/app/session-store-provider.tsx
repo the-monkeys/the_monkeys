@@ -1,5 +1,6 @@
 'use client';
 
+//TODO: Delete this file in future
 import { createContext, useContext, useRef } from 'react';
 
 import {
@@ -9,6 +10,48 @@ import {
 } from '@/lib/store/useSession';
 import { UserJWT } from '@/services/models/user';
 import { useStore } from 'zustand';
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
+
+//TODO: Delete this file in future
 
 const SessionStoreContext = createContext<SessionStoreApi | undefined>(
   undefined

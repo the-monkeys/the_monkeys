@@ -4,7 +4,6 @@ import { useCallback, useState } from 'react';
 
 import Image from 'next/image';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -17,13 +16,14 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
+import useAuth from '@/hooks/auth/useAuth';
 import axiosFileInstance from '@/services/api/axiosFileInstance';
 import { useDropzone } from 'react-dropzone';
 import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 export const UpdateProfileDialog = () => {
-  const { data, status } = useSession();
+  const { data, isSuccess: isAuthenticated } = useAuth();
 
   const [uploadError, setUploadError] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<File | undefined>(
@@ -68,7 +68,7 @@ export const UpdateProfileDialog = () => {
 
     try {
       const response = await axiosFileInstance.post(
-        `/files/profile/${data?.user.username}/profile`,
+        `/files/profile/${data?.username}/profile`,
         formData
       );
 
@@ -83,7 +83,7 @@ export const UpdateProfileDialog = () => {
         setOpen(false);
       }
 
-      mutate(`/files/profile/${data?.user.username}/profile`);
+      mutate(`/files/profile/${data?.username}/profile`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({
@@ -196,7 +196,7 @@ export const UpdateProfileDialog = () => {
                 variant='constructive'
                 type='button'
                 onClick={onProfileUpload}
-                disabled={loading || status === 'unauthenticated'}
+                disabled={loading || !isAuthenticated}
                 className='rounded-full'
               >
                 {loading ? <Loader /> : <Icon name='RiCheck' />}

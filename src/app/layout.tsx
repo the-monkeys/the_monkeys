@@ -9,7 +9,6 @@ import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 import './globals.css';
 import { QueryClientMount } from './query-client-mount';
-import { SessionStoreProvider } from './session-store-provider';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 
@@ -72,15 +71,13 @@ const RootLayout = async ({
         <Toaster />
         <SWRProvider>
           <QueryClientMount>
-            <SessionStoreProvider>
-              <ThemeProviders>
-                <TooltipProvider>
-                  <Navbar />
-                  <main>{children}</main>
-                  <Footer />
-                </TooltipProvider>
-              </ThemeProviders>
-            </SessionStoreProvider>
+            <ThemeProviders>
+              <TooltipProvider>
+                <Navbar />
+                <main>{children}</main>
+                <Footer />
+              </TooltipProvider>
+            </ThemeProviders>
           </QueryClientMount>
         </SWRProvider>
       </body>

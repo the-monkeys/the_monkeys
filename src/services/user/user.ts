@@ -50,3 +50,9 @@ export async function requestEmailVerification(email: string) {
 
   return response.data;
 }
+
+export async function deleteUser(username: string) {
+  const response = await axiosInstance.delete(`/user/${username}`);
+
+  return response.data;
+}

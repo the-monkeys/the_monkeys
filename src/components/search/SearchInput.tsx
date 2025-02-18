@@ -4,7 +4,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import { useSession } from '@/app/session-store-provider';
+import useAuth from '@/hooks/auth/useAuth';
 import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
 import { twMerge } from 'tailwind-merge';
 
@@ -14,7 +14,7 @@ import { Input } from '../ui/input';
 import { SearchUsers } from './SearchUsers';
 
 export const SearchInput = ({ className }: { className?: string }) => {
-  const { status } = useSession();
+  const { isSuccess } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
@@ -52,14 +52,10 @@ export const SearchInput = ({ className }: { className?: string }) => {
         <Input
           value={searchQuery}
           variant='ghost'
-          placeholder={
-            status === 'authenticated'
-              ? 'Search for authors'
-              : 'Login to search'
-          }
+          placeholder={isSuccess ? 'Search for authors' : 'Login to search'}
           className='px-1 rounded-none focus-visible:shadow-none'
           onChange={handleInputChange}
-          disabled={status === 'unauthenticated'}
+          disabled={!isSuccess}
           onFocus={() => setFocused(true)}
           onBlur={handleBlur}
         />

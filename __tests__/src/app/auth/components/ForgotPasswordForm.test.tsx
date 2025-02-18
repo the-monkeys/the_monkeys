@@ -1,9 +1,10 @@
 import ForgotPasswordForm from '@/app/auth/components/ForgotPasswordForm';
-import { Toaster } from '@/components/ui/toaster';
 import * as Services from '@/services/auth/auth';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { renderWithProviders } from '../../../../utils';
 
 describe('ForgotPasswordForm', () => {
   afterEach(() => {
@@ -11,7 +12,7 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('Shows invalid email error on invalid email', async () => {
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
 
     const submitButton = screen.getByRole('button');
     const emailInput = screen.getByRole('textbox');
@@ -26,7 +27,7 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('Shows required error text on values', async () => {
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
 
     const submitButton = screen.getByRole('button');
     await userEvent.click(submitButton);
@@ -37,14 +38,14 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('Clear button is hidden when field is empty', async () => {
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
     const clearButton = screen.queryByRole('button', { name: 'clear button' });
 
     expect(clearButton).toBeNull();
   });
 
   it('Clear button is visible when field is empty', async () => {
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
     const emailInput = screen.getByRole('textbox');
 
     await userEvent.type(emailInput, 'john@example.com');
@@ -53,7 +54,7 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('Clear button clears the email field', async () => {
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
     const emailInput = screen.getByRole('textbox');
 
     await userEvent.type(emailInput, 'john@example.com');
@@ -74,7 +75,7 @@ describe('ForgotPasswordForm', () => {
         },
       }));
 
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
 
     const submitButton = screen.getByRole('button');
     const emailInput = screen.getByRole('textbox');
@@ -103,7 +104,7 @@ describe('ForgotPasswordForm', () => {
         },
       }));
 
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
 
     const submitButton = screen.getByRole('button');
     const emailInput = screen.getByRole('textbox');
@@ -130,7 +131,7 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('Error submit', async () => {
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
 
     const submitButton = screen.getByRole('button');
     const emailInput = screen.getByRole('textbox');
@@ -154,7 +155,7 @@ describe('ForgotPasswordForm', () => {
   });
 
   it('Clicking clear button after error', async () => {
-    render(<ForgotPasswordForm />);
+    renderWithProviders(<ForgotPasswordForm />);
 
     const submitButton = screen.getByRole('button');
     const emailInput = screen.getByRole('textbox');

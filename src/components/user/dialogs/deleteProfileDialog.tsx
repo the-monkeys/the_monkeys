@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
@@ -14,11 +13,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
+import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
 import { mutate } from 'swr';
 
 export const DeleteProfileDialog = () => {
-  const { data } = useSession();
+  const { data } = useAuth();
 
   const [open, setOpen] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export const DeleteProfileDialog = () => {
 
     try {
       const response = await axiosInstance.delete(
-        `/files/profile/${data?.user.username}/profile`
+        `/files/profile/${data?.username}/profile`
       );
 
       if (response.status === 202) {
@@ -41,7 +41,7 @@ export const DeleteProfileDialog = () => {
         setOpen(false);
       }
 
-      mutate(`/files/profile/${data?.user.username}/profile`);
+      mutate(`/files/profile/${data?.username}/profile`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { useSession } from '@/app/session-store-provider';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -16,22 +15,19 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import axiosInstance from '@/services/api/axiosInstance';
+import useAuth from '@/hooks/auth/useAuth';
+import { deleteUser } from '@/services/user/user';
+import { useMutation } from '@tanstack/react-query';
 
 export const Danger = () => {
-  const { data, update } = useSession();
+  const { data } = useAuth();
   const router = useRouter();
 
   const [deleteMessage, setDeleteMessage] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
 
-  const onAccountDelete = async () => {
-    setLoading(true);
-
-    try {
-      await axiosInstance.delete(`/user/${data?.user.username}`);
-
-      update({ status: 'unauthenticated', data: null });
+  const mutation = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
       toast({
         variant: 'success',
         title: 'Success',
@@ -39,7 +35,8 @@ export const Danger = () => {
       });
 
       router.replace('/');
-    } catch (err: unknown) {
+    },
+    onError: (err) => {
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -53,9 +50,11 @@ export const Danger = () => {
           description: 'An unknown error occurred.',
         });
       }
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const onAccountDelete = async () => {
+    if (data?.username) mutation.mutate(data?.username);
   };
 
   return (
@@ -102,9 +101,11 @@ export const Danger = () => {
               variant='destructive'
               className='w-fit float-right'
               onClick={onAccountDelete}
-              disabled={deleteMessage !== 'delete my account' || loading}
+              disabled={
+                deleteMessage !== 'delete my account' || mutation.isPending
+              }
             >
-              {loading && <Loader />}I Agree, Delete
+              {mutation.isPending && <Loader />}I Agree, Delete
             </Button>
           </div>
         </DialogContent>

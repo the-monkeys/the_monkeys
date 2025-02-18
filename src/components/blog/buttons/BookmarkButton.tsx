@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
@@ -16,12 +15,9 @@ export const BookmarkButton = ({
   size?: number;
   isDisable?: boolean;
 }) => {
-  const { status } = useSession();
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(blogId);
 
   const [loading, setLoading] = useState<boolean>(false);
-
-  if (status === 'unauthenticated') return null;
 
   if (isLoading) {
     return (

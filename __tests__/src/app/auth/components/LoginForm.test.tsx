@@ -1,18 +1,11 @@
 import LoginForm from '@/app/auth/components/LoginForm';
-import { SessionStoreProvider } from '@/app/session-store-provider';
-import { Toaster } from '@/components/ui/toaster';
 import * as Services from '@/services/auth/auth';
 import { User } from '@/services/models/user';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-const withProviders = (children: React.ReactNode) => (
-  <>
-    <Toaster />
-    <SessionStoreProvider>{children}</SessionStoreProvider>
-  </>
-);
+import { renderWithProviders } from '../../../../utils';
 
 let routerReplaceStub = vi.fn();
 let searchParamsGetStub = vi.fn();
@@ -39,7 +32,7 @@ describe('LoginForm', () => {
   });
 
   it('Focuses on email on first render', async () => {
-    render(withProviders(<LoginForm />));
+    renderWithProviders(<LoginForm />);
 
     const emailInput = await screen.findByPlaceholderText(
       'Enter email address'
@@ -49,11 +42,11 @@ describe('LoginForm', () => {
   });
 
   it('Typing on first render changes email input', async () => {
-    render(withProviders(<LoginForm />));
+    renderWithProviders(<LoginForm />);
 
-    const emailInput = (await screen.findByPlaceholderText(
+    const emailInput = await screen.findByPlaceholderText(
       'Enter email address'
-    )) as HTMLInputElement;
+    );
 
     await userEvent.keyboard('hello world');
 
@@ -61,7 +54,7 @@ describe('LoginForm', () => {
   });
 
   it('Shows required error text on values', async () => {
-    render(withProviders(<LoginForm />));
+    renderWithProviders(<LoginForm />);
 
     const submitButton = await screen.findByText('Login');
     await userEvent.click(submitButton);
@@ -76,7 +69,7 @@ describe('LoginForm', () => {
   });
 
   it('Shows invalid email error on invalid email', async () => {
-    render(withProviders(<LoginForm />));
+    renderWithProviders(<LoginForm />);
 
     const submitButton = await screen.findByText('Login');
 
@@ -89,7 +82,7 @@ describe('LoginForm', () => {
   });
 
   it('Successful login', async () => {
-    render(withProviders(<LoginForm />));
+    renderWithProviders(<LoginForm />);
 
     const submitButton = screen.getByText('Login');
 
@@ -118,7 +111,7 @@ describe('LoginForm', () => {
 
     searchParamsGetStub.mockReturnValue('https://monkeys.com/');
 
-    render(withProviders(<LoginForm />));
+    renderWithProviders(<LoginForm />);
 
     const submitButton = screen.getByText('Login');
 
@@ -137,7 +130,7 @@ describe('LoginForm', () => {
   });
 
   it('Error login', async () => {
-    render(withProviders(<LoginForm />));
+    renderWithProviders(<LoginForm />);
     const submitButton = screen.getByText('Login');
 
     const spy = vi.spyOn(Services, 'login').mockImplementation(() => {

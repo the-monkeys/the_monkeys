@@ -1,10 +1,10 @@
 import React from 'react';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
+import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { mutate } from 'swr';
 
 interface TopicButtonProps {
@@ -12,6 +12,7 @@ interface TopicButtonProps {
   isFollowed: boolean;
   loading: boolean;
   onSuccess: () => void;
+  user?: GetPublicUserProfileApiResponse;
 }
 
 export const TopicButton = ({
@@ -19,13 +20,12 @@ export const TopicButton = ({
   isFollowed,
   loading,
   onSuccess,
+  user,
 }: TopicButtonProps) => {
-  const { data: session, status } = useSession();
-
-  if (status === 'unauthenticated') return null;
+  if (!user) return null;
 
   const handleCategoryClick = async () => {
-    const username = session?.user?.username;
+    const username = user.username;
 
     if (!username) {
       toast({
@@ -54,7 +54,7 @@ export const TopicButton = ({
   };
 
   const handleUnfollowCategory = async () => {
-    const username = session?.user?.username;
+    const username = user.username;
 
     try {
       await axiosInstance.put(`/user/un-follow-topics/${username}`, {

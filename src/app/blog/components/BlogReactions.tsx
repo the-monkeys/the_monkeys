@@ -37,7 +37,7 @@ export const BlogReactions = ({
 
         <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' /> */}
 
-        <BookmarkButton blogId={blogId} size={20} />
+        {isSuccess && <BookmarkButton blogId={blogId} size={20} />}
       </div>
     </div>
   );

@@ -2,7 +2,6 @@
 
 import { Suspense, useCallback, useEffect, useState } from 'react';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -12,8 +11,6 @@ import { verifyEmailVerificationToken } from '@/services/auth/auth';
 import { SearchParamsComponent } from './SearchParams';
 
 export const VerifyEmailStatus = () => {
-  const { status, update } = useSession();
-
   const [loading, setLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -44,12 +41,6 @@ export const VerifyEmailStatus = () => {
             title: 'Success',
             description: 'Email verification successful!',
           });
-
-          if (status === 'authenticated') {
-            update({
-              data: { user: { email_verification_status: 'Verified' } },
-            });
-          }
 
           setIsSuccess(true);
         })
