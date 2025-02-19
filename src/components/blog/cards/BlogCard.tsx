@@ -23,13 +23,13 @@ import {
 
 interface BlogCardProps {
   blog: Blog;
-  status: 'authenticated' | 'loading' | 'unauthenticated';
+  isAuthenticated: boolean;
   modificationEnable?: boolean;
 }
 
 export const BlogCard: FC<BlogCardProps> = ({
   blog,
-  status,
+  isAuthenticated,
   modificationEnable = false,
 }) => {
   const router = useRouter();
@@ -49,8 +49,7 @@ export const BlogCard: FC<BlogCardProps> = ({
     router.push(`/edit/${blogId}`);
   };
 
-  const showModificationOptions =
-    status === 'authenticated' && modificationEnable;
+  const showModificationOptions = isAuthenticated && modificationEnable;
 
   const likesCount = blog?.LikeCount || blog?.like_count;
   const bookmarksCount = blog?.BookmarkCount || blog?.bookmark_count;

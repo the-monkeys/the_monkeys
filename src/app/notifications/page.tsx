@@ -1,15 +1,15 @@
 'use client';
 
 import { Loader } from '@/components/loader';
+import useAuth from '@/hooks/auth/useAuth';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
-import { useSession } from 'next-auth/react';
 
 import { MarkReadButton } from './components/MarkReadButton';
 import { NotificationCard } from './components/NotificationCard';
 
 const NotificationsPage = () => {
   const { notifications, isLoading, isError } = useGetAllNotifications();
-  const { data: session } = useSession();
+  const { data: session } = useAuth();
 
   if (isLoading) {
     return (
@@ -40,7 +40,7 @@ const NotificationsPage = () => {
     <div className='mx-auto w-full sm:w-4/5 md:w-3/5 px-4 flex flex-col items-center sm:items-end space-y-4'>
       <MarkReadButton
         notificationIds={unreadNotifications}
-        userId={session?.user.username}
+        userId={session?.username}
       />
 
       <div className='w-full space-y-2'>

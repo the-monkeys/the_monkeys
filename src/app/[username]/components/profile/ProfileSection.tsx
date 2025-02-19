@@ -8,8 +8,8 @@ import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import { ProfileCard } from '@/components/user/cards/ProfileCard';
 import { ShareProfileDialog } from '@/components/user/dialogs/ShareProfileDialog';
+import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
-import { useSession } from 'next-auth/react';
 
 import UserNotFound from '../../UserNotFound';
 import { ProfileActionsDropdown } from './ProfileActionsDropdown';
@@ -18,7 +18,7 @@ import { UpdateDialog } from './UpdateDialog';
 
 export const ProfileSection = () => {
   const params = useParams<{ username: string }>();
-  const { data: session, status } = useSession();
+  const { data: session, isSuccess } = useAuth();
 
   const { user, isLoading, isError } = useUser(params.username);
 
@@ -30,16 +30,14 @@ export const ProfileSection = () => {
     return <ProfileCardSkeleton />;
   }
 
-  const isAuthenticated =
-    session?.user.username === params.username && status === 'authenticated';
+  const isAuthenticated = session?.username === params.username && isSuccess;
 
   return (
     <>
       <div className='mb-3 flex gap-2 items-center justify-end'>
-        {params.username !== session?.user.username &&
-          status === 'authenticated' && (
-            <FollowButton username={params.username} />
-          )}
+        {params.username !== session?.username && isSuccess && (
+          <FollowButton username={params.username} />
+        )}
 
         {isAuthenticated && <UpdateDialog data={session} />}
 

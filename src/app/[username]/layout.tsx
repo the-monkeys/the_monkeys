@@ -1,6 +1,20 @@
+import { Metadata } from 'next';
+
 import Container from '@/components/layout/Container';
 
 import { ProfileSection } from './components/profile/ProfileSection';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { username: string };
+}): Promise<Metadata> {
+  const username = params.username;
+
+  return {
+    title: `@${username}`,
+  };
+}
 
 const ProfilePageLayout = ({
   children,

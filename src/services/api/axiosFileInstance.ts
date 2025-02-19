@@ -1,7 +1,6 @@
 import { API_URL } from '@/constants/api';
 import axios from 'axios';
 import Bowser from 'bowser';
-import { getSession } from 'next-auth/react';
 import { publicIpv4 } from 'public-ip';
 
 const axiosFileInstance = axios.create({
@@ -14,11 +13,6 @@ const axiosFileInstance = axios.create({
 
 axiosFileInstance.interceptors.request.use(
   async (config) => {
-    const session = await getSession();
-    if (session && session.user && session.user.token) {
-      config.headers['Authorization'] = `Bearer ${session.user.token}`;
-    }
-
     // Get public IP address
     const ip = await publicIpv4();
     config.headers['Ip'] = ip;

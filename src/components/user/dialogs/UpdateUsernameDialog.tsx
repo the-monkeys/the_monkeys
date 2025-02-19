@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
@@ -22,18 +20,20 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
-import { API_URL } from '@/constants/api';
 import { updateUsername } from '@/lib/schema/settings';
-import axiosInstance from '@/services/api/axiosInstance';
+import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
+import { updateUserName } from '@/services/user/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useSession } from 'next-auth/react';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export const UpdateUsernameDialog = () => {
+export const UpdateUsernameDialog = ({
+  user,
+}: {
+  user?: GetPublicUserProfileApiResponse;
+}) => {
   const router = useRouter();
-  const { data: session, update } = useSession();
-  const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof updateUsername>>({
     resolver: zodResolver(updateUsername),
@@ -42,44 +42,30 @@ export const UpdateUsernameDialog = () => {
     },
   });
 
-  const updateUserSession = async (token: string) => {
-    await update({
-      ...session,
-      user: {
-        ...session?.user,
-        token: token,
-        username: form.getValues('username'),
-      },
-    });
-  };
+  const mutation = useMutation({
+    mutationFn: updateUserName,
+    onSuccess: (data) => {
+      form.reset();
+      router.push(`/${data.username}`);
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Username updated successfully.',
+      });
+    },
+    onError: (err) => {
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description: err.message || 'Failed to update username.',
+      });
+    },
+  });
 
   const onSubmit = async (values: z.infer<typeof updateUsername>) => {
-    setLoading(true);
+    if (!user) return;
 
-    axiosInstance
-      .put(`${API_URL}/auth/settings/username/${session?.user?.username}`, {
-        username: values.username,
-      })
-      .then((res) => {
-        updateUserSession(res.data.token);
-        form.reset();
-        router.push(`/${values.username}`);
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Username updated successfully.',
-        });
-      })
-      .catch((err) => {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to update username.',
-        });
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    mutation.mutate({ username: user.username, newUsername: values.username });
   };
 
   return (
@@ -112,9 +98,7 @@ export const UpdateUsernameDialog = () => {
                   <FormControl>
                     <Input
                       placeholder={
-                        session?.user?.username
-                          ? `${session?.user?.username}`
-                          : 'Enter username'
+                        user?.username ? `${user.username}` : 'Enter username'
                       }
                       {...field}
                     />
@@ -126,11 +110,11 @@ export const UpdateUsernameDialog = () => {
             <div className='pt-4'>
               <Button
                 size='lg'
-                disabled={loading ? true : false}
+                disabled={mutation.isPending}
                 type='submit'
                 className='float-right'
               >
-                {loading && <Loader />} Update
+                {mutation.isPending && <Loader />} Update
               </Button>
             </div>
           </form>

@@ -95,16 +95,25 @@ export const ResetPasswordForm = () => {
   function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
     setLoading(true);
     axiosInstanceNoAuth
-      .post('/auth/update-password', {
-        new_password: values.password,
-      })
+      .post(
+        '/auth/update-password',
+        {
+          new_password: values.password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`,
+          },
+        }
+      )
       .then((res) => {
         toast({
           variant: 'success',
           title: 'Success',
           description: 'Your password has been updated successfully.',
         });
-        navigate.push('/api/auth/signin');
+
+        navigate.push('/auth/login');
       })
       .catch((err) => {
         toast({

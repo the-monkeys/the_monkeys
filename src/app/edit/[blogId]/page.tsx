@@ -1,11 +1,10 @@
 'use client';
 
-import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
@@ -13,10 +12,10 @@ import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL_V2 } from '@/constants/api';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -24,26 +23,22 @@ const Editor = dynamic(() => import('@/components/editor'), {
 });
 
 const EditPage = ({ params }: { params: { blogId: string } }) => {
-  const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
   const [data, setData] = useState<OutputData | null>(null);
   const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [showModal, setShowModal] = useState(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const { data: session } = useSession();
+  const { data: session } = useAuth();
   const router = useRouter();
   const blogId = params.blogId;
 
   const { blog, isLoading } = useGetDraftBlogDetail(blogId);
 
-  const authToken = session?.user.token;
-  const accountId = session?.user.account_id;
+  const accountId = session?.account_id;
 
-  const createWebSocket = useCallback((blogId: string, token: string) => {
-    const ws = new WebSocket(
-      `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
-    );
+  const createWebSocket = useCallback((blogId: string) => {
+    const ws = new WebSocket(`${WSS_URL_V2}/blog/draft/${blogId}`);
 
     ws.onopen = () => {
       console.log('websocket connection 🟢');
@@ -115,7 +110,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       });
 
       setBlogPublishLoading(false);
-      router.push(`/${session?.user?.username}`);
+      router.push(`/${session?.username}`);
     } catch (err) {
       toast({
         variant: 'destructive',
@@ -128,16 +123,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     }
   }, [data, accountId, blogId, formatData, router]);
 
-  // Load the Editor component dynamically
-  useEffect(() => {
-    const loadEditor = async () => {
-      const editor = await import('@/components/editor');
-      setEditor(() => editor.default);
-    };
-
-    loadEditor();
-  }, []);
-
   // Fetch draft blog data every time the page loads
   useEffect(() => {
     mutate(`/blog/my-drafts/${blogId}`, blogId, { revalidate: true });
@@ -145,21 +130,19 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Create WebSocket connection when authToken is available
   useEffect(() => {
-    if (authToken) {
-      const cleanup = createWebSocket(blogId, authToken);
+    const cleanup = createWebSocket(blogId);
 
-      const handleBeforeUnload = () => {
-        cleanup();
-      };
+    const handleBeforeUnload = () => {
+      cleanup();
+    };
 
-      window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
-      return () => {
-        cleanup();
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }
-  }, [authToken, blogId, createWebSocket]);
+    return () => {
+      cleanup();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [blogId, createWebSocket]);
 
   // Set editor data based on the source
   useEffect(() => {
@@ -173,17 +156,13 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     if (webSocket && webSocket.readyState === WebSocket.OPEN && data) {
       const formattedData = formatData(data, accountId);
       webSocket.send(JSON.stringify(formattedData));
+
       setIsSaving(true); // Set saving status when data is sent
     }
 
-    if (
-      webSocket &&
-      webSocket.readyState === WebSocket.CLOSED &&
-      data &&
-      authToken
-    ) {
+    if (webSocket && webSocket.readyState === WebSocket.CLOSED && data) {
       setTimeout(() => {
-        const cleanup = createWebSocket(blogId, authToken);
+        const cleanup = createWebSocket(blogId);
 
         return () => {
           cleanup();
@@ -214,7 +193,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
           <div className='mt-4 min-h-screen'>
             <Suspense fallback={<Loader />}>
-              {editor && data && (
+              {data && (
                 <Editor
                   data={data}
                   onChange={setData}

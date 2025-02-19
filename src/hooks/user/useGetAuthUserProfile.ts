@@ -1,17 +1,27 @@
-import { authFetcher } from '@/services/fetcher';
-import useSWR from 'swr';
+import axiosInstance from '@/services/api/axiosInstance';
+import { GetAuthUserProfileApiResponse } from '@/services/profile/userApiTypes';
+import { useQuery } from '@tanstack/react-query';
 
-const useGetAuthUserProfile = (username: string | undefined) => {
-  const { data, error } = useSWR(
-    username ? `/user/${username}` : null,
-    authFetcher
+async function getAuthUserProfile(username: string) {
+  const resp = await axiosInstance.get<GetAuthUserProfileApiResponse>(
+    `/user/${username}`
   );
 
-  return {
-    user: data,
-    isLoading: !error && !data,
-    isError: error,
-  };
+  return resp.data;
+}
+
+const useGetAuthUserProfile = (username?: string) => {
+  return useQuery({
+    queryFn: async () => {
+      if (username) {
+        return await getAuthUserProfile(username);
+      }
+
+      return null;
+    },
+    queryKey: ['user', username],
+    enabled: !!username,
+  });
 };
 
 export default useGetAuthUserProfile;

@@ -3,10 +3,15 @@
 import { BlogCard } from '@/components/blog/cards/BlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
-import { useSession } from 'next-auth/react';
+import { IUser } from '@/services/models/user';
 
-export const Blogs = ({ username }: { username: string }) => {
-  const { data: session, status } = useSession();
+export const Blogs = ({
+  username,
+  user,
+}: {
+  username: string;
+  user?: IUser;
+}) => {
   const { blogs, isLoading, isError } = useGetPublishedBlogByUsername(username);
 
   if (isError)
@@ -34,8 +39,8 @@ export const Blogs = ({ username }: { username: string }) => {
               <BlogCard
                 key={blog?.blog_id}
                 blog={blog}
-                status={status}
-                modificationEnable={session?.user.username === username}
+                isAuthenticated={!!user}
+                modificationEnable={user?.username === username}
               />
             );
           })

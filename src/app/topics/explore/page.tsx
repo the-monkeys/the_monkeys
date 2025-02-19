@@ -3,22 +3,20 @@
 import { useState } from 'react';
 import React from 'react';
 
-import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { CATEGORY_INITIAL_LETTERS } from '@/constants/topics';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
-import { useSession } from 'next-auth/react';
 
 import { AddTopicForm } from './components/AddTopicDialog';
-import { CategoryButton } from './components/CategoryButton';
 import { TopicsList } from './components/TopicsList';
 
 const ExploreTopicsPage = () => {
-  const { status } = useSession();
+  const { isSuccess } = useAuth();
   const { categories, isError, isLoading } = useGetAllCategories();
   const [selectedLetter, setSelectedLetter] = useState<string>('');
 
@@ -53,7 +51,7 @@ const ExploreTopicsPage = () => {
           </Button>
         ))}
 
-        {status === 'authenticated' && (
+        {isSuccess && (
           <AddTopicForm
             categories={categories || {}}
             categoriesLoading={isLoading}

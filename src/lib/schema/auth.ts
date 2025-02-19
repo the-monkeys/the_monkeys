@@ -39,7 +39,28 @@ export const signupSchema = z.object({
   password: passwordCriteria,
 });
 
-// Forgot Password Schema For Validation
+export const registerUserSchema = z
+  .object({
+    first_name: z
+      .string({ required_error: 'First Name is required' })
+      .min(1, 'First Name is required'),
+    last_name: z
+      .string({ required_error: 'Last Name is required' })
+      .min(1, 'Last Name is required')
+      .optional(),
+    email: z
+      .string({ required_error: 'Email is required' })
+      .min(1, 'Email is required')
+      .email('Invalid email'),
+    password: passwordCriteria,
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ['confirmPassword'],
+    message: 'Password does not match',
+  });
+
+// Forgot Passowrd Schema For Validation
 export const forgotPasswordSchema = z.object({
   email: emailCriteria,
 });

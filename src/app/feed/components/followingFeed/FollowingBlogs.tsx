@@ -3,13 +3,13 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetFollowingAuthorsBlogs from '@/hooks/blog/useGetFollowingAuthorsBlogs';
 
 export const FollowingBlogs = ({
-  status,
+  isAuthenticated,
 }: {
-  status: 'authenticated' | 'loading' | 'unauthenticated';
+  isAuthenticated: boolean;
 }) => {
   const { blogs, isLoading, isError } = useGetFollowingAuthorsBlogs();
 
-  if (status === 'unauthenticated')
+  if (!isAuthenticated)
     return (
       <p className='w-full text-sm opacity-80 text-center'>
         Login to view blogs.

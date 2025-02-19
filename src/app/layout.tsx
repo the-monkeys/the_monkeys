@@ -5,9 +5,10 @@ import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
-import Providers from './Providers';
 import './globals.css';
+import { QueryClientMount } from './query-client-mount';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 
@@ -54,11 +55,9 @@ export const metadata: Metadata = {
   },
 };
 
-const RootLayout = ({
-  auth,
+const RootLayout = async ({
   children,
 }: Readonly<{
-  auth: React.ReactNode;
   children: React.ReactNode;
 }>) => {
   return (
@@ -71,14 +70,15 @@ const RootLayout = ({
       >
         <Toaster />
         <SWRProvider>
-          <Providers>
+          <QueryClientMount>
             <ThemeProviders>
-              <Navbar />
-              <div>{auth}</div>
-              <main>{children}</main>
-              <Footer />
+              <TooltipProvider>
+                <Navbar />
+                <main>{children}</main>
+                <Footer />
+              </TooltipProvider>
             </ThemeProviders>
-          </Providers>
+          </QueryClientMount>
         </SWRProvider>
       </body>
     </html>

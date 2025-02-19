@@ -1,11 +1,10 @@
 import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
-import { CommentButton } from '@/components/blog/buttons/CommentButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
-import { useSession } from 'next-auth/react';
+import useAuth from '@/hooks/auth/useAuth';
 import { twMerge } from 'tailwind-merge';
 
 export const BlogReactions = ({
@@ -16,9 +15,9 @@ export const BlogReactions = ({
   blogURL?: string | string[];
   blogId?: string;
 }) => {
-  const { status } = useSession();
+  const { isSuccess, isError } = useAuth();
 
-  if (status === 'unauthenticated')
+  if (isError)
     return (
       <p className='p-1 text-sm opacity-80 text-center'>
         You are not logged in.
@@ -30,7 +29,7 @@ export const BlogReactions = ({
       <div className='flex-1 flex items-center'>
         <LikeButton blogId={blogId} size={20} />
 
-        {status === 'authenticated' && <LikesCount blogId={blogId} />}
+        {isSuccess && <LikesCount blogId={blogId} />}
       </div>
 
       <div className='flex items-center gap-[2px]'>
@@ -38,7 +37,7 @@ export const BlogReactions = ({
 
         <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' /> */}
 
-        <BookmarkButton blogId={blogId} size={20} />
+        {isSuccess && <BookmarkButton blogId={blogId} size={20} />}
       </div>
     </div>
   );

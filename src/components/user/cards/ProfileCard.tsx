@@ -46,7 +46,7 @@ export const ProfileCard = ({
               {`@${user?.username}`}
             </p>
 
-            {isAuthenticated && <UpdateUsernameDialog />}
+            {isAuthenticated && <UpdateUsernameDialog user={user} />}
           </div>
 
           <h2 className='w-full font-dm_sans font-medium text-xl capitalize'>
