@@ -1,0 +1,26 @@
+name: Branch Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  delete-branch:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Delete merged branch
+        uses: SvanBoxel/delete-merged-branch@main
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          delete_closed_pr_branch: true
+          branch_pattern: '*' # Delete all merged branches
+          exclude_pattern: 'main|master|develop|staging' # Exclude important branches
+
+  notify-deletion:
+    needs: delete-branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify branch deletion
+        run: |
+          echo "✅ Branch '${{ github.event.pull_request.head.ref }}' was deleted after merge!"
