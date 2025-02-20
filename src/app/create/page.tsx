@@ -11,21 +11,18 @@ import React, {
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import { EditorProps } from '@/components/editor';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import PublishModal from '@/components/modals/publish/PublishModal';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 import { WSS_URL_V2 } from '@/constants/api';
+import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
-import { useSession } from 'next-auth/react';
 
 // Dynamically import the Editor component to avoid server-side rendering issues
-const Editor = dynamic(() => import('@/components/editor'), {
-  ssr: false,
-});
+const Editor = dynamic(() => import('@/components/editor'), { ssr: false });
 
 const initial_data = {
   time: new Date().getTime(),
@@ -45,9 +42,6 @@ const initial_data = {
 };
 
 const CreatePage = () => {
-  // State to manage the editor component
-  const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
-
   // State to manage the editor data
   const [data, setData] = useState<OutputData>(initial_data);
 
@@ -68,9 +62,8 @@ const CreatePage = () => {
   const [publishedBlogLoading, setPublishedBlogLoading] =
     useState<boolean>(false);
   // Get the session data
-  const { data: session } = useSession();
+  const { data: session, isError } = useAuth();
 
-  const authToken = session?.user.token;
   const router = useRouter();
 
   // Use useRef to store the blog ID
@@ -78,10 +71,8 @@ const CreatePage = () => {
   const blogId = blogIdRef.current;
 
   // Function to create and manage WebSocket connection
-  const createWebSocket = useCallback((blogId: string, token: string) => {
-    const ws = new WebSocket(
-      `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
-    );
+  const createWebSocket = useCallback((blogId: string) => {
+    const ws = new WebSocket(`${WSS_URL_V2}/blog/draft/${blogId}`);
 
     ws.onopen = () => {
       console.log('websocket connection 🟢');
@@ -142,7 +133,7 @@ const CreatePage = () => {
       return; // Ensure data is not null and has a title block
     }
 
-    const formattedData = formatData(data, session?.user.account_id);
+    const formattedData = formatData(data, session?.account_id);
 
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
@@ -154,7 +145,7 @@ const CreatePage = () => {
         });
 
         setPublishedBlogLoading(false);
-        router.push(`/${session?.user?.username}`);
+        router.push(`/${session?.username}`);
       })
       .catch((err) => {
         setPublishedBlogLoading(false);
@@ -165,22 +156,23 @@ const CreatePage = () => {
           description: 'error',
         });
       });
-  }, [data, session?.user.account_id, blogId, formatData, router]);
+  }, [data, session?.account_id, blogId, formatData, router]);
 
   // Load the Editor component dynamically
-  useEffect(() => {
-    const loadEditor = async () => {
-      const editor = await import('@/components/editor');
-      setEditor(() => editor.default);
-    };
 
-    loadEditor();
-  }, []);
+  useEffect(() => {
+    if (isError) {
+      const url = new URL('/auth/login', location.href);
+      url.searchParams.set('callbackURL', location.href);
+
+      router.replace(url.pathname + url.search);
+    }
+  }, [isError]);
 
   // Create WebSocket connection when authToken is available
   useEffect(() => {
-    if (typeof window !== 'undefined' && authToken) {
-      const cleanup = createWebSocket(blogId, authToken);
+    if (typeof window !== 'undefined') {
+      const cleanup = createWebSocket(blogId);
 
       const handleBeforeUnload = () => {
         cleanup();
@@ -193,7 +185,7 @@ const CreatePage = () => {
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }
-  }, [authToken, blogId, createWebSocket]);
+  }, [blogId, createWebSocket]);
 
   // Create editor configuration when blogId is available
   useEffect(() => {
@@ -216,26 +208,21 @@ const CreatePage = () => {
       webSocket &&
       webSocket.readyState === WebSocket.OPEN
     ) {
-      const formattedData = formatData(data, session?.user.account_id);
+      const formattedData = formatData(data, session?.account_id);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
 
-    if (
-      webSocket &&
-      webSocket.readyState === WebSocket.CLOSED &&
-      data &&
-      authToken
-    ) {
+    if (webSocket && webSocket.readyState === WebSocket.CLOSED && data) {
       setTimeout(() => {
-        const cleanup = createWebSocket(blogId, authToken);
+        const cleanup = createWebSocket(blogId);
 
         return () => {
           cleanup();
         };
       }, 1200);
     }
-  }, [data, webSocket, session?.user.account_id, formatData]);
+  }, [data, webSocket, session?.account_id, formatData]);
 
   return (
     <>
@@ -253,7 +240,7 @@ const CreatePage = () => {
 
         <div className='mt-4 min-h-screen'>
           <Suspense fallback={<Loader />}>
-            {editor && data && editorConfig && (
+            {data && editorConfig && (
               <Editor data={data} onChange={setData} config={editorConfig} />
             )}
           </Suspense>

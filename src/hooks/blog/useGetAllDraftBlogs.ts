@@ -1,5 +1,5 @@
 import { GetDraftBlogResponse } from '@/services/blog/blogTypes';
-import { authFetcher, authFetcherV2 } from '@/services/fetcher';
+import { authFetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 
 const useGetAllDraftBlogs = () => {

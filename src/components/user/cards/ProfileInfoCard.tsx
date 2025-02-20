@@ -4,8 +4,8 @@ import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import { Button } from '@/components/ui/button';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
-import { useSession } from 'next-auth/react';
 import { twMerge } from 'tailwind-merge';
 
 import { FollowButton } from '../buttons/followButton';
@@ -17,7 +17,7 @@ export const ProfileInfoCard = ({
   userId?: string;
   className?: string;
 }) => {
-  const { data: session, status } = useSession();
+  const { data: session, isSuccess } = useAuth();
   const { user, isLoading, isError } = useGetProfileInfoById(userId);
 
   if (isLoading) return <ProfileInfoCardSkeleton />;
@@ -35,13 +35,12 @@ export const ProfileInfoCard = ({
     >
       <div className='mb-[20px] p-2 w-full bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-2'>
         <div className='flex items-center justify-end gap-[6px]'>
-          {userData?.username !== session?.user.username &&
-            status === 'authenticated' && (
-              <FollowButton
-                username={userData?.username}
-                className='!rounded-md'
-              />
-            )}
+          {userData?.username !== session?.username && isSuccess && (
+            <FollowButton
+              username={userData?.username}
+              className='!rounded-md'
+            />
+          )}
 
           <Button variant='secondary' size='icon' asChild>
             <Link href={`/${userData?.username}`}>

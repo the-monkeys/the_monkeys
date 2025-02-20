@@ -15,12 +15,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
+import useAuth from '@/hooks/auth/useAuth';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
-  const { data: session } = useSession();
+  const { data: session } = useAuth();
   const [isLoading, setIsLoading] = React.useState<{
     button1: boolean;
     button2: boolean;
@@ -32,7 +32,7 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
 
   const router = useRouter();
 
-  const username = session?.user.username;
+  const username = session?.username;
 
   const handleEdit = (blogId: string) => {
     router.push(`/edit/${blogId}`);

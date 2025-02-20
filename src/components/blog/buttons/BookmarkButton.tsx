@@ -4,7 +4,6 @@ import Icon from '@/components/icon';
 import { toast } from '@/components/ui/use-toast';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const BookmarkButton = ({
@@ -16,12 +15,9 @@ export const BookmarkButton = ({
   size?: number;
   isDisable?: boolean;
 }) => {
-  const { status } = useSession();
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(blogId);
 
   const [loading, setLoading] = useState<boolean>(false);
-
-  if (status === 'unauthenticated') return null;
 
   if (isLoading) {
     return (

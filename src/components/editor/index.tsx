@@ -1,3 +1,5 @@
+'use client';
+
 import React, { FC, useEffect, useRef } from 'react';
 
 import { editorConfig } from '@/config/editor/editorjs_readonly.config';

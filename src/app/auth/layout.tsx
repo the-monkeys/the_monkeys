@@ -10,12 +10,10 @@ export const metadata: Metadata = {
   description,
 };
 
-const AuthLayout = ({
+export default async function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {
-  return <Container className='mb-20 min-h-screen'>{children}</Container>;
-};
-
-export default AuthLayout;
+}>) {
+  return <Container className='mb-20'>{children}</Container>;
+}

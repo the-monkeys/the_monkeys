@@ -13,8 +13,8 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toast } from '@/components/ui/use-toast';
+import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useSession } from 'next-auth/react';
 import { mutate } from 'swr';
 
 export const DeleteBlogDialog = ({
@@ -26,11 +26,11 @@ export const DeleteBlogDialog = ({
   isDraft?: boolean;
   size?: number;
 }) => {
-  const { data: session } = useSession();
+  const { data: session } = useAuth();
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
 
-  const username = session?.user.username;
+  const username = session?.username;
 
   async function deleteBlogById(blogId?: string) {
     setLoading(true);

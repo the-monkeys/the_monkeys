@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const SettingsPage = () => {
+const SettingsPage = async () => {
   return (
     <Container className='pb-12 space-y-4 md:space-y-6'>
       <PageHeader>

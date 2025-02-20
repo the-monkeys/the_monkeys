@@ -8,7 +8,6 @@ import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
-import { getSession } from 'next-auth/react';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'editorjs_editor-container',
@@ -56,14 +55,11 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
         captionPlaceholder: 'Type something',
         uploader: {
           async uploadByFile(file: File) {
-            const session = await getSession();
-            const token = session?.user.token;
-
             const formData = new FormData();
             formData.append('file', file);
 
             const response = await axiosInstance.post(
-              `${API_URL}/files/post/${blogId}?token=${token}`,
+              `${API_URL}/files/post/${blogId}`,
               formData
             );
 

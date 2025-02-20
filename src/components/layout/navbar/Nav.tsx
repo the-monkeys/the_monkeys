@@ -9,6 +9,7 @@ import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
 import { Separator } from '@/components/ui/separator';
 import { FEED_ROUTE } from '@/constants/routeConstants';
+import { IUser } from '@/services/models/user';
 import { twMerge } from 'tailwind-merge';
 
 import Container from '../Container';
@@ -17,7 +18,13 @@ import Container from '../Container';
 import WSNotificationDropdown from './WSNotificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
-const Nav = () => {
+const Nav = ({
+  session,
+  isAuthLoading,
+}: {
+  session?: IUser;
+  isAuthLoading: boolean;
+}) => {
   const [prevScrollpos, setPrevScrollpos] = useState(0);
   const [top, setTop] = useState(0);
 
@@ -59,9 +66,13 @@ const Nav = () => {
             {/* Use <NotificationDropdown /> as a fallback if WebSocket is not working.
             Uncomment only when necessary. */}
 
-            <WSNotificationDropdown />
+            {isAuthLoading && (
+              <div className='size-4 rounded-full bg-foreground-light dark:bg-foreground-dark'></div>
+            )}
 
-            <ProfileDropdown />
+            {!isAuthLoading && session && <WSNotificationDropdown />}
+
+            <ProfileDropdown session={session} />
 
             <Separator orientation='vertical' className='h-8' />
 
