@@ -4,10 +4,12 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
@@ -29,11 +31,13 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <div className='hover:opacity-80 cursor-pointer'>
-          <Icon name='RiUser' size={22} />
+          <ProfileFrame className='size-[24px]'>
+            <ProfileImage username={session?.username} />
+          </ProfileFrame>
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='mt-3 mr-2 w-36 sm:w-44 space-y-1'>
+      <DropdownMenuContent className='mt-3 mr-2 w-[200px] sm:w-[220px] space-y-1'>
         {!session ? (
           <DropdownMenuItem asChild>
             <button
@@ -62,15 +66,32 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
           </DropdownMenuItem>
         ) : (
           <>
+            <DropdownMenuItem className='focus:opacity-100'>
+              <div className='flex items-center gap-2'>
+                <ProfileFrame className='size-8 sm:size-10 shrink-0 !rounded-sm'>
+                  <ProfileImage username={session?.username} />
+                </ProfileFrame>
+
+                <div className='flex-1 flex flex-col overflow-hidden'>
+                  <p className='font-dm_sans font-medium text-base truncate'>
+                    {session.first_name} {session.last_name}
+                  </p>
+                  <p className='text-sm truncate opacity-80'>
+                    @{session.username}
+                  </p>
+                </div>
+              </div>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
             <DropdownMenuItem asChild>
               <Link
                 href={`/${session.username}`}
                 className='flex w-full items-center gap-2'
               >
                 <Icon name='RiUser' size={18} />
-                <p className='flex-1 font-dm_sans text-sm sm:text-base truncate'>
-                  {session.first_name} {session.last_name}
-                </p>
+                <p className='font-dm_sans text-sm sm:text-base'>Profile</p>
               </Link>
             </DropdownMenuItem>
 

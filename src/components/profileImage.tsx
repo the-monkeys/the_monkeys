@@ -51,7 +51,7 @@ export const ProfileImage = ({ username }: { username?: string }) => {
       />
     );
 
-  if (isError)
+  if (isError || imageUrl === '')
     return (
       <Image
         src='/default-profile.svg'
