@@ -33,7 +33,7 @@ export const footerList = [
       },
       {
         text: 'Contact',
-        link: '#',
+        link: 'mailto:mail.themonkeys.life@gmail.com',
       },
       // {
       //   text: 'Press Kit',
