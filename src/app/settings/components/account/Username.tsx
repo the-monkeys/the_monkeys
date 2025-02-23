@@ -1,7 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -17,12 +15,12 @@ import { updateUsername as updateUsernameSchema } from '@/lib/schema/settings';
 import { IUser } from '@/services/models/user';
 import { updateUserName } from '@/services/user/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export const Username = ({ data }: { data: IUser }) => {
-  const router = useRouter();
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof updateUsernameSchema>>({
     resolver: zodResolver(updateUsernameSchema),
@@ -34,6 +32,8 @@ export const Username = ({ data }: { data: IUser }) => {
   const mutation = useMutation({
     mutationFn: updateUserName,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
+
       form.reset();
       toast({
         variant: 'success',

@@ -21,10 +21,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/use-toast';
 import { updateUsername } from '@/lib/schema/settings';
+import { User } from '@/services/models/user';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { updateUserName } from '@/services/user/user';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -34,6 +35,7 @@ export const UpdateUsernameDialog = ({
   user?: GetPublicUserProfileApiResponse;
 }) => {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof updateUsername>>({
     resolver: zodResolver(updateUsername),
@@ -45,13 +47,17 @@ export const UpdateUsernameDialog = ({
   const mutation = useMutation({
     mutationFn: updateUserName,
     onSuccess: (data) => {
+      const user = new User(data);
+      console.log('-->', user);
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
+
       form.reset();
-      router.push(`/${data.username}`);
       toast({
         variant: 'success',
         title: 'Success',
         description: 'Username updated successfully.',
       });
+      router.push(`/${user.username}`);
     },
     onError: (err) => {
       toast({
