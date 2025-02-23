@@ -1,7 +1,11 @@
+import { useEffect, useState } from 'react';
+
 import fetcher from '@/services/fileFetcher';
 import useSWR from 'swr';
 
 const useProfileImage = (username: string | undefined) => {
+  const [imageUrl, setImageUrl] = useState<string>('');
+
   const { data, error, isLoading } = useSWR<Blob>(
     username ? `/files/profile/${username}/profile` : null,
     fetcher,
@@ -12,11 +16,14 @@ const useProfileImage = (username: string | undefined) => {
     }
   );
 
-  let imageUrl = '';
-  if (data) {
-    const url = URL.createObjectURL(data);
-    imageUrl = url;
-  }
+  useEffect(() => {
+    if (!data) return;
+
+    const objectUrl = URL.createObjectURL(data);
+    setImageUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl); // Cleanup on unmount
+  }, [data]);
 
   return {
     imageUrl,
