@@ -23,6 +23,7 @@ axiosFileInstance.interceptors.request.use(
     const os = browser.getOSName();
     config.headers['Client'] = client;
     config.headers['OS'] = os;
+    config.withCredentials = true;
 
     return config;
   },
