@@ -1,4 +1,5 @@
 import { Loader } from '@/components/loader';
+import { HashTopicLinksContainer } from '@/components/topics/topicsContainer';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -7,12 +8,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import moment from 'moment';
 
 export const PublishBlogDialog = ({
+  topics,
   handlePublish,
   isPublishing,
 }: {
+  topics: string[];
   handlePublish: () => void;
   isPublishing: boolean;
 }) => {
@@ -29,11 +31,16 @@ export const PublishBlogDialog = ({
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <div className='space-y-2'>
+        <div className='space-y-3'>
           <p className='opacity-80'>
             Once published, your post will be visible to everyone. You can edit
             it later, but changes will be reflected publicly.
           </p>
+
+          <div className='space-y-1'>
+            <p className='text-sm opacity-80'>Topics:</p>
+            <HashTopicLinksContainer topics={topics} />
+          </div>
         </div>
 
         <div className='pt-4'>

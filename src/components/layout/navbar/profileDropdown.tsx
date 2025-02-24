@@ -31,7 +31,7 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <div className='hover:opacity-80 cursor-pointer'>
-          <ProfileFrame className='size-[24px] ring-1 ring-foreground-light/50 dark:ring-foreground-dark/50'>
+          <ProfileFrame className='size-[22px] ring-1 ring-foreground-light/50 dark:ring-foreground-dark/50'>
             <ProfileImage username={session?.username} />
           </ProfileFrame>
         </div>
@@ -66,34 +66,27 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
           </DropdownMenuItem>
         ) : (
           <>
-            <DropdownMenuItem className='focus:opacity-100'>
-              <div className='flex items-center gap-2'>
-                <ProfileFrame className='size-8 sm:size-10 shrink-0 !rounded-sm'>
+            <DropdownMenuItem asChild>
+              <Link
+                href={`/${session.username}`}
+                className='flex items-center gap-2'
+              >
+                <ProfileFrame className='size-8 sm:size-10 shrink-0'>
                   <ProfileImage username={session?.username} />
                 </ProfileFrame>
 
                 <div className='flex-1 flex flex-col overflow-hidden'>
-                  <p className='font-dm_sans font-medium text-base truncate'>
+                  <p className='font-dm_sans font-medium text-base'>
                     {session.first_name} {session.last_name}
                   </p>
-                  <p className='text-sm truncate opacity-80'>
+                  <p className='text-[13px] opacity-80 truncate'>
                     @{session.username}
                   </p>
                 </div>
-              </div>
+              </Link>
             </DropdownMenuItem>
 
             <DropdownMenuSeparator />
-
-            <DropdownMenuItem asChild>
-              <Link
-                href={`/${session.username}`}
-                className='flex w-full items-center gap-2'
-              >
-                <Icon name='RiUser' size={18} />
-                <p className='font-dm_sans text-sm sm:text-base'>Profile</p>
-              </Link>
-            </DropdownMenuItem>
 
             <DropdownMenuItem asChild>
               <Link

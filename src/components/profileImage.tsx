@@ -28,7 +28,7 @@ export const ProfileFrame = ({
     <div
       className={twMerge(
         className,
-        'flex items-center justify-center overflow-hidden rounded-full'
+        'flex items-center justify-center bg-foreground-light/25 dark:bg-foreground-dark/25 overflow-hidden rounded-full'
       )}
     >
       {children}

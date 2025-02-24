@@ -190,6 +190,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             />
 
             <PublishBlogDialog
+              topics={blogTopics}
               isPublishing={blogPublishLoading}
               handlePublish={handlePublishStep}
             />

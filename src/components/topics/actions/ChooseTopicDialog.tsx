@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 import FormSearchSelect from '@/components/FormSearchSelect';
 import { Button } from '@/components/ui/button';
 import {
@@ -22,6 +24,8 @@ export const ChooseTopicDialog = ({
 }) => {
   const { topics } = useGetAllTopics();
 
+  const [open, setOpen] = useState<boolean>(false);
+
   const defaultTopics = blogTopics.map((topic) => {
     return { value: topic, label: topic };
   });
@@ -43,7 +47,7 @@ export const ChooseTopicDialog = ({
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           variant='secondary'
@@ -75,7 +79,7 @@ export const ChooseTopicDialog = ({
           />
         </div>
 
-        <div className='flex items-center justify-end'>
+        <div className='flex items-center justify-end gap-2'>
           <p className='px-1 text-sm'>
             Topics added:{' '}
             <span
@@ -87,6 +91,15 @@ export const ChooseTopicDialog = ({
               {blogTopics.length}
             </span>
           </p>
+
+          <Button
+            type='button'
+            size='sm'
+            className='w-fit rounded-full'
+            onClick={() => setOpen(false)}
+          >
+            Save
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
