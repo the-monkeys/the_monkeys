@@ -5,10 +5,11 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import Icon from '@/components/icon';
+import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
+import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
-import PublishModal from '@/components/modals/publish/PublishModal';
-import { Button } from '@/components/ui/button';
+import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
+import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL_V2 } from '@/constants/api';
@@ -23,19 +24,22 @@ const Editor = dynamic(() => import('@/components/editor'), {
 });
 
 const EditPage = ({ params }: { params: { blogId: string } }) => {
-  const [data, setData] = useState<OutputData | null>(null);
-  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState(false);
-  const [blogPublishLoading, setBlogPublishLoading] = useState(false);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const blogId = params.blogId;
   const { data: session } = useAuth();
   const router = useRouter();
-  const blogId = params.blogId;
 
   const { blog, isLoading } = useGetDraftBlogDetail(blogId);
 
+  // editor states
+  const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
+  const [data, setData] = useState<OutputData | null>(null);
+  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [blogPublishLoading, setBlogPublishLoading] = useState(false);
+  const [blogTopics, setBlogTopics] = useState<string[]>([]);
+
   const accountId = session?.account_id;
+  const username = session?.username;
 
   const createWebSocket = useCallback((blogId: string) => {
     const ws = new WebSocket(`${WSS_URL_V2}/blog/draft/${blogId}`);
@@ -45,7 +49,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     };
 
     ws.onmessage = (event) => {
-      console.log('websocket message 📜');
       setIsSaving(false); // Reset saving status when message is received
     };
 
@@ -79,10 +82,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             time: new Date().getTime(),
           })),
         },
-        tags: selectedTags,
+        tags: blogTopics,
       };
     },
-    [selectedTags]
+    [blogTopics]
   );
 
   const handlePublishStep = useCallback(async () => {
@@ -110,7 +113,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       });
 
       setBlogPublishLoading(false);
-      router.push(`/${session?.username}`);
+      router.push(`/${username}`);
     } catch (err) {
       toast({
         variant: 'destructive',
@@ -148,6 +151,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   useEffect(() => {
     if (blog) {
       setData(blog.blog);
+      setBlogTopics(blog.tags);
     }
   }, [blog]);
 
@@ -167,31 +171,32 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         return () => {
           cleanup();
         };
-      }, 1200);
+      }, 1000);
     }
-  }, [data, webSocket, accountId, formatData]);
+  }, [data, blogTopics, webSocket, accountId, formatData]);
 
   return (
     <>
       {isLoading ? (
-        <div className='min-h-screen flex flex-col items-center gap-2'>
-          <Loader />
-          <p className='opacity-80'>Almost there! Preparing your editor...</p>
+        <div className='mx-auto w-full sm:w-4/5'>
+          <EditorBlockSkeleton />
         </div>
       ) : (
-        <div className='relative min-h-screen'>
-          <div className='py-1 mx-auto w-full sm:w-4/5 flex justify-end items-center'>
-            <Button
-              size='icon'
-              onClick={() => setShowModal(true)}
-              title='Publish Blog'
-              className='rounded-full'
-            >
-              <Icon name='RiArrowRight' />
-            </Button>
+        <div className='relative min-h-screen space-y-4'>
+          <div className='p-2 flex justify-center items-center gap-[6px]'>
+            <ChooseTopicDialog
+              blogTopics={blogTopics}
+              setBlogTopics={setBlogTopics}
+            />
+
+            <PublishBlogDialog
+              topics={blogTopics}
+              isPublishing={blogPublishLoading}
+              handlePublish={handlePublishStep}
+            />
           </div>
 
-          <div className='mt-4 min-h-screen'>
+          <div className='py-3 min-h-screen'>
             <Suspense fallback={<Loader />}>
               {data && (
                 <Editor
@@ -209,16 +214,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
                 <p className='text-sm text-center'>Saving blog...</p>
               </div>
             </div>
-          )}
-
-          {showModal && (
-            <PublishModal
-              setModal={setShowModal}
-              setSelectedTags={setSelectedTags}
-              blogId={blogId}
-              handlePublishStep={handlePublishStep}
-              publishedBlogLoading={blogPublishLoading}
-            />
           )}
         </div>
       )}

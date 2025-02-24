@@ -1,4 +1,3 @@
-import { Separator } from '../ui/separator';
 import { Skeleton } from '../ui/skeleton';
 import {
   UserInfoCardCompactSkeleton,
@@ -7,7 +6,35 @@ import {
 
 export const EditorBlockSkeleton = () => {
   return (
-    <div className='mt-8 h-[800px] w-full bg-gradient-to-b from-foreground-light dark:from-foreground-dark from-[20%] rounded-t-md animate-opacity-pulse' />
+    <div className='mt-8 h-[800px] w-full space-y-6'>
+      <div className='space-y-1'>
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-4/5 h-5' />
+      </div>
+
+      <div className='space-y-1'>
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-1/4 h-5' />
+      </div>
+
+      <div className='space-y-1'>
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+      </div>
+
+      <div className='space-y-1'>
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-1/2 h-5' />
+      </div>
+    </div>
   );
 };
 
@@ -17,7 +44,7 @@ export const PublishedBlogSkeleton = () => {
       <div className='col-span-3 lg:col-span-2'>
         <UserInfoCardSkeleton />
 
-        <EditorBlockSkeleton />
+        <div className='mt-8 h-[800px] w-full bg-gradient-to-b from-foreground-light dark:from-foreground-dark from-[20%] rounded-t-md animate-opacity-pulse' />
       </div>
 
       <div className='hidden lg:block col-span-3 lg:col-span-1 space-y-4'>
@@ -40,7 +67,7 @@ export const BlogCardSkeleton = () => {
 export const ShowcaseBlogCardSkeleton = () => {
   return (
     <div className='col-span-2 sm:col-span-1 space-y-3'>
-      <Skeleton className='h-[180px] sm:h-[220px] w-full !rounded-none' />
+      <Skeleton className='h-[180px] sm:h-[220px] w-full ' />
 
       <div className='space-y-1'>
         <Skeleton className='h-6 w-full' />
@@ -62,7 +89,7 @@ export const FeedBlogCardSkeleton = () => {
 
 export const ShowcaseBlogCardListSkeleton = () => {
   return (
-    <div className='grid grid-cols-2 md:grid-cols-3 gap-y-8 sm:gap-y-10 gap-x-6'>
+    <div className='grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-6'>
       <ShowcaseBlogCardSkeleton />
       <ShowcaseBlogCardSkeleton />
       <ShowcaseBlogCardSkeleton />
@@ -81,7 +108,7 @@ export const ShowcaseBlogCardListSkeleton = () => {
 
 export const BlogCardListSkeleton = () => {
   return (
-    <div className='w-full space-y-6 md:space-y-8'>
+    <div className='w-full space-y-8'>
       <BlogCardSkeleton />
       <BlogCardSkeleton />
       <BlogCardSkeleton />
@@ -93,7 +120,7 @@ export const BlogCardListSkeleton = () => {
 
 export const FeedBlogCardListSkeleton = () => {
   return (
-    <div className='w-full space-y-6 md:space-y-8'>
+    <div className='w-full space-y-8'>
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />

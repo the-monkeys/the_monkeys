@@ -30,7 +30,7 @@ export const UserInfoCardCompact = ({
   return (
     <div className='w-full flex items-center gap-2'>
       <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-5 !rounded-sm'>
+        <ProfileFrame className='size-5'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
       </Link>
@@ -125,7 +125,6 @@ export const UserInfoCardBlogPage = ({
           </div>
 
           <div className='flex items-end text-sm gap-1'>
-            <p className='opacity-80'>Posted on:</p>
             <p className='opacity-80'>
               {moment(date).format('MMM DD, yyyy')}
               {' / '}

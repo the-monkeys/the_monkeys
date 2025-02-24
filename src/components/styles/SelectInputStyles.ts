@@ -4,95 +4,110 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
   control: (provided: any, state: any) => ({
     ...provided,
     outline: 'none',
-    borderWidth: '2px',
+    borderWidth: '1px',
     borderColor: state.isFocused
       ? isDarkTheme
-        ? '#d4d4d4' // Light gray border for dark theme
-        : '#cccccc' // Light gray border for light theme
+        ? '#D9D9D9'
+        : '#2C2C2C'
       : isDarkTheme
-        ? '#2C2C2C' // Dark gray border for dark theme
-        : '#e5e5e5', // Light gray border for light theme
-    boxShadow: state.isFocused
-      ? isDarkTheme
-        ? '0 0 0 2px #d4d4d4'
-        : '0 0 0 2px #cccccc'
-      : 'none', // Subtle glow on focus
+        ? '#696969'
+        : '#878787',
+    boxShadow: 'none',
     borderRadius: '0.375rem',
-    backgroundColor: isDarkTheme ? '#1f1f1f' : '', // Black for dark, white for light
-    color: isDarkTheme ? '#f5f5f5' : '#333333',
-    minHeight: '2.5rem', // Match input height of shadcn/ui
+    backgroundColor: isDarkTheme ? '#0F0F0F' : '#F2F2F2',
+    color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
+    minHeight: '2.5rem',
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
+    ':hover': {
+      borderColor: isDarkTheme ? '#D9D9D9' : '#2C2C2C',
+    },
+  }),
+  valueContainer: (provided: any) => ({
+    ...provided,
+    padding: '6px',
   }),
   menu: (provided: any) => ({
     ...provided,
-    backgroundColor: isDarkTheme ? '#1f1f1f' : '#ffffff', // Black for dark, white for light
-    border: `1px solid ${isDarkTheme ? '#2C2C2C' : '#e5e5e5'}`, // Dark gray for dark, light gray for light
+    backgroundColor: isDarkTheme ? '#0F0F0F' : '#F2F2F2',
+    border: `1px solid ${isDarkTheme ? '#2C2C2C' : '#D9D9D9'}`,
     borderRadius: '0.375rem',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)', // Subtle shadow
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     zIndex: 50,
-    maxHeight: '13rem',
-    overflowY: 'hidden', // Scroll when content exceeds
   }),
   option: (provided: any, state: any) => ({
     ...provided,
-    backgroundColor: state.isFocused
+    backgroundColor: state.isSelected
       ? isDarkTheme
-        ? '#2e2e2e' // Dark gray on hover for dark
-        : '#f9f9f9' // Light gray on hover for light
-      : state.isSelected
+        ? '#3F3F3F'
+        : '#E5E5E5'
+      : state.isFocused
         ? isDarkTheme
-          ? '#3f3f3f' // Slightly lighter gray for selected (dark)
-          : '#f3f3f3' // Light gray for selected (light)
+          ? '#2C2C2C'
+          : '#D9D9D9'
         : isDarkTheme
-          ? '#1f1f1f' // Default black background for dark
-          : '#ffffff', // Default white background for light
+          ? '#0F0F0F'
+          : '#F2F2F2',
     color:
       state.isSelected || state.isFocused
         ? isDarkTheme
-          ? '#f5f5f5' // White text on hover/selected (dark)
-          : '#333333' // Dark gray text on hover/selected (light)
+          ? '#FCFCFC'
+          : '#0D0D0D'
         : isDarkTheme
-          ? '#d4d4d4' // Light gray text otherwise (dark)
-          : '#6b6b6b', // Medium gray text otherwise (light)
+          ? '#D9D9D9'
+          : '#6B6B6B',
     padding: '0.5rem 1rem',
     cursor: 'pointer',
     ':active': {
-      backgroundColor: isDarkTheme ? '#3f3f3f' : '#f3f3f3', // Active state matches selected
+      backgroundColor: isDarkTheme ? '#3F3F3F' : '#E5E5E5',
     },
   }),
   placeholder: (provided: any) => ({
     ...provided,
-    color: isDarkTheme ? '#a3a3a3' : '#6b6b6b', // Lighter gray for placeholder
+    color: isDarkTheme ? '#A3A3A3' : '#6B6B6B',
     fontSize: '0.875rem',
   }),
   singleValue: (provided: any) => ({
     ...provided,
-    color: isDarkTheme ? '#f5f5f5' : '#333333', // White for dark, black for light
+    color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
     fontSize: '0.875rem',
+  }),
+  multiValue: (provided: any) => ({
+    ...provided,
+    overflow: 'hidden',
+    padding: '0px 0px 0px 4px',
+    color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
+    borderRadius: '4px',
+  }),
+  multiValueRemove: (provided: any) => ({
+    ...provided,
+    padding: '0px 6px',
+    color: '#EF4444',
   }),
   input: (provided: any) => ({
     ...provided,
-    color: isDarkTheme ? '#f5f5f5' : '#333333', // White text for dark, black for light
+    color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
   }),
   dropdownIndicator: (provided: any, state: any) => ({
     ...provided,
     color: state.isFocused
       ? isDarkTheme
-        ? '#a3a3a3' // Gray dropdown indicator for dark
-        : '#6b6b6b' // Gray dropdown indicator for light
+        ? '#A3A3A3'
+        : '#6B6B6B'
       : isDarkTheme
-        ? '#6b6b6b'
-        : '#cccccc', // Subtle gray when not focused
-    ':hover': { color: isDarkTheme ? '#a3a3a3' : '#6b6b6b' }, // Lighter gray on hover
+        ? '#6B6B6B'
+        : '#CCCCCC',
+    ':hover': { color: isDarkTheme ? '#A3A3A3' : '#6B6B6B' },
   }),
   clearIndicator: (provided: any) => ({
     ...provided,
-    display: 'none', // Hide the clear (cross) button
+    display: 'none',
   }),
   menuList: (provided: any) => ({
     ...provided,
-    padding: 0, // Remove extra padding around options
+    padding: 0,
+    maxHeight: '13rem',
+    overflowY: 'auto',
   }),
 });

@@ -11,10 +11,10 @@ import React, {
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import Icon from '@/components/icon';
+import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
+import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
-import PublishModal from '@/components/modals/publish/PublishModal';
-import { Button } from '@/components/ui/button';
+import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { toast } from '@/components/ui/use-toast';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
@@ -42,29 +42,20 @@ const initial_data = {
 };
 
 const CreatePage = () => {
-  // State to manage the editor data
-  const [data, setData] = useState<OutputData>(initial_data);
-
-  // State to manage the visibility of the publish modal
-  const [showModal, setShowModal] = useState<boolean>(false);
-
-  // State to manage the WebSocket connection
-  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
-
-  // State to manage the saving status
-  const [isSaving, setIsSaving] = useState<boolean>(false);
-
-  // State to manage the editor configuration
-  const [editorConfig, setEditorConfig] = useState<EditorConfig | null>(null);
-
-  // set selected tags topics
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  const [publishedBlogLoading, setPublishedBlogLoading] =
-    useState<boolean>(false);
-  // Get the session data
   const { data: session, isError } = useAuth();
-
   const router = useRouter();
+
+  // editor states
+  const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
+  const [data, setData] = useState<OutputData>(initial_data);
+  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [editorConfig, setEditorConfig] = useState<EditorConfig | null>(null);
+  const [blogPublishLoading, setBlogPublishLoading] = useState<boolean>(false);
+  const [blogTopics, setBlogTopics] = useState<string[]>([]);
+
+  const accountId = session?.account_id;
+  const username = session?.username;
 
   // Use useRef to store the blog ID
   const blogIdRef = useRef<string>(Math.random().toString(36).substring(7));
@@ -79,7 +70,6 @@ const CreatePage = () => {
     };
 
     ws.onmessage = (event) => {
-      console.log('WebSocket message received');
       setIsSaving(false); // Reset saving status when message is received
     };
 
@@ -93,7 +83,6 @@ const CreatePage = () => {
 
     setWebSocket(ws);
 
-    // Cleanup function to close the WebSocket connection
     return () => {
       ws.close();
     };
@@ -114,16 +103,16 @@ const CreatePage = () => {
             time: new Date().getTime(),
           })),
         },
-        tags: selectedTags,
+        tags: blogTopics,
       };
     },
-    [selectedTags]
+    [blogTopics]
   );
 
   const handlePublishStep = useCallback(() => {
-    setPublishedBlogLoading(true);
+    setBlogPublishLoading(true);
     if (!data || data.blocks.length === 0 || data.blocks[0].type !== 'header') {
-      setPublishedBlogLoading(false);
+      setBlogPublishLoading(false);
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -133,7 +122,7 @@ const CreatePage = () => {
       return; // Ensure data is not null and has a title block
     }
 
-    const formattedData = formatData(data, session?.account_id);
+    const formattedData = formatData(data, accountId);
 
     axiosInstance
       .post(`/blog/publish/${blogId}`, formattedData)
@@ -144,11 +133,11 @@ const CreatePage = () => {
           description: 'success',
         });
 
-        setPublishedBlogLoading(false);
-        router.push(`/${session?.username}`);
+        setBlogPublishLoading(false);
+        router.push(`/${username}`);
       })
       .catch((err) => {
-        setPublishedBlogLoading(false);
+        setBlogPublishLoading(false);
 
         toast({
           variant: 'destructive',
@@ -156,7 +145,7 @@ const CreatePage = () => {
           description: 'error',
         });
       });
-  }, [data, session?.account_id, blogId, formatData, router]);
+  }, [data, accountId, blogId, formatData, router]);
 
   // Load the Editor component dynamically
 
@@ -208,7 +197,7 @@ const CreatePage = () => {
       webSocket &&
       webSocket.readyState === WebSocket.OPEN
     ) {
-      const formattedData = formatData(data, session?.account_id);
+      const formattedData = formatData(data, accountId);
       webSocket.send(JSON.stringify(formattedData));
       setIsSaving(true); // Set saving status when data is sent
     }
@@ -220,25 +209,27 @@ const CreatePage = () => {
         return () => {
           cleanup();
         };
-      }, 1200);
+      }, 1000);
     }
-  }, [data, webSocket, session?.account_id, formatData]);
+  }, [data, blogTopics, webSocket, accountId, formatData]);
 
   return (
     <>
       <div className='space-y-4'>
-        <div className='py-1 mx-auto w-full sm:w-4/5 flex justify-end items-center'>
-          <Button
-            size='icon'
-            onClick={() => setShowModal(true)}
-            title='Publish Blog'
-            className='rounded-full'
-          >
-            <Icon name='RiArrowRight' />
-          </Button>
+        <div className='p-2 flex justify-center items-center gap-[6px]'>
+          <ChooseTopicDialog
+            blogTopics={blogTopics}
+            setBlogTopics={setBlogTopics}
+          />
+
+          <PublishBlogDialog
+            topics={blogTopics}
+            isPublishing={blogPublishLoading}
+            handlePublish={handlePublishStep}
+          />
         </div>
 
-        <div className='mt-4 min-h-screen'>
+        <div className='py-3 min-h-screen'>
           <Suspense fallback={<Loader />}>
             {data && editorConfig && (
               <Editor data={data} onChange={setData} config={editorConfig} />
@@ -253,16 +244,6 @@ const CreatePage = () => {
             <p className='text-sm text-center'>Saving blog...</p>
           </div>
         </div>
-      )}
-
-      {showModal && (
-        <PublishModal
-          setModal={setShowModal}
-          setSelectedTags={setSelectedTags}
-          blogId={blogId}
-          handlePublishStep={handlePublishStep}
-          publishedBlogLoading={publishedBlogLoading}
-        />
       )}
     </>
   );

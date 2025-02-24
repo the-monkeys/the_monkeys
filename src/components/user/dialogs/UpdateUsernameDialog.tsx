@@ -100,7 +100,6 @@ export const UpdateUsernameDialog = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className='text-sm'>Username</FormLabel>
-                  <FormMessage />
                   <FormControl>
                     <Input
                       placeholder={
@@ -109,6 +108,7 @@ export const UpdateUsernameDialog = ({
                       {...field}
                     />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />

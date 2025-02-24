@@ -33,5 +33,9 @@ export const updateEmailSchema = z.object({
 });
 
 export const updateUsername = z.object({
-  username: z.string().min(2).max(50),
+  username: z
+    .string()
+    .min(2, 'Username must be at least 2 characters long')
+    .max(50, 'Username cannot exceed 50 characters')
+    .regex(/^\S+$/, 'Username cannot contain spaces'),
 });
