@@ -223,6 +223,7 @@ const CreatePage = () => {
           />
 
           <PublishBlogDialog
+            topics={blogTopics}
             isPublishing={blogPublishLoading}
             handlePublish={handlePublishStep}
           />
