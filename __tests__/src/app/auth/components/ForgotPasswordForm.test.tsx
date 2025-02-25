@@ -1,4 +1,4 @@
-import ForgotPasswordForm from '@/app/auth/components/ForgotPasswordForm';
+import ForgotPasswordForm from '@/app/auth/components/forms/ForgotPasswordForm';
 import * as Services from '@/services/auth/auth';
 import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

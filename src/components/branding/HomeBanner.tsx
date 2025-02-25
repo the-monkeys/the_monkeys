@@ -6,8 +6,6 @@ import Icon from '../icon';
 import { Button } from '../ui/button';
 import { BackgroundBanner } from './BackgroundBanner';
 
-('./BackgroundBanner');
-
 const HomeBanner = () => {
   return (
     <div className='py-6 px-4 relative flex flex-col justify-center items-center min-h-60 md:min-h-80'>
