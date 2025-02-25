@@ -29,3 +29,20 @@ export const UpdateDetailsFormSkeleton = () => {
     </div>
   );
 };
+
+export const LoginFormSkeleton = () => {
+  return (
+    <div className='space-y-6'>
+      <div className='space-y-2'>
+        <Skeleton className='h-10 w-full rounded-md' />
+        <Skeleton className='h-10 w-full rounded-md' />
+        <Skeleton className='h-10 w-full rounded-md' />
+      </div>
+
+      <div className='space-y-3'>
+        <Skeleton className='h-10 w-full rounded-md' />
+        <Skeleton className='h-10 w-full rounded-md' />
+      </div>
+    </div>
+  );
+};
