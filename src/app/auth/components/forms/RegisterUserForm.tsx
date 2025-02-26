@@ -141,17 +141,17 @@ export default function RegisterUserForm() {
                       <RiInformationLine className='ml-2' size={18} />
                     </TooltipTrigger>
                     <TooltipContent asChild>
-                      <ul className='space-y-1 dark:bg-foreground-dark bg-background-light shadow p-4 rounded-md'>
-                        <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+                      <ul className='p-4 bg-background-light dark:bg-background-dark border-1 border-border-light/25 dark:border-border-dark/25 rounded-lg space-y-1'>
+                        <li className='text-xs sm:text-sm list-disc list-inside'>
                           Must be at least 6 characters long.
                         </li>
-                        <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+                        <li className='text-xs sm:text-sm list-disc list-inside'>
                           Must contain at least one lowercase letter.
                         </li>
-                        <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+                        <li className='text-xs sm:text-sm list-disc list-inside'>
                           Must contain at least one uppercase letter.
                         </li>
-                        <li className='font-roboto font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+                        <li className='text-xs sm:text-sm list-disc list-inside'>
                           Must contain at least one number.
                         </li>
                       </ul>
@@ -198,11 +198,7 @@ export default function RegisterUserForm() {
         />
 
         <div className='pt-6 flex flex-row-reverse  gap-2 items-center'>
-          <Button
-            variant='brand'
-            disabled={loading ? true : false}
-            className='flex-1 order-1'
-          >
+          <Button disabled={loading ? true : false} className='flex-1 order-1'>
             {loading && <Loader />} Register
           </Button>
         </div>

@@ -114,7 +114,7 @@ export default function LoginForm() {
                 <FormMessage />
                 <Link
                   href='/auth/forgot-password'
-                  className='font-dm_sans text-sm hover:underline opacity-80 text-blue-600 dark:text-blue-400 ml-auto'
+                  className='font-dm_sans text-sm hover:underline opacity-80 ml-auto'
                 >
                   Forgot your password?
                 </Link>
@@ -125,7 +125,6 @@ export default function LoginForm() {
 
         <div className='pt-6 flex gap-2 items-center'>
           <Button
-            variant='brand'
             className='flex-1 order-1 transition-colors duration-300'
             disabled={mutation.isPending}
           >

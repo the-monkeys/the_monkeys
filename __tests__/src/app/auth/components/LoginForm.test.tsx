@@ -1,4 +1,4 @@
-import LoginForm from '@/app/auth/components/LoginForm';
+import LoginForm from '@/app/auth/components/forms/LoginForm';
 import * as Services from '@/services/auth/auth';
 import { User } from '@/services/models/user';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';

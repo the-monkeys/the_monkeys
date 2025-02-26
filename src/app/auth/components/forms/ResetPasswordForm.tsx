@@ -26,7 +26,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { SearchParamsComponent } from './SearchParams';
+import { SearchParamsComponent } from '../SearchParams';
 
 export const ResetPasswordForm = () => {
   const [searchParams, setSearchParams] = useState<{
@@ -128,17 +128,16 @@ export const ResetPasswordForm = () => {
   }
 
   return (
-    <div className='flex flex-col items-center px-4 py-5'>
+    <div className='flex flex-col items-center'>
       <Suspense fallback={<Loader />}>
         <SearchParamsComponent setSearchParams={updateSearchParams} />
       </Suspense>
 
-      {resetTokenStatus.loading ? (
+      {!resetTokenStatus.loading ? (
         <Loader size={32} />
       ) : (
         <Alert
           variant={resetTokenStatus.status ? 'constructive' : 'destructive'}
-          className='w-full sm:w-1/2'
         >
           <Icon name='RiErrorWarning' />
           <AlertTitle>
@@ -153,14 +152,16 @@ export const ResetPasswordForm = () => {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='mt-4 w-full sm:w-96 space-y-4'
+          className='w-full mt-4 space-y-2'
         >
           <FormField
             control={form.control}
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>New Password</FormLabel>
+                <FormLabel className='font-roboto text-sm'>
+                  New Password
+                </FormLabel>
                 <FormControl>
                   <PasswordInput
                     placeholder='Enter new password'
@@ -178,7 +179,9 @@ export const ResetPasswordForm = () => {
             name='confirmPassword'
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
+                <FormLabel className='font-roboto text-sm'>
+                  Confirm Password
+                </FormLabel>
                 <FormControl>
                   <PasswordInput
                     placeholder='Enter new password'
@@ -191,24 +194,23 @@ export const ResetPasswordForm = () => {
             )}
           />
 
-          <ul className='space-y-1'>
-            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+          <ul className='py-2 space-y-1'>
+            <li className='text-xs sm:text-sm list-disc list-inside'>
               Must be at least 6 characters long.
             </li>
-            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='text-xs sm:text-sm list-disc list-inside'>
               Must contain at least one lowercase letter.
             </li>
-            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='text-xs sm:text-sm list-disc list-inside'>
               Must contain at least one uppercase letter.
             </li>
-            <li className='font-light text-xs sm:text-sm opacity-80 list-disc list-inside'>
+            <li className='text-xs sm:text-sm list-disc list-inside'>
               Must contain at least one number.
             </li>
           </ul>
 
           <div className='pt-4'>
             <Button
-              variant='default'
               disabled={!resetTokenStatus.status || loading}
               className='float-right'
               type='submit'

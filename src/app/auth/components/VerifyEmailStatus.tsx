@@ -61,7 +61,7 @@ export const VerifyEmailStatus = () => {
   }, [searchParams]);
 
   return (
-    <div className='flex flex-col items-center px-4 py-5'>
+    <div className='flex flex-col items-center'>
       <Suspense
         fallback={
           <div>
@@ -75,10 +75,7 @@ export const VerifyEmailStatus = () => {
       {loading && <Loader size={32} />}
 
       {(isSuccess || isError) && (
-        <Alert
-          variant={isSuccess ? 'constructive' : 'destructive'}
-          className='w-full sm:w-1/2'
-        >
+        <Alert variant={isSuccess ? 'constructive' : 'destructive'}>
           <Icon name='RiErrorWarning' />
           <AlertTitle>
             {isSuccess && 'Success'}

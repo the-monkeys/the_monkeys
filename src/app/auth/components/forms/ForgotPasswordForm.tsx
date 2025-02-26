@@ -97,7 +97,7 @@ export default function ForgotPasswordForm() {
 
           <div className='pt-6 flex gap-2 items-center'>
             <Button
-              variant={submitSuccess ? 'outline' : 'brand'}
+              variant={submitSuccess ? 'outline' : 'default'}
               className='flex-1'
               disabled={loading || submitSuccess}
               aria-label={getButtonText()}
