@@ -14,7 +14,7 @@ import {
   useGetFollowing,
 } from '@/hooks/user/useUserConnections';
 
-import { FollowButton } from '../buttons/followButton';
+import { FollowButton, FollowButtonTab } from '../buttons/followButton';
 
 const ConnectionCard = ({
   first_name,
@@ -124,7 +124,7 @@ export const ConnectionsDialog = ({
                     following?.users.map((following) => {
                       return (
                         <>
-                          <div className='flex justify-between items-center'>
+                          <div className='flex justify-between items-center py-1'>
                             {' '}
                             <ConnectionCard
                               key={following?.username}
@@ -132,7 +132,7 @@ export const ConnectionsDialog = ({
                               last_name={following.last_name}
                               username={following.username}
                             />
-                            <FollowButton username={following.username} />
+                            <FollowButtonTab username={following.username} />
                           </div>
                         </>
                       );
