@@ -125,7 +125,6 @@ export default function LoginForm() {
 
         <div className='pt-6 flex gap-2 items-center'>
           <Button
-            variant='brand'
             className='flex-1 order-1 transition-colors duration-300'
             disabled={mutation.isPending}
           >

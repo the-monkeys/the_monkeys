@@ -211,7 +211,6 @@ export const ResetPasswordForm = () => {
 
           <div className='pt-4'>
             <Button
-              variant='default'
               disabled={!resetTokenStatus.status || loading}
               className='float-right'
               type='submit'

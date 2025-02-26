@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { LoginFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { Button } from '@/components/ui/button';
 import useAuth from '@/hooks/auth/useAuth';
@@ -27,7 +28,13 @@ export default function LoginPage() {
 
   return (
     <>
-      <FormHeader className='mt-8'>
+      <div className='flex justify-end'>
+        <LinksRedirectArrow link='/feed'>
+          <p className='font-dm_sans font-medium'>Monkeys Showcase</p>
+        </LinksRedirectArrow>
+      </div>
+
+      <FormHeader>
         <FormHeading heading='Welcome Back' />
         <FormSubheading subheading='Log in to continue your journey' />
       </FormHeader>
@@ -44,10 +51,10 @@ export default function LoginPage() {
               className='w-full flex items-center gap-2 cursor-not-allowed'
             >
               <Icon name='RiGoogle' type='Fill' />
-              <p>Google Login (Coming Soon)</p>
+              <p>Google Login (coming soon)</p>
             </Button>
 
-            <div className='mt-4 text-center'>
+            <div className='mt-6 text-center'>
               <span className='font-dm_sans'>New to Monkeys? </span>
               <Link
                 href='/auth/register'

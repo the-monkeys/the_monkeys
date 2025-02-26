@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 
+import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
+
 import {
   FormHeader,
   FormHeading,
@@ -12,7 +14,13 @@ import RegisterUserForm from '../components/forms/RegisterUserForm';
 export default function Register() {
   return (
     <>
-      <FormHeader className='mt-8'>
+      <div className='flex justify-end'>
+        <LinksRedirectArrow link='/feed'>
+          <p className='font-dm_sans font-medium'>Monkeys Showcase</p>
+        </LinksRedirectArrow>
+      </div>
+
+      <FormHeader>
         <FormHeading heading='Get Started' />
         <FormSubheading subheading='Create an account and join us today' />
       </FormHeader>
@@ -20,7 +28,7 @@ export default function Register() {
       <div className='flex flex-col gap-4'>
         <RegisterUserForm />
 
-        <div className='mt-4 text-center'>
+        <div className='mt-6 text-center'>
           <span className='font-dm_sans'>Already have an account? </span>
           <Link
             href='/auth/login'

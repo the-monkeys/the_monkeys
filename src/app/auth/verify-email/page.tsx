@@ -10,7 +10,7 @@ import {
 const VerifyEmailPage = () => {
   return (
     <>
-      <FormHeader className='mt-8'>
+      <FormHeader>
         <FormHeading heading='Verify Your Email' />
         <FormSubheading subheading='Check your inbox to confirm your email address' />
       </FormHeader>
