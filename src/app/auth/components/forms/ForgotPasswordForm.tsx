@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,14 +19,11 @@ import {
   RiCloseCircleFill,
   RiResetRightLine,
 } from '@remixicon/react';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function ForgotPasswordForm() {
-  const [loading, setLoading] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState(false);
-
   const form = useForm<z.infer<typeof forgotPasswordSchema>>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -36,26 +31,19 @@ export default function ForgotPasswordForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
-    setLoading(true);
-    try {
-      await forgotPass({ email: values.email });
+  const mutation = useMutation({
+    mutationFn: forgotPass,
+    onError: (err) => console.log(err),
+  });
 
-      setSubmitSuccess(true);
-      setSubmitError(false);
-    } catch (err) {
-      console.error(err);
-      setSubmitSuccess(false);
-      setSubmitError(true);
-    } finally {
-      setLoading(false);
-    }
+  async function onSubmit(values: z.infer<typeof forgotPasswordSchema>) {
+    mutation.mutate({ email: values.email });
   }
 
   const getButtonText = () => {
-    if (submitSuccess) return 'Submitted Successfully';
+    if (mutation.isSuccess) return 'Submitted Successfully';
 
-    if (submitError) return 'Click to retry';
+    if (mutation.isError) return 'Click to retry';
 
     return 'Submit';
   };
@@ -70,19 +58,18 @@ export default function ForgotPasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className='font-roboto text-sm'>Email</FormLabel>
-                <FormControl>
+                <FormControl onChange={() => mutation.reset()}>
                   <div className='relative'>
                     <Input placeholder='Enter email address' {...field} />
-                    {(field.value || submitSuccess) && (
+                    {field.value && (
                       <button
                         type='button'
                         aria-label='clear button'
                         className='absolute right-2 top-1/2 -translate-y-1/2'
-                        disabled={loading}
+                        disabled={mutation.isPending}
                         onClick={() => {
-                          setSubmitSuccess(false);
-                          setSubmitError(false);
                           form.resetField('email');
+                          mutation.reset();
                         }}
                       >
                         <RiCloseCircleFill />
@@ -97,21 +84,18 @@ export default function ForgotPasswordForm() {
 
           <div className='pt-6 flex gap-2 items-center'>
             <Button
-              variant={submitSuccess ? 'outline' : 'default'}
+              variant={mutation.isSuccess ? 'outline' : 'default'}
               className='flex-1'
-              disabled={loading || submitSuccess}
+              disabled={mutation.isPending || mutation.isSuccess}
               aria-label={getButtonText()}
               aria-live='polite'
             >
-              {loading ? (
-                <Loader />
-              ) : (
-                <>
-                  {submitSuccess && <RiCheckLine className='mr-2' />}
-                  {submitError && (
-                    <RiResetRightLine size={18} className='mr-2' />
-                  )}
-                </>
+              {mutation.isPending && <Loader className='mr-2' />}
+              {!mutation.isPending && mutation.isSuccess && (
+                <RiCheckLine className='mr-2' />
+              )}
+              {!mutation.isPending && mutation.isError && (
+                <RiResetRightLine size={18} className='mr-2' />
               )}
               {getButtonText()}
             </Button>
@@ -119,7 +103,7 @@ export default function ForgotPasswordForm() {
         </form>
       </Form>
       <p className='text-alert-red text-center mx-auto w-11/12' role='alert'>
-        {submitError &&
+        {mutation.isError &&
           'An unexpected error occurred while submitting the form, please retry again or contact support'}
       </p>
     </>
