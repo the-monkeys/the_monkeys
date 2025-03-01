@@ -54,7 +54,7 @@ export default function LoginPage() {
             >
               <a href={API_URL + '/auth/google/login'}>
                 <Icon name='RiGoogle' type='Fill' />
-                <p>Google Login</p>
+                <p>Login with Google</p>
               </a>
             </Button>
 

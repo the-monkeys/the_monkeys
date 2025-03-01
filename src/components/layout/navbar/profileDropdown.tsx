@@ -22,7 +22,7 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
   const queryClient = useQueryClient();
 
   const handleSignout = async () => {
-    axiosInstance.get('/auth/logout');
+    await axiosInstance.get('/auth/logout');
 
     queryClient.resetQueries({ queryKey: ['auth'] });
   };
