@@ -1,6 +1,6 @@
 import ForgotPasswordForm from '@/app/auth/components/forms/ForgotPasswordForm';
 import * as Services from '@/services/auth/auth';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -182,6 +182,37 @@ describe('ForgotPasswordForm', () => {
     await userEvent.click(clearButton);
 
     expect(emailInput.value).toBe('');
+    expect(submitButton.textContent).toBe('Submit');
+    expect(submitButton.disabled).toBe(false);
+  });
+
+  it('Editing input field after submitting enables submit button', async () => {
+    renderWithProviders(<ForgotPasswordForm />);
+
+    const submitButton = screen.getByRole('button');
+    const emailInput = screen.getByRole('textbox');
+
+    const spy = vi
+      .spyOn(Services, 'forgotPass')
+      // @ts-ignore
+      .mockImplementation((values) => ({
+        status: 200,
+        data: {
+          message: 'rest link is sent to your registered email',
+        },
+      }));
+
+    await userEvent.click(emailInput);
+    await userEvent.keyboard('john@doe.com');
+    await userEvent.click(submitButton);
+
+    expect(submitButton.textContent).toBe('Submitted Successfully');
+    expect(submitButton.disabled).toBe(true);
+
+    await userEvent.click(emailInput);
+    await userEvent.keyboard('1');
+    screen.debug();
+
     expect(submitButton.textContent).toBe('Submit');
     expect(submitButton.disabled).toBe(false);
   });
