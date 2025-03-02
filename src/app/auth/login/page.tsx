@@ -9,6 +9,7 @@ import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { LoginFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { Button } from '@/components/ui/button';
+import { API_URL } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 
 import {
@@ -48,10 +49,13 @@ export default function LoginPage() {
 
             <Button
               variant='secondary'
-              className='w-full flex items-center gap-2 cursor-not-allowed'
+              className='w-full flex items-center gap-2'
+              asChild
             >
-              <Icon name='RiGoogle' type='Fill' />
-              <p>Google Login (coming soon)</p>
+              <a href={API_URL + '/auth/google/login'}>
+                <Icon name='RiGoogle' type='Fill' />
+                <p>Login with Google</p>
+              </a>
             </Button>
 
             <div className='mt-6 text-center'>

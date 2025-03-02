@@ -12,6 +12,7 @@ const APIEndpoint = {
   REGISTER: '/auth/register',
   FORGOT_PASS: '/auth/forgot-pass',
   VALIDATE_SESSION: '/auth/validate-session',
+  GOOGLE_CALLBACK: '/auth/google/callback',
 } as const;
 
 interface getResetPasswordTokenApiResponse {
@@ -116,6 +117,14 @@ export async function forgotPass({ email }: { email: string }) {
 
 export async function validateSession() {
   const response = await axiosInstance.get<IUser>(APIEndpoint.VALIDATE_SESSION);
+
+  return response.data;
+}
+
+export async function googleSSOCallback(code: string) {
+  const response = await axiosInstance.get<IUser>(APIEndpoint.GOOGLE_CALLBACK, {
+    params: { code },
+  });
 
   return response.data;
 }
