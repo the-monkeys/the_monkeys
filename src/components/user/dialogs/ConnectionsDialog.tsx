@@ -14,7 +14,7 @@ import {
   useGetFollowing,
 } from '@/hooks/user/useUserConnections';
 
-import { FollowButton, FollowButtonTab } from '../buttons/followButton';
+import { FollowButton } from '../buttons/followButton';
 
 const ConnectionCard = ({
   first_name,
@@ -28,13 +28,13 @@ const ConnectionCard = ({
   return (
     <Link
       href={`/${username}`}
-      className='px-1 py-2 flex items-center gap-x-2 hover:bg-foreground-light dark:hover:bg-foreground-dark overflow-hidden'
+      className='px-1 py-2 flex flex-col justify-center i gap-x-2 hover:bg-foreground-light dark:hover:bg-foreground-dark overflow-hidden'
     >
-      <h2 className='text-sm md:text-base'>
+      <h2 className='text-sm md:text-xl '>
         {first_name} {last_name}
       </h2>
 
-      <p className='flex-1 text-xs md:text-sm opacity-80 truncate'>
+      <p className='flex-1 text-xs md:text-base opacity-80 truncate'>
         {`@${username}`}
       </p>
     </Link>
@@ -123,18 +123,19 @@ export const ConnectionsDialog = ({
                   {following?.users ? (
                     following?.users.map((following) => {
                       return (
-                        <>
-                          <div className='flex justify-between items-center py-1'>
-                            {' '}
-                            <ConnectionCard
-                              key={following?.username}
-                              first_name={following.first_name}
-                              last_name={following.last_name}
-                              username={following.username}
-                            />
-                            <FollowButtonTab username={following.username} />
-                          </div>
-                        </>
+                        <div
+                          key={following?.username}
+                          className='flex justify-between items-center py-1'
+                        >
+                          {' '}
+                          <ConnectionCard
+                            key={following?.username}
+                            first_name={following.first_name}
+                            last_name={following.last_name}
+                            username={following.username}
+                          />
+                          <FollowButton username={following.username} />
+                        </div>
                       );
                     })
                   ) : (
