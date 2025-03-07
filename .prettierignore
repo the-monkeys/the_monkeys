@@ -1,3 +1,7 @@
+# Ignore everything
+*
+*/*
+
 # Ignore build directories
 node_modules/
 out/
