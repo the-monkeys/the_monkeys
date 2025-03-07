@@ -1,33 +1,32 @@
 ---
-name: 🚀 Feature request
-about: Suggest an idea for this project
+name: 🚀 Feature Request
+about: Suggest an idea to improve this project
 title: '[Feature]: '
 labels: enhancement
 assignees: ''
 ---
 
-### 🔰 Type of Feature:
+### 🔰 Feature Type
 
-- [ ] 💡 Feature
+- [ ] 💡 New Feature
 - [ ] 🐛 Bug Fix
 - [ ] 📃 Documentation
-- [ ] 🎨 Style
+- [ ] 🎨 UI Improvement
 - [ ] 💻 Code Refactor
-- [ ] 🔥 Performance
-- [ ] ✅ Test
+- [ ] ✅ Tests
 
-### ❓ Is your feature request related to a problem? Please describe.
+### ❓ Related Issue
 
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+Is this feature related to an existing issue? If so, please provide details.
 
-### 📃 Describe the solution you'd like.
+### 💡 Proposed Solution
 
-A clear and concise description of what you want to happen.
+Describe the solution or approach you have in mind.
 
-### 📃 Describe alternatives you've considered.
+### 🔄 Alternative Solutions
 
-A clear and concise description of any alternative solutions or features you've considered.
+Have you considered any alternative solutions? If yes, describe them.
 
-### 👂 Additional context
+### 👂 Additional Context
 
-Add any other context or screenshots about the feature request here.
+Include any extra details, screenshots, or relevant context for the feature request.
