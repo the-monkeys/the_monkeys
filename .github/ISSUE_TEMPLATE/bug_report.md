@@ -1,30 +1,27 @@
 ---
-name: 🐛 Bug report
-about: Create a report to help us improve
+name: 🐛 Bug Report
+about: Report a bug to help us improve
 title: '[Bug]: '
 labels: bug
 assignees: ''
 ---
 
-### 🐛 Describe the bug:
+### 🐛 Describe the Bug
 
-A clear and concise description of what the bug is.
+Provide a clear and concise description of the issue you are facing.
 
-### 🔃 Steps To Reproduce
+### 🔃 Steps to Reproduce
+
+List the steps to reproduce the bug:
 
 1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+2. Click on '...'
+3. See the error
 
-### 📃 Expected behavior
+### 📃 Expected Behavior
 
-A clear and concise description of what you expected to happen.
+Describe what you expected to happen instead.
 
-### 📸 Screenshots
+### 📸 Screenshots or Videos
 
-If applicable, add screenshots to help explain your problem.
-
-### 👂 Additional context
-
-Add any other context about the problem here.
+If possible, provide screenshots or a short video to illustrate the issue.
