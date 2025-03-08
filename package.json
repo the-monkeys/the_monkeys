@@ -10,7 +10,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "format": "prettier --write",
     "prepare": "husky"
   },
   "dependencies": {
