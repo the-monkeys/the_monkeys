@@ -1,6 +1,7 @@
-"use client";
+'use client';
 
 import { useParams } from 'next/navigation';
+
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
