@@ -10,8 +10,8 @@ import {
 } from '@/components/layout/pageHeading';
 import { Button } from '@/components/ui/button';
 
-import TopicFollowButton from '../explore/components/TopicFollowButton';
 import { BlogsByTopic } from './components/BlogsByTopic';
+import TopicFollowButton from './components/TopicFollowButton';
 
 export async function generateMetadata({
   params,

@@ -32,7 +32,11 @@ const TopicFollowButton = () => {
       await axiosInstance.put(`/user/follow-topics/${username}`, {
         topics: [topic],
       });
-
+      toast({
+        variant: 'success',
+        title: 'Topic Followed',
+        description: `You have successfully followed ${topic}`,
+      });
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
     } catch (error: any) {
@@ -73,13 +77,14 @@ const TopicFollowButton = () => {
     <div>
       {isFollowed ? (
         <Button
-          variant='brand'
+          variant='secondary'
           size='sm'
           className='rounded-full'
           onClick={handleUnfollowButton}
+          data-testid='unFollowButton'
         >
           <Icon name='RiSubtract' className='mr-1' />
-          Unfollow
+          Unfollow Topic
         </Button>
       ) : (
         <Button
@@ -87,9 +92,10 @@ const TopicFollowButton = () => {
           size='sm'
           className='rounded-full'
           onClick={handleFollowButton}
+          data-testid='followButton'
         >
           <Icon name='RiAdd' className='mr-1' />
-          Follow
+          Follow Topic
         </Button>
       )}
     </div>
