@@ -1,0 +1,84 @@
+/* Container for the code block */
+.code-block-container {
+  position: relative;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  background-color: #f6f8fa;
+  margin: 16px 0;
+  overflow: hidden;
+}
+
+/* Textarea for raw code input */
+.code-block-input {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #24292e;
+  background-color: transparent;
+  border: none;
+  resize: vertical;
+  outline: none;
+}
+
+/* Pre element for syntax-highlighted output */
+.code-block-container pre {
+  margin: 0;
+  padding: 12px;
+  background-color: #f6f8fa;
+  border-top: 1px solid #e1e4e8;
+  overflow-x: auto;
+}
+
+/* Code element inside pre */
+.code-block-container code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #24292e;
+}
+
+/* Copy button */
+.copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #0366d6;
+  background-color: #ffffff;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.copy-button:hover {
+  background-color: #0366d6;
+  color: #ffffff;
+}
+
+/* Highlight.js styles (overrides if needed) */
+.hljs {
+  background-color: transparent !important;
+}
+/* Language label */
+.language-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #0366d6;
+  border-radius: 4px;
+  z-index: 1;
+}
