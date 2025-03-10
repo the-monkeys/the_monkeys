@@ -36,7 +36,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     },
     delimiter: Delimiter,
     code: {
-      class: CodeBlockTool, // Use your custom code block tool
+      class: CodeBlockTool,
     },
     quote: {
       class: Quote,
