@@ -8,7 +8,7 @@ import {
 import hljs from 'highlight.js';
 import 'highlight.js/styles/github.css';
 
-import './styles/codeBlock.css';
+import './styles/codeblock.css';
 
 interface CodeBlockData extends BlockToolData {
   code?: string;
