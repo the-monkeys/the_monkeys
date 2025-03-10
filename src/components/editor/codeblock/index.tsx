@@ -12,6 +12,7 @@ import './styles/codeBlock.css';
 
 interface CodeBlockData extends BlockToolData {
   code?: string;
+  language?: string; // Add language property
 }
 
 export default class CodeBlockTool implements BlockTool {
@@ -20,13 +21,13 @@ export default class CodeBlockTool implements BlockTool {
   private wrapper: HTMLElement | null = null;
 
   constructor({ data, api }: { data?: CodeBlockData; api: API }) {
-    this.data = data || { code: '' };
+    this.data = data || { code: '', language: 'plaintext' }; // Default to plaintext
     this.api = api;
   }
 
   public static get toolbox(): ToolboxConfig {
     return {
-      icon: 'Code',
+      icon: '',
       title: 'Code',
     };
   }
@@ -44,8 +45,28 @@ export default class CodeBlockTool implements BlockTool {
     // Create a pre element for syntax-highlighted output
     const pre = document.createElement('pre');
     const code = document.createElement('code');
-    code.classList.add('language-javascript'); // Default language
+    code.classList.add(`language-${this.data.language || 'plaintext'}`); // Set initial language
     pre.appendChild(code);
+
+    // Create a language label
+    const languageLabel = document.createElement('div');
+    languageLabel.classList.add('language-label');
+    languageLabel.textContent = this.data.language || 'plaintext'; // Set initial label
+
+    // Create a dropdown for manual language selection
+    const languageSelect = document.createElement('select');
+    languageSelect.classList.add('language-select');
+    ['JavaScript', 'Python', 'HTML', 'CSS', 'Java', 'Plain Text'].forEach(
+      (lang) => {
+        const option = document.createElement('option');
+        option.value = lang.toLowerCase();
+        option.textContent = lang;
+        if (lang.toLowerCase() === this.data.language) {
+          option.selected = true; // Set selected option
+        }
+        languageSelect.appendChild(option);
+      }
+    );
 
     // Create a copy button
     const copyButton = document.createElement('button');
@@ -53,13 +74,30 @@ export default class CodeBlockTool implements BlockTool {
     copyButton.textContent = 'Copy';
     copyButton.addEventListener('click', () => this.copyCode(code.innerText));
 
-    // Update highlighted code when textarea changes
+    // Update highlighted code and language when textarea changes
     textarea.addEventListener('input', () => {
-      code.textContent = textarea.value;
+      const codeText = textarea.value;
+      code.textContent = codeText;
+
+      // Detect language using highlight.js
+      const detectedLanguage =
+        hljs.highlightAuto(codeText).language || 'plaintext';
+      languageLabel.textContent = detectedLanguage;
+      code.className = `language-${detectedLanguage}`; // Update code element class
+      hljs.highlightBlock(code);
+    });
+
+    // Update language on dropdown change
+    languageSelect.addEventListener('change', () => {
+      const selectedLanguage = languageSelect.value;
+      languageLabel.textContent = selectedLanguage;
+      code.className = `language-${selectedLanguage}`;
       hljs.highlightBlock(code);
     });
 
     // Append elements to the wrapper
+    this.wrapper.appendChild(languageLabel);
+    this.wrapper.appendChild(languageSelect);
     this.wrapper.appendChild(textarea);
     this.wrapper.appendChild(pre);
     this.wrapper.appendChild(copyButton);
@@ -82,6 +120,7 @@ export default class CodeBlockTool implements BlockTool {
       code: true, // Allow HTML tags
     };
   }
+
   private copyCode(text: string): void {
     navigator.clipboard
       .writeText(text)
@@ -105,8 +144,12 @@ export default class CodeBlockTool implements BlockTool {
     const textarea = blockContent.querySelector(
       '.code-block-input'
     ) as HTMLTextAreaElement;
+    const languageLabel = blockContent.querySelector(
+      '.language-label'
+    ) as HTMLDivElement;
     return {
       code: textarea.value,
+      language: languageLabel.textContent || 'plaintext', // Save the detected language
     };
   }
 }
