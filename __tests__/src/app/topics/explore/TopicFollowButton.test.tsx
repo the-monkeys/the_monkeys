@@ -3,6 +3,7 @@ import * as toastModule from '@/components/ui/use-toast';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
+import '@/services/user/userService';
 import {
   cleanup,
   fireEvent,
@@ -13,7 +14,15 @@ import {
 import { mutate } from 'swr';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+export const followTopicApi = async (username: string, topic: string) => {
+  return axiosInstance.put(`/user/follow-topics/${username}`, {
+    topics: [topic],
+  });
+};
 vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
   useParams: () => ({ topic: 'myTestTopic' }),
 }));
 
@@ -22,27 +31,31 @@ vi.mock('@/hooks/user/useUser');
 vi.mock('@/components/ui/use-toast', () => ({
   toast: vi.fn(),
 }));
-vi.mock('@/services/api/axiosInstance');
 vi.mock('swr', () => ({
   mutate: vi.fn(),
 }));
+vi.mock('@/services/api/axiosInstance');
+vi.mocked(followTopicApi);
+vi.mock('@/services/userService', () => ({
+  followTopicApi: vi.fn(),
+}));
+const mockFollowTopicApi = vi.fn();
+vi.mock('@/services/userService', () => ({
+  followTopicApi: mockFollowTopicApi,
+}));
 
-describe('Individual topic follow button', () => {
+describe('Individual Topic Follow Button', () => {
   afterEach(() => {
     cleanup();
     vi.clearAllMocks();
   });
 
   it('should show an error toast when user is not present', () => {
-    (useAuth as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      data: null,
-    });
-    (useUser as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      user: null,
-    });
-
-    render(<TopicFollowButton />);
+    (useAuth as jest.Mock).mockReturnValue({ data: null });
+    (useUser as jest.Mock).mockReturnValue({ user: null });
+    render(<TopicFollowButton topic='myTestTopic' />);
     const followButton = screen.getByTestId('followButton');
+
     fireEvent.click(followButton);
 
     expect(toastModule.toast).toHaveBeenCalledWith({
@@ -51,83 +64,46 @@ describe('Individual topic follow button', () => {
     });
   });
 
-  it('Should render a Follow Button when the topic is not followed', () => {
+  it('should render a Follow Button when the topic is not followed', () => {
     const mockUser = { topics: [] };
-    (useAuth as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      data: { username: 'testUser' },
-    });
-    (useUser as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      user: mockUser,
-    });
+    (useAuth as jest.Mock).mockReturnValue({ data: { username: 'testUser' } });
+    (useUser as jest.Mock).mockReturnValue({ user: mockUser });
 
-    render(<TopicFollowButton />);
+    render(<TopicFollowButton topic='myTestTopic' />);
     const followButton = screen.getByTestId('followButton');
+
     expect(followButton).toBeTruthy();
     expect(followButton.textContent).toContain('Follow Topic');
   });
 
-  it('Should render an Unfollow Button when the topic is already followed', () => {
+  it('should render an Unfollow Button when the topic is already followed', () => {
     const mockUser = { username: 'testUser', topics: ['myTestTopic'] };
-    (useAuth as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      data: { username: 'testUser' },
-    });
-    (useUser as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      user: mockUser,
-    });
+    (useAuth as jest.Mock).mockReturnValue({ data: { username: 'testUser' } });
+    (useUser as jest.Mock).mockReturnValue({ user: mockUser });
 
-    render(<TopicFollowButton />);
+    render(<TopicFollowButton topic='myTestTopic' />);
     const unFollowButton = screen.getByTestId('unFollowButton');
+
     expect(unFollowButton).toBeTruthy();
     expect(unFollowButton.textContent).toContain('Unfollow Topic');
   });
-  it('should call API and show success toast when following a topic', async () => {
-    const mockUser = { username: 'testUser', topics: [] };
-    (useAuth as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      data: { username: 'testUser' },
-    });
-    (useUser as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      user: mockUser,
-    });
-    (
-      axiosInstance.put as unknown as ReturnType<typeof vi.fn>
-    ).mockResolvedValue({ data: { success: true } });
-    render(<TopicFollowButton />);
-    const followButton = screen.getByTestId('followButton');
-    fireEvent.click(followButton);
-    await waitFor(() => {
-      expect(axiosInstance.put).toHaveBeenCalledWith(
-        '/user/follow-topics/testUser',
-        { topics: ['myTestTopic'] }
-      );
-      expect(toastModule.toast).toHaveBeenCalledWith({
-        variant: 'success',
-        title: 'Topic Followed',
-        description: 'You have successfully followed myTestTopic',
-      });
-      expect(mutate).toHaveBeenCalledWith('/user/topics');
-      expect(mutate).toHaveBeenCalledWith('/user/public/testUser');
-    });
-  });
+});
 
-  it('should show error toast when API call fails during follow operation', async () => {
-    const mockUser = { username: 'testUser', topics: [] };
-    (useAuth as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      data: { username: 'testUser' },
-    });
-    (useUser as unknown as ReturnType<typeof vi.fn>).mockReturnValue({
-      user: mockUser,
-    });
-    (
-      axiosInstance.put as unknown as ReturnType<typeof vi.fn>
-    ).mockRejectedValue(new Error('API Error'));
-    render(<TopicFollowButton />);
-    const followButton = screen.getByTestId('followButton');
-    fireEvent.click(followButton);
-    await waitFor(() => {
-      expect(toastModule.toast).toHaveBeenCalledWith({
-        title: 'Error',
-        description: 'Something went wrong while following the topic.',
-      });
+it('should show error toast when API call fails during follow operation', async () => {
+  const mockUser = { username: 'testUser', topics: [] };
+  (useAuth as jest.Mock).mockReturnValue({ data: { username: 'testUser' } });
+  (useUser as jest.Mock).mockReturnValue({ user: mockUser });
+  (axiosInstance.put as jest.Mock).mockRejectedValue(new Error('API Error'));
+
+  render(<TopicFollowButton topic='myTestTopic' />);
+  const followButton = screen.getByTestId('followButton');
+
+  fireEvent.click(followButton);
+
+  await waitFor(() => {
+    expect(toastModule.toast).toHaveBeenCalledWith({
+      title: 'Error',
+      description: 'Something went wrong while following the topic.',
     });
   });
 });

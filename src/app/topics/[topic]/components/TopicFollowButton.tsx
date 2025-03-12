@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
@@ -8,15 +8,25 @@ import { toast } from '@/components/ui/use-toast';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
+import { followTopicApi, unfollowTopicApi } from '@/services/user/userService';
 import { mutate } from 'swr';
 
-const TopicFollowButton = () => {
-  const params = useParams();
-  const topic = Array.isArray(params.topic) ? params.topic[0] : params.topic;
+interface TopicFollowButtonProps {
+  topic: string;
+}
+const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
+  const router = useRouter();
   const { data: session } = useAuth();
   const { user } = useUser(session?.username);
   const followedTopics = user?.topics || [];
   const isFollowed = followedTopics.includes(topic);
+
+  const handleApiCalls = async (url: string, topic: string) => {
+    return axiosInstance.put(url, {
+      topics: [topic],
+    });
+  };
+
   const handleFollowButton = async () => {
     const username = user?.username;
 
@@ -25,13 +35,12 @@ const TopicFollowButton = () => {
         title: 'Error',
         description: 'Username is missing, please relogin.',
       });
+      router.push('/auth/login');
       return;
     }
 
     try {
-      await axiosInstance.put(`/user/follow-topics/${username}`, {
-        topics: [topic],
-      });
+      await followTopicApi(username, topic);
       toast({
         variant: 'success',
         title: 'Topic Followed',
@@ -47,6 +56,7 @@ const TopicFollowButton = () => {
       console.error('Error:', error.message);
     }
   };
+
   const handleUnfollowButton = async () => {
     const username = user?.username;
 
@@ -55,14 +65,12 @@ const TopicFollowButton = () => {
         title: 'Error',
         description: 'Username is missing, please relogin.',
       });
+      router.push('/auth/login');
       return;
     }
 
     try {
-      await axiosInstance.put(`/user/un-follow-topics/${username}`, {
-        topics: [topic],
-      });
-
+      await unfollowTopicApi(username, topic);
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
     } catch (error: any) {
@@ -73,6 +81,7 @@ const TopicFollowButton = () => {
       console.error('Error:', error.message);
     }
   };
+
   return (
     <div>
       {isFollowed ? (

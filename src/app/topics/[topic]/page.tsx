@@ -43,7 +43,7 @@ const TopicBlogsPage = ({
       </PageHeader>
 
       <div className='mt-3 mb-10 flex justify-center gap-2 flex-wrap'>
-        <TopicFollowButton />
+        <TopicFollowButton topic={topic} />
 
         <Button size='sm' className='rounded-full' asChild>
           <Link href='/topics/explore' target='_blank'>
