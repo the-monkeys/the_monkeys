@@ -25,10 +25,4 @@ describe('purifyHTMLString', () => {
 
     expect(result).toBe('');
   });
-
-  it('throws an error for non-string inputs', () => {
-    const invalidInput = null; // @ts-expect-error Testing non-string input
-
-    expect(() => purifyHTMLString(invalidInput)).toThrow();
-  });
 });

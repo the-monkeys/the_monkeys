@@ -6,7 +6,7 @@
     "dev": "next dev",
     "test": "vitest --run",
     "test:watch": "vitest",
-    "coverage": "vitest --coverage --run",
+    "coverage": "vitest --silent --coverage --run",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
