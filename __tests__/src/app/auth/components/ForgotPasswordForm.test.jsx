@@ -67,7 +67,6 @@ describe('ForgotPasswordForm', () => {
   it('Successful submit', async () => {
     const spy = vi
       .spyOn(Services, 'forgotPass')
-      // @ts-ignore
       .mockImplementation((values) => ({
         status: 200,
         data: {
@@ -96,7 +95,6 @@ describe('ForgotPasswordForm', () => {
   it('Clicking clear button after successful submit - resets form and button', async () => {
     const spy = vi
       .spyOn(Services, 'forgotPass')
-      // @ts-ignore
       .mockImplementation((values) => ({
         status: 200,
         data: {
@@ -194,7 +192,6 @@ describe('ForgotPasswordForm', () => {
 
     const spy = vi
       .spyOn(Services, 'forgotPass')
-      // @ts-ignore
       .mockImplementation((values) => ({
         status: 200,
         data: {
@@ -211,7 +208,6 @@ describe('ForgotPasswordForm', () => {
 
     await userEvent.click(emailInput);
     await userEvent.keyboard('1');
-    screen.debug();
 
     expect(submitButton.textContent).toBe('Submit');
     expect(submitButton.disabled).toBe(false);
