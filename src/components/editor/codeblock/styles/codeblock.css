@@ -1,84 +1,78 @@
-/* Container for the code block */
+/* Container for the entire code block */
 .code-block-container {
   position: relative;
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
-  background-color: #f6f8fa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #282c34;
   margin: 16px 0;
+  padding: 12px;
   overflow: hidden;
+  font-family: 'Fira Code', monospace;
 }
 
-/* Textarea for raw code input */
+/* Code input area */
 .code-block-input {
   width: 100%;
-  min-height: 100px;
-  padding: 12px;
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
-    monospace;
+  min-height: 120px;
+  padding: 10px;
   font-size: 14px;
-  line-height: 1.5;
-  color: #24292e;
-  background-color: transparent;
+  background-color: #1e1e1e;
+  color: #ffffff;
   border: none;
   resize: vertical;
   outline: none;
+  border-radius: 4px;
 }
 
-/* Pre element for syntax-highlighted output */
+/* Syntax-highlighted block */
 .code-block-container pre {
-  margin: 0;
+  margin-top: 10px;
   padding: 12px;
-  background-color: #f6f8fa;
-  border-top: 1px solid #e1e4e8;
+  background-color: #1e1e1e;
+  border-radius: 4px;
   overflow-x: auto;
-}
-
-/* Code element inside pre */
-.code-block-container code {
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
-    monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #24292e;
 }
 
 /* Copy button */
 .copy-button {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 6px 12px;
+  top: 10px;
+  right: 10px;
+  padding: 6px 10px;
   font-size: 12px;
-  font-weight: 500;
-  color: #0366d6;
-  background-color: #ffffff;
-  border: 1px solid #e1e4e8;
+  color: #ffffff;
+  background-color: #ff5542;
+  border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition:
-    background-color 0.2s,
-    color 0.2s;
 }
 
 .copy-button:hover {
-  background-color: #0366d6;
-  color: #ffffff;
+  background-color: #ff5542;
 }
 
-/* Highlight.js styles (overrides if needed) */
-.hljs {
-  background-color: transparent !important;
-}
-/* Language label */
-.language-label {
+/* Language dropdown */
+.language-select {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  left: 10px;
   padding: 4px 8px;
   font-size: 12px;
-  font-weight: 500;
   color: #ffffff;
-  background-color: #0366d6;
+  background-color: #ff5542;
   border-radius: 4px;
-  z-index: 1;
+  border: none;
+  cursor: pointer;
+}
+
+.language-select:hover {
+  background-color: #ff5542;
+}
+pre .code {
+  color: #ffffff !important;
+}
+/* Highlight.js Overrides */
+.hljs {
+  background: transparent !important;
+  color: #ffffff !important;
 }
