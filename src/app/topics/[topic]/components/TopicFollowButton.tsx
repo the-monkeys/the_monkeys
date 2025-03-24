@@ -1,6 +1,6 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { toast } from '@/components/ui/use-toast';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
-import { followTopicApi, unfollowTopicApi } from '@/services/user/userService';
+import { followTopicApi, unfollowTopicApi } from '@/services/user/user';
 import { mutate } from 'swr';
 
 interface TopicFollowButtonProps {
@@ -16,6 +16,8 @@ interface TopicFollowButtonProps {
 }
 const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { data: session } = useAuth();
   const { user } = useUser(session?.username);
   const followedTopics = user?.topics || [];
@@ -28,14 +30,15 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
   };
 
   const handleFollowButton = async () => {
-    const username = user?.username;
+    const username = session?.username;
 
     if (!username) {
       toast({
-        title: 'Error',
-        description: 'Username is missing, please relogin.',
+        title: 'Login Required',
+        description: `You need to login to follow ${topic}`,
       });
-      router.push('/auth/login');
+      const callbackURL = encodeURIComponent(`${pathname}?${searchParams}`);
+      router.push(`/auth/login?callbackURL=${callbackURL}`);
       return;
     }
 
@@ -58,19 +61,20 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
   };
 
   const handleUnfollowButton = async () => {
-    const username = user?.username;
+    const username = session?.username;
 
     if (!username) {
-      toast({
-        title: 'Error',
-        description: 'Username is missing, please relogin.',
-      });
       router.push('/auth/login');
       return;
     }
 
     try {
       await unfollowTopicApi(username, topic);
+      toast({
+        variant: 'success',
+        title: 'Topic Unfollowed',
+        description: `You have successfully Unfollowed ${topic}`,
+      });
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
     } catch (error: any) {
@@ -84,29 +88,16 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
 
   return (
     <div>
-      {isFollowed ? (
-        <Button
-          variant='secondary'
-          size='sm'
-          className='rounded-full'
-          onClick={handleUnfollowButton}
-          data-testid='unFollowButton'
-        >
-          <Icon name='RiSubtract' className='mr-1' />
-          Unfollow Topic
-        </Button>
-      ) : (
-        <Button
-          variant='brand'
-          size='sm'
-          className='rounded-full'
-          onClick={handleFollowButton}
-          data-testid='followButton'
-        >
-          <Icon name='RiAdd' className='mr-1' />
-          Follow Topic
-        </Button>
-      )}
+      <Button
+        variant={isFollowed ? 'secondary' : 'brand'}
+        size='sm'
+        className='rounded-full'
+        onClick={isFollowed ? handleUnfollowButton : handleFollowButton}
+        data-testid={isFollowed ? 'unFollowButton' : 'followButton'}
+      >
+        <Icon name={isFollowed ? 'RiSubtract' : 'RiAdd'} className='mr-1' />
+        {isFollowed ? 'Unfollow Topic' : 'Follow Topic'}
+      </Button>
     </div>
   );
 };
