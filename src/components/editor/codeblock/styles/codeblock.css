@@ -1,0 +1,78 @@
+/* Container for the entire code block */
+.code-block-container {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #282c34;
+  margin: 16px 0;
+  padding: 12px;
+  overflow: hidden;
+  font-family: 'Fira Code', monospace;
+}
+
+/* Code input area */
+.code-block-input {
+  width: 100%;
+  min-height: 120px;
+  padding: 10px;
+  font-size: 14px;
+  background-color: #1e1e1e;
+  color: #ffffff;
+  border: none;
+  resize: vertical;
+  outline: none;
+  border-radius: 4px;
+}
+
+/* Syntax-highlighted block */
+.code-block-container pre {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #1e1e1e;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+/* Copy button */
+.copy-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #ff5542;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.copy-button:hover {
+  background-color: #ff5542;
+}
+
+/* Language dropdown */
+.language-select {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 4px 8px;
+  font-size: 12px;
+  color: #ffffff;
+  background-color: #ff5542;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+.language-select:hover {
+  background-color: #ff5542;
+}
+pre .code {
+  color: #ffffff !important;
+}
+/* Highlight.js Overrides */
+.hljs {
+  background: transparent !important;
+  color: #ffffff !important;
+}

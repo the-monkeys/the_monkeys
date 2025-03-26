@@ -32,7 +32,7 @@ declare module '@editorjs/quote' {
   export = Quote;
 }
 
-declare module '@editorjs/code' {
-  import Code from '@editorjs/code';
-  export = Code;
-}
+// declare module '@editorjs/code' {
+//   import Code from '@editorjs/code';
+//   export = Code;
+// }
