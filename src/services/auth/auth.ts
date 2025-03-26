@@ -117,6 +117,7 @@ export async function forgotPass({ email }: { email: string }) {
 
 export async function validateSession() {
   const response = await axiosInstance.get<IUser>(APIEndpoint.VALIDATE_SESSION);
+
   return response.data;
 }
 
