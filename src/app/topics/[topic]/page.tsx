@@ -11,6 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 import { BlogsByTopic } from './components/BlogsByTopic';
+import TopicFollowButton from './components/TopicFollowButton';
 
 export async function generateMetadata({
   params,
@@ -34,7 +35,6 @@ const TopicBlogsPage = ({
   };
 }) => {
   const topic = decodeURIComponent(params.topic);
-
   return (
     <Container className='pb-12 px-4 min-h-screen'>
       <PageHeader>
@@ -43,15 +43,7 @@ const TopicBlogsPage = ({
       </PageHeader>
 
       <div className='mt-3 mb-10 flex justify-center gap-2 flex-wrap'>
-        <Button
-          variant='brand'
-          size='sm'
-          className='rounded-full'
-          disabled={true}
-        >
-          <Icon name='RiAdd' className='mr-1' />
-          Follow
-        </Button>
+        <TopicFollowButton topic={topic} />
 
         <Button size='sm' className='rounded-full' asChild>
           <Link href='/topics/explore' target='_blank'>
