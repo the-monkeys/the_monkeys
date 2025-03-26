@@ -46,7 +46,7 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
       await followTopicApi(username, topic);
       toast({
         variant: 'success',
-        title: 'Topic Followed',
+        title: 'Topic followed',
         description: `You have successfully followed ${topic}`,
       });
       mutate('/user/topics');
@@ -73,7 +73,7 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
       toast({
         variant: 'success',
         title: 'Topic Unfollowed',
-        description: `You have successfully Unfollowed ${topic}`,
+        description: `You have successfully unfollowed ${topic}`,
       });
       mutate('/user/topics');
       mutate(`/user/public/${username}`);
