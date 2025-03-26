@@ -88,7 +88,7 @@ describe('TopicFollowButton Component', () => {
     fireEvent.click(unfollowButton);
 
     await waitFor(() => {
-      screen.getByText('You have successfully Unfollowed myTestTopic');
+      screen.getByText('You have successfully unfollowed myTestTopic');
     });
   });
 });
