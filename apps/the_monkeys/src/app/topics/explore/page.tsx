@@ -6,11 +6,11 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { CATEGORY_INITIAL_LETTERS } from '@/constants/topics';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetAllCategories from '@/hooks/user/usetGetAllCategories';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 import { AddTopicForm } from './components/AddTopicDialog';
 import { TopicsList } from './components/TopicsList';

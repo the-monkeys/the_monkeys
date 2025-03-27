@@ -8,8 +8,17 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/icon';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
+import { resetPasswordSchema } from '@/lib/schema/auth';
+import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
+import { getResetPasswordToken } from '@/services/auth/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@the-monkeys/ui/atoms/alert';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import {
   Form,
   FormControl,
@@ -17,12 +26,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { resetPasswordSchema } from '@/lib/schema/auth';
-import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
-import { getResetPasswordToken } from '@/services/auth/auth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from '@the-monkeys/ui/hooks/use-toast';
+} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

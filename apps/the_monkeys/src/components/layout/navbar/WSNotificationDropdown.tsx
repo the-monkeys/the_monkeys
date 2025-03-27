@@ -3,18 +3,18 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Separator } from '@/components/ui/separator';
 import { WSS_URL } from '@/constants/api';
 import {
   Notification,
   WSNotification,
 } from '@/services/notification/notificationTypes';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@the-monkeys/ui/atoms/dropdown-menu';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 const WSNotificationDropdown = () => {
   const [open, setOpen] = useState<boolean>(false);

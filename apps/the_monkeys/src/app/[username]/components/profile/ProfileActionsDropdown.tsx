@@ -4,7 +4,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@the-monkeys/ui/atoms/dropdown-menu';
 
 export const ProfileActionsDropdown = ({ username }: { username: string }) => {
   return (

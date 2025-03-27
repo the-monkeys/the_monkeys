@@ -8,7 +8,7 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
-import { Button } from '@/components/ui/button';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { BlogsByTopic } from './components/BlogsByTopic';
 import TopicFollowButton from './components/TopicFollowButton';

@@ -2,8 +2,8 @@ import { useParams } from 'next/navigation';
 
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
-import { Separator } from '@/components/ui/separator';
 import useUser from '@/hooks/user/useUser';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 export const TopicsCard = () => {
   const params = useParams<{ username: string }>();

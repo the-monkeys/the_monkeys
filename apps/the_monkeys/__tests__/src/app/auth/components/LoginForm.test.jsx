@@ -1,7 +1,7 @@
 import LoginForm from '@/app/auth/components/forms/LoginForm';
 import * as Services from '@/services/auth/auth';
 import { User } from '@/services/models/user';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 

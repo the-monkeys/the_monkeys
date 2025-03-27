@@ -1,8 +1,8 @@
 'use client';
 
 import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
 import { publishSteps } from '@/constants/modal';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 import ModalContent from '../layout/ModalContent';
 import { PublishStep } from './PublishModal';

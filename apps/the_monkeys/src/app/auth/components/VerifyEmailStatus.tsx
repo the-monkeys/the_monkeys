@@ -4,8 +4,12 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { verifyEmailVerificationToken } from '@/services/auth/auth';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@the-monkeys/ui/atoms/alert';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 import { SearchParamsComponent } from './SearchParams';

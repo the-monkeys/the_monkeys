@@ -5,18 +5,18 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
+import useAuth from '@/hooks/auth/useAuth';
+import { deleteUser } from '@/services/user/user';
+import { useMutation } from '@tanstack/react-query';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import useAuth from '@/hooks/auth/useAuth';
-import { deleteUser } from '@/services/user/user';
-import { useMutation } from '@tanstack/react-query';
+} from '@the-monkeys/ui/atoms/dialog';
+import { Input } from '@the-monkeys/ui/atoms/input';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const Danger = () => {

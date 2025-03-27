@@ -1,13 +1,13 @@
 import { Loader } from '@/components/loader';
 import { HashTopicLinksContainer } from '@/components/topics/topicsContainer';
-import { Button } from '@/components/ui/button';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@the-monkeys/ui/atoms/dialog';
 
 export const PublishBlogDialog = ({
   topics,

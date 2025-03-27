@@ -8,9 +8,9 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { LoginFormSkeleton } from '@/components/skeletons/formSkeleton';
-import { Button } from '@/components/ui/button';
 import { API_URL } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 import {
   FormHeader,

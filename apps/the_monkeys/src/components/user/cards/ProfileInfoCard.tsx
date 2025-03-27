@@ -3,9 +3,9 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ProfileInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
-import { Button } from '@/components/ui/button';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import { twMerge } from 'tailwind-merge';
 
 import { FollowButton } from '../buttons/followButton';

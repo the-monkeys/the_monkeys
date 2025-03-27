@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { BlogRecommendationCard } from '@/components/blog/cards/BlogRecommendationCard';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
 import { CREATE_ROUTE } from '@/constants/routeConstants';
 import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 export const BlogRecommendations = ({ blogId }: { blogId: string }) => {
   const { blogs, isLoading, isError } = useGetLatest100Blogs();

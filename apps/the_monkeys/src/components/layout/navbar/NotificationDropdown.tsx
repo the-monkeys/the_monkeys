@@ -4,14 +4,14 @@ import Link from 'next/link';
 
 import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
+import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Separator } from '@/components/ui/separator';
-import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
+} from '@the-monkeys/ui/atoms/dropdown-menu';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 const NotificationDropdown = () => {
   const { status } = useSession();

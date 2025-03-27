@@ -5,17 +5,17 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
+import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
+import axiosInstance from '@/services/api/axiosInstance';
+import { IUser } from '@/services/models/user';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
-import axiosInstance from '@/services/api/axiosInstance';
-import { IUser } from '@/services/models/user';
-import { useQueryClient } from '@tanstack/react-query';
+} from '@the-monkeys/ui/atoms/dropdown-menu';
 
 const ProfileDropdown = ({ session }: { session?: IUser }) => {
   const router = useRouter();

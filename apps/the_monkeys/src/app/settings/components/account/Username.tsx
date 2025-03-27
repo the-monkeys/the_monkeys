@@ -1,21 +1,21 @@
 'use client';
 
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
+import { updateUsername as updateUsernameSchema } from '@/lib/schema/settings';
+import { IUser } from '@/services/models/user';
+import { updateUserName } from '@/services/user/user';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { updateUsername as updateUsernameSchema } from '@/lib/schema/settings';
-import { IUser } from '@/services/models/user';
-import { updateUserName } from '@/services/user/user';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from '@the-monkeys/ui/hooks/use-toast';
+} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

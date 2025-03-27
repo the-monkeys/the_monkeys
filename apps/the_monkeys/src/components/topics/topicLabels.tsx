@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 import { TOPICS_COLOR_CODE } from '@/constants/topics';
+import { Badge } from '@the-monkeys/ui/atoms/badge';
 
 import Icon from '../icon';
-import { Badge } from '../ui/badge';
 
 export const TopicLabelLink = ({ topic }: { topic: string }) => {
   return (

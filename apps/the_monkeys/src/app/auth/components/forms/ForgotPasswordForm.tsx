@@ -1,16 +1,6 @@
 'use client';
 
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { forgotPasswordSchema } from '@/lib/schema/auth';
 import { forgotPass } from '@/services/auth/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,6 +10,16 @@ import {
   RiResetRightLine,
 } from '@remixicon/react';
 import { useMutation } from '@tanstack/react-query';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

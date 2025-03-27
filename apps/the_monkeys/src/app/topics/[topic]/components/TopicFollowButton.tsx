@@ -3,11 +3,11 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
 import { followTopicApi, unfollowTopicApi } from '@/services/user/user';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 

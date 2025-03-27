@@ -1,9 +1,9 @@
 import Link from 'next/link';
 
 import { CREATE_ROUTE } from '@/constants/routeConstants';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 import Icon from '../icon';
-import { Button } from '../ui/button';
 
 export const CreateButton = () => {
   return (

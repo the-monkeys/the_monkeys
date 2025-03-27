@@ -9,9 +9,13 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Loader } from '@/components/loader';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { googleSSOCallback } from '@/services/auth/auth';
 import { useMutation } from '@tanstack/react-query';
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@the-monkeys/ui/atoms/alert';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 import {

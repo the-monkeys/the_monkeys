@@ -5,7 +5,8 @@ import {
   ShareButtonContainer,
 } from '@/components/buttons/shareButton';
 import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
+import { LIVE_URL } from '@/constants/api';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
@@ -13,8 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { LIVE_URL } from '@/constants/api';
+} from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 interface ShareProfileDialogProps {

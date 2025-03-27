@@ -7,11 +7,11 @@ import Link from 'next/link';
 import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import Icon from '@/components/icon';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
-import { Button } from '@/components/ui/button';
 import { CREATE_ROUTE } from '@/constants/routeConstants';
 import { getBlogsByTopicSchema } from '@/lib/schema/blog';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
 import { GetBlogsByTopics } from '@/services/blog/blogTypes';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 export const BlogsByTopic = ({ topic }: { topic: string }) => {
   const [blogs, setBlogs] = useState<GetBlogsByTopics>({ blogs: [] });

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import moment from 'moment';
 
 import ProfileImage, { ProfileFrame } from '../profileImage';
@@ -8,7 +9,6 @@ import {
   UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
 } from '../skeletons/userSkeleton';
-import { Skeleton } from '../ui/skeleton';
 
 export const UserInfoCardCompact = ({
   id,

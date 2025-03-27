@@ -4,7 +4,12 @@ import { useState } from 'react';
 
 import { Loader } from '@/components/loader';
 import { SelectInputStyles } from '@/components/styles/SelectInputStyles';
-import { Button } from '@/components/ui/button';
+import axiosInstance from '@/services/api/axiosInstance';
+import { Category } from '@/services/category/categoryTypes';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import {
   Form,
   FormControl,
@@ -12,12 +17,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import axiosInstance from '@/services/api/axiosInstance';
-import { Category } from '@/services/category/categoryTypes';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from '@the-monkeys/ui/hooks/use-toast';
+} from '@the-monkeys/ui/molecules/form';
 import { useTheme } from 'next-themes';
 import { useForm } from 'react-hook-form';
 import Select from 'react-select';

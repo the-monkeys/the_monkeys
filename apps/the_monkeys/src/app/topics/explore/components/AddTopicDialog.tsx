@@ -3,15 +3,15 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
+import { Category } from '@/services/category/categoryTypes';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Category } from '@/services/category/categoryTypes';
+} from '@the-monkeys/ui/atoms/dialog';
 
 import TopicForm from './AddTopicForm';
 

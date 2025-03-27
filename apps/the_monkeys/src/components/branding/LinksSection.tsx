@@ -1,7 +1,8 @@
 import Link from 'next/link';
 
+import { Button } from '@the-monkeys/ui/atoms/button';
+
 import Icon from '../icon';
-import { Button } from '../ui/button';
 
 export const LinksSection = () => {
   return (

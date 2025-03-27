@@ -2,17 +2,22 @@ import Link from 'next/link';
 
 import { ConnectionsListSkeleton } from '@/components/skeletons/userSkeleton';
 import {
+  useGetFollowers,
+  useGetFollowing,
+} from '@/hooks/user/useUserConnections';
+import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from '@the-monkeys/ui/atoms/dialog';
 import {
-  useGetFollowers,
-  useGetFollowing,
-} from '@/hooks/user/useUserConnections';
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@the-monkeys/ui/atoms/tabs';
 
 import { FollowButton } from '../buttons/followButton';
 
