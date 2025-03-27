@@ -137,7 +137,7 @@ export default function RegisterUserForm() {
                 <div className='flex items-center'>
                   Password
                   <Tooltip>
-                    <TooltipTrigger>
+                    <TooltipTrigger type='button'>
                       <RiInformationLine className='ml-2' size={18} />
                     </TooltipTrigger>
                     <TooltipContent asChild>
