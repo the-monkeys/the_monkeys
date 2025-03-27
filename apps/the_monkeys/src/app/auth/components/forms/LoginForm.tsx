@@ -5,7 +5,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
+import { loginSchema } from '@/lib/schema/auth';
+import { cn } from '@/lib/utils';
+import { login } from '@/services/auth/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import {
   Form,
   FormControl,
@@ -13,14 +20,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { loginSchema } from '@/lib/schema/auth';
-import { cn } from '@/lib/utils';
-import { login } from '@/services/auth/auth';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from '@the-monkeys/ui/hooks/use-toast';
+} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

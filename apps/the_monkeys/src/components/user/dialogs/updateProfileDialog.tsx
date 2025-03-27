@@ -6,17 +6,17 @@ import Image from 'next/image';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
+import useAuth from '@/hooks/auth/useAuth';
+import axiosFileInstance from '@/services/api/axiosFileInstance';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import useAuth from '@/hooks/auth/useAuth';
-import axiosFileInstance from '@/services/api/axiosFileInstance';
+} from '@the-monkeys/ui/atoms/dialog';
+import { Input } from '@the-monkeys/ui/atoms/input';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useDropzone } from 'react-dropzone';
 import { mutate } from 'swr';

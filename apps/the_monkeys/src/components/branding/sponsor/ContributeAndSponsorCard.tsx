@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
-import { Button } from '@/components/ui/button';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import { twMerge } from 'tailwind-merge';
 
 export const ContributeAndSponsorCard = ({

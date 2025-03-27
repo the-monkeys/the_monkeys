@@ -1,6 +1,10 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { publishSteps } from '@/constants/modal';
+import { blogDetailsSchema } from '@/lib/schema/blog';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Input } from '@the-monkeys/ui/atoms/input';
 import {
   Form,
   FormControl,
@@ -8,11 +12,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { publishSteps } from '@/constants/modal';
-import { blogDetailsSchema } from '@/lib/schema/blog';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

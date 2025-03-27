@@ -6,16 +6,16 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
+import useAuth from '@/hooks/auth/useAuth';
+import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import useAuth from '@/hooks/auth/useAuth';
-import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
+} from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 

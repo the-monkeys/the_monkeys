@@ -4,16 +4,16 @@ import { useState } from 'react';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
+import useAuth from '@/hooks/auth/useAuth';
+import axiosInstance from '@/services/api/axiosInstance';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import useAuth from '@/hooks/auth/useAuth';
-import axiosInstance from '@/services/api/axiosInstance';
+} from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 

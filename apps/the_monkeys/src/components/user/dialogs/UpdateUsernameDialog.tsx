@@ -2,14 +2,22 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
+import { updateUsername } from '@/lib/schema/settings';
+import { User } from '@/services/models/user';
+import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
+import { updateUserName } from '@/services/user/user';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@the-monkeys/ui/atoms/dialog';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import {
   Form,
   FormControl,
@@ -17,15 +25,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { updateUsername } from '@/lib/schema/settings';
-import { User } from '@/services/models/user';
-import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
-import { updateUserName } from '@/services/user/user';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from '@the-monkeys/ui/hooks/use-toast';
+} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

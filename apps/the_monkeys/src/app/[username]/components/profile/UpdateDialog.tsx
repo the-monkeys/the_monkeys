@@ -5,14 +5,22 @@ import { useEffect, useState } from 'react';
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
-import { Button } from '@/components/ui/button';
+import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
+import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
+import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
+import axiosInstance from '@/services/api/axiosInstance';
+import { IUser } from '@/services/models/user';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@the-monkeys/ui/atoms/dialog';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import {
   Form,
   FormControl,
@@ -20,15 +28,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
-import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
-import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
-import axiosInstance from '@/services/api/axiosInstance';
-import { IUser } from '@/services/models/user';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from '@the-monkeys/ui/hooks/use-toast';
+} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
 import { z } from 'zod';

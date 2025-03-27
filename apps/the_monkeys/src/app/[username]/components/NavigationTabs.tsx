@@ -1,5 +1,5 @@
-import { TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { IUser } from '@/services/models/user';
+import { TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 
 export const NavigationTabs = ({
   username,

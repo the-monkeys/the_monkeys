@@ -1,7 +1,9 @@
 import { useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
-import { Button } from '@/components/ui/button';
+import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
+import useGetAllTopics from '@/hooks/user/useGetAllTopics';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
@@ -9,10 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
-import useGetAllTopics from '@/hooks/user/useGetAllTopics';
+} from '@the-monkeys/ui/atoms/dialog';
+import { Label } from '@the-monkeys/ui/atoms/label';
 import { twMerge } from 'tailwind-merge';
 
 export const ChooseTopicDialog = ({

@@ -1,4 +1,4 @@
-import { Skeleton } from '../ui/skeleton';
+import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
 export const UpdateDetailsFormSkeleton = () => {
   return (

@@ -6,11 +6,11 @@ import Link from 'next/link';
 
 import useAuth from '@/hooks/auth/useAuth';
 import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
+import { Input } from '@the-monkeys/ui/atoms/input';
 import { twMerge } from 'tailwind-merge';
 
 import Icon from '../icon';
 import { SearchResultSkeleton } from '../skeletons/searchSkeleton';
-import { Input } from '../ui/input';
 import { SearchUsers } from './SearchUsers';
 
 export const SearchInput = ({ className }: { className?: string }) => {

@@ -4,18 +4,6 @@ import { useEffect, useState } from 'react';
 
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
-import { Button } from '@/components/ui/button';
-import { Calendar } from '@/components/ui/calendar';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Popover } from '@/components/ui/popover';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
 import useAuth from '@/hooks/auth/useAuth';
@@ -23,8 +11,23 @@ import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@the-monkeys/ui/atoms/popover';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@the-monkeys/ui/molecules/form';
+import { Calendar } from '@the-monkeys/ui/organism/calendar';
 import { format } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';

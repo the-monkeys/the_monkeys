@@ -7,9 +7,9 @@ import Link from 'next/link';
 import { CreateButton } from '@/components/buttons/createButton';
 import Logo from '@/components/logo';
 import ThemeSwitch from '@/components/themeSwitch';
-import { Separator } from '@/components/ui/separator';
 import { FEED_ROUTE } from '@/constants/routeConstants';
 import { IUser } from '@/services/models/user';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 import { twMerge } from 'tailwind-merge';
 
 import Container from '../Container';

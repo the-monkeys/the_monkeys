@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import Icon from '@/components/icon';
-import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { Input } from '@the-monkeys/ui/atoms/input';
 
 type PasswordInputProps = {
   placeholder?: string;

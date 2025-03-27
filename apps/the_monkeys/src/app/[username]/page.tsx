@@ -1,7 +1,7 @@
 'use client';
 
-import { Tabs, TabsContent } from '@/components/ui/tabs';
 import useAuth from '@/hooks/auth/useAuth';
+import { Tabs, TabsContent } from '@the-monkeys/ui/atoms/tabs';
 
 import { Blogs } from './components/Blogs';
 import { Drafts } from './components/Drafts';

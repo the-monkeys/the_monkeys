@@ -6,8 +6,8 @@ import FeaturesGrid from '@/components/branding/featuresGrid';
 import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import { Button } from '@/components/ui/button';
 import { CREATE_ROUTE } from '@/constants/routeConstants';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 const LandingPage = () => {
   return (

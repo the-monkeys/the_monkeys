@@ -6,7 +6,12 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@the-monkeys/ui/atoms/tabs';
 
 import { Account } from './components/Account';
 import { Notifications } from './components/Notifications';

@@ -4,8 +4,12 @@ import { useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
 import { Loader } from '@/components/loader';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { publishSteps } from '@/constants/modal';
+import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
+import useGetAllTopics from '@/hooks/user/useGetAllTopics';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Badge } from '@the-monkeys/ui/atoms/badge';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Form,
   FormControl,
@@ -14,11 +18,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { publishSteps } from '@/constants/modal';
-import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
-import useGetAllTopics from '@/hooks/user/useGetAllTopics';
-import { zodResolver } from '@hookform/resolvers/zod';
+} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 import { z } from 'zod';

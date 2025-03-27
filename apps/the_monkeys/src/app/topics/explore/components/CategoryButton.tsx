@@ -4,9 +4,9 @@ import React from 'react';
 import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { Button } from '@/components/ui/button';
 import useUser from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 

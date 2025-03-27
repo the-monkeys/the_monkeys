@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { Button } from '@/components/ui/button';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { TopicButton } from './TopicButton';
 
