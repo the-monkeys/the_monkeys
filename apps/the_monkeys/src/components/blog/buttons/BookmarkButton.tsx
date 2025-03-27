@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
-import { toast } from '@/components/ui/use-toast';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
 import axiosInstance from '@/services/api/axiosInstance';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 
 export const BookmarkButton = ({

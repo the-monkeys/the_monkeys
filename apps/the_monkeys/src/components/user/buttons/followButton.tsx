@@ -3,9 +3,9 @@ import { useState } from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
-import { toast } from '@/components/ui/use-toast';
 import { useIsFollowingUser } from '@/hooks/user/useUserConnections';
 import axiosInstance from '@/services/api/axiosInstance';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
 

@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { Switch } from '@the-monkeys/ui/atoms/switch';
 
 export const ChatNotifications = () => {
   return (

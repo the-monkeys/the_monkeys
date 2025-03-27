@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 interface BlogShareDialogProps {
   blogURL: string;

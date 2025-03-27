@@ -22,13 +22,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { mutate } from 'swr';
 import { z } from 'zod';

@@ -16,7 +16,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
 import { registerUserSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import { register } from '@/services/auth/auth';
@@ -27,6 +26,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@the-monkeys/ui/atoms/tooltip';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

@@ -15,11 +15,11 @@ import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
 import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
-import { toast } from '@/components/ui/use-toast';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 // Dynamically import the Editor component to avoid server-side rendering issues
 const Editor = dynamic(() => import('@/components/editor'), { ssr: false });

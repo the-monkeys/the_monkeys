@@ -5,8 +5,8 @@ import { Suspense, useCallback, useEffect, useState } from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { toast } from '@/components/ui/use-toast';
 import { verifyEmailVerificationToken } from '@/services/auth/auth';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 import { SearchParamsComponent } from './SearchParams';
 

@@ -14,10 +14,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
 import useAuth from '@/hooks/auth/useAuth';
 import { deleteUser } from '@/services/user/user';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const Danger = () => {
   const { data } = useAuth();

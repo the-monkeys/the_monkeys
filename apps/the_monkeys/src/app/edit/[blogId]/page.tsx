@@ -10,13 +10,13 @@ import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
-import { toast } from '@/components/ui/use-toast';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 
 const Editor = dynamic(() => import('@/components/editor'), {

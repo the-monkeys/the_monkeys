@@ -12,9 +12,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { toast } from '@/components/ui/use-toast';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 
 export const DeleteBlogDialog = ({

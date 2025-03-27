@@ -6,11 +6,13 @@
 		"dev": "turbo run dev",
 		"lint": "turbo run lint",
 		"test": "turbo run test",
-		"prepare": "husky"
+		"prepare": "husky",
+		"format": "turbo run format"
 	},
 	"devDependencies": {
 		"husky": "^9.1.7",
-		"turbo": "^2.4.4"
+		"turbo": "^2.4.4",
+		"typescript": "^5.8.2"
 	},
 	"packageManager": "pnpm@10.7.0"
 }

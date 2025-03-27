@@ -14,9 +14,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { toast } from '@/components/ui/use-toast';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 
 export const EditBlogDialog = ({ blogId }: { blogId: string }) => {

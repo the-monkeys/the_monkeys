@@ -3,16 +3,26 @@
 	"type": "module",
 	"exports": {
 		"./*": "./src/*",
-		"./atoms/*": "./src/atoms/*.tsx"
+		"./atoms/*": "./src/atoms/*.tsx",
+		"./molecules/*": "./src/molecules/*.tsx",
+		"./hooks/*": "./src/hooks/index.ts"
+	},
+	"scripts": {
+		"lint": "tsc && biome check",
+		"format": "biome check --write ."
 	},
 	"dependencies": {
+		"@radix-ui/react-switch": "^1.0.3",
+		"@radix-ui/react-toast": "^1.1.5",
 		"@radix-ui/react-tooltip": "^1.1.6",
+		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.0",
 		"react": "^18",
 		"react-dom": "^18",
 		"tailwind-merge": "^2.2.2"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
 		"@the-monkeys/config": "workspace:*",
 		"@types/react": "^18",
 		"@types/react-dom": "^18"

@@ -14,10 +14,10 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
 import axiosInstance from '@/services/api/axiosInstance';
 import { Category } from '@/services/category/categoryTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useTheme } from 'next-themes';
 import { useForm } from 'react-hook-form';
 import Select from 'react-select';
