@@ -1,3 +1,6 @@
 node_modules/
 .turbo
-.env.*
+.env.local
+.env
+.env.dev
+.env.production
