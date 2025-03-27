@@ -20,12 +20,12 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { toast } from '@/components/ui/use-toast';
 import { updatePasswordSchema } from '@/lib/schema/auth';
 import { IUser } from '@/services/models/user';
 import { updatePassword } from '@/services/user/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

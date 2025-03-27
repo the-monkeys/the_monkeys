@@ -16,7 +16,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Popover } from '@/components/ui/popover';
-import { toast } from '@/components/ui/use-toast';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
 import useAuth from '@/hooks/auth/useAuth';
@@ -25,6 +24,7 @@ import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PopoverContent, PopoverTrigger } from '@radix-ui/react-popover';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { format } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';

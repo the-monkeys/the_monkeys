@@ -4,8 +4,8 @@ import { Arvo, DM_Sans, IBM_Plex_Sans } from 'next/font/google';
 import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
-import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@the-monkeys/ui/atoms/tooltip';
+import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 
 import './globals.css';
 import { QueryClientMount } from './query-client-mount';

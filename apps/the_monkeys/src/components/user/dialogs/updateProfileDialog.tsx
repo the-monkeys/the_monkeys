@@ -15,9 +15,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosFileInstance from '@/services/api/axiosFileInstance';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useDropzone } from 'react-dropzone';
 import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';

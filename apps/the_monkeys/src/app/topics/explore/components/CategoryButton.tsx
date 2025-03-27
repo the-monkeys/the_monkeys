@@ -5,9 +5,9 @@ import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
 import useUser from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 
 export const CategoryButton = ({ topics }: { topics: string[] }) => {

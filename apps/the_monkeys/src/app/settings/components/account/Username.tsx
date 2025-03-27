@@ -10,12 +10,12 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
 import { updateUsername as updateUsernameSchema } from '@/lib/schema/settings';
 import { IUser } from '@/services/models/user';
 import { updateUserName } from '@/services/user/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

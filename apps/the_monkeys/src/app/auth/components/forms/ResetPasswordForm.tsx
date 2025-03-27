@@ -18,11 +18,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { toast } from '@/components/ui/use-toast';
 import { resetPasswordSchema } from '@/lib/schema/auth';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import { getResetPasswordToken } from '@/services/auth/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
