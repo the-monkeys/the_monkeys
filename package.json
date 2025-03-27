@@ -1,12 +1,16 @@
 {
+	"name": "@the-monkeys",
 	"private": true,
 	"scripts": {
 		"build": "turbo run build",
 		"dev": "turbo run dev",
-		"lint": "turbo run lint"
+		"lint": "turbo run lint",
+		"test": "turbo run test",
+		"prepare": "husky"
 	},
 	"devDependencies": {
-    "turbo": "^2.4.4"
+		"husky": "^9.1.7",
+		"turbo": "^2.4.4"
 	},
 	"packageManager": "pnpm@10.7.0"
 }

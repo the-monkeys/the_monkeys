@@ -16,14 +16,17 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Tooltip } from '@/components/ui/tooltip';
 import { toast } from '@/components/ui/use-toast';
 import { registerUserSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import { register } from '@/services/auth/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TooltipContent, TooltipTrigger } from '@radix-ui/react-tooltip';
 import { RiInformationLine } from '@remixicon/react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@the-monkeys/ui/atoms/tooltip';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 

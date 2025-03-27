@@ -6,19 +6,13 @@
 				"./src/*"
 			]
 		},
-		"plugins": [
-			{
-				"name": "next"
-			}
-		]
+		"outDir": "dist"
 	},
 	"include": [
-		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.js",
 		"**/*.jsx",
 		"**/*.tsx",
-		".next/types/**/*.ts"
 	],
 	"exclude": [
 		"node_modules"
