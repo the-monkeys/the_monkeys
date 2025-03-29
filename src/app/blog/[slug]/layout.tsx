@@ -6,60 +6,60 @@ import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { Blog } from '@/services/blog/blogTypes';
 
 type Props = {
-  params: { slug: string }; // Fixed the type to remove unnecessary `Promise`
+  params: { slug: string };
+};
+
+const truncateDescription = (text: string, maxLength: number): string => {
+  return text.length <= maxLength
+    ? text
+    : `${text.slice(0, maxLength).trim()}...`;
+};
+
+const fetchBlogData = async (id: string): Promise<Blog | null> => {
+  try {
+    const response = await axiosInstanceV2.get<Blog>(`/blog/${id}`);
+    return response.data;
+  } catch (error) {
+    console.warn(`Failed to fetch blog data for ID: ${id}`, error);
+    return null;
+  }
 };
 
 export async function generateMetadata(
   { params }: Props,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const id = params.slug; // Extract slug directly
-
-  // Fetch blog data
-  let blog: Blog | null = null;
-  try {
-    const response = await axiosInstanceV2.get<Blog>(
-      `/blog/${id.split('-').pop()}`
-    );
-    blog = response.data;
-  } catch (error) {
-    console.error('Error fetching blog data:', error);
-  }
-
-  // Extract OpenGraph image
+  const id = params.slug.split('-').pop() || '';
+  const blog = await fetchBlogData(id);
   const blocks = blog?.blog?.blocks || [];
+
   const imageBlock = blocks.find((block) => block.type === 'image');
-  const imageUrl = imageBlock?.data?.file?.url;
   const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
-  const fullDescription =
-    descriptionBlock?.data?.text || 'No description available.';
 
-  // Truncate description to a maximum of 160 characters
-  const truncateDescription = (text: string, maxLength: number): string => {
-    if (text.length <= maxLength) return text;
-    return text.slice(0, maxLength).trim() + '...';
-  };
+  const metaTitle = blocks[0]?.data?.text || 'Monkeys Blog';
+  const metaDescription = truncateDescription(
+    descriptionBlock?.data?.text || 'No description available.',
+    157
+  );
+  const imageUrl = imageBlock?.data?.file?.url;
+  const canonicalUrl = `${baseUrl}/blog/${params.slug}`;
 
-  const metaDescription = truncateDescription(fullDescription, 157);
   const parentMetadata = await parent;
-  // Construct the canonical URL
-
-  const canonicalUrl = `${baseUrl}/blog/${id}`;
 
   return {
-    title: blocks[0]?.data?.text || parentMetadata.title,
-    description: metaDescription,
+    title: metaTitle || parentMetadata.title,
+    description: metaDescription || parentMetadata.description,
     openGraph: {
-      title: blocks[0]?.data?.text || parentMetadata.description,
+      title: metaTitle,
       description: metaDescription,
-      images: imageUrl,
+      images: imageUrl ? [imageUrl] : [],
       url: canonicalUrl,
     },
     twitter: {
-      title: blocks[0]?.data?.text || 'Monkeys Blog',
+      title: metaTitle,
       card: 'summary_large_image',
       description: metaDescription,
-      images: imageUrl,
+      images: imageUrl ? imageUrl : '',
     },
     alternates: {
       canonical: canonicalUrl,
