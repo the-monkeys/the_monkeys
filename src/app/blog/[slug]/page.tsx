@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import { getCardContent } from '@/components/blog/getBlogContent';
 import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
@@ -20,6 +21,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
+import { generateBlogSchema } from './utils/utils';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -29,7 +31,6 @@ const Editor = dynamic(() => import('@/components/editor/preview'), {
 const BlogPage = () => {
   const params = useParams();
 
-  // Assuming route is `/blog/[slug]`, `params.slug` will contain the full slug.
   const fullSlug = params?.slug || '';
   const blogId = typeof fullSlug === 'string' ? fullSlug.split('-').pop() : ''; // Extract the blog ID from the slug
 
@@ -75,9 +76,28 @@ const BlogPage = () => {
     ...blog.blog,
     blocks: blog?.blog.blocks.slice(1),
   };
-
+  const { titleContent, descriptionContent, imageContent } = getCardContent({
+    blog,
+  });
   return (
     <>
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateBlogSchema(
+              titleContent,
+              descriptionContent,
+              imageContent,
+              blog?.published_time,
+              fullSlug,
+              tags,
+              'Monkeys Writer',
+              blog
+            )
+          ),
+        }}
+      />
       <div className='relative col-span-3 lg:col-span-2'>
         <div className='mb-6'>
           <UserInfoCardBlogPage id={authorId} date={date} />
