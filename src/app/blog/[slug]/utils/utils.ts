@@ -3,31 +3,31 @@ import { Blog } from '@/services/blog/blogTypes';
 
 export const generateBlogSchema = (
   blogTitle: string,
-  blogDescritption: string,
+  blogDescription: string,
   blogImg: string,
   publishedDate: string,
   fullSlug: string | string[],
   tags: string[],
-  userInfo: string,
+  authorName: string,
   blog: Blog
 ) => {
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: blogTitle,
-    description: blogDescritption,
-    image: `${LIVE_URL}/${blogImg}`,
+    description: blogDescription,
+    image: `${blogImg}`,
     author: {
       '@type': 'Person',
-      name: userInfo || 'Monkeys Writer',
-      url: `${LIVE_URL}/${userInfo}`,
+      name: authorName,
+      url: `${LIVE_URL}/${authorName}`,
     },
     publisher: {
       '@type': 'Organization',
-      name: 'The Monkeys Blog',
+      name: 'Monkeys',
       logo: {
         '@type': 'ImageObject',
-        url: `${LIVE_URL}/logo.png`,
+        url: `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`,
       },
     },
     datePublished: publishedDate,

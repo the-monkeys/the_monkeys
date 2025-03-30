@@ -17,6 +17,7 @@ import {
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
@@ -36,6 +37,10 @@ const BlogPage = () => {
 
   const { blog, isError, isLoading } =
     useGetPublishedBlogDetailByBlogId(blogId);
+  const authorId = blog?.owner_account_id;
+
+  const { user } = useGetProfileInfoById(authorId);
+  const authorName = user?.user?.username || 'Monkeys Writer';
 
   if (isLoading) {
     return <PublishedBlogSkeleton />;
@@ -67,7 +72,6 @@ const BlogPage = () => {
   }
 
   const blogIdfromAPI = blog?.blog_id;
-  const authorId = blog?.owner_account_id;
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
@@ -76,9 +80,11 @@ const BlogPage = () => {
     ...blog.blog,
     blocks: blog?.blog.blocks.slice(1),
   };
+
   const { titleContent, descriptionContent, imageContent } = getCardContent({
     blog,
   });
+
   return (
     <>
       <script
@@ -91,8 +97,9 @@ const BlogPage = () => {
               imageContent,
               blog?.published_time,
               fullSlug,
+
               tags,
-              'Monkeys Writer',
+              authorName,
               blog
             )
           ),
@@ -111,7 +118,7 @@ const BlogPage = () => {
             className='font-dm_sans font-bold text-[30px] md:text-[34px] leading-[1.3]'
           ></h1>
 
-          <HashTopicLinksContainer topics={blog?.tags} />
+          <HashTopicLinksContainer topics={tags} />
         </div>
 
         <div className='pb-10 min-h-screen overflow-hidden'>
