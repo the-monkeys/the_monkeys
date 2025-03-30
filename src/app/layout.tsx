@@ -5,6 +5,7 @@ import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { LIVE_URL } from '@/constants/api';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 import './globals.css';
@@ -54,7 +55,39 @@ export const metadata: Metadata = {
     google: 'WIMiYru73CLiTFT9yEP2zIgQCv07AxBETTstbKe7Fws',
   },
 };
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Monkeys',
+  url: LIVE_URL,
+  logo: `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`,
+  sameAs: [
+    'https://x.com/monkeys_com_co',
+    'https://www.instagram.com/monkeys_com_co?igsh=ZnhjYWZqN3hidThj',
+  ],
+  description:
+    'A collaborative blogging platform where writers contribute articles that build upon each other, creating a continuous flow of insightful content.',
+  foundingDate: '2023-01-01',
+  founders: [
+    {
+      '@type': 'Person',
+      name: 'Dave Augustus',
+      url: 'https://x.com/monkeys_com_co',
+    },
+  ],
 
+  publisher: {
+    '@type': 'Organization',
+    name: 'Monkeys',
+    url: LIVE_URL,
+  },
+  knowsAbout: [
+    'Collaborative Blogging',
+    'Content Writing',
+    'Interconnected Articles',
+    'Topic Clustering',
+  ],
+};
 const RootLayout = async ({
   children,
 }: Readonly<{
@@ -63,6 +96,10 @@ const RootLayout = async ({
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
         <AdSense pId='4687427997504601' />
       </head>
       <body

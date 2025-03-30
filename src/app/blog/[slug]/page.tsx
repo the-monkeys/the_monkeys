@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import { getCardContent } from '@/components/blog/getBlogContent';
 import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
@@ -16,10 +17,12 @@ import {
 import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
+import { generateBlogSchema } from './utils/utils';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -29,12 +32,15 @@ const Editor = dynamic(() => import('@/components/editor/preview'), {
 const BlogPage = () => {
   const params = useParams();
 
-  // Assuming route is `/blog/[slug]`, `params.slug` will contain the full slug.
   const fullSlug = params?.slug || '';
   const blogId = typeof fullSlug === 'string' ? fullSlug.split('-').pop() : ''; // Extract the blog ID from the slug
 
   const { blog, isError, isLoading } =
     useGetPublishedBlogDetailByBlogId(blogId);
+  const authorId = blog?.owner_account_id;
+
+  const { user } = useGetProfileInfoById(authorId);
+  const authorName = user?.user?.username || 'Monkeys Writer';
 
   if (isLoading) {
     return <PublishedBlogSkeleton />;
@@ -66,7 +72,6 @@ const BlogPage = () => {
   }
 
   const blogIdfromAPI = blog?.blog_id;
-  const authorId = blog?.owner_account_id;
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
@@ -76,8 +81,30 @@ const BlogPage = () => {
     blocks: blog?.blog.blocks.slice(1),
   };
 
+  const { titleContent, descriptionContent, imageContent } = getCardContent({
+    blog,
+  });
+
   return (
     <>
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            generateBlogSchema(
+              titleContent,
+              descriptionContent,
+              imageContent,
+              blog?.published_time,
+              fullSlug,
+
+              tags,
+              authorName,
+              blog
+            )
+          ),
+        }}
+      />
       <div className='relative col-span-3 lg:col-span-2'>
         <div className='mb-6'>
           <UserInfoCardBlogPage id={authorId} date={date} />
@@ -91,7 +118,7 @@ const BlogPage = () => {
             className='font-dm_sans font-bold text-[30px] md:text-[34px] leading-[1.3]'
           ></h1>
 
-          <HashTopicLinksContainer topics={blog?.tags} />
+          <HashTopicLinksContainer topics={tags} />
         </div>
 
         <div className='pb-10 min-h-screen overflow-hidden'>
