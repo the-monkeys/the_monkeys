@@ -22,7 +22,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
-import { generateBlogSchema } from './utils/utils';
+import { generateBlogSchema } from './utils';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
