@@ -1,5 +1,5 @@
 {
-	"extends": "@the-monkeys/config/tsconfig.json",
+	"extends": "@the-monkeys/config/base.json",
 	"compilerOptions": {
 		"paths": {
 			"@/*": ["./src/*"]
