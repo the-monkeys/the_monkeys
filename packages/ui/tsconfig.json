@@ -1,0 +1,10 @@
+{
+	"extends": "@the-monkeys/config/base.json",
+	"compilerOptions": {
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	},
+	"include": ["**/*.ts", "**/*.js", "**/*.jsx", "**/*.tsx"],
+	"exclude": ["node_modules"]
+}
