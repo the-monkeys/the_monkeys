@@ -66,6 +66,7 @@ npm run dev
 - [Tailwind CSS](https://tailwindcss.com/) – A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
 - [Shadcn/ui](https://ui.shadcn.com/) – Beautifully designed components that you can copy and paste into your apps.
 - [Remix Icons](https://remixicon.com/) – Open-source neutral-style system symbols elaborately crafted for designers and developers.
+- [Turborepo](https://turbo.build) - For creating monorepo 
 
 ## Backend
 
