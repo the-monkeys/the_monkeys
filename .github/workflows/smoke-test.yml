@@ -1,15 +1,23 @@
-name: Build Cache
+name: smoke-test
 on:
+  pull_request:
+    branches:
+      - main
   push:
     branches:
       - main
+  workflow_run:
+    workflows: ['Linter']
+    types:
+      - completed
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v4
- 
+
       - name: Cache turbo build setup
         uses: actions/cache@v4
         with:
