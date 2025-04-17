@@ -1,4 +1,9 @@
+'use client';
+
+import { useEffect } from 'react';
+
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import HomeBanner from '@/components/branding/HomeBanner';
 import { LinksSection } from '@/components/branding/LinksSection';
@@ -7,9 +12,20 @@ import { ContributeAndSponsorCard } from '@/components/branding/sponsor/Contribu
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { CREATE_ROUTE } from '@/constants/routeConstants';
+import useAuth from '@/hooks/auth/useAuth';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 const LandingPage = () => {
+  const { status } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    console.log(status);
+    if (status === 'success') {
+      router.replace('/feed');
+    }
+  }, [status]);
+
   return (
     <Container className='min-h-screen space-y-8 sm:space-y-10 pb-12'>
       <HomeBanner />
