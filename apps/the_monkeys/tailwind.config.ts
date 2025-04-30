@@ -24,12 +24,23 @@ const config = {
       ibm_plex_sans: ['var(--font-ibm_plex_sans)'],
     },
     extend: {
+      fontSize: {
+        display: ['2.5rem', { lineHeight: '1.4', fontWeight: 500 }],
+        titleLarge: ['2rem', { lineHeight: '1.5', fontWeight: 600 }],
+        titleMedium: ['1.25rem', { lineHeight: '1.6', fontWeight: 600 }],
+        titleSmall: ['1', { lineHeight: '1.5', fontWeight: 600 }],
+        subtitle: ['1.25rem', { lineHeight: '1.6', fontWeight: 400 }],
+        bodyLarge: ['1rem', { lineHeight: '1.5' }],
+        bodyMedium: ['0.875rem', { lineHeight: '1.4285' }],
+        bodySmall: ['0.75rem', { lineHeight: '1.666' }],
+        caption: ['0.75rem', { lineHeight: '1.333', fontWeight: 400 }],
+      },
       colors: {
         brand: {
           orange: '#FF5542',
         },
         background: {
-          dark: '#0F0F0F',
+          dark: '#121212',
           light: '#F2F2F2',
         },
         foreground: {

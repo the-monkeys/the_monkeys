@@ -2,7 +2,7 @@
 
 import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 
-import { LatestBlogs } from './LatestBlogs';
+import LatestBlogs from './LatestBlogs';
 
 export const BlogFeed = () => {
   return (
