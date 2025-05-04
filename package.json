@@ -4,6 +4,7 @@
 	"scripts": {
 		"build": "turbo run lint build",
 		"dev": "turbo run dev",
+		"install-deps": "npm install -D pnpm && pnpm install",
 		"lint": "turbo run lint",
 		"test": "turbo run test",
 		"prepare": "husky",
@@ -11,6 +12,7 @@
 	},
 	"devDependencies": {
 		"husky": "^9.1.7",
+		"pnpm": "^10.10.0",
 		"turbo": "^2.4.4",
 		"typescript": "^5.8.2"
 	},
