@@ -24,7 +24,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export default function LoginForm() {
+export default function LoginForm({ isLoading }: { isLoading: boolean }) {
   const router = useRouter();
   const params = useSearchParams();
   const queryClient = useQueryClient();
@@ -126,7 +126,7 @@ export default function LoginForm() {
         <div className='pt-6 flex gap-2 items-center'>
           <Button
             className='flex-1 order-1 transition-colors duration-300'
-            disabled={mutation.isPending}
+            disabled={mutation.isPending || isLoading}
           >
             {mutation.isPending && <Loader />} Login
           </Button>
