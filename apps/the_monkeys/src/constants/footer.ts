@@ -29,7 +29,7 @@ export const footerList = [
       },
       {
         text: 'About',
-        link: '#',
+        link: '/about',
       },
       {
         text: 'Contact',
