@@ -9,7 +9,7 @@ import Container from '@/components/layout/Container';
 import { CREATE_ROUTE } from '@/constants/routeConstants';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
-const LandingPage = () => {
+const AboutPage = () => {
   return (
     <Container className='min-h-screen space-y-8 sm:space-y-10 pb-12'>
       <HomeBanner />
@@ -64,4 +64,4 @@ const LandingPage = () => {
   );
 };
 
-export default LandingPage;
+export default AboutPage;
