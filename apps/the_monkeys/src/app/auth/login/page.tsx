@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
-import { LoginFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { API_URL } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -41,34 +40,30 @@ export default function LoginPage() {
       </FormHeader>
 
       <div className='flex flex-col gap-4'>
-        {isLoading || isFetching ? (
-          <LoginFormSkeleton />
-        ) : (
-          <>
-            <LoginForm />
+        <>
+          <LoginForm isLoading={isLoading || isFetching} />
 
-            <Button
-              variant='secondary'
-              className='w-full flex items-center gap-2'
-              asChild
+          <Button
+            variant='secondary'
+            className='w-full flex items-center gap-2'
+            asChild
+          >
+            <a href={API_URL + '/auth/google/login'}>
+              <Icon name='RiGoogle' type='Fill' />
+              <p>Login with Google</p>
+            </a>
+          </Button>
+
+          <div className='mt-6 text-center'>
+            <span className='font-dm_sans'>New to Monkeys? </span>
+            <Link
+              href='/auth/register'
+              className='font-dm_sans hover:underline text-brand-orange'
             >
-              <a href={API_URL + '/auth/google/login'}>
-                <Icon name='RiGoogle' type='Fill' />
-                <p>Login with Google</p>
-              </a>
-            </Button>
-
-            <div className='mt-6 text-center'>
-              <span className='font-dm_sans'>New to Monkeys? </span>
-              <Link
-                href='/auth/register'
-                className='font-dm_sans hover:underline text-brand-orange'
-              >
-                Join Monkeys
-              </Link>
-            </div>
-          </>
-        )}
+              Join Monkeys
+            </Link>
+          </div>
+        </>
       </div>
     </>
   );
