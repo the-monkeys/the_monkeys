@@ -12,6 +12,15 @@ const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/feed',
+        permanent: false,
+      },
+    ]
+  },
 };
 
 const withMDX = createMDX({});
