@@ -2,8 +2,8 @@ import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
-export const LatestBlogs = () => {
-  const { blogs, isLoading, isError } = useGetLatest100Blogs();
+export default function LatestBlogs() {
+  const { blogs, isError, isLoading } = useGetLatest100Blogs();
 
   if (isError)
     return (
@@ -13,7 +13,7 @@ export const LatestBlogs = () => {
     );
 
   return (
-    <div className='mx-auto max-w-3xl flex flex-col gap-10'>
+    <div>
       {isLoading ? (
         <FeedBlogCardListSkeleton />
       ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
@@ -27,4 +27,4 @@ export const LatestBlogs = () => {
       )}
     </div>
   );
-};
+}

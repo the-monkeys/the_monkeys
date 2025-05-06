@@ -2,6 +2,8 @@
 
 import moment from 'moment';
 
+import LatestBlogs from '../blogFeed/LatestBlogs';
+import { LatestBlogsCard } from '../blogFeed/LatestBlogsCard';
 import { NewsCategories } from './components/NewsCategories';
 import { NewsGrid } from './components/NewsGrid';
 import { ShowcaseBlogs } from './components/ShowcaseBlogs';
@@ -21,9 +23,17 @@ export const ShowcaseFeed = () => {
         </p>
       </div>
 
-      <ShowcaseBlogs />
+      <div className='grid grid-cols-12 gap-4'>
+        <div className='px-8 grid'>
+          <LatestBlogs />
+        </div>
+        <div className='col-start-1 col-end-13 lg:col-start-9'>
+          <LatestBlogsCard />
+        </div>
+      </div>
+      {/*<ShowcaseBlogs />
 
-      <NewsCategories />
+      <NewsCategories />*/}
 
       {/* <NewsGrid /> */}
     </div>
