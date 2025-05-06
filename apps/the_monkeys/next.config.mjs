@@ -17,7 +17,7 @@ const nextConfig = {
       {
         source: '/',
         destination: '/feed',
-        permanent: true, // 301
+        permanent: false,
       },
     ]
   },
