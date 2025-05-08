@@ -16,57 +16,8 @@ We also believe in the power of community. Engage with fellow readers, writers, 
 
 Explore, learn, and grow with The Monkeys. We're excited to have you on this journey with us!
 
-## Project Roadmap
-
-- [x] Shift the codebase from React.js to Next.
-- [x] Initial project setup.
-- [x] UI/UX design (v1).
-- [x] Landing page.
-- [x] Authentication service.
-- [x] User service.
-- [x] Blog service.
-- [ ] Enhance website performance.
-- [ ] Improve editor.
-
-## Installation
-
-1. Clone & create this repo locally with the following command:
-
-```sh
-git clone https://github.com/the-monkeys/the_monkeys.git
-```
-
-2. Install dependencies using npm:
-
-```sh
-npm install
-# or npm install --force
-```
-
-3. Copy `.env.example` to `.env.local` and update the variables.
-
-```
-cp .env.example .env.local
-```
-
-4. Input all the required enviroment variables in .env file.
-
-5. Start the development server:
-
-```sh
-# At the root of the repo
-npm run dev
-```
-
-## Tech Stack & Features
-
-- [Next.js](https://nextjs.org/) – The React Framework for the Web.
-- [Netlify](https://www.netlify.com/) – Netlify is the essential platform for the delivery of exceptional and dynamic web experiences, without limitations.
-- [Zod](https://zod.dev/) – TypeScript-first schema validation with static type inference.
-- [Tailwind CSS](https://tailwindcss.com/) – A utility-first CSS framework packed with classes that can be composed to build any design, directly in your markup.
-- [Shadcn/ui](https://ui.shadcn.com/) – Beautifully designed components that you can copy and paste into your apps.
-- [Remix Icons](https://remixicon.com/) – Open-source neutral-style system symbols elaborately crafted for designers and developers.
-- [Turborepo](https://turbo.build) - For creating monorepo 
+## Contributing
+To setup the repo or to contribute follow [CONTRIBUTING.md](/contributing.md)
 
 ## Backend
 
