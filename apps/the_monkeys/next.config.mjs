@@ -19,7 +19,7 @@ const nextConfig = {
         destination: '/feed',
         permanent: false,
       },
-    ]
+    ];
   },
 };
 
