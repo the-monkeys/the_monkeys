@@ -31,8 +31,13 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10
+
       - name: Install dependencies
-        run: npm run install-deps
+        run: pnpm install
 
       - name: Build
-        run: npm run build
+        run: pnpm run build
