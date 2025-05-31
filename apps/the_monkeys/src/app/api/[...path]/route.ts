@@ -42,8 +42,12 @@ export async function POST(
     headers,
     body: JSON.stringify(body),
   });
+  const data = await response.json();
 
-  return response;
+  return new Response(JSON.stringify(data), {
+    status: response.status,
+    headers: response.headers,
+  });
 }
 
 export async function PUT(
