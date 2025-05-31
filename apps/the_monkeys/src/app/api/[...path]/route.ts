@@ -37,16 +37,19 @@ export async function POST(
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
 
+  const responseHeaders = new Headers();
   const response = await fetch(`${API_URL}/${params.path.join('/')}`, {
     method: req.method,
     headers,
     body: JSON.stringify(body),
   });
+
+  responseHeaders.set('Set-Cookie', response.headers.get('Set-Cookie') || '');
   const data = await response.json();
 
   return new Response(JSON.stringify(data), {
     status: response.status,
-    headers: response.headers,
+    headers: responseHeaders,
   });
 }
 
