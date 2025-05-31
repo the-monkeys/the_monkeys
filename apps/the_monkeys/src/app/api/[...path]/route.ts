@@ -20,6 +20,7 @@ export async function GET(
     headers,
   });
 
+  response.headers.delete('Content-Encoding');
   return response;
 }
 
@@ -73,6 +74,7 @@ export async function PUT(
     body: JSON.stringify(body),
   });
 
+  response.headers.delete('Content-Encoding');
   return response;
 }
 
@@ -96,5 +98,6 @@ export async function DELETE(
     body: JSON.stringify(body),
   });
 
+  response.headers.delete('Content-Encoding');
   return response;
 }
