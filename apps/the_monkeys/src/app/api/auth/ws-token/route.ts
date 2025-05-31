@@ -12,7 +12,7 @@ export async function GET(req: Request) {
   const jwt = new SignJWT(value);
 
   jwt.setProtectedHeader({ alg: 'HS256' });
-  const token = await jwt.sign(Buffer.from(process.env.AUTH_SECRET!));
+  const token = await jwt.sign(Buffer.from(process.env.NEXTAUTH_SECRET!));
 
   return Response.json({ status: 'success', token });
 }
