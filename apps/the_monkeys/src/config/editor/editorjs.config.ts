@@ -1,4 +1,3 @@
-import { API_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
@@ -66,7 +65,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
             return {
               success: 1,
               file: {
-                url: `${API_URL}/files/post/${blogId}/${response.data.new_file_name}`,
+                url: `/files/post/${blogId}/${response.data.new_file_name}`,
               },
             };
           },
