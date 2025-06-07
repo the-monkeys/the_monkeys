@@ -59,7 +59,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
             formData.append('file', file);
 
             const response = await axiosInstance.post(
-              `${API_URL}/files/post/${blogId}`,
+              `/files/post/${blogId}`,
               formData
             );
 
