@@ -28,8 +28,6 @@ export async function POST(
   { params }: { params: { path: string[] } }
 ) {
   const cookieStore = cookies();
-  const body = await req.json();
-
   const authToken = cookieStore.get('mat');
 
   const headers = new Headers(req.headers);
@@ -38,10 +36,12 @@ export async function POST(
   }
 
   const responseHeaders = new Headers();
-  const response = await fetch(`${apiURL}/${params.path.join('/')}`, {
+  const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
     method: req.method,
     headers,
-    body: JSON.stringify(body),
+    body: req.body,
+    //@ts-ignore
+    duplex: 'half',
   });
 
   responseHeaders.set('Set-Cookie', response.headers.get('Set-Cookie') || '');
@@ -67,7 +67,7 @@ export async function PUT(
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
 
-  const response = await fetch(`${apiURL}/${params.path.join('/')}`, {
+  const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
     method: req.method,
     headers,
     body: JSON.stringify(body),
@@ -91,7 +91,7 @@ export async function DELETE(
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
 
-  const response = await fetch(`${apiURL}/${params.path.join('/')}`, {
+  const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
     method: req.method,
     headers,
     body: JSON.stringify(body),
