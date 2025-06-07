@@ -56,8 +56,6 @@ export async function PUT(
   { params }: { params: { path: string[] } }
 ) {
   const cookieStore = cookies();
-  const body = await req.json();
-
   const authToken = cookieStore.get('mat');
 
   const headers = new Headers(req.headers);
@@ -67,14 +65,22 @@ export async function PUT(
 
   const apiURL = new URL(API_URL!).origin;
 
+  const responseHeaders = new Headers();
   const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
     method: req.method,
     headers,
-    body: JSON.stringify(body),
+    body: req.body,
+    //@ts-ignore
+    duplex: 'half',
   });
 
-  response.headers.delete('Content-Encoding');
-  return response;
+  responseHeaders.set('Set-Cookie', response.headers.get('Set-Cookie') || '');
+  const data = await response.json();
+
+  return new Response(JSON.stringify(data), {
+    status: response.status,
+    headers: responseHeaders,
+  });
 }
 
 export async function DELETE(
@@ -82,8 +88,6 @@ export async function DELETE(
   { params }: { params: { path: string[] } }
 ) {
   const cookieStore = cookies();
-  const body = await req.json();
-
   const authToken = cookieStore.get('mat');
 
   const headers = new Headers(req.headers);
@@ -93,12 +97,20 @@ export async function DELETE(
 
   const apiURL = new URL(API_URL!).origin;
 
+  const responseHeaders = new Headers();
   const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
     method: req.method,
     headers,
-    body: JSON.stringify(body),
+    body: req.body,
+    //@ts-ignore
+    duplex: 'half',
   });
 
-  response.headers.delete('Content-Encoding');
-  return response;
+  responseHeaders.set('Set-Cookie', response.headers.get('Set-Cookie') || '');
+  const data = await response.json();
+
+  return new Response(JSON.stringify(data), {
+    status: response.status,
+    headers: responseHeaders,
+  });
 }
