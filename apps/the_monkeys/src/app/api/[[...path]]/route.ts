@@ -2,17 +2,13 @@ import { cookies } from 'next/headers';
 
 import { API_URL } from '@/constants/api';
 
-if (!API_URL) {
-  throw new Error('API_URL not declared');
-}
-
-const apiURL = new URL(API_URL).origin;
-
 export async function GET(
   req: Request,
   { params }: { params: { path: string[] } }
 ) {
   const headers = new Headers(req.headers);
+
+  const apiURL = new URL(API_URL!).origin;
 
   const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
     method: req.method,
@@ -34,6 +30,8 @@ export async function POST(
   if (authToken) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
+
+  const apiURL = new URL(API_URL!).origin;
 
   const responseHeaders = new Headers();
   const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
@@ -67,6 +65,8 @@ export async function PUT(
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
 
+  const apiURL = new URL(API_URL!).origin;
+
   const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
     method: req.method,
     headers,
@@ -90,6 +90,8 @@ export async function DELETE(
   if (authToken) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
+
+  const apiURL = new URL(API_URL!).origin;
 
   const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
     method: req.method,
