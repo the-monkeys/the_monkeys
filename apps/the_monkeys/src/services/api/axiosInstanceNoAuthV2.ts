@@ -1,10 +1,9 @@
-import { API_URL_V2 } from '@/constants/api';
 import axios from 'axios';
 import Bowser from 'bowser';
 import { publicIpv4 } from 'public-ip';
 
 const axiosInstanceNoAuthV2 = axios.create({
-  baseURL: API_URL_V2,
+  baseURL: '/api/v2',
   timeout: 10000,
 });
 

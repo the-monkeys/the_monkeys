@@ -1,10 +1,9 @@
-import { API_URL } from '@/constants/api';
 import axios from 'axios';
 import Bowser from 'bowser';
 import { publicIpv4 } from 'public-ip';
 
 const axiosInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: '/api/v1',
   timeout: 10000,
 });
 

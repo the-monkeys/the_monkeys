@@ -1,10 +1,9 @@
-import { API_URL } from '@/constants/api';
 import axios from 'axios';
 import Bowser from 'bowser';
 import { publicIpv4 } from 'public-ip';
 
 const axiosFileInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: '/api/v1',
   timeout: 10000,
   headers: {
     'Content-Type': 'multipart/form-data',
@@ -32,18 +31,6 @@ axiosFileInstance.interceptors.request.use(
   }
 );
 
-axiosFileInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Handle common errors
-    if (error.response) {
-      // For example, redirect to login if 401
-      if (error.response.status === 401) {
-        window.location.href = '/login';
-      }
-    }
-    return Promise.reject(error);
-  }
-);
+axiosFileInstance.interceptors.response.use((response) => response);
 
 export default axiosFileInstance;

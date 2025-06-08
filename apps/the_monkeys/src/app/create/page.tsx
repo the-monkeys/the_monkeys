@@ -53,6 +53,7 @@ const CreatePage = () => {
   const [editorConfig, setEditorConfig] = useState<EditorConfig | null>(null);
   const [blogPublishLoading, setBlogPublishLoading] = useState<boolean>(false);
   const [blogTopics, setBlogTopics] = useState<string[]>([]);
+  const [token, setToken] = useState<string>();
 
   const accountId = session?.account_id;
   const username = session?.username;
@@ -61,32 +62,47 @@ const CreatePage = () => {
   const blogIdRef = useRef<string>(Math.random().toString(36).substring(7));
   const blogId = blogIdRef.current;
 
+  useEffect(() => {
+    if (!session) return;
+
+    axiosInstance.get('/auth/ws-token').then((res) => {
+      setToken(res.data.token);
+    });
+  }, [session]);
+
   // Function to create and manage WebSocket connection
-  const createWebSocket = useCallback((blogId: string) => {
-    const ws = new WebSocket(`${WSS_URL_V2}/blog/draft/${blogId}`);
+  const createWebSocket = useCallback(
+    (blogId: string) => {
+      if (!token) return;
 
-    ws.onopen = () => {
-      console.log('websocket connection 🟢');
-    };
+      const ws = new WebSocket(
+        `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
+      );
 
-    ws.onmessage = (event) => {
-      setIsSaving(false); // Reset saving status when message is received
-    };
+      ws.onopen = () => {
+        console.log('websocket connection 🟢');
+      };
 
-    ws.onclose = () => {
-      console.log('websocket connection 🔴');
-    };
+      ws.onmessage = (event) => {
+        setIsSaving(false); // Reset saving status when message is received
+      };
 
-    ws.onerror = (error) => {
-      console.error('websocket error ⭕', error);
-    };
+      ws.onclose = () => {
+        console.log('websocket connection 🔴');
+      };
 
-    setWebSocket(ws);
+      ws.onerror = (error) => {
+        console.error('websocket error ⭕', error);
+      };
 
-    return () => {
-      ws.close();
-    };
-  }, []);
+      setWebSocket(ws);
+
+      return () => {
+        ws.close();
+      };
+    },
+    [token]
+  );
 
   // Function to format data before sending it to the server
   const formatData = useCallback(
@@ -164,13 +180,13 @@ const CreatePage = () => {
       const cleanup = createWebSocket(blogId);
 
       const handleBeforeUnload = () => {
-        cleanup();
+        cleanup?.();
       };
 
       window.addEventListener('beforeunload', handleBeforeUnload);
 
       return () => {
-        cleanup();
+        cleanup?.();
         window.removeEventListener('beforeunload', handleBeforeUnload);
       };
     }
@@ -207,7 +223,7 @@ const CreatePage = () => {
         const cleanup = createWebSocket(blogId);
 
         return () => {
-          cleanup();
+          cleanup?.();
         };
       }, 1000);
     }

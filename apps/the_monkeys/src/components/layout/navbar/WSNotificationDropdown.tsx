@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import { WSS_URL } from '@/constants/api';
+import axiosInstance from '@/services/api/axiosInstance';
 import {
   Notification,
   WSNotification,
@@ -21,9 +22,21 @@ const WSNotificationDropdown = () => {
   const [notifications, setNotifications] = useState<
     Map<number, Notification & { time: Date }>
   >(new Map());
+  const [token, setToken] = useState<string>();
+
+  useEffect(() => {
+    axiosInstance.get(`/auth/ws-token`).then((data) => {
+      if (data.data) {
+        setToken(data.data.token);
+      }
+    });
+  }, []);
 
   const createWebSocket = useCallback(() => {
-    const ws = new WebSocket(`${WSS_URL}/notification/ws-notification`);
+    if (!token) return null;
+    const ws = new WebSocket(
+      `${WSS_URL}/notification/ws-notification?token=${token}`
+    );
 
     ws.onopen = () => {
       console.log('I feel a connection here 🤔');
@@ -52,7 +65,7 @@ const WSNotificationDropdown = () => {
     return () => {
       ws.close();
     };
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     let cleanup: (() => void) | null = null;
