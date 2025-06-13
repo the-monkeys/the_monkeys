@@ -3,7 +3,10 @@ import { Metadata } from 'next';
 import { FeedNavigation } from './components/FeedNavigation';
 import { BlogFeed } from './components/blogFeed/BlogFeed';
 import { FollowingFeed } from './components/followingFeed/FollowingFeed';
+import HeroGrid from './components/hero/grid';
 import { ShowcaseFeed } from './components/showcaseFeed/ShowcaseFeed';
+import TopicFeedComponent from './components/topicFeed/topicFeed';
+import TrendingCategories from './components/trending/trending';
 
 export async function generateMetadata({
   searchParams,
@@ -32,13 +35,16 @@ const BlogFeedPage = ({
 
   return (
     <div>
-      <FeedNavigation feedSource={feedSource} />
+      {/* <FeedNavigation feedSource={feedSource} />
 
       <div className='min-h-screen'>
         {feedSource === 'all' && <BlogFeed />}
         {feedSource === 'following' && <FollowingFeed />}
         {feedSource === 'feed' && <ShowcaseFeed />}
-      </div>
+      </div> */}
+      <HeroGrid />
+      <TrendingCategories />
+      <TopicFeedComponent />
     </div>
   );
 };
