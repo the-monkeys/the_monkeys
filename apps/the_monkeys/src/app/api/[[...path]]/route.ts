@@ -2,15 +2,13 @@ import { cookies } from 'next/headers';
 
 import { API_URL } from '@/constants/api';
 
-export async function GET(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
+export async function GET(req: Request) {
+  const url = new URL(req.url);
   const headers = new Headers(req.headers);
 
   const apiURL = new URL(API_URL!).origin;
 
-  const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
+  const response = await fetch(`${apiURL}${url.pathname}${url.search}`, {
     method: req.method,
     headers,
   });
