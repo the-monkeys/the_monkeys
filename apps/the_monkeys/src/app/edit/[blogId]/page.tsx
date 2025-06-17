@@ -37,12 +37,23 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [blogTopics, setBlogTopics] = useState<string[]>([]);
+  const [token, setToken] = useState<string>();
 
   const accountId = session?.account_id;
   const username = session?.username;
 
+  useEffect(() => {
+    if (!session) return;
+
+    axiosInstance.get('/auth/ws-token').then((res) => {
+      setToken(res.data.token);
+    });
+  }, [session]);
+
   const createWebSocket = useCallback((blogId: string) => {
-    const ws = new WebSocket(`${WSS_URL_V2}/blog/draft/${blogId}`);
+    const ws = new WebSocket(
+      `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
+    );
 
     ws.onopen = () => {
       console.log('websocket connection 🟢');
