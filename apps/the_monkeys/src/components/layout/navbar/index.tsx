@@ -2,7 +2,6 @@
 
 import useAuth from '@/hooks/auth/useAuth';
 
-import MobileNav from './MobileNav';
 import Nav from './Nav';
 
 const Navbar = () => {
@@ -10,7 +9,6 @@ const Navbar = () => {
 
   return (
     <>
-      <MobileNav isAuthLoading={isLoading} session={data} />
       <Nav isAuthLoading={isLoading} session={data} />
     </>
   );

@@ -32,8 +32,6 @@ const BlogFeedPage = ({
 
   return (
     <div>
-      <FeedNavigation feedSource={feedSource} />
-
       <div className='min-h-screen'>
         {feedSource === 'all' && <BlogFeed />}
         {feedSource === 'following' && <FollowingFeed />}

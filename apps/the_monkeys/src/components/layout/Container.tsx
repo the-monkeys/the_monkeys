@@ -4,7 +4,7 @@ const Container = (props: React.HTMLProps<HTMLDivElement>) => {
   const { children, className, ...rest } = props;
 
   return (
-    <div className={cn('mx-auto max-w-7xl', className)} {...rest}>
+    <div className={cn('mx-auto max-w-[1400px]', className)} {...rest}>
       {children}
     </div>
   );

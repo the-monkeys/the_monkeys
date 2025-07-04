@@ -1,5 +1,6 @@
 export const HOME_ROUTE = '/';
 export const CREATE_ROUTE = '/create';
+export const LOGIN_ROUTE = '/auth/login';
 export const FEED_ROUTE = '/feed';
 export const ACTIVITY_ROUTE = '/activity';
 export const LIBRARY_ROUTE = '/library';

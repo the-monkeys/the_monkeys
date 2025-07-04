@@ -29,24 +29,24 @@ const config = {
           orange: '#FF5542',
         },
         background: {
-          dark: '#0F0F0F',
-          light: '#F2F2F2',
+          dark: '#121212',
+          light: '#FAFAFA',
         },
         foreground: {
-          dark: '#2C2C2C',
-          light: '#D9D9D9',
+          dark: '#1E1E1E',
+          light: '#EDEDED',
         },
         border: {
-          dark: '#696969',
-          light: '#878787',
+          dark: '#3F3F3F',
+          light: '#CCCCCC',
         },
         text: {
-          dark: '#FCFCFC',
-          light: '#0D0D0D',
+          dark: '#FFFFFF',
+          light: '#121212',
         },
         alert: {
-          red: '#EF4444',
-          green: '#22C55E',
+          red: '#DC2626',
+          green: '#16A34A',
         },
       },
       borderWidth: {

@@ -5,7 +5,10 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import { CreateButton } from '@/components/buttons/createButton';
+import LoginButton from '@/components/buttons/loginButton';
+import Icon from '@/components/icon';
 import Logo from '@/components/logo';
+import { SearchInput } from '@/components/search/SearchInput';
 import ThemeSwitch from '@/components/themeSwitch';
 import { FEED_ROUTE } from '@/constants/routeConstants';
 import { IUser } from '@/services/models/user';
@@ -49,35 +52,42 @@ const Nav = ({
   return (
     <header
       className={twMerge(
-        'hidden md:block sticky left-0 border-foreground-light dark:border-foreground-dark bg-background-light/80  dark:bg-background-dark/80 backdrop-blur-sm z-30',
-        `top-${top}`,
-        top === 0 && prevScrollpos === 0 ? 'border-none' : 'border-b-1'
+        'sticky left-0 border-b-1 border-foreground-light dark:border-foreground-dark bg-background-light dark:bg-background-dark z-30',
+        `top-${top}`
       )}
     >
-      <Container className='w-full px-4 py-[14px] flex items-center justify-between'>
-        <Link href={FEED_ROUTE}>
-          <Logo />
-        </Link>
+      <Container className='w-full px-4 py-3 flex items-center justify-between'>
+        <div className='flex items-center gap-[6px]'>
+          <Link href={FEED_ROUTE} className='flex items-center gap-[6px]'>
+            <div className='size-9 flex justify-center items-center'>
+              <Logo />
+            </div>
 
-        <div className='flex items-center space-x-3'>
-          <div className='flex items-center gap-3'>
+            <div className='hidden md:block pt-2'>
+              <p className='font-dm_sans font-medium text-2xl'>Monkeys</p>
+            </div>
+          </Link>
+        </div>
+
+        <div className='flex items-center space-x-[10px]'>
+          <div className='flex items-center gap-2'>
             <ThemeSwitch />
-
-            {/* Use <NotificationDropdown /> as a fallback if WebSocket is not working.
-            Uncomment only when necessary. */}
-
-            {isAuthLoading && (
-              <div className='size-4 rounded-full bg-foreground-light dark:bg-foreground-dark'></div>
-            )}
-
+            {/* Use <NotificationDropdown /> as a fallback if WebSocket not working*/}
             {!isAuthLoading && session && <WSNotificationDropdown />}
-
-            <ProfileDropdown session={session} />
-
-            <Separator orientation='vertical' className='h-8' />
-
-            <CreateButton />
           </div>
+
+          <Separator orientation='vertical' className='h-6 w-[2px]' />
+
+          {session ? (
+            <div className='flex items-center gap-2'>
+              <CreateButton />
+              <ProfileDropdown session={session} />
+            </div>
+          ) : (
+            <div className='flex items-center gap-2'>
+              <LoginButton />
+            </div>
+          )}
         </div>
       </Container>
     </header>
