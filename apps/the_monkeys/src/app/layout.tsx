@@ -55,6 +55,7 @@ export const metadata: Metadata = {
     google: 'WIMiYru73CLiTFT9yEP2zIgQCv07AxBETTstbKe7Fws',
   },
 };
+
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',

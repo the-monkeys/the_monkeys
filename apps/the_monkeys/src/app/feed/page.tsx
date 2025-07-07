@@ -1,42 +1,37 @@
-import { Metadata } from 'next';
+'use client';
 
-import { FeedNavigation } from './components/FeedNavigation';
-import { BlogFeed } from './components/blogFeed/BlogFeed';
-import { FollowingFeed } from './components/followingFeed/FollowingFeed';
-import { ShowcaseFeed } from './components/showcaseFeed/ShowcaseFeed';
+import Container from '@/components/layout/Container';
+import { ShowcaseBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: { source: string };
-}): Promise<Metadata> {
-  const title = 'Latest Blog Feed';
-  const description =
-    'Stay in the loop with the latest blogs and news on business, sports, politics, technology from around the world on Monkeys.';
+import TrendingSection from './sections/Trending';
 
-  return {
-    title: title,
-    description: description,
-    alternates: {
-      canonical: '/feed',
-    },
-  };
-}
+const BlogFeedPage = () => {
+  const { blogs, isLoading, isError } = useGetLatest100Blogs({ limit: 50 });
 
-const BlogFeedPage = ({
-  searchParams,
-}: {
-  searchParams: { source: string };
-}) => {
-  const feedSource = searchParams.source || 'feed';
+  if (isLoading || isError) {
+    return <ShowcaseBlogCardListSkeleton />;
+  }
+
+  const filteredBlogs = blogs?.blogs?.filter((blog) => {
+    if (!blog?.tags?.length) return false;
+
+    if (blog?.blog?.blocks.length < 5) return false;
+
+    return blog;
+  });
+
+  if (!filteredBlogs) {
+    return (
+      <div>
+        <p>Blogs not available</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <div className='min-h-screen'>
-        {feedSource === 'all' && <BlogFeed />}
-        {feedSource === 'following' && <FollowingFeed />}
-        {feedSource === 'feed' && <ShowcaseFeed />}
-      </div>
+    <div className=''>
+      <TrendingSection blogs={filteredBlogs} />
     </div>
   );
 };

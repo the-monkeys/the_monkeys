@@ -44,13 +44,26 @@ export const footerList = [
         link: '/topics/Healthcare',
       },
       {
-        text: 'History',
-        link: '/topics/History',
-      },
-      {
         text: 'Explore All',
         link: '/topics/explore',
         disable: false,
+      },
+    ],
+  },
+  {
+    heading: 'Legal',
+    items: [
+      {
+        text: 'Terms of Use',
+        link: '/terms',
+      },
+      {
+        text: 'Privacy Policy',
+        link: '/privacy',
+      },
+      {
+        text: 'Cookie Policy',
+        link: '/cookies',
       },
     ],
   },

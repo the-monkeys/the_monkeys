@@ -54,13 +54,13 @@ export const UserInfoCardCompact = ({
 };
 
 export const UserInfoCardShowcase = ({
-  id,
+  authorID,
   date,
 }: {
-  id?: string;
+  authorID?: string;
   date?: number | string;
 }) => {
-  const { user, isLoading, isError } = useGetProfileInfoById(id);
+  const { user, isLoading, isError } = useGetProfileInfoById(authorID);
 
   if (isLoading) return <Skeleton className='h-4 w-32 !rounded-none' />;
 
@@ -72,17 +72,15 @@ export const UserInfoCardShowcase = ({
 
   return (
     <div className='flex items-center gap-1'>
-      <p className='font-dm_sans font-light text-sm opacity-80'>By</p>
-
       <Link
         href={`/${userData?.username}`}
-        className='font-dm_sans text-sm hover:underline underline-offset-2 decoration-1'
+        className='text-xs sm:text-sm hover:underline'
       >
         {userData?.first_name} {userData?.last_name}
       </Link>
 
-      <p className='font-dm_sans font-light text-sm opacity-80'>
-        on {moment(date).format('MMM DD, YYYY')}
+      <p className='text-xs sm:text-sm'>
+        — {moment(date).format('MMM DD, YYYY')}
       </p>
     </div>
   );

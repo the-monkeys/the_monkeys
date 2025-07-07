@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { footerList } from '@/constants/footer';
+import { FEED_ROUTE } from '@/constants/routeConstants';
 import {
   MONKEYS_DISCORD,
   MONKEYS_GITHUB,
@@ -26,16 +27,14 @@ const FooterList = ({
 }) => {
   return (
     <div className='min-w-[140px] space-y-4'>
-      <h4 className='font-dm_sans font-semibold text-sm sm:text-base'>
-        {heading}
-      </h4>
+      <h4 className='font-semibold text-sm md:text-base'>{heading}</h4>
 
-      <ul className='space-y-2'>
+      <ul className='space-y-[6px] sm:space-y-2'>
         {items.map((item, index) => (
           <li key={index}>
             <Link
               href={item.link}
-              className='text-xs sm:text-sm hover:underline'
+              className='font-light text-sm md:text-base hover:underline'
             >
               {item.text}
             </Link>
@@ -48,29 +47,36 @@ const FooterList = ({
 
 const Footer = () => {
   return (
-    <footer className='relative bg-brand-orange text-white mt-20 overflow-hidden'>
+    <footer className='bg-brand-orange text-white mt-20 overflow-hidden'>
       <div className='flex'>
         <div className='flex-[2] h-[50px] bg-black opacity-20' />
         <div className='flex-[1] h-[50px] bg-black opacity-10' />
       </div>
 
-      <div className='absolute -bottom-[20px] right-0 size-[320px] md:size-[420px] filter brightness-95'>
-        <Logo />
-      </div>
+      <Container className='px-4 pt-10 pb-12 z-10'>
+        <div className='grid grid-cols-3 gap-14 lg:gap-4'>
+          <div className='col-span-3 lg:col-span-1 space-y-3'>
+            <Link
+              href={FEED_ROUTE}
+              className='group flex items-center gap-[6px]'
+            >
+              <div className='size-12 md:size-14 flex justify-center items-center filter brightness-50 group-hover:brightness-[.6] transition-all'>
+                <Logo />
+              </div>
 
-      <Container className='relative px-4 pt-8 pb-12 z-10'>
-        <div className='grid grid-cols-3 gap-10'>
-          <div className='col-span-3 md:col-span-1 space-y-3'>
-            <h5 className='font-dm_sans font-medium text-3xl md:text-4xl'>
-              Monkeys
-            </h5>
+              <div className='pt-3'>
+                <p className='font-dm_sans font-medium text-3xl md:text-4xl'>
+                  Monkeys
+                </p>
+              </div>
+            </Link>
 
             <p className='text-xs text-text-dark'>
               © 2025 BUDDHICINTAKA PVT. LTD. All rights reserved.
             </p>
           </div>
 
-          <div className='col-span-3 md:col-span-2 flex gap-12 md:justify-end items-start'>
+          <div className='col-span-3 lg:col-span-2 flex gap-10 justify-between lg:justify-end items-start flex-wrap'>
             {footerList.map((val, index) => {
               return (
                 <FooterList
@@ -129,13 +135,13 @@ const Footer = () => {
             href='/privacy'
             className='text-xs hover:underline underline-offset-1'
           >
-            Privacy Policy
+            Privacy
           </Link>
           <Link
             href='/cookies'
             className='text-xs hover:underline underline-offset-1'
           >
-            Cookie Policy
+            Cookies
           </Link>
         </div>
       </Container>
