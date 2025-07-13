@@ -6,3 +6,4 @@ export const ACTIVITY_ROUTE = '/activity';
 export const LIBRARY_ROUTE = '/library';
 export const BLOG_ROUTE = '/blog';
 export const EXPLORE_TOPICS_ROUTE = '/topics/explore';
+export const TOPIC_ROUTE = '/topics';

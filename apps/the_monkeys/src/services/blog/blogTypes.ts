@@ -13,11 +13,24 @@ export interface Blog {
   BookmarkCount: number;
   bookmark_count: number;
 }
+
+export interface MetaBlog {
+  blog_id: string;
+  title: string;
+  first_image: string;
+  first_paragraph: string;
+  like_count: number;
+  owner_account_id: string;
+  published_time: string;
+  tags: string[];
+}
+
 export interface Block {
   id: string;
   type: string;
   data: any;
 }
+
 export interface GetDraftBlogResponse {
   blogs: Blog[];
 }
@@ -37,6 +50,11 @@ export interface GetFollwingAuthorsBlogsResponse {
 // get latest 100 blog api response
 export interface GetLatest100BlogsResponse {
   blogs: Blog[];
+}
+
+// get meta-feed blogs
+export interface GetMetaFeedBlogs {
+  blogs: MetaBlog[];
 }
 
 // get blogs based on topics

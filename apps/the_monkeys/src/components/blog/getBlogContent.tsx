@@ -78,16 +78,21 @@ export const BlogDescription = ({
 export const BlogImage = ({
   title,
   image,
+  className,
 }: {
   title: string;
   image: string;
+  className?: string;
 }) => {
   return (
     <img
       src={image}
       alt={title}
       loading='lazy'
-      className='h-full w-full object-cover'
+      className={twMerge(
+        className,
+        'h-full w-full object-cover object-left-top'
+      )}
     />
   );
 };
