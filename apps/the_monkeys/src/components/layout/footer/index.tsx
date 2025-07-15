@@ -60,12 +60,12 @@ const Footer = () => {
               href={FEED_ROUTE}
               className='group flex items-center gap-[6px]'
             >
-              <div className='size-12 md:size-14 flex justify-center items-center filter brightness-50 group-hover:brightness-[.6] transition-all'>
+              <div className='size-12 flex justify-center items-center filter brightness-50 group-hover:brightness-[.6] transition-all'>
                 <Logo />
               </div>
 
-              <div className='pt-3'>
-                <p className='font-dm_sans font-medium text-3xl md:text-4xl'>
+              <div className='pt-2'>
+                <p className='font-dm_sans font-medium text-[1.8rem]'>
                   Monkeys
                 </p>
               </div>

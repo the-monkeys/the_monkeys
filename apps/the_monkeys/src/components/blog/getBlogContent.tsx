@@ -89,10 +89,7 @@ export const BlogImage = ({
       src={image}
       alt={title}
       loading='lazy'
-      className={twMerge(
-        className,
-        'h-full w-full object-cover object-left-top'
-      )}
+      className={twMerge(className, 'h-full w-full object-cover object-left')}
     />
   );
 };

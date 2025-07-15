@@ -33,8 +33,8 @@ const config = {
           light: '#FAFAFA',
         },
         foreground: {
-          dark: '#1E1E1E',
-          light: '#EDEDED',
+          dark: '#1a1a1a',
+          light: '#f2f2f2',
         },
         border: {
           dark: '#3F3F3F',

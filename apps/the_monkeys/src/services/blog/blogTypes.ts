@@ -19,10 +19,12 @@ export interface MetaBlog {
   title: string;
   first_image: string;
   first_paragraph: string;
-  like_count: number;
+  like_count?: number;
   owner_account_id: string;
   published_time: string;
   tags: string[];
+  bookmark_count?: number;
+  content_type?: string;
 }
 
 export interface Block {

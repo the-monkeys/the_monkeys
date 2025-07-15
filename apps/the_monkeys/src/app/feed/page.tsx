@@ -82,23 +82,19 @@ const BlogFeedPage = () => {
       <TrendingSection blogs={filteredBlogs} />
 
       <div>
-        <CategorySection category='Tech & Innovation' />
+        <CategorySection title='Tech & Innovation' category='technology' />
       </div>
 
       <div>
-        <CategorySection category='Business & Finance' />
+        <CategorySection title='Business & Finance' category='business' />
       </div>
 
       <div>
-        <CategorySection category='AI' />
+        <CategorySection title='Sports' category='sports' />
       </div>
 
       <div>
-        <CategorySection category='Sports & Entertainment' />
-      </div>
-
-      <div>
-        <CategorySection category='Science & History' />
+        <CategorySection title='Entertainment' category='Entertainment' />
       </div>
     </div>
   );

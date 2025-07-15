@@ -52,7 +52,7 @@ const Nav = ({
   return (
     <header
       className={twMerge(
-        'sticky left-0 border-b-1 border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark z-30 shadow-sm',
+        'sticky left-0 border-b-1 border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark z-30',
         `top-${top}`
       )}
     >
@@ -63,7 +63,7 @@ const Nav = ({
               <Logo />
             </div>
 
-            <div className='hidden md:block pt-2'>
+            <div className='hidden md:block pt-1'>
               <p className='font-dm_sans font-medium text-2xl'>Monkeys</p>
             </div>
           </Link>

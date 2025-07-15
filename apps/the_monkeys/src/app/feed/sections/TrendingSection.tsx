@@ -13,12 +13,12 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
     <div className='space-y-6 md:space-y-8'>
       <div className='bg-foreground-light dark:bg-foreground-dark'>
         <Container className='px-4 py-8 md:py-10'>
-          <div className='grid grid-cols-2 gap-6 sm:gap-5'>
+          <div className='grid grid-cols-2 gap-6'>
             <div className='col-span-2 lg:col-span-1'>
               <TrendingBlogCardL blog={blogs[0]} />
             </div>
 
-            <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-6 sm:gap-5'>
+            <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-6'>
               {blogs.slice(1, 5).map((blog) => (
                 <div className='col-span-2 sm:col-span-1' key={blog.blog_id}>
                   <TrendingBlogCardS blog={blog} />
@@ -31,13 +31,9 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
 
       <div className='pb-6'>
         <Container className='px-4 grid grid-cols-3 gap-8'>
-          <div className='col-span-3 md:col-span-2 space-y-6 md:space-y-10'>
-            <h5 className='font-semibold font-dm_sans text-brand-orange text-4xl md:text-5xl text-center md:text-left'>
-              Just In
-            </h5>
-
-            <div className='flex flex-col gap-6 lg:gap-8'>
-              {blogs.slice(6, 15).map((blog) => {
+          <div className='col-span-3 md:col-span-2'>
+            <div className='flex flex-col gap-6'>
+              {blogs.slice(6, 16).map((blog) => {
                 return <FeedBlogCard blog={blog} key={blog.blog_id} />;
               })}
             </div>
@@ -45,8 +41,8 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
 
           <div className='col-span-3 md:col-span-1 space-y-8'>
             <div>
-              <h5 className='py-2 font-dm_sans font-semibold text-2xl'>
-                Quick Reads
+              <h5 className='pt-2 pb-[6px] font-dm_sans font-medium text-2xl'>
+                Latest Headlines
               </h5>
 
               <div className='pl-2 mt-2'>

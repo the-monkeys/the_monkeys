@@ -20,29 +20,33 @@ export const FeedBlogCard = ({ blog }: { blog: MetaBlog }) => {
     <div className='group flex flex-col sm:flex-row gap-2 sm:gap-4'>
       <div className='shrink-0 overflow-hidden'>
         {!imageContent ? (
-          <div className='h-[220px] sm:h-[130px] w-full sm:w-[200px] bg-background-dark dark:background-light' />
+          <div className='h-[220px] sm:h-[120px] w-full sm:w-[180px] bg-background-dark dark:background-light' />
         ) : (
-          <div className='h-[220px] sm:h-[130px] w-full sm:w-[200px] rounded-sm overflow-hidden'>
+          <div className='h-[220px] sm:h-[120px] w-full sm:w-[180px] rounded-sm overflow-hidden'>
             <BlogImage title={titleContent} image={imageContent} />
           </div>
         )}
       </div>
 
-      <div className='w-full flex flex-col gap-[6px]'>
-        <div className='pb-1 flex'>
+      <div className='w-full flex flex-col'>
+        <div className='pb-2 flex'>
           <Link
             href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-            className='shrink-0 px-[5px] py-[2px] border-1 rounded-sm border-border-light dark:border-border-dark hover:border-brand-orange dark:hover:border-brand-orange capitalize'
+            className='shrink-0 hover:opacity-80 capitalize'
           >
-            <p className='text-sm'>{blog?.tags[0]}</p>
+            <p className='font-[450] text-sm text-brand-orange'>
+              {blog?.tags[0]}
+            </p>
           </Link>
         </div>
 
         <Link
           href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-          className='font-semibold text-lg md:text-xl line-clamp-2 hover:underline underline-offset-2'
+          className='mb-[6px] w-full'
         >
-          {titleContent}
+          <h2 className='font-medium text-lg md:text-xl leading-tight hover:underline underline-offset-2 line-clamp-2'>
+            {titleContent}
+          </h2>
         </Link>
 
         <UserInfoCardShowcase authorID={authorId} date={date} />
