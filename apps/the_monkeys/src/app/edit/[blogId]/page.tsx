@@ -51,6 +51,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   }, [session]);
 
   const createWebSocket = useCallback((blogId: string) => {
+    if (!token) return;
+
     const ws = new WebSocket(
       `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
     );
@@ -144,18 +146,20 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Create WebSocket connection when authToken is available
   useEffect(() => {
-    const cleanup = createWebSocket(blogId);
+    if (typeof window !== 'undefined') {
+      const cleanup = createWebSocket(blogId);
 
-    const handleBeforeUnload = () => {
-      cleanup();
-    };
+      const handleBeforeUnload = () => {
+        cleanup?.();
+      };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+      window.addEventListener('beforeunload', handleBeforeUnload);
 
-    return () => {
-      cleanup();
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
+      return () => {
+        cleanup?.();
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+      };
+    }
   }, [blogId, createWebSocket]);
 
   // Set editor data based on the source
@@ -180,7 +184,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         const cleanup = createWebSocket(blogId);
 
         return () => {
-          cleanup();
+          cleanup?.();
         };
       }, 1000);
     }
