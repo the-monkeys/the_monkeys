@@ -46,27 +46,27 @@
 
 /* basic styles */
 .ce-header {
-  background-color: #f2f2f2 !important;
+  background-color: #fafafa !important;
 }
 
 .dark .ce-header {
-  background-color: #0f0f0f !important;
+  background-color: #121212 !important;
 }
 
 .ce-paragraph {
-  background-color: #f2f2f2 !important;
+  background-color: #fafafa !important;
 }
 
 .dark .ce-paragraph {
-  background-color: #0f0f0f !important;
+  background-color: #121212 !important;
 }
 
 .cdx-list {
-  background-color: #f2f2f2 !important;
+  background-color: #fafafa !important;
 }
 
 .dark .cdx-list {
-  background-color: #0f0f0f !important;
+  background-color: #121212 !important;
 }
 
 h1.ce-header {
@@ -142,13 +142,13 @@ li.cdx-list__item {
   padding: 10px 8px 10px 16px !important;
   margin: 0 0 30px !important;
   position: relative;
-  background-color: #d9d9d97f;
-  border-left: 4px solid #878787;
+  background-color: #ededed7f;
+  border-left: 4px solid #cccccc;
 }
 
 .dark .cdx-quote {
-  background-color: #2c2c2c7f;
-  border-left: 4px solid #696969;
+  background-color: #1e1e1e7f;
+  border-left: 4px solid #3f3f3f;
 }
 
 .cdx-quote__text {
@@ -176,7 +176,7 @@ li.cdx-list__item {
   padding: 16px 20px !important;
   border: none !important;
   background: rgba(217, 217, 217, 0.5) !important;
-  border: 1px solid #d9d9d9 !important;
+  border: 1px solid #ededed !important;
   color: #1e1e1e !important;
   font-size: var(--blog-code-text-size) !important;
   font-family: monospace !important;
@@ -186,7 +186,7 @@ li.cdx-list__item {
 
 .dark .ce-code__textarea {
   background: rgba(44, 44, 44, 0.5) !important;
-  border: 1px solid #2c2c2c !important;
+  border: 1px solid #1e1e1e !important;
   color: #fafafa !important;
 }
 
@@ -225,44 +225,44 @@ li.cdx-list__item {
 /* toolbar: plus & setting button styles */
 .ce-toolbar__plus svg,
 .ce-toolbar__settings-btn svg {
-  color: #2c2c2c;
+  color: #1e1e1e;
 }
 
 .ce-toolbar__plus,
 .ce-toolbar__settings-btn {
-  background-color: #f2f2f2;
+  background-color: #fafafa;
   border: 1px solid rgba(43, 43, 43, 0.25);
   border-radius: 8px;
 }
 
 .ce-toolbar__plus:hover,
 .ce-toolbar__settings-btn:hover {
-  background-color: #f2f2f2 !important;
+  background-color: #fafafa !important;
   border: none;
 }
 
 .dark .ce-toolbar__plus svg,
 .dark .ce-toolbar__settings-btn svg {
-  color: #d9d9d9;
+  color: #ededed;
 }
 
 .dark .ce-toolbar__plus,
 .dark .ce-toolbar__settings-btn {
-  background-color: #0f0f0f;
+  background-color: #121212;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
 }
 
 .dark .ce-toolbar__plus:hover,
 .dark .ce-toolbar__settings-btn:hover {
-  background-color: #0f0f0f !important;
+  background-color: #121212 !important;
   border: none;
 }
 
 /* popover toolbar styles*/
 .ce-popover {
   margin-top: 0.5rem;
-  background-color: #f2f2f2;
+  background-color: #fafafa;
   border: 1px solid rgba(43, 43, 43, 0.25);
 }
 
@@ -290,26 +290,26 @@ li.cdx-list__item {
 .ce-popover-item__icon {
   width: 24px;
   height: 24px;
-  background-color: #2c2c2c !important;
+  background-color: #1e1e1e !important;
   border-radius: 8px;
 }
 
 .ce-popover-item__icon svg {
   width: 18px;
-  color: #d9d9d9;
+  color: #ededed;
 }
 
 .ce-popover-item__title {
-  color: #2c2c2c;
+  color: #1e1e1e;
 }
 
 .ce-popover__nothing-found-message {
-  color: #2c2c2c;
+  color: #1e1e1e;
 }
 
 .cdx-search-field {
   background-color: rgba(242, 242, 243, 0.25);
-  color: #2c2c2c;
+  color: #1e1e1e;
 }
 
 .ce-popover-item--confirmation {
@@ -317,11 +317,11 @@ li.cdx-list__item {
 }
 
 .ce-popover-item--confirmation:hover .ce-popover-item__title {
-  color: #2c2c2c;
+  color: #1e1e1e;
 }
 
 .dark .ce-popover {
-  background-color: #0f0f0f;
+  background-color: #121212;
   border: 1px solid rgba(242, 242, 243, 0.25);
 }
 
@@ -340,37 +340,37 @@ li.cdx-list__item {
 .dark .ce-popover-item__icon {
   width: 24px;
   height: 24px;
-  background-color: #d9d9d9 !important;
+  background-color: #ededed !important;
   border-radius: 8px;
 }
 
 .dark .ce-popover-item__icon svg {
   width: 18px;
-  color: #2c2c2c;
+  color: #1e1e1e;
 }
 
 .dark .ce-popover-item__title {
-  color: #d9d9d9;
+  color: #ededed;
 }
 
 .dark .ce-popover__nothing-found-message {
-  color: #d9d9d9;
+  color: #ededed;
 }
 
 .dark .cdx-search-field {
   background-color: rgba(43, 43, 43, 0.25);
-  color: #d9d9d9;
+  color: #ededed;
 }
 
 .dark .ce-popover-item--confirmation:hover .ce-popover-item__title {
-  color: #d9d9d9;
+  color: #ededed;
 }
 
 /* inline toolbar*/
 
 .ce-inline-toolbar,
 .ce-inline-toolbar--showed {
-  background-color: #f2f2f2;
+  background-color: #fafafa;
   border: 1px solid rgba(43, 43, 43, 0.25);
 }
 
@@ -392,7 +392,7 @@ li.cdx-list__item {
 
 .dark .ce-inline-toolbar,
 .dark .ce-inline-toolbar--showed {
-  background-color: #0f0f0f;
+  background-color: #121212;
   border: 1px solid rgba(242, 242, 243, 0.25);
 }
 
@@ -408,7 +408,7 @@ li.cdx-list__item {
 
 .ce-conversion-toolbar,
 .ce-conversion-toolbar--showed {
-  background-color: #f2f2f2;
+  background-color: #fafafa;
   border: 1px solid rgba(43, 43, 43, 0.25);
 }
 
@@ -427,28 +427,28 @@ li.cdx-list__item {
 }
 
 .ce-conversion-tool__icon {
-  background-color: #2c2c2c !important;
+  background-color: #1e1e1e !important;
   border-radius: 8px;
 }
 
 .ce-conversion-tool__icon svg {
   width: 18px;
-  color: #d9d9d9;
+  color: #ededed;
 }
 
 .dark .ce-conversion-toolbar,
 .dark .ce-conversion-toolbar--showed {
-  background-color: #0f0f0f;
+  background-color: #121212;
   border: 1px solid rgba(242, 242, 243, 0.25);
 }
 
 .dark .ce-conversion-tool__icon {
-  background-color: #d9d9d9 !important;
+  background-color: #ededed !important;
   border-radius: 8px;
 }
 
 .dark .ce-conversion-tool__icon svg {
-  color: #2c2c2c;
+  color: #1e1e1e;
 }
 
 /* delimiter styles */
@@ -468,22 +468,22 @@ li.cdx-list__item {
 
 /* inline marker styles */
 .cdx-marker {
-  color: #0f0f0f;
+  color: #121212;
 }
 
 .dark .cdx-marker {
-  color: #d9d9d9;
+  color: #ededed;
 }
 
 /* selection styles */
 .light ::selection {
-  background-color: #0f0f0f;
-  color: #d9d9d9;
+  background-color: #121212;
+  color: #ededed;
 }
 
 .dark ::selection {
-  background-color: #d9d9d9;
-  color: #0f0f0f;
+  background-color: #ededed;
+  color: #121212;
 }
 
 #editorjs_editor-container {

@@ -7,21 +7,21 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
     borderWidth: '1px',
     borderColor: state.isFocused
       ? isDarkTheme
-        ? '#D9D9D9'
-        : '#2C2C2C'
+        ? '#EDEDED'
+        : '#1E1E1E'
       : isDarkTheme
-        ? '#696969'
-        : '#878787',
+        ? '#3F3F3F'
+        : '#CCCCCC',
     boxShadow: 'none',
     borderRadius: '0.375rem',
-    backgroundColor: isDarkTheme ? '#0F0F0F' : '#F2F2F2',
-    color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
+    backgroundColor: isDarkTheme ? '#121212' : '#FAFAFA',
+    color: isDarkTheme ? '#FFFFFF' : '#121212',
     minHeight: '2.5rem',
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
     ':hover': {
-      borderColor: isDarkTheme ? '#D9D9D9' : '#2C2C2C',
+      borderColor: isDarkTheme ? '#EDEDED' : '#1E1E1E',
     },
   }),
   valueContainer: (provided: any) => ({
@@ -30,8 +30,8 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
   }),
   menu: (provided: any) => ({
     ...provided,
-    backgroundColor: isDarkTheme ? '#0F0F0F' : '#F2F2F2',
-    border: `1px solid ${isDarkTheme ? '#2C2C2C' : '#D9D9D9'}`,
+    backgroundColor: isDarkTheme ? '#121212' : '#FAFAFA',
+    border: `1px solid ${isDarkTheme ? '#1E1E1E' : '#EDEDED'}`,
     borderRadius: '0.375rem',
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
     zIndex: 50,
@@ -44,18 +44,18 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
         : '#E5E5E5'
       : state.isFocused
         ? isDarkTheme
-          ? '#2C2C2C'
-          : '#D9D9D9'
+          ? '#1E1E1E'
+          : '#EDEDED'
         : isDarkTheme
-          ? '#0F0F0F'
-          : '#F2F2F2',
+          ? '#121212'
+          : '#FAFAFA',
     color:
       state.isSelected || state.isFocused
         ? isDarkTheme
-          ? '#FCFCFC'
-          : '#0D0D0D'
+          ? '#FFFFFF'
+          : '#121212'
         : isDarkTheme
-          ? '#D9D9D9'
+          ? '#EDEDED'
           : '#6B6B6B',
     padding: '0.5rem 1rem',
     cursor: 'pointer',
@@ -70,24 +70,24 @@ export const SelectInputStyles = (isDarkTheme: boolean): StylesConfig => ({
   }),
   singleValue: (provided: any) => ({
     ...provided,
-    color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
+    color: isDarkTheme ? '#FFFFFF' : '#121212',
     fontSize: '0.875rem',
   }),
   multiValue: (provided: any) => ({
     ...provided,
     overflow: 'hidden',
     padding: '0px 0px 0px 4px',
-    color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
+    color: isDarkTheme ? '#FFFFFF' : '#121212',
     borderRadius: '4px',
   }),
   multiValueRemove: (provided: any) => ({
     ...provided,
     padding: '0px 6px',
-    color: '#EF4444',
+    color: '#DC2626',
   }),
   input: (provided: any) => ({
     ...provided,
-    color: isDarkTheme ? '#FCFCFC' : '#0D0D0D',
+    color: isDarkTheme ? '#FFFFFF' : '#121212',
   }),
   dropdownIndicator: (provided: any, state: any) => ({
     ...provided,

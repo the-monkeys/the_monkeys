@@ -1,8 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { footerList } from '@/constants/footer';
+import { FEED_ROUTE } from '@/constants/routeConstants';
 import {
   MONKEYS_DISCORD,
   MONKEYS_GITHUB,
@@ -23,13 +26,15 @@ const FooterList = ({
   }[];
 }) => {
   return (
-    <div className='space-y-4'>
-      <h4 className='font-dm_sans font-semibold'>{heading}</h4>
+    <div className='min-w-[140px] space-y-4'>
+      <h4 className='font-dm_sans font-semibold text-base'>{heading}</h4>
 
-      <ul className='space-y-2'>
+      <ul className='space-y-[6px] sm:space-y-2'>
         {items.map((item, index) => (
-          <li className='text-sm hover:opacity-80' key={index}>
-            <Link href={item.link}>{item.text}</Link>
+          <li key={index}>
+            <Link href={item.link} className='text-sm hover:underline'>
+              {item.text}
+            </Link>
           </li>
         ))}
       </ul>
@@ -39,69 +44,107 @@ const FooterList = ({
 
 const Footer = () => {
   return (
-    <Container className='px-4 py-12'>
-      <footer className='space-y-10'>
-        <div className='flex flex-col sm:flex-row justify-between flex-wrap gap-10'>
-          <div className='space-y-6'>
-            <Logo showSubHeading={true} />
+    <footer className='mt-20 overflow-hidden'>
+      <div className='flex'>
+        <div className='flex-[2] h-[30px] bg-brand-orange' />
+        <div className='flex-[1] h-[30px] bg-brand-orange opacity-80' />
+      </div>
 
-            <div>
-              <p className='pb-1 font-dm_sans text-xs'>Connect with us</p>
-
-              <div className='flex items-center gap-3'>
-                <Link
-                  className='opacity-80 hover:opacity-100'
-                  href={MONKEYS_X}
-                  target='_blank'
-                >
-                  <Icon name='RiTwitterX' type='Fill' />
-                </Link>
-
-                <Link
-                  className='opacity-80 hover:opacity-100'
-                  href={MONKEYS_DISCORD}
-                  target='_blank'
-                >
-                  <Icon name='RiDiscord' type='Fill' />
-                </Link>
-
-                <Link
-                  className='opacity-80 hover:opacity-100'
-                  href={MONKEYS_GITHUB}
-                  target='_blank'
-                >
-                  <Icon name='RiGithub' type='Fill' />
-                </Link>
-
-                <Link
-                  className='opacity-80 hover:opacity-100'
-                  href={MONKEYS_INSTAGRAM}
-                  target='_blank'
-                >
-                  <Icon name='RiInstagram' type='Fill' />
-                </Link>
+      <Container className='px-4 py-12 z-10'>
+        <div className='grid grid-cols-3 gap-14 lg:gap-4'>
+          <div className='col-span-3 lg:col-span-1 space-y-3'>
+            <Link
+              href={FEED_ROUTE}
+              className='group flex items-center gap-[6px]'
+            >
+              <div className='size-12 flex justify-center items-center group-hover:opacity-80 transition-all'>
+                <Logo />
               </div>
-            </div>
+
+              <div className='pt-2'>
+                <p className='font-dm_sans font-medium text-[1.8rem]'>
+                  Monkeys
+                </p>
+              </div>
+            </Link>
+
+            <p className='text-xs'>
+              © 2025{' '}
+              <span className='font-medium'>BUDDHICINTAKA PVT. LTD.</span> All
+              rights reserved.
+            </p>
           </div>
 
-          <div className='flex flex-wrap gap-12'>
-            {footerList.map((listItem, index) => {
-              return <FooterList {...listItem} key={index} />;
+          <div className='col-span-3 lg:col-span-2 flex gap-10 justify-between lg:justify-end items-start flex-wrap'>
+            {footerList.map((val, index) => {
+              return (
+                <FooterList
+                  key={index}
+                  heading={val.heading}
+                  items={val.items}
+                />
+              );
             })}
           </div>
         </div>
 
-        <div className='pb-8 space-y-2'>
-          <p className='text-xs sm:text-sm text-center opacity-80'>
-            2025,{' '}
-            <Link href='/feed' className='font-medium'>
-              Monkeys
-            </Link>
-            , All Rights Reserved
-          </p>
+        <div className='mt-16 flex justify-center items-center gap-3'>
+          <Link href={MONKEYS_DISCORD} className='group'>
+            <Icon
+              name='RiDiscord'
+              type='Fill'
+              className='opacity-60 hover:opacity-100'
+            />
+          </Link>
+
+          <Link href={MONKEYS_GITHUB} className='group'>
+            <Icon
+              name='RiGithub'
+              size={24}
+              type='Fill'
+              className='opacity-60 hover:opacity-100'
+            />
+          </Link>
+
+          <Link href={MONKEYS_X} className='group'>
+            <Icon
+              name='RiTwitterX'
+              type='Fill'
+              className='opacity-60 hover:opacity-100'
+            />
+          </Link>
+
+          <Link href={MONKEYS_INSTAGRAM} className='group'>
+            <Icon
+              name='RiInstagram'
+              type='Fill'
+              className='opacity-60 hover:opacity-100'
+            />
+          </Link>
         </div>
-      </footer>
-    </Container>
+
+        <div className='mt-5 flex justify-center gap-6'>
+          <Link
+            href='/terms'
+            className='text-xs hover:underline underline-offset-1'
+          >
+            Terms
+          </Link>
+          <Link
+            href='/privacy'
+            className='text-xs hover:underline underline-offset-1'
+          >
+            Privacy
+          </Link>
+          <Link
+            href='/cookies'
+            className='text-xs hover:underline underline-offset-1'
+          >
+            Cookies
+          </Link>
+        </div>
+      </Container>
+    </footer>
   );
 };
 

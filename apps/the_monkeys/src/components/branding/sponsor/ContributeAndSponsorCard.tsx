@@ -13,24 +13,24 @@ export const ContributeAndSponsorCard = ({
     <div
       className={twMerge(
         className,
-        'p-4 flex flex-col sm:flex-row md:flex-col gap-4 items-start md:items-center border-1 border-border-light/25 dark:border-border-dark/25 rounded-xl'
+        'flex flex-col sm:flex-row md:flex-col gap-6 items-start md:items-center border-1 border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark'
       )}
     >
       <div className='w-full'>
-        <h3 className='pb-1 font-dm_sans font-semibold text-base md:text-lg text-left'>
+        <h3 className='pb-2 font-dm_sans font-semibold text-base md:text-lg text-left'>
           Your support matters!
         </h3>
 
-        <p className='text-sm opacity-80'>
-          Contribute ideas or code, or sponsor us to help drive growth and
-          impact.
+        <p className='text-sm'>
+          Contribute features or improvements, or become a sponsor to help us
+          grow sustainably and deliver value to the community.
         </p>
       </div>
 
       <div className='w-full flex-1 flex gap-2 flex-wrap'>
         <Button
           variant='outline'
-          className='flex-1 rounded-full border-blue-500/25 dark:border-blue-500/25 hover:bg-blue-500/25 dark:hover:bg-blue-500/25'
+          className='flex-1 border-blue-500/50 dark:border-blue-500/50 hover:bg-blue-500/25 dark:hover:bg-blue-500/25'
           asChild
         >
           <Link
@@ -44,7 +44,7 @@ export const ContributeAndSponsorCard = ({
 
         <Button
           variant='outline'
-          className='flex-1 rounded-full border-pink-500/25 dark:border-pink-500/25 hover:bg-pink-500/25 dark:hover:bg-pink-500/25'
+          className='flex-1 border-pink-500/50 dark:border-pink-500/50 hover:bg-pink-500/25 dark:hover:bg-pink-500/25'
           asChild
         >
           <Link href='https://github.com/sponsors/the-monkeys' target='_blank'>

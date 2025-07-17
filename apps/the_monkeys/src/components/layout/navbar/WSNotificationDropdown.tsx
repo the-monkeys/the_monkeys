@@ -131,7 +131,7 @@ const WSNotificationDropdown = () => {
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger>
         <div className='relative hover:opacity-80 cursor-pointer'>
-          <Icon name='RiNotification3' size={22} />
+          <Icon name='RiNotification3' />
           {notificationArray.length ? (
             <div className='absolute top-0 right-0 size-[10px] rounded-full bg-brand-orange shadow-sm'></div>
           ) : null}

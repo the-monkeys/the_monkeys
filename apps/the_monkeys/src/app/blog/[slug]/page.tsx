@@ -65,7 +65,7 @@ const BlogPage = () => {
         </div>
 
         <LinksRedirectArrow link='/feed' className='py-4 mx-auto w-fit'>
-          <p className='font-dm_sans'>Visit Our Showcase</p>
+          <p className='font-dm_sans'>Monkeys Feed</p>
         </LinksRedirectArrow>
       </div>
     );

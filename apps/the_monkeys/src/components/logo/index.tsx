@@ -1,14 +1,15 @@
-import MobileLogo from './MobileLogo';
-import WebLogo from './WebLogo';
+import Image from 'next/image';
 
-const Logo = ({ showSubHeading = false }: { showSubHeading?: boolean }) => {
+const Logo = () => {
   return (
-    <div className='flex flex-col items-start'>
-      <MobileLogo /> <WebLogo />
-      {showSubHeading && (
-        <p className='font-dm_sans text-sm'>Inspire, Inform, Innovate</p>
-      )}
-    </div>
+    <Image
+      src={'/logo-brand.svg'}
+      alt='Monkeys Logo'
+      title='Monkeys Logo'
+      height={24}
+      width={88}
+      className='h-full w-full'
+    />
   );
 };
 

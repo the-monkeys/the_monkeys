@@ -48,7 +48,7 @@ export const ShowcaseBlogCard = ({ blog }: { blog: Blog }) => {
         </div>
       </Link>
 
-      <UserInfoCardShowcase id={authorId} date={date} />
+      <UserInfoCardShowcase authorID={authorId} date={date} />
     </div>
   );
 };

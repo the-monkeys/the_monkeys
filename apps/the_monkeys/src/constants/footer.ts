@@ -1,51 +1,60 @@
 export const footerList = [
-  // {
-  //   heading: 'Services',
-  //   items: [
-  //     {
-  //       text: 'Branding',
-  //       link: '#',
-  //     },
-  //     {
-  //       text: 'Design',
-  //       link: '#',
-  //     },
-  //     {
-  //       text: 'Marketing',
-  //       link: '#',
-  //     },
-  //     {
-  //       text: 'Advertisement',
-  //       link: '#',
-  //     },
-  //   ],
-  // },
   {
     heading: 'Company',
     items: [
       {
-        text: 'Showcase',
+        text: 'Monkeys',
         link: '/feed',
       },
       {
-        text: 'About',
+        text: 'About Us',
         link: '/about',
       },
       {
-        text: 'Contact',
+        text: 'Contact Us',
         link: 'mailto:mail.themonkeys.life@gmail.com',
       },
-      // {
-      //   text: 'Press Kit',
-      //   link: '#',
-      // },
+      {
+        text: 'Advertise with Us',
+        link: '#',
+      },
+      {
+        text: 'Feedback',
+        link: '#',
+      },
+    ],
+  },
+  {
+    heading: 'Topics',
+    items: [
+      {
+        text: 'Artificial Intelligence',
+        link: '/topics/Artificial Intelligence',
+      },
+      {
+        text: 'Corportate Layoffs',
+        link: '/topics/Corporate Layoffs',
+      },
+      {
+        text: 'Sports',
+        link: '/topics/Sports',
+      },
+      {
+        text: 'Healthcare',
+        link: '/topics/Healthcare',
+      },
+      {
+        text: 'Explore All',
+        link: '/topics/explore',
+        disable: false,
+      },
     ],
   },
   {
     heading: 'Legal',
     items: [
       {
-        text: 'Terms',
+        text: 'Terms of Use',
         link: '/terms',
       },
       {

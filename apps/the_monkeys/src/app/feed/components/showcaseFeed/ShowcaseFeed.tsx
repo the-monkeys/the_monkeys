@@ -2,8 +2,6 @@
 
 import moment from 'moment';
 
-import { NewsCategories } from './components/NewsCategories';
-import { NewsGrid } from './components/NewsGrid';
 import { ShowcaseBlogs } from './components/ShowcaseBlogs';
 
 export const ShowcaseFeed = () => {
@@ -22,10 +20,6 @@ export const ShowcaseFeed = () => {
       </div>
 
       <ShowcaseBlogs />
-
-      <NewsCategories />
-
-      {/* <NewsGrid /> */}
     </div>
   );
 };

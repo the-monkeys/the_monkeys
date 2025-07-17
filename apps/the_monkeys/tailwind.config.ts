@@ -29,24 +29,24 @@ const config = {
           orange: '#FF5542',
         },
         background: {
-          dark: '#0F0F0F',
-          light: '#F2F2F2',
+          dark: '#121212',
+          light: '#FAFAFA',
         },
         foreground: {
           dark: '#2C2C2C',
           light: '#D9D9D9',
         },
         border: {
-          dark: '#696969',
-          light: '#878787',
+          dark: '#3F3F3F',
+          light: '#CCCCCC',
         },
         text: {
-          dark: '#FCFCFC',
-          light: '#0D0D0D',
+          dark: '#FFFFFF',
+          light: '#121212',
         },
         alert: {
-          red: '#EF4444',
-          green: '#22C55E',
+          red: '#DC2626',
+          green: '#16A34A',
         },
       },
       borderWidth: {
@@ -131,7 +131,7 @@ const config = {
         'scale-up': 'scale-up 0.2s ease-in',
         'icon-shake': 'icon-shake 0.6s ease-in-out',
         'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
-        'loader-rotate': 'loader-rotate 0.6s linear infinite',
+        'loader-rotate': 'loader-rotate 0.8s linear infinite',
         'theme-spin': 'theme-spin 0.2s linear',
         'appear-up': 'appear-up .8s ease-out',
         'accordion-down': 'accordion-down 0.1s ease-out',

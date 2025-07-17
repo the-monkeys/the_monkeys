@@ -1,20 +1,17 @@
-import Container from '@/components/layout/Container';
-import { SearchInput } from '@/components/search/SearchInput';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Latest Blog Feed',
+  description:
+    'Stay in the loop with the latest blogs and news on business, sports, politics, technology from around the world on Monkeys.',
+};
 
 const BlogFeedPageLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  return (
-    <Container className='gap-6 lg:gap-8 p-4 pb-12 space-y-6'>
-      <div>
-        <SearchInput className='flex-1 mx-auto w-full sm:max-w-[500px]' />
-      </div>
-
-      <div className='min-h-screen'>{children}</div>
-    </Container>
-  );
+  return <div className='min-h-screen'>{children}</div>;
 };
 
 export default BlogFeedPageLayout;
