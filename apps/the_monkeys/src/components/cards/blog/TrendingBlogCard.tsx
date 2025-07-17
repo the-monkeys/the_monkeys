@@ -6,7 +6,6 @@ import {
   BlogImage,
   BlogTitle,
 } from '@/components/blog/getBlogContent';
-import Icon from '@/components/icon';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
@@ -24,13 +23,13 @@ export const TrendingBlogCardL = ({ blog }: { blog: MetaBlog }) => {
   return (
     <div className='overflow-hidden h-full w-full'>
       <div className='flex flex-col gap-2'>
-        {!imageContent ? (
-          <div className='h-[200px] bg-brand-orange' />
-        ) : (
-          <div className='h-[220px] sm:h-[360px] lg:h-[400px] rounded-sm overflow-hidden'>
+        <div className='h-[200px] sm:h-[360px] lg:h-[400px] overflow-hidden'>
+          {!imageContent ? (
+            <div className='h-full w-full bg-brand-orange/40' />
+          ) : (
             <BlogImage title={titleContent} image={imageContent} />
-          </div>
-        )}
+          )}
+        </div>
 
         <div className='flex flex-col'>
           <div className='pb-2 flex'>
@@ -73,8 +72,12 @@ export const TrendingBlogCardS = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='group flex flex-col gap-2 h-full w-full'>
-      <div className='h-[220px] rounded-sm overflow-hidden'>
-        <BlogImage title={titleContent} image={imageContent} />
+      <div className='h-[200px] sm:h-[220px] overflow-hidden'>
+        {!imageContent ? (
+          <div className='h-full w-full bg-brand-orange/40' />
+        ) : (
+          <BlogImage title={titleContent} image={imageContent} />
+        )}
       </div>
 
       <div className='flex flex-col'>
@@ -116,7 +119,7 @@ export const TrendingBlogCardText = ({ blog }: { blog: MetaBlog }) => {
   const blogSlug = generateSlug(blog?.title);
 
   return (
-    <div className='p-4 flex flex-col justify-center gap-2 w-full border-1 rounded-sm border-border-light/80 dark:border-border-dark/80'>
+    <div className='p-4 flex flex-col justify-end gap-2 h-full w-full bg-orange-100 dark:bg-orange-950'>
       <Link
         href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
         className='shrink-0 hover:opacity-80 capitalize'
@@ -131,13 +134,13 @@ export const TrendingBlogCardText = ({ blog }: { blog: MetaBlog }) => {
         />
       </Link>
 
-      <div className='mt-6 space-y-2'>
+      <UserInfoCardShowcase authorID={authorId} date={date} />
+
+      <div className='mt-3'>
         <BlogDescription
           className='text-sm font-light line-clamp-3'
           description={descriptionContent}
         />
-
-        <UserInfoCardShowcase authorID={authorId} date={date} />
       </div>
     </div>
   );

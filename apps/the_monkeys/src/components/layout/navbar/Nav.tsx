@@ -52,11 +52,11 @@ const Nav = ({
   return (
     <header
       className={twMerge(
-        'sticky left-0 border-b-1 border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark z-30',
+        'sticky left-0 border-b-1 border-border-light/60 dark:border-border-dark/60 bg-background-light dark:bg-background-dark z-30',
         `top-${top}`
       )}
     >
-      <Container className='w-full px-4 py-3 flex items-center justify-between'>
+      <div className='w-full px-4 py-3 flex items-center justify-between'>
         <div className='flex items-center gap-[6px]'>
           <Link href={FEED_ROUTE} className='group flex items-center gap-[6px]'>
             <div className='size-9 flex justify-center items-center group-hover:opacity-85'>
@@ -89,7 +89,7 @@ const Nav = ({
             </div>
           )}
         </div>
-      </Container>
+      </div>
     </header>
   );
 };

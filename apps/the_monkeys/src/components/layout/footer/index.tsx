@@ -27,15 +27,12 @@ const FooterList = ({
 }) => {
   return (
     <div className='min-w-[140px] space-y-4'>
-      <h4 className='font-semibold text-sm md:text-base'>{heading}</h4>
+      <h4 className='font-dm_sans font-semibold text-base'>{heading}</h4>
 
       <ul className='space-y-[6px] sm:space-y-2'>
         {items.map((item, index) => (
           <li key={index}>
-            <Link
-              href={item.link}
-              className='font-light text-sm md:text-base hover:underline'
-            >
+            <Link href={item.link} className='text-sm hover:underline'>
               {item.text}
             </Link>
           </li>
@@ -47,20 +44,20 @@ const FooterList = ({
 
 const Footer = () => {
   return (
-    <footer className='bg-brand-orange text-white mt-20 overflow-hidden'>
+    <footer className='mt-20 overflow-hidden'>
       <div className='flex'>
-        <div className='flex-[2] h-[50px] bg-black opacity-20' />
-        <div className='flex-[1] h-[50px] bg-black opacity-10' />
+        <div className='flex-[2] h-[30px] bg-brand-orange' />
+        <div className='flex-[1] h-[30px] bg-brand-orange opacity-80' />
       </div>
 
-      <Container className='px-4 pt-10 pb-12 z-10'>
+      <Container className='px-4 py-12 z-10'>
         <div className='grid grid-cols-3 gap-14 lg:gap-4'>
           <div className='col-span-3 lg:col-span-1 space-y-3'>
             <Link
               href={FEED_ROUTE}
               className='group flex items-center gap-[6px]'
             >
-              <div className='size-12 flex justify-center items-center filter brightness-50 group-hover:brightness-[.6] transition-all'>
+              <div className='size-12 flex justify-center items-center group-hover:opacity-80 transition-all'>
                 <Logo />
               </div>
 
@@ -71,8 +68,10 @@ const Footer = () => {
               </div>
             </Link>
 
-            <p className='text-xs text-text-dark'>
-              © 2025 BUDDHICINTAKA PVT. LTD. All rights reserved.
+            <p className='text-xs'>
+              © 2025{' '}
+              <span className='font-medium'>BUDDHICINTAKA PVT. LTD.</span> All
+              rights reserved.
             </p>
           </div>
 
@@ -94,7 +93,7 @@ const Footer = () => {
             <Icon
               name='RiDiscord'
               type='Fill'
-              className='text-black/50 group-hover:text-black/70'
+              className='opacity-60 hover:opacity-100'
             />
           </Link>
 
@@ -103,7 +102,7 @@ const Footer = () => {
               name='RiGithub'
               size={24}
               type='Fill'
-              className='text-black/50 group-hover:text-black/70'
+              className='opacity-60 hover:opacity-100'
             />
           </Link>
 
@@ -111,7 +110,7 @@ const Footer = () => {
             <Icon
               name='RiTwitterX'
               type='Fill'
-              className='text-black/50 group-hover:text-black/70'
+              className='opacity-60 hover:opacity-100'
             />
           </Link>
 
@@ -119,12 +118,12 @@ const Footer = () => {
             <Icon
               name='RiInstagram'
               type='Fill'
-              className='text-black/50 group-hover:text-black/70'
+              className='opacity-60 hover:opacity-100'
             />
           </Link>
         </div>
 
-        <div className='mt-6 flex justify-center gap-6'>
+        <div className='mt-5 flex justify-center gap-6'>
           <Link
             href='/terms'
             className='text-xs hover:underline underline-offset-1'

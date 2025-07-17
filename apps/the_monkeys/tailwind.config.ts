@@ -33,8 +33,8 @@ const config = {
           light: '#FAFAFA',
         },
         foreground: {
-          dark: '#1a1a1a',
-          light: '#f2f2f2',
+          dark: '#2C2C2C',
+          light: '#D9D9D9',
         },
         border: {
           dark: '#3F3F3F',
@@ -131,7 +131,7 @@ const config = {
         'scale-up': 'scale-up 0.2s ease-in',
         'icon-shake': 'icon-shake 0.6s ease-in-out',
         'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
-        'loader-rotate': 'loader-rotate 0.6s linear infinite',
+        'loader-rotate': 'loader-rotate 0.8s linear infinite',
         'theme-spin': 'theme-spin 0.2s linear',
         'appear-up': 'appear-up .8s ease-out',
         'accordion-down': 'accordion-down 0.1s ease-out',

@@ -2,11 +2,18 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import Icon from '@/components/icon';
+import Container from '@/components/layout/Container';
 import { Loader } from '@/components/loader';
+import {
+  orderedCategories,
+  orderedCompactCategories,
+} from '@/config/categoryConfig';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
 import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 
 import CategorySection from './sections/CategorySection';
+import CategorySectionCompact from './sections/CategorySectionCompact';
 import TrendingSection from './sections/TrendingSection';
 
 const BlogFeedPage = () => {
@@ -48,8 +55,11 @@ const BlogFeedPage = () => {
 
   if (blogsLoading) {
     return (
-      <div className='py-10 flex items-center justify-center'>
-        <Loader className='text-brand-orange' size={62} />
+      <div className='px-4 py-10 flex flex-col justify-center items-center'>
+        <Loader className='text-brand-orange' size={52} />
+        <p className='py-2 font-dm_sans text-base'>
+          Fetching latest posts for you...
+        </p>
       </div>
     );
   }
@@ -59,43 +69,39 @@ const BlogFeedPage = () => {
     (blogsError || !filteredBlogs || filteredBlogs.length === 0)
   ) {
     return (
-      <div className='col-span-3 min-h-screen flex flex-col items-center justify-center space-y-3 py-10'>
-        <h2 className='text-xl font-semibold text-gray-800 dark:text-white'>
-          Oops! Something went wrong.
+      <div className='px-4 py-10 flex flex-col items-center justify-center'>
+        <div className='p-2'>
+          <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
+        </div>
+
+        <h2 className='font-dm_sans text-xl'>
+          Feed unavailable. Sorry for the inconvenience.
         </h2>
-        {blogsError ? (
-          <p className='text-sm text-gray-500 dark:text-gray-400'>
-            We couldn&apos;t load the blog feed right now. Please try again
-            later.
-          </p>
-        ) : (
-          <p className='text-sm text-gray-500 dark:text-gray-400'>
-            No blogs to display at the moment.
-          </p>
-        )}
       </div>
     );
   }
 
   return (
-    <div className='space-y-8'>
+    <div className='min-h-screen'>
       <TrendingSection blogs={filteredBlogs} />
 
-      <div>
-        <CategorySection title='Tech & Innovation' category='technology' />
+      <div className='mt-10 space-y-8'>
+        {orderedCategories.map(({ title, category }, index) => {
+          return (
+            <CategorySection title={title} category={category} key={index} />
+          );
+        })}
       </div>
 
-      <div>
-        <CategorySection title='Business & Finance' category='business' />
-      </div>
-
-      <div>
-        <CategorySection title='Sports' category='sports' />
-      </div>
-
-      <div>
-        <CategorySection title='Entertainment' category='Entertainment' />
-      </div>
+      <Container className='mt-8 grid grid-cols-2 gap-8'>
+        {orderedCompactCategories.map(({ title, category }, index) => {
+          return (
+            <div className='col-span-2 md:col-span-1' key={index}>
+              <CategorySectionCompact title={title} category={category} />
+            </div>
+          );
+        })}
+      </Container>
     </div>
   );
 };

@@ -19,13 +19,13 @@ export const FeedBlogCard = ({ blog }: { blog: MetaBlog }) => {
   return (
     <div className='group flex flex-col sm:flex-row gap-2 sm:gap-4'>
       <div className='shrink-0 overflow-hidden'>
-        {!imageContent ? (
-          <div className='h-[220px] sm:h-[120px] w-full sm:w-[180px] bg-background-dark dark:background-light' />
-        ) : (
-          <div className='h-[220px] sm:h-[120px] w-full sm:w-[180px] rounded-sm overflow-hidden'>
+        <div className='h-[200px] sm:h-[120px] w-full sm:w-[180px] overflow-hidden'>
+          {!imageContent ? (
+            <div className='h-full w-full bg-brand-orange/40' />
+          ) : (
             <BlogImage title={titleContent} image={imageContent} />
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       <div className='w-full flex flex-col'>

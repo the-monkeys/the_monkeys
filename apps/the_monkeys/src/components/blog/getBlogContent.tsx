@@ -84,12 +84,15 @@ export const BlogImage = ({
   image: string;
   className?: string;
 }) => {
+  // need to optimize this further
   return (
     <img
       src={image}
       alt={title}
-      loading='lazy'
-      className={twMerge(className, 'h-full w-full object-cover object-left')}
+      className={twMerge(
+        className,
+        'h-full w-full object-cover object-left-top'
+      )}
     />
   );
 };
