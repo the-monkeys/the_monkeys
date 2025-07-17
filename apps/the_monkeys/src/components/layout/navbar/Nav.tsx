@@ -6,13 +6,10 @@ import Link from 'next/link';
 
 import { CreateButton } from '@/components/buttons/createButton';
 import LoginButton from '@/components/buttons/loginButton';
-import Icon from '@/components/icon';
 import Logo from '@/components/logo';
-import { SearchInput } from '@/components/search/SearchInput';
 import ThemeSwitch from '@/components/themeSwitch';
 import { FEED_ROUTE } from '@/constants/routeConstants';
 import { IUser } from '@/services/models/user';
-import { Separator } from '@the-monkeys/ui/atoms/separator';
 import { twMerge } from 'tailwind-merge';
 
 import Container from '../Container';
@@ -56,10 +53,10 @@ const Nav = ({
         `top-${top}`
       )}
     >
-      <div className='w-full px-4 py-3 flex items-center justify-between'>
+      <Container className='w-full px-4 py-[10px] flex items-center justify-between'>
         <div className='flex items-center gap-[6px]'>
           <Link href={FEED_ROUTE} className='group flex items-center gap-[6px]'>
-            <div className='size-9 flex justify-center items-center group-hover:opacity-85'>
+            <div className='w-9 flex justify-center items-center group-hover:opacity-85'>
               <Logo />
             </div>
 
@@ -76,10 +73,8 @@ const Nav = ({
             {!isAuthLoading && session && <WSNotificationDropdown />}
           </div>
 
-          <Separator orientation='vertical' className='h-6 w-[2px]' />
-
           {session ? (
-            <div className='flex items-center gap-2'>
+            <div className='flex items-center gap-[10px]'>
               <CreateButton />
               <ProfileDropdown session={session} />
             </div>
@@ -89,7 +84,7 @@ const Nav = ({
             </div>
           )}
         </div>
-      </div>
+      </Container>
     </header>
   );
 };

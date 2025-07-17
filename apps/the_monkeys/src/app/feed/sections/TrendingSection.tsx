@@ -29,7 +29,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
         </Container>
       </div>
 
-      <div className='py-6 bg-foreground-light/30 dark:bg-foreground-dark/30'>
+      <div className='py-6 bg-foreground-light/40 dark:bg-foreground-dark/40'>
         <Container className='px-4 grid grid-cols-3 gap-8'>
           <div className='col-span-3 md:col-span-2'>
             <div className='flex flex-col gap-6'>

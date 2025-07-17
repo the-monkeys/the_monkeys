@@ -1,9 +1,4 @@
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
-import {
-  TrendingBlogCardS,
-  TrendingBlogCardText,
-} from '@/components/cards/blog/TrendingBlogCard';
-import Container from '@/components/layout/Container';
 import useGetCategoryBlogs from '@/hooks/posts/useGetCategoryBlogs';
 
 const CategorySectionCompact = ({
@@ -15,6 +10,7 @@ const CategorySectionCompact = ({
 }) => {
   const { blogs, isError, isLoading } = useGetCategoryBlogs({
     category: category,
+    limit: 8,
   });
 
   if (isError || isLoading) return null;

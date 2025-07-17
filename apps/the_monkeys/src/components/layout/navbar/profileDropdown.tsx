@@ -31,7 +31,7 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <div className='hover:opacity-80 cursor-pointer'>
-          <ProfileFrame className='h-9 border-[1.4px] border-border-dark dark:border-border-light'>
+          <ProfileFrame className='size-9 border-1 border-border-light/80 dark:border-border-dark/80'>
             <ProfileImage username={session?.username} />
           </ProfileFrame>
         </div>
