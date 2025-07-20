@@ -1,23 +1,23 @@
 {
-	"name": "@the-monkeys",
-	"private": true,
-	"scripts": {
-		"build": "turbo run lint build",
-		"dev": "turbo run dev",
-		"install-deps": "npm install -D pnpm && pnpm install",
-		"lint": "turbo run lint",
-		"test": "turbo run test",
-		"prepare": "husky",
-		"format": "turbo run format"
-	},
-	"devDependencies": {
-		"husky": "^9.1.7",
-		"pnpm": "^10.13.1",
-		"turbo": "^2.4.4",
-		"typescript": "^5.8.2"
-	},
-	"packageManager": "pnpm@10.10.0",
-	"dependencies": {
-		"build": "^0.1.4"
-	}
+  "name": "@the-monkeys",
+  "private": true,
+  "scripts": {
+    "build": "turbo run lint build",
+    "dev": "turbo run dev",
+    "install-deps": "npm install -D pnpm && pnpm install",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "prepare": "husky",
+    "format": "turbo run format"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "pnpm": "^10.13.1",
+    "turbo": "^2.4.4",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@10.10.0",
+  "dependencies": {
+    "build": "^0.1.4"
+  }
 }
