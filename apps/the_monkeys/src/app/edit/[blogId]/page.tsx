@@ -1,12 +1,11 @@
 'use client';
 
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
-import { EditorProps } from '@/components/editor';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
@@ -21,86 +20,211 @@ import { mutate } from 'swr';
 
 const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
+  loading: () => <EditorBlockSkeleton />,
 });
 
 const EditPage = ({ params }: { params: { blogId: string } }) => {
   const blogId = params.blogId;
   const { data: session } = useAuth();
   const router = useRouter();
-
   const { blog, isLoading } = useGetDraftBlogDetail(blogId);
 
-  // editor states
-  const [editor, setEditor] = useState<React.FC<EditorProps> | null>(null);
+  // Refs for latest values
+  const dataRef = useRef<OutputData | null>(null);
+  const accountIdRef = useRef<string | undefined>();
+  const blogTopicsRef = useRef<string[]>([]);
+  const webSocketRef = useRef<WebSocket | null>(null);
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // State variables
   const [data, setData] = useState<OutputData | null>(null);
-  const [webSocket, setWebSocket] = useState<WebSocket | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [blogTopics, setBlogTopics] = useState<string[]>([]);
-  const [token, setToken] = useState<string>();
+  const [token, setToken] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState('Connecting...');
 
   const accountId = session?.account_id;
   const username = session?.username;
 
+  // Keep refs updated
+  useEffect(() => {
+    dataRef.current = data;
+    accountIdRef.current = accountId;
+    blogTopicsRef.current = blogTopics;
+  }, [data, accountId, blogTopics]);
+
+  // Get WebSocket token
   useEffect(() => {
     if (!session) return;
 
-    axiosInstance.get('/auth/ws-token').then((res) => {
-      setToken(res.data.token);
-    });
-  }, [session]);
-
-  const createWebSocket = useCallback((blogId: string) => {
-    if (!token) return;
-
-    const ws = new WebSocket(
-      `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
-    );
-
-    ws.onopen = () => {
-      console.log('websocket connection 🟢');
+    const fetchToken = async () => {
+      try {
+        const response = await axiosInstance.get('/auth/ws-token');
+        setToken(response.data.token);
+      } catch (error) {
+        console.error('Failed to get WebSocket token:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Connection Error',
+          description:
+            'Failed to establish connection. Please refresh the page.',
+        });
+      }
     };
 
-    ws.onmessage = (event) => {
-      setIsSaving(false); // Reset saving status when message is received
-    };
+    fetchToken();
 
-    ws.onclose = () => {
-      console.log('websocket connection 🔴');
-    };
-
-    ws.onerror = (error) => {
-      console.error('websocket error ⭕', error);
-    };
-
-    setWebSocket(ws);
+    // Refresh token every 5 minutes
+    const tokenRefreshInterval = setInterval(fetchToken, 5 * 60 * 1000);
 
     return () => {
-      ws.close();
+      clearInterval(tokenRefreshInterval);
     };
-  }, []);
+  }, [session]);
 
-  // Function to format data before sending it to the server
+  // Format data for transmission
   const formatData = useCallback(
-    (data: OutputData, accountId: string | undefined) => {
+    (data: OutputData, accountId: string | undefined, blogTopics: string[]) => {
       return {
         owner_account_id: accountId,
         author_list: [accountId],
         content_type: 'editorjs',
         blog: {
-          time: data.time,
-          blocks: data.blocks.map((block) => ({
-            ...block,
-            author: [accountId],
-            time: new Date().getTime(),
-          })),
+          time: data?.time || Date.now(),
+          blocks:
+            data?.blocks?.map((block) => ({
+              ...block,
+              author: [accountId],
+              time: Date.now(),
+            })) || [],
         },
         tags: blogTopics,
       };
     },
-    [blogTopics]
+    []
   );
 
+  // WebSocket management
+  useEffect(() => {
+    if (!token || !blogId) return;
+
+    let isMounted = true;
+    const MAX_RETRIES = 5;
+    let retryCount = 0;
+
+    const connectWebSocket = () => {
+      if (!isMounted) return;
+
+      if (webSocketRef.current) {
+        webSocketRef.current.close();
+      }
+
+      setConnectionStatus('Connecting...');
+      const ws = new WebSocket(
+        `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
+      );
+
+      ws.onopen = () => {
+        if (!isMounted) return;
+        console.log('WebSocket connected 🟢');
+        setIsConnected(true);
+        setConnectionStatus('Connected');
+        retryCount = 0;
+
+        // Send latest data on reconnect
+        if (dataRef.current) {
+          const formattedData = formatData(
+            dataRef.current,
+            accountIdRef.current,
+            blogTopicsRef.current
+          );
+          ws.send(JSON.stringify(formattedData));
+          setIsSaving(true);
+        }
+      };
+
+      ws.onmessage = (event) => {
+        setIsSaving(false);
+        // Optional: Handle any incoming messages from server
+      };
+
+      ws.onclose = (event) => {
+        if (!isMounted) return;
+        console.log('WebSocket closed 🔴', event.code, event.reason);
+        setIsConnected(false);
+        setIsSaving(false);
+        setConnectionStatus('Disconnected');
+
+        // Reconnect logic with exponential backoff
+        if (retryCount < MAX_RETRIES) {
+          const delay = Math.min(1000 * 2 ** retryCount, 30000);
+          setConnectionStatus(
+            `Reconnecting in ${Math.round(delay / 1000)}s...`
+          );
+          reconnectTimeoutRef.current = setTimeout(() => {
+            retryCount++;
+            connectWebSocket();
+          }, delay);
+        } else {
+          setConnectionStatus('Connection failed. Please refresh the page.');
+        }
+      };
+
+      ws.onerror = (error) => {
+        console.error('WebSocket error ⭕', error);
+        ws.close();
+      };
+
+      webSocketRef.current = ws;
+    };
+
+    connectWebSocket();
+
+    // Handle tab visibility changes
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && !isConnected && token) {
+        // Reconnect immediately when tab becomes visible
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+        }
+        connectWebSocket();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      isMounted = false;
+      if (webSocketRef.current) {
+        webSocketRef.current.close();
+      }
+      if (reconnectTimeoutRef.current) {
+        clearTimeout(reconnectTimeoutRef.current);
+      }
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [token, blogId, formatData]);
+
+  // Auto-save when data changes
+  useEffect(() => {
+    if (!data || !isConnected) return;
+
+    const formattedData = formatData(data, accountId, blogTopics);
+
+    try {
+      if (webSocketRef.current?.readyState === WebSocket.OPEN) {
+        webSocketRef.current.send(JSON.stringify(formattedData));
+        setIsSaving(true);
+      }
+    } catch (error) {
+      console.error('Error sending data:', error);
+      setIsSaving(false);
+    }
+  }, [data, blogTopics, isConnected, accountId, formatData]);
+
+  // Handle blog publishing
   const handlePublishStep = useCallback(async () => {
     if (!data || data.blocks.length === 0) {
       toast({
@@ -108,87 +232,50 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         title: 'Error',
         description: 'Blog content cannot be empty.',
       });
-
-      return; // Ensure data is not null and not empty
+      return;
     }
-
-    const formattedData = formatData(data, accountId);
 
     setBlogPublishLoading(true);
 
     try {
-      await axiosInstance.post(`/blog/publish/${blogId}`, formattedData);
+      await axiosInstance.post(
+        `/blog/publish/${blogId}`,
+        formatData(data, accountId, blogTopics)
+      );
 
       toast({
         variant: 'success',
-        title: 'Blog Published successfully',
-        description: 'Your blog has been published successfully!',
+        title: 'Blog Published Successfully',
+        description: 'Your blog is now live!',
       });
 
-      setBlogPublishLoading(false);
+      // Invalidate cache and redirect
+      mutate(`/blog/my-drafts/${blogId}`);
       router.push(`/${username}`);
-    } catch (err) {
+    } catch (error) {
+      console.error('Publish error:', error);
       toast({
         variant: 'destructive',
-        title: 'Error publishing blog',
-        description:
-          'There was an error while publishing your blog. Please try again.',
+        title: 'Error Publishing Blog',
+        description: 'There was an error while publishing. Please try again.',
       });
     } finally {
       setBlogPublishLoading(false);
     }
-  }, [data, accountId, blogId, formatData, router]);
+  }, [data, accountId, blogId, blogTopics, formatData, router, username]);
 
-  // Fetch draft blog data every time the page loads
-  useEffect(() => {
-    mutate(`/blog/my-drafts/${blogId}`, blogId, { revalidate: true });
-  }, [mutate]);
-
-  // Create WebSocket connection when authToken is available
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const cleanup = createWebSocket(blogId);
-
-      const handleBeforeUnload = () => {
-        cleanup?.();
-      };
-
-      window.addEventListener('beforeunload', handleBeforeUnload);
-
-      return () => {
-        cleanup?.();
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-      };
-    }
-  }, [blogId, createWebSocket]);
-
-  // Set editor data based on the source
+  // Initialize editor data
   useEffect(() => {
     if (blog) {
-      setData(blog.blog);
-      setBlogTopics(blog.tags);
+      setData(blog.blog || { time: Date.now(), blocks: [], version: '' });
+      setBlogTopics(blog.tags || []);
     }
   }, [blog]);
 
-  // Send data to WebSocket when data changes
+  // Fetch draft blog data on mount
   useEffect(() => {
-    if (webSocket && webSocket.readyState === WebSocket.OPEN && data) {
-      const formattedData = formatData(data, accountId);
-      webSocket.send(JSON.stringify(formattedData));
-
-      setIsSaving(true); // Set saving status when data is sent
-    }
-
-    if (webSocket && webSocket.readyState === WebSocket.CLOSED && data) {
-      setTimeout(() => {
-        const cleanup = createWebSocket(blogId);
-
-        return () => {
-          cleanup?.();
-        };
-      }, 1000);
-    }
-  }, [data, blogTopics, webSocket, accountId, formatData]);
+    mutate(`/blog/my-drafts/${blogId}`);
+  }, [blogId]);
 
   return (
     <>
@@ -198,17 +285,28 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         </div>
       ) : (
         <div className='relative min-h-screen space-y-4'>
-          <div className='p-2 flex justify-center items-center gap-[6px]'>
-            <ChooseTopicDialog
-              blogTopics={blogTopics}
-              setBlogTopics={setBlogTopics}
-            />
+          <div className='p-2 flex justify-between items-center gap-4'>
+            <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+              <span
+                className={`inline-block w-3 h-3 rounded-full ${
+                  isConnected ? 'bg-green-500' : 'bg-yellow-500'
+                }`}
+              />
+              {connectionStatus}
+            </div>
 
-            <PublishBlogDialog
-              topics={blogTopics}
-              isPublishing={blogPublishLoading}
-              handlePublish={handlePublishStep}
-            />
+            <div className='flex gap-2'>
+              <ChooseTopicDialog
+                blogTopics={blogTopics}
+                setBlogTopics={setBlogTopics}
+              />
+
+              <PublishBlogDialog
+                topics={blogTopics}
+                isPublishing={blogPublishLoading}
+                handlePublish={handlePublishStep}
+              />
+            </div>
           </div>
 
           <div className='py-3 min-h-screen'>
@@ -223,10 +321,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             </Suspense>
           </div>
 
-          {webSocket && isSaving && (
-            <div className='sticky w-fit left-[50%] -translate-x-[50%] bottom-[53px] md:bottom-4 p-2 z-[99]'>
-              <div className='px-[10px] py-1 bg-foreground-light dark:bg-foreground-dark rounded-md'>
-                <p className='text-sm text-center'>Saving blog...</p>
+          {isSaving && (
+            <div className='fixed left-1/2 -translate-x-1/2 bottom-4 p-2 z-50'>
+              <div className='px-3 py-1.5 bg-foreground text-background rounded-full shadow-md flex items-center gap-2'>
+                <div className='w-2 h-2 rounded-full bg-green-400 animate-pulse' />
+                <span className='text-sm'>Saving...</span>
               </div>
             </div>
           )}
