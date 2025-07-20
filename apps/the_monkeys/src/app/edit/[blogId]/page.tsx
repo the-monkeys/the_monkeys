@@ -23,19 +23,6 @@ const Editor = dynamic(() => import('@/components/editor'), {
   loading: () => <EditorBlockSkeleton />,
 });
 
-// const useTabVisibility = (callback: (isVisible: boolean) => void) => {
-//   useEffect(() => {
-//     const handleVisibilityChange = () => {
-//       callback(document.visibilityState === 'visible');
-//     };
-
-//     document.addEventListener('visibilitychange', handleVisibilityChange);
-//     return () => {
-//       document.removeEventListener('visibilitychange', handleVisibilityChange);
-//     };
-//   }, [callback]);
-// };
-
 const EditPage = ({ params }: { params: { blogId: string } }) => {
   const blogId = params.blogId;
   const { data: session } = useAuth();
