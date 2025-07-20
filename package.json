@@ -2,7 +2,7 @@
   "name": "@the-monkeys",
   "private": true,
   "scripts": {
-    "build": "turbo run lint build",
+    "build": "turbo run  build",
     "dev": "turbo run dev",
     "install-deps": "npm install -D pnpm && pnpm install",
     "lint": "turbo run lint",
