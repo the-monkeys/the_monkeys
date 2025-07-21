@@ -3,6 +3,7 @@
 	"private": true,
 	"scripts": {
 		"build": "turbo run lint build",
+		"build:netlify": "./build-ci.sh",
 		"dev": "turbo run dev",
 		"install-deps": "npm install -D pnpm && pnpm install",
 		"lint": "turbo run lint",

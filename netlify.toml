@@ -1,0 +1,6 @@
+[build]
+  command = "npm install && cd apps/the_monkeys && npm install && npm run build"
+  publish = "apps/the_monkeys/.next"
+
+[build.environment]
+  NODE_VERSION = "20"
