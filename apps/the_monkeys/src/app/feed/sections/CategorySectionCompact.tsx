@@ -1,4 +1,5 @@
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
+import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetCategoryBlogs from '@/hooks/posts/useGetCategoryBlogs';
 
 const CategorySectionCompact = ({
@@ -13,9 +14,11 @@ const CategorySectionCompact = ({
     limit: 8,
   });
 
-  // TODO: implement skeleton for loading state
+  if (!blogs?.blogs) {
+    return null;
+  }
 
-  if (isError || isLoading) return null;
+  if (isError) return null;
 
   return (
     <div className='px-4 py-6'>
@@ -30,15 +33,19 @@ const CategorySectionCompact = ({
         </div>
       </div>
 
-      <div className='flex flex-col gap-5'>
-        {blogs?.blogs.slice(0, 5).map((blog) => {
-          return (
-            <div className='col-span-2 lg:col-span-1' key={blog?.blog_id}>
-              <FeedBlogCard blog={blog} />
-            </div>
-          );
-        })}
-      </div>
+      {isLoading ? (
+        <FeedBlogCardListSkeleton />
+      ) : (
+        <div className='flex flex-col gap-5'>
+          {blogs?.blogs.slice(0, 5).map((blog) => {
+            return (
+              <div className='col-span-2 lg:col-span-1' key={blog?.blog_id}>
+                <FeedBlogCard blog={blog} />
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

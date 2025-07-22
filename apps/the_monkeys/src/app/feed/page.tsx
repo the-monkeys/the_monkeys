@@ -4,12 +4,7 @@ import { useMemo } from 'react';
 
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import { Loader } from '@/components/loader';
-import { SearchInput } from '@/components/search/SearchInput';
-import {
-  FeedBlogCardListSkeleton,
-  ShowcaseBlogCardListSkeleton,
-} from '@/components/skeletons/blogSkeleton';
+import { ShowcaseBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import {
   orderedCategories,
   orderedCompactCategories,
@@ -40,8 +35,10 @@ const BlogFeedPage = () => {
           <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
         </div>
 
-        <h2 className='font-dm_sans text-xl'>
+        <h2 className='font-dm_sans text-xl text-center'>
           Feed unavailable. Sorry for the inconvenience.
+          <br />
+          Try refreshing once.
         </h2>
       </div>
     );
@@ -51,7 +48,7 @@ const BlogFeedPage = () => {
     <div className='min-h-screen'>
       <TrendingSection blogs={filteredBlogs} />
 
-      {/* TODO: optimize category section */}
+      {/* TODO: optimize category sections */}
 
       <div className='space-y-8'>
         {orderedCategories.map(({ title, category }, index) => {

@@ -67,13 +67,7 @@ export const BlogCardSkeleton = () => {
 };
 
 export const FeedBlogCardSkeleton = () => {
-  return (
-    <div className='px-0 lg:px-6 space-y-3'>
-      <UserInfoCardSkeleton />
-
-      <Skeleton className='h-32 md:h-28 w-full' />
-    </div>
-  );
+  return <Skeleton className='h-32 md:h-28 w-full' />;
 };
 
 export const ShowcaseBlogCardListSkeleton = () => {
@@ -119,15 +113,25 @@ export const BlogCardListSkeleton = () => {
 
 export const FeedBlogCardListSkeleton = () => {
   return (
-    <div className='w-full space-y-8'>
+    <div className='w-full space-y-6'>
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />
-      <FeedBlogCardSkeleton />
-      <FeedBlogCardSkeleton />
-      <FeedBlogCardSkeleton />
-      <FeedBlogCardSkeleton />
+    </div>
+  );
+};
+
+export const FeedCategorySectionSkeleton = () => {
+  return (
+    <div className='space-y-8'>
+      <div className='grid grid-cols-2 md:grid-cols-3 gap-6'>
+        <Skeleton className='col-span-2 sm:col-span-1 h-[180px] w-full' />
+        <Skeleton className='col-span-2 sm:col-span-1 h-[180px] w-full' />
+        <Skeleton className='col-span-2 sm:col-span-1 h-[180px] w-full' />
+      </div>
+
+      <FeedBlogCardListSkeleton />
     </div>
   );
 };

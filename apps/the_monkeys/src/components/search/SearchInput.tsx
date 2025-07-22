@@ -66,7 +66,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
 
         {debouncedQuery.trim() && focused && (
           <div className='absolute top-full left-0 max-w-[520px] w-screen pr-2 pt-4 z-20 search-results-container'>
-            <div className='p-4 pb-2 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
+            <div className='p-4 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
               <SearchPosts query={debouncedQuery} />
             </div>
           </div>

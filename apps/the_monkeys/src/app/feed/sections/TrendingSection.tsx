@@ -6,7 +6,7 @@ import {
 } from '@/components/cards/blog/TrendingBlogCard';
 import Container from '@/components/layout/Container';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
-import { RecommendedTopics } from '@/constants/topics';
+import { recommendedTopics } from '@/constants/topics';
 import { MetaBlog } from '@/services/blog/blogTypes';
 
 const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
@@ -50,7 +50,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
                 Recommended Topics
               </h6>
 
-              <TopicLinksContainer topics={RecommendedTopics} />
+              <TopicLinksContainer topics={recommendedTopics} />
             </div>
           </div>
         </Container>

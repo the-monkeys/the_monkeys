@@ -1,7 +1,4 @@
-import {
-  GetLatest100BlogsResponse,
-  GetMetaFeedBlogs,
-} from '@/services/blog/blogTypes';
+import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 

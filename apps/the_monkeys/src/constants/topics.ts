@@ -50,7 +50,7 @@ export const TOPICS_COLOR_CODE = [
   '#D35400', // Burnt Orange
 ];
 
-export const RecommendedTopics = [
+export const recommendedTopics = [
   'Artificial Intelligence',
   'Machine Learning',
   'Formula1',
