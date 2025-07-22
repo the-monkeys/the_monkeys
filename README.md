@@ -1,7 +1,5 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./public/logo-full-light.svg" alt="The Monkeys" height="80px">
-  <source media="(prefers-color-scheme: light)" srcset="./public/logo-full-dark.svg" alt="The Monkeys" height="80px">
-  <img src="./public/logo-full-light.svg" alt="Monkeys">
+  <img src="./public/logo-brand.svg" alt="Monkeys">
 </picture>
 
 # Inspire, Inform, Innovate
@@ -17,6 +15,7 @@ We also believe in the power of community. Engage with fellow readers, writers, 
 Explore, learn, and grow with The Monkeys. We're excited to have you on this journey with us!
 
 ## Contributing
+
 To setup the repo or to contribute follow [CONTRIBUTING.md](/contributing.md)
 
 ## Backend
@@ -44,7 +43,7 @@ By following these guidelines, you help maintain a high standard of collaboratio
 ## Contributing
 
 We are thrilled to have you consider contributing to The Monkeys! Our platform thrives on the diverse knowledge and skills of our community.
- 
+
 Whether you're an experienced developer, a tech enthusiast, a writer, or someone passionate about sharing insights, there's a place for you here. Here are a few ways you can contribute:
 
 1. **Code Contributions**: Help us improve and expand our platform. From fixing bugs to adding new features, your code is valuable.
