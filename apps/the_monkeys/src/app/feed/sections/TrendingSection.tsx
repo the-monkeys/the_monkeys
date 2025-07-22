@@ -1,4 +1,3 @@
-import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { HeadlineBlogCard } from '@/components/cards/blog/HeadlineBlogCard';
 import {
@@ -6,32 +5,32 @@ import {
   TrendingBlogCardS,
 } from '@/components/cards/blog/TrendingBlogCard';
 import Container from '@/components/layout/Container';
+import { TopicLinksContainer } from '@/components/topics/topicsContainer';
+import { recommendedTopics } from '@/constants/topics';
 import { MetaBlog } from '@/services/blog/blogTypes';
 
 const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
   return (
     <div className='space-y-6'>
-      <div className=''>
-        <Container className='px-4 py-8 md:py-10'>
-          <div className='grid grid-cols-2 gap-6 md:gap-5'>
-            <div className='col-span-2 lg:col-span-1'>
-              <TrendingBlogCardL blog={blogs[0]} />
-            </div>
-
-            <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-6 md:gap-5'>
-              {blogs.slice(1, 5).map((blog) => (
-                <div className='col-span-2 sm:col-span-1' key={blog.blog_id}>
-                  <TrendingBlogCardS blog={blog} />
-                </div>
-              ))}
-            </div>
+      <Container className='px-4 pt-8 md:pt-10'>
+        <div className='grid grid-cols-2 gap-6'>
+          <div className='col-span-2 lg:col-span-1'>
+            <TrendingBlogCardL blog={blogs[0]} />
           </div>
-        </Container>
-      </div>
 
-      <div className='py-6 bg-foreground-light/40 dark:bg-foreground-dark/40'>
+          <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-6'>
+            {blogs.slice(1, 5).map((blog) => (
+              <div className='col-span-2 sm:col-span-1' key={blog.blog_id}>
+                <TrendingBlogCardS blog={blog} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </Container>
+
+      <div className='py-6'>
         <Container className='px-4 grid grid-cols-3 gap-8'>
-          <div className='col-span-3 md:col-span-2'>
+          <div className='col-span-3 lg:col-span-2'>
             <div className='flex flex-col gap-6'>
               {blogs.slice(6, 16).map((blog) => {
                 return <FeedBlogCard blog={blog} key={blog.blog_id} />;
@@ -39,22 +38,20 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
             </div>
           </div>
 
-          <div className='col-span-3 md:col-span-1 space-y-8'>
-            <div>
-              <div className='px-3 py-2 bg-brand-orange rounded-tl-sm rounded-tr-sm'>
-                <h5 className='font-dm_sans font-medium text-xl text-white'>
-                  Latest Headlines
-                </h5>
-              </div>
-
-              <div className='py-2 flex flex-col rounded-bl-sm rounded-br-sm border-1 border-t-0 border-border-light dark:border-border-dark divide-y-1 divide-border-light dark:divide-border-dark'>
-                {blogs.slice(16, 26).map((blog) => {
-                  return <HeadlineBlogCard key={blog.blog_id} blog={blog} />;
-                })}
-              </div>
+          <div className='col-span-3 lg:col-span-1 h-fit grid grid-cols-2 lg:grid-cols-1 gap-6'>
+            <div className='col-span-2 md:col-span-1 flex flex-col divide-y-1 divide-border-light dark:divide-border-dark rounded-md overflow-hidden'>
+              {blogs.slice(16, 22).map((blog) => {
+                return <HeadlineBlogCard key={blog.blog_id} blog={blog} />;
+              })}
             </div>
 
-            {/* <ContributeAndSponsorCard className='p-4 lg:p-6' /> */}
+            <div className='col-span-2 md:col-span-1 space-y-3'>
+              <h6 className='p-1 font-dm_sans font-medium'>
+                Recommended Topics
+              </h6>
+
+              <TopicLinksContainer topics={recommendedTopics} />
+            </div>
           </div>
         </Container>
       </div>

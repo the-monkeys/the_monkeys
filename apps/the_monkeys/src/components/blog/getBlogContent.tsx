@@ -2,6 +2,8 @@ import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { twMerge } from 'tailwind-merge';
 
+import placeholderImage from '../../../public/image-placeholder.png';
+
 export const getCardContent = ({ blog }: { blog: Blog }) => {
   const blocks = blog?.blog?.blocks || [];
   const titleContent = blocks[0]?.data?.text;
@@ -91,7 +93,27 @@ export const BlogImage = ({
       alt={title}
       className={twMerge(
         className,
-        'h-full w-full object-cover object-left-top'
+        'h-full w-full object-cover object-top md:object-center'
+      )}
+    />
+  );
+};
+
+export const BlogPlaceholderImage = ({
+  title,
+  className,
+}: {
+  title: string;
+  className?: string;
+}) => {
+  // need to optimize this further
+  return (
+    <img
+      src={placeholderImage.src}
+      alt={title}
+      className={twMerge(
+        className,
+        'h-full w-full object-cover object-top md:object-center'
       )}
     />
   );

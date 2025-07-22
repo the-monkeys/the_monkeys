@@ -44,12 +44,7 @@ const FooterList = ({
 
 const Footer = () => {
   return (
-    <footer className='mt-20 overflow-hidden'>
-      <div className='flex'>
-        <div className='flex-[2] h-[30px] bg-brand-orange' />
-        <div className='flex-[1] h-[30px] bg-brand-orange opacity-80' />
-      </div>
-
+    <footer className='mt-20 border-t-2 border-border-light dark:border-border-dark'>
       <Container className='px-4 py-12 z-10'>
         <div className='grid grid-cols-3 gap-14 lg:gap-4'>
           <div className='col-span-3 lg:col-span-1 space-y-3'>
@@ -62,7 +57,7 @@ const Footer = () => {
               </div>
 
               <div className='pt-2'>
-                <p className='font-dm_sans font-medium text-[1.8rem]'>
+                <p className='font-dm_sans font-[450] tracking-tight text-[1.8rem]'>
                   Monkeys
                 </p>
               </div>

@@ -1,10 +1,17 @@
 import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
-import { BlogImage } from '@/components/blog/getBlogContent';
+import {
+  BlogDescription,
+  BlogImage,
+  BlogPlaceholderImage,
+  BlogTitle,
+} from '@/components/blog/getBlogContent';
+import Icon from '@/components/icon';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
+import { Badge } from '@the-monkeys/ui/atoms/badge';
 
 export const FeedBlogCard = ({ blog }: { blog: MetaBlog }) => {
   const authorId = blog?.owner_account_id;
@@ -12,44 +19,55 @@ export const FeedBlogCard = ({ blog }: { blog: MetaBlog }) => {
   const date = blog?.published_time;
 
   const titleContent = blog?.title;
+  const descriptionContent = blog?.first_paragraph;
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
 
   return (
-    <div className='group flex flex-col sm:flex-row gap-2 sm:gap-4'>
-      <div className='shrink-0 overflow-hidden'>
-        <div className='h-[200px] sm:h-[120px] w-full sm:w-[180px] overflow-hidden'>
+    <div className='space-y-2'>
+      {blog?.tags.length && (
+        <div className='flex items-center gap-1 overflow-hidden'>
+          <p className='text-sm opacity-80'>In</p>
+
+          <Link
+            href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+            className='shrink-0 font-medium font-dm_sans text-sm text-brand-orange capitalize hover:underline'
+          >
+            {blog?.tags[0]}
+          </Link>
+        </div>
+      )}
+
+      <div className='group flex flex-col sm:flex-row gap-3 sm:gap-4'>
+        <div className='shrink-0 h-[200px] sm:h-[140px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-md overflow-hidden'>
           {!imageContent ? (
-            <div className='h-full w-full bg-brand-orange/40' />
+            <BlogPlaceholderImage title={titleContent} />
           ) : (
             <BlogImage title={titleContent} image={imageContent} />
           )}
         </div>
-      </div>
 
-      <div className='w-full flex flex-col'>
-        <div className='pb-2 flex'>
-          <Link
-            href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-            className='shrink-0 hover:opacity-80 capitalize'
-          >
-            <p className='font-[450] text-sm text-brand-orange'>
-              {blog?.tags[0]}
-            </p>
-          </Link>
+        <div className='w-full space-y-[10px]'>
+          <UserInfoCardShowcase authorID={authorId} date={date} />
+
+          <div className='space-y-2'>
+            <Link
+              href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
+              className='w-full'
+            >
+              <BlogTitle
+                title={titleContent}
+                className='font-medium text-xl leading-[1.3] hover:underline underline-offset-2 line-clamp-2'
+              />
+            </Link>
+
+            <BlogDescription
+              description={descriptionContent}
+              className='text-sm line-clamp-2 opacity-90'
+            />
+          </div>
         </div>
-
-        <Link
-          href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-          className='mb-[6px] w-full'
-        >
-          <h2 className='font-medium text-lg md:text-xl leading-tight hover:underline underline-offset-2 line-clamp-2'>
-            {titleContent}
-          </h2>
-        </Link>
-
-        <UserInfoCardShowcase authorID={authorId} date={date} />
       </div>
     </div>
   );

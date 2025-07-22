@@ -7,7 +7,7 @@ const LoginButton = () => {
     <Link
       href={`${LOGIN_ROUTE}`}
       title='Login to Monkeys'
-      className='px-[10px] py-[6px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light rounded-sm hover:bg-opacity-85 transition-colors'
+      className='px-[10px] py-1 text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light rounded-sm hover:opacity-85 transition-colors'
     >
       <p className='font-dm_sans font-medium'>Sign In</p>
     </Link>

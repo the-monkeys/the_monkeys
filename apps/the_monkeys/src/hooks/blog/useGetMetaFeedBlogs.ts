@@ -2,12 +2,9 @@ import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 
-const useGetCategoryBlogs = ({
-  category,
-  limit = 15,
-}: { category?: string; limit?: number } = {}) => {
+const useGetMetaFeedBlogs = ({ limit = 50 }: { limit?: number } = {}) => {
   const { data, error, isLoading } = useSWR<GetMetaFeedBlogs>(
-    `/posts/${category}?limit=${limit}`,
+    `/blog/meta-feed?limit=${limit}`,
     fetcherV2,
     {
       revalidateOnFocus: false,
@@ -23,4 +20,4 @@ const useGetCategoryBlogs = ({
   };
 };
 
-export default useGetCategoryBlogs;
+export default useGetMetaFeedBlogs;

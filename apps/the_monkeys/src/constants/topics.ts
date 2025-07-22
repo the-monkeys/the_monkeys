@@ -49,3 +49,15 @@ export const TOPICS_COLOR_CODE = [
   '#16A085', // Dark Teal
   '#D35400', // Burnt Orange
 ];
+
+export const recommendedTopics = [
+  'Artificial Intelligence',
+  'Machine Learning',
+  'Formula1',
+  'Web3',
+  'TV Shows',
+  'Football',
+  'Sports',
+  'Fitness',
+  'Social Media',
+];
