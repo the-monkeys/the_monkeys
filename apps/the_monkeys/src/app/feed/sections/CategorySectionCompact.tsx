@@ -13,19 +13,21 @@ const CategorySectionCompact = ({
     limit: 8,
   });
 
+  // TODO: implement skeleton for loading state
+
   if (isError || isLoading) return null;
 
   return (
     <div className='px-4 py-6'>
       <div className='mb-10'>
+        <h5 className='mt-2 py-1 font-dm_sans font-medium text-2xl break-words'>
+          {title}
+        </h5>
+
         <div className='flex items-end'>
           <div className='w-[80px] h-1 bg-brand-orange' />
           <div className='flex-grow h-[1px] bg-border-light dark:bg-border-dark' />
         </div>
-
-        <h5 className='mt-2 py-1 font-dm_sans font-semibold text-2xl break-words'>
-          {title}
-        </h5>
       </div>
 
       <div className='flex flex-col gap-5'>

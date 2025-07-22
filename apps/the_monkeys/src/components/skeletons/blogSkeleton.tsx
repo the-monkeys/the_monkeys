@@ -1,5 +1,6 @@
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
+import Container from '../layout/Container';
 import {
   UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
@@ -65,19 +66,6 @@ export const BlogCardSkeleton = () => {
   );
 };
 
-export const ShowcaseBlogCardSkeleton = () => {
-  return (
-    <div className='col-span-2 sm:col-span-1 space-y-3'>
-      <Skeleton className='h-[180px] sm:h-[220px] w-full ' />
-
-      <div className='space-y-1'>
-        <Skeleton className='h-6 w-full' />
-        <Skeleton className='h-6 w-4/5' />
-      </div>
-    </div>
-  );
-};
-
 export const FeedBlogCardSkeleton = () => {
   return (
     <div className='px-0 lg:px-6 space-y-3'>
@@ -90,20 +78,30 @@ export const FeedBlogCardSkeleton = () => {
 
 export const ShowcaseBlogCardListSkeleton = () => {
   return (
-    <div className='grid grid-cols-2 md:grid-cols-3 gap-y-10 gap-x-6'>
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-      <ShowcaseBlogCardSkeleton />
-    </div>
+    <Container className='px-4 py-8 min-h-screen space-y-8'>
+      <div className='grid grid-cols-2 gap-6'>
+        <Skeleton className='col-span-2 md:col-span-1 w-full h-[300px] md:h-full' />
+
+        <div className='col-span-2 md:col-span-1 grid grid-cols-2 gap-4'>
+          <Skeleton className='col-span-2 sm:col-span-1 h-[200px] w-full' />
+          <Skeleton className='col-span-2 sm:col-span-1 h-[200px] w-full' />
+          <Skeleton className='col-span-2 sm:col-span-1 h-[200px] w-full' />
+          <Skeleton className='col-span-2 sm:col-span-1 h-[200px] w-full' />
+        </div>
+      </div>
+
+      <div className='grid grid-cols-3 gap-6'>
+        <div className='col-span-3 sm:col-span-2 space-y-4'>
+          <Skeleton className='h-[200px] md:h-[150px] w-full' />
+          <Skeleton className='h-[200px] md:h-[150px] w-full' />
+          <Skeleton className='h-[200px] md:h-[150px] w-full' />
+          <Skeleton className='h-[200px] md:h-[150px] w-full' />
+          <Skeleton className='h-[200px] md:h-[150px] w-full' />
+        </div>
+
+        <Skeleton className='hidden sm:block col-span-1 h-full w-full' />
+      </div>
+    </Container>
   );
 };
 

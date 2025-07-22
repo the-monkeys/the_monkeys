@@ -2,6 +2,7 @@ import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { TrendingBlogCardS } from '@/components/cards/blog/TrendingBlogCard';
 import Container from '@/components/layout/Container';
 import useGetCategoryBlogs from '@/hooks/posts/useGetCategoryBlogs';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 const CategorySection = ({
   title,
@@ -14,19 +15,21 @@ const CategorySection = ({
     category: category,
   });
 
+  // TODO: implement skeleton for loading state
+
   if (isError || isLoading) return null;
 
   return (
     <Container className='px-4 py-6'>
       <div className='mb-10'>
+        <h5 className='mt-2 py-1 font-dm_sans font-medium text-2xl break-words'>
+          {title}
+        </h5>
+
         <div className='flex items-end'>
           <div className='w-[80px] h-1 bg-brand-orange' />
           <div className='flex-grow h-[1px] bg-border-light dark:bg-border-dark' />
         </div>
-
-        <h5 className='mt-2 py-1 font-dm_sans font-semibold text-2xl break-words'>
-          {title}
-        </h5>
       </div>
 
       <div className='space-y-8 lg:space-y-10'>
@@ -39,6 +42,8 @@ const CategorySection = ({
             );
           })}
         </div>
+
+        <Separator className='mx-auto w-1/2' />
 
         <div className='grid grid-cols-2 gap-6'>
           {blogs?.blogs.slice(6, 12).map((blog) => {

@@ -5,6 +5,11 @@ import { useMemo } from 'react';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { Loader } from '@/components/loader';
+import { SearchInput } from '@/components/search/SearchInput';
+import {
+  FeedBlogCardListSkeleton,
+  ShowcaseBlogCardListSkeleton,
+} from '@/components/skeletons/blogSkeleton';
 import {
   orderedCategories,
   orderedCompactCategories,
@@ -25,14 +30,7 @@ const BlogFeedPage = () => {
   }, [blogs]);
 
   if (isLoading) {
-    return (
-      <div className='px-4 py-10 flex flex-col justify-center items-center'>
-        <Loader className='text-brand-orange' size={52} />
-        <p className='py-2 font-dm_sans text-base'>
-          Fetching latest posts for you...
-        </p>
-      </div>
-    );
+    return <ShowcaseBlogCardListSkeleton />;
   }
 
   if (isError || !filteredBlogs || filteredBlogs.length === 0) {
@@ -53,7 +51,9 @@ const BlogFeedPage = () => {
     <div className='min-h-screen'>
       <TrendingSection blogs={filteredBlogs} />
 
-      <div className='mt-10 space-y-8'>
+      {/* TODO: optimize category section */}
+
+      <div className='space-y-8'>
         {orderedCategories.map(({ title, category }, index) => {
           return (
             <CategorySection title={title} category={category} key={index} />
