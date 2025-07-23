@@ -273,8 +273,7 @@ const CreatePage = () => {
 
   return (
     <div className='relative min-h-screen'>
-      {/* Connection status bar */}
-      <div className='sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-2 border-b flex justify-between items-center'>
+      <div className='p-2 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-2'>
         <div className='flex items-center gap-2 text-sm'>
           <span
             className={`inline-block w-2 h-2 rounded-full ${
@@ -297,8 +296,7 @@ const CreatePage = () => {
         </div>
       </div>
 
-      {/* Editor area */}
-      <div className='py-4 px-2 max-w-4xl mx-auto'>
+      <div className='py-3 min-h-screen'>
         <Suspense fallback={<Loader />}>
           {data && editorConfig && (
             <Editor data={data} onChange={setData} config={editorConfig} />
@@ -306,7 +304,6 @@ const CreatePage = () => {
         </Suspense>
       </div>
 
-      {/* Saving indicator */}
       {isSaving && (
         <div className='fixed left-1/2 -translate-x-1/2 bottom-4 p-2 z-50'>
           <div className='px-3 py-1.5 bg-foreground text-background rounded-full shadow-md flex items-center gap-2'>

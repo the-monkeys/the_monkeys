@@ -285,8 +285,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         </div>
       ) : (
         <div className='relative min-h-screen space-y-4'>
-          <div className='p-2 flex justify-between items-center gap-4'>
-            <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+          <div className='p-2 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-2'>
+            <div className='flex items-center gap-2 text-sm'>
               <span
                 className={`inline-block w-3 h-3 rounded-full ${
                   isConnected ? 'bg-green-500' : 'bg-yellow-500'
