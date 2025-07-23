@@ -303,7 +303,7 @@ const CreatePage = () => {
           )}
         </Suspense>
       </div>
-
+      {/* saving */}
       {isSaving && (
         <div className='fixed left-1/2 -translate-x-1/2 bottom-4 p-2 z-50'>
           <div className='px-3 py-1.5 bg-foreground text-background rounded-full shadow-md flex items-center gap-2'>
