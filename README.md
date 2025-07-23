@@ -1,11 +1,10 @@
 <picture>
-  <img src="./public/logo-brand.svg" alt="Monkeys">
+  <img src="./apps/the_monkeys/public/logo-brand.svg" alt="Monkeys" style="height: 100px; width: 100px;">
 </picture>
 
-# Inspire, Inform, Innovate
+# Monkeys
 
-#### Blog together and write content that connect, inspire, and leave a lasting impact.
-
+#### Inspire, Inform, Innovate
 With Monkeys, create content that truly makes a difference. We provide a dynamic space for individuals to share their knowledge and experiences across a wide array of topics. Whether you're passionate about science, technology, personal development, self-improvement, psychology, philosophy, fashion, health, or lifestyle, you'll find a place here to both learn and contribute.
 
 Our platform is designed with the belief that learning should be accessible to everyone. Dive into our diverse range of perspectives and insights, and expand your understanding of the world.
