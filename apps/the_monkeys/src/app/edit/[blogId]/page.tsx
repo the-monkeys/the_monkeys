@@ -46,6 +46,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
+  const [heartbeatEnabled, setHeartbeatEnabled] = useState(true);
 
   const accountId = session?.account_id;
   const username = session?.username;
@@ -138,26 +139,32 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           retryCount = 0;
           lastHeartbeatRef.current = Date.now();
 
-          // Start heartbeat to monitor connection health
-          heartbeatIntervalRef.current = setInterval(() => {
-            if (ws.readyState === WebSocket.OPEN) {
-              // Send a ping message to keep connection alive
-              try {
-                ws.send(
-                  JSON.stringify({ type: 'ping', timestamp: Date.now() })
-                );
-                lastHeartbeatRef.current = Date.now();
-              } catch (error) {
-                console.warn('Failed to send heartbeat:', error);
-                // Connection might be dead, trigger reconnection
-                if (isMounted) {
-                  setIsConnected(false);
-                  setConnectionStatus('Connection lost - reconnecting...');
-                  connectWebSocket();
+          // Clear any existing heartbeat interval before setting a new one
+          if (heartbeatIntervalRef.current) {
+            clearInterval(heartbeatIntervalRef.current);
+          }
+
+          // Start heartbeat to monitor connection health (reduce frequency to avoid server issues)
+          if (heartbeatEnabled) {
+            heartbeatIntervalRef.current = setInterval(() => {
+              if (ws.readyState === WebSocket.OPEN && isMounted) {
+                // Send a ping message to keep connection alive
+                try {
+                  // Use a simpler ping format that the server might handle better
+                  ws.send(JSON.stringify({ type: 'ping' }));
+                  lastHeartbeatRef.current = Date.now();
+                  console.log('Heartbeat sent 💓');
+                } catch (error) {
+                  console.warn('Failed to send heartbeat:', error);
+                  // Disable heartbeat if it's causing issues
+                  setHeartbeatEnabled(false);
+                  if (heartbeatIntervalRef.current) {
+                    clearInterval(heartbeatIntervalRef.current);
+                  }
                 }
               }
-            }
-          }, 30000); // Send heartbeat every 30 seconds
+            }, 60000); // Increase to 60 seconds to be more conservative
+          }
 
           // Send latest data on reconnect
           if (dataRef.current) {
@@ -179,10 +186,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             const message = JSON.parse(event.data);
             // Handle pong responses to keep connection alive
             if (message.type === 'pong') {
-              console.log('Received pong - connection healthy');
+              console.log('Received pong - connection healthy 💚');
               return;
             }
             // Handle other server messages here if needed
+            console.log('Received message:', message);
           } catch (error) {
             // Message might not be JSON, that's okay
             console.log('Received non-JSON message:', event.data);
@@ -195,6 +203,12 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           setIsConnected(false);
           setIsSaving(false);
 
+          // Clear heartbeat interval when connection closes
+          if (heartbeatIntervalRef.current) {
+            clearInterval(heartbeatIntervalRef.current);
+            heartbeatIntervalRef.current = null;
+          }
+
           // Handle different close codes with immediate vs delayed reconnection
           let statusMessage = 'Disconnected';
           let shouldReconnectImmediately = false;
@@ -204,6 +218,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             shouldReconnectImmediately = true; // Network issues - reconnect immediately
           } else if (event.code === 1000) {
             statusMessage = 'Disconnected normally';
+            console.log('Normal WebSocket closure - not reconnecting');
             return; // Don't reconnect for normal closure
           } else if (event.code === 1001) {
             statusMessage = 'Server going away';
@@ -217,6 +232,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           } else if (event.code === 1011) {
             statusMessage = 'Server error';
             shouldReconnectImmediately = false; // Server error - use backoff
+          } else if (event.code === 1005) {
+            // No status code - might be a normal close
+            console.log('WebSocket closed without status code - not reconnecting');
+            return;
           } else {
             statusMessage = 'Connection closed';
             shouldReconnectImmediately = true; // Unknown reason - try immediately
@@ -224,25 +243,30 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
           setConnectionStatus(statusMessage);
 
+          // Add a small delay before attempting reconnection to avoid rapid reconnection loops
+          const baseDelay = shouldReconnectImmediately ? 1000 : 2000;
+
           // Reconnect logic - immediate for certain scenarios, exponential backoff for others
           if (retryCount < MAX_RETRIES) {
             let delay = 0;
 
             if (shouldReconnectImmediately && retryCount === 0) {
-              // First retry for network/server issues - immediate
-              delay = 100; // Small delay to prevent rapid fire
+              // First retry for network/server issues - small delay
+              delay = baseDelay;
               setConnectionStatus('Reconnecting...');
             } else {
               // Use exponential backoff for subsequent retries or server errors
-              delay = Math.min(1000 * Math.pow(2, retryCount), 15000); // Reduced max delay to 15s
+              delay = Math.min(baseDelay * Math.pow(2, retryCount), 15000);
               setConnectionStatus(
                 `Reconnecting in ${Math.round(delay / 1000)}s...`
               );
             }
 
             reconnectTimeoutRef.current = setTimeout(() => {
-              retryCount++;
-              connectWebSocket();
+              if (isMounted) {
+                retryCount++;
+                connectWebSocket();
+              }
             }, delay);
           } else {
             setConnectionStatus('Connection failed. Please refresh the page.');
