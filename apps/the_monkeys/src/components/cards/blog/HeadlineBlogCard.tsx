@@ -20,11 +20,11 @@ export const HeadlineBlogCard = ({ blog }: { blog: MetaBlog }) => {
     <div className='px-4 py-3 space-y-2 bg-foreground-light/40 dark:bg-foreground-dark/40'>
       {blog?.tags.length && (
         <div className='flex items-center gap-1 overflow-hidden'>
-          <p className='text-sm opacity-80'>In</p>
+          <p className='text-sm opacity-80'>in</p>
 
           <Link
             href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-            className='shrink-0 font-medium font-dm_sans text-sm text-brand-orange capitalize hover:underline'
+            className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
           >
             {blog?.tags[0]}
           </Link>

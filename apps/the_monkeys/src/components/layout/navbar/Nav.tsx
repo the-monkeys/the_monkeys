@@ -69,7 +69,7 @@ const Nav = ({
             <SearchInputLink />
           </div>
 
-          <SearchInput className='hidden sm:block w-[280px] md:w-[380px]' />
+          <SearchInput className='hidden sm:block w-[250px] md:w-[350px]' />
         </div>
 
         <div className='flex items-center space-x-[10px]'>

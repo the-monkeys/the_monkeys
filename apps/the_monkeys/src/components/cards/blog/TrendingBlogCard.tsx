@@ -35,11 +35,11 @@ export const TrendingBlogCardL = ({ blog }: { blog: MetaBlog }) => {
       <div className='space-y-[10px]'>
         {blog?.tags.length && (
           <div className='flex items-center gap-1 overflow-hidden'>
-            <p className='text-sm opacity-80'>In</p>
+            <p className='text-sm opacity-80'>in</p>
 
             <Link
               href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-              className='shrink-0 font-medium font-dm_sans text-sm text-brand-orange capitalize hover:underline'
+              className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
             >
               {blog?.tags[0]}
             </Link>
@@ -52,7 +52,7 @@ export const TrendingBlogCardL = ({ blog }: { blog: MetaBlog }) => {
             className='mb-[6px]'
           >
             <BlogTitle
-              className='font-semibold text-2xl sm:text-3xl leading-[1.3] hover:underline underline-offset-2 line-clamp-3'
+              className='font-semibold text-2xl sm:text-3xl leading-[1.3] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent}
             />
           </Link>
@@ -61,7 +61,7 @@ export const TrendingBlogCardL = ({ blog }: { blog: MetaBlog }) => {
 
           <BlogDescription
             description={descriptionContent}
-            className='hidden sm:block pt-2 text-sm lg:text-base line-clamp-4 opacity-90'
+            className='pt-2 text-sm lg:text-base line-clamp-3 md:line-clamp-5 opacity-90'
           />
         </div>
       </div>
@@ -92,11 +92,11 @@ export const TrendingBlogCardS = ({ blog }: { blog: MetaBlog }) => {
       <div className='space-y-[10px]'>
         {blog?.tags.length && (
           <div className='flex items-center gap-1 overflow-hidden'>
-            <p className='text-sm opacity-80'>In</p>
+            <p className='text-sm opacity-80'>in</p>
 
             <Link
               href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-              className='shrink-0 font-medium font-dm_sans text-sm text-brand-orange capitalize hover:underline'
+              className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
             >
               {blog?.tags[0]}
             </Link>

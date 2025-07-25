@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { HeadlineBlogCard } from '@/components/cards/blog/HeadlineBlogCard';
 import {
@@ -6,6 +8,7 @@ import {
 } from '@/components/cards/blog/TrendingBlogCard';
 import Container from '@/components/layout/Container';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
+import { TOPIC_ROUTE } from '@/constants/routeConstants';
 import { recommendedTopics } from '@/constants/topics';
 import { MetaBlog } from '@/services/blog/blogTypes';
 
@@ -29,28 +32,37 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
       </Container>
 
       <div className='py-6'>
-        <Container className='px-4 grid grid-cols-3 gap-8'>
+        <Container className='px-4 grid grid-cols-3 gap-8 lg:gap-12 xl:gap-16'>
           <div className='col-span-3 lg:col-span-2'>
             <div className='flex flex-col gap-6'>
-              {blogs.slice(6, 16).map((blog) => {
+              {blogs.slice(5, 15).map((blog) => {
                 return <FeedBlogCard blog={blog} key={blog.blog_id} />;
               })}
             </div>
           </div>
 
           <div className='col-span-3 lg:col-span-1 h-fit grid grid-cols-2 lg:grid-cols-1 gap-6'>
-            <div className='col-span-2 md:col-span-1 flex flex-col divide-y-1 divide-border-light dark:divide-border-dark rounded-md overflow-hidden'>
-              {blogs.slice(16, 22).map((blog) => {
-                return <HeadlineBlogCard key={blog.blog_id} blog={blog} />;
-              })}
-            </div>
+            {/* Headline blogs section - will replace with some other section in future */}
 
-            <div className='col-span-2 md:col-span-1 space-y-3'>
-              <h6 className='p-1 font-dm_sans font-medium'>
-                Recommended Topics
+            <div className='col-span-2 md:col-span-1 flex flex-col gap-3'>
+              <h6 className='py-2 font-dm_sans font-semibold'>
+                Topics on the rise
               </h6>
 
               <TopicLinksContainer topics={recommendedTopics} />
+
+              <Link
+                href={`${TOPIC_ROUTE}/explore`}
+                className='w-fit text-sm opacity-90 hover:underline'
+              >
+                Explore more topics
+              </Link>
+            </div>
+
+            <div className='col-span-2 md:col-span-1 flex flex-col gap-3'>
+              <h6 className='py-2 font-dm_sans font-semibold'>
+                People to follow
+              </h6>
             </div>
           </div>
         </Container>

@@ -52,12 +52,13 @@ export const TOPICS_COLOR_CODE = [
 
 export const recommendedTopics = [
   'Artificial Intelligence',
-  'Machine Learning',
-  'Formula1',
-  'Web3',
-  'TV Shows',
-  'Football',
-  'Sports',
   'Fitness',
+  'Machine Learning',
+  'Web3',
+  'Formula1',
+  'Football',
+  'TV Shows',
   'Social Media',
+  'Sports',
+  'Immigration',
 ];

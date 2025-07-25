@@ -1,50 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import Link from 'next/link';
-
-import { generateSlug } from '@/app/blog/utils/generateSlug';
-import { BLOG_ROUTE } from '@/constants/routeConstants';
+import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
+import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
-import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
+import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { useBlogStore } from '@/store/useBlogStore';
 
-import { BlogTitle } from '../blog/getBlogContent';
-import { SearchBlogTitlesSkeleton } from '../skeletons/searchSkeleton';
-
-const SearchBlogTitle = ({
-  blog,
-  onClose,
-}: {
-  blog: MetaBlog;
-  onClose?: () => void;
-}) => {
-  const blogId = blog?.blog_id;
-
-  const titleContent = blog?.title;
-
-  const blogSlug = generateSlug(titleContent);
-
-  return (
-    <Link
-      href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-      className='group p-1'
-      onClick={onClose}
-    >
-      <BlogTitle
-        title={titleContent}
-        className='font-medium group-hover:underline leading-[1.3] line-clamp-2'
-      />
-    </Link>
-  );
-};
-
-export const SearchPosts = ({
-  query,
-  onClose,
-}: {
-  query: string;
-  onClose?: () => void;
-}) => {
+export const SearchPosts = ({ query }: { query: string }) => {
   const [blogs, setBlogs] = useState<GetMetaFeedBlogs>({ blogs: [] });
 
   const [blogsLoading, setBlogsLoading] = useState(true);
@@ -84,7 +46,7 @@ export const SearchPosts = ({
   }, [query]);
 
   if (blogsLoading) {
-    return <SearchBlogTitlesSkeleton />;
+    return <FeedBlogCardListSkeleton />;
   }
 
   if (
@@ -97,20 +59,11 @@ export const SearchPosts = ({
       </div>
     );
   }
-
   return (
-    <div className='space-y-[10px]'>
-      <div className='flex flex-col gap-2'>
-        {blogs?.blogs.slice(0, 3).map((blog) => {
-          return (
-            <SearchBlogTitle
-              blog={blog}
-              onClose={onClose}
-              key={blog?.blog_id}
-            />
-          );
-        })}
-      </div>
+    <div className='flex flex-col space-y-6 sm:space-y-8'>
+      {blogs?.blogs.map((blog) => {
+        return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+      })}
     </div>
   );
 };
