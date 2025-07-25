@@ -122,62 +122,97 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
 
       setConnectionStatus('Connecting...');
-      const ws = new WebSocket(
-        `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
-      );
 
-      ws.onopen = () => {
-        if (!isMounted) return;
-        console.log('WebSocket connected 🟢');
-        setIsConnected(true);
-        setConnectionStatus('Connected');
-        retryCount = 0;
+      try {
+        const ws = new WebSocket(
+          `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
+        );
 
-        // Send latest data on reconnect
-        if (dataRef.current) {
-          const formattedData = formatData(
-            dataRef.current,
-            accountIdRef.current,
-            blogTopicsRef.current
-          );
-          ws.send(JSON.stringify(formattedData));
-          setIsSaving(true);
-        }
-      };
+        ws.onopen = () => {
+          if (!isMounted) return;
+          console.log('WebSocket connected 🟢');
+          setIsConnected(true);
+          setConnectionStatus('Connected');
+          retryCount = 0;
 
-      ws.onmessage = (event) => {
-        setIsSaving(false);
-        // Optional: Handle any incoming messages from server
-      };
+          // Send latest data on reconnect
+          if (dataRef.current) {
+            const formattedData = formatData(
+              dataRef.current,
+              accountIdRef.current,
+              blogTopicsRef.current
+            );
+            ws.send(JSON.stringify(formattedData));
+            setIsSaving(true);
+          }
+        };
 
-      ws.onclose = (event) => {
-        if (!isMounted) return;
-        console.log('WebSocket closed 🔴', event.code, event.reason);
+        ws.onmessage = (event) => {
+          setIsSaving(false);
+          // Optional: Handle any incoming messages from server
+        };
+
+        ws.onclose = (event) => {
+          if (!isMounted) return;
+          console.log('WebSocket closed 🔴', event.code, event.reason);
+          setIsConnected(false);
+          setIsSaving(false);
+
+          // Handle different close codes
+          let statusMessage = 'Disconnected';
+          if (event.code === 1006) {
+            statusMessage = 'Connection lost unexpectedly';
+          } else if (event.code === 1000) {
+            statusMessage = 'Disconnected normally';
+            return; // Don't reconnect for normal closure
+          } else if (event.code === 1001) {
+            statusMessage = 'Server going away';
+          } else if (event.code === 1008 || event.code === 1002) {
+            statusMessage = 'Connection failed - invalid token';
+            setConnectionStatus(
+              'Authentication failed. Please refresh the page.'
+            );
+            return; // Don't reconnect for auth issues
+          }
+
+          setConnectionStatus(statusMessage);
+
+          // Reconnect logic with exponential backoff
+          if (retryCount < MAX_RETRIES) {
+            const delay = Math.min(1000 * 2 ** retryCount, 30000);
+            setConnectionStatus(
+              `Reconnecting in ${Math.round(delay / 1000)}s...`
+            );
+            reconnectTimeoutRef.current = setTimeout(() => {
+              retryCount++;
+              connectWebSocket();
+            }, delay);
+          } else {
+            setConnectionStatus('Connection failed. Please refresh the page.');
+          }
+        };
+
+        ws.onerror = (error) => {
+          console.error('WebSocket error ⭕', error);
+          setConnectionStatus('Connection error occurred');
+          // Don't immediately close, let onclose handle the reconnection
+        };
+
+        webSocketRef.current = ws;
+      } catch (error) {
+        console.error('Failed to create WebSocket connection:', error);
+        setConnectionStatus('Failed to establish connection');
         setIsConnected(false);
-        setIsSaving(false);
-        setConnectionStatus('Disconnected');
 
-        // Reconnect logic with exponential backoff
+        // Retry after a delay if we haven't exceeded max retries
         if (retryCount < MAX_RETRIES) {
           const delay = Math.min(1000 * 2 ** retryCount, 30000);
-          setConnectionStatus(
-            `Reconnecting in ${Math.round(delay / 1000)}s...`
-          );
-          reconnectTimeoutRef.current = setTimeout(() => {
+          setTimeout(() => {
             retryCount++;
             connectWebSocket();
           }, delay);
-        } else {
-          setConnectionStatus('Connection failed. Please refresh the page.');
         }
-      };
-
-      ws.onerror = (error) => {
-        console.error('WebSocket error ⭕', error);
-        ws.close();
-      };
-
-      webSocketRef.current = ws;
+      }
     };
 
     connectWebSocket();
@@ -209,22 +244,64 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Auto-save when data changes
   useEffect(() => {
-    if (!data || !isConnected) return;
+    if (!data || !isConnected || !webSocketRef.current) return;
 
     const formattedData = formatData(data, accountId, blogTopics);
 
     try {
-      if (webSocketRef.current?.readyState === WebSocket.OPEN) {
+      if (webSocketRef.current.readyState === WebSocket.OPEN) {
         webSocketRef.current.send(JSON.stringify(formattedData));
         setIsSaving(true);
+      } else if (webSocketRef.current.readyState === WebSocket.CONNECTING) {
+        // Wait for connection to open, then send
+        console.log('WebSocket still connecting, will send when ready');
+      } else {
+        console.log(
+          'WebSocket not ready, state:',
+          webSocketRef.current.readyState
+        );
+        setIsConnected(false);
       }
     } catch (error) {
       console.error('Error sending data:', error);
       setIsSaving(false);
+      setIsConnected(false);
+      toast({
+        variant: 'destructive',
+        title: 'Connection Error',
+        description: 'Failed to save changes. Please check your connection.',
+      });
     }
   }, [data, blogTopics, isConnected, accountId, formatData]);
 
-  // Handle blog publishing
+  // Manual reconnect function
+  const handleManualReconnect = useCallback(() => {
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+    }
+
+    // Reset connection state and try to reconnect
+    setIsConnected(false);
+    setConnectionStatus('Reconnecting...');
+
+    // Close existing connection if any
+    if (webSocketRef.current) {
+      webSocketRef.current.close();
+    }
+
+    // Trigger reconnection by updating token (this will restart the WebSocket effect)
+    if (session) {
+      axiosInstance
+        .get('/auth/ws-token')
+        .then((response) => {
+          setToken(response.data.token);
+        })
+        .catch((error) => {
+          console.error('Failed to refresh token:', error);
+          setConnectionStatus('Failed to refresh connection token');
+        });
+    }
+  }, [session]);
   const handlePublishStep = useCallback(async () => {
     if (!data || data.blocks.length === 0) {
       toast({
@@ -289,10 +366,41 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             <div className='flex items-center gap-2 text-sm'>
               <span
                 className={`inline-block w-3 h-3 rounded-full ${
-                  isConnected ? 'bg-green-500' : 'bg-yellow-500'
+                  isConnected
+                    ? 'bg-green-500'
+                    : connectionStatus.includes('Reconnecting')
+                      ? 'bg-yellow-500 animate-pulse'
+                      : connectionStatus.includes('failed') ||
+                          connectionStatus.includes('Authentication')
+                        ? 'bg-red-500'
+                        : 'bg-yellow-500'
                 }`}
               />
-              {connectionStatus}
+              <span
+                className={`${
+                  connectionStatus.includes('failed') ||
+                  connectionStatus.includes('Authentication')
+                    ? 'text-red-600 dark:text-red-400'
+                    : connectionStatus.includes('Reconnecting')
+                      ? 'text-yellow-600 dark:text-yellow-400'
+                      : isConnected
+                        ? 'text-green-600 dark:text-green-400'
+                        : 'text-gray-600 dark:text-gray-400'
+                }`}
+              >
+                {connectionStatus}
+              </span>
+
+              {/* Manual reconnect button for failed connections */}
+              {(connectionStatus.includes('failed') ||
+                connectionStatus.includes('Authentication')) && (
+                <button
+                  onClick={handleManualReconnect}
+                  className='ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors'
+                >
+                  Reconnect
+                </button>
+              )}
             </div>
 
             <div className='flex gap-2'>
