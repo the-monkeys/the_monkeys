@@ -143,7 +143,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             if (ws.readyState === WebSocket.OPEN) {
               // Send a ping message to keep connection alive
               try {
-                ws.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }));
+                ws.send(
+                  JSON.stringify({ type: 'ping', timestamp: Date.now() })
+                );
                 lastHeartbeatRef.current = Date.now();
               } catch (error) {
                 console.warn('Failed to send heartbeat:', error);
@@ -318,6 +320,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, blogId, formatData]);
 
   // Auto-save when data changes
@@ -443,26 +446,28 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           <div className='p-2 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-2'>
             <div className='flex items-center gap-2 text-sm'>
               <span
-                className={`inline-block w-3 h-3 rounded-full ${isConnected
+                className={`inline-block w-3 h-3 rounded-full ${
+                  isConnected
                     ? 'bg-green-500'
                     : connectionStatus.includes('Reconnecting')
                       ? 'bg-yellow-500 animate-pulse'
                       : connectionStatus.includes('failed') ||
-                        connectionStatus.includes('Authentication')
+                          connectionStatus.includes('Authentication')
                         ? 'bg-red-500'
                         : 'bg-yellow-500'
-                  }`}
+                }`}
               />
               <span
-                className={`${connectionStatus.includes('failed') ||
-                    connectionStatus.includes('Authentication')
+                className={`${
+                  connectionStatus.includes('failed') ||
+                  connectionStatus.includes('Authentication')
                     ? 'text-red-600 dark:text-red-400'
                     : connectionStatus.includes('Reconnecting')
                       ? 'text-yellow-600 dark:text-yellow-400'
                       : isConnected
                         ? 'text-green-600 dark:text-green-400'
                         : 'text-gray-600 dark:text-gray-400'
-                  }`}
+                }`}
               >
                 {connectionStatus}
               </span>
@@ -470,13 +475,13 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               {/* Manual reconnect button for failed connections */}
               {(connectionStatus.includes('failed') ||
                 connectionStatus.includes('Authentication')) && (
-                  <button
-                    onClick={handleManualReconnect}
-                    className='ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors'
-                  >
-                    Reconnect
-                  </button>
-                )}
+                <button
+                  onClick={handleManualReconnect}
+                  className='ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors'
+                >
+                  Reconnect
+                </button>
+              )}
             </div>
 
             <div className='flex gap-2'>
