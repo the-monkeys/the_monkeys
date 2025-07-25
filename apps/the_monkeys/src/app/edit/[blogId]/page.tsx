@@ -35,6 +35,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const blogTopicsRef = useRef<string[]>([]);
   const webSocketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const lastHeartbeatRef = useRef<number>(Date.now());
 
   // State variables
   const [data, setData] = useState<OutputData | null>(null);
@@ -134,6 +136,26 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           setIsConnected(true);
           setConnectionStatus('Connected');
           retryCount = 0;
+          lastHeartbeatRef.current = Date.now();
+
+          // Start heartbeat to monitor connection health
+          heartbeatIntervalRef.current = setInterval(() => {
+            if (ws.readyState === WebSocket.OPEN) {
+              // Send a ping message to keep connection alive
+              try {
+                ws.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }));
+                lastHeartbeatRef.current = Date.now();
+              } catch (error) {
+                console.warn('Failed to send heartbeat:', error);
+                // Connection might be dead, trigger reconnection
+                if (isMounted) {
+                  setIsConnected(false);
+                  setConnectionStatus('Connection lost - reconnecting...');
+                  connectWebSocket();
+                }
+              }
+            }
+          }, 30000); // Send heartbeat every 30 seconds
 
           // Send latest data on reconnect
           if (dataRef.current) {
@@ -149,7 +171,20 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
         ws.onmessage = (event) => {
           setIsSaving(false);
-          // Optional: Handle any incoming messages from server
+          lastHeartbeatRef.current = Date.now();
+
+          try {
+            const message = JSON.parse(event.data);
+            // Handle pong responses to keep connection alive
+            if (message.type === 'pong') {
+              console.log('Received pong - connection healthy');
+              return;
+            }
+            // Handle other server messages here if needed
+          } catch (error) {
+            // Message might not be JSON, that's okay
+            console.log('Received non-JSON message:', event.data);
+          }
         };
 
         ws.onclose = (event) => {
@@ -158,31 +193,51 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           setIsConnected(false);
           setIsSaving(false);
 
-          // Handle different close codes
+          // Handle different close codes with immediate vs delayed reconnection
           let statusMessage = 'Disconnected';
+          let shouldReconnectImmediately = false;
+
           if (event.code === 1006) {
             statusMessage = 'Connection lost unexpectedly';
+            shouldReconnectImmediately = true; // Network issues - reconnect immediately
           } else if (event.code === 1000) {
             statusMessage = 'Disconnected normally';
             return; // Don't reconnect for normal closure
           } else if (event.code === 1001) {
             statusMessage = 'Server going away';
+            shouldReconnectImmediately = true; // Server restart - reconnect immediately
           } else if (event.code === 1008 || event.code === 1002) {
             statusMessage = 'Connection failed - invalid token';
             setConnectionStatus(
               'Authentication failed. Please refresh the page.'
             );
             return; // Don't reconnect for auth issues
+          } else if (event.code === 1011) {
+            statusMessage = 'Server error';
+            shouldReconnectImmediately = false; // Server error - use backoff
+          } else {
+            statusMessage = 'Connection closed';
+            shouldReconnectImmediately = true; // Unknown reason - try immediately
           }
 
           setConnectionStatus(statusMessage);
 
-          // Reconnect logic with exponential backoff
+          // Reconnect logic - immediate for certain scenarios, exponential backoff for others
           if (retryCount < MAX_RETRIES) {
-            const delay = Math.min(1000 * 2 ** retryCount, 30000);
-            setConnectionStatus(
-              `Reconnecting in ${Math.round(delay / 1000)}s...`
-            );
+            let delay = 0;
+
+            if (shouldReconnectImmediately && retryCount === 0) {
+              // First retry for network/server issues - immediate
+              delay = 100; // Small delay to prevent rapid fire
+              setConnectionStatus('Reconnecting...');
+            } else {
+              // Use exponential backoff for subsequent retries or server errors
+              delay = Math.min(1000 * Math.pow(2, retryCount), 15000); // Reduced max delay to 15s
+              setConnectionStatus(
+                `Reconnecting in ${Math.round(delay / 1000)}s...`
+              );
+            }
+
             reconnectTimeoutRef.current = setTimeout(() => {
               retryCount++;
               connectWebSocket();
@@ -217,7 +272,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
     connectWebSocket();
 
-    // Handle tab visibility changes
+    // Handle tab visibility changes and network connectivity
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && !isConnected && token) {
         // Reconnect immediately when tab becomes visible
@@ -228,7 +283,25 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
     };
 
+    const handleOnline = () => {
+      if (!isConnected && token) {
+        console.log('Network back online - attempting reconnection');
+        setConnectionStatus('Network restored - reconnecting...');
+        if (reconnectTimeoutRef.current) {
+          clearTimeout(reconnectTimeoutRef.current);
+        }
+        connectWebSocket();
+      }
+    };
+
+    const handleOffline = () => {
+      setConnectionStatus('Network offline');
+      setIsConnected(false);
+    };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
       isMounted = false;
@@ -238,7 +311,12 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
+      if (heartbeatIntervalRef.current) {
+        clearInterval(heartbeatIntervalRef.current);
+      }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, [token, blogId, formatData]);
 
@@ -365,28 +443,26 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           <div className='p-2 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-2'>
             <div className='flex items-center gap-2 text-sm'>
               <span
-                className={`inline-block w-3 h-3 rounded-full ${
-                  isConnected
+                className={`inline-block w-3 h-3 rounded-full ${isConnected
                     ? 'bg-green-500'
                     : connectionStatus.includes('Reconnecting')
                       ? 'bg-yellow-500 animate-pulse'
                       : connectionStatus.includes('failed') ||
-                          connectionStatus.includes('Authentication')
+                        connectionStatus.includes('Authentication')
                         ? 'bg-red-500'
                         : 'bg-yellow-500'
-                }`}
+                  }`}
               />
               <span
-                className={`${
-                  connectionStatus.includes('failed') ||
-                  connectionStatus.includes('Authentication')
+                className={`${connectionStatus.includes('failed') ||
+                    connectionStatus.includes('Authentication')
                     ? 'text-red-600 dark:text-red-400'
                     : connectionStatus.includes('Reconnecting')
                       ? 'text-yellow-600 dark:text-yellow-400'
                       : isConnected
                         ? 'text-green-600 dark:text-green-400'
                         : 'text-gray-600 dark:text-gray-400'
-                }`}
+                  }`}
               >
                 {connectionStatus}
               </span>
@@ -394,13 +470,13 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               {/* Manual reconnect button for failed connections */}
               {(connectionStatus.includes('failed') ||
                 connectionStatus.includes('Authentication')) && (
-                <button
-                  onClick={handleManualReconnect}
-                  className='ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors'
-                >
-                  Reconnect
-                </button>
-              )}
+                  <button
+                    onClick={handleManualReconnect}
+                    className='ml-2 px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors'
+                  >
+                    Reconnect
+                  </button>
+                )}
             </div>
 
             <div className='flex gap-2'>
