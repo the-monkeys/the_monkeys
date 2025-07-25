@@ -56,9 +56,9 @@ export const recommendedTopics = [
   'Machine Learning',
   'Web3',
   'Formula1',
+  'Social Media',
   'Football',
   'TV Shows',
-  'Social Media',
-  'Sports',
   'Immigration',
+  'Sports',
 ];

@@ -1,5 +1,4 @@
 import { DefaultProfile } from '@/components/profileImage';
-import { SearchInput } from '@/components/search/SearchInput';
 
 const UserNotFound = () => {
   return (
@@ -18,8 +17,6 @@ const UserNotFound = () => {
           for someone else.
         </p>
       </div>
-
-      <SearchInput className='w-full' />
     </>
   );
 };

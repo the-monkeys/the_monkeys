@@ -54,7 +54,7 @@ const Nav = ({
       <Container className='w-full px-4 py-[10px] flex items-center justify-between flex-wrap md:flex-nowrap gap-4'>
         <div className='flex items-center gap-[10px] sm:gap-4'>
           <Link href={FEED_ROUTE} className='group flex items-center gap-[6px]'>
-            <div className='w-[38px] md:w-9 flex justify-center items-center group-hover:opacity-85'>
+            <div className='w-9 flex justify-center items-center group-hover:opacity-85'>
               <Logo />
             </div>
 

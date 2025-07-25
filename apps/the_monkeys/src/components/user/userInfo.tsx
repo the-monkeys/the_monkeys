@@ -10,6 +10,39 @@ import {
   UserInfoCardSkeleton,
 } from '../skeletons/userSkeleton';
 
+export const RecommendedUserCard = ({ id }: { id?: string }) => {
+  const { user, isLoading, isError } = useGetProfileInfoById(id);
+
+  if (isLoading) return <UserInfoCardCompactSkeleton />;
+
+  if (isError) {
+    return null;
+  }
+
+  const userData = user?.user;
+
+  return (
+    <div className='w-full flex gap-3'>
+      <Link href={`/${userData?.username}`} className='hover:opacity-80'>
+        <ProfileFrame className='size-10 ring-1 ring-border-light/40 dark:ring-border-dark/40'>
+          <ProfileImage username={userData?.username} />
+        </ProfileFrame>
+      </Link>
+
+      <div className='space-y-[6px]'>
+        <Link
+          href={`/${userData?.username}`}
+          className='font-medium hover:underline'
+        >
+          {userData?.first_name} {userData?.last_name}
+        </Link>
+
+        <span className='text-sm opacity-90 line-clamp-2'>{userData?.bio}</span>
+      </div>
+    </div>
+  );
+};
+
 export const UserInfoCardCompact = ({
   id,
   date,

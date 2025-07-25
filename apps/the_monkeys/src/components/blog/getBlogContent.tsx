@@ -91,10 +91,7 @@ export const BlogImage = ({
     <img
       src={image}
       alt={title}
-      className={twMerge(
-        className,
-        'h-full w-full object-cover object-top md:object-center'
-      )}
+      className={twMerge(className, 'h-full w-full object-cover object-center')}
     />
   );
 };
