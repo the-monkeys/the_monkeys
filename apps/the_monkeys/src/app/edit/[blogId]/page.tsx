@@ -234,7 +234,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             shouldReconnectImmediately = false; // Server error - use backoff
           } else if (event.code === 1005) {
             // No status code - might be a normal close
-            console.log('WebSocket closed without status code - not reconnecting');
+            console.log(
+              'WebSocket closed without status code - not reconnecting'
+            );
             return;
           } else {
             statusMessage = 'Connection closed';
