@@ -71,16 +71,16 @@ export const UserInfoCardShowcase = ({
   const userData = user?.user;
 
   return (
-    <div className='flex items-center gap-1'>
+    <div className='flex items-center gap-1 flex-wrap'>
       <Link
         href={`/${userData?.username}`}
-        className='text-xs sm:text-sm hover:underline'
+        className='shrink-0 text-sm hover:underline'
       >
         {userData?.first_name} {userData?.last_name}
       </Link>
 
-      <p className='text-xs sm:text-sm'>
-        — {moment(date).format('MMM DD, YYYY')}
+      <p className='shrink-0 text-sm'>
+        - {moment(date).format('MMM DD, YYYY')}
       </p>
     </div>
   );

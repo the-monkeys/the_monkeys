@@ -1,13 +1,10 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./public/logo-full-light.svg" alt="The Monkeys" height="80px">
-  <source media="(prefers-color-scheme: light)" srcset="./public/logo-full-dark.svg" alt="The Monkeys" height="80px">
-  <img src="./public/logo-full-light.svg" alt="Monkeys">
+  <img src="./apps/the_monkeys/public/logo-brand.svg" alt="Monkeys" style="height: 100px; width: 100px;">
 </picture>
 
-# Inspire, Inform, Innovate
+# Monkeys
 
-#### Blog together and write content that connect, inspire, and leave a lasting impact.
-
+#### Inspire, Inform, Innovate
 With Monkeys, create content that truly makes a difference. We provide a dynamic space for individuals to share their knowledge and experiences across a wide array of topics. Whether you're passionate about science, technology, personal development, self-improvement, psychology, philosophy, fashion, health, or lifestyle, you'll find a place here to both learn and contribute.
 
 Our platform is designed with the belief that learning should be accessible to everyone. Dive into our diverse range of perspectives and insights, and expand your understanding of the world.
@@ -17,6 +14,7 @@ We also believe in the power of community. Engage with fellow readers, writers, 
 Explore, learn, and grow with The Monkeys. We're excited to have you on this journey with us!
 
 ## Contributing
+
 To setup the repo or to contribute follow [CONTRIBUTING.md](/contributing.md)
 
 ## Backend
@@ -44,7 +42,7 @@ By following these guidelines, you help maintain a high standard of collaboratio
 ## Contributing
 
 We are thrilled to have you consider contributing to The Monkeys! Our platform thrives on the diverse knowledge and skills of our community.
- 
+
 Whether you're an experienced developer, a tech enthusiast, a writer, or someone passionate about sharing insights, there's a place for you here. Here are a few ways you can contribute:
 
 1. **Code Contributions**: Help us improve and expand our platform. From fixing bugs to adding new features, your code is valuable.

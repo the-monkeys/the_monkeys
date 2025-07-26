@@ -24,7 +24,7 @@ export const TopicLinksContainer = ({
   const maxTopicsShow = maxShow ? PROFILE_TOPICS_SHOW_MAX_COUNT : undefined;
 
   return (
-    <div className='flex items-center gap-1 flex-wrap'>
+    <div className='flex items-center gap-[6px] flex-wrap'>
       {topics.slice(0, maxTopicsShow).map((topic, index) => (
         <TopicLabelLink key={`${topic}_${index}`} topic={topic} />
       ))}

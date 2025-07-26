@@ -1,8 +1,28 @@
 import Link from 'next/link';
 
-import ProfileImage, { ProfileFrame } from '../profileImage';
+import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
 
-export const SearchUsers = ({ users }: { users?: SearchUser[] | null }) => {
+import ProfileImage, { ProfileFrame } from '../profileImage';
+import { SearchResultSkeleton } from '../skeletons/searchSkeleton';
+
+export const SearchUsers = ({ query }: { query: string }) => {
+  const { searchUsers, searchUsersLoading, searchUsersError } =
+    useGetSearchUser(query.trim() ? query : undefined);
+
+  if (searchUsersLoading) {
+    return <SearchResultSkeleton />;
+  }
+
+  if (searchUsersError) {
+    return (
+      <p className='text-sm opacity-80 text-center'>
+        Failed to load search results.
+      </p>
+    );
+  }
+
+  const users = searchUsers?.users;
+
   return (
     <div className='p-4 space-y-3'>
       <h4 className='font-dm_sans font-medium text-sm opacity-80'>Profiles</h4>

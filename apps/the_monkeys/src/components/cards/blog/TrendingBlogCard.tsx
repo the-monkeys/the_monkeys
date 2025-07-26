@@ -4,6 +4,7 @@ import { generateSlug } from '@/app/blog/utils/generateSlug';
 import {
   BlogDescription,
   BlogImage,
+  BlogPlaceholderImage,
   BlogTitle,
 } from '@/components/blog/getBlogContent';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
@@ -16,44 +17,52 @@ export const TrendingBlogCardL = ({ blog }: { blog: MetaBlog }) => {
   const date = blog?.published_time;
 
   const titleContent = blog?.title;
+  const descriptionContent = blog?.first_paragraph;
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
 
   return (
-    <div className='overflow-hidden h-full w-full'>
-      <div className='flex flex-col gap-2'>
-        <div className='h-[200px] sm:h-[360px] lg:h-[400px] overflow-hidden'>
-          {!imageContent ? (
-            <div className='h-full w-full bg-brand-orange/40' />
-          ) : (
-            <BlogImage title={titleContent} image={imageContent} />
-          )}
-        </div>
+    <div className='h-full w-full flex flex-col gap-3'>
+      <div className='h-[220px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-md overflow-hidden'>
+        {!imageContent ? (
+          <BlogPlaceholderImage title={titleContent} />
+        ) : (
+          <BlogImage title={titleContent} image={imageContent} />
+        )}
+      </div>
 
-        <div className='flex flex-col'>
-          <div className='pb-2 flex'>
+      <div className='space-y-[10px]'>
+        {blog?.tags.length && (
+          <div className='flex items-center gap-1 overflow-hidden'>
+            <p className='text-sm opacity-80'>In</p>
+
             <Link
               href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-              className='shrink-0 hover:opacity-80 capitalize'
+              className='shrink-0 font-medium font-dm_sans text-sm text-brand-orange capitalize hover:underline'
             >
-              <p className='font-[450] text-sm text-brand-orange'>
-                {blog?.tags[0]}
-              </p>
+              {blog?.tags[0]}
             </Link>
           </div>
+        )}
 
+        <div className='pb-2 space-y-2'>
           <Link
             href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
             className='mb-[6px]'
           >
             <BlogTitle
-              className='font-semibold text-2xl sm:text-4xl leading-tight hover:underline underline-offset-2 line-clamp-3'
+              className='font-semibold text-2xl sm:text-3xl leading-[1.3] hover:underline underline-offset-2 line-clamp-3'
               title={titleContent}
             />
           </Link>
 
           <UserInfoCardShowcase authorID={authorId} date={date} />
+
+          <BlogDescription
+            description={descriptionContent}
+            className='hidden sm:block pt-2 text-sm lg:text-base line-clamp-4 opacity-90'
+          />
         </div>
       </div>
     </div>
@@ -71,76 +80,39 @@ export const TrendingBlogCardS = ({ blog }: { blog: MetaBlog }) => {
   const blogSlug = generateSlug(titleContent);
 
   return (
-    <div className='group flex flex-col gap-2 h-full w-full'>
-      <div className='h-[200px] sm:h-[220px] overflow-hidden'>
+    <div className='group flex flex-col gap-3 h-full w-full'>
+      <div className='h-[200px] sm:h-[220px] bg-foreground-light dark:bg-foreground-dark rounded-md overflow-hidden'>
         {!imageContent ? (
-          <div className='h-full w-full bg-brand-orange/40' />
+          <BlogPlaceholderImage title={titleContent} />
         ) : (
           <BlogImage title={titleContent} image={imageContent} />
         )}
       </div>
 
-      <div className='flex flex-col'>
-        <div className='pb-2 flex'>
-          <Link
-            href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-            className='shrink-0 hover:opacity-80 capitalize'
-          >
-            <p className='font-[450] text-sm text-brand-orange'>
+      <div className='space-y-[10px]'>
+        {blog?.tags.length && (
+          <div className='flex items-center gap-1 overflow-hidden'>
+            <p className='text-sm opacity-80'>In</p>
+
+            <Link
+              href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+              className='shrink-0 font-medium font-dm_sans text-sm text-brand-orange capitalize hover:underline'
+            >
               {blog?.tags[0]}
-            </p>
+            </Link>
+          </div>
+        )}
+
+        <div className='flex flex-col gap-2'>
+          <Link href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`} className='w-full'>
+            <BlogTitle
+              className='font-semibold text-lg leading-[1.3] hover:underline underline-offset-2 line-clamp-2'
+              title={titleContent}
+            />
           </Link>
+
+          <UserInfoCardShowcase authorID={authorId} date={date} />
         </div>
-
-        <Link
-          href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-          className='mb-[6px] w-full'
-        >
-          <BlogTitle
-            className='font-medium text-xl leading-tight hover:underline underline-offset-2 line-clamp-2'
-            title={titleContent}
-          />
-        </Link>
-
-        <UserInfoCardShowcase authorID={authorId} date={date} />
-      </div>
-    </div>
-  );
-};
-
-export const TrendingBlogCardText = ({ blog }: { blog: MetaBlog }) => {
-  const authorId = blog?.owner_account_id;
-  const blogId = blog?.blog_id;
-  const date = blog?.published_time;
-
-  const titleContent = blog?.title;
-  const descriptionContent = blog?.first_paragraph;
-
-  const blogSlug = generateSlug(blog?.title);
-
-  return (
-    <div className='p-4 flex flex-col justify-end gap-2 h-full w-full bg-orange-100 dark:bg-orange-950'>
-      <Link
-        href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-        className='shrink-0 hover:opacity-80 capitalize'
-      >
-        <p className='font-[450] text-sm text-brand-orange'>{blog?.tags[0]}</p>
-      </Link>
-
-      <Link href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`} className='w-full'>
-        <BlogTitle
-          className='font-semibold text-xl leading-tight hover:underline underline-offset-2 line-clamp-3'
-          title={titleContent}
-        />
-      </Link>
-
-      <UserInfoCardShowcase authorID={authorId} date={date} />
-
-      <div className='mt-3'>
-        <BlogDescription
-          className='text-sm font-light line-clamp-3'
-          description={descriptionContent}
-        />
       </div>
     </div>
   );
