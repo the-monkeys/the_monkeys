@@ -95,7 +95,7 @@ export const UserInfoCardShowcase = ({
 }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(authorID);
 
-  if (isLoading) return <Skeleton className='h-4 w-32 !rounded-none' />;
+  if (isLoading) return <Skeleton className='h-4 w-32' />;
 
   if (isError) {
     return null;

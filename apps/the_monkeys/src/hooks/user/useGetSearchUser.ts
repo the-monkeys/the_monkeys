@@ -1,4 +1,5 @@
 import { authFetcher } from '@/services/fetcher';
+import { GetUserSearchResponse } from '@/services/search/searchTypes';
 import useSWR from 'swr';
 
 export const useGetSearchUser = (searchQuery?: string) => {

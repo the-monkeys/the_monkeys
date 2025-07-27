@@ -4,6 +4,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import { LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Separator } from '@the-monkeys/ui/atoms/separator';
@@ -11,6 +12,7 @@ import { twMerge } from 'tailwind-merge';
 
 import Icon from '../icon';
 import { SearchPosts } from './SearchPosts';
+import { SearchUsers } from './SearchUsers';
 
 export const SearchInput = ({ className }: { className?: string }) => {
   const { isSuccess } = useAuth();
@@ -39,7 +41,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedQuery(searchQuery);
+      setDebouncedQuery(searchQuery.trim());
     }, 300);
 
     return () => clearTimeout(handler);
@@ -74,15 +76,42 @@ export const SearchInput = ({ className }: { className?: string }) => {
           </button>
         )}
 
-        {debouncedQuery.trim() && focused && (
+        {debouncedQuery && focused && (
           <div className='absolute top-full left-0 max-w-[520px] w-screen pr-2 pt-4 z-20 search-results-container'>
             <div className='p-4 pb-3 flex flex-col gap-3 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
-              <div>
-                <h6 className='font-dm_sans'>Posts</h6>
+              <div className='space-y-2'>
+                <h6 className='px-1 font-dm_sans font-medium opacity-90'>
+                  Posts
+                </h6>
 
-                <Separator className='mt-1 mb-2 opacity-80' />
+                <Separator />
 
                 <SearchPosts query={debouncedQuery} onClose={handleClose} />
+              </div>
+
+              <div className='space-y-2'>
+                <h6 className='px-1 font-dm_sans font-medium opacity-90'>
+                  Authors
+                </h6>
+
+                <Separator />
+
+                {isSuccess ? (
+                  <SearchUsers query={debouncedQuery} onClose={handleClose} />
+                ) : (
+                  <div className='py-2 flex justify-center items-center gap-1'>
+                    <Link
+                      href={LOGIN_ROUTE}
+                      className='font-medium text-sm text-brand-orange hover:underline'
+                    >
+                      Login
+                    </Link>
+
+                    <p className='text-sm opacity-90 text-center'>
+                      to find authors on Monkeys.
+                    </p>
+                  </div>
+                )}
               </div>
 
               <Link

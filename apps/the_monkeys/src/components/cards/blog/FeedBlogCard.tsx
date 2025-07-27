@@ -23,7 +23,7 @@ export const FeedBlogCard = ({ blog }: { blog: MetaBlog }) => {
   return (
     <div className='space-y-2'>
       <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-        <div className='shrink-0 h-[230px] sm:h-[120px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-md overflow-hidden'>
+        <div className='shrink-0 h-[230px] sm:h-[120px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-md shadow-sm overflow-hidden'>
           {!imageContent ? (
             <BlogPlaceholderImage title={titleContent} />
           ) : (

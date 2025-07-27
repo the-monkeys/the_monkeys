@@ -1,9 +1,11 @@
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
+import { twMerge } from 'tailwind-merge';
 
 import Container from '../layout/Container';
 import {
   UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
+  UserRecommendationCardSkeleton,
 } from './userSkeleton';
 
 export const EditorBlockSkeleton = () => {
@@ -67,33 +69,95 @@ export const BlogCardSkeleton = () => {
 };
 
 export const FeedBlogCardSkeleton = () => {
-  return <Skeleton className='h-32 md:h-28 w-full' />;
+  return (
+    <div className='flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
+      <Skeleton className='h-[230px] sm:h-[120px] w-full sm:w-[200px]' />
+
+      <div className='space-y-2 w-full'>
+        <Skeleton className='h-[10px] w-[100px]' />
+        <Skeleton className='h-[20px] w-full' />
+        <Skeleton className='h-[20px] w-1/2' />
+      </div>
+    </div>
+  );
+};
+
+export const FeedTrendingCardLargeSkeleton = ({
+  className,
+}: {
+  className?: string;
+}) => {
+  return (
+    <div className={twMerge(className, 'space-y-[10px]')}>
+      <Skeleton className='h-[220px] md:h-[360px] w-full' />
+
+      <div className='space-y-2'>
+        <Skeleton className='h-[10px] w-[100px]' />
+        <Skeleton className='h-[20px] w-full' />
+        <Skeleton className='h-[20px] w-1/2' />
+      </div>
+    </div>
+  );
+};
+
+export const FeedTrendingCardSmallSkeleton = ({
+  className,
+}: {
+  className?: string;
+}) => {
+  return (
+    <div className={twMerge(className, 'space-y-[10px]')}>
+      <Skeleton className='h-[220px] w-full' />
+
+      <div className='space-y-2'>
+        <Skeleton className='h-[10px] w-[100px]' />
+        <Skeleton className='h-[20px] w-full' />
+        <Skeleton className='h-[20px] w-1/2' />
+      </div>
+    </div>
+  );
 };
 
 export const ShowcaseBlogCardListSkeleton = () => {
   return (
-    <Container className='px-4 py-8 min-h-screen space-y-8'>
+    <Container className='px-4 py-8 min-h-screen space-y-10'>
       <div className='grid grid-cols-2 gap-6'>
-        <Skeleton className='col-span-2 md:col-span-1 w-full h-[300px] md:h-full' />
+        <FeedTrendingCardLargeSkeleton className='col-span-2 sm:col-span-1' />
 
-        <div className='col-span-2 md:col-span-1 grid grid-cols-2 gap-4'>
-          <Skeleton className='col-span-2 sm:col-span-1 h-[200px] w-full' />
-          <Skeleton className='col-span-2 sm:col-span-1 h-[200px] w-full' />
-          <Skeleton className='col-span-2 sm:col-span-1 h-[200px] w-full' />
-          <Skeleton className='col-span-2 sm:col-span-1 h-[200px] w-full' />
+        <div className='col-span-2 md:col-span-1 grid grid-cols-2 gap-6'>
+          <FeedTrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+          <FeedTrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+          <FeedTrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+          <FeedTrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
         </div>
       </div>
 
-      <div className='grid grid-cols-3 gap-6'>
+      <div className='grid grid-cols-3 gap-8 lg:gap-10 xl:gap-16'>
         <div className='col-span-3 sm:col-span-2 space-y-4'>
-          <Skeleton className='h-[200px] md:h-[150px] w-full' />
-          <Skeleton className='h-[200px] md:h-[150px] w-full' />
-          <Skeleton className='h-[200px] md:h-[150px] w-full' />
-          <Skeleton className='h-[200px] md:h-[150px] w-full' />
-          <Skeleton className='h-[200px] md:h-[150px] w-full' />
+          <FeedBlogCardListSkeleton />
         </div>
 
-        <Skeleton className='hidden sm:block col-span-1 h-full w-full' />
+        <div className='col-span-3 sm:col-span-1 space-y-10'>
+          <div className='flex gap-2 flex-wrap'>
+            <Skeleton className='h-8 w-[160px] rounded-full' />
+            <Skeleton className='h-8 w-[120px] rounded-full' />
+            <Skeleton className='h-8 w-[140px] rounded-full' />
+            <Skeleton className='h-8 w-[100px] rounded-full' />
+            <Skeleton className='h-8 w-[135px] rounded-full' />
+            <Skeleton className='h-8 w-[140px] rounded-full' />
+            <Skeleton className='h-8 w-[160px] rounded-full' />
+            <Skeleton className='h-8 w-[150px] rounded-full' />
+            <Skeleton className='h-8 w-[120px] rounded-full' />
+          </div>
+
+          <div className='grid grid-cols-2 gap-4'>
+            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
+            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
+            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
+            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
+            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
+          </div>
+        </div>
       </div>
     </Container>
   );
@@ -114,6 +178,7 @@ export const BlogCardListSkeleton = () => {
 export const FeedBlogCardListSkeleton = () => {
   return (
     <div className='w-full space-y-6'>
+      <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />
       <FeedBlogCardSkeleton />

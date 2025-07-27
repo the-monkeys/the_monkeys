@@ -1,15 +1,13 @@
-import { useEffect, useState } from 'react';
-
 import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
-import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
-import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
-import { useBlogStore } from '@/store/useBlogStore';
+import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
+import { MetaBlog } from '@/services/blog/blogTypes';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 import { BlogTitle } from '../blog/getBlogContent';
-import { SearchBlogTitlesSkeleton } from '../skeletons/searchSkeleton';
+import { SearchResultsSkeleton } from '../skeletons/searchSkeleton';
 
 const SearchBlogTitle = ({
   blog,
@@ -45,72 +43,44 @@ export const SearchPosts = ({
   query: string;
   onClose?: () => void;
 }) => {
-  const [blogs, setBlogs] = useState<GetMetaFeedBlogs>({ blogs: [] });
+  // TODO: Cache the search results using zustand store
 
-  const [blogsLoading, setBlogsLoading] = useState(true);
-  const [blogsError, setBlogsError] = useState(false);
+  const { searchBlogs, searchBlogsLoading, searchBlogsError } =
+    useGetSearchBlog(query.trim() ? query : undefined);
 
-  const { blogCache, setBlogCache } = useBlogStore();
-
-  useEffect(() => {
-    const trimmedQuery = query.trim();
-    if (!trimmedQuery) return;
-
-    const fetchBlogs = async () => {
-      setBlogsLoading(true);
-      setBlogsError(false);
-
-      if (blogCache.has(trimmedQuery)) {
-        setBlogs(blogCache.get(trimmedQuery)!);
-        setBlogsLoading(false);
-        return;
-      }
-
-      try {
-        const response = await axiosInstanceNoAuthV2.post(`/blog/search`, {
-          search_query: trimmedQuery,
-        });
-
-        setBlogCache(trimmedQuery, response.data);
-        setBlogs(response.data);
-      } catch (err: unknown) {
-        setBlogsError(true);
-      } finally {
-        setBlogsLoading(false);
-      }
-    };
-
-    fetchBlogs();
-  }, [query]);
-
-  if (blogsLoading) {
-    return <SearchBlogTitlesSkeleton />;
+  if (searchBlogsLoading) {
+    return <SearchResultsSkeleton />;
   }
 
-  if (
-    !blogsLoading &&
-    (blogsError || !blogs?.blogs || blogs?.blogs.length === 0)
-  ) {
+  if (searchBlogsError) {
     return (
-      <div className='p-2 flex items-center justify-center'>
-        <p className='opacity-90'>No results found.</p>
-      </div>
+      <p className='text-sm opacity-90 text-center'>
+        Failed to load search results.
+      </p>
     );
   }
 
+  const blogs = searchBlogs?.blogs;
+
   return (
-    <div className='space-y-[10px]'>
-      <div className='flex flex-col gap-2'>
-        {blogs?.blogs.slice(0, 3).map((blog) => {
-          return (
-            <SearchBlogTitle
-              blog={blog}
-              onClose={onClose}
-              key={blog?.blog_id}
-            />
-          );
-        })}
-      </div>
-    </div>
+    <>
+      {!blogs || blogs === null ? (
+        <p className='py-2 text-sm opacity-90 text-center'>
+          No results found for your search
+        </p>
+      ) : (
+        <div className='flex flex-col gap-2'>
+          {blogs?.slice(0, 3).map((blog) => {
+            return (
+              <SearchBlogTitle
+                blog={blog}
+                onClose={onClose}
+                key={blog?.blog_id}
+              />
+            );
+          })}
+        </div>
+      )}
+    </>
   );
 };
