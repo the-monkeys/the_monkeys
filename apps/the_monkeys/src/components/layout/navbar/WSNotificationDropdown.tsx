@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
-import { WSS_URL } from '@/constants/api';
+import { WSS_URL, WSS_URL_V2 } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
 import {
   Notification,
@@ -34,37 +34,60 @@ const WSNotificationDropdown = () => {
 
   const createWebSocket = useCallback(() => {
     if (!token) return null;
-    const ws = new WebSocket(
-      `${WSS_URL}/notification/ws-notification?token=${token}`
-    );
 
-    ws.onopen = () => {
-      console.log('I feel a connection here 🤔');
-    };
+    try {
+      // Try V2 first, fallback to V1 if V2 is not available
+      const wsUrl = WSS_URL_V2 || WSS_URL;
+      const ws = new WebSocket(
+        `${wsUrl}/notification/ws-notification?token=${token}`
+      );
 
-    ws.onmessage = (event) => {
-      try {
-        const notification = JSON.parse(event.data) as WSNotification;
-        const notificationData = notification.notification[0];
+      ws.onopen = () => {
+        console.log('Notification WebSocket connected 🟢');
+      };
 
-        setNotifications((prev) =>
-          new Map(prev).set(notificationData.id, {
-            time: new Date(),
-            ...notificationData,
-          })
+      ws.onmessage = (event) => {
+        try {
+          const notification = JSON.parse(event.data) as WSNotification;
+          const notificationData = notification.notification[0];
+
+          setNotifications((prev) =>
+            new Map(prev).set(notificationData.id, {
+              time: new Date(),
+              ...notificationData,
+            })
+          );
+        } catch (error) {
+          console.error('Error parsing notification:', error);
+        }
+      };
+
+      ws.onclose = (event) => {
+        console.log(
+          'Notification WebSocket closed 🔴',
+          event.code,
+          event.reason
         );
-      } catch (error) {
-        console.error('Error parsing notification:', error);
-      }
-    };
+        // Don't automatically reconnect for now to avoid spam
+      };
 
-    ws.onerror = (error) => {
-      console.error('WS Error:', error);
-    };
+      ws.onerror = (error) => {
+        console.error('Notification WS Error:', error);
+        // Don't spam reconnections, let it fail gracefully
+      };
 
-    return () => {
-      ws.close();
-    };
+      return () => {
+        if (
+          ws.readyState === WebSocket.OPEN ||
+          ws.readyState === WebSocket.CONNECTING
+        ) {
+          ws.close();
+        }
+      };
+    } catch (error) {
+      console.error('Failed to create notification WebSocket:', error);
+      return null;
+    }
   }, [token]);
 
   useEffect(() => {

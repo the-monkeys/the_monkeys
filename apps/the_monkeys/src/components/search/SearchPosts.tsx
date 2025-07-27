@@ -44,7 +44,7 @@ export const SearchPosts = ({ query }: { query: string }) => {
     };
 
     fetchBlogs();
-  }, [query]);
+  }, [query, blogCache, setBlogCache]);
 
   if (blogsLoading) {
     return <SearchResultSkeleton />;
