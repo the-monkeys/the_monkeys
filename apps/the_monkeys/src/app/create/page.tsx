@@ -125,9 +125,7 @@ const CreatePage = () => {
 
   const accountId = session?.account_id;
   const username = session?.username;
-  const blogIdRef = useRef(
-    `draft-${Math.random().toString(36).substring(2, 9)}`
-  );
+  const blogIdRef = useRef(`${Math.random().toString(36).substring(7)}`);
   const blogId = blogIdRef.current;
 
   // WebSocket management

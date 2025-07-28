@@ -36,7 +36,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const webSocketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // State variables
   const [data, setData] = useState<OutputData | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
@@ -84,7 +83,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     };
   }, [session]);
 
-  // Format data for transmission
+  // Format data
   const formatData = useCallback(
     (data: OutputData, accountId: string | undefined, blogTopics: string[]) => {
       return {
@@ -157,7 +156,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         setIsSaving(false);
         setConnectionStatus('Disconnected');
 
-        // Reconnect logic with exponential backoff
         if (retryCount < MAX_RETRIES) {
           const delay = Math.min(1000 * 2 ** retryCount, 30000);
           setConnectionStatus(
