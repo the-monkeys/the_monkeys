@@ -1,9 +1,11 @@
+import Link from 'next/link';
+
 import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { LIVE_URL } from '@/constants/api';
-import { BLOG_ROUTE } from '@/constants/routeConstants';
+import { BLOG_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { twMerge } from 'tailwind-merge';
 
@@ -12,16 +14,22 @@ export const BlogReactions = ({
   blogId,
 }: {
   className?: string;
-  blogURL?: string | string[];
   blogId?: string;
 }) => {
   const { isSuccess, isError } = useAuth();
 
-  if (isError)
+  if (isError || !isSuccess)
     return (
-      <p className='p-1 text-sm opacity-80 text-center'>
-        You are not logged in.
-      </p>
+      <div className='p-1 flex justify-center items-center gap-1'>
+        <Link
+          href={LOGIN_ROUTE}
+          className='text-sm font-medium text-brand-orange hover:underline'
+        >
+          Login
+        </Link>
+
+        <p className='text-sm'>to like or save this post.</p>
+      </div>
     );
 
   return (
@@ -29,15 +37,11 @@ export const BlogReactions = ({
       <div className='flex-1 flex items-center'>
         <LikeButton blogId={blogId} size={20} />
 
-        {isSuccess && <LikesCount blogId={blogId} />}
+        <LikesCount blogId={blogId} />
       </div>
 
       <div className='flex items-center gap-[2px]'>
-        {/* <CommentButton size={20} isDisable={true} />
-
-        <div className='size-[3px] bg-foreground-dark dark:bg-foreground-light rounded-full' /> */}
-
-        {isSuccess && <BookmarkButton blogId={blogId} size={20} />}
+        <BookmarkButton blogId={blogId} size={20} />
       </div>
     </div>
   );
@@ -53,12 +57,12 @@ export const BlogReactionsContainer = ({
   const url = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   return (
-    <div className='sticky left-0 bottom-[20px] mx-auto w-full max-w-full sm:max-w-[320px] flex items-center gap-[6px] z-20'>
-      <div className='flex-1 px-4 py-[6px] bg-foreground-light dark:bg-foreground-dark rounded-full shadow-sm border-1 border-border-light/60 dark:border-border-dark/60'>
-        <BlogReactions blogURL={blogURL} blogId={blogId} />
+    <div className='sticky left-0 bottom-[30px] mx-auto w-full flex items-center gap-[6px] z-20'>
+      <div className='flex-1 px-4 py-[6px] bg-foreground-light/60 dark:bg-foreground-dark/60 backdrop-blur-md rounded-full border-1 border-border-light dark:border-border-dark'>
+        <BlogReactions blogId={blogId} />
       </div>
 
-      <div className='px-3 py-[6px] bg-foreground-light dark:bg-foreground-dark rounded-full shadow-sm border-1 border-border-light/60 dark:border-border-dark/60'>
+      <div className='shrink-0 px-3 py-[6px] bg-foreground-light/60 dark:bg-foreground-dark/60 backdrop-blur-md rounded-full border-1 border-border-light dark:border-border-dark'>
         <BlogShareDialog blogURL={url} size={20} />
       </div>
     </div>

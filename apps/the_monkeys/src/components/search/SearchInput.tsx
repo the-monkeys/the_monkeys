@@ -78,7 +78,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
 
         {debouncedQuery && focused && (
           <div className='absolute top-full left-0 max-w-[520px] w-screen pr-2 pt-4 z-20 search-results-container'>
-            <div className='p-4 pb-3 flex flex-col gap-3 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
+            <div className='p-4 pb-3 flex flex-col gap-4 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
               <div className='space-y-2'>
                 <h6 className='px-1 font-dm_sans font-medium opacity-90'>
                   Posts
@@ -114,13 +114,13 @@ export const SearchInput = ({ className }: { className?: string }) => {
                 )}
               </div>
 
-              <Link
+              {/* <Link
                 href={`/search?query=${debouncedQuery}`}
                 className='self-center p-1 text-sm hover:underline opacity-90'
                 onClick={handleClose}
               >
                 see all results for &apos;{debouncedQuery}&apos;
-              </Link>
+              </Link> */}
             </div>
           </div>
         )}

@@ -3,22 +3,20 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
-import { getCardContent } from '@/components/blog/getBlogContent';
+import { BlogTitle, getCardContent } from '@/components/blog/getBlogContent';
 import Icon from '@/components/icon';
+import Container from '@/components/layout/Container';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
   EditorBlockSkeleton,
   PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import {
-  HashTopicLinksContainer,
-  TopicLinksContainer,
-} from '@/components/topics/topicsContainer';
-import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
+import { TopicLinksContainer } from '@/components/topics/topicsContainer';
+import { AuthorInfoCard } from '@/components/user/cards/AuthorInfoCard';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
-import { purifyHTMLString } from '@/utils/purifyHTML';
+import moment from 'moment';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
@@ -33,14 +31,15 @@ const BlogPage = () => {
   const params = useParams();
 
   const fullSlug = params?.slug || '';
-  const blogId = typeof fullSlug === 'string' ? fullSlug.split('-').pop() : ''; // Extract the blog ID from the slug
+  const urlBlogId =
+    typeof fullSlug === 'string' ? fullSlug.split('-').pop() : '';
 
   const { blog, isError, isLoading } =
-    useGetPublishedBlogDetailByBlogId(blogId);
+    useGetPublishedBlogDetailByBlogId(urlBlogId);
   const authorId = blog?.owner_account_id;
 
   const { user } = useGetProfileInfoById(authorId);
-  const authorName = user?.user?.username || 'Monkeys Writer';
+  const authorName = user?.user?.username || 'Monkeys Author';
 
   if (isLoading) {
     return <PublishedBlogSkeleton />;
@@ -71,7 +70,7 @@ const BlogPage = () => {
     );
   }
 
-  const blogIdfromAPI = blog?.blog_id;
+  const blogId = blog?.blog_id;
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
@@ -105,44 +104,61 @@ const BlogPage = () => {
           ),
         }}
       />
-      <div className='relative col-span-3 lg:col-span-2'>
-        <div className='mb-6'>
-          <UserInfoCardBlogPage id={authorId} date={date} />
+
+      <>
+        <div className='bg-foreground-light/20 dark:bg-foreground-dark/20'>
+          <Container className='px-4 py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
+            <div className='mb-2 flex justify-center items-center gap-2'>
+              <p className='text-xs sm:text-sm opacity-90'>
+                {moment(date).format('MMM DD, yyyy')}
+              </p>
+
+              <p>{' · '}</p>
+
+              <p className='text-xs sm:text-sm opacity-90'>
+                {moment(date).utc().format('hh:mm A')} UTC
+              </p>
+            </div>
+
+            <BlogTitle
+              title={blogTitle}
+              className='py-[6px] font-dm_sans font-bold text-3xl sm:text-4xl !leading-snug text-center'
+            />
+
+            <UserInfoCardBlogPage id={authorId} />
+          </Container>
         </div>
 
-        <div className='space-y-2'>
-          <h1
-            dangerouslySetInnerHTML={{
-              __html: purifyHTMLString(blogTitle),
-            }}
-            className='font-dm_sans font-bold text-[30px] md:text-[34px] leading-[1.3]'
-          ></h1>
+        <div className='space-y-20'>
+          <Container className='px-4 max-w-3xl space-y-4'>
+            <div className='overflow-hidden'>
+              <Editor key={blogId} data={blogDataWithoutHeading} />
+            </div>
 
-          <HashTopicLinksContainer topics={tags} />
+            <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
+          </Container>
+
+          <Container className='px-4 max-w-5xl space-y-12'>
+            <TopicLinksContainer topics={tags} />
+
+            <AuthorInfoCard userId={authorId} />
+
+            <div className='py-6 space-y-3'>
+              <h6 className='p-1 font-dm_sans font-medium'>
+                Explore similar content
+              </h6>
+
+              <BlogRecommendations blogId={blogId} topics={tags} />
+            </div>
+          </Container>
         </div>
-
-        <div className='pb-10 min-h-screen overflow-hidden'>
-          <Editor key={blogId} data={blogDataWithoutHeading} />
-        </div>
-
-        <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />
-
-        <div className='mt-[50px]'>
-          <TopicLinksContainer topics={tags} />
-        </div>
-      </div>
-
-      <div className='col-span-3 lg:col-span-1 space-y-8'>
-        <div className='space-y-2'>
-          <h4 className='px-1 font-dm_sans font-medium'>Author Spotlight</h4>
-
-          <ProfileInfoCard userId={authorId} className='max-w-[500px]' />
-        </div>
-
-        <BlogRecommendations blogId={blogIdfromAPI} />
-      </div>
+      </>
     </>
   );
 };
 
 export default BlogPage;
+
+{
+  /* <AuthorInfoCard userId={authorId} className='max-w-[500px]' /> */
+}

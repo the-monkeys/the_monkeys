@@ -72,11 +72,7 @@ export async function generateMetadata(
 }
 
 const BlogPageLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Container className='px-4 py-5 grid grid-cols-3 gap-6 lg:gap-8'>
-      {children}
-    </Container>
-  );
+  return <div>{children}</div>;
 };
 
 export default BlogPageLayout;

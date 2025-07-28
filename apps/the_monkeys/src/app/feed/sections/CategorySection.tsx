@@ -1,5 +1,5 @@
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
-import { TrendingBlogCardS } from '@/components/cards/blog/TrendingBlogCard';
+import { TrendingBlogCardSmall } from '@/components/cards/blog/TrendingBlogCard';
 import Container from '@/components/layout/Container';
 import { FeedCategorySectionSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetCategoryBlogs from '@/hooks/posts/useGetCategoryBlogs';
@@ -43,7 +43,7 @@ const CategorySection = ({
             {blogs?.blogs.slice(0, 6).map((blog) => {
               return (
                 <div className='col-span-3 md:col-span-1' key={blog?.blog_id}>
-                  <TrendingBlogCardS blog={blog} />
+                  <TrendingBlogCardSmall blog={blog} />
                 </div>
               );
             })}

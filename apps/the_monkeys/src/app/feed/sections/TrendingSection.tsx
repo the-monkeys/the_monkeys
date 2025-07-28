@@ -2,8 +2,8 @@ import Link from 'next/link';
 
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import {
-  TrendingBlogCardL,
-  TrendingBlogCardS,
+  TrendingBlogCardLarge,
+  TrendingBlogCardSmall,
 } from '@/components/cards/blog/TrendingBlogCard';
 import Container from '@/components/layout/Container';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
@@ -17,15 +17,15 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
   return (
     <div className='space-y-6'>
       <Container className='px-4 pt-8 md:pt-10'>
-        <div className='grid grid-cols-2 gap-6'>
+        <div className='grid grid-cols-2 gap-8'>
           <div className='col-span-2 lg:col-span-1'>
-            <TrendingBlogCardL blog={blogs[0]} />
+            <TrendingBlogCardLarge blog={blogs[0]} />
           </div>
 
           <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-6'>
             {blogs.slice(1, 5).map((blog) => (
               <div className='col-span-2 sm:col-span-1' key={blog.blog_id}>
-                <TrendingBlogCardS blog={blog} />
+                <TrendingBlogCardSmall blog={blog} />
               </div>
             ))}
           </div>

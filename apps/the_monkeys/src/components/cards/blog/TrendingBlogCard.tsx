@@ -11,7 +11,7 @@ import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 
-export const TrendingBlogCardL = ({ blog }: { blog: MetaBlog }) => {
+export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time;
@@ -67,7 +67,7 @@ export const TrendingBlogCardL = ({ blog }: { blog: MetaBlog }) => {
   );
 };
 
-export const TrendingBlogCardS = ({ blog }: { blog: MetaBlog }) => {
+export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time;

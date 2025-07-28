@@ -44,7 +44,7 @@ const FooterList = ({
 
 const Footer = () => {
   return (
-    <footer className='mt-20 border-t-2 border-border-light dark:border-border-dark'>
+    <footer className='mt-20 border-t-1 border-border-light dark:border-border-dark'>
       <Container className='px-4 py-12 z-10'>
         <div className='grid grid-cols-3 gap-14 lg:gap-4'>
           <div className='col-span-3 lg:col-span-1 space-y-3'>

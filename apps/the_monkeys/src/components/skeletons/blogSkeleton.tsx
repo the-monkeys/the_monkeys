@@ -94,6 +94,7 @@ export const FeedTrendingCardLargeSkeleton = ({
       <div className='space-y-2'>
         <Skeleton className='h-[10px] w-[100px]' />
         <Skeleton className='h-[20px] w-full' />
+        <Skeleton className='h-[20px] w-full' />
         <Skeleton className='h-[20px] w-1/2' />
       </div>
     </div>
@@ -121,7 +122,7 @@ export const FeedTrendingCardSmallSkeleton = ({
 export const ShowcaseBlogCardListSkeleton = () => {
   return (
     <Container className='px-4 py-8 min-h-screen space-y-10'>
-      <div className='grid grid-cols-2 gap-6'>
+      <div className='grid grid-cols-2 gap-8'>
         <FeedTrendingCardLargeSkeleton className='col-span-2 sm:col-span-1' />
 
         <div className='col-span-2 md:col-span-1 grid grid-cols-2 gap-6'>
