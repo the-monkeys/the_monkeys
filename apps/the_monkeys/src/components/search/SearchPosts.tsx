@@ -1,78 +1,86 @@
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
-import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
-import { useBlogStore } from '@/store/useBlogStore';
+import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { BLOG_ROUTE } from '@/constants/routeConstants';
+import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
+import { MetaBlog } from '@/services/blog/blogTypes';
 
-import { SearchBlogCard } from '../cards/blog/SearchBlogCard';
-import LinksRedirectArrow from '../links/LinksRedirectArrow';
-import { SearchResultSkeleton } from '../skeletons/searchSkeleton';
+import { BlogTitle } from '../blog/getBlogContent';
+import { SearchResultsPostSkeleton } from '../skeletons/searchSkeleton';
 
-export const SearchPosts = ({ query }: { query: string }) => {
-  const [blogs, setBlogs] = useState<GetMetaFeedBlogs>({ blogs: [] });
+const SearchBlogTitle = ({
+  blog,
+  onClose,
+}: {
+  blog: MetaBlog;
+  onClose?: () => void;
+}) => {
+  const blogId = blog?.blog_id;
 
-  const [blogsLoading, setBlogsLoading] = useState(true);
-  const [blogsError, setBlogsError] = useState(false);
+  const titleContent = blog?.title;
 
-  const { blogCache, setBlogCache } = useBlogStore();
-  useEffect(() => {
-    const trimmedQuery = query.trim();
-    if (!trimmedQuery) return;
+  const blogSlug = generateSlug(titleContent);
 
-    const fetchBlogs = async () => {
-      setBlogsLoading(true);
-      setBlogsError(false);
+  return (
+    <Link
+      target='_blank'
+      href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
+      className='group p-1'
+      onClick={onClose}
+    >
+      <BlogTitle
+        title={titleContent}
+        className='font-medium group-hover:underline leading-[1.3] line-clamp-2'
+      />
+    </Link>
+  );
+};
 
-      if (blogCache.has(trimmedQuery)) {
-        setBlogs(blogCache.get(trimmedQuery)!);
-        setBlogsLoading(false);
-        return;
-      }
+export const SearchPosts = ({
+  query,
+  onClose,
+}: {
+  query: string;
+  onClose?: () => void;
+}) => {
+  // TODO: Cache the search results using zustand store
 
-      try {
-        const response = await axiosInstanceNoAuthV2.post(`/blog/search`, {
-          search_query: trimmedQuery,
-        });
+  const { searchBlogs, searchBlogsLoading, searchBlogsError } =
+    useGetSearchBlog(query.trim() ? query : undefined);
 
-        setBlogCache(trimmedQuery, response.data);
-        setBlogs(response.data);
-      } catch (err: unknown) {
-        setBlogsError(true);
-      } finally {
-        setBlogsLoading(false);
-      }
-    };
-
-    fetchBlogs();
-  }, [query]);
-
-  if (blogsLoading) {
-    return <SearchResultSkeleton />;
+  if (searchBlogsLoading) {
+    return <SearchResultsPostSkeleton />;
   }
 
-  if (
-    !blogsLoading &&
-    (blogsError || !blogs?.blogs || blogs?.blogs.length === 0)
-  ) {
+  if (searchBlogsError) {
     return (
-      <div className='p-2 flex items-center justify-center'>
-        <p className='opacity-90'>No results found.</p>
-      </div>
+      <p className='text-sm opacity-90 text-center'>
+        Failed to load search results.
+      </p>
     );
   }
-  return (
-    <div className='space-y-[10px]'>
-      <div className='flex flex-col divide-y-1 divide-border-light dark:divide-border-dark'>
-        {blogs?.blogs.slice(0, 3).map((blog) => {
-          return <SearchBlogCard blog={blog} key={blog?.blog_id} />;
-        })}
-      </div>
 
-      <div className='flex justify-end'>
-        <LinksRedirectArrow link={`/search?${query}`} className='p-1'>
-          <p className='text-sm'>See all results</p>
-        </LinksRedirectArrow>
-      </div>
-    </div>
+  const blogs = searchBlogs?.blogs;
+
+  return (
+    <>
+      {!blogs || blogs === null ? (
+        <p className='py-2 text-sm opacity-90 text-center'>
+          No results found for your search
+        </p>
+      ) : (
+        <div className='flex flex-col gap-2'>
+          {blogs?.slice(0, 3).map((blog) => {
+            return (
+              <SearchBlogTitle
+                blog={blog}
+                onClose={onClose}
+                key={blog?.blog_id}
+              />
+            );
+          })}
+        </div>
+      )}
+    </>
   );
 };

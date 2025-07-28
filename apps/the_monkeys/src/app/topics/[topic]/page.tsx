@@ -23,7 +23,7 @@ export async function generateMetadata({
   const topic = decodeURIComponent(params.topic) || 'Various Topics';
 
   return {
-    title: `Blogs on ${topic}`,
+    title: `Posts on ${topic}`,
   };
 }
 

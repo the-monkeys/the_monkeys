@@ -10,6 +10,39 @@ import {
   UserInfoCardSkeleton,
 } from '../skeletons/userSkeleton';
 
+export const RecommendedUserCard = ({ id }: { id?: string }) => {
+  const { user, isLoading, isError } = useGetProfileInfoById(id);
+
+  if (isLoading) return <UserInfoCardCompactSkeleton />;
+
+  if (isError) {
+    return null;
+  }
+
+  const userData = user?.user;
+
+  return (
+    <div className='w-full flex gap-3'>
+      <Link href={`/${userData?.username}`} className='hover:opacity-80'>
+        <ProfileFrame className='size-10 ring-1 ring-border-light/40 dark:ring-border-dark/40'>
+          <ProfileImage username={userData?.username} />
+        </ProfileFrame>
+      </Link>
+
+      <div className='space-y-[6px]'>
+        <Link
+          href={`/${userData?.username}`}
+          className='font-medium hover:underline'
+        >
+          {userData?.first_name} {userData?.last_name}
+        </Link>
+
+        <span className='text-sm opacity-90 line-clamp-2'>{userData?.bio}</span>
+      </div>
+    </div>
+  );
+};
+
 export const UserInfoCardCompact = ({
   id,
   date,
@@ -62,7 +95,7 @@ export const UserInfoCardShowcase = ({
 }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(authorID);
 
-  if (isLoading) return <Skeleton className='h-4 w-32 !rounded-none' />;
+  if (isLoading) return <Skeleton className='h-4 w-32' />;
 
   if (isError) {
     return null;
@@ -80,19 +113,14 @@ export const UserInfoCardShowcase = ({
       </Link>
 
       <p className='shrink-0 text-sm'>
-        - {moment(date).format('MMM DD, YYYY')}
+        {' · '}
+        {moment(date).format('MMM DD, YYYY')}
       </p>
     </div>
   );
 };
 
-export const UserInfoCardBlogPage = ({
-  id,
-  date,
-}: {
-  id?: string;
-  date?: number | string;
-}) => {
+export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
 
   if (isLoading) return <UserInfoCardSkeleton />;
@@ -104,33 +132,21 @@ export const UserInfoCardBlogPage = ({
   const userData = user?.user;
 
   return (
-    <div className='w-full flex items-center gap-2'>
-      <div className='flex items-center gap-[6px]'>
-        <div>
-          <ProfileFrame className='size-[38px] !rounded-sm'>
-            <ProfileImage username={userData?.username} />
-          </ProfileFrame>
-        </div>
+    <div className='flex items-center overflow-x-hidden gap-[6px]'>
+      <p className='text-sm'>by</p>
 
-        <div className='flex flex-col justify-center overflow-hidden space-y-[2px]'>
-          <div>
-            <Link
-              href={`/${userData?.username}`}
-              className='font-dm_sans font-medium text-sm hover:underline decoration-1'
-            >
-              {userData?.first_name} {userData?.last_name}
-            </Link>
-          </div>
-
-          <div className='flex items-end text-sm gap-1'>
-            <p className='opacity-80'>
-              {moment(date).format('MMM DD, yyyy')}
-              {' / '}
-              {moment(date).utc().format('hh:mm A')} UTC
-            </p>
-          </div>
-        </div>
+      <div className='shrink-0 p-[2px]'>
+        <ProfileFrame className='size-6 shadow-sm'>
+          <ProfileImage username={userData?.username} />
+        </ProfileFrame>
       </div>
+
+      <Link
+        href={`/${userData?.username}`}
+        className='font-medium text-sm md:text-base hover:underline'
+      >
+        {userData?.first_name} {userData?.last_name}
+      </Link>
     </div>
   );
 };

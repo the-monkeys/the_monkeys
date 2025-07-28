@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import { ShowcaseBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import { FeedSkeleton } from '@/components/skeletons/blogSkeleton';
 import {
   orderedCategories,
   orderedCompactCategories,
@@ -16,7 +16,7 @@ import CategorySectionCompact from './sections/CategorySectionCompact';
 import TrendingSection from './sections/TrendingSection';
 
 const BlogFeedPage = () => {
-  const { blogs, isError, isLoading } = useGetMetaFeedBlogs({ limit: 50 });
+  const { blogs, isError, isLoading } = useGetMetaFeedBlogs({ limit: 30 });
 
   const filteredBlogs = useMemo(() => {
     return blogs?.blogs?.filter(
@@ -25,7 +25,7 @@ const BlogFeedPage = () => {
   }, [blogs]);
 
   if (isLoading) {
-    return <ShowcaseBlogCardListSkeleton />;
+    return <FeedSkeleton />;
   }
 
   if (isError || !filteredBlogs || filteredBlogs.length === 0) {

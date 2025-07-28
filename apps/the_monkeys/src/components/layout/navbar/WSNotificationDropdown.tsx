@@ -129,13 +129,19 @@ const WSNotificationDropdown = () => {
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger>
-        <div className='relative hover:opacity-80 cursor-pointer'>
-          <Icon name='RiNotification3' />
-          {notificationArray.length ? (
-            <div className='absolute top-0 right-0 size-[10px] rounded-full bg-brand-orange shadow-sm'></div>
-          ) : null}
-        </div>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant='ghost'
+          size='icon'
+          className='relative rounded-full hover:opacity-80 cursor-pointer'
+          title='View Notifications'
+        >
+          {!notificationArray.length ? (
+            <Icon name='RiNotification3' />
+          ) : (
+            <Icon name='RiNotification3' type='Fill' />
+          )}
+        </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className='mt-3 mr-2 w-[260px] sm:w-[360px] p-2 flex flex-col'>

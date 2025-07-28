@@ -4,12 +4,15 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import { LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { Button } from '@the-monkeys/ui/atoms/button';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 import { twMerge } from 'tailwind-merge';
 
 import Icon from '../icon';
 import { SearchPosts } from './SearchPosts';
+import { SearchUsers } from './SearchUsers';
 
 export const SearchInput = ({ className }: { className?: string }) => {
   const { isSuccess } = useAuth();
@@ -22,14 +25,6 @@ export const SearchInput = ({ className }: { className?: string }) => {
     setSearchQuery(e.target.value);
   };
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(searchQuery);
-    }, 300);
-
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
-
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     if (
       !e.relatedTarget ||
@@ -39,16 +34,33 @@ export const SearchInput = ({ className }: { className?: string }) => {
     }
   };
 
+  const handleClose = () => {
+    setSearchQuery('');
+    setFocused(false);
+  };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(searchQuery.trim());
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
   return (
     <div className={twMerge(className)}>
       <div className='relative px-3 py-[6px] flex items-center gap-[6px] bg-foreground-light/40 dark:bg-foreground-dark/40 rounded-full'>
         <div className='p-1 flex justify-center'>
-          <Icon name='RiSearch' />
+          <Icon
+            name='RiSearch'
+            size={18}
+            className={twMerge(focused ? 'opacity-100' : 'opacity-60')}
+          />
         </div>
 
         <input
           value={searchQuery}
-          placeholder='Search...'
+          placeholder='Search'
           className='w-full bg-transparent focus:outline-none'
           onChange={handleInputChange}
           onFocus={() => setFocused(true)}
@@ -64,10 +76,51 @@ export const SearchInput = ({ className }: { className?: string }) => {
           </button>
         )}
 
-        {debouncedQuery.trim() && focused && (
+        {debouncedQuery && focused && (
           <div className='absolute top-full left-0 max-w-[520px] w-screen pr-2 pt-4 z-20 search-results-container'>
-            <div className='p-4 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
-              <SearchPosts query={debouncedQuery} />
+            <div className='p-4 flex flex-col gap-4 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
+              <div className='space-y-2'>
+                <h6 className='px-1 font-dm_sans font-medium opacity-90'>
+                  Posts
+                </h6>
+
+                <Separator className='opacity-60' />
+
+                <SearchPosts query={debouncedQuery} onClose={handleClose} />
+              </div>
+
+              <div className='space-y-2'>
+                <h6 className='px-1 font-dm_sans font-medium opacity-90'>
+                  Authors
+                </h6>
+
+                <Separator className='opacity-60' />
+
+                {isSuccess ? (
+                  <SearchUsers query={debouncedQuery} onClose={handleClose} />
+                ) : (
+                  <div className='py-2 flex justify-center items-center gap-1'>
+                    <Link
+                      href={LOGIN_ROUTE}
+                      className='font-medium text-sm text-brand-orange hover:underline'
+                    >
+                      LOGIN
+                    </Link>
+
+                    <p className='text-sm opacity-90 text-center'>
+                      to find authors on Monkeys.
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* <Link
+                href={`/search?query=${debouncedQuery}`}
+                className='self-center p-1 text-sm hover:underline opacity-90'
+                onClick={handleClose}
+              >
+                see all results for &apos;{debouncedQuery}&apos;
+              </Link> */}
             </div>
           </div>
         )}

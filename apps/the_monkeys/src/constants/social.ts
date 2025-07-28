@@ -36,3 +36,21 @@ export const notFoundList = [
     link: '/feed',
   },
 ];
+
+export const recommendedUsers = [
+  {
+    userID: '32d41649baac685418176fd8b00d646e',
+  },
+  {
+    userID: '1522b6d91a2c35b8180fcc3f706cd88e',
+  },
+  {
+    userID: '99218bec5cdb3db018124007a5437928',
+  },
+  {
+    userID: 'f0fe39f4d914c0e4181bd98ca62e4763',
+  },
+  {
+    userID: '8a729144e08d830e181c675b2913f67b',
+  },
+];

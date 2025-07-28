@@ -10,7 +10,7 @@ import { twMerge } from 'tailwind-merge';
 
 import { FollowButton } from '../buttons/followButton';
 
-export const ProfileInfoCard = ({
+export const AuthorInfoCard = ({
   userId,
   className,
 }: {

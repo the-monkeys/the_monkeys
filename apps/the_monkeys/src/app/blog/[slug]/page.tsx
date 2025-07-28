@@ -3,22 +3,20 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
-import { getCardContent } from '@/components/blog/getBlogContent';
+import { BlogTitle, getCardContent } from '@/components/blog/getBlogContent';
 import Icon from '@/components/icon';
+import Container from '@/components/layout/Container';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
+  BlogPageSkeleton,
   EditorBlockSkeleton,
-  PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import {
-  HashTopicLinksContainer,
-  TopicLinksContainer,
-} from '@/components/topics/topicsContainer';
-import { ProfileInfoCard } from '@/components/user/cards/ProfileInfoCard';
+import { TopicLinksContainer } from '@/components/topics/topicsContainer';
+import { AuthorInfoCard } from '@/components/user/cards/AuthorInfoCard';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
-import { purifyHTMLString } from '@/utils/purifyHTML';
+import moment from 'moment';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
@@ -33,45 +31,45 @@ const BlogPage = () => {
   const params = useParams();
 
   const fullSlug = params?.slug || '';
-  const blogId = typeof fullSlug === 'string' ? fullSlug.split('-').pop() : ''; // Extract the blog ID from the slug
+  const urlBlogId =
+    typeof fullSlug === 'string' ? fullSlug.split('-').pop() : '';
 
   const { blog, isError, isLoading } =
-    useGetPublishedBlogDetailByBlogId(blogId);
+    useGetPublishedBlogDetailByBlogId(urlBlogId);
   const authorId = blog?.owner_account_id;
 
   const { user } = useGetProfileInfoById(authorId);
-  const authorName = user?.user?.username || 'Monkeys Writer';
+  const authorName = user?.user?.username || 'Monkeys Author';
 
   if (isLoading) {
-    return <PublishedBlogSkeleton />;
+    return <BlogPageSkeleton />;
   }
 
   if (isError || !blog) {
     return (
-      <div className='col-span-3 min-h-screen'>
-        <div className='py-5 flex flex-col items-center space-y-1'>
+      <div className='col-span-3 h-[800px]'>
+        <div className='py-8 flex flex-col items-center space-y-1'>
           <div className='p-2'>
             <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
           </div>
 
-          <p className='text-lg text-center'>
-            The blog content isn&apos;t available.
+          <p className='font-medium text-lg text-center'>
+            Oops! This post isn&apos; accessible at the moment.
           </p>
 
           <p className='text-center opacity-80'>
-            It might have been removed by the owner or is temporarily
-            inaccessible.
+            This post may be unavailable. Try refreshing or check back later.
           </p>
         </div>
 
         <LinksRedirectArrow link='/feed' className='py-4 mx-auto w-fit'>
-          <p className='font-dm_sans'>Monkeys Feed</p>
+          <p className='font-dm_sans'>Explore Monkeys Feed</p>
         </LinksRedirectArrow>
       </div>
     );
   }
 
-  const blogIdfromAPI = blog?.blog_id;
+  const blogId = blog?.blog_id;
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
@@ -105,42 +103,55 @@ const BlogPage = () => {
           ),
         }}
       />
-      <div className='relative col-span-3 lg:col-span-2'>
-        <div className='mb-6'>
-          <UserInfoCardBlogPage id={authorId} date={date} />
+
+      <>
+        <div className=''>
+          <Container className='px-4 py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
+            <div className='mb-1 flex justify-center items-center gap-2'>
+              <p className='text-xs sm:text-sm opacity-90'>
+                {moment(date).format('MMM DD, yyyy')}
+              </p>
+
+              <p>{' · '}</p>
+
+              <p className='text-xs sm:text-sm opacity-90'>
+                {moment(date).utc().format('hh:mm A')} UTC
+              </p>
+            </div>
+
+            <BlogTitle
+              title={blogTitle}
+              className='py-[6px] font-dm_sans font-bold text-3xl sm:text-4xl !leading-snug text-center'
+            />
+
+            <UserInfoCardBlogPage id={authorId} />
+          </Container>
         </div>
 
-        <div className='space-y-2'>
-          <h1
-            dangerouslySetInnerHTML={{
-              __html: purifyHTMLString(blogTitle),
-            }}
-            className='font-dm_sans font-bold text-[30px] md:text-[34px] leading-[1.3]'
-          ></h1>
+        <div className='space-y-20'>
+          <Container className='px-4 max-w-3xl space-y-6'>
+            <div className='overflow-hidden border-t-1 border-border-light dark:border-border-dark'>
+              <Editor key={blogId} data={blogDataWithoutHeading} />
+            </div>
 
-          <HashTopicLinksContainer topics={tags} />
+            <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
+          </Container>
+
+          <Container className='px-4 max-w-5xl space-y-12'>
+            <TopicLinksContainer topics={tags} />
+
+            <AuthorInfoCard userId={authorId} className='max-w-[600px]' />
+
+            <div className='py-6 space-y-3'>
+              <h6 className='p-1 font-dm_sans font-semibold'>
+                Explore similar content
+              </h6>
+
+              <BlogRecommendations blogId={blogId} topics={tags} />
+            </div>
+          </Container>
         </div>
-
-        <div className='pb-10 min-h-screen overflow-hidden'>
-          <Editor key={blogId} data={blogDataWithoutHeading} />
-        </div>
-
-        <BlogReactionsContainer blogURL={fullSlug} blogId={blogIdfromAPI} />
-
-        <div className='mt-[50px]'>
-          <TopicLinksContainer topics={tags} />
-        </div>
-      </div>
-
-      <div className='col-span-3 lg:col-span-1 space-y-8'>
-        <div className='space-y-2'>
-          <h4 className='px-1 font-dm_sans font-medium'>Author Spotlight</h4>
-
-          <ProfileInfoCard userId={authorId} className='max-w-[500px]' />
-        </div>
-
-        <BlogRecommendations blogId={blogIdfromAPI} />
-      </div>
+      </>
     </>
   );
 };

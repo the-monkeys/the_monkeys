@@ -1,55 +1,71 @@
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-import { BlogRecommendationCard } from '@/components/blog/cards/BlogRecommendationCard';
-import Icon from '@/components/icon';
-import { Loader } from '@/components/loader';
-import { CREATE_ROUTE } from '@/constants/routeConstants';
-import useGetLatest100Blogs from '@/hooks/blog/useGetLatest100Blogs';
-import { Button } from '@the-monkeys/ui/atoms/button';
+import { TrendingBlogCardSmall } from '@/components/cards/blog/TrendingBlogCard';
+import { BlogPageRecommendationSkeleton } from '@/components/skeletons/blogSkeleton';
+import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
+import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 
-export const BlogRecommendations = ({ blogId }: { blogId: string }) => {
-  const { blogs, isLoading, isError } = useGetLatest100Blogs();
+export const BlogRecommendations = ({
+  blogId,
+  topics,
+}: {
+  blogId: string;
+  topics: string[];
+}) => {
+  const [blogs, setBlogs] = useState<GetMetaFeedBlogs>({ blogs: [] });
 
-  if (isLoading)
+  const [blogsLoading, setBlogsLoading] = useState(true);
+  const [blogsError, setBlogsError] = useState(false);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      setBlogsLoading(true);
+      setBlogsError(false);
+
+      try {
+        const response = await axiosInstanceNoAuthV2.post(`/blog/meta-feed`, {
+          tags: topics,
+        });
+
+        setBlogs(response.data);
+      } catch (err: unknown) {
+        setBlogsError(true);
+      } finally {
+        setBlogsLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  if (blogsLoading) {
+    return <BlogPageRecommendationSkeleton />;
+  }
+
+  if (
+    !blogsLoading &&
+    (blogsError || !blogs?.blogs || blogs?.blogs.length === 0)
+  ) {
     return (
-      <div className='py-4 flex justify-center'>
-        <Loader />
+      <div className='p-2 flex items-center justify-center'>
+        <p className='opacity-90'>No results found.</p>
       </div>
     );
+  }
 
-  if (isError) return null;
+  const filteredRecommendations = blogs?.blogs.filter(
+    (blog) => blog?.blog_id !== blogId
+  );
 
   return (
-    <div className='pb-6 space-y-3'>
-      <h4 className='py-1 pl-2 font-dm_sans font-medium border-l-4 border-brand-orange'>
-        Recommended for You
-      </h4>
-
-      <div className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'>
-        {blogs?.blogs.length ? (
-          blogs?.blogs
-            .filter((blog) => blog?.blog_id !== blogId)
-            .slice(0, 6)
-            .map((blog) => {
-              return blog?.blog?.blocks.length < 5 ? null : (
-                <BlogRecommendationCard key={blog?.blog_id} blog={blog} />
-              );
-            })
-        ) : (
-          <div className='py-2 flex flex-col items-center gap-4'>
-            <p className='text-sm opacity-80 text-center'>
-              No blogs available.
-            </p>
-
-            <Button size='sm' className='rounded-full ' asChild>
-              <Link href={`${CREATE_ROUTE}`}>
-                <Icon name='RiPencil' className='mr-1' />
-                Write Your Own
-              </Link>
-            </Button>
+    <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
+      {filteredRecommendations.slice(0, 6).map((blog) => {
+        return (
+          <div className='col-span-2 sm:col-span-1' key={blog?.blog_id}>
+            <TrendingBlogCardSmall blog={blog} />
           </div>
-        )}
-      </div>
+        );
+      })}
     </div>
   );
 };
