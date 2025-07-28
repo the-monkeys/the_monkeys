@@ -4,10 +4,9 @@ import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
 import { MetaBlog } from '@/services/blog/blogTypes';
-import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 import { BlogTitle } from '../blog/getBlogContent';
-import { SearchResultsSkeleton } from '../skeletons/searchSkeleton';
+import { SearchResultsPostSkeleton } from '../skeletons/searchSkeleton';
 
 const SearchBlogTitle = ({
   blog,
@@ -24,6 +23,7 @@ const SearchBlogTitle = ({
 
   return (
     <Link
+      target='_blank'
       href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
       className='group p-1'
       onClick={onClose}
@@ -49,7 +49,7 @@ export const SearchPosts = ({
     useGetSearchBlog(query.trim() ? query : undefined);
 
   if (searchBlogsLoading) {
-    return <SearchResultsSkeleton />;
+    return <SearchResultsPostSkeleton />;
   }
 
   if (searchBlogsError) {

@@ -49,11 +49,12 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
               </ProfileFrame>
 
               <div className='flex-1 flex flex-col overflow-hidden'>
-                <p className='font-dm_sans font-medium text-base'>
-                  {session?.first_name} {session?.last_name}
-                </p>
                 <p className='text-[13px] opacity-80 truncate'>
                   @{session?.username}
+                </p>
+
+                <p className='font-dm_sans font-medium text-base'>
+                  {session?.first_name} {session?.last_name}
                 </p>
               </div>
             </Link>

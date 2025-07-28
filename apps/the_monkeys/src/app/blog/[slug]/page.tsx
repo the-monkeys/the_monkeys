@@ -8,8 +8,8 @@ import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
+  BlogPageSkeleton,
   EditorBlockSkeleton,
-  PublishedBlogSkeleton,
 } from '@/components/skeletons/blogSkeleton';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
 import { AuthorInfoCard } from '@/components/user/cards/AuthorInfoCard';
@@ -42,29 +42,28 @@ const BlogPage = () => {
   const authorName = user?.user?.username || 'Monkeys Author';
 
   if (isLoading) {
-    return <PublishedBlogSkeleton />;
+    return <BlogPageSkeleton />;
   }
 
   if (isError || !blog) {
     return (
-      <div className='col-span-3 min-h-screen'>
-        <div className='py-5 flex flex-col items-center space-y-1'>
+      <div className='col-span-3 h-[800px]'>
+        <div className='py-8 flex flex-col items-center space-y-1'>
           <div className='p-2'>
             <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
           </div>
 
-          <p className='text-lg text-center'>
-            The blog content isn&apos;t available.
+          <p className='font-medium text-lg text-center'>
+            Oops! This post isn&apos; accessible at the moment.
           </p>
 
           <p className='text-center opacity-80'>
-            It might have been removed by the owner or is temporarily
-            inaccessible.
+            This post may be unavailable. Try refreshing or check back later.
           </p>
         </div>
 
         <LinksRedirectArrow link='/feed' className='py-4 mx-auto w-fit'>
-          <p className='font-dm_sans'>Monkeys Feed</p>
+          <p className='font-dm_sans'>Explore Monkeys Feed</p>
         </LinksRedirectArrow>
       </div>
     );
@@ -106,9 +105,9 @@ const BlogPage = () => {
       />
 
       <>
-        <div className='bg-foreground-light/20 dark:bg-foreground-dark/20'>
+        <div className=''>
           <Container className='px-4 py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
-            <div className='mb-2 flex justify-center items-center gap-2'>
+            <div className='mb-1 flex justify-center items-center gap-2'>
               <p className='text-xs sm:text-sm opacity-90'>
                 {moment(date).format('MMM DD, yyyy')}
               </p>
@@ -130,8 +129,8 @@ const BlogPage = () => {
         </div>
 
         <div className='space-y-20'>
-          <Container className='px-4 max-w-3xl space-y-4'>
-            <div className='overflow-hidden'>
+          <Container className='px-4 max-w-3xl space-y-6'>
+            <div className='overflow-hidden border-t-1 border-border-light dark:border-border-dark'>
               <Editor key={blogId} data={blogDataWithoutHeading} />
             </div>
 
@@ -141,10 +140,10 @@ const BlogPage = () => {
           <Container className='px-4 max-w-5xl space-y-12'>
             <TopicLinksContainer topics={tags} />
 
-            <AuthorInfoCard userId={authorId} />
+            <AuthorInfoCard userId={authorId} className='max-w-[600px]' />
 
             <div className='py-6 space-y-3'>
-              <h6 className='p-1 font-dm_sans font-medium'>
+              <h6 className='p-1 font-dm_sans font-semibold'>
                 Explore similar content
               </h6>
 
@@ -158,7 +157,3 @@ const BlogPage = () => {
 };
 
 export default BlogPage;
-
-{
-  /* <AuthorInfoCard userId={authorId} className='max-w-[500px]' /> */
-}

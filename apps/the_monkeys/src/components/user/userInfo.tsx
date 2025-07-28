@@ -132,18 +132,18 @@ export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
   const userData = user?.user;
 
   return (
-    <div className='flex items-center overflow-hidden gap-[6px]'>
-      {/* <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-6'>
+    <div className='flex items-center overflow-x-hidden gap-[6px]'>
+      <p className='text-sm'>by</p>
+
+      <div className='shrink-0 p-[2px]'>
+        <ProfileFrame className='size-6 shadow-sm'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
-      </Link> */}
-
-      <p className='text-sm'>by</p>
+      </div>
 
       <Link
         href={`/${userData?.username}`}
-        className='font-medium text-sm md:text-base text-brand-orange hover:underline'
+        className='font-medium text-sm md:text-base hover:underline'
       >
         {userData?.first_name} {userData?.last_name}
       </Link>

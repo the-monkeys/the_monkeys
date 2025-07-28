@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import { ShowcaseBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import { FeedSkeleton } from '@/components/skeletons/blogSkeleton';
 import {
   orderedCategories,
   orderedCompactCategories,
@@ -25,7 +25,7 @@ const BlogFeedPage = () => {
   }, [blogs]);
 
   if (isLoading) {
-    return <ShowcaseBlogCardListSkeleton />;
+    return <FeedSkeleton />;
   }
 
   if (isError || !filteredBlogs || filteredBlogs.length === 0) {

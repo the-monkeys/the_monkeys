@@ -25,7 +25,7 @@ export const BlogReactions = ({
           href={LOGIN_ROUTE}
           className='text-sm font-medium text-brand-orange hover:underline'
         >
-          Login
+          LOGIN
         </Link>
 
         <p className='text-sm'>to like or save this post.</p>
@@ -57,12 +57,12 @@ export const BlogReactionsContainer = ({
   const url = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   return (
-    <div className='sticky left-0 bottom-[30px] mx-auto w-full flex items-center gap-[6px] z-20'>
-      <div className='flex-1 px-4 py-[6px] bg-foreground-light/60 dark:bg-foreground-dark/60 backdrop-blur-md rounded-full border-1 border-border-light dark:border-border-dark'>
+    <div className='sticky left-0 bottom-[30px] mx-auto w-full flex items-center gap-3 z-20'>
+      <div className='flex-1 px-4 py-2 bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/80 dark:ring-border-dark/80'>
         <BlogReactions blogId={blogId} />
       </div>
 
-      <div className='shrink-0 px-3 py-[6px] bg-foreground-light/60 dark:bg-foreground-dark/60 backdrop-blur-md rounded-full border-1 border-border-light dark:border-border-dark'>
+      <div className='shrink-0 px-3 py-2 bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/80 dark:ring-border-dark/80'>
         <BlogShareDialog blogURL={url} size={20} />
       </div>
     </div>

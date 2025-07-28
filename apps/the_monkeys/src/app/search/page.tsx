@@ -8,6 +8,8 @@ import Icon from '@/components/icon';
 
 import { SearchPosts } from './components/SearchPosts';
 
+// TODO: change the layout to incorporate results for both posts and users
+
 const SearchPage = () => {
   const searchParams = useSearchParams();
   const searchQueryParam = searchParams.get('query');

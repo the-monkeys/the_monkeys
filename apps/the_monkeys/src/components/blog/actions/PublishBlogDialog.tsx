@@ -1,5 +1,5 @@
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { HashTopicLinksContainer } from '@/components/topics/topicsContainer';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -31,15 +31,35 @@ export const PublishBlogDialog = ({
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <div className='space-y-3'>
-          <p className='opacity-80'>
+        <div className='space-y-6'>
+          <p>
             Once published, your post will be visible to everyone. You can edit
             it later, but changes will be reflected publicly.
           </p>
 
-          <div className='space-y-1'>
-            <p className='text-sm opacity-80'>Topics:</p>
-            <HashTopicLinksContainer topics={topics} />
+          <div className='space-y-2'>
+            <p className='font-dm_sans font-medium text-sm'>Topics Included</p>
+
+            {topics.length ? (
+              <div className='flex gap-3 flex-wrap'>
+                {topics.map((topic, index) => {
+                  return (
+                    <div className='flex items-center gap-[2px]' key={index}>
+                      <Icon
+                        name='RiHashtag'
+                        type='NIL'
+                        className='text-brand-orange'
+                        size={18}
+                      />
+
+                      <p className='text-sm'>{topic}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className='py-2 text-sm opacity-90'>No topics added yet.</p>
+            )}
           </div>
         </div>
 

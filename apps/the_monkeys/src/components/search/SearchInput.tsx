@@ -78,13 +78,13 @@ export const SearchInput = ({ className }: { className?: string }) => {
 
         {debouncedQuery && focused && (
           <div className='absolute top-full left-0 max-w-[520px] w-screen pr-2 pt-4 z-20 search-results-container'>
-            <div className='p-4 pb-3 flex flex-col gap-4 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
+            <div className='p-4 flex flex-col gap-4 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
               <div className='space-y-2'>
                 <h6 className='px-1 font-dm_sans font-medium opacity-90'>
                   Posts
                 </h6>
 
-                <Separator />
+                <Separator className='opacity-60' />
 
                 <SearchPosts query={debouncedQuery} onClose={handleClose} />
               </div>
@@ -94,7 +94,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
                   Authors
                 </h6>
 
-                <Separator />
+                <Separator className='opacity-60' />
 
                 {isSuccess ? (
                   <SearchUsers query={debouncedQuery} onClose={handleClose} />
@@ -104,7 +104,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
                       href={LOGIN_ROUTE}
                       className='font-medium text-sm text-brand-orange hover:underline'
                     >
-                      Login
+                      LOGIN
                     </Link>
 
                     <p className='text-sm opacity-90 text-center'>

@@ -10,7 +10,7 @@ import {
 
 export const EditorBlockSkeleton = () => {
   return (
-    <div className='mt-8 h-[800px] w-full space-y-6'>
+    <div className='mt-8 w-full space-y-6'>
       <div className='space-y-1'>
         <Skeleton className='w-full h-5' />
         <Skeleton className='w-full h-5' />
@@ -22,14 +22,11 @@ export const EditorBlockSkeleton = () => {
         <Skeleton className='w-full h-5' />
         <Skeleton className='w-full h-5' />
         <Skeleton className='w-full h-5' />
-        <Skeleton className='w-full h-5' />
         <Skeleton className='w-1/4 h-5' />
       </div>
 
       <div className='space-y-1'>
-        <Skeleton className='w-full h-5' />
-        <Skeleton className='w-full h-5' />
-        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-4/5 h-[250px]' />
       </div>
 
       <div className='space-y-1'>
@@ -38,23 +35,56 @@ export const EditorBlockSkeleton = () => {
         <Skeleton className='w-full h-5' />
         <Skeleton className='w-1/2 h-5' />
       </div>
+
+      <div className='space-y-1'>
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-4/5 h-5' />
+      </div>
+
+      <div className='space-y-1'>
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-full h-5' />
+        <Skeleton className='w-1/4 h-5' />
+      </div>
     </div>
   );
 };
 
-export const PublishedBlogSkeleton = () => {
+export const BlogPageSkeleton = () => {
   return (
-    <>
-      <div className='col-span-3 lg:col-span-2'>
+    <div className='space-y-10'>
+      <Container className='px-4 py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
+        <Skeleton className='h-3 w-28' />
+
+        <div className='w-full space-y-2'>
+          <Skeleton className='h-9 w-full' />
+          <Skeleton className='mx-auto h-9 w-1/2' />
+        </div>
+
         <UserInfoCardSkeleton />
+      </Container>
 
-        <div className='mt-8 h-[800px] w-full bg-gradient-to-b from-foreground-light dark:from-foreground-dark from-[20%] rounded-t-md animate-opacity-pulse' />
-      </div>
+      <Container className='max-w-3xl'>
+        <EditorBlockSkeleton />
+      </Container>
 
-      <div className='hidden lg:block col-span-3 lg:col-span-1 space-y-4'>
-        <div className='h-64 w-full bg-gradient-to-b from-foreground-light dark:from-foreground-dark from-[20%] rounded-t-md animate-opacity-pulse' />
-      </div>
-    </>
+      <Container className='py-4 max-w-5xl'>
+        <div className='flex gap-2 flex-wrap'>
+          <Skeleton className='h-8 w-[160px] rounded-full' />
+          <Skeleton className='h-8 w-[120px] rounded-full' />
+          <Skeleton className='h-8 w-[140px] rounded-full' />
+          <Skeleton className='h-8 w-[100px] rounded-full' />
+          <Skeleton className='h-8 w-[135px] rounded-full' />
+          <Skeleton className='h-8 w-[140px] rounded-full' />
+          <Skeleton className='h-8 w-[160px] rounded-full' />
+          <Skeleton className='h-8 w-[150px] rounded-full' />
+          <Skeleton className='h-8 w-[120px] rounded-full' />
+        </div>
+      </Container>
+    </div>
   );
 };
 
@@ -64,6 +94,18 @@ export const BlogCardSkeleton = () => {
       <UserInfoCardCompactSkeleton />
 
       <Skeleton className='h-32 md:h-28 w-full' />
+    </div>
+  );
+};
+
+export const BlogCardListSkeleton = () => {
+  return (
+    <div className='w-full space-y-8'>
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
+      <BlogCardSkeleton />
     </div>
   );
 };
@@ -82,7 +124,7 @@ export const FeedBlogCardSkeleton = () => {
   );
 };
 
-export const FeedTrendingCardLargeSkeleton = ({
+export const TrendingCardLargeSkeleton = ({
   className,
 }: {
   className?: string;
@@ -101,7 +143,7 @@ export const FeedTrendingCardLargeSkeleton = ({
   );
 };
 
-export const FeedTrendingCardSmallSkeleton = ({
+export const TrendingCardSmallSkeleton = ({
   className,
 }: {
   className?: string;
@@ -119,17 +161,17 @@ export const FeedTrendingCardSmallSkeleton = ({
   );
 };
 
-export const ShowcaseBlogCardListSkeleton = () => {
+export const FeedSkeleton = () => {
   return (
     <Container className='px-4 py-8 min-h-screen space-y-10'>
       <div className='grid grid-cols-2 gap-8'>
-        <FeedTrendingCardLargeSkeleton className='col-span-2 sm:col-span-1' />
+        <TrendingCardLargeSkeleton className='col-span-2 sm:col-span-1' />
 
         <div className='col-span-2 md:col-span-1 grid grid-cols-2 gap-6'>
-          <FeedTrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <FeedTrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <FeedTrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <FeedTrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
         </div>
       </div>
 
@@ -160,19 +202,9 @@ export const ShowcaseBlogCardListSkeleton = () => {
           </div>
         </div>
       </div>
-    </Container>
-  );
-};
 
-export const BlogCardListSkeleton = () => {
-  return (
-    <div className='w-full space-y-8'>
-      <BlogCardSkeleton />
-      <BlogCardSkeleton />
-      <BlogCardSkeleton />
-      <BlogCardSkeleton />
-      <BlogCardSkeleton />
-    </div>
+      <FeedCategorySectionSkeleton />
+    </Container>
   );
 };
 
@@ -192,12 +224,25 @@ export const FeedCategorySectionSkeleton = () => {
   return (
     <div className='space-y-8'>
       <div className='grid grid-cols-2 md:grid-cols-3 gap-6'>
-        <Skeleton className='col-span-2 sm:col-span-1 h-[180px] w-full' />
-        <Skeleton className='col-span-2 sm:col-span-1 h-[180px] w-full' />
-        <Skeleton className='col-span-2 sm:col-span-1 h-[180px] w-full' />
+        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       </div>
 
       <FeedBlogCardListSkeleton />
+    </div>
+  );
+};
+
+export const BlogPageRecommendationSkeleton = () => {
+  return (
+    <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
+      <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+      <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+      <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+      <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+      <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+      <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
     </div>
   );
 };

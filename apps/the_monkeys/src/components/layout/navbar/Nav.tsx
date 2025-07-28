@@ -72,14 +72,14 @@ const Nav = ({
           <SearchInput className='hidden sm:block w-[250px] md:w-[350px]' />
         </div>
 
-        <div className='flex items-center space-x-[10px]'>
-          <div className='flex items-center gap-2'>
+        <div className='flex items-center space-x-2'>
+          <div className='flex items-center gap-[2px]'>
             {!isAuthLoading && session && <WSNotificationDropdown />}
             <ThemeSwitch />
           </div>
 
           {session ? (
-            <div className='flex items-center gap-[10px]'>
+            <div className='flex items-center gap-2'>
               <CreateButton />
               <ProfileDropdown session={session} />
             </div>
