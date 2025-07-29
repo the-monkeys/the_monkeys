@@ -1,10 +1,10 @@
-import { GetDraftBlogResponse } from '@/services/blog/blogTypes';
+import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
 import useSWR from 'swr';
 
 const useGetPublishedBlogByUsername = (username: string | undefined) => {
-  const { data, error, isLoading } = useSWR<GetDraftBlogResponse>(
-    `blog/all/${username}`,
+  const { data, error, isLoading } = useSWR<GetMetaFeedBlogs>(
+    `blog/user/${username}`,
     fetcherV2,
     {
       revalidateOnFocus: false,

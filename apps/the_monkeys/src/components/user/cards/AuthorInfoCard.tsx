@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
-import { ProfileInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import { AuthorInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -20,7 +20,7 @@ export const AuthorInfoCard = ({
   const { data: session, isSuccess } = useAuth();
   const { user, isLoading, isError } = useGetProfileInfoById(userId);
 
-  if (isLoading) return <ProfileInfoCardSkeleton />;
+  if (isLoading) return <AuthorInfoCardSkeleton />;
 
   if (isError) return null;
 
@@ -36,13 +36,15 @@ export const AuthorInfoCard = ({
       <div className='mb-[20px] p-2 w-full bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-2'>
         <div className='flex items-center justify-end gap-[6px]'>
           {userData?.username !== session?.username && isSuccess && (
-            <FollowButton
-              username={userData?.username}
-              className='!rounded-md'
-            />
+            <FollowButton username={userData?.username} />
           )}
 
-          <Button variant='secondary' size='icon' asChild>
+          <Button
+            variant='secondary'
+            size='icon'
+            className='rounded-full'
+            asChild
+          >
             <Link href={`/${userData?.username}`}>
               <Icon name='RiArrowRightUp' />
             </Link>

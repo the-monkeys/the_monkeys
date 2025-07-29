@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Latest Blog Feed',
+  title: 'Catch What’s Trending',
   description:
-    'Stay in the loop with the latest blogs and news on business, sports, politics, technology from around the world on Monkeys.',
+    'Your go-to source for the latest in technology, business, sports, and entertainment — worldwide, on Monkeys.',
 };
 
 const BlogFeedPageLayout = ({
@@ -11,7 +11,7 @@ const BlogFeedPageLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  return <div className='min-h-screen'>{children}</div>;
+  return <div className='min-h-[800px]'>{children}</div>;
 };
 
 export default BlogFeedPageLayout;

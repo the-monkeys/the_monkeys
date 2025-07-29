@@ -72,7 +72,7 @@ const Nav = ({
           <SearchInput className='hidden sm:block w-[250px] md:w-[350px]' />
         </div>
 
-        <div className='flex items-center space-x-2'>
+        <div className='flex items-center space-x-[6px]'>
           <div className='flex items-center gap-[2px]'>
             {!isAuthLoading && session && <WSNotificationDropdown />}
             <ThemeSwitch />

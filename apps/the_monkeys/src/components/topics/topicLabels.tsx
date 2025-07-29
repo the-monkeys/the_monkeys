@@ -12,7 +12,7 @@ export const TopicLabelLink = ({ topic }: { topic: string }) => {
         <Icon
           name='RiArrowRightUp'
           size={16}
-          className='ml-1 opacity-50 group-hover:opacity-100'
+          className='ml-1 opacity-80 group-hover:opacity-100'
         />
       </Badge>
     </Link>

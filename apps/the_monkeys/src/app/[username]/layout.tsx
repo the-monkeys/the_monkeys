@@ -22,13 +22,15 @@ const ProfilePageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='grid grid-cols-3 gap-8 md:gap-6 px-4 py-4 pb-12'>
-      <div className='col-span-3 md:col-span-1'>
-        <ProfileSection />
+    <div className='min-h-[800px] space-y-[130px]'>
+      <div className='px-4 py-6 sm:py-8 bg-brand-orange'>
+        <Container className='px-4 sm:px-6 py-4 -mb-[100px] max-w-7xl bg-background-light dark:bg-background-dark shadow-sm border-b-1 border-brand-orange'>
+          <ProfileSection />
+        </Container>
       </div>
 
-      <div className='col-span-3 md:col-span-2'>{children}</div>
-    </Container>
+      <Container className='px-4'>{children}</Container>
+    </div>
   );
 };
 

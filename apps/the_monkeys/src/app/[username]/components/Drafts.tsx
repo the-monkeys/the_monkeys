@@ -1,6 +1,6 @@
 'use client';
 
-import { BlogCard } from '@/components/blog/cards/BlogCard';
+import { ProfileBlogCard } from '@/components/cards/blog/ProfileBlogCard';
 import { BlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 import { IUser } from '@/services/models/user';
@@ -36,11 +36,12 @@ export const Drafts = ({
           blogs?.blogs &&
           blogs?.blogs.map((blog) => {
             return (
-              <BlogCard
-                key={blog?.blog_id}
+              <ProfileBlogCard
                 blog={blog}
                 isAuthenticated={!!user}
                 modificationEnable={user?.username === username}
+                isDraft={true}
+                key={blog?.blog_id}
               />
             );
           })

@@ -96,7 +96,7 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <button
-          className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
+          className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
           title='Convert to Draft'
         >
           <Icon name='RiPencil' size={18} />
@@ -113,7 +113,7 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
           received. Are you sure you want to proceed?
         </p>
 
-        <div className='pt-4 flex flex-col items-end gap-2'>
+        <div className='pt-4 flex justify-end items-end gap-2'>
           <Button
             type='button'
             variant='secondary'
@@ -124,7 +124,7 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
             disabled={isLoading.button1 || isLoading.button2}
           >
             {isLoading.button1 && <Loader />}
-            Move and Edit
+            Move & Edit
           </Button>
 
           <Button
@@ -134,7 +134,7 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
             disabled={isLoading.button1 || isLoading.button2}
           >
             {isLoading.button2 && <Loader />}
-            Move to Drafts
+            Move
           </Button>
         </div>
       </DialogContent>

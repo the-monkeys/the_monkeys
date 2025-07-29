@@ -14,6 +14,7 @@ import {
 } from '@/constants/social';
 import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import moment from 'moment';
 
 import { ConnectionsDialog } from '../dialogs/ConnectionsDialog';
@@ -34,32 +35,28 @@ export const ProfileCard = ({
     : 'Not available';
 
   return (
-    <div className='mt-2 space-y-2'>
-      <div className='flex gap-2 items-end'>
-        <ProfileFrame className='size-[80px]'>
+    <div className='flex flex-col gap-3'>
+      <div className='flex items-end gap-3 flex-wrap'>
+        <ProfileFrame className='size-[80px] ring-2 ring-border-light/40 dark:ring-border-dark/40'>
           <ProfileImage username={user?.username} />
         </ProfileFrame>
 
-        <div className='flex-1 overflow-hidden'>
-          <div className='flex item-center gap-1'>
-            <p className='font-dm_sans text-sm opacity-80 truncate'>
-              {`@${user?.username}`}
-            </p>
+        <div className='space-y-1'>
+          <div className='flex item-center gap-[6px]'>
+            <p className='truncate'>{`@${user?.username}`}</p>
 
             {isAuthenticated && <UpdateUsernameDialog user={user} />}
           </div>
 
-          <h2 className='w-full font-dm_sans font-medium text-xl capitalize'>
+          <h2 className='w-fit font-dm_sans font-medium text-3xl tracking-tight capitalize'>
             {`${user?.first_name} ${user?.last_name}`}
           </h2>
         </div>
       </div>
 
-      {user?.bio && (
-        <p className='py-1 leading-tight break-words'>{user.bio}</p>
-      )}
+      {user?.bio && <p className='py-1 opacity-90 break-words'>{user.bio}</p>}
 
-      <div className='mb-4 flex items-center flex-wrap gap-x-2'>
+      <div className='flex items-center gap-3'>
         <div className='flex items-center gap-1'>
           <p className='font-medium'>
             {connectionsLoading || connectionsError
@@ -89,101 +86,93 @@ export const ProfileCard = ({
         </div>
       </div>
 
-      <div className='gap-y-1'>
-        <div className='flex items-center gap-1'>
-          <Icon name='RiCalendar' size={16} className='opacity-80' />
+      <div className='flex items-center gap-x-3 gap-y-2 flex-wrap'>
+        <div className='flex items-center gap-[6px]'>
+          <Icon name='RiCalendar' type='Fill' className='opacity-90' />
 
-          <p className='text-sm opacity-80'>Joined {joinedDate}</p>
+          <p className='text-sm'>Joined {joinedDate}</p>
         </div>
 
         {user?.address && (
-          <div className='flex items-center gap-1'>
-            <Icon name='RiMapPinUser' size={16} className='opacity-80' />
+          <div className='flex items-center gap-[6px]'>
+            <Icon name='RiMapPinUser' type='Fill' className='opacity-90' />
 
-            <p className='text-sm opacity-80'>{user.address}</p>
+            <p className='text-sm'>{user.address}</p>
           </div>
         )}
       </div>
 
-      <div className='flex items-center flex-wrap gap-x-2 gap-y-1'>
+      <div className='mt-4 flex items-center flex-wrap gap-2'>
         {user?.twitter && (
-          <Link
-            target='_blank'
-            title='Twitter'
-            href={`${X_URL}/${user.twitter}`}
-            className='flex items-center gap-1'
+          <Button
+            variant='outline'
+            size='icon'
+            className='rounded-full'
+            asChild
           >
-            <Icon
-              name='RiTwitterX'
-              type='Fill'
-              size={18}
-              className='opacity-80'
-            />
-
-            <p className='text-sm opacity-80 hover:opacity-100 hover:underline'>
-              {user.twitter}
-            </p>
-          </Link>
+            <Link
+              target='_blank'
+              title='Twitter'
+              href={`${X_URL}/${user.twitter}`}
+              className='flex items-center gap-1'
+            >
+              <Icon name='RiTwitterX' type='Fill' size={18} />
+            </Link>
+          </Button>
         )}
 
         {user?.github && (
-          <Link
-            target='_blank'
-            title='Twitter'
-            href={`${GITHUB_URL}/${user.github}/`}
-            className='flex items-center gap-1'
+          <Button
+            variant='outline'
+            size='icon'
+            className='rounded-full'
+            asChild
           >
-            <Icon
-              name='RiGithub'
-              type='Fill'
-              size={18}
-              className='opacity-80'
-            />
-
-            <p className='text-sm opacity-80 hover:opacity-100 hover:underline'>
-              {user.github}
-            </p>
-          </Link>
+            <Link
+              target='_blank'
+              title='Github'
+              href={`${GITHUB_URL}/${user.github}/`}
+              className='flex items-center gap-1'
+            >
+              <Icon name='RiGithub' type='Fill' size={18} />
+            </Link>
+          </Button>
         )}
 
         {user?.linkedin && (
-          <Link
-            target='_blank'
-            title='Twitter'
-            href={`${LINKEDIN_URL}/${user.linkedin}`}
-            className='flex items-center gap-1'
+          <Button
+            variant='outline'
+            size='icon'
+            className='rounded-full'
+            asChild
           >
-            <Icon
-              name='RiLinkedin'
-              type='Fill'
-              size={18}
-              className='opacity-80'
-            />
-
-            <p className='text-sm opacity-80 hover:opacity-100 hover:underline'>
-              {user.linkedin}
-            </p>
-          </Link>
+            <Link
+              target='_blank'
+              title='LinkedIn'
+              href={`${LINKEDIN_URL}/${user.linkedin}`}
+              className='flex items-center gap-1'
+            >
+              <Icon name='RiLinkedin' type='Fill' size={18} />
+            </Link>
+          </Button>
         )}
 
         {user?.instagram && (
-          <Link
-            target='_blank'
-            title='Twitter'
-            href={`${INSTAGRAM_URL}/${user.instagram}/`}
-            className='flex items-center gap-1'
+          <Button
+            variant='outline'
+            size='icon'
+            className='rounded-full'
+            asChild
           >
-            <Icon
-              name='RiInstagram'
-              type='Fill'
-              size={18}
-              className='opacity-80'
-            />
-
-            <p className='text-sm opacity-80 hover:opacity-100 hover:underline'>
-              {user.instagram}
-            </p>
-          </Link>
+            <Link
+              target='_blank'
+              title='Instagram'
+              href={`${INSTAGRAM_URL}/${user.instagram}/`}
+              className='flex items-center gap-1'
+            >
+              <Icon name='RiInstagram' type='Fill' size={18} />
+            </Link>
+          </Button>
         )}
       </div>
     </div>

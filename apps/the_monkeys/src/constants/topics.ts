@@ -33,14 +33,13 @@ export const BLOG_TOPICS_SHOW_MAX_COUNT = 6;
 export const PROFILE_TOPICS_SHOW_MAX_COUNT = 6;
 
 export const recommendedTopics = [
-  'Artificial Intelligence',
+  'Corporate Layoffs',
   'Fitness',
+  'Artificial Intelligence',
   'Machine Learning',
-  'Web3',
-  'Formula1',
-  'Social Media',
-  'Football',
-  'TV Shows',
-  'Immigration',
   'Sports',
+  'Football',
+  'Social Media',
+  'Immigration',
+  'Europe',
 ];

@@ -32,7 +32,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
         </div>
       </Container>
 
-      <div className='py-6'>
+      <div className='sm:pt-8 pb-6'>
         <Container className='px-4 grid grid-cols-3 gap-8 lg:gap-10 xl:gap-16'>
           <div className='col-span-3 lg:col-span-2'>
             <div className='flex flex-col gap-6'>
@@ -44,7 +44,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
 
           <div className='col-span-3 lg:col-span-1 h-fit grid grid-cols-2 lg:grid-cols-1 gap-10'>
             <div className='col-span-2 md:col-span-1 flex flex-col gap-6'>
-              <h6 className='py-2 font-dm_sans font-semibold border-b-1 border-border-light dark:border-border-dark'>
+              <h6 className='px-1 pb-2 font-dm_sans font-semibold border-b-1 border-border-light dark:border-border-dark'>
                 Topics on the rise
               </h6>
 
@@ -59,7 +59,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
             </div>
 
             <div className='col-span-2 md:col-span-1 flex flex-col gap-6'>
-              <h6 className='py-2 font-dm_sans font-semibold border-b-1 border-border-light dark:border-border-dark'>
+              <h6 className='px-1 pb-2 font-dm_sans font-semibold border-b-1 border-border-light dark:border-border-dark'>
                 Authors making headlines
               </h6>
 

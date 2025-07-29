@@ -12,8 +12,6 @@ import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 
 import UserNotFound from '../../UserNotFound';
-import { ProfileActionsDropdown } from './ProfileActionsDropdown';
-import { TopicsCard } from './TopicsCard';
 import { UpdateDialog } from './UpdateDialog';
 
 export const ProfileSection = () => {
@@ -33,7 +31,7 @@ export const ProfileSection = () => {
   const isAuthenticated = session?.username === params.username && isSuccess;
 
   return (
-    <>
+    <div>
       <div className='mb-3 flex gap-2 items-center justify-end'>
         {params.username !== session?.username && isSuccess && (
           <FollowButton username={params.username} />
@@ -42,13 +40,9 @@ export const ProfileSection = () => {
         {isAuthenticated && <UpdateDialog data={session} />}
 
         <ShareProfileDialog username={params.username} size={20} />
-
-        {/* <ProfileActionsDropdown username={params.username} /> */}
       </div>
 
       <ProfileCard isAuthenticated={isAuthenticated} user={user} />
-
-      <TopicsCard />
-    </>
+    </div>
   );
 };
