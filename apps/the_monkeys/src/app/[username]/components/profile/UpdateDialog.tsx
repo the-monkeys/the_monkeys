@@ -119,7 +119,9 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className='!text-base rounded-full'>Update</Button>
+        <Button variant='secondary' className='!text-base rounded-full'>
+          Update
+        </Button>
       </DialogTrigger>
 
       <DialogContent className='max-h-[60vh] sm:max-h-[80vh] overflow-auto'>

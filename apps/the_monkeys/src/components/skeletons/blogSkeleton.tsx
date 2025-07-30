@@ -3,7 +3,6 @@ import { twMerge } from 'tailwind-merge';
 
 import Container from '../layout/Container';
 import {
-  UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
   UserRecommendationCardSkeleton,
 } from './userSkeleton';
@@ -74,28 +73,6 @@ export const BlogPageSkeleton = () => {
       <Container className='py-4 max-w-5xl'>
         <TopicsContainerSkeleton />
       </Container>
-    </div>
-  );
-};
-
-export const BlogCardSkeleton = () => {
-  return (
-    <div className='px-0 lg:px-6 space-y-3'>
-      <UserInfoCardCompactSkeleton />
-
-      <Skeleton className='h-32 md:h-28 w-full' />
-    </div>
-  );
-};
-
-export const BlogCardListSkeleton = () => {
-  return (
-    <div className='w-full space-y-8'>
-      <BlogCardSkeleton />
-      <BlogCardSkeleton />
-      <BlogCardSkeleton />
-      <BlogCardSkeleton />
-      <BlogCardSkeleton />
     </div>
   );
 };

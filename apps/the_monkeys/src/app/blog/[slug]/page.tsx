@@ -1,18 +1,18 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { BlogTitle, getCardContent } from '@/components/blog/getBlogContent';
+import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
   BlogPageSkeleton,
   EditorBlockSkeleton,
 } from '@/components/skeletons/blogSkeleton';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
-import { AuthorInfoCard } from '@/components/user/cards/AuthorInfoCard';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';

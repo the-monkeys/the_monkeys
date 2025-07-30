@@ -15,7 +15,7 @@ const ThemeSwitch = () => {
 
   if (!mounted)
     return (
-      <div className='size-4 rounded-full bg-foreground-light dark:bg-foreground-dark'></div>
+      <div className='mr-1 size-8 rounded-full bg-foreground-light dark:bg-foreground-dark animate-pulse'></div>
     );
 
   if (resolvedTheme === 'dark') {

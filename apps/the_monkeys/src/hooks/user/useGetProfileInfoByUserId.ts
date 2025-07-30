@@ -7,9 +7,10 @@ const useGetProfileInfoById = (userId: string | undefined) => {
     `/user/public/account/${userId}`,
     authFetcher,
     {
+      shouldRetryOnError: false,
       revalidateOnFocus: false,
       revalidateIfStale: false,
-      refreshInterval: 0,
+      refreshInterval: 30000,
     }
   );
 

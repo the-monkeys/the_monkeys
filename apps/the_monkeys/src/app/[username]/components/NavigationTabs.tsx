@@ -15,7 +15,7 @@ export const NavigationTabs = ({
           Posts
         </p>
 
-        <div className='mt-[6px] h-[1px] w-0 bg-background-dark dark:bg-background-light rounded-full group-data-[state=active]:w-4/5 transition-all' />
+        <div className='mt-[6px] h-[1px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-4/5 transition-all' />
       </TabsTrigger>
 
       {user?.username === username && (
@@ -24,7 +24,7 @@ export const NavigationTabs = ({
             Drafts
           </p>
 
-          <div className='mt-[6px] h-[1px] w-0 bg-background-dark dark:bg-background-light rounded-full group-data-[state=active]:w-4/5 transition-all' />
+          <div className='mt-[6px] h-[1px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-4/5 transition-all' />
         </TabsTrigger>
       )}
     </TabsList>

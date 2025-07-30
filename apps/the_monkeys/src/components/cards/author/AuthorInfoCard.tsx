@@ -3,12 +3,11 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { AuthorInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import { FollowButton } from '@/components/user/buttons/followButton';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { twMerge } from 'tailwind-merge';
-
-import { FollowButton } from '../buttons/followButton';
 
 export const AuthorInfoCard = ({
   userId,
@@ -81,7 +80,7 @@ export const AuthorInfoCard = ({
 
           {userData?.location && (
             <div className='flex items-center gap-1'>
-              <Icon name='RiMapPinUser' size={18} />
+              <Icon name='RiMapPinUser' size={18} type='Fill' />
 
               <p className='opacity-80'>{userData.location}</p>
             </div>

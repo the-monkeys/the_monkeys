@@ -1,6 +1,8 @@
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
-export const ProfileCardSkeleton = () => {
+import { TopicsContainerSkeleton } from './blogSkeleton';
+
+export const AuthorProfileCardSkeleton = () => {
   return (
     <div className='space-y-3'>
       <div className='flex justify-end gap-2'>
@@ -18,9 +20,8 @@ export const ProfileCardSkeleton = () => {
       </div>
 
       <div className='py-2 space-y-1'>
-        <Skeleton className='h-3 w-full' />
-        <Skeleton className='h-3 w-full' />
-        <Skeleton className='h-3 w-1/2' />
+        <Skeleton className='h-4 w-full' />
+        <Skeleton className='h-4 w-1/2' />
       </div>
 
       <Skeleton className='h-4 w-28' />
@@ -56,6 +57,20 @@ export const AuthorInfoCardSkeleton = () => {
           <Skeleton className='h-4 w-32' />
           <Skeleton className='h-4 w-32' />
         </div>
+      </div>
+    </div>
+  );
+};
+
+export const ProfileSectionSkeleton = () => {
+  return (
+    <div className='grid grid-cols-3 gap-4'>
+      <div className='col-span-3 md:col-span-2 p-4 bg-foreground-light/20 dark:bg-foreground-dark/20 rounded-lg'>
+        <AuthorProfileCardSkeleton />
+      </div>
+
+      <div className='col-span-3 md:col-span-1 p-4 bg-foreground-light/20 dark:bg-foreground-dark/20 rounded-lg'>
+        <TopicsContainerSkeleton />
       </div>
     </div>
   );

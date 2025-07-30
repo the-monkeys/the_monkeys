@@ -6,6 +6,8 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
+import { ConnectionsDialog } from '@/components/user/dialogs/ConnectionsDialog';
+import { UpdateUsernameDialog } from '@/components/user/dialogs/UpdateUsernameDialog';
 import {
   GITHUB_URL,
   INSTAGRAM_URL,
@@ -17,10 +19,15 @@ import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes
 import { Button } from '@the-monkeys/ui/atoms/button';
 import moment from 'moment';
 
-import { ConnectionsDialog } from '../dialogs/ConnectionsDialog';
-import { UpdateUsernameDialog } from '../dialogs/UpdateUsernameDialog';
+const SocialLinkButton = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <Button variant='outline' size='icon' className='rounded-full' asChild>
+      {children}
+    </Button>
+  );
+};
 
-export const ProfileCard = ({
+export const AuthorProfileCard = ({
   isAuthenticated,
   user,
 }: {
@@ -35,7 +42,7 @@ export const ProfileCard = ({
     : 'Not available';
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='flex flex-col gap-2'>
       <div className='flex items-end gap-3 flex-wrap'>
         <ProfileFrame className='size-[80px] ring-2 ring-border-light/40 dark:ring-border-dark/40'>
           <ProfileImage username={user?.username} />
@@ -43,18 +50,16 @@ export const ProfileCard = ({
 
         <div className='space-y-1'>
           <div className='flex item-center gap-[6px]'>
-            <p className='truncate'>{`@${user?.username}`}</p>
+            <p className='px-[2px] truncate'>{`@${user?.username}`}</p>
 
             {isAuthenticated && <UpdateUsernameDialog user={user} />}
           </div>
 
-          <h2 className='w-fit font-dm_sans font-medium text-3xl tracking-tight capitalize'>
+          <h2 className='w-fit font-dm_sans font-medium text-3xl text-brand-orange tracking-tight capitalize'>
             {`${user?.first_name} ${user?.last_name}`}
           </h2>
         </div>
       </div>
-
-      {user?.bio && <p className='py-1 opacity-90 break-words'>{user.bio}</p>}
 
       <div className='flex items-center gap-3'>
         <div className='flex items-center gap-1'>
@@ -86,6 +91,8 @@ export const ProfileCard = ({
         </div>
       </div>
 
+      {user?.bio && <p className='py-1 break-words'>{user.bio}</p>}
+
       <div className='flex items-center gap-x-3 gap-y-2 flex-wrap'>
         <div className='flex items-center gap-[6px]'>
           <Icon name='RiCalendar' type='Fill' className='opacity-90' />
@@ -104,12 +111,7 @@ export const ProfileCard = ({
 
       <div className='mt-4 flex items-center flex-wrap gap-2'>
         {user?.twitter && (
-          <Button
-            variant='outline'
-            size='icon'
-            className='rounded-full'
-            asChild
-          >
+          <SocialLinkButton>
             <Link
               target='_blank'
               title='Twitter'
@@ -118,16 +120,11 @@ export const ProfileCard = ({
             >
               <Icon name='RiTwitterX' type='Fill' size={18} />
             </Link>
-          </Button>
+          </SocialLinkButton>
         )}
 
         {user?.github && (
-          <Button
-            variant='outline'
-            size='icon'
-            className='rounded-full'
-            asChild
-          >
+          <SocialLinkButton>
             <Link
               target='_blank'
               title='Github'
@@ -136,16 +133,11 @@ export const ProfileCard = ({
             >
               <Icon name='RiGithub' type='Fill' size={18} />
             </Link>
-          </Button>
+          </SocialLinkButton>
         )}
 
         {user?.linkedin && (
-          <Button
-            variant='outline'
-            size='icon'
-            className='rounded-full'
-            asChild
-          >
+          <SocialLinkButton>
             <Link
               target='_blank'
               title='LinkedIn'
@@ -154,16 +146,11 @@ export const ProfileCard = ({
             >
               <Icon name='RiLinkedin' type='Fill' size={18} />
             </Link>
-          </Button>
+          </SocialLinkButton>
         )}
 
         {user?.instagram && (
-          <Button
-            variant='outline'
-            size='icon'
-            className='rounded-full'
-            asChild
-          >
+          <SocialLinkButton>
             <Link
               target='_blank'
               title='Instagram'
@@ -172,7 +159,7 @@ export const ProfileCard = ({
             >
               <Icon name='RiInstagram' type='Fill' size={18} />
             </Link>
-          </Button>
+          </SocialLinkButton>
         )}
       </div>
     </div>

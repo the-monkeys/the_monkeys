@@ -1,5 +1,3 @@
-'use client';
-
 import { ProfileBlogCard } from '@/components/cards/blog/ProfileBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
@@ -24,28 +22,24 @@ export const Blogs = ({
     );
 
   return (
-    <div className='min-h-screen'>
-      <div className='flex flex-col gap-10'>
-        {isLoading ? (
-          <FeedBlogCardListSkeleton />
-        ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='w-full text-sm opacity-80 text-center'>
-            No blogs published yet.
-          </p>
-        ) : (
-          blogs?.blogs &&
-          blogs?.blogs.map((blog) => {
-            return (
-              <ProfileBlogCard
-                blog={blog}
-                isAuthenticated={!!user}
-                modificationEnable={user?.username === username}
-                key={blog?.blog_id}
-              />
-            );
-          })
-        )}
-      </div>
+    <div className='flex flex-col gap-6'>
+      {isLoading ? (
+        <FeedBlogCardListSkeleton />
+      ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
+        <p className='w-full opacity-90 text-center'>No posts yet.</p>
+      ) : (
+        blogs?.blogs &&
+        blogs?.blogs.map((blog) => {
+          return (
+            <ProfileBlogCard
+              blog={blog}
+              isAuthenticated={!!user}
+              modificationEnable={user?.username === username}
+              key={blog?.blog_id}
+            />
+          );
+        })
+      )}
     </div>
   );
 };
