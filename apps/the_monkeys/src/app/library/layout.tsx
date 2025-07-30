@@ -17,7 +17,7 @@ const LibraryPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='pb-12 px-4 min-h-screen space-y-8'>
+    <Container className='pb-12 px-4 min-h-screen space-y-10'>
       <PageHeader>
         <PageHeading heading='Library' />
         <PageSubheading

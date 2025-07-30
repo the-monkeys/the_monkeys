@@ -72,6 +72,7 @@ export const ProfileBlogCard = ({
             <div className='w-fit flex items-center gap-1'>
               <Link
                 href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                target='_blank'
                 className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
               >
                 {blog?.tags[0]}

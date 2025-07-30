@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
+import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import {
   BlogImage,
   BlogPlaceholderImage,
@@ -12,7 +13,13 @@ import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 
-export const FeedBlogCard = ({ blog }: { blog: MetaBlog }) => {
+export const FeedBlogCard = ({
+  blog,
+  showBookmarkOption = false,
+}: {
+  blog: MetaBlog;
+  showBookmarkOption?: boolean;
+}) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time;
@@ -50,6 +57,7 @@ export const FeedBlogCard = ({ blog }: { blog: MetaBlog }) => {
             <div className='w-fit flex items-center gap-1'>
               <Link
                 href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                target='_blank'
                 className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
               >
                 {blog?.tags[0]}
@@ -58,6 +66,7 @@ export const FeedBlogCard = ({ blog }: { blog: MetaBlog }) => {
           )}
 
           <div className='flex items-center gap-[6px]'>
+            {showBookmarkOption && <BookmarkButton blogId={blog?.blog_id} />}
             <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
           </div>
         </div>

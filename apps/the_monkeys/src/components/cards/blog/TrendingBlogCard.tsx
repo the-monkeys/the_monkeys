@@ -57,6 +57,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
             <div className='w-fit flex items-center gap-1'>
               <Link
                 href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                target='_blank'
                 className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
               >
                 {blog?.tags[0]}
@@ -85,7 +86,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
-    <div className='group h-full w-full space-y-[10px]'>
+    <div className='group h-full w-full flex flex-col gap-[10px]'>
       <div className='h-[220px] sm:h-[200px] bg-foreground-light dark:bg-foreground-dark rounded-md shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
@@ -94,7 +95,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
         )}
       </div>
 
-      <div className='w-full flex flex-col justify-between gap-[10px]'>
+      <div className='flex-grow w-full flex flex-col justify-between gap-[10px]'>
         <div>
           <UserInfoCardShowcase authorID={authorId} date={date} />
 
@@ -111,6 +112,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
             <div className='w-fit flex items-center gap-1'>
               <Link
                 href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                target='_blank'
                 className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
               >
                 {blog?.tags[0]}

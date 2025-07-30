@@ -132,7 +132,7 @@ export const BookmarkButton = ({
     <>
       {bookmarkStatus?.bookMarked ? (
         <button
-          className={`group p-1 flex items-center justify-center opacity-100 hover:opacity-80 ${
+          className={`group p-1 flex items-center justify-center opacity-80 hover:opacity-100 ${
             loading || isDisable
               ? 'cursor-default opacity-80'
               : 'cursor-pointer'

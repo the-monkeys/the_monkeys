@@ -20,7 +20,7 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
   if (isError) {
     return (
       <div className='px-4 py-12 flex flex-col gap-1 items-center justify-center'>
-        <div className='mb-3 size-[80px] ring-1 ring-border-light/25 dark:ring-border-dark/25 rounded-full overflow-hidden'>
+        <div className='mb-3 size-[80px] ring-1 ring-border-light dark:ring-border-dark rounded-full overflow-hidden'>
           <DefaultProfile />
         </div>
 

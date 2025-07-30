@@ -117,7 +117,7 @@ const BlogPage = () => {
 
             <BlogTitle
               title={blogTitle}
-              className='py-[6px] font-dm_sans font-bold text-3xl sm:text-4xl !leading-snug text-center'
+              className='pt-[6px] font-dm_sans font-bold text-3xl sm:text-4xl !leading-snug text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />

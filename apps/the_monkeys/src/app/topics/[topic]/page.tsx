@@ -36,24 +36,24 @@ const TopicBlogsPage = ({
 }) => {
   const topic = decodeURIComponent(params.topic);
   return (
-    <Container className='pb-12 px-4 min-h-screen'>
+    <Container className='pb-12 px-4 min-h-screen space-y-2'>
       <PageHeader>
         <PageSubheading subheading='Read about' />
         <PageHeading heading={topic} className='text-center' />
       </PageHeader>
 
-      <div className='mt-3 mb-10 flex justify-center gap-2 flex-wrap'>
+      <div className='flex justify-center gap-2 flex-wrap'>
         <TopicFollowButton topic={topic} />
 
-        <Button size='sm' className='rounded-full' asChild>
+        <Button variant='secondary' className='rounded-full' asChild>
           <Link href='/topics/explore' target='_blank'>
             <Icon name='RiCompass' className='mr-1' />
-            Explore All
+            Explore
           </Link>
         </Button>
       </div>
 
-      <div className='mx-auto max-w-3xl min-h-screen'>
+      <div className='pt-10 mx-auto max-w-4xl min-h-[800px]'>
         <BlogsByTopic topic={topic} />
       </div>
     </Container>

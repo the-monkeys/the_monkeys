@@ -3,7 +3,6 @@ import { TrendingBlogCardSmall } from '@/components/cards/blog/TrendingBlogCard'
 import Container from '@/components/layout/Container';
 import { FeedCategorySectionSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetCategoryBlogs from '@/hooks/posts/useGetCategoryBlogs';
-import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 const CategorySection = ({
   title,

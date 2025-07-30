@@ -59,13 +59,19 @@ export const BlogRecommendations = ({
 
   return (
     <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
-      {filteredRecommendations.slice(0, 6).map((blog) => {
-        return (
-          <div className='col-span-2 sm:col-span-1' key={blog?.blog_id}>
-            <TrendingBlogCardSmall blog={blog} />
-          </div>
-        );
-      })}
+      {filteredRecommendations.length ? (
+        filteredRecommendations.slice(0, 6).map((blog) => {
+          return (
+            <div className='col-span-2 sm:col-span-1' key={blog?.blog_id}>
+              <TrendingBlogCardSmall blog={blog} />
+            </div>
+          );
+        })
+      ) : (
+        <div className='col-span-3 p-2 flex items-center justify-center'>
+          <p className='opacity-90'>No similar posts available.</p>
+        </div>
+      )}
     </div>
   );
 };
