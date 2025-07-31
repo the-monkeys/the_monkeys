@@ -17,12 +17,10 @@ const truncateDescription = (text: string, maxLength: number): string => {
 const fetchBlogData = async (id: string): Promise<Blog | null> => {
   try {
     const res = await fetch(`${API_URL_V2}/blog/${id}`, {
-      // optional headers if needed
       headers: {
         'Content-Type': 'application/json',
       },
-      // Make sure this runs server-side only
-      cache: 'no-store', // or 'force-cache' if you want caching
+      cache: 'no-store',
     });
 
     if (!res.ok) {
@@ -49,7 +47,7 @@ export async function generateMetadata(
   const imageBlock = blocks.find((block) => block.type === 'image');
   const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
 
-  const metaTitle = blocks[0]?.data?.text || 'Posted on Monkeys';
+  const metaTitle = blocks[0]?.data?.text || 'Published Post';
   const metaDescription = truncateDescription(
     descriptionBlock?.data?.text || 'No description available.',
     157
@@ -85,7 +83,7 @@ export async function generateMetadata(
 }
 
 const BlogPageLayout = ({ children }: { children: React.ReactNode }) => {
-  return <div>{children}</div>;
+  return <div className='min-h-[800px]'>{children}</div>;
 };
 
 export default BlogPageLayout;

@@ -4,51 +4,48 @@ import React from 'react';
 
 import { useParams } from 'next/navigation';
 
-import { ProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import { AuthorProfileCard } from '@/components/cards/author/AuthorProfileCard';
+import { DefaultProfile } from '@/components/profileImage';
+import { ProfileSectionSkeleton } from '@/components/skeletons/profileSkeleton';
 import { FollowButton } from '@/components/user/buttons/followButton';
-import { ProfileCard } from '@/components/user/cards/ProfileCard';
 import { ShareProfileDialog } from '@/components/user/dialogs/ShareProfileDialog';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
+import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 
-import UserNotFound from '../../UserNotFound';
-import { ProfileActionsDropdown } from './ProfileActionsDropdown';
-import { TopicsCard } from './TopicsCard';
+import { TopicsList } from './TopicsList';
 import { UpdateDialog } from './UpdateDialog';
 
-export const ProfileSection = () => {
-  const params = useParams<{ username: string }>();
+export const ProfileSection = ({
+  paramsUser,
+  user,
+}: {
+  paramsUser: string;
+  user?: GetPublicUserProfileApiResponse;
+}) => {
   const { data: session, isSuccess } = useAuth();
 
-  const { user, isLoading, isError } = useUser(params.username);
-
-  if (isError) {
-    return <UserNotFound />;
-  }
-
-  if (isLoading) {
-    return <ProfileCardSkeleton />;
-  }
-
-  const isAuthenticated = session?.username === params.username && isSuccess;
+  const isAuthenticated = session?.username === paramsUser && isSuccess;
 
   return (
-    <>
-      <div className='mb-3 flex gap-2 items-center justify-end'>
-        {params.username !== session?.username && isSuccess && (
-          <FollowButton username={params.username} />
-        )}
+    <div className='grid grid-cols-3 gap-4'>
+      <div className='col-span-3 md:col-span-2 p-4 bg-foreground-light/20 dark:bg-foreground-dark/20 border-1 border-border-light/40 dark:border-border-dark/40 rounded-lg'>
+        <div className='mb-3 flex gap-2 items-center justify-end'>
+          {paramsUser !== session?.username && isSuccess && (
+            <FollowButton username={paramsUser} />
+          )}
 
-        {isAuthenticated && <UpdateDialog data={session} />}
+          {isAuthenticated && <UpdateDialog data={session} />}
 
-        <ShareProfileDialog username={params.username} size={20} />
+          <ShareProfileDialog username={paramsUser} size={20} />
+        </div>
 
-        {/* <ProfileActionsDropdown username={params.username} /> */}
+        <AuthorProfileCard isAuthenticated={isAuthenticated} user={user} />
       </div>
 
-      <ProfileCard isAuthenticated={isAuthenticated} user={user} />
-
-      <TopicsCard />
-    </>
+      <div className='col-span-3 md:col-span-1 p-4 bg-foreground-light/20 dark:bg-foreground-dark/20 border-1 border-border-light/40 dark:border-border-dark/40 rounded-lg'>
+        <TopicsList topics={user?.topics} />
+      </div>
+    </div>
   );
 };

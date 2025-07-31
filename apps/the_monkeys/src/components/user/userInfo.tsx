@@ -6,14 +6,14 @@ import moment from 'moment';
 
 import ProfileImage, { ProfileFrame } from '../profileImage';
 import {
-  UserInfoCardCompactSkeleton,
   UserInfoCardSkeleton,
+  UserRecommendationCardSkeleton,
 } from '../skeletons/userSkeleton';
 
 export const RecommendedUserCard = ({ id }: { id?: string }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
 
-  if (isLoading) return <UserInfoCardCompactSkeleton />;
+  if (isLoading) return <UserRecommendationCardSkeleton />;
 
   if (isError) {
     return null;
@@ -43,49 +43,6 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
   );
 };
 
-export const UserInfoCardCompact = ({
-  id,
-  date,
-}: {
-  id?: string;
-  date?: number | string;
-}) => {
-  const { user, isLoading, isError } = useGetProfileInfoById(id);
-
-  if (isLoading) return <UserInfoCardCompactSkeleton />;
-
-  if (isError) {
-    return <p className='mb-4 text-sm opacity-80'>User not available</p>;
-  }
-
-  const userData = user?.user;
-
-  return (
-    <div className='w-full flex items-center gap-2'>
-      <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-5'>
-          <ProfileImage username={userData?.username} />
-        </ProfileFrame>
-      </Link>
-
-      <div className='flex gap-1 justify-center flex-wrap'>
-        <Link
-          href={`/${userData?.username}`}
-          className='font-dm_sans font-medium text-[13px] hover:underline decoration-1'
-        >
-          {userData?.first_name} {userData?.last_name}
-        </Link>
-
-        <span className='text-sm cursor-default'>·</span>
-
-        <p className='font-dm_sans text-[13px] opacity-80 cursor-default'>
-          {moment(date).format('MMM DD, YYYY')}
-        </p>
-      </div>
-    </div>
-  );
-};
-
 export const UserInfoCardShowcase = ({
   authorID,
   date,
@@ -95,7 +52,7 @@ export const UserInfoCardShowcase = ({
 }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(authorID);
 
-  if (isLoading) return <Skeleton className='h-4 w-32' />;
+  if (isLoading) return <Skeleton className='mb-1 h-4 w-36' />;
 
   if (isError) {
     return null;
@@ -126,7 +83,7 @@ export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
   if (isLoading) return <UserInfoCardSkeleton />;
 
   if (isError) {
-    return <p className='mb-4 text-sm opacity-80'>User not available</p>;
+    return <p className='text-sm opacity-80'>User not available</p>;
   }
 
   const userData = user?.user;

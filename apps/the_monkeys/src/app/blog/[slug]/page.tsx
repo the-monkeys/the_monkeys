@@ -1,18 +1,18 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { BlogTitle, getCardContent } from '@/components/blog/getBlogContent';
+import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import {
   BlogPageSkeleton,
   EditorBlockSkeleton,
 } from '@/components/skeletons/blogSkeleton';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
-import { AuthorInfoCard } from '@/components/user/cards/AuthorInfoCard';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
@@ -47,24 +47,20 @@ const BlogPage = () => {
 
   if (isError || !blog) {
     return (
-      <div className='col-span-3 h-[800px]'>
-        <div className='py-8 flex flex-col items-center space-y-1'>
-          <div className='p-2'>
-            <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
-          </div>
-
-          <p className='font-medium text-lg text-center'>
-            Oops! This post isn&apos; accessible at the moment.
-          </p>
-
-          <p className='text-center opacity-80'>
-            This post may be unavailable. Try refreshing or check back later.
-          </p>
+      <div className='px-4 py-12 flex flex-col items-center justify-center'>
+        <div className='p-4 flex items-center'>
+          <p className='font-dm_sans font-bold text-6xl'>4</p>
+          <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
+          <p className='font-dm_sans font-bold text-6xl'>4</p>
         </div>
 
-        <LinksRedirectArrow link='/feed' className='py-4 mx-auto w-fit'>
-          <p className='font-dm_sans'>Explore Monkeys Feed</p>
-        </LinksRedirectArrow>
+        <h2 className='py-1 font-dm_sans font-medium text-lg text-center'>
+          Page not found — but at least you found us!
+        </h2>
+
+        <p className='text-base opacity-90 text-center'>
+          Try refreshing, or swing by again later.
+        </p>
       </div>
     );
   }
@@ -105,7 +101,7 @@ const BlogPage = () => {
       />
 
       <>
-        <div className=''>
+        <div>
           <Container className='px-4 py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
             <div className='mb-1 flex justify-center items-center gap-2'>
               <p className='text-xs sm:text-sm opacity-90'>
@@ -121,7 +117,7 @@ const BlogPage = () => {
 
             <BlogTitle
               title={blogTitle}
-              className='py-[6px] font-dm_sans font-bold text-3xl sm:text-4xl !leading-snug text-center'
+              className='pt-[6px] font-dm_sans font-bold text-3xl sm:text-4xl !leading-snug text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />

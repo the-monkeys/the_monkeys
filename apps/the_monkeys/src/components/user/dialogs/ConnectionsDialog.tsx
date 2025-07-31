@@ -31,18 +31,17 @@ const ConnectionCard = ({
   username: string;
 }) => {
   return (
-    <Link
-      href={`/${username}`}
-      className='px-1 py-2 flex flex-col justify-center i gap-x-2 hover:bg-foreground-light dark:hover:bg-foreground-dark overflow-hidden'
-    >
-      <h2 className='text-sm md:text-xl '>
-        {first_name} {last_name}
-      </h2>
+    <div className='w-full flex justify-between items-center gap-2'>
+      <div className='flex-1 space-y-1 overflow-hidden'>
+        <Link href={`/${username}`} className='hover:underline truncate'>
+          {first_name} {last_name}
+        </Link>
 
-      <p className='flex-1 text-xs md:text-base opacity-80 truncate'>
-        {`@${username}`}
-      </p>
-    </Link>
+        <p className='text-sm opacity-90 truncate'>{`@${username}`}</p>
+      </div>
+
+      <FollowButton username={username} className='shrink-0' />
+    </div>
   );
 };
 
@@ -95,7 +94,7 @@ export const ConnectionsDialog = ({
           </TabsList>
 
           <div className='max-h-[50vh] sm:max-h-[60vh] overflow-auto'>
-            {followerLoading || followingLoading ? (
+            {!followerLoading || followingLoading ? (
               <ConnectionsListSkeleton />
             ) : (
               <>
@@ -132,14 +131,12 @@ export const ConnectionsDialog = ({
                           key={following?.username}
                           className='flex justify-between items-center py-1'
                         >
-                          {' '}
                           <ConnectionCard
                             key={following?.username}
                             first_name={following.first_name}
                             last_name={following.last_name}
                             username={following.username}
                           />
-                          <FollowButton username={following.username} />
                         </div>
                       );
                     })

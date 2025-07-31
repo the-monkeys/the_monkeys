@@ -48,7 +48,6 @@ export const UpdateUsernameDialog = ({
     mutationFn: updateUserName,
     onSuccess: (data) => {
       const user = new User(data);
-      console.log('-->', user);
       queryClient.invalidateQueries({ queryKey: ['auth'] });
 
       form.reset();
@@ -78,12 +77,7 @@ export const UpdateUsernameDialog = ({
     <Dialog>
       <DialogTrigger asChild>
         <button className='opcity-100 hover:opacity-80'>
-          <Icon
-            name='RiPencil'
-            size={16}
-            type='Fill'
-            className='text-brand-orange'
-          />
+          <Icon name='RiPencil' size={16} type='Fill' />
         </button>
       </DialogTrigger>
 

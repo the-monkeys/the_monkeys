@@ -1,5 +1,5 @@
 export const orderedCategories = [
-  { title: 'Tech & Innovation', category: 'technology' },
+  { title: 'Tech, Security & Innovation', category: 'technology' },
   { title: 'Business & Finance', category: 'business' },
   { title: 'Sports', category: 'sports' },
   { title: 'Culture & Media', category: 'entertainment' },

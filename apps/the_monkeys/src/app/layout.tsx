@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     default: 'Monkeys - Inspire, Inform, Innovate',
   },
   description:
-    'Join Monkeys for collaborative blog writing, blog version control, diverse topics and staying updated with ongoing global headlines.',
+    'Your go-to source for the latest in technology, business, sports, and entertainment — worldwide, on Monkeys.',
   twitter: {
     card: 'summary_large_image',
   },

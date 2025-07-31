@@ -51,7 +51,7 @@ const Nav = ({
         prevScrollpos === 0 && 'border-none'
       )}
     >
-      <Container className='w-full px-4 py-[10px] flex items-center justify-between flex-wrap md:flex-nowrap gap-4'>
+      <Container className='w-full px-4 py-[10px] flex items-center justify-between gap-4'>
         <div className='flex items-center gap-[10px] sm:gap-4'>
           <Link href={FEED_ROUTE} className='group flex items-center gap-[6px]'>
             <div className='w-9 flex justify-center items-center group-hover:opacity-85'>
@@ -69,10 +69,10 @@ const Nav = ({
             <SearchInputLink />
           </div>
 
-          <SearchInput className='hidden sm:block w-[250px] md:w-[350px]' />
+          <SearchInput className='hidden sm:block w-[250px] md:w-[320px]' />
         </div>
 
-        <div className='flex items-center space-x-2'>
+        <div className='flex items-center space-x-[6px]'>
           <div className='flex items-center gap-[2px]'>
             {!isAuthLoading && session && <WSNotificationDropdown />}
             <ThemeSwitch />

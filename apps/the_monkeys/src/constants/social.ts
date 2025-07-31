@@ -53,4 +53,7 @@ export const recommendedUsers = [
   {
     userID: '8a729144e08d830e181c675b2913f67b',
   },
+  {
+    userID: '0471e8fe18edea171821ebe4132dfc99',
+  },
 ];

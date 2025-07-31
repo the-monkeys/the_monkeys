@@ -1,25 +1,34 @@
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
-import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
+import { DeleteBlogDialog } from '@/components/blog/actions/DeleteBlogDialog';
+import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
 import {
   BlogImage,
   BlogPlaceholderImage,
   BlogTitle,
 } from '@/components/blog/getBlogContent';
+import Icon from '@/components/icon';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 
-export const FeedBlogCard = ({
+export const ProfileBlogCard = ({
   blog,
-  showBookmarkOption = false,
+  isAuthenticated,
+  modificationEnable = false,
+  isDraft = false,
 }: {
   blog: MetaBlog;
-  showBookmarkOption?: boolean;
+  isAuthenticated: boolean;
+  modificationEnable: boolean;
+  isDraft?: boolean;
 }) => {
+  const router = useRouter();
+
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time;
@@ -29,6 +38,12 @@ export const FeedBlogCard = ({
 
   const blogSlug = generateSlug(titleContent);
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
+
+  const showModificationOptions = isAuthenticated && modificationEnable;
+
+  const handleEdit = (blogId: string) => {
+    router.push(`/edit/${blogId}`);
+  };
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
@@ -53,7 +68,7 @@ export const FeedBlogCard = ({
         </div>
 
         <div className='pt-2 w-full flex justify-between items-center gap-2'>
-          {blog?.tags.length && (
+          {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link
                 href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
@@ -63,11 +78,30 @@ export const FeedBlogCard = ({
                 {blog?.tags[0]}
               </Link>
             </div>
+          ) : (
+            <p className='shrink-0 text-sm opacity-80 italic'>no topics</p>
           )}
 
-          <div className='flex items-center gap-[6px]'>
-            {showBookmarkOption && <BookmarkButton blogId={blog?.blog_id} />}
-            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
+          <div className='flex items-center gap-2'>
+            {!isDraft && <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />}
+
+            {showModificationOptions && !isDraft && (
+              <EditBlogDialog blogId={blogId} />
+            )}
+
+            {showModificationOptions && isDraft && (
+              <button
+                onClick={() => handleEdit(blogId)}
+                className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
+                title='Edit Draft'
+              >
+                <Icon name='RiEdit2' size={18} />
+              </button>
+            )}
+
+            {showModificationOptions && (
+              <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
+            )}
           </div>
         </div>
       </div>

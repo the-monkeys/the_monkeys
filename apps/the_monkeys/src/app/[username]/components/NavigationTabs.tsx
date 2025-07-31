@@ -10,21 +10,21 @@ export const NavigationTabs = ({
 }) => {
   return (
     <TabsList className='flex justify-center gap-0'>
-      <TabsTrigger value='blogs'>
-        <p className='px-3 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
-          Blogs
+      <TabsTrigger value='posts'>
+        <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
+          Posts
         </p>
 
-        <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+        <div className='mt-[6px] h-[1px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-4/5 transition-all' />
       </TabsTrigger>
 
       {user?.username === username && (
         <TabsTrigger value='drafts'>
-          <p className='px-3 font-dm_sans opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
+          <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
             Drafts
           </p>
 
-          <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+          <div className='mt-[6px] h-[1px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-4/5 transition-all' />
         </TabsTrigger>
       )}
     </TabsList>

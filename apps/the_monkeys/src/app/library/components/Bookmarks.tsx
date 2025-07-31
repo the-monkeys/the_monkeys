@@ -1,43 +1,40 @@
 'use client';
 
-import { FeedBlogCard } from '@/components/blog/cards/FeedBlogCard';
+import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetBookmarkedBlogs from '@/hooks/blog/useGetBookmarkedBlogs';
 
 export const Bookmarks = () => {
   const { blogs, isLoading, isError } = useGetBookmarkedBlogs();
 
+  if (isLoading) {
+    return <FeedBlogCardListSkeleton />;
+  }
+
+  if (!blogs?.blogs) {
+    return null;
+  }
+
   if (isError)
     return (
       <div className='min-h-screen'>
-        <p className='w-full text-sm opacity-80 text-center'>
-          No blogs bookmarked yet.
+        <p className='w-full opacity-90 text-center'>
+          No posts bookmarked yet.
         </p>
       </div>
     );
 
   return (
-    <div className='min-h-screen'>
-      <div className='flex flex-col gap-10'>
-        {isLoading ? (
-          <FeedBlogCardListSkeleton />
-        ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
-          <p className='w-full text-sm opacity-80 text-center'>
-            No saved blogs yet.
-          </p>
-        ) : (
-          blogs?.blogs &&
-          blogs?.blogs.map((blog) => {
-            return (
-              <FeedBlogCard
-                key={blog.blog_id}
-                blog={blog}
-                removeBookmarkOption={true}
-              />
-            );
-          })
-        )}
-      </div>
+    <div className='flex flex-col gap-6'>
+      {blogs.blogs.map((blog) => {
+        return (
+          <FeedBlogCard
+            blog={blog}
+            key={blog?.blog_id}
+            showBookmarkOption={true}
+          />
+        );
+      })}
     </div>
   );
 };

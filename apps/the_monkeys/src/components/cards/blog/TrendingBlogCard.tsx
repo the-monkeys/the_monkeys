@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import {
   BlogDescription,
   BlogImage,
@@ -8,6 +9,7 @@ import {
   BlogTitle,
 } from '@/components/blog/getBlogContent';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
+import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 
@@ -21,6 +23,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
+  const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
     <div className='h-full w-full flex flex-col gap-[10px]'>
@@ -32,35 +35,39 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
         )}
       </div>
 
-      <div className='space-y-[10px]'>
-        {blog?.tags.length && (
-          <div className='w-fit flex items-center gap-1'>
-            <Link
-              href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-              className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
-            >
-              {blog?.tags[0]}
-            </Link>
-          </div>
-        )}
+      <div className='w-full flex flex-col justify-between gap-[10px]'>
+        <div>
+          <UserInfoCardShowcase authorID={authorId} date={date} />
 
-        <div className='space-y-2'>
-          <Link
-            href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`}
-            className='mb-[6px]'
-          >
+          <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='font-semibold text-2xl sm:text-3xl hover:underline underline-offset-2 line-clamp-2'
+              className='pt-2 font-semibold text-2xl sm:text-3xl !leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent}
             />
           </Link>
 
-          <UserInfoCardShowcase authorID={authorId} date={date} />
-
           <BlogDescription
             description={descriptionContent}
-            className='pt-1 text-sm lg:text-base line-clamp-3 opacity-90'
+            className='pt-[10px] text-sm lg:text-base line-clamp-3 opacity-90'
           />
+        </div>
+
+        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+          {blog?.tags.length && (
+            <div className='w-fit flex items-center gap-1'>
+              <Link
+                href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                target='_blank'
+                className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
+              >
+                {blog?.tags[0]}
+              </Link>
+            </div>
+          )}
+
+          <div className='flex items-center gap-[6px]'>
+            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
+          </div>
         </div>
       </div>
     </div>
@@ -76,9 +83,10 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
+  const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
-    <div className='group flex flex-col gap-[10px] h-full w-full'>
+    <div className='group h-full w-full flex flex-col gap-[10px]'>
       <div className='h-[220px] sm:h-[200px] bg-foreground-light dark:bg-foreground-dark rounded-md shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
@@ -87,27 +95,34 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
         )}
       </div>
 
-      <div className='space-y-[10px]'>
-        {blog?.tags.length && (
-          <div className='w-fit flex items-center gap-1'>
-            <Link
-              href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-              className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
-            >
-              {blog?.tags[0]}
-            </Link>
-          </div>
-        )}
+      <div className='flex-grow w-full flex flex-col justify-between gap-[10px]'>
+        <div>
+          <UserInfoCardShowcase authorID={authorId} date={date} />
 
-        <div className='flex flex-col gap-2'>
-          <Link href={`${BLOG_ROUTE}/${blogSlug}-${blogId}`} className='w-full'>
+          <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
+              className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
               title={titleContent}
             />
           </Link>
+        </div>
 
-          <UserInfoCardShowcase authorID={authorId} date={date} />
+        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+          {blog?.tags.length && (
+            <div className='w-fit flex items-center gap-1'>
+              <Link
+                href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                target='_blank'
+                className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
+              >
+                {blog?.tags[0]}
+              </Link>
+            </div>
+          )}
+
+          <div className='flex items-center gap-[6px]'>
+            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
+          </div>
         </div>
       </div>
     </div>

@@ -28,12 +28,15 @@ export const UserInfoCardSkeleton = () => {
   );
 };
 
-export const UserInfoCardCompactSkeleton = () => {
+export const ConnectionCardSkeleton = () => {
   return (
-    <div className='flex items-center gap-2'>
-      <Skeleton className='size-6 rounded-sm' />
+    <div className='flex justify-between items-center'>
+      <div className='p-1 space-y-1'>
+        <Skeleton className='h-4 w-40' />
+        <Skeleton className='h-3 w-32' />
+      </div>
 
-      <Skeleton className='h-4 w-32' />
+      <Skeleton className='h-9 w-28 rounded-full' />
     </div>
   );
 };
@@ -41,10 +44,11 @@ export const UserInfoCardCompactSkeleton = () => {
 export const ConnectionsListSkeleton = () => {
   return (
     <div className='space-y-2'>
-      <Skeleton className='h-10 w-full' />
-      <Skeleton className='h-10 w-full' />
-      <Skeleton className='h-10 w-full' />
-      <Skeleton className='h-10 w-full' />
+      <ConnectionCardSkeleton />
+      <ConnectionCardSkeleton />
+      <ConnectionCardSkeleton />
+      <ConnectionCardSkeleton />
+      <ConnectionCardSkeleton />
     </div>
   );
 };

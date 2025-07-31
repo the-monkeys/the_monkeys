@@ -52,7 +52,7 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
           className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
           title='Share Blog'
         >
-          <Icon name='RiShareForward' size={size} />
+          <Icon name='RiShare' size={size} />
         </button>
       </DialogTrigger>
 
