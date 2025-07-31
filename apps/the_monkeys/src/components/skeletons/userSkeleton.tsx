@@ -32,11 +32,11 @@ export const ConnectionCardSkeleton = () => {
   return (
     <div className='flex justify-between items-center'>
       <div className='p-1 space-y-1'>
-        <Skeleton className='h-4 w-40' />
         <Skeleton className='h-3 w-32' />
+        <Skeleton className='h-4 w-40' />
       </div>
 
-      <Skeleton className='h-9 w-28 rounded-full' />
+      <Skeleton className='size-9 rounded-full' />
     </div>
   );
 };

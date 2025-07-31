@@ -24,6 +24,8 @@ export const Bookmarks = () => {
       </div>
     );
 
+  console.log(blogs);
+
   return (
     <div className='flex flex-col gap-6'>
       {blogs.blogs.map((blog) => {

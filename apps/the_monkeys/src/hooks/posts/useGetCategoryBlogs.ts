@@ -10,6 +10,8 @@ const useGetCategoryBlogs = ({
     `/posts/${category}?limit=${limit}`,
     fetcherV2,
     {
+      errorRetryInterval: 10000,
+      errorRetryCount: 4,
       revalidateOnFocus: false,
       revalidateIfStale: false,
       refreshInterval: 300000,

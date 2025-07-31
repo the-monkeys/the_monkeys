@@ -52,7 +52,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
           />
         </div>
 
-        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+        <div className='pt-2 w-full flex items-center gap-2'>
           {blog?.tags.length && (
             <div className='w-fit flex items-center gap-1'>
               <Link
@@ -64,6 +64,8 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
               </Link>
             </div>
           )}
+
+          <p className='font-medium opacity-80'>{' · '}</p>
 
           <div className='flex items-center gap-[6px]'>
             <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
@@ -107,7 +109,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
           </Link>
         </div>
 
-        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+        <div className='pt-2 w-full flex items-center gap-2'>
           {blog?.tags.length && (
             <div className='w-fit flex items-center gap-1'>
               <Link
@@ -119,6 +121,8 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
               </Link>
             </div>
           )}
+
+          <p className='font-medium opacity-80'>{' · '}</p>
 
           <div className='flex items-center gap-[6px]'>
             <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />

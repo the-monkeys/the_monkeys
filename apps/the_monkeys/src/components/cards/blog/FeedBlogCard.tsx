@@ -52,7 +52,7 @@ export const FeedBlogCard = ({
           </Link>
         </div>
 
-        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+        <div className='pt-2 w-full flex items-center gap-2'>
           {blog?.tags.length && (
             <div className='w-fit flex items-center gap-1'>
               <Link
@@ -65,8 +65,16 @@ export const FeedBlogCard = ({
             </div>
           )}
 
+          <p className='font-medium opacity-80'>{' · '}</p>
+
           <div className='flex items-center gap-[6px]'>
-            {showBookmarkOption && <BookmarkButton blogId={blog?.blog_id} />}
+            {showBookmarkOption && (
+              <>
+                <BookmarkButton blogId={blog?.blog_id} />
+                <p className='font-medium opacity-80'>{' · '}</p>
+              </>
+            )}
+
             <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
           </div>
         </div>

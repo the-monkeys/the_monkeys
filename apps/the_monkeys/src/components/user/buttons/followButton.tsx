@@ -5,6 +5,7 @@ import { Loader } from '@/components/loader';
 import { useIsFollowingUser } from '@/hooks/user/useUserConnections';
 import axiosInstance from '@/services/api/axiosInstance';
 import { Button } from '@the-monkeys/ui/atoms/button';
+import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
@@ -20,7 +21,7 @@ export const FollowButton = ({
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  if (isLoading) return <Loader className='my-1' />;
+  if (isLoading) return <Skeleton className='h-9 w-32 rounded-full' />;
 
   if (isError) return null;
 
@@ -119,7 +120,7 @@ export const FollowButtonIcon = ({
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Skeleton className='size-9 rounded-full' />;
 
   if (isError) return null;
 
@@ -188,7 +189,7 @@ export const FollowButtonIcon = ({
           size='icon'
           disabled={loading}
           onClick={onUserUnfollow}
-          className={twMerge(className)}
+          className={twMerge(className, 'rounded-full')}
         >
           {loading ? <Loader /> : <Icon name='RiUserUnfollow' size={18} />}
         </Button>
@@ -198,7 +199,7 @@ export const FollowButtonIcon = ({
           size='icon'
           disabled={loading}
           onClick={onUserFollow}
-          className={twMerge(className)}
+          className={twMerge(className, 'rounded-full')}
         >
           {loading ? <Loader /> : <Icon name='RiUserFollow' size={18} />}
         </Button>

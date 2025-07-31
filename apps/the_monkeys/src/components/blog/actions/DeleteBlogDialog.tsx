@@ -40,6 +40,7 @@ export const DeleteBlogDialog = ({
 
       if (response.status === 200) {
         toast({
+          variant: 'success',
           title: 'Success',
           description: 'Deleted successfully',
         });
