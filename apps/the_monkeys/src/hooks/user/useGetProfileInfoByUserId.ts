@@ -10,7 +10,7 @@ const useGetProfileInfoById = (userId: string | undefined) => {
       shouldRetryOnError: false,
       revalidateOnFocus: false,
       revalidateIfStale: false,
-      refreshInterval: 30000,
+      refreshInterval: 300000,
     }
   );
 

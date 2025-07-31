@@ -57,6 +57,7 @@ export interface GetLatest100BlogsResponse {
 // get meta-feed blogs
 export interface GetMetaFeedBlogs {
   blogs: MetaBlog[];
+  total_blogs?: number;
 }
 
 // get blogs based on topics

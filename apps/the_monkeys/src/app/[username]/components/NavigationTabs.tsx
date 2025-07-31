@@ -9,7 +9,7 @@ export const NavigationTabs = ({
   user?: IUser;
 }) => {
   return (
-    <TabsList className='flex justify-center gap-0'>
+    <TabsList className='pb-4 flex justify-end sm:justify-center gap-0'>
       <TabsTrigger value='posts'>
         <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
           Posts

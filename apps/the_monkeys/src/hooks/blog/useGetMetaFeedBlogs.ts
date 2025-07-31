@@ -7,6 +7,8 @@ const useGetMetaFeedBlogs = ({ limit = 50 }: { limit?: number } = {}) => {
     `/blog/meta-feed?limit=${limit}`,
     fetcherV2,
     {
+      errorRetryInterval: 10000,
+      errorRetryCount: 4,
       revalidateOnFocus: false,
       revalidateIfStale: false,
       refreshInterval: 300000,

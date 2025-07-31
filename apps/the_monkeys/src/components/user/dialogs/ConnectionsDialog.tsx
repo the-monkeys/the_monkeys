@@ -19,7 +19,7 @@ import {
   TabsTrigger,
 } from '@the-monkeys/ui/atoms/tabs';
 
-import { FollowButton } from '../buttons/followButton';
+import { FollowButtonIcon } from '../buttons/followButton';
 
 const ConnectionCard = ({
   first_name,
@@ -31,16 +31,16 @@ const ConnectionCard = ({
   username: string;
 }) => {
   return (
-    <div className='w-full flex justify-between items-center gap-2'>
+    <div className='p-1 w-full flex justify-between items-center gap-2'>
       <div className='flex-1 space-y-1 overflow-hidden'>
+        <p className='text-sm opacity-90 truncate'>{`@${username}`}</p>
+
         <Link href={`/${username}`} className='hover:underline truncate'>
           {first_name} {last_name}
         </Link>
-
-        <p className='text-sm opacity-90 truncate'>{`@${username}`}</p>
       </div>
 
-      <FollowButton username={username} className='shrink-0' />
+      <FollowButtonIcon username={username} className='shrink-0' />
     </div>
   );
 };
@@ -77,7 +77,7 @@ export const ConnectionsDialog = ({
                 Followers
               </p>
 
-              <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+              <div className='mt-[6px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-4/5 transition-all' />
             </TabsTrigger>
 
             <TabsTrigger
@@ -89,19 +89,16 @@ export const ConnectionsDialog = ({
                 Following
               </p>
 
-              <div className='mt-1 h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-full transition-all' />
+              <div className='mt-[6px] h-[1px] w-0 bg-brand-orange group-data-[state=active]:w-4/5 transition-all' />
             </TabsTrigger>
           </TabsList>
 
-          <div className='max-h-[50vh] sm:max-h-[60vh] overflow-auto'>
-            {!followerLoading || followingLoading ? (
+          <div className='max-h-[50vh] sm:max-h-[400px] overflow-auto'>
+            {followerLoading || followingLoading ? (
               <ConnectionsListSkeleton />
             ) : (
               <>
-                <TabsContent
-                  className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
-                  value='followers'
-                >
+                <TabsContent className='flex flex-col gap-2' value='followers'>
                   {followers?.users ? (
                     followers?.users.map((follower) => {
                       return (
@@ -120,24 +117,16 @@ export const ConnectionsDialog = ({
                   )}
                 </TabsContent>
 
-                <TabsContent
-                  className='divide-y-1 divide-foreground-light dark:divide-foreground-dark'
-                  value='following'
-                >
+                <TabsContent className='flex flex-col gap-2' value='following'>
                   {following?.users ? (
                     following?.users.map((following) => {
                       return (
-                        <div
+                        <ConnectionCard
                           key={following?.username}
-                          className='flex justify-between items-center py-1'
-                        >
-                          <ConnectionCard
-                            key={following?.username}
-                            first_name={following.first_name}
-                            last_name={following.last_name}
-                            username={following.username}
-                          />
-                        </div>
+                          first_name={following.first_name}
+                          last_name={following.last_name}
+                          username={following.username}
+                        />
                       );
                     })
                   ) : (

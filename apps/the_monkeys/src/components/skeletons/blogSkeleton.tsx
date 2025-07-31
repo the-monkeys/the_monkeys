@@ -82,17 +82,10 @@ export const FeedBlogCardSkeleton = () => {
     <div className='flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
       <Skeleton className='h-[230px] sm:h-[120px] w-full sm:w-[200px]' />
 
-      <div className='space-y-2 w-full flex flex-col justify-between'>
-        <div className='space-y-2'>
-          <Skeleton className='h-[10px] w-[100px]' />
-          <Skeleton className='h-[20px] w-full' />
-          <Skeleton className='h-[20px] w-1/2' />
-        </div>
-
-        <div className='flex justify-end items-center gap-2'>
-          <Skeleton className='size-6 rounded-full' />
-          <Skeleton className='size-6 rounded-full' />
-        </div>
+      <div className='w-full space-y-2'>
+        <Skeleton className='h-3 w-[100px]' />
+        <Skeleton className='h-[20px] w-full' />
+        <Skeleton className='h-[20px] w-1/2' />
       </div>
     </div>
   );
@@ -108,7 +101,7 @@ export const TrendingCardLargeSkeleton = ({
       <Skeleton className='h-[220px] md:h-[360px] w-full' />
 
       <div className='space-y-2'>
-        <Skeleton className='h-[10px] w-[100px]' />
+        <Skeleton className='h-3 w-[100px]' />
         <Skeleton className='h-[20px] w-full' />
         <Skeleton className='h-[20px] w-full' />
         <Skeleton className='h-[20px] w-1/2' />
@@ -127,7 +120,7 @@ export const TrendingCardSmallSkeleton = ({
       <Skeleton className='h-[220px] w-full' />
 
       <div className='space-y-2'>
-        <Skeleton className='h-[10px] w-[100px]' />
+        <Skeleton className='h-3 w-[100px]' />
         <Skeleton className='h-[20px] w-full' />
         <Skeleton className='h-[20px] w-1/2' />
       </div>
@@ -188,14 +181,12 @@ export const FeedSkeleton = () => {
   );
 };
 
-export const FeedBlogCardListSkeleton = () => {
+export const FeedBlogCardListSkeleton = ({ count = 5 }: { count?: number }) => {
   return (
     <div className='w-full space-y-6'>
-      <FeedBlogCardSkeleton />
-      <FeedBlogCardSkeleton />
-      <FeedBlogCardSkeleton />
-      <FeedBlogCardSkeleton />
-      <FeedBlogCardSkeleton />
+      {Array.from({ length: count }).map((_, index) => (
+        <FeedBlogCardSkeleton key={index} />
+      ))}
     </div>
   );
 };

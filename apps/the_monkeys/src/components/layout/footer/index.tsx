@@ -32,7 +32,11 @@ const FooterList = ({
       <ul className='space-y-[6px] sm:space-y-2'>
         {items.map((item, index) => (
           <li key={index}>
-            <Link href={item.link} className='text-sm hover:underline'>
+            <Link
+              target='_blank'
+              href={item.link}
+              className='text-sm hover:underline'
+            >
               {item.text}
             </Link>
           </li>
