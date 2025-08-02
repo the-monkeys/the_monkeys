@@ -8,10 +8,17 @@ type Props = {
   params: { slug: string };
 };
 
-const truncateDescription = (text: string, maxLength: number): string => {
-  return text.length <= maxLength
-    ? text
-    : `${text.slice(0, maxLength).trim()}...`;
+const MAX_DESCRIPTION_LENGTH = 157;
+
+const truncateDescription = (
+  text: string,
+  maxLength: number = MAX_DESCRIPTION_LENGTH
+): string => {
+  if (!text) return '';
+  const trimmed = text.trim();
+  return trimmed.length <= maxLength
+    ? trimmed
+    : `${trimmed.slice(0, maxLength).replace(/\s+\S*$/, '')}...`;
 };
 
 const fetchBlogData = async (id: string): Promise<Blog | null> => {
@@ -20,18 +27,18 @@ const fetchBlogData = async (id: string): Promise<Blog | null> => {
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store',
+
+      next: { revalidate: 3600 },
     });
 
     if (!res.ok) {
-      console.warn(`Blog fetch failed with status ${res.status}`);
+      console.error(`Blog fetch failed for ID ${id} with status ${res.status}`);
       return null;
     }
 
-    const data: Blog = await res.json();
-    return data;
+    return await res.json();
   } catch (error) {
-    console.warn(`Failed to fetch blog data for ID: ${id}`, error);
+    console.error(`Failed to fetch blog data for ID: ${id}`, error);
     return null;
   }
 };
@@ -42,35 +49,61 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const id = params.slug.split('-').pop() || '';
   const blog = await fetchBlogData(id);
-  const blocks = blog?.blog?.blocks || [];
-
-  const imageBlock = blocks.find((block) => block.type === 'image');
-  const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
-
-  const metaTitle = blocks[0]?.data?.text || 'Published Post';
-  const metaDescription = truncateDescription(
-    descriptionBlock?.data?.text || 'No description available.',
-    157
-  );
-  const imageUrl = imageBlock?.data?.file?.url;
-  const canonicalUrl = `${baseUrl}/blog/${params.slug}`;
 
   const parentMetadata = await parent;
+  const defaultTitle = 'Published Post | Monkeys';
+  const defaultDescription =
+    'Discover insightful articles and latest updates on our blog.';
+  const siteName = 'Monkeys';
+
+  const blocks = blog?.blog?.blocks || [];
+  const titleBlock =
+    blocks.find((block) => block.type === 'header') || blocks[0];
+  const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
+  const imageBlock = blocks.find((block) => block.type === 'image');
+
+  // Prepare metadata values
+  const metaTitle = titleBlock?.data?.text
+    ? `${titleBlock.data.text} | ${siteName}`
+    : defaultTitle;
+
+  const metaDescription = truncateDescription(
+    descriptionBlock?.data?.text || defaultDescription
+  );
+
+  const imageUrl = imageBlock?.data?.file?.url
+    ? new URL(imageBlock.data.file.url, baseUrl).toString()
+    : `${baseUrl}/default-blog-image.jpg`;
+
+  const canonicalUrl = `${baseUrl}/blog/${params.slug}`;
 
   return {
-    title: metaTitle || parentMetadata.title,
-    description: metaDescription || parentMetadata.description,
+    title: metaTitle,
+    description: metaDescription,
+    keywords: blog?.tags?.join(', ') || '',
     openGraph: {
+      type: 'article',
       title: metaTitle,
       description: metaDescription,
-      images: imageUrl ? [imageUrl] : [],
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: metaTitle,
+        },
+      ],
       url: canonicalUrl,
+      siteName,
+      publishedTime: blog?.published_time || new Date().toISOString(),
+      authors: blog?.owner_account_id ? [] : [],
     },
     twitter: {
-      title: metaTitle,
       card: 'summary_large_image',
+      title: metaTitle,
       description: metaDescription,
-      images: imageUrl ? imageUrl : '',
+      images: imageUrl,
+      creator: blog?.owner_account_id || '@yourtwitter',
     },
     alternates: {
       canonical: canonicalUrl,
@@ -79,11 +112,34 @@ export async function generateMetadata(
         'de-DE': '/de-DE',
       },
     },
+    robots: {
+      index: true,
+      follow: true,
+      nocache: false,
+      googleBot: {
+        index: true,
+        follow: true,
+        noimageindex: false,
+      },
+    },
+
+    ...(blog?.published_time && {
+      publishedTime: blog?.published_time,
+    }),
+    ...(blog?.published_time && {
+      modifiedTime: blog?.published_time,
+    }),
   };
 }
 
 const BlogPageLayout = ({ children }: { children: React.ReactNode }) => {
-  return <div className='min-h-[800px]'>{children}</div>;
+  return (
+    <main className='min-h-[800px] container mx-auto px-4'>
+      <article itemScope itemType='https://schema.org/BlogPosting'>
+        {children}
+      </article>
+    </main>
+  );
 };
 
 export default BlogPageLayout;

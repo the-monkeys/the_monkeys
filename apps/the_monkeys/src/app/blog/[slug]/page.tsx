@@ -1,10 +1,9 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
-import { BlogTitle, getCardContent } from '@/components/blog/getBlogContent';
+import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
@@ -115,7 +114,7 @@ const BlogPage = () => {
               </p>
             </div>
 
-            <BlogTitle
+            <BlogHeading
               title={blogTitle}
               className='pt-[6px] font-dm_sans font-bold text-3xl sm:text-4xl !leading-snug text-center'
             />

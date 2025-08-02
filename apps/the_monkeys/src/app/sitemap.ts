@@ -3,24 +3,27 @@ import { unstable_noStore as noStore } from 'next/cache';
 
 import { baseUrl } from '@/constants/baseUrl';
 import { FEED_ROUTE } from '@/constants/routeConstants';
-import { Blog, GetLatest100BlogsResponse } from '@/services/blog/blogTypes';
+import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
 
 // Fetch blog posts from the API using fetch
-async function fetchBlogPosts(): Promise<Blog[]> {
+async function fetchBlogPosts(): Promise<MetaBlog[]> {
   try {
-    const response = await fetch('https://monkeys.support/api/v2/blog/feed', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(
+      'https://monkeys.support/api/v2/blog/meta-feed',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
     if (!response.ok) {
       console.error(`Failed to fetch blog posts: ${response.statusText}`);
       return [];
     }
 
-    const data: GetLatest100BlogsResponse = await response.json();
+    const data: GetMetaFeedBlogs = await response.json();
     console.log(data);
 
     return data?.blogs || [];
@@ -47,9 +50,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: Blog) => {
+  const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: MetaBlog) => {
     // Extract the title from the blog's content
-    const title = post?.blog?.blocks[0]?.data?.text || 'untitled';
+    const title = post?.title || 'untitled';
 
     // Generate a slug from the title
     const slug = title

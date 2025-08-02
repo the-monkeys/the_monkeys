@@ -59,6 +59,22 @@ export const BlogTitle = ({
     />
   );
 };
+export const BlogHeading = ({
+  title,
+  className,
+}: {
+  title: string;
+  className?: string;
+}) => {
+  return (
+    <h1
+      className={twMerge(className, 'capitalize')}
+      dangerouslySetInnerHTML={{
+        __html: purifyHTMLString(title),
+      }}
+    />
+  );
+};
 
 export const BlogDescription = ({
   description,
