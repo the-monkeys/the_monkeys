@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Arvo, DM_Sans, IBM_Plex_Sans } from 'next/font/google';
+import Script from 'next/script';
 
-import AdSense from '@/components/AdSense/AdSense';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { LIVE_URL } from '@/constants/api';
@@ -101,7 +101,12 @@ const RootLayout = async ({
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
-        <AdSense pId='4687427997504601' />
+        <Script
+          async
+          src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4687427997504601'
+          crossOrigin='anonymous'
+        ></Script>
+        {/* <AdSense pId='4687427997504601' /> */}
       </head>
       <body
         className={`${arvo.variable} ${dm_sans.variable} ${ibm_plex_sans.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
