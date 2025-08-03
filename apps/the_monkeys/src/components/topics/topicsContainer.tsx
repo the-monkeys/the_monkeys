@@ -19,7 +19,7 @@ export const TopicLinksContainer = ({ topics }: { topics?: string[] }) => {
   );
 };
 
-export const ProfileTopicLinkContainer = ({
+export const TopicLinksContainerCompact = ({
   topics,
 }: {
   topics?: string[];

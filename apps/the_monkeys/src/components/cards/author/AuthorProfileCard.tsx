@@ -56,7 +56,7 @@ export const AuthorProfileCard = ({
           </div>
 
           <h2 className='w-fit font-dm_sans font-medium text-3xl text-brand-orange tracking-tight capitalize'>
-            {`${user?.first_name} ${user?.last_name}`}
+            {user?.first_name} {user?.last_name ? user?.last_name : ''}
           </h2>
         </div>
       </div>

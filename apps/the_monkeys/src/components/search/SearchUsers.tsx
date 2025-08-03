@@ -25,7 +25,7 @@ const SearchUserCard = ({
         className='w-fit capitalize hover:underline truncate'
         onClick={onClose}
       >
-        {user?.first_name} {user?.last_name}
+        {user?.first_name} {user?.last_name ? user?.last_name : ''}
       </Link>
     </div>
   );

@@ -61,7 +61,8 @@ export const AuthorInfoCard = ({
             </p>
 
             <h2 className='flex-1 font-dm_sans font-medium text-xl capitalize'>
-              {`${userData?.first_name} ${userData?.last_name}`}
+              {userData?.first_name}{' '}
+              {userData?.last_name ? userData?.last_name : ''}
             </h2>
           </div>
         </div>

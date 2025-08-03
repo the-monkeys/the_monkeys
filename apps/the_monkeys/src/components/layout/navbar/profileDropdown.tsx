@@ -54,7 +54,8 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
                 </p>
 
                 <p className='font-dm_sans font-medium text-base'>
-                  {session?.first_name} {session?.last_name}
+                  {session?.first_name}{' '}
+                  {session?.last_name ? session?.last_name : ''}
                 </p>
               </div>
             </Link>

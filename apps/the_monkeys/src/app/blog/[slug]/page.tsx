@@ -11,7 +11,7 @@ import {
   BlogPageSkeleton,
   EditorBlockSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import { TopicLinksContainer } from '@/components/topics/topicsContainer';
+import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
@@ -133,7 +133,10 @@ const BlogPage = () => {
           </Container>
 
           <Container className='px-4 max-w-5xl space-y-12'>
-            <TopicLinksContainer topics={tags} />
+            <div className='flex items-start gap-3'>
+              <h5 className='py-1 font-dm_sans font-medium'>Topics:</h5>
+              <TopicLinksContainerCompact topics={tags} />
+            </div>
 
             <AuthorInfoCard userId={authorId} className='max-w-[600px]' />
 

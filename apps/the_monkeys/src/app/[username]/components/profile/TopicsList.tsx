@@ -1,4 +1,4 @@
-import { ProfileTopicLinkContainer } from '@/components/topics/topicsContainer';
+import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 
 export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
   return (
@@ -7,7 +7,7 @@ export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
         Author&apos;s interest
       </h6>
 
-      <ProfileTopicLinkContainer topics={topics} />
+      <TopicLinksContainerCompact topics={topics} />
     </div>
   );
 };

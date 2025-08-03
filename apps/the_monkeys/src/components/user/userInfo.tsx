@@ -34,7 +34,8 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
           href={`/${userData?.username}`}
           className='font-medium hover:underline'
         >
-          {userData?.first_name} {userData?.last_name}
+          {userData?.first_name}{' '}
+          {userData?.last_name ? userData?.last_name : ''}
         </Link>
 
         <span className='text-sm opacity-90 line-clamp-2'>{userData?.bio}</span>
@@ -66,7 +67,7 @@ export const UserInfoCardShowcase = ({
         href={`/${userData?.username}`}
         className='shrink-0 text-sm hover:underline'
       >
-        {userData?.first_name} {userData?.last_name}
+        {userData?.first_name} {userData?.last_name ? userData?.last_name : ''}
       </Link>
 
       <p className='shrink-0 text-sm'>
@@ -102,7 +103,7 @@ export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
         href={`/${userData?.username}`}
         className='font-medium text-sm md:text-base hover:underline'
       >
-        {userData?.first_name} {userData?.last_name}
+        {userData?.first_name} {userData?.last_name ? userData?.last_name : ''}
       </Link>
     </div>
   );
@@ -138,7 +139,8 @@ export const UserInfoCard = ({
           href={`/${userData?.username}`}
           className='font-dm_sans font-medium text-sm hover:underline decoration-1'
         >
-          {userData?.first_name} {userData?.last_name}
+          {userData?.first_name}{' '}
+          {userData?.last_name ? userData?.last_name : ''}
         </Link>
 
         <div className='flex gap-1'>

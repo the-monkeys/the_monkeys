@@ -61,7 +61,7 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
           <h6 className='pb-1 font-dm_sans font-medium text-xl truncate'>
             Latest from{' '}
             <span className='font-dm_sans font-medium text-2xl'>
-              {user?.first_name} {user?.last_name}
+              {user?.first_name}
             </span>
           </h6>
 

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const updateProfileSchema = z.object({
   first_name: z.string().min(1, 'First name is required').max(50),
-  last_name: z.string().min(1, 'Last name is required').max(50),
+  last_name: z.string().optional(),
   address: z.string().max(100).optional(),
   contact_number: z
     .string()
