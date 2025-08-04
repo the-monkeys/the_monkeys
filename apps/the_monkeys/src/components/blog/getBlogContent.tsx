@@ -52,7 +52,7 @@ export const BlogTitle = ({
 }) => {
   return (
     <h2
-      className={twMerge(className, 'capitalize')}
+      className={twMerge(className, 'w-fit capitalize')}
       dangerouslySetInnerHTML={{
         __html: purifyHTMLString(title),
       }}
@@ -68,7 +68,7 @@ export const BlogHeading = ({
 }) => {
   return (
     <h1
-      className={twMerge(className, 'capitalize')}
+      className={twMerge(className, 'w-fit capitalize')}
       dangerouslySetInnerHTML={{
         __html: purifyHTMLString(title),
       }}
@@ -107,7 +107,7 @@ export const BlogImage = ({
     <img
       src={image}
       alt={title}
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      className={twMerge(className, 'h-full w-full object-cover object-top')}
     />
   );
 };
@@ -124,10 +124,7 @@ export const BlogPlaceholderImage = ({
     <img
       src={placeholderImage.src}
       alt={title}
-      className={twMerge(
-        className,
-        'h-full w-full object-cover object-top md:object-center'
-      )}
+      className={twMerge(className, 'h-full w-full object-cover object-top')}
     />
   );
 };

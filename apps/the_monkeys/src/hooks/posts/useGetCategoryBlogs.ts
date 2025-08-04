@@ -14,7 +14,7 @@ const useGetCategoryBlogs = ({
       errorRetryCount: 4,
       revalidateOnFocus: false,
       revalidateIfStale: false,
-      refreshInterval: 300000,
+      refreshInterval: 180000,
     }
   );
 

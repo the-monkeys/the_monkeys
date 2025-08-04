@@ -52,7 +52,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: MetaBlog) => {
     // Extract the title from the blog's content
-    const title = post?.title || 'untitled';
+    const title = post?.title || 'Untitled Post';
 
     // Generate a slug from the title
     const slug = title
@@ -61,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .replace(/^-+|-+$/g, ''); // Trim leading and trailing hyphens
 
     return {
-      url: `${baseUrl}/blog/${slug || 'untitled'}-${post?.blog_id}`, // Fallback to 'untitled' if slug is empty
+      url: `${baseUrl}/blog/${slug || 'untitled post'}-${post?.blog_id}`, // Fallback to 'untitled' if slug is empty
       changeFrequency: 'monthly', // Updated for regular additions
       priority: 1,
     };

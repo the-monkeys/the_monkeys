@@ -65,11 +65,11 @@ export const AuthorInfoCardSkeleton = () => {
 export const ProfileSectionSkeleton = () => {
   return (
     <div className='grid grid-cols-3 gap-4'>
-      <div className='col-span-3 md:col-span-2 p-4 bg-foreground-light/20 dark:bg-foreground-dark/20 rounded-lg'>
+      <div className='col-span-3 md:col-span-2 p-4 bg-foreground-light/20 dark:bg-foreground-dark/20 rounded-md'>
         <AuthorProfileCardSkeleton />
       </div>
 
-      <div className='col-span-3 md:col-span-1 p-4 bg-foreground-light/20 dark:bg-foreground-dark/20 rounded-lg'>
+      <div className='col-span-3 md:col-span-1 p-4 bg-foreground-light/20 dark:bg-foreground-dark/20 rounded-md'>
         <TopicsContainerSkeleton />
       </div>
     </div>

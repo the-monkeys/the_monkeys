@@ -25,7 +25,7 @@ export const EditorBlockSkeleton = () => {
       </div>
 
       <div className='space-y-1'>
-        <Skeleton className='w-full h-[250px]' />
+        <Skeleton className='w-4/5 h-[250px]' />
       </div>
 
       <div className='space-y-1'>
@@ -54,8 +54,8 @@ export const EditorBlockSkeleton = () => {
 
 export const BlogPageSkeleton = () => {
   return (
-    <div className='space-y-10'>
-      <Container className='px-4 py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
+    <div className='px-4 space-y-8'>
+      <Container className='py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
         <Skeleton className='h-3 w-28' />
 
         <div className='w-full space-y-2'>
@@ -66,12 +66,8 @@ export const BlogPageSkeleton = () => {
         <UserInfoCardSkeleton />
       </Container>
 
-      <Container className='px-4 max-w-3xl'>
+      <Container className='max-w-3xl'>
         <EditorBlockSkeleton />
-      </Container>
-
-      <Container className='py-4 max-w-5xl'>
-        <TopicsContainerSkeleton />
       </Container>
     </div>
   );
@@ -80,7 +76,7 @@ export const BlogPageSkeleton = () => {
 export const FeedBlogCardSkeleton = () => {
   return (
     <div className='flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <Skeleton className='h-[230px] sm:h-[120px] w-full sm:w-[200px]' />
+      <Skeleton className='shrink-0 h-[230px] sm:h-[130px] w-full sm:w-[200px]' />
 
       <div className='w-full space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
@@ -146,7 +142,7 @@ export const TopicsContainerSkeleton = () => {
 
 export const FeedSkeleton = () => {
   return (
-    <Container className='px-4 py-8 min-h-screen space-y-10'>
+    <Container className='px-4 py-8 min-h-screen space-y-14'>
       <div className='grid grid-cols-2 gap-8'>
         <TrendingCardLargeSkeleton className='col-span-2 sm:col-span-1' />
 

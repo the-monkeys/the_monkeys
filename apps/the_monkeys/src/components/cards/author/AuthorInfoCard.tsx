@@ -56,18 +56,17 @@ export const AuthorInfoCard = ({
           </ProfileFrame>
 
           <div className='flex-1 overflow-hidden'>
-            <p className='font-dm_sans text-sm opacity-80 truncate'>
-              {`@${userData?.username}`}
-            </p>
+            <p className='text-sm truncate'>{`@${userData?.username}`}</p>
 
-            <h2 className='flex-1 font-dm_sans font-medium text-xl capitalize'>
-              {`${userData?.first_name} ${userData?.last_name}`}
+            <h2 className='flex-1 font-dm_sans font-medium text-2xl capitalize'>
+              {userData?.first_name}{' '}
+              {userData?.last_name ? userData?.last_name : ''}
             </h2>
           </div>
         </div>
       </div>
 
-      <div className='mt-[20px] px-4 pb-4 space-y-1'>
+      <div className='mt-[20px] px-4 pb-4 space-y-2'>
         {userData?.bio && (
           <p className='py-2 leading-tight break-words'>{userData.bio}</p>
         )}

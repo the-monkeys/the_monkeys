@@ -7,7 +7,7 @@ export interface FollowDataResponse {
   users: {
     username: string;
     first_name: string;
-    last_name: string;
+    last_name?: string;
   }[];
 }
 
@@ -19,7 +19,7 @@ export interface ConnectionCountResponse {
 export interface GetPublicUserProfileApiResponse {
   username: string;
   first_name: string;
-  last_name: string;
+  last_name?: string;
   bio: string;
   address: string;
   twitter: string;
@@ -35,7 +35,7 @@ export interface GetProfileInfoByIdResponse {
     account_id: string;
     username: string;
     first_name: string;
-    last_name: string;
+    last_name?: string;
     bio: string;
     location: string;
     created_at: Timestamp;
@@ -50,7 +50,7 @@ export interface GetAuthUserProfileApiResponse {
   user_status: string;
   username: string;
   first_name: string;
-  last_name: string;
+  last_name?: string;
   bio: string;
   address: string;
   contact_number: string;

@@ -30,11 +30,7 @@ export const signupSchema = z.object({
     .string({ required_error: 'First Name is required' })
     .trim()
     .min(1, 'First Name is required'),
-  last_name: z
-    .string({ required_error: 'Last Name is required' })
-    .trim()
-    .min(1, 'Last Name is required')
-    .optional(),
+  last_name: z.string().trim().optional(),
   email: emailCriteria,
   password: passwordCriteria,
 });
@@ -44,10 +40,7 @@ export const registerUserSchema = z
     first_name: z
       .string({ required_error: 'First Name is required' })
       .min(1, 'First Name is required'),
-    last_name: z
-      .string({ required_error: 'Last Name is required' })
-      .min(1, 'Last Name is required')
-      .optional(),
+    last_name: z.string().optional(),
     email: z
       .string({ required_error: 'Email is required' })
       .min(1, 'Email is required')
@@ -109,7 +102,6 @@ export const registrationSchema = z.object({
     .string()
     .trim()
     .max(25, 'Last Name Should not be more than 25 Characters')
-    .min(1, 'Last Name is required')
     .refine(
       (value) => /^[a-zA-Z]+$/.test(value ?? ''),
       'Last Name should contain only alphabets'

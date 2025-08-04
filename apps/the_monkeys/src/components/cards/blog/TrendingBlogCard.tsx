@@ -27,7 +27,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[230px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-md shadow-sm overflow-hidden'>
+      <div className='h-[230px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -42,18 +42,20 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
           <Link href={blogURL} className='w-full'>
             <BlogTitle
               className='pt-2 font-semibold text-2xl sm:text-3xl !leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
-              title={titleContent}
+              title={titleContent || 'Untitled Post'}
             />
           </Link>
 
-          <BlogDescription
-            description={descriptionContent}
-            className='pt-[10px] text-sm lg:text-base line-clamp-3 opacity-90'
-          />
+          {descriptionContent !== '' && (
+            <BlogDescription
+              description={descriptionContent}
+              className='pt-[10px] text-sm lg:text-base line-clamp-3 opacity-90'
+            />
+          )}
         </div>
 
         <div className='pt-2 w-full flex items-center gap-2'>
-          {blog?.tags.length && (
+          {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link
                 href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
@@ -63,6 +65,8 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
                 {blog?.tags[0]}
               </Link>
             </div>
+          ) : (
+            <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
           )}
 
           <p className='font-medium opacity-80'>{' · '}</p>
@@ -89,7 +93,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='group h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[220px] sm:h-[200px] bg-foreground-light dark:bg-foreground-dark rounded-md shadow-sm overflow-hidden'>
+      <div className='h-[220px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -104,13 +108,13 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
           <Link href={blogURL} className='w-full'>
             <BlogTitle
               className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
-              title={titleContent}
+              title={titleContent || 'Untitled Post'}
             />
           </Link>
         </div>
 
         <div className='pt-2 w-full flex items-center gap-2'>
-          {blog?.tags.length && (
+          {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link
                 href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
@@ -120,6 +124,8 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
                 {blog?.tags[0]}
               </Link>
             </div>
+          ) : (
+            <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
           )}
 
           <p className='font-medium opacity-80'>{' · '}</p>

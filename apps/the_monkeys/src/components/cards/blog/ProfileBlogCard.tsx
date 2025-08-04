@@ -47,7 +47,7 @@ export const ProfileBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[230px] sm:h-[120px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-md shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[230px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -62,7 +62,7 @@ export const ProfileBlogCard = ({
           <Link href={blogURL} className='w-full'>
             <BlogTitle
               className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
-              title={titleContent}
+              title={titleContent || 'Untitled Post'}
             />
           </Link>
         </div>
@@ -79,7 +79,7 @@ export const ProfileBlogCard = ({
               </Link>
             </div>
           ) : (
-            <p className='shrink-0 text-sm opacity-80 italic'>no topics</p>
+            <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
           )}
 
           <div className='flex items-center gap-2'>

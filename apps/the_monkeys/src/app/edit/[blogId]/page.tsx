@@ -224,7 +224,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Handle blog publishing
   const handlePublishStep = useCallback(async () => {
-    if (!data || data.blocks.length === 0) {
+    if (!data || data.blocks.length === 0 || data.blocks[0].type !== 'header') {
       toast({
         variant: 'destructive',
         title: 'Error',

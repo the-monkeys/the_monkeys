@@ -32,7 +32,7 @@ export const FeedBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[230px] sm:h-[120px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-md shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[230px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -47,36 +47,33 @@ export const FeedBlogCard = ({
           <Link href={blogURL} className='w-full'>
             <BlogTitle
               className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
-              title={titleContent}
+              title={titleContent || 'Untitled Post'}
             />
           </Link>
         </div>
 
-        <div className='pt-2 w-full flex items-center gap-2'>
-          {blog?.tags.length && (
-            <div className='w-fit flex items-center gap-1'>
-              <Link
-                href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-                target='_blank'
-                className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
-              >
-                {blog?.tags[0]}
-              </Link>
-            </div>
-          )}
-
-          <p className='font-medium opacity-80'>{' · '}</p>
-
+        <div className='pt-2 w-full flex justify-between items-center gap-2'>
           <div className='flex items-center gap-[6px]'>
-            {showBookmarkOption && (
-              <>
-                <BookmarkButton blogId={blog?.blog_id} />
-                <p className='font-medium opacity-80'>{' · '}</p>
-              </>
+            {blog?.tags.length ? (
+              <div className='w-fit flex items-center gap-1'>
+                <Link
+                  href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                  target='_blank'
+                  className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
+                >
+                  {blog?.tags[0]}
+                </Link>
+              </div>
+            ) : (
+              <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
             )}
+
+            <p className='font-medium opacity-80'>{' · '}</p>
 
             <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
           </div>
+
+          {showBookmarkOption && <BookmarkButton blogId={blog?.blog_id} />}
         </div>
       </div>
     </div>
