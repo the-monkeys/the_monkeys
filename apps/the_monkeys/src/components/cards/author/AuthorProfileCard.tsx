@@ -42,7 +42,7 @@ export const AuthorProfileCard = ({
     : 'Not available';
 
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-3'>
       <div className='flex items-end gap-3 flex-wrap'>
         <ProfileFrame className='size-[80px] ring-2 ring-border-light/40 dark:ring-border-dark/40'>
           <ProfileImage username={user?.username} />
@@ -55,7 +55,7 @@ export const AuthorProfileCard = ({
             {isAuthenticated && <UpdateUsernameDialog user={user} />}
           </div>
 
-          <h2 className='w-fit font-dm_sans font-medium text-3xl text-brand-orange tracking-tight capitalize'>
+          <h2 className='w-fit font-dm_sans font-medium text-3xl tracking-tight capitalize'>
             {user?.first_name} {user?.last_name ? user?.last_name : ''}
           </h2>
         </div>

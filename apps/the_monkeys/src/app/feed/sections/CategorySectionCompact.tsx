@@ -21,7 +21,7 @@ const CategorySectionCompact = ({
   if (isError) return null;
 
   return (
-    <div className='px-4 py-6'>
+    <div className='px-4 pt-6'>
       <div className='mb-10'>
         <h5 className='mt-2 py-1 font-dm_sans font-medium text-2xl break-words'>
           {title}

@@ -53,15 +53,12 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
     <>
       <ProfileSection paramsUser={params.username} user={user} />
 
-      <div className='grid grid-cols-3 gap-10 overflow-x-hidden'>
-        <Tabs
-          defaultValue='posts'
-          className='col-span-3 lg:col-span-2 space-y-6'
-        >
+      <div className='max-w-5xl'>
+        <Tabs defaultValue='posts' className='space-y-6'>
           <h6 className='pb-1 font-dm_sans font-medium text-xl truncate'>
             Latest from{' '}
-            <span className='font-dm_sans font-medium text-2xl'>
-              {user?.first_name}
+            <span className='font-dm_sans font-semibold'>
+              {user?.first_name} {user?.last_name ? user?.last_name : ''}
             </span>
           </h6>
 
@@ -81,7 +78,6 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
         </Tabs>
 
         {/* TODO: add section to showcase bookmarks and notificatoins for logged in users */}
-        <div className='col-span-3 lg:col-span-1'></div>
       </div>
     </>
   );

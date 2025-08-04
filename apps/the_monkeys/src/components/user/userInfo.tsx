@@ -65,7 +65,7 @@ export const UserInfoCardShowcase = ({
     <div className='flex items-center gap-1 flex-wrap'>
       <Link
         href={`/${userData?.username}`}
-        className='shrink-0 text-sm hover:underline'
+        className='shrink-0 font-medium text-sm hover:underline'
       >
         {userData?.first_name} {userData?.last_name ? userData?.last_name : ''}
       </Link>
@@ -105,54 +105,6 @@ export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
       >
         {userData?.first_name} {userData?.last_name ? userData?.last_name : ''}
       </Link>
-    </div>
-  );
-};
-
-export const UserInfoCard = ({
-  id,
-  date,
-}: {
-  id?: string;
-  date?: number | string;
-}) => {
-  const { user, isLoading, isError } = useGetProfileInfoById(id);
-
-  if (isLoading) return <UserInfoCardSkeleton />;
-
-  if (isError) {
-    return <p className='mb-4 text-sm opacity-80'>User not available</p>;
-  }
-
-  const userData = user?.user;
-
-  return (
-    <div className='w-full flex items-center gap-2'>
-      <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-[35px] !rounded-sm'>
-          <ProfileImage username={userData?.username} />
-        </ProfileFrame>
-      </Link>
-
-      <div className='flex flex-col justify-center overflow-hidden'>
-        <Link
-          href={`/${userData?.username}`}
-          className='font-dm_sans font-medium text-sm hover:underline decoration-1'
-        >
-          {userData?.first_name}{' '}
-          {userData?.last_name ? userData?.last_name : ''}
-        </Link>
-
-        <div className='flex gap-1'>
-          <p className='font-dm_sans text-[13px] opacity-80 cursor-default'>
-            {moment(date).format('MMMM DD, yyyy')}
-          </p>
-
-          <span className='hidden sm:block text-sm cursor-default'>·</span>
-
-          <p className='hidden sm:block font-dm_sans text-[13px] opacity-80 cursor-default'>{`@${userData?.username}`}</p>
-        </div>
-      </div>
     </div>
   );
 };
