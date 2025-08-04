@@ -1,8 +1,11 @@
 'use client';
 
+import { useMemo } from 'react';
+
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import { LanguageIndicator } from '@/components/blog/LanguageIndicator';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
@@ -15,6 +18,10 @@ import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer'
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import {
+  detectLanguage,
+  extractTextFromBlocks,
+} from '@/utils/languageDetection';
 import moment from 'moment';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
@@ -39,6 +46,13 @@ const BlogPage = () => {
 
   const { user } = useGetProfileInfoById(authorId);
   const authorName = user?.user?.username || 'Monkeys Author';
+
+  // Detect language of the blog content
+  const detectedLanguage = useMemo(() => {
+    if (!blog?.blog?.blocks) return null;
+    const textContent = extractTextFromBlocks(blog.blog.blocks);
+    return detectLanguage(textContent);
+  }, [blog?.blog?.blocks]);
 
   if (isLoading) {
     return <BlogPageSkeleton />;
@@ -119,6 +133,18 @@ const BlogPage = () => {
               <p className='text-xs sm:text-sm opacity-90'>
                 {moment(date).utc().format('hh:mm A')} UTC
               </p>
+
+              {/* Language Detection Display */}
+              {detectedLanguage && (
+                <>
+                  <p>{' · '}</p>
+                  <LanguageIndicator
+                    languageCode={detectedLanguage.code}
+                    languageName={detectedLanguage.name}
+                    confidence={detectedLanguage.confidence}
+                  />
+                </>
+              )}
             </div>
 
             <BlogHeading
