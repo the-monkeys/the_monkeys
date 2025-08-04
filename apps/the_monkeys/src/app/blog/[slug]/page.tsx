@@ -69,15 +69,11 @@ const BlogPage = () => {
   const tags = blog?.tags;
 
   const blogTitle = blog?.blog.blocks[0].data.text;
-  // const blogDataWithoutHeading = {
-  //   ...blog.blog,
-  //   blocks: blog?.blog.blocks.slice(1),
-  // };
 
   const blogDataWithoutHeading = () => {
     const firstBlock = blog?.blog?.blocks[0];
 
-    if (firstBlock.type !== 'heading') return blog?.blog;
+    if (firstBlock.type !== 'header') return blog?.blog;
 
     return {
       ...blog.blog,

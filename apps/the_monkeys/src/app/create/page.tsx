@@ -26,7 +26,7 @@ const initial_data = {
       id: 'title',
       type: 'header',
       data: {
-        text: 'Untitled Blog',
+        text: 'Untitled Post',
         level: 1,
         config: {
           placeholder: 'Pen your thoughts...',

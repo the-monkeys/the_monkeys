@@ -21,7 +21,7 @@ export const LikeButton = ({
 
   if (isLoading) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-50 cursor-default'>
+      <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
         <Icon name='RiHeart3' size={size} />
       </div>
     );
