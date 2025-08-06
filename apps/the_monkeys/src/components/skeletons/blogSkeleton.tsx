@@ -25,7 +25,7 @@ export const EditorBlockSkeleton = () => {
       </div>
 
       <div className='space-y-1'>
-        <Skeleton className='w-4/5 h-[250px]' />
+        <Skeleton className='w-full h-[300px]' />
       </div>
 
       <div className='space-y-1'>

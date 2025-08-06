@@ -12,13 +12,14 @@ import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 
 export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
   const date = blog?.published_time;
 
-  const titleContent = blog?.title;
+  const titleContent = purifyHTMLString(blog?.title);
   const descriptionContent = blog?.first_paragraph;
   const imageContent = blog?.first_image;
 
@@ -27,7 +28,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[230px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='h-[220px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -85,7 +86,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
   const blogId = blog?.blog_id;
   const date = blog?.published_time;
 
-  const titleContent = blog?.title;
+  const titleContent = purifyHTMLString(blog?.title);
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);

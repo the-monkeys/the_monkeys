@@ -12,6 +12,7 @@ import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 
 export const FeedBlogCard = ({
   blog,
@@ -24,7 +25,7 @@ export const FeedBlogCard = ({
   const blogId = blog?.blog_id;
   const date = blog?.published_time;
 
-  const titleContent = blog?.title;
+  const titleContent = purifyHTMLString(blog?.title);
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
@@ -32,7 +33,7 @@ export const FeedBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[230px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[220px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (

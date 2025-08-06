@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useParams } from 'next/navigation';
 
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
@@ -11,10 +12,12 @@ import {
   BlogPageSkeleton,
   EditorBlockSkeleton,
 } from '@/components/skeletons/blogSkeleton';
+import { SocialSnapshotDialog } from '@/components/social/SocialSnapshotDialog';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
@@ -69,6 +72,7 @@ const BlogPage = () => {
   const tags = blog?.tags;
 
   const blogTitle = blog?.blog.blocks[0].data.text;
+  const sanitizedBlogTitle = purifyHTMLString(blogTitle);
 
   const blogDataWithoutHeading = () => {
     const firstBlock = blog?.blog?.blocks[0];
@@ -107,39 +111,65 @@ const BlogPage = () => {
       />
 
       <>
-        <div className='px-2'>
-          <Container className='py-8 sm:py-10 max-w-5xl flex flex-col items-center gap-4'>
-            <div className='flex justify-center items-center gap-2'>
-              <p className='text-xs sm:text-sm opacity-90'>
-                {moment(date).format('MMM DD, yyyy')}
-              </p>
-
-              <p>{' · '}</p>
-
-              <p className='text-xs sm:text-sm opacity-90'>
-                {moment(date).utc().format('hh:mm A')} UTC
-              </p>
-            </div>
+        <div className='px-2 sm:px-4'>
+          <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-4 border-b-1 border-border-light/80 dark:border-border-dark/80'>
+            <p className='text-sm opacity-90'>
+              {moment(date).format('MMM DD, yyyy')}
+              {' / '}
+              {moment(date).utc().format('hh:mm A')} UTC
+            </p>
 
             <BlogHeading
-              title={blogTitle || 'Untitled Post'}
-              className='pt-[6px] font-dm_sans font-bold text-3xl sm:text-4xl !leading-[1.3] text-center'
+              title={sanitizedBlogTitle || 'Untitled Post'}
+              className='py-2 font-dm_sans font-semibold text-2xl sm:text-4xl !leading-tight text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />
           </Container>
         </div>
 
-        <div className='px-4 space-y-20'>
-          <Container className='max-w-3xl space-y-4'>
-            <div className='px-1 overflow-hidden border-t-1 border-border-light dark:border-border-dark'>
+        <div className='px-4'>
+          <Container className='max-w-3xl space-y-4 '>
+            <div className='px-1 overflow-hidden'>
               <Editor key={blogId} data={blogDataWithoutHeading()} />
             </div>
 
             <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
 
-            <div className='pt-10 space-y-10'>
-              <div className='space-y-2'>
+            <div className='pt-8 space-y-12'>
+              <div className='relative border-2 border-brand-orange bg-gradient-to-l from-brand-orange/30 via-brand-orange/5 to-transparent overflow-hidden'>
+                <div className='flex-1 p-6 space-y-4'>
+                  <div className='space-y-1'>
+                    <h4 className='font-dm_sans font-semibold text-3xl sm:text-4xl leading-tight drop-shadow-sm'>
+                      Social
+                      <span className='font-bold text-brand-orange'> .</span>
+                      <br />
+                      Snapshot
+                      <span className='font-bold text-brand-orange'> .</span>
+                    </h4>
+
+                    <p className='text-sm sm:text-base'>
+                      Make this post social-ready in one click.
+                    </p>
+                  </div>
+
+                  <div className='py-2'>
+                    <SocialSnapshotDialog blog={blog} />
+                  </div>
+                </div>
+
+                <div className='absolute top-0 right-0 h-full -z-20 opacity-40 sm:opacity-90'>
+                  <Image
+                    src={'/social-snapshot-background.svg'}
+                    alt='Social Snapshot'
+                    width={100}
+                    height={100}
+                    className='w-full h-full'
+                  />
+                </div>
+              </div>
+
+              <div className='space-y-4'>
                 <h5 className='font-dm_sans font-medium'>Topics included</h5>
                 <TopicLinksContainerCompact topics={tags} />
               </div>

@@ -59,6 +59,7 @@ export const BlogTitle = ({
     />
   );
 };
+
 export const BlogHeading = ({
   title,
   className,

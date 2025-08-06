@@ -35,6 +35,7 @@ export type IconName =
   | 'RiSubtract'
   | 'RiClipboard'
   | 'RiUpload2'
+  | 'RiDownload2'
   | 'RiDeleteBin6'
   | 'RiNavigation'
   | 'RiSettings3'
