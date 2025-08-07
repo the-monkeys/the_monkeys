@@ -66,7 +66,7 @@ export const SearchPosts = ({
     <>
       {!blogs || blogs === null ? (
         <p className='py-2 text-sm opacity-90 text-center'>
-          No results found for your search
+          No posts found for your search
         </p>
       ) : (
         <div className='flex flex-col gap-2'>

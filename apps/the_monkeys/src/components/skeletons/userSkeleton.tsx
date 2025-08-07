@@ -11,9 +11,12 @@ export const UserRecommendationCardSkeleton = ({
       <Skeleton className='shrink-0 size-10 rounded-full' />
 
       <div className='w-full space-y-2'>
-        <Skeleton className='h-3 w-32' />
-        <Skeleton className='h-[10px] w-full' />
-        <Skeleton className='h-[10px] w-1/2' />
+        <Skeleton className='h-4 w-32' />
+
+        <div className='space-y-1'>
+          <Skeleton className='h-[10px] w-full' />
+          <Skeleton className='h-[10px] w-1/2' />
+        </div>
       </div>
     </div>
   );

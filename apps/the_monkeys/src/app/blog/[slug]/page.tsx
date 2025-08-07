@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
+import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
@@ -148,12 +149,16 @@ const BlogPage = () => {
         </div>
 
         <div className='px-4 mt-16'>
-          <Container className='max-w-5xl space-y-4'>
-            <h6 className='pb-2 font-dm_sans font-semibold'>
-              Explore similar content
-            </h6>
+          <Container className='max-w-5xl space-y-12'>
+            <div className='space-y-4'>
+              <h6 className='pb-2 font-dm_sans font-semibold'>
+                Explore similar content
+              </h6>
 
-            <BlogRecommendations blogId={blogId} topics={tags} />
+              <BlogRecommendations blogId={blogId} topics={tags} />
+            </div>
+
+            <ContributeAndSponsorCard />
           </Container>
         </div>
       </>

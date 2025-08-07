@@ -207,7 +207,7 @@ export const SnapshotCanvas = ({
 
   return (
     <div className='flex flex-col gap-3'>
-      <div className='relative w-fit h-fit bg-foreground-light/80 dark:bg-foreground-dark/80 rounded-md overflow-hidden'>
+      <div className='relative w-fit h-fit bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-md overflow-hidden'>
         <canvas ref={canvasRef} className='w-full max-w-[320px]' />
 
         {!canvasError && loading && (

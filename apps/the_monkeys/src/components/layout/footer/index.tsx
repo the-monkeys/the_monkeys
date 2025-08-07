@@ -10,6 +10,7 @@ import {
   MONKEYS_DISCORD,
   MONKEYS_GITHUB,
   MONKEYS_INSTAGRAM,
+  MONKEYS_TELEGRAM,
   MONKEYS_X,
 } from '@/constants/social';
 
@@ -120,24 +121,32 @@ const Footer = () => {
               className='opacity-60 hover:opacity-100'
             />
           </Link>
+
+          <Link href={MONKEYS_TELEGRAM} className='group'>
+            <Icon
+              name='RiTelegram2'
+              type='Fill'
+              className='opacity-60 hover:opacity-100'
+            />
+          </Link>
         </div>
 
-        <div className='mt-5 flex justify-center gap-6'>
+        <div className='mt-5 flex justify-center gap-6 sm:gap-10'>
           <Link
             href='/terms'
-            className='text-xs hover:underline underline-offset-1'
+            className='text-xs sm:text-sm hover:underline underline-offset-1'
           >
             Terms
           </Link>
           <Link
             href='/privacy'
-            className='text-xs hover:underline underline-offset-1'
+            className='text-xs sm:text-sm hover:underline underline-offset-1'
           >
             Privacy
           </Link>
           <Link
             href='/cookies'
-            className='text-xs hover:underline underline-offset-1'
+            className='text-xs sm:text-sm hover:underline underline-offset-1'
           >
             Cookies
           </Link>

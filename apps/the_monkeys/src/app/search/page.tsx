@@ -7,8 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import Icon from '@/components/icon';
 
 import { SearchPosts } from './components/SearchPosts';
-
-// TODO: change the layout to incorporate results for both posts and users
+import { SearchUsers } from './components/SearchUsers';
 
 const SearchPage = () => {
   const searchParams = useSearchParams();
@@ -32,7 +31,7 @@ const SearchPage = () => {
   }, [searchQuery]);
 
   return (
-    <div className='space-y-10'>
+    <div className='space-y-12'>
       <div className='relative mx-auto max-w-3xl flex items-center gap-2'>
         <div className='p-1 flex justify-center'>
           <Icon name='RiSearch' />
@@ -55,9 +54,24 @@ const SearchPage = () => {
         )}
       </div>
 
+      {/* need to add pagination to search results */}
       {debouncedQuery.trim() && (
-        <div className='max-w-4xl mx-auto'>
-          <SearchPosts query={debouncedQuery} />
+        <div className='grid grid-cols-3 gap-8 lg:gap-10 xl:gap-16'>
+          <div className='col-span-3 md:col-span-1 space-y-6'>
+            <h4 className='px-1 pb-2 font-dm_sans font-medium opacity-90 border-b-1 border-border-light/60 dark:border-border-dark/60'>
+              Authors
+            </h4>
+
+            <SearchUsers query={debouncedQuery} />
+          </div>
+
+          <div className='col-span-3 md:col-span-2 space-y-6'>
+            <h4 className='px-1 pb-2 font-dm_sans font-medium opacity-90 border-b-1 border-border-light/60 dark:border-border-dark/60'>
+              Posts
+            </h4>
+
+            <SearchPosts query={debouncedQuery} />
+          </div>
         </div>
       )}
     </div>

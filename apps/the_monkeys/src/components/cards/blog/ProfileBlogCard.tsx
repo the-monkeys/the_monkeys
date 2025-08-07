@@ -63,7 +63,7 @@ export const ProfileBlogCard = ({
           {isDraft ? (
             <div className='w-full'>
               <BlogTitle
-                className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
+                className='pt-[6px] font-semibold text-lg leading-normal line-clamp-2'
                 title={titleContent || 'Untitled Post'}
               />
             </div>
