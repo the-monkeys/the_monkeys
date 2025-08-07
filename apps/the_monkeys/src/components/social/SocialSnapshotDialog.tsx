@@ -41,7 +41,7 @@ export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className='!max-w-lg'>
+      <DialogContent className='!max-w-lg h-fit max-h-[75vh] sm:max-h-[85vh] overflow-y-auto'>
         <DialogHeader>
           <DialogTitle>Social Snapshot</DialogTitle>
           <DialogDescription>
@@ -51,22 +51,28 @@ export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
 
         <div className='pt-4 flex flex-col items-center gap-4'>
           <div className='flex gap-3 flex-wrap'>
-            {images.map((image, index) => {
-              return (
-                <div
-                  className={twMerge(
-                    'shrink-0 size-[60px] md:size-[80px] rounded-md overflow-hidden ring-2 cursor-pointer hover:opacity-100',
-                    selectedImage === image
-                      ? 'opacity-100 ring-brand-orange'
-                      : 'opacity-90 border-ring-light dark:ring-border-dark'
-                  )}
-                  key={index}
-                  onClick={() => setSelectedImage(image)}
-                >
-                  <img src={image} className='w-full h-full object-cover' />
-                </div>
-              );
-            })}
+            {images.length ? (
+              images.map((image, index) => {
+                return (
+                  <div
+                    className={twMerge(
+                      'shrink-0 h-[60px] w-[80px] overflow-hidden ring-2 cursor-pointer hover:opacity-100',
+                      selectedImage === image
+                        ? 'opacity-100 ring-brand-orange'
+                        : 'opacity-90 border-ring-light dark:ring-border-dark'
+                    )}
+                    key={index}
+                    onClick={() => setSelectedImage(image)}
+                  >
+                    <img src={image} className='w-full h-full object-cover' />
+                  </div>
+                );
+              })
+            ) : (
+              <p className='p-2 text-sm opacity-90'>
+                No image available. Using default background.
+              </p>
+            )}
           </div>
 
           <div className='flex-1'>

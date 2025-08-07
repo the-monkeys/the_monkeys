@@ -1,7 +1,6 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import Image from 'next/image';
 import { useParams } from 'next/navigation';
 
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
@@ -12,7 +11,7 @@ import {
   BlogPageSkeleton,
   EditorBlockSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import { SocialSnapshotDialog } from '@/components/social/SocialSnapshotDialog';
+import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
@@ -101,7 +100,6 @@ const BlogPage = () => {
               imageContent,
               blog?.published_time,
               fullSlug,
-
               tags,
               authorName,
               blog
@@ -121,7 +119,7 @@ const BlogPage = () => {
 
             <BlogHeading
               title={sanitizedBlogTitle || 'Untitled Post'}
-              className='py-2 font-dm_sans font-semibold text-2xl sm:text-4xl !leading-tight text-center'
+              className='py-2 font-dm_sans font-semibold text-[26px] sm:text-4xl !leading-tight text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />
@@ -137,37 +135,7 @@ const BlogPage = () => {
             <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
 
             <div className='pt-8 space-y-12'>
-              <div className='relative border-2 border-brand-orange bg-gradient-to-l from-brand-orange/30 via-brand-orange/5 to-transparent overflow-hidden'>
-                <div className='flex-1 p-6 space-y-4'>
-                  <div className='space-y-1'>
-                    <h4 className='font-dm_sans font-semibold text-3xl sm:text-4xl leading-tight drop-shadow-sm'>
-                      Social
-                      <span className='font-bold text-brand-orange'> .</span>
-                      <br />
-                      Snapshot
-                      <span className='font-bold text-brand-orange'> .</span>
-                    </h4>
-
-                    <p className='text-sm sm:text-base'>
-                      Make this post social-ready in one click.
-                    </p>
-                  </div>
-
-                  <div className='py-2'>
-                    <SocialSnapshotDialog blog={blog} />
-                  </div>
-                </div>
-
-                <div className='absolute top-0 right-0 h-full -z-20 opacity-40 sm:opacity-90'>
-                  <Image
-                    src={'/social-snapshot-background.svg'}
-                    alt='Social Snapshot'
-                    width={100}
-                    height={100}
-                    className='w-full h-full'
-                  />
-                </div>
-              </div>
+              <SocialSnapshotCard blog={blog} />
 
               <div className='space-y-4'>
                 <h5 className='font-dm_sans font-medium'>Topics included</h5>

@@ -80,8 +80,11 @@ export const FeedBlogCardSkeleton = () => {
 
       <div className='w-full space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
-        <Skeleton className='h-[20px] w-full' />
-        <Skeleton className='h-[20px] w-1/2' />
+
+        <div className='w-full space-y-1'>
+          <Skeleton className='h-[20px] w-full' />
+          <Skeleton className='h-[20px] w-1/2' />
+        </div>
       </div>
     </div>
   );
@@ -98,9 +101,12 @@ export const TrendingCardLargeSkeleton = ({
 
       <div className='space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
-        <Skeleton className='h-[20px] w-full' />
-        <Skeleton className='h-[20px] w-full' />
-        <Skeleton className='h-[20px] w-1/2' />
+
+        <div className='w-full space-y-1'>
+          <Skeleton className='h-[20px] w-full' />
+          <Skeleton className='h-[20px] w-full' />
+          <Skeleton className='h-[20px] w-1/2' />
+        </div>
       </div>
     </div>
   );
@@ -117,8 +123,11 @@ export const TrendingCardSmallSkeleton = ({
 
       <div className='space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
-        <Skeleton className='h-[20px] w-full' />
-        <Skeleton className='h-[20px] w-1/2' />
+
+        <div className='w-full space-y-1'>
+          <Skeleton className='h-[20px] w-full' />
+          <Skeleton className='h-[20px] w-1/2' />
+        </div>
       </div>
     </div>
   );
@@ -144,9 +153,9 @@ export const FeedSkeleton = () => {
   return (
     <Container className='px-4 py-8 min-h-screen space-y-14'>
       <div className='grid grid-cols-2 gap-8'>
-        <TrendingCardLargeSkeleton className='col-span-2 sm:col-span-1' />
+        <TrendingCardLargeSkeleton className='col-span-2 lg:col-span-1' />
 
-        <div className='col-span-2 md:col-span-1 grid grid-cols-2 gap-6'>
+        <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-6'>
           <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
           <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
           <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
@@ -155,11 +164,11 @@ export const FeedSkeleton = () => {
       </div>
 
       <div className='grid grid-cols-3 gap-8 lg:gap-10 xl:gap-16'>
-        <div className='col-span-3 sm:col-span-2 space-y-4'>
+        <div className='col-span-3 lg:col-span-2 space-y-4'>
           <FeedBlogCardListSkeleton />
         </div>
 
-        <div className='col-span-3 sm:col-span-1 space-y-10'>
+        <div className='col-span-3 lg:col-span-1 space-y-10'>
           <TopicsContainerSkeleton />
 
           <div className='grid grid-cols-2 gap-4'>
@@ -189,7 +198,7 @@ export const FeedBlogCardListSkeleton = ({ count = 5 }: { count?: number }) => {
 
 export const FeedCategorySectionSkeleton = () => {
   return (
-    <div className='space-y-8'>
+    <div className='space-y-10'>
       <div className='grid grid-cols-2 md:grid-cols-3 gap-6'>
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />

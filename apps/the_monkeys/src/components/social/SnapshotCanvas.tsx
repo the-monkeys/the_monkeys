@@ -141,7 +141,7 @@ export const SnapshotCanvas = ({
         ctx.fillRect(0, 0, width, height);
 
         // title section
-        ctx.font = '550 56px Helvetica, sans-serif';
+        ctx.font = '550 60px Helvetica, sans-serif';
         ctx.shadowColor = '#000000';
         ctx.shadowBlur = 7;
         ctx.fillStyle = 'white';
@@ -151,7 +151,7 @@ export const SnapshotCanvas = ({
         const paddingX = 52;
         const paddingY = 32;
 
-        wrapText(ctx, title, width / 2, height - 260, width - paddingX * 2, 66);
+        wrapText(ctx, title, width / 2, height - 250, width - paddingX * 2, 68);
 
         ctx.save();
 
@@ -167,7 +167,7 @@ export const SnapshotCanvas = ({
           logoHeight
         );
 
-        ctx.font = '400 38px Helvetica, sans-serif';
+        ctx.font = '450 38px Helvetica, sans-serif';
         ctx.fillStyle = 'white';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'bottom';
@@ -208,7 +208,7 @@ export const SnapshotCanvas = ({
   return (
     <div className='flex flex-col gap-3'>
       <div className='relative w-fit h-fit bg-foreground-light/80 dark:bg-foreground-dark/80 rounded-md overflow-hidden'>
-        <canvas ref={canvasRef} className='w-full max-w-[350px]' />
+        <canvas ref={canvasRef} className='w-full max-w-[320px]' />
 
         {!canvasError && loading && (
           <>

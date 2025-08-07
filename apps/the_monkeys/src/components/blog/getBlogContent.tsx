@@ -37,8 +37,8 @@ export const getCardContent = ({ blog }: { blog: Blog }) => {
   }
 
   return {
-    titleContent,
-    descriptionContent,
+    titleContent: purifyHTMLString(titleContent),
+    descriptionContent: purifyHTMLString(descriptionContent),
     imageContent,
   };
 };
