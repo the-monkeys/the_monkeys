@@ -9,6 +9,7 @@ export const MONKEYS_DISCORD = 'https://discord.gg/6fK9YuV8FV';
 export const MONKEYS_GITHUB = 'https://github.com/the-monkeys';
 export const MONKEYS_X = 'https://x.com/monkeys_com_co';
 export const MONKEYS_INSTAGRAM = 'https://www.instagram.com/monkeys_com_co/';
+export const MONKEYS_TELEGRAM = 'https://t.me/monkeys_com_co';
 
 export const notFoundList = [
   {

@@ -37,8 +37,8 @@ export const getCardContent = ({ blog }: { blog: Blog }) => {
   }
 
   return {
-    titleContent,
-    descriptionContent,
+    titleContent: purifyHTMLString(titleContent),
+    descriptionContent: purifyHTMLString(descriptionContent),
     imageContent,
   };
 };
@@ -59,6 +59,7 @@ export const BlogTitle = ({
     />
   );
 };
+
 export const BlogHeading = ({
   title,
   className,

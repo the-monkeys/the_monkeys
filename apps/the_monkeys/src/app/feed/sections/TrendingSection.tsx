@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import {
   TrendingBlogCardLarge,
@@ -17,7 +18,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
   return (
     <div className='space-y-6'>
       <Container className='px-4 pt-8 md:pt-10'>
-        <div className='grid grid-cols-2 gap-8'>
+        <div className='grid grid-cols-2 gap-6 lg:gap-8'>
           <div className='col-span-2 lg:col-span-1'>
             <TrendingBlogCardLarge blog={blogs[0]} />
           </div>
@@ -75,6 +76,10 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
                   );
                 })}
               </div>
+            </div>
+
+            <div className='col-span-2 lg:col-span-1 flex flex-col gap-6'>
+              <ContributeAndSponsorCard />
             </div>
           </div>
         </Container>

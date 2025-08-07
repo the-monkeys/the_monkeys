@@ -1,8 +1,9 @@
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 
 import { API_URL_V2 } from '@/constants/api';
 import { baseUrl } from '@/constants/baseUrl';
 import { Blog } from '@/services/blog/blogTypes';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 
 type Props = {
   params: { slug: string };
@@ -43,17 +44,13 @@ const fetchBlogData = async (id: string): Promise<Blog | null> => {
   }
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const id = params.slug.split('-').pop() || '';
   const blog = await fetchBlogData(id);
 
-  const parentMetadata = await parent;
   const defaultTitle = 'Published Post | Monkeys';
   const defaultDescription =
-    'Discover insightful articles and latest updates on our blog.';
+    'Stay sharp with content crafted to offer clarity, insight, and direction.';
   const siteName = 'Monkeys';
 
   const blocks = blog?.blog?.blocks || [];
@@ -62,7 +59,6 @@ export async function generateMetadata(
   const descriptionBlock = blocks.find((block) => block.type === 'paragraph');
   const imageBlock = blocks.find((block) => block.type === 'image');
 
-  // Prepare metadata values
   const metaTitle = titleBlock?.data?.text
     ? `${titleBlock.data.text} | ${siteName}`
     : defaultTitle;
@@ -77,20 +73,23 @@ export async function generateMetadata(
 
   const canonicalUrl = `${baseUrl}/blog/${params.slug}`;
 
+  const purifiedTitle = purifyHTMLString(metaTitle);
+  const purifiedDescription = purifyHTMLString(metaDescription);
+
   return {
-    title: metaTitle,
-    description: metaDescription,
+    title: purifiedTitle,
+    description: purifiedDescription,
     keywords: blog?.tags?.join(', ') || '',
     openGraph: {
       type: 'article',
-      title: metaTitle,
-      description: metaDescription,
+      title: purifiedTitle,
+      description: purifiedDescription,
       images: [
         {
           url: imageUrl,
           width: 1200,
           height: 630,
-          alt: metaTitle,
+          alt: purifiedTitle,
         },
       ],
       url: canonicalUrl,
@@ -100,8 +99,8 @@ export async function generateMetadata(
     },
     twitter: {
       card: 'summary_large_image',
-      title: metaTitle,
-      description: metaDescription,
+      title: purifiedTitle,
+      description: purifiedDescription,
       images: imageUrl,
       creator: blog?.owner_account_id || '@yourtwitter',
     },

@@ -15,6 +15,7 @@ import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
+import { purifyHTMLString } from '@/utils/purifyHTML';
 
 export const ProfileBlogCard = ({
   blog,
@@ -33,7 +34,7 @@ export const ProfileBlogCard = ({
   const blogId = blog?.blog_id;
   const date = blog?.published_time;
 
-  const titleContent = blog?.title;
+  const titleContent = purifyHTMLString(blog?.title);
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
@@ -47,7 +48,7 @@ export const ProfileBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[230px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[200px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -59,12 +60,21 @@ export const ProfileBlogCard = ({
         <div>
           <UserInfoCardShowcase authorID={authorId} date={date} />
 
-          <Link href={blogURL} className='w-full'>
-            <BlogTitle
-              className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
-              title={titleContent || 'Untitled Post'}
-            />
-          </Link>
+          {isDraft ? (
+            <div className='w-full'>
+              <BlogTitle
+                className='pt-[6px] font-semibold text-lg leading-normal line-clamp-2'
+                title={titleContent || 'Untitled Post'}
+              />
+            </div>
+          ) : (
+            <Link href={blogURL} className='w-full'>
+              <BlogTitle
+                className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
+                title={titleContent || 'Untitled Post'}
+              />
+            </Link>
+          )}
         </div>
 
         <div className='pt-2 w-full flex justify-between items-center gap-2'>

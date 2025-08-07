@@ -17,7 +17,7 @@ const SearchPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='pb-12 px-4 min-h-screen space-y-6'>
+    <Container className='pb-12 px-4 max-w-6xl min-h-[800px] space-y-6'>
       <PageHeader>
         <PageHeading heading='Search' />
         <PageSubheading

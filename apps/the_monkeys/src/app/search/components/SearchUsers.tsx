@@ -1,18 +1,14 @@
 import Link from 'next/link';
 
+import ProfileImage, { ProfileFrame } from '@/components/profileImage';
+import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import { SearchResultsAuthorSkeleton } from '@/components/skeletons/searchSkeleton';
+import { UserRecommendationCardSkeleton } from '@/components/skeletons/userSkeleton';
+import { RecommendedUserCard } from '@/components/user/userInfo';
 import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
 import { SearchUser } from '@/services/search/searchTypes';
 
-import ProfileImage, { ProfileFrame } from '../profileImage';
-import { SearchResultsAuthorSkeleton } from '../skeletons/searchSkeleton';
-
-const SearchUserCard = ({
-  user,
-  onClose,
-}: {
-  user: SearchUser;
-  onClose?: () => void;
-}) => {
+const SearchUserCard = ({ user }: { user: SearchUser }) => {
   return (
     <div className='p-1 flex gap-2 items-center overflow-hidden'>
       <ProfileFrame className='shrink-0 size-9'>
@@ -24,7 +20,6 @@ const SearchUserCard = ({
           target='_blank'
           href={`/${user.username}`}
           className='w-fit capitalize hover:underline truncate'
-          onClick={onClose}
         >
           {user?.first_name} {user?.last_name ? user?.last_name : ''}
         </Link>
@@ -35,27 +30,26 @@ const SearchUserCard = ({
   );
 };
 
-export const SearchUsers = ({
-  query,
-  onClose,
-}: {
-  query: string;
-  onClose?: () => void;
-}) => {
-  // TOOD: Cache the search results using zustand store
-
+export const SearchUsers = ({ query }: { query: string }) => {
   const { searchUsers, searchUsersLoading, searchUsersError } =
     useGetSearchUser(query.trim() ? query : undefined);
 
   if (searchUsersLoading) {
-    return <SearchResultsAuthorSkeleton />;
+    return (
+      <div className='space-y-4'>
+        <UserRecommendationCardSkeleton />
+        <UserRecommendationCardSkeleton />
+        <UserRecommendationCardSkeleton />
+        <UserRecommendationCardSkeleton />
+      </div>
+    );
   }
 
   if (searchUsersError) {
     return (
-      <p className='text-sm opacity-90 text-center'>
-        Failed to load search results.
-      </p>
+      <div className='p-2 flex items-center justify-center'>
+        <p className='opacity-90'>No results found.</p>
+      </div>
     );
   }
 
@@ -64,19 +58,13 @@ export const SearchUsers = ({
   return (
     <>
       {!users || users === null ? (
-        <p className='text-sm opacity-80 text-center'>
+        <p className='py-2 text-sm opacity-90 text-center'>
           No users found for your search
         </p>
       ) : (
-        <div className='flex flex-col gap-2'>
-          {users?.slice(0, 5).map((user) => {
-            return (
-              <SearchUserCard
-                user={user}
-                onClose={onClose}
-                key={user.username}
-              />
-            );
+        <div className='flex flex-col space-y-6 sm:space-y-8'>
+          {users.map((user) => {
+            return <SearchUserCard user={user} key={user?.username} />;
           })}
         </div>
       )}
