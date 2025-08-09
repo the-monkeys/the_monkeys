@@ -73,21 +73,21 @@ h1.ce-header {
   padding: 0 !important;
   margin: 0 0 15px !important;
   font-size: var(--blog-h1-text-size);
-  font-weight: 600;
+  font-weight: 550;
 }
 
 h2.ce-header {
   padding: 0 !important;
   margin: 0 0 14px 0 !important;
   font-size: var(--blog-h2-text-size);
-  font-weight: 600;
+  font-weight: 550;
 }
 
 h3.ce-header {
   padding: 0 !important;
   margin: 0 0 14px 0 !important;
   font-size: var(--blog-h3-text-size);
-  font-weight: 600;
+  font-weight: 550;
 }
 
 .ce-paragraph {

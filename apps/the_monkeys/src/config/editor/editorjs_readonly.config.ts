@@ -1,3 +1,4 @@
+import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
@@ -11,6 +12,9 @@ export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',
   readOnly: true,
   tools: {
+    title: {
+      class: TitleBlockTool,
+    },
     header: {
       class: Header,
       config: {

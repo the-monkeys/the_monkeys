@@ -1,6 +1,7 @@
+import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import { API_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
-import Code from '@editorjs/code';
+import CodeTool from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -12,6 +13,9 @@ import Quote from '@editorjs/quote';
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'editorjs_editor-container',
   tools: {
+    title: {
+      class: TitleBlockTool,
+    },
     header: {
       class: Header,
       inlineToolbar: true,
@@ -24,7 +28,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       class: Paragraph,
       inlineToolbar: true,
       config: {
-        placeholder: 'Type something',
+        placeholder: '',
       },
     },
     list: {
@@ -34,25 +38,24 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
         defaultStyle: 'unordered',
       },
     },
-    delimiter: Delimiter,
     code: {
-      class: Code,
+      class: CodeTool,
       config: {
-        placeholder: 'Type code',
+        placholder: '',
       },
     },
+    delimiter: Delimiter,
     quote: {
       class: Quote,
       inlineToolbar: true,
       config: {
-        quotePlaceholder: 'Type something',
-        captionPlaceholder: 'Type something',
+        quotePlaceholder: '',
       },
     },
     image: {
       class: Image,
       config: {
-        captionPlaceholder: 'Type something',
+        captionPlaceholder: '',
         uploader: {
           async uploadByFile(file: File) {
             const formData = new FormData();

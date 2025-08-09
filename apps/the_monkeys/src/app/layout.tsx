@@ -82,6 +82,7 @@ const schema = {
     name: 'Monkeys',
     url: LIVE_URL,
   },
+
   knowsAbout: [
     'Collaborative Blogging',
     'Content Writing',
@@ -89,6 +90,7 @@ const schema = {
     'Topic Clustering',
   ],
 };
+
 const RootLayout = async ({
   children,
 }: Readonly<{

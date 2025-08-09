@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
+import Icon from '@/components/icon';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -53,9 +54,10 @@ export const ChooseTopicDialog = ({
           variant='secondary'
           size='sm'
           title='Add Topics'
-          className='rounded-full'
+          className='flex items-center gap-1 rounded-full'
         >
-          Choose Topics {`(${blogTopics.length})`}
+          <Icon name='RiAdd' size={18} />
+          Topics {`(${blogTopics.length})`}
         </Button>
       </DialogTrigger>
 

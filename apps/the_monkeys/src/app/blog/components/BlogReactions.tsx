@@ -57,7 +57,7 @@ export const BlogReactionsContainer = ({
   const url = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   return (
-    <div className='sticky left-0 bottom-[30px] mx-auto w-full flex items-center gap-2 z-20'>
+    <div className='sticky left-0 bottom-[20px] mx-auto w-full flex items-center gap-2 z-20'>
       <div className='flex-1 px-4 py-2 bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/60 dark:ring-border-dark/60'>
         <BlogReactions blogId={blogId} />
       </div>

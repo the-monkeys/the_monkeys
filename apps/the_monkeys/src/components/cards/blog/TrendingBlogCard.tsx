@@ -28,7 +28,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[200px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='h-[220px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -94,7 +94,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='group h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='h-[220px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
