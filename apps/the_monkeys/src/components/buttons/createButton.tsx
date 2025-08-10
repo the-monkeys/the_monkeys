@@ -9,7 +9,7 @@ export const CreateButton = () => {
     <Link
       href={`${CREATE_ROUTE}`}
       title='Create Post'
-      className='group h-9 flex items-center gap-1 px-2 sm:px-4 py-[6px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light rounded-full hover:bg-opacity-85'
+      className='group h-9 flex items-center gap-1 px-2 sm:px-4 py-[6px] text-text-dark dark:text-text-light bg-background-dark dark:bg-background-light rounded-full hover:bg-background-dark/80 dark:hover:bg-background-light/80'
     >
       <Icon
         name='RiPencil'

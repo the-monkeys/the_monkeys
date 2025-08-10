@@ -2,7 +2,7 @@ import Icon from '@/components/icon';
 
 export const AI = () => {
   return (
-    <div className='group p-4 md:p-6 col-span-3 sm:col-span-1 flex flex-col justify-between gap-4 bg-background-light dark:bg-background-dark border-1 border-foreground-light dark:border-foreground-dark rounded-xl overflow-hidden'>
+    <div className='group p-4 md:p-6 col-span-3 sm:col-span-1 flex flex-col justify-between gap-4 bg-background-light dark:bg-background-dark border-1 border-border-light dark:border-border-dark rounded-xl overflow-hidden'>
       <div className='h-full flex flex-col items-center gap-2'>
         <Icon
           name='RiSparkling'

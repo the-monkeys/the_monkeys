@@ -90,6 +90,8 @@ export const SnapshotCanvas = ({
   const [canvasError, setCanvasError] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
+
     const draw = async () => {
       const canvas = canvasRef.current;
       if (!canvas) return;

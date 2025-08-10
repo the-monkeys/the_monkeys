@@ -102,13 +102,13 @@ export const SearchInput = ({ className }: { className?: string }) => {
                   <div className='py-2 flex justify-center items-center gap-1'>
                     <Link
                       href={LOGIN_ROUTE}
-                      className='font-medium text-sm text-brand-orange hover:underline'
+                      className='font-medium text-sm text-brand-orange underline'
                     >
-                      LOGIN
+                      Login
                     </Link>
 
                     <p className='text-sm opacity-90 text-center'>
-                      to find authors on Monkeys.
+                      to find authors.
                     </p>
                   </div>
                 )}

@@ -62,7 +62,7 @@ const Footer = () => {
               </div>
 
               <div className='pt-2'>
-                <p className='font-dm_sans font-[450] tracking-tight text-[1.8rem]'>
+                <p className='font-dm_sans font-medium tracking-tight text-[1.8rem]'>
                   Monkeys
                 </p>
               </div>

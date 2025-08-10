@@ -19,7 +19,6 @@ const config = {
       },
     },
     fontFamily: {
-      arvo: ['var(--font-arvo)'],
       dm_sans: ['var(--font-dm_sans)'],
       ibm_plex_sans: ['var(--font-ibm_plex_sans)'],
     },

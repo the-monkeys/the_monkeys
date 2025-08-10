@@ -12,7 +12,10 @@ import {
   BlogPageSkeleton,
   EditorBlockSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
+import {
+  SocialSnapshotCard,
+  SocialSnapshotCardCompact,
+} from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
@@ -127,15 +130,17 @@ const BlogPage = () => {
           </Container>
         </div>
 
-        <div className='px-4'>
-          <Container className='max-w-3xl space-y-4 '>
-            <div className='px-1 overflow-hidden'>
+        <div className='p-4'>
+          <Container className='max-w-3xl'>
+            <SocialSnapshotCardCompact blog={blog} />
+
+            <div className='px-1 pb-4 overflow-hidden'>
               <Editor key={blogId} data={blogDataWithoutHeading()} />
             </div>
 
             <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
 
-            <div className='pt-8 space-y-12'>
+            <div className='pt-10 space-y-12'>
               <SocialSnapshotCard blog={blog} />
 
               <div className='space-y-4'>
@@ -148,17 +153,17 @@ const BlogPage = () => {
           </Container>
         </div>
 
-        <div className='px-4 mt-16'>
+        <div className='px-4 mt-12'>
           <Container className='max-w-5xl space-y-12'>
+            <ContributeAndSponsorCard />
+
             <div className='space-y-4'>
-              <h6 className='pb-2 font-dm_sans font-semibold'>
+              <h6 className='pb-2 font-dm_sans font-medium text-lg'>
                 Explore similar content
               </h6>
 
               <BlogRecommendations blogId={blogId} topics={tags} />
             </div>
-
-            <ContributeAndSponsorCard />
           </Container>
         </div>
       </>

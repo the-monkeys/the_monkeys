@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const FormHeading = ({ heading }: { heading: string; className?: string }) => {
   return (
-    <h1 className='font-arvo font-medium text-[28px] sm:text-3xl text-center sm:text-left'>
+    <h1 className='font-dm_sans font-medium text-[28px] sm:text-3xl text-center sm:text-left'>
       {heading}
     </h1>
   );

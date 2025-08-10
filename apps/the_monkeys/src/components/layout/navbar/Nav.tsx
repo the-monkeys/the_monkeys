@@ -59,7 +59,7 @@ const Nav = ({
             </div>
 
             <div className='hidden md:block pt-1'>
-              <p className='font-dm_sans font-[450] tracking-tight text-[25px]'>
+              <p className='font-dm_sans font-medium tracking-tight text-[25px]'>
                 Monkeys
               </p>
             </div>

@@ -109,7 +109,7 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
         <DialogDescription className='hidden'></DialogDescription>
 
         <p className='opacity-80'>
-          Moving this blog to drafts will remove all the reactions it has
+          Moving this post to drafts will remove all the reactions it has
           received. Are you sure you want to proceed?
         </p>
 

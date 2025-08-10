@@ -2,14 +2,18 @@
 
 import { ChangeEvent, useEffect, useState } from 'react';
 
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import { LOGIN_ROUTE } from '@/constants/routeConstants';
+import useAuth from '@/hooks/auth/useAuth';
 
 import { SearchPosts } from './components/SearchPosts';
 import { SearchUsers } from './components/SearchUsers';
 
 const SearchPage = () => {
+  const { isSuccess } = useAuth();
   const searchParams = useSearchParams();
   const searchQueryParam = searchParams.get('query');
 
@@ -62,7 +66,22 @@ const SearchPage = () => {
               Authors
             </h4>
 
-            <SearchUsers query={debouncedQuery} />
+            {isSuccess ? (
+              <SearchUsers query={debouncedQuery} />
+            ) : (
+              <div className='py-2 flex justify-center items-center gap-1'>
+                <Link
+                  href={LOGIN_ROUTE}
+                  className='font-medium text-sm text-brand-orange underline'
+                >
+                  Login
+                </Link>
+
+                <p className='text-sm opacity-90 text-center'>
+                  to find authors.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className='col-span-3 md:col-span-2 space-y-6'>

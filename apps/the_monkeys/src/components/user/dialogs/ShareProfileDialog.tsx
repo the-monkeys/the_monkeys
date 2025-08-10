@@ -55,13 +55,13 @@ export const ShareProfileDialog: FC<ShareProfileDialogProps> = ({
           className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
           title='Share Profile'
         >
-          <Icon name='RiShare' size={size} />
+          <Icon name='RiShareForward' size={size} />
         </button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Showcase your Profile</DialogTitle>
+          <DialogTitle>Share Profile</DialogTitle>
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 

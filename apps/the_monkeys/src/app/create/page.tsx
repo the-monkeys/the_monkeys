@@ -277,7 +277,7 @@ const CreatePage = () => {
       toast({
         variant: 'success',
         title: 'Blog Published Successfully',
-        description: 'Your blog is now live!',
+        description: 'Your post is now live!',
       });
       router.push(`/${username}`);
     } catch (error) {

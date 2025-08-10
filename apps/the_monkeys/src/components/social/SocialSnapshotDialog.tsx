@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
@@ -20,21 +20,24 @@ export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
   const [selectedImage, setSelectedImage] = useState<string>('');
 
   const { titleContent } = getCardContent({ blog });
-  const sanitizedTitle = purifyHTMLString(titleContent);
 
   const images = blog?.blog?.blocks
     .filter((block) => block.type === 'image' && block.data.file.url)
-    .map((block) => {
-      if (selectedImage === '') setSelectedImage(block.data.file.url);
-      return block.data.file.url;
-    });
+    .map((block) => block.data.file.url);
+
+  useEffect(() => {
+    if (images.length && selectedImage === '') {
+      setSelectedImage(images[0]);
+    }
+  }, [images, selectedImage]);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button
+          size='sm'
           variant='brand'
-          className='rounded-none'
+          className='!text-base rounded-sm hover:text-white hover:!bg-opacity-80'
           title='Create Snapshot'
         >
           Create Snapshot
@@ -59,7 +62,7 @@ export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
                       'shrink-0 h-[60px] w-[80px] overflow-hidden ring-2 cursor-pointer hover:opacity-100',
                       selectedImage === image
                         ? 'opacity-100 ring-brand-orange'
-                        : 'opacity-90 border-ring-light dark:ring-border-dark'
+                        : 'opacity-90 ring-border-light dark:ring-border-dark'
                     )}
                     key={index}
                     onClick={() => setSelectedImage(image)}

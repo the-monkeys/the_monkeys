@@ -270,7 +270,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       toast({
         variant: 'success',
         title: 'Blog Published Successfully',
-        description: 'Your blog is now live!',
+        description: 'Your post is now live!',
       });
 
       // Invalidate cache and redirect

@@ -4,26 +4,26 @@
 
 :root {
   --blog-h1-text-size: 30px;
-  --blog-h2-text-size: 28px;
-  --blog-h3-text-size: 24px;
+  --blog-h2-text-size: 26px;
+  --blog-h3-text-size: 22px;
   --blog-p-text-size: 18px;
   --blog-list-text-size: 18px;
   --blog-quote-text-size: 18px;
-  --blog-code-text-size: 16px;
+  --blog-code-text-size: 18px;
   --blog-text-height: 1.6;
-  --blog-quote-text-height: 1.4;
+  --blog-quote-text-height: 1.6;
 }
 
 @media (max-width: 650px) {
   :root {
-    --blog-h1-text-size: 28px;
+    --blog-h1-text-size: 26px;
     --blog-h2-text-size: 24px;
-    --blog-h3-text-size: 22px;
-    --blog-p-text-size: 18px;
-    --blog-list-text-size: 18px;
-    --blog-quote-text-size: 18px;
+    --blog-h3-text-size: 20px;
+    --blog-p-text-size: 16px;
+    --blog-list-text-size: 16px;
+    --blog-quote-text-size: 16px;
     --blog-code-text-size: 16px;
-    --blog-text-height: 1.8;
+    --blog-text-height: 1.6;
   }
 }
 
@@ -73,21 +73,21 @@ h1.ce-header {
   padding: 0 !important;
   margin: 0 0 15px !important;
   font-size: var(--blog-h1-text-size);
-  font-weight: 550;
+  font-weight: 600;
 }
 
 h2.ce-header {
   padding: 0 !important;
   margin: 0 0 14px 0 !important;
   font-size: var(--blog-h2-text-size);
-  font-weight: 550;
+  font-weight: 600;
 }
 
 h3.ce-header {
   padding: 0 !important;
   margin: 0 0 14px 0 !important;
   font-size: var(--blog-h3-text-size);
-  font-weight: 550;
+  font-weight: 600;
 }
 
 .ce-paragraph {
@@ -139,16 +139,16 @@ li.cdx-list__item {
 /* quote tool */
 
 .cdx-quote {
-  padding: 10px 8px 10px 16px !important;
+  padding: 12px 8px 12px 16px !important;
   margin: 0 0 30px !important;
   position: relative;
-  background-color: #ededed7f;
-  border-left: 4px solid #cccccc;
+  background-color: #ededed5e;
+  border-left: 3px solid #cccccc;
 }
 
 .dark .cdx-quote {
-  background-color: #1e1e1e7f;
-  border-left: 4px solid #3f3f3f;
+  background-color: #1e1e1e5e;
+  border-left: 3px solid #3f3f3f;
 }
 
 .cdx-quote__text {
@@ -459,11 +459,23 @@ li.cdx-list__item {
 }
 
 .ce-delimiter::before {
-  content: '● ● ●' !important;
-  font-size: 16px !important;
-  line-height: normal !important;
-  height: fit-content !important;
-  letter-spacing: normal !important;
+  margin: auto;
+  height: 1px !important;
+  width: 50%;
+  background-color: #ccccccb7;
+  content: '' !important;
+  line-height: 0px !important;
+  letter-spacing: 0px !important;
+}
+
+.dark .ce-delimiter::before {
+  margin: auto;
+  height: 1px !important;
+  width: 50%;
+  background-color: #3f3f3fb7;
+  content: '' !important;
+  line-height: 0px !important;
+  letter-spacing: 0px !important;
 }
 
 /* inline marker styles */
@@ -515,7 +527,7 @@ li.cdx-list__item {
   }
 
   .cdx-quote {
-    padding: 8px 6px 8px 14px !important;
+    padding: 10px 6px 10px 14px !important;
   }
 
   .cdx-quote__text {

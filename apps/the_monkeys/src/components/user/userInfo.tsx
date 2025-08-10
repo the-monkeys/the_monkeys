@@ -53,8 +53,6 @@ export const UserInfoCardShowcase = ({
 }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(authorID);
 
-  if (isLoading) return <Skeleton className='mb-1 h-4 w-36' />;
-
   if (isError) {
     return null;
   }
@@ -63,17 +61,23 @@ export const UserInfoCardShowcase = ({
 
   return (
     <div className='flex items-center gap-1 flex-wrap'>
-      <Link
-        href={`/${userData?.username}`}
-        className='shrink-0 text-sm hover:underline'
-      >
-        {userData?.first_name} {userData?.last_name ? userData?.last_name : ''}
-      </Link>
+      {!isLoading ? (
+        isError ? null : (
+          <Link
+            href={`/${userData?.username}`}
+            className='shrink-0 text-sm hover:underline'
+          >
+            {userData?.first_name}{' '}
+            {userData?.last_name ? userData?.last_name : ''}
+          </Link>
+        )
+      ) : (
+        <Skeleton className='h-4 w-28' />
+      )}
 
-      <p className='shrink-0 text-sm'>
-        {' / '}
-        {moment(date).format('MMM DD, YYYY')}
-      </p>
+      {!isError && <span className='text-sm opacity-80'>{' — '}</span>}
+
+      <p className='shrink-0 text-sm'>{moment(date).format('MMM DD, YYYY')}</p>
     </div>
   );
 };

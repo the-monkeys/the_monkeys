@@ -14,27 +14,27 @@ export const MONKEYS_TELEGRAM = 'https://t.me/monkeys_com_co';
 export const notFoundList = [
   {
     title: 'Join our Discord',
-    text: 'Join our Discord to connect, chat, and stay in the loop.',
+    text: 'Join Discord to connect with community.',
     icon: 'RiDiscord' as IconName,
     link: MONKEYS_DISCORD,
   },
   {
     title: 'Explore on GitHub',
-    text: 'Explore our GitHub for repositories and collaboration tools.',
+    text: 'Explore GitHub to collaborate.',
     icon: 'RiGithub' as IconName,
     link: MONKEYS_GITHUB,
   },
   {
     title: 'Follow us on X',
-    text: 'Follow us on X for the latest updates and news highlights.',
+    text: 'Follow us on X for the latest updates.',
     icon: 'RiTwitterX' as IconName,
     link: MONKEYS_X,
   },
   {
-    title: 'Monkeys Showcase',
-    text: 'Check out latest blogs and news from around the world.',
-    icon: 'RiNewspaper' as IconName,
-    link: '/feed',
+    title: 'Join Telegram',
+    text: 'Be a part of our Telegram channel.',
+    icon: 'RiTelegram' as IconName,
+    link: MONKEYS_TELEGRAM,
   },
 ];
 

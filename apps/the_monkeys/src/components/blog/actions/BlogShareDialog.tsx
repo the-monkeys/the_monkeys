@@ -32,14 +32,14 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
           toast({
             variant: 'default',
             title: 'Blog Link Copied',
-            description: 'The blog link has been copied.',
+            description: 'The link to this post has been copied.',
           });
         },
         () => {
           toast({
             variant: 'error',
             title: 'Copy Failed',
-            description: 'Unable to copy the blog link.',
+            description: 'Unable to copy the post link.',
           });
         }
       );

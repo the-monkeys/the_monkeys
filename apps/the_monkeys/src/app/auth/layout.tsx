@@ -22,7 +22,7 @@ export default async function AuthLayout({
           <BackgroundBanner />
         </div>
 
-        <div className='mx-auto max-w-lg px-4 sm:px-6 py-6 rounded-2xl shadow-2xl shadow-brand-orange/25 bg-background-light dark:bg-background-dark space-y-8'>
+        <div className='mx-auto max-w-lg px-4 sm:px-6 py-6 rounded-2xl shadow-2xl shadow-brand-orange/20 bg-background-light dark:bg-background-dark space-y-8'>
           {children}
         </div>
       </div>

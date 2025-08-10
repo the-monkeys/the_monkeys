@@ -23,9 +23,9 @@ export const BlogReactions = ({
       <div className='p-1 flex justify-center items-center gap-1'>
         <Link
           href={LOGIN_ROUTE}
-          className='text-sm font-medium text-brand-orange hover:underline'
+          className='text-sm font-medium text-brand-orange underline'
         >
-          LOGIN
+          Login
         </Link>
 
         <p className='text-sm'>to interact with post.</p>
