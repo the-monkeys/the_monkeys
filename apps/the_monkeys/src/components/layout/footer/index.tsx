@@ -12,6 +12,7 @@ import {
   MONKEYS_INSTAGRAM,
   MONKEYS_TELEGRAM,
   MONKEYS_X,
+  MONKEYS_YOUTUBE,
 } from '@/constants/social';
 
 import Container from '../Container';
@@ -68,7 +69,7 @@ const Footer = () => {
               </div>
             </Link>
 
-            <p className='text-xs'>
+            <p className='text-xs sm:text-sm'>
               © 2025{' '}
               <span className='font-medium'>BUDDHICINTAKA PVT. LTD.</span> All
               rights reserved.
@@ -88,67 +89,58 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className='mt-16 flex justify-center items-center gap-3'>
-          <Link href={MONKEYS_DISCORD} className='group'>
-            <Icon
-              name='RiDiscord'
-              type='Fill'
-              className='opacity-60 hover:opacity-100'
-            />
-          </Link>
+        <div className='mt-16 flex justify-center items-center gap-x-4 gap-y-3 flex-wrap'>
+          <div className='w-full mx-auto'>
+            <p className='text-sm opacity-90 text-center'>connect with us</p>
+          </div>
 
-          <Link href={MONKEYS_GITHUB} className='group'>
+          <Link target='_blank' href={MONKEYS_GITHUB} className='group'>
             <Icon
               name='RiGithub'
               size={24}
               type='Fill'
-              className='opacity-60 hover:opacity-100'
+              className='opacity-80 hover:opacity-100'
             />
           </Link>
 
-          <Link href={MONKEYS_X} className='group'>
+          <Link target='_blank' href={MONKEYS_X} className='group'>
             <Icon
               name='RiTwitterX'
               type='Fill'
-              className='opacity-60 hover:opacity-100'
+              className='opacity-80 hover:opacity-100'
             />
           </Link>
 
-          <Link href={MONKEYS_INSTAGRAM} className='group'>
+          <Link target='_blank' href={MONKEYS_YOUTUBE} className='group'>
+            <Icon
+              name='RiYoutube'
+              type='Fill'
+              className='opacity-80 hover:opacity-100'
+            />
+          </Link>
+
+          <Link target='_blank' href={MONKEYS_DISCORD} className='group'>
+            <Icon
+              name='RiDiscord'
+              type='Fill'
+              className='opacity-80 hover:opacity-100'
+            />
+          </Link>
+
+          <Link target='_blank' href={MONKEYS_INSTAGRAM} className='group'>
             <Icon
               name='RiInstagram'
               type='Fill'
-              className='opacity-60 hover:opacity-100'
+              className='opacity-80 hover:opacity-100'
             />
           </Link>
 
-          <Link href={MONKEYS_TELEGRAM} className='group'>
+          <Link target='_blank' href={MONKEYS_TELEGRAM} className='group'>
             <Icon
               name='RiTelegram2'
               type='Fill'
-              className='opacity-60 hover:opacity-100'
+              className='opacity-80 hover:opacity-100'
             />
-          </Link>
-        </div>
-
-        <div className='mt-5 flex justify-center gap-6 sm:gap-10'>
-          <Link
-            href='/terms'
-            className='text-xs sm:text-sm hover:underline underline-offset-1'
-          >
-            Terms
-          </Link>
-          <Link
-            href='/privacy'
-            className='text-xs sm:text-sm hover:underline underline-offset-1'
-          >
-            Privacy
-          </Link>
-          <Link
-            href='/cookies'
-            className='text-xs sm:text-sm hover:underline underline-offset-1'
-          >
-            Cookies
           </Link>
         </div>
       </Container>

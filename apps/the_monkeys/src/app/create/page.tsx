@@ -30,9 +30,9 @@ const initial_data = {
   blocks: [
     {
       id: 'title',
-      type: 'title',
+      type: 'header',
       data: {
-        text: 'Title',
+        text: 'Untitled Post',
       },
     },
   ],
@@ -227,7 +227,7 @@ const CreatePage = () => {
         // Automatically clear saving status after 3 seconds if no response
         setTimeout(() => setIsSaving(false), 3000);
       }
-    }, 1000);
+    }, 2000);
 
     setSaveTimer(timer);
 
@@ -240,7 +240,7 @@ const CreatePage = () => {
 
   // Handle blog publishing
   const handlePublishStep = useCallback(async () => {
-    if (!data || data.blocks.length === 0) {
+    if (!data || data.blocks.length <= 2) {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -249,11 +249,11 @@ const CreatePage = () => {
       return;
     }
 
-    if (data.blocks[0].type !== 'title') {
+    if (data.blocks[0].type !== 'header' && data?.blocks[0].data.level !== 1) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Post should start with a title.',
+        description: 'Post should start with Heading 1.',
       });
       return;
     }

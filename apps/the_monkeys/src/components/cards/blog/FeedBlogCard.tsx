@@ -66,7 +66,7 @@ export const FeedBlogCard = ({
                 </Link>
               </div>
             ) : (
-              <p className='shrink-0 text-sm opacity-90'>Untagged</p>
+              <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
             )}
 
             <p className='font-medium text-sm opacity-80'>{' · '}</p>

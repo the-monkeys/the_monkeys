@@ -4,8 +4,8 @@
 
 :root {
   --blog-h1-text-size: 30px;
-  --blog-h2-text-size: 26px;
-  --blog-h3-text-size: 22px;
+  --blog-h2-text-size: 24px;
+  --blog-h3-text-size: 20px;
   --blog-p-text-size: 18px;
   --blog-list-text-size: 18px;
   --blog-quote-text-size: 18px;
@@ -16,9 +16,9 @@
 
 @media (max-width: 650px) {
   :root {
-    --blog-h1-text-size: 26px;
-    --blog-h2-text-size: 24px;
-    --blog-h3-text-size: 20px;
+    --blog-h1-text-size: 36px;
+    --blog-h2-text-size: 22px;
+    --blog-h3-text-size: 18px;
     --blog-p-text-size: 16px;
     --blog-list-text-size: 16px;
     --blog-quote-text-size: 16px;
@@ -70,6 +70,7 @@
 }
 
 h1.ce-header {
+  font-family: var(--font-dm_sans) !important;
   padding: 0 !important;
   margin: 0 0 15px !important;
   font-size: var(--blog-h1-text-size);
@@ -96,7 +97,7 @@ h3.ce-header {
   font-size: var(--blog-p-text-size);
   font-weight: 400;
   line-height: var(--blog-text-height) !important;
-  opacity: 0.92;
+  opacity: 0.95;
 }
 
 .codex-editor__redactor {

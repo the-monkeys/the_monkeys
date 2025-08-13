@@ -26,7 +26,7 @@ const HomeBanner = () => {
         <Button
           size='lg'
           variant='brand'
-          className='group px-6 rounded-full hover:text-text-dark hover:bg-opacity-100 shadow-md'
+          className='group px-6 rounded-full hover:text-text-dark hover:bg-opacity-100 shadow-sm'
           title='Create Post'
           asChild
         >

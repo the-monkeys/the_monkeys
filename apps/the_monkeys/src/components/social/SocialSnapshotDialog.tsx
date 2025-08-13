@@ -37,7 +37,7 @@ export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
         <Button
           size='sm'
           variant='brand'
-          className='!text-base rounded-sm hover:text-white hover:!bg-opacity-80'
+          className='!text-base rounded-none hover:text-white hover:!bg-opacity-85'
           title='Create Snapshot'
         >
           Create Snapshot

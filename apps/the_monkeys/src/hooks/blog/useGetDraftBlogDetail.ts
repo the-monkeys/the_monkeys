@@ -5,7 +5,10 @@ import useSWR from 'swr';
 const useGetDraftBlogDetail = (blogId: string | null) => {
   const { data, error, isLoading } = useSWR<Blog>(
     blogId ? `/blog/my-draft/${blogId}` : null,
-    authFetcherV2
+    authFetcherV2,
+    {
+      revalidateIfStale: false,
+    }
   );
 
   return {

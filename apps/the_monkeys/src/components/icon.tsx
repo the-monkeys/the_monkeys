@@ -55,6 +55,7 @@ export type IconName =
   | 'RiGoogle'
   | 'RiMeta'
   | 'RiWhatsapp'
+  | 'RiYoutube'
   | 'RiInstagram'
   | 'RiTelegram2'
   | 'RiLinkedin'

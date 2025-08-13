@@ -6,7 +6,7 @@ import { SocialSnapshotDialog } from './SocialSnapshotDialog';
 
 export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
   return (
-    <div className='relative border-l-2 border-brand-orange bg-gradient-to-l from-brand-orange/40 via-brand-orange/5 to-transparent overflow-hidden'>
+    <div className='relative bg-gradient-to-l from-brand-orange/60 from-[15%] to-transparent overflow-hidden'>
       <div className='w-full p-6 space-y-4'>
         <div className='space-y-1'>
           <h4 className='font-dm_sans font-semibold text-3xl sm:text-4xl leading-tight drop-shadow-sm'>
@@ -33,7 +33,7 @@ export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
           alt='Social Snapshot'
           width={100}
           height={100}
-          className='w-full h-full opacity-30 sm:opacity-70 object-cover'
+          className='w-full h-full opacity-30 sm:opacity-60 brightness-90 object-cover scale-110'
         />
       </div>
     </div>
@@ -42,8 +42,8 @@ export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
 
 export const SocialSnapshotCardCompact = ({ blog }: { blog: Blog }) => {
   return (
-    <div className='relative border-l-2 border-brand-orange bg-gradient-to-l from-brand-orange/20 via-brand-orange/5 to-transparent px-4 py-3 overflow-hidden'>
-      <div className='flex flex-col sm:flex-row justify-between sm:items-center gap-4'>
+    <div className='relative bg-gradient-to-l from-brand-orange/60 from-[15%] to-transparent pl-2 pr-4 py-3 overflow-hidden'>
+      <div className='flex justify-between items-center gap-4 flex-wrap'>
         <div className='space-y-1'>
           <h5 className='font-dm_sans font-semibold text-2xl leading-tight'>
             Social<span className='font-bold text-brand-orange'>.</span>{' '}
@@ -65,7 +65,7 @@ export const SocialSnapshotCardCompact = ({ blog }: { blog: Blog }) => {
           alt='Social Snapshot'
           width={100}
           height={100}
-          className='w-full h-full opacity-20 sm:opacity-50 object-cover scale-110'
+          className='w-full h-full opacity-30 sm:opacity-60 brightness-90 object-cover scale-125'
         />
       </div>
     </div>

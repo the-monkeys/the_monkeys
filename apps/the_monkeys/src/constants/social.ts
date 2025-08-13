@@ -5,6 +5,8 @@ export const LINKEDIN_URL = 'https://www.linkedin.com/in';
 export const GITHUB_URL = 'https://github.com';
 export const INSTAGRAM_URL = 'https://www.instagram.com';
 
+export const MONKEYS_YOUTUBE =
+  'https://youtube.com/@monkeys-com-co?si=fxtY1R_NdwzZDWkZ';
 export const MONKEYS_DISCORD = 'https://discord.gg/6fK9YuV8FV';
 export const MONKEYS_GITHUB = 'https://github.com/the-monkeys';
 export const MONKEYS_X = 'https://x.com/monkeys_com_co';

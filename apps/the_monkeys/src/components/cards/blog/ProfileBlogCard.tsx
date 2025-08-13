@@ -58,7 +58,11 @@ export const ProfileBlogCard = ({
 
       <div className='w-full flex flex-col justify-between gap-[10px]'>
         <div>
-          <UserInfoCardShowcase authorID={authorId} date={date} />
+          <UserInfoCardShowcase
+            authorID={authorId}
+            date={date}
+            isDraft={isDraft}
+          />
 
           {isDraft ? (
             <div className='w-full'>
@@ -89,7 +93,7 @@ export const ProfileBlogCard = ({
               </Link>
             </div>
           ) : (
-            <p className='shrink-0 text-sm opacity-90'>Untagged</p>
+            <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
           )}
 
           <div className='flex items-center gap-2'>

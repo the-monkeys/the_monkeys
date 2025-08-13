@@ -113,8 +113,8 @@ const BlogPage = () => {
       />
 
       <>
-        <div className='px-2 sm:px-4'>
-          <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-4 border-b-1 border-border-light/80 dark:border-border-dark/80'>
+        <div className='px-4'>
+          <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
             <p className='text-sm opacity-90'>
               {moment(date).format('MMM DD, yyyy')}
               {' / '}
@@ -123,7 +123,7 @@ const BlogPage = () => {
 
             <BlogHeading
               title={sanitizedBlogTitle || 'Untitled Post'}
-              className='py-2 font-dm_sans font-semibold text-[26px] sm:text-4xl !leading-tight text-center'
+              className='pt-1 pb-3 font-dm_sans font-semibold text-[26px] sm:text-4xl !leading-tight text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />

@@ -229,7 +229,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Handle blog publishing
   const handlePublishStep = useCallback(async () => {
-    if (!data || data.blocks.length === 0) {
+    if (!data || data.blocks.length <= 2) {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -238,11 +238,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       return;
     }
 
-    if (data.blocks[0].type !== 'title') {
+    if (data.blocks[0].type !== 'header' && data?.blocks[0].data.level !== 1) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Post should start with a title.',
+        description: 'Post should start with Heading 1.',
       });
       return;
     }

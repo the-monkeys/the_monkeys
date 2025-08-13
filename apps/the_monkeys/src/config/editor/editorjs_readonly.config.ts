@@ -12,9 +12,6 @@ export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',
   readOnly: true,
   tools: {
-    title: {
-      class: TitleBlockTool,
-    },
     header: {
       class: Header,
       config: {

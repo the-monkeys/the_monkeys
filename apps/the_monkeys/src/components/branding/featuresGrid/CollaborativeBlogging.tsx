@@ -2,13 +2,13 @@ import Icon from '@/components/icon';
 
 export const CollaborativeBlogging = () => {
   return (
-    <div className='group px-4 md:px-6 pt-4 md:pt-6 col-span-3 md:col-span-2 bg-background-light dark:bg-background-dark border-1 border-bor-light dark:border-border-dark rounded-xl overflow-hidden'>
+    <div className='group px-4 md:px-6 pt-4 md:pt-6 col-span-3 md:col-span-2 bg-background-light dark:bg-background-dark border-1 border-border-light/40 dark:border-border-dark/40 rounded-xl overflow-hidden'>
       <div className='space-y-1'>
         <h2 className='font-dm_sans font-medium text-base sm:text-lg md:text-xl'>
-          Collaborative Blogging
+          Collaborative Writing
         </h2>
 
-        <p className='text-xs sm:text-sm md:text-base opacity-80'>
+        <p className='text-xs sm:text-sm md:text-base opacity-90'>
           {`Invite co-authors to work on blogs together and create impactful
           stories. Writing is better when it's shared!`}
         </p>

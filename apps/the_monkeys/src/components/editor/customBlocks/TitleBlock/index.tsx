@@ -34,7 +34,7 @@ export default class TitleBlockTool implements BlockTool {
     this.input.contentEditable = 'true';
     this.input.innerText = this.data.text || '';
 
-    // prevent backspace or delte from removing block
+    // to prevent backspace or delete from removing block
     // this.input.addEventListener('keydown', (e) => {
     //   if (e.key === 'Backspace' || e.key === 'Delete') {
     //     e.stopPropagation();
@@ -45,11 +45,8 @@ export default class TitleBlockTool implements BlockTool {
   }
 
   save(blockContent: HTMLElement): TitleBlockData {
-    const titleBlock = blockContent.querySelector(
-      '.title-block-input'
-    ) as HTMLElement;
     return {
-      text: titleBlock?.innerText || 'Untitled Post',
+      text: blockContent?.innerText,
     };
   }
 

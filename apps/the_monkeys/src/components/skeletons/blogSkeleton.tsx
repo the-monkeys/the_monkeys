@@ -58,7 +58,7 @@ export const BlogPageSkeleton = () => {
       <Container className='py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
         <Skeleton className='h-3 w-28' />
 
-        <div className='w-full space-y-2'>
+        <div className='pb-2 w-full space-y-2'>
           <Skeleton className='h-9 w-full' />
           <Skeleton className='mx-auto h-9 w-1/2' />
         </div>

@@ -13,9 +13,6 @@ import Quote from '@editorjs/quote';
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'editorjs_editor-container',
   tools: {
-    title: {
-      class: TitleBlockTool,
-    },
     header: {
       class: Header,
       inlineToolbar: true,
