@@ -51,7 +51,7 @@ const FooterList = ({
 const Footer = () => {
   return (
     <footer className='mt-20 border-t-1 border-border-light dark:border-border-dark'>
-      <Container className='px-4 py-12 z-10'>
+      <Container className='px-[10px] py-12 z-10'>
         <div className='grid grid-cols-3 gap-14 lg:gap-4'>
           <div className='col-span-3 lg:col-span-1 space-y-3'>
             <Link
@@ -89,7 +89,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className='mt-16 flex justify-center items-center gap-x-4 gap-y-3 flex-wrap'>
+        <div className='mt-16 flex justify-center items-center gap-4 flex-wrap'>
           <div className='w-full mx-auto'>
             <p className='text-sm opacity-90 text-center'>connect with us</p>
           </div>

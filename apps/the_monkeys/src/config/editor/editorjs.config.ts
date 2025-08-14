@@ -18,7 +18,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       inlineToolbar: true,
       config: {
         levels: [1, 2, 3],
-        defaultLevel: 1,
+        defaultLevel: 2,
       },
     },
     paragraph: {

@@ -50,7 +50,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='pt-[10px] text-sm lg:text-base line-clamp-3 opacity-90'
+              className='pt-[10px] text-sm lg:text-base line-clamp-2 opacity-90'
             />
           )}
         </div>

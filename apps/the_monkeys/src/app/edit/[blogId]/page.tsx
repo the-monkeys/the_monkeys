@@ -361,7 +361,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
           {isSaving && (
             <div className='fixed left-1/2 -translate-x-1/2 bottom-[30px] p-2 z-50'>
-              <div className='px-3 py-1 border-1 border-yellow-500/80 bg-yellow-500/20 rounded-full shadow-sm flex items-center gap-1'>
+              <div className='px-3 py-1 border-1 border-yellow-500/80 bg-yellow-500/50 rounded-full shadow-sm flex items-center gap-1'>
                 <div
                   className={`inline-block size-2 rounded-full bg-yellow-500`}
                 />

@@ -72,14 +72,14 @@ export const UserInfoCardShowcase = ({
           </Link>
         )
       ) : (
-        <Skeleton className='h-4 w-28' />
+        <Skeleton className='h-3 w-28' />
       )}
 
       {!isDraft && (
         <>
           <span className='text-sm opacity-80'>{' — '}</span>
 
-          <p className='shrink-0 text-sm'>
+          <p className='shrink-0 text-sm opacity-90'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
         </>

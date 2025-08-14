@@ -32,7 +32,7 @@ export const AuthorInfoCard = ({
         'border-1 border-foreground-light/50 dark:border-foreground-dark/50 rounded-sm overflow-hidden'
       )}
     >
-      <div className='mb-[20px] p-4 w-full bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-2'>
+      <div className='mb-[20px] px-4 py-3 w-full bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-1'>
         <div className='flex items-center justify-end gap-[6px]'>
           {userData?.username !== session?.username && isSuccess && (
             <FollowButton username={userData?.username} />

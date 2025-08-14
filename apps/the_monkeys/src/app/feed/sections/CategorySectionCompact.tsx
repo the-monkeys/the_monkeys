@@ -23,7 +23,7 @@ const CategorySectionCompact = ({
   return (
     <div className='px-4 pt-6'>
       <div className='mb-10'>
-        <h5 className='mt-2 pb-3 font-dm_sans font-medium text-2xl break-words'>
+        <h5 className='mt-2 pb-3 font-dm_sans font-semibold text-2xl break-words'>
           {title}
         </h5>
 

@@ -37,7 +37,7 @@ export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
         <Button
           size='sm'
           variant='brand'
-          className='!text-base rounded-none hover:text-white hover:!bg-opacity-85'
+          className='!text-base rounded-none hover:text-white hover:!bg-opacity-60'
           title='Create Snapshot'
         >
           Create Snapshot
@@ -79,7 +79,11 @@ export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
           </div>
 
           <div className='flex-1'>
-            <SnapshotCanvas title={titleContent} imageURL={selectedImage} />
+            <SnapshotCanvas
+              id={blog?.blog_id}
+              title={titleContent}
+              imageURL={selectedImage}
+            />
           </div>
         </div>
       </DialogContent>

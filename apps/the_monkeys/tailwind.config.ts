@@ -20,7 +20,7 @@ const config = {
     },
     fontFamily: {
       dm_sans: ['var(--font-dm_sans)'],
-      ibm_plex_sans: ['var(--font-ibm_plex_sans)'],
+      inter: ['var(--font-inter)'],
     },
     extend: {
       colors: {
@@ -129,7 +129,7 @@ const config = {
       animation: {
         'scale-up': 'scale-up 0.2s ease-in',
         'icon-shake': 'icon-shake 0.6s ease-in-out',
-        'opacity-pulse': 'opacity-pulse 1s ease-in-out infinite',
+        'opacity-pulse': 'opacity-pulse 0.8s ease-in-out infinite',
         'loader-rotate': 'loader-rotate 0.8s linear infinite',
         'theme-spin': 'theme-spin 0.2s linear',
         'appear-up': 'appear-up .8s ease-out',

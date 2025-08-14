@@ -73,12 +73,14 @@ function wrapText(
 }
 
 export const SnapshotCanvas = ({
+  id,
   title,
   imageURL,
   logoURL = '/logo-brand.svg',
   width = 1080,
   height = 1350,
 }: {
+  id: string;
   title: string;
   imageURL: string;
   logoURL?: string;
@@ -143,7 +145,7 @@ export const SnapshotCanvas = ({
         ctx.fillRect(0, 0, width, height);
 
         // title section
-        ctx.font = '550 60px Helvetica, sans-serif';
+        ctx.font = '600 64px "DM Sans", sans-serif';
         ctx.shadowColor = '#000000';
         ctx.shadowBlur = 7;
         ctx.fillStyle = 'white';
@@ -153,7 +155,7 @@ export const SnapshotCanvas = ({
         const paddingX = 52;
         const paddingY = 32;
 
-        wrapText(ctx, title, width / 2, height - 250, width - paddingX * 2, 68);
+        wrapText(ctx, title, width / 2, height - 280, width - paddingX * 2, 74);
 
         ctx.save();
 
@@ -169,7 +171,7 @@ export const SnapshotCanvas = ({
           logoHeight
         );
 
-        ctx.font = '450 38px Helvetica, sans-serif';
+        ctx.font = '400 38px "DM Sans", sans-serif';
         ctx.fillStyle = 'white';
         ctx.textAlign = 'left';
         ctx.textBaseline = 'bottom';
@@ -194,7 +196,7 @@ export const SnapshotCanvas = ({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const link = document.createElement('a');
-    link.download = 'social-snapshot.png';
+    link.download = `social-snapshot-${id}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   };
@@ -224,7 +226,7 @@ export const SnapshotCanvas = ({
       </div>
 
       <Button
-        className='flex items-center gap-2 shadow-md'
+        className='flex rounded-full items-center gap-2 shadow-md'
         onClick={downloadImage}
         disabled={loading}
       >
