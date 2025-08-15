@@ -36,3 +36,8 @@ declare module '@editorjs/code' {
   import Code from '@editorjs/code';
   export = Code;
 }
+
+declare module '@editorjs/table' {
+  import Table from '@editorjs/table';
+  export = Table;
+}

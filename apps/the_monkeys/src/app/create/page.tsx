@@ -33,6 +33,7 @@ const initial_data = {
       type: 'header',
       data: {
         text: 'Untitled Post',
+        level: 1,
       },
     },
   ],

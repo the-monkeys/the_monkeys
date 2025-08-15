@@ -1,4 +1,3 @@
-import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import { API_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
 import CodeTool from '@editorjs/code';
@@ -9,6 +8,7 @@ import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
+import Table from '@editorjs/table';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'editorjs_editor-container',
@@ -38,7 +38,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     code: {
       class: CodeTool,
       config: {
-        placholder: '',
+        placeholder: 'Add your code snippet...',
       },
     },
     delimiter: Delimiter,
@@ -71,6 +71,14 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
             };
           },
         },
+      },
+    },
+    table: {
+      class: Table,
+      inlineToolbar: true,
+      config: {
+        rows: 3,
+        cols: 2,
       },
     },
   },
