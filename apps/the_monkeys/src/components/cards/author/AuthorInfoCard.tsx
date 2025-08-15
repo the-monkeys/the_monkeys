@@ -68,10 +68,12 @@ export const AuthorInfoCard = ({
 
       <div className='mt-[20px] px-4 pb-4 space-y-2'>
         {userData?.bio && (
-          <p className='py-2 leading-tight break-words'>{userData.bio}</p>
+          <p className='pt-2 leading-tight line-clamp-3 opacity-90'>
+            {userData.bio}
+          </p>
         )}
 
-        <div className='flex items-center gap-2'>
+        <div className='pt-2 flex items-center gap-2'>
           <p className='font-medium'>
             {user?.followers ? user.followers : '0'}{' '}
             <span className='font-normal opacity-80'>Followers</span>

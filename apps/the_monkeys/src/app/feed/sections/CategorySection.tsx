@@ -37,8 +37,8 @@ const CategorySection = ({
       {isLoading ? (
         <FeedCategorySectionSkeleton />
       ) : (
-        <div className='space-y-10 lg:space-y-12'>
-          <div className='grid grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8'>
+        <div className='space-y-8 sm:space-y-12 lg:space-y-14'>
+          <div className='grid grid-cols-2 lg:grid-cols-3 gap-8'>
             {blogs?.blogs.slice(0, 6).map((blog) => {
               return (
                 <div className='col-span-2 md:col-span-1' key={blog?.blog_id}>
@@ -48,7 +48,7 @@ const CategorySection = ({
             })}
           </div>
 
-          <div className='grid grid-cols-2 gap-6'>
+          <div className='grid grid-cols-2 gap-8'>
             {blogs?.blogs.slice(6, 12).map((blog) => {
               return (
                 <div className='col-span-2 lg:col-span-1' key={blog?.blog_id}>

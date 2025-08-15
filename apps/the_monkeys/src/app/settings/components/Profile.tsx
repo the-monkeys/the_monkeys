@@ -234,7 +234,7 @@ export const Profile = () => {
                         </div>
                       </PopoverTrigger>
 
-                      <PopoverContent className='w-auto'>
+                      <PopoverContent className='w-auto p-0'>
                         <Calendar
                           mode='single'
                           selected={

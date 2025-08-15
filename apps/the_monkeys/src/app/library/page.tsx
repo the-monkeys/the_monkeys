@@ -4,14 +4,7 @@ import useAuth from '@/hooks/auth/useAuth';
 
 import { Bookmarks } from './components/Bookmarks';
 
-const LibraryPage = ({
-  params,
-}: {
-  params: {
-    source: string;
-  };
-}) => {
-  const source = params.source;
+const LibraryPage = () => {
   const { data: session } = useAuth();
 
   return (

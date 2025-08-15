@@ -67,7 +67,7 @@ export const ProfileBlogCard = ({
           {isDraft ? (
             <div className='w-full'>
               <BlogTitle
-                className='pt-[6px] font-semibold text-lg leading-[1.4] line-clamp-2'
+                className='pt-2 font-semibold text-lg leading-[1.4] line-clamp-2'
                 title={titleContent || 'Untitled Post'}
               />
             </div>
@@ -81,7 +81,7 @@ export const ProfileBlogCard = ({
           )}
         </div>
 
-        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+        <div className='pt-3 w-full flex justify-between items-center gap-2'>
           {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link
@@ -97,9 +97,7 @@ export const ProfileBlogCard = ({
           )}
 
           <div className='flex items-center gap-2'>
-            {!isDraft && (
-              <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
-            )}
+            {!isDraft && <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />}
 
             {showModificationOptions && !isDraft && (
               <EditBlogDialog blogId={blogId} />

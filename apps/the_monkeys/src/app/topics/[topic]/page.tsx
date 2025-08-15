@@ -45,7 +45,7 @@ const TopicBlogsPage = ({
       <div className='flex justify-center gap-2 flex-wrap'>
         <TopicFollowButton topic={topic} />
 
-        <Button variant='secondary' className='rounded-full' asChild>
+        <Button variant='outline' className='rounded-full' asChild>
           <Link href='/topics/explore' target='_blank'>
             <Icon name='RiCompass' className='mr-1' />
             Explore

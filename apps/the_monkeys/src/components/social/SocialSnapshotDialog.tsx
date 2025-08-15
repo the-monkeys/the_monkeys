@@ -16,7 +16,13 @@ import { twMerge } from 'tailwind-merge';
 import { getCardContent } from '../blog/getBlogContent';
 import { SnapshotCanvas } from './SnapshotCanvas';
 
-export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
+export const SocialSnapshotDialog = ({
+  blog,
+  size = 'default',
+}: {
+  blog: Blog;
+  size?: 'default' | 'sm' | 'lg';
+}) => {
   const [selectedImage, setSelectedImage] = useState<string>('');
 
   const { titleContent } = getCardContent({ blog });
@@ -35,9 +41,9 @@ export const SocialSnapshotDialog = ({ blog }: { blog: Blog }) => {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          size='sm'
           variant='brand'
-          className='!text-base rounded-none hover:text-white hover:!bg-opacity-60'
+          size={size}
+          className='!text-base rounded-full hover:!bg-brand-orange/85 hover:!text-white'
           title='Create Snapshot'
         >
           Create Snapshot

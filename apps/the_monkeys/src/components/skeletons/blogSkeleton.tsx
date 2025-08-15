@@ -155,7 +155,7 @@ export const FeedSkeleton = () => {
       <div className='grid grid-cols-2 gap-8'>
         <TrendingCardLargeSkeleton className='col-span-2 lg:col-span-1' />
 
-        <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-6'>
+        <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-8'>
           <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
           <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
           <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
@@ -171,7 +171,7 @@ export const FeedSkeleton = () => {
         <div className='col-span-3 lg:col-span-1 space-y-10'>
           <TopicsContainerSkeleton />
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className='grid grid-cols-2 gap-6'>
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
@@ -188,7 +188,7 @@ export const FeedSkeleton = () => {
 
 export const FeedBlogCardListSkeleton = ({ count = 5 }: { count?: number }) => {
   return (
-    <div className='w-full space-y-6'>
+    <div className='w-full space-y-8'>
       {Array.from({ length: count }).map((_, index) => (
         <FeedBlogCardSkeleton key={index} />
       ))}
@@ -199,7 +199,7 @@ export const FeedBlogCardListSkeleton = ({ count = 5 }: { count?: number }) => {
 export const FeedCategorySectionSkeleton = () => {
   return (
     <div className='space-y-10'>
-      <div className='grid grid-cols-2 md:grid-cols-3 gap-6'>
+      <div className='grid grid-cols-2 md:grid-cols-3 gap-8'>
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
@@ -212,7 +212,7 @@ export const FeedCategorySectionSkeleton = () => {
 
 export const BlogPageRecommendationSkeleton = () => {
   return (
-    <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
+    <div className='grid grid-cols-2 lg:grid-cols-3 gap-8'>
       <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />

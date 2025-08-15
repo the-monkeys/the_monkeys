@@ -47,13 +47,13 @@ export const FeedBlogCard = ({
 
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='pt-[6px] font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
+              className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
         </div>
 
-        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+        <div className='pt-3 w-full flex justify-between items-center gap-2'>
           <div className='flex items-center gap-[6px]'>
             {blog?.tags.length ? (
               <div className='w-fit flex items-center gap-1'>
@@ -74,7 +74,9 @@ export const FeedBlogCard = ({
             <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
           </div>
 
-          {showBookmarkOption && <BookmarkButton blogId={blog?.blog_id} />}
+          {showBookmarkOption && (
+            <BookmarkButton blogId={blog?.blog_id} size={16} />
+          )}
         </div>
       </div>
     </div>

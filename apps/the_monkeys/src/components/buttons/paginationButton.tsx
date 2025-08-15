@@ -11,7 +11,8 @@ export const PaginationPrevButton = ({
 }) => {
   return (
     <Button
-      variant='secondary'
+      variant='outline'
+      size='lg'
       className='group flex items-center gap-1 rounded-full'
       onClick={onClick}
       disabled={disable}
@@ -34,7 +35,8 @@ export const PaginationNextButton = ({
 }) => {
   return (
     <Button
-      variant='secondary'
+      variant='outline'
+      size='lg'
       className='group flex items-center gap-1 rounded-full'
       onClick={onClick}
       disabled={disable}

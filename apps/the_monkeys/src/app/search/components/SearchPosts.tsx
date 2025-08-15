@@ -27,7 +27,7 @@ export const SearchPosts = ({ query }: { query: string }) => {
           No posts found for your search
         </p>
       ) : (
-        <div className='flex flex-col space-y-6 sm:space-y-8'>
+        <div className='flex flex-col space-y-8'>
           {blogs.map((blog) => {
             return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
           })}

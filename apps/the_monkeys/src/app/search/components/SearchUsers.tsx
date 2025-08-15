@@ -59,7 +59,7 @@ export const SearchUsers = ({ query }: { query: string }) => {
           No authors found for your search
         </p>
       ) : (
-        <div className='flex flex-col space-y-6 sm:space-y-8'>
+        <div className='flex flex-col space-y-6'>
           {users.map((user) => {
             return <SearchUserCard user={user} key={user?.username} />;
           })}

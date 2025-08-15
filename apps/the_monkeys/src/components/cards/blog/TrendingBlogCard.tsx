@@ -50,12 +50,12 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='pt-[10px] text-sm lg:text-base line-clamp-2 opacity-90'
+              className='pt-[10px] text-sm lg:text-base !leading-snug line-clamp-3 opacity-90'
             />
           )}
         </div>
 
-        <div className='pt-2 w-full flex items-center gap-2'>
+        <div className='pt-3 w-full flex items-center gap-2'>
           {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link
@@ -108,13 +108,13 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='pt-[6px] font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
+              className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
         </div>
 
-        <div className='pt-2 w-full flex items-center gap-2'>
+        <div className='pt-3 w-full flex items-center gap-2'>
           {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link

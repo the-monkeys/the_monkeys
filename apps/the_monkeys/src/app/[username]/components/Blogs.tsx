@@ -45,7 +45,7 @@ export const Blogs = ({
     );
 
   return (
-    <div className='flex flex-col gap-6'>
+    <div className='flex flex-col gap-8'>
       {isLoading ? (
         <FeedBlogCardListSkeleton count={PROFILE_POSTS_PER_PAGE} />
       ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (

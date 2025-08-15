@@ -40,7 +40,10 @@ const PageHeader = ({
 }) => {
   return (
     <div
-      className={twMerge(className, 'p-4 flex flex-col items-center space-y-2')}
+      className={twMerge(
+        className,
+        'px-4 py-8 flex flex-col items-center space-y-2'
+      )}
     >
       {children}
     </div>

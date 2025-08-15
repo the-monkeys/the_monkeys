@@ -26,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const SettingsPage = async () => {
   return (
-    <Container className='pb-12 space-y-4 md:space-y-6'>
+    <Container className='pb-12 !max-w-5xl space-y-6'>
       <PageHeader>
         <PageHeading heading='Settings' className='self-start' />
         <PageSubheading

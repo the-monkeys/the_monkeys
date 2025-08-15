@@ -21,12 +21,7 @@ export const PublishBlogDialog = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          variant='brand'
-          size='sm'
-          title='Publish Blog'
-          className='rounded-full'
-        >
+        <Button size='sm' title='Publish Blog' className='rounded-full'>
           Publish
         </Button>
       </DialogTrigger>

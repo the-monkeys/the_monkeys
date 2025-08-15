@@ -18,11 +18,11 @@ export const ContributeAndSponsorCard = ({
     >
       <div className='p-4 sm:p-6 bg-background-light dark:bg-background-dark space-y-6'>
         <div className='space-y-[6px]'>
-          <h4 className='font-dm_sans font-semibold text-2xl leading-tight drop-shadow-sm'>
+          <h4 className='font-dm_sans font-medium text-2xl'>
             Together we build better
           </h4>
 
-          <p className='text-sm'>
+          <p className='text-sm opacity-90'>
             Add features or sponsor to support sustainable growth and community
             impact.
           </p>

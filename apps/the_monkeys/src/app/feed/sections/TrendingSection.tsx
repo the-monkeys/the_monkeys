@@ -18,12 +18,12 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
   return (
     <div className='space-y-6'>
       <Container className='px-4 pt-8 md:pt-10'>
-        <div className='grid grid-cols-2 gap-6'>
-          <div className='col-span-2 lg:col-span-1'>
+        <div className='grid grid-cols-2 gap-8'>
+          <div className='col-span-2 [@media(min-width:1200px)]:col-span-1'>
             <TrendingBlogCardLarge blog={blogs[0]} />
           </div>
 
-          <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-6'>
+          <div className='col-span-2 [@media(min-width:1200px)]:col-span-1 grid grid-cols-2 gap-8'>
             {blogs.slice(1, 5).map((blog) => (
               <div className='col-span-2 sm:col-span-1' key={blog.blog_id}>
                 <TrendingBlogCardSmall blog={blog} />
@@ -35,7 +35,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
 
       <Container className='sm:pt-6 px-4 pb-6 grid grid-cols-3 gap-10 xl:gap-16'>
         <div className='col-span-3 lg:col-span-2'>
-          <div className='flex flex-col gap-6'>
+          <div className='flex flex-col gap-8'>
             {blogs.slice(5, 15).map((blog) => {
               return <FeedBlogCard blog={blog} key={blog.blog_id} />;
             })}
@@ -67,7 +67,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
               Authors making headlines
             </h6>
 
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-2 gap-6'>
               {recommendedUsers.map((user, index) => {
                 return (
                   <div

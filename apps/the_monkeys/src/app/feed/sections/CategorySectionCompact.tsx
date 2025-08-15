@@ -36,7 +36,7 @@ const CategorySectionCompact = ({
       {isLoading ? (
         <FeedBlogCardListSkeleton />
       ) : (
-        <div className='flex flex-col gap-5'>
+        <div className='flex flex-col gap-8'>
           {blogs?.blogs.slice(0, 5).map((blog) => {
             return (
               <div className='col-span-2 lg:col-span-1' key={blog?.blog_id}>

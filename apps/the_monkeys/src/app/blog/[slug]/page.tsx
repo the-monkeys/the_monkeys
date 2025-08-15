@@ -12,10 +12,7 @@ import {
   BlogPageSkeleton,
   EditorBlockSkeleton,
 } from '@/components/skeletons/blogSkeleton';
-import {
-  SocialSnapshotCard,
-  SocialSnapshotCardCompact,
-} from '@/components/social/SocialSnapshot';
+import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
@@ -123,7 +120,7 @@ const BlogPage = () => {
 
             <BlogHeading
               title={sanitizedBlogTitle || 'Untitled Post'}
-              className='pt-1 pb-3 font-dm_sans font-semibold text-[26px] sm:text-4xl !leading-tight text-center'
+              className='pt-1 pb-3 font-dm_sans font-semibold text-[28px] sm:text-4xl !leading-tight text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />
@@ -132,8 +129,6 @@ const BlogPage = () => {
 
         <div className='p-4'>
           <Container className='max-w-3xl'>
-            <SocialSnapshotCardCompact blog={blog} />
-
             <div className='px-1 pb-4 overflow-hidden'>
               <Editor key={blogId} data={blogDataWithoutHeading()} />
             </div>
