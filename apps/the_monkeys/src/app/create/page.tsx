@@ -7,16 +7,22 @@ import { useRouter } from 'next/navigation';
 
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { Loader } from '@/components/loader';
+import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
-  loading: () => <Loader />,
+  loading: () => (
+    <div className='w-full'>
+      <EditorBlockSkeleton />
+    </div>
+  ),
 });
 
 const initial_data = {
@@ -28,9 +34,6 @@ const initial_data = {
       data: {
         text: 'Untitled Post',
         level: 1,
-        config: {
-          placeholder: 'Pen your thoughts...',
-        },
       },
     },
   ],
@@ -225,7 +228,7 @@ const CreatePage = () => {
         // Automatically clear saving status after 3 seconds if no response
         setTimeout(() => setIsSaving(false), 3000);
       }
-    }, 1000);
+    }, 2000);
 
     setSaveTimer(timer);
 
@@ -238,11 +241,32 @@ const CreatePage = () => {
 
   // Handle blog publishing
   const handlePublishStep = useCallback(async () => {
-    if (!data || data.blocks.length === 0 || data.blocks[0].type !== 'header') {
+    if (!data || data.blocks.length <= 2) {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Blog must have a title and content.',
+        description: 'Post must contain a title and content.',
+      });
+      return;
+    }
+
+    if (data.blocks[0].type !== 'header' && data?.blocks[0].data.level !== 1) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Post should start with Heading 1.',
+      });
+      return;
+    }
+
+    const titleBlockCount = data.blocks.filter(
+      (block) => block.type === 'title'
+    ).length;
+    if (titleBlockCount > 1) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Only one title block is allowed in the post.',
       });
       return;
     }
@@ -254,7 +278,7 @@ const CreatePage = () => {
       toast({
         variant: 'success',
         title: 'Blog Published Successfully',
-        description: 'Your blog is now live!',
+        description: 'Your post is now live!',
       });
       router.push(`/${username}`);
     } catch (error) {
@@ -271,21 +295,30 @@ const CreatePage = () => {
 
   return (
     <div className='relative min-h-screen'>
-      <div className='p-2 flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-2'>
-        <div className='flex items-center gap-2 text-sm'>
-          <span
-            className={`inline-block w-2 h-2 rounded-full ${
-              isConnected ? 'bg-green-500' : 'bg-yellow-500'
+      <div className='pt-4 pb-3 flex flex-col sm:flex-row justify-between items-center gap-2'>
+        <div
+          className={twMerge(
+            'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',
+            isConnected
+              ? 'border-alert-green/80 bg-alert-green/20'
+              : 'border-alert-red/80 bg-alert-red/20'
+          )}
+        >
+          <div
+            className={`inline-block size-2 rounded-full ${
+              isConnected ? 'bg-alert-green' : 'bg-alert-red'
             }`}
           />
-          <span>{connectionStatus}</span>
+
+          <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>
         </div>
 
-        <div className='flex gap-2'>
+        <div className='flex items-center gap-2'>
           <ChooseTopicDialog
             blogTopics={blogTopics}
             setBlogTopics={setBlogTopics}
           />
+
           <PublishBlogDialog
             topics={blogTopics}
             isPublishing={blogPublishLoading}
@@ -294,19 +327,26 @@ const CreatePage = () => {
         </div>
       </div>
 
-      <div className='py-3 min-h-screen'>
-        <Suspense fallback={<Loader />}>
+      <div className='py-3'>
+        <Suspense
+          fallback={
+            <div className='p-6 flex itemx-center'>
+              <Loader size={40} className='text-brand-orange' />
+            </div>
+          }
+        >
           {data && editorConfig && (
             <Editor data={data} onChange={setData} config={editorConfig} />
           )}
         </Suspense>
       </div>
-      {/* saving */}
+
       {isSaving && (
-        <div className='fixed left-1/2 -translate-x-1/2 bottom-4 p-2 z-50'>
-          <div className='px-3 py-1.5 bg-foreground text-background rounded-full shadow-md flex items-center gap-2'>
-            <div className='w-2 h-2 rounded-full bg-green-400 animate-pulse' />
-            <span className='text-sm'>Saving...</span>
+        <div className='fixed left-1/2 -translate-x-1/2 bottom-[30px] p-2 z-50'>
+          <div className='px-3 py-1 border-1 border-yellow-500/80 bg-yellow-500/50 rounded-full shadow-sm flex items-center gap-1'>
+            <div className={`inline-block size-2 rounded-full bg-yellow-500`} />
+
+            <p className='text-xs sm:text-sm'>Saving...</p>
           </div>
         </div>
       )}

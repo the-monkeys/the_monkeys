@@ -110,8 +110,8 @@ const BlogPage = () => {
       />
 
       <>
-        <div className='px-2 sm:px-4'>
-          <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-4 border-b-1 border-border-light/80 dark:border-border-dark/80'>
+        <div className='px-4'>
+          <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
             <p className='text-sm opacity-90'>
               {moment(date).format('MMM DD, yyyy')}
               {' / '}
@@ -120,22 +120,22 @@ const BlogPage = () => {
 
             <BlogHeading
               title={sanitizedBlogTitle || 'Untitled Post'}
-              className='py-2 font-dm_sans font-semibold text-[26px] sm:text-4xl !leading-tight text-center'
+              className='pt-1 pb-3 font-dm_sans font-semibold text-[28px] sm:text-4xl !leading-tight text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />
           </Container>
         </div>
 
-        <div className='px-4'>
-          <Container className='max-w-3xl space-y-4 '>
-            <div className='px-1 overflow-hidden'>
+        <div className='p-4'>
+          <Container className='max-w-3xl'>
+            <div className='px-1 pb-4 overflow-hidden'>
               <Editor key={blogId} data={blogDataWithoutHeading()} />
             </div>
 
             <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
 
-            <div className='pt-8 space-y-12'>
+            <div className='pt-10 space-y-12'>
               <SocialSnapshotCard blog={blog} />
 
               <div className='space-y-4'>
@@ -148,17 +148,17 @@ const BlogPage = () => {
           </Container>
         </div>
 
-        <div className='px-4 mt-16'>
+        <div className='px-4 mt-12'>
           <Container className='max-w-5xl space-y-12'>
+            <ContributeAndSponsorCard />
+
             <div className='space-y-4'>
-              <h6 className='pb-2 font-dm_sans font-semibold'>
+              <h6 className='pb-2 font-dm_sans font-medium text-lg'>
                 Explore similar content
               </h6>
 
               <BlogRecommendations blogId={blogId} topics={tags} />
             </div>
-
-            <ContributeAndSponsorCard />
           </Container>
         </div>
       </>

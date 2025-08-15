@@ -14,7 +14,7 @@ const SocialCard = ({
 }) => {
   return (
     <div className='col-span-2 sm:col-span-1 p-4 flex flex-col justify-between bg-foreground-light/25 dark:bg-foreground-dark/25 border-1 border-border-light dark:border-border-dark rounded-md space-y-4'>
-      <Icon name={icon} className='opacity-80' />
+      <Icon name={icon} size={24} />
 
       <div className='space-y-1'>
         <LinksRedirectArrow link={link}>

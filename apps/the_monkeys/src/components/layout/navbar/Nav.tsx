@@ -51,7 +51,7 @@ const Nav = ({
         prevScrollpos === 0 && 'border-none'
       )}
     >
-      <Container className='w-full px-4 py-[10px] flex items-center justify-between gap-4'>
+      <Container className='w-full px-[10px] py-[10px] flex items-center justify-between gap-4'>
         <div className='flex items-center gap-[10px] sm:gap-4'>
           <Link href={FEED_ROUTE} className='group flex items-center gap-[6px]'>
             <div className='w-9 flex justify-center items-center group-hover:opacity-85'>
@@ -59,7 +59,7 @@ const Nav = ({
             </div>
 
             <div className='hidden md:block pt-1'>
-              <p className='font-dm_sans font-[450] tracking-tight text-[25px]'>
+              <p className='font-dm_sans font-medium tracking-tight text-[25px]'>
                 Monkeys
               </p>
             </div>

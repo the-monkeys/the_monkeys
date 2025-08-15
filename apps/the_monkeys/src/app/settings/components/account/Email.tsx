@@ -1,5 +1,3 @@
-'use client';
-
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { updateEmailSchema } from '@/lib/schema/settings';

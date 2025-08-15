@@ -18,7 +18,7 @@ export const Section: FC<SectionProps> = ({
       <h3
         className={twMerge(
           isDanger && 'text-alert-red',
-          'p-1 w-full border-b-1 border-foreground-light dark:border-foreground-dark font-dm_sans text-base md:text-lg'
+          'p-1 font-medium w-full border-b-1 border-border-light dark:border-border-dark font-dm_sans text-base md:text-lg'
         )}
       >
         {sectionTitle}

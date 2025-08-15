@@ -39,7 +39,7 @@ const fetchBlogData = async (id: string): Promise<Blog | null> => {
 
     return await res.json();
   } catch (error) {
-    console.error(`Failed to fetch blog data for ID: ${id}`, error);
+    console.error(`Failed to fetch post data for ID: ${id}`, error);
     return null;
   }
 };

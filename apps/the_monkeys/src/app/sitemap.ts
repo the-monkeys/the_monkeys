@@ -5,7 +5,7 @@ import { baseUrl } from '@/constants/baseUrl';
 import { FEED_ROUTE } from '@/constants/routeConstants';
 import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
 
-// Fetch blog posts from the API using fetch
+// Fetch posts from the API using fetch
 async function fetchBlogPosts(): Promise<MetaBlog[]> {
   try {
     const response = await fetch(
@@ -19,7 +19,7 @@ async function fetchBlogPosts(): Promise<MetaBlog[]> {
     );
 
     if (!response.ok) {
-      console.error(`Failed to fetch blog posts: ${response.statusText}`);
+      console.error(`Failed to fetch posts: ${response.statusText}`);
       return [];
     }
 
@@ -28,7 +28,7 @@ async function fetchBlogPosts(): Promise<MetaBlog[]> {
 
     return data?.blogs || [];
   } catch (error) {
-    console.error('Error fetching blog posts:', error);
+    console.error('Error fetching posts:', error);
     return [];
   }
 }

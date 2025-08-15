@@ -13,12 +13,12 @@ const HomeBanner = () => {
         <BackgroundBanner />
       </div>
 
-      <h1 className='pb-2 md:pb-4 font-arvo text-[30px] sm:text-[40px] md:text-[50px] drop-shadow-sm text-center leading-10 animate-appear-up'>
+      <h1 className='pb-2 md:pb-4 font-dm_sans font-medium text-[30px] sm:text-[40px] md:text-[50px] drop-shadow-sm text-center leading-10 animate-appear-up'>
         Inspire, Inform, Innovate
       </h1>
 
-      <p className='font-dm_sans font-light text-base sm:text-lg md:text-xl text-center opacity-80 animate-appear-up'>
-        Blog together and write content that connect, inspire, and leave a
+      <p className='text-base sm:text-lg md:text-xl text-center opacity-90 animate-appear-up'>
+        Come together and write content that connect, inspire, and leave a
         lasting impact.
       </p>
 
@@ -26,8 +26,8 @@ const HomeBanner = () => {
         <Button
           size='lg'
           variant='brand'
-          className='group px-6 rounded-full hover:text-text-dark hover:bg-opacity-100 shadow-md'
-          title='Create Blog'
+          className='group px-6 rounded-full hover:text-text-dark hover:bg-opacity-100 shadow-sm'
+          title='Create Post'
           asChild
         >
           <Link href={`${CREATE_ROUTE}`}>

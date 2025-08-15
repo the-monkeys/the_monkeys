@@ -16,7 +16,7 @@ export default function Register() {
     <>
       <div className='flex justify-end'>
         <LinksRedirectArrow link='/feed'>
-          <p className='font-dm_sans font-medium'>Monkeys Showcase</p>
+          <p className='font-dm_sans font-medium'>Monkeys Feed</p>
         </LinksRedirectArrow>
       </div>
 

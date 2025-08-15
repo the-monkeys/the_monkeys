@@ -1,6 +1,6 @@
 import { API_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
-import Code from '@editorjs/code';
+import CodeTool from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -8,6 +8,7 @@ import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
+import Table from '@editorjs/table';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'editorjs_editor-container',
@@ -17,14 +18,14 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       inlineToolbar: true,
       config: {
         levels: [1, 2, 3],
-        defaultLevel: 1,
+        defaultLevel: 2,
       },
     },
     paragraph: {
       class: Paragraph,
       inlineToolbar: true,
       config: {
-        placeholder: 'Type something',
+        placeholder: '',
       },
     },
     list: {
@@ -34,25 +35,24 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
         defaultStyle: 'unordered',
       },
     },
-    delimiter: Delimiter,
     code: {
-      class: Code,
+      class: CodeTool,
       config: {
-        placeholder: 'Type code',
+        placeholder: 'Add your code snippet...',
       },
     },
+    delimiter: Delimiter,
     quote: {
       class: Quote,
       inlineToolbar: true,
       config: {
-        quotePlaceholder: 'Type something',
-        captionPlaceholder: 'Type something',
+        quotePlaceholder: '',
       },
     },
     image: {
       class: Image,
       config: {
-        captionPlaceholder: 'Type something',
+        captionPlaceholder: '',
         uploader: {
           async uploadByFile(file: File) {
             const formData = new FormData();
@@ -71,6 +71,14 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
             };
           },
         },
+      },
+    },
+    table: {
+      class: Table,
+      inlineToolbar: true,
+      config: {
+        rows: 3,
+        cols: 2,
       },
     },
   },

@@ -104,7 +104,7 @@ const PublishModal = ({
   return (
     <Modal setModal={setModal}>
       <ModalHeader>
-        <h1 className='font-arvo text-2xl sm:text-3xl text-center'>
+        <h1 className='font-dm_sans text-2xl sm:text-3xl text-center'>
           {publishStep?.heading}
         </h1>
 

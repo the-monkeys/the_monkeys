@@ -77,7 +77,7 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
           </div>
         </Tabs>
 
-        {/* TODO: add section to showcase bookmarks and notificatoins for logged in users */}
+        {/* TODO: add section to showcase bookmarks, notification, word cloud etc. */}
       </div>
     </>
   );

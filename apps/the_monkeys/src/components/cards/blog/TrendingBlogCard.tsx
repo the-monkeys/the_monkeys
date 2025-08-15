@@ -28,7 +28,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[200px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='h-[210px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -42,7 +42,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='pt-2 font-semibold text-[20px] sm:text-3xl leading-snug hover:underline underline-offset-2 line-clamp-2'
+              className='pt-2 font-semibold text-[20px] sm:text-3xl leading-[1.4] sm:leading-[1.34] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
@@ -50,12 +50,12 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='pt-[10px] text-sm lg:text-base line-clamp-3 opacity-90'
+              className='pt-[10px] text-sm lg:text-base !leading-snug line-clamp-3 opacity-90'
             />
           )}
         </div>
 
-        <div className='pt-2 w-full flex items-center gap-2'>
+        <div className='pt-3 w-full flex items-center gap-2'>
           {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link
@@ -67,13 +67,13 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
               </Link>
             </div>
           ) : (
-            <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
+            <p className='shrink-0 text-sm opacity-90'>Untagged</p>
           )}
 
-          <p className='font-medium opacity-80'>{' · '}</p>
+          <p className='font-medium text-sm opacity-80'>{' · '}</p>
 
           <div className='flex items-center gap-[6px]'>
-            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
+            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='group h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='h-[210px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -108,13 +108,13 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
+              className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
         </div>
 
-        <div className='pt-2 w-full flex items-center gap-2'>
+        <div className='pt-3 w-full flex items-center gap-2'>
           {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link
@@ -126,13 +126,13 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
               </Link>
             </div>
           ) : (
-            <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
+            <p className='shrink-0 text-sm opacity-90'>Untagged</p>
           )}
 
-          <p className='font-medium opacity-80'>{' · '}</p>
+          <p className='font-medium text-sm opacity-80'>{' · '}</p>
 
           <div className='flex items-center gap-[6px]'>
-            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
+            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
           </div>
         </div>
       </div>

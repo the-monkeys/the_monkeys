@@ -48,7 +48,7 @@ export const ProfileBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[200px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[210px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -58,26 +58,30 @@ export const ProfileBlogCard = ({
 
       <div className='w-full flex flex-col justify-between gap-[10px]'>
         <div>
-          <UserInfoCardShowcase authorID={authorId} date={date} />
+          <UserInfoCardShowcase
+            authorID={authorId}
+            date={date}
+            isDraft={isDraft}
+          />
 
           {isDraft ? (
             <div className='w-full'>
               <BlogTitle
-                className='pt-[6px] font-semibold text-lg leading-normal line-clamp-2'
+                className='pt-2 font-semibold text-lg leading-[1.4] line-clamp-2'
                 title={titleContent || 'Untitled Post'}
               />
             </div>
           ) : (
             <Link href={blogURL} className='w-full'>
               <BlogTitle
-                className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
+                className='pt-[6px] font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
                 title={titleContent || 'Untitled Post'}
               />
             </Link>
           )}
         </div>
 
-        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+        <div className='pt-3 w-full flex justify-between items-center gap-2'>
           {blog?.tags.length ? (
             <div className='w-fit flex items-center gap-1'>
               <Link

@@ -1,0 +1,16 @@
+.title-block-input {
+  margin-bottom: 10px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-weight: 600;
+  font-family: var(--font-dm_sans) !important;
+  font-size: 26px;
+  line-height: 1.25;
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  .title-block-input {
+    font-size: 2.25rem;
+  }
+}

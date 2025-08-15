@@ -1,5 +1,3 @@
-'use client';
-
 import { Loader } from '@/components/loader';
 import { updateUsername as updateUsernameSchema } from '@/lib/schema/settings';
 import { IUser } from '@/services/models/user';

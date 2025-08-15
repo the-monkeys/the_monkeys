@@ -22,7 +22,7 @@ const buttonVariants = cva(
 				ghost: "hover:bg-foreground-light dark:hover:bg-foreground-dark",
 				link: "underline-offset-4 hover:underline decoration-1",
 				brand:
-					"bg-brand-orange text-text-dark light border-2 border-brand-orange hover:text-brand-orange hover:bg-opacity-0",
+					"bg-brand-orange text-white light border-2 border-brand-orange hover:text-brand-orange hover:bg-opacity-0",
 			},
 			size: {
 				default: "h-9 px-4 py-2",

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Arvo, DM_Sans, IBM_Plex_Sans } from 'next/font/google';
+import { DM_Sans, Inter } from 'next/font/google';
 import Script from 'next/script';
 
 import Footer from '@/components/layout/footer';
@@ -13,17 +13,10 @@ import { QueryClientMount } from './query-client-mount';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 
-const arvo = Arvo({
-  weight: ['400', '700'],
-  subsets: ['latin'],
-  variable: '--font-arvo',
-  display: 'swap',
-});
-
-const ibm_plex_sans = IBM_Plex_Sans({
+const inter = Inter({
   weight: ['300', '400', '500', '600', '700'],
   subsets: ['latin'],
-  variable: '--font-ibm_plex_sans',
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -82,6 +75,7 @@ const schema = {
     name: 'Monkeys',
     url: LIVE_URL,
   },
+
   knowsAbout: [
     'Collaborative Blogging',
     'Content Writing',
@@ -89,6 +83,7 @@ const schema = {
     'Topic Clustering',
   ],
 };
+
 const RootLayout = async ({
   children,
 }: Readonly<{
@@ -109,7 +104,7 @@ const RootLayout = async ({
         {/* <AdSense pId='4687427997504601' /> */}
       </head>
       <body
-        className={`${arvo.variable} ${dm_sans.variable} ${ibm_plex_sans.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
+        className={`${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
         <Toaster />
         <SWRProvider>

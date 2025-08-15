@@ -33,7 +33,7 @@ export const FeedBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[200px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[210px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -47,13 +47,13 @@ export const FeedBlogCard = ({
 
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='pt-[6px] font-semibold text-lg leading-normal hover:underline underline-offset-2 line-clamp-2'
+              className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
         </div>
 
-        <div className='pt-2 w-full flex justify-between items-center gap-2'>
+        <div className='pt-3 w-full flex justify-between items-center gap-2'>
           <div className='flex items-center gap-[6px]'>
             {blog?.tags.length ? (
               <div className='w-fit flex items-center gap-1'>
@@ -69,12 +69,14 @@ export const FeedBlogCard = ({
               <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
             )}
 
-            <p className='font-medium opacity-80'>{' · '}</p>
+            <p className='font-medium text-sm opacity-80'>{' · '}</p>
 
-            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />
+            <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
           </div>
 
-          {showBookmarkOption && <BookmarkButton blogId={blog?.blog_id} />}
+          {showBookmarkOption && (
+            <BookmarkButton blogId={blog?.blog_id} size={16} />
+          )}
         </div>
       </div>
     </div>

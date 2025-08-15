@@ -65,7 +65,7 @@ export const SearchUsers = ({
     <>
       {!users || users === null ? (
         <p className='text-sm opacity-80 text-center'>
-          No users found for your search
+          No authors found for your search
         </p>
       ) : (
         <div className='flex flex-col gap-2'>

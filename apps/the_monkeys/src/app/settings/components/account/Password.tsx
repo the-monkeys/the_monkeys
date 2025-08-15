@@ -1,5 +1,3 @@
-'use client';
-
 import { useRouter } from 'next/navigation';
 
 import PasswordInput from '@/components/input/PasswordInput';

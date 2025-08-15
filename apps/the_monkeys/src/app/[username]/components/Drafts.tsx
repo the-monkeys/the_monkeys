@@ -42,7 +42,7 @@ export const Drafts = ({
     );
 
   return (
-    <div className='flex flex-col gap-6'>
+    <div className='flex flex-col gap-8'>
       {isLoading ? (
         <FeedBlogCardListSkeleton count={PROFILE_DRAFTS_PER_PAGE} />
       ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (

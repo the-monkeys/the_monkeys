@@ -1,10 +1,7 @@
 import Link from 'next/link';
 
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
-import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
-import { SearchResultsAuthorSkeleton } from '@/components/skeletons/searchSkeleton';
 import { UserRecommendationCardSkeleton } from '@/components/skeletons/userSkeleton';
-import { RecommendedUserCard } from '@/components/user/userInfo';
 import { useGetSearchUser } from '@/hooks/user/useGetSearchUser';
 import { SearchUser } from '@/services/search/searchTypes';
 
@@ -59,10 +56,10 @@ export const SearchUsers = ({ query }: { query: string }) => {
     <>
       {!users || users === null ? (
         <p className='py-2 text-sm opacity-90 text-center'>
-          No users found for your search
+          No authors found for your search
         </p>
       ) : (
-        <div className='flex flex-col space-y-6 sm:space-y-8'>
+        <div className='flex flex-col space-y-6'>
           {users.map((user) => {
             return <SearchUserCard user={user} key={user?.username} />;
           })}

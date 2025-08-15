@@ -24,21 +24,21 @@ const CategorySection = ({
   return (
     <Container className='px-4 pt-6'>
       <div className='mb-10'>
-        <h5 className='mt-2 py-1 font-dm_sans font-medium text-2xl break-words'>
+        <h5 className='mt-2 pb-3 font-dm_sans font-semibold text-2xl break-words'>
           {title}
         </h5>
 
         <div className='flex items-end'>
           <div className='w-[80px] h-1 bg-brand-orange' />
-          <div className='flex-grow h-[1px] bg-border-light dark:bg-border-dark' />
+          <div className='flex-grow h-[1px] bg-border-light/60 dark:bg-border-dark/60' />
         </div>
       </div>
 
       {isLoading ? (
         <FeedCategorySectionSkeleton />
       ) : (
-        <div className='space-y-10 lg:space-y-12'>
-          <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
+        <div className='space-y-8 sm:space-y-12 lg:space-y-14'>
+          <div className='grid grid-cols-2 lg:grid-cols-3 gap-8'>
             {blogs?.blogs.slice(0, 6).map((blog) => {
               return (
                 <div className='col-span-2 md:col-span-1' key={blog?.blog_id}>
@@ -48,7 +48,7 @@ const CategorySection = ({
             })}
           </div>
 
-          <div className='grid grid-cols-2 gap-6'>
+          <div className='grid grid-cols-2 gap-8'>
             {blogs?.blogs.slice(6, 12).map((blog) => {
               return (
                 <div className='col-span-2 lg:col-span-1' key={blog?.blog_id}>

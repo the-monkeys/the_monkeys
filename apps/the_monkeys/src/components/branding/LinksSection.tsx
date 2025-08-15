@@ -7,15 +7,14 @@ import Icon from '../icon';
 export const LinksSection = () => {
   return (
     <div className='mx-auto max-w-5xl px-4 grid grid-cols-2 gap-4 md:gap-6'>
-      <div className='col-span-2 md:col-span-1 p-4 flex flex-col bg-foreground-light/25 dark:bg-foreground-dark/25 border-1 border-foreground-light dark:border-foreground-dark rounded-xl'>
+      <div className='col-span-2 md:col-span-1 p-4 flex flex-col bg-foreground-light/25 dark:bg-foreground-dark/25 border-1 border-border-light dark:border-border-dark rounded-xl'>
         <h2 className='pb-2 font-dm_sans font-medium text-xl sm:text-2xl'>
-          Monkeys{' '}
-          <span className='font-dm_sans text-brand-orange'>Showcase</span>
+          Monkeys <span className='font-dm_sans text-brand-orange'>Feed</span>
         </h2>
 
         <p className='mb-4 sm:mb-6 text-sm md:text-base opacity-80'>
-          Get a blend of the latest blogs and impactful news stories, all
-          curated in one place for your convenience.
+          Get a blend of the latest posts and trending topic, all curated in one
+          place for your convenience.
         </p>
 
         <Button
@@ -23,7 +22,7 @@ export const LinksSection = () => {
           className='group w-fit pl-6 pr-4 self-end rounded-full'
           asChild
         >
-          <Link href='/feed' title='Monkeys Showcase'>
+          <Link href='/feed' title='Monkeys Feed'>
             Discover
             <Icon
               name='RiArrowRight'
@@ -34,7 +33,7 @@ export const LinksSection = () => {
         </Button>
       </div>
 
-      <div className='col-span-2 md:col-span-1 px-3 sm:px-4 py-4 sm:py-5 flex flex-col bg-foreground-light/25 dark:bg-foreground-dark/25 border-1 border-foreground-light dark:border-foreground-dark rounded-xl'>
+      <div className='col-span-2 md:col-span-1 px-3 sm:px-4 py-4 sm:py-5 flex flex-col bg-foreground-light/25 dark:bg-foreground-dark/25 border-1 border-border-light dark:border-border-dark rounded-xl'>
         <h2 className='pb-2 font-dm_sans font-medium text-xl sm:text-2xl'>
           Diverse <span className='font-dm_sans text-brand-orange'>Topics</span>
         </h2>

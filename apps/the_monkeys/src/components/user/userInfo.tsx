@@ -47,33 +47,43 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
 export const UserInfoCardShowcase = ({
   authorID,
   date,
+  isDraft = false,
 }: {
   authorID?: string;
   date?: number | string;
+  isDraft?: boolean;
 }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(authorID);
-
-  if (isLoading) return <Skeleton className='mb-1 h-4 w-36' />;
-
-  if (isError) {
-    return null;
-  }
 
   const userData = user?.user;
 
   return (
     <div className='flex items-center gap-1 flex-wrap'>
-      <Link
-        href={`/${userData?.username}`}
-        className='shrink-0 text-sm hover:underline'
-      >
-        {userData?.first_name} {userData?.last_name ? userData?.last_name : ''}
-      </Link>
+      {!isLoading ? (
+        isError ? (
+          <p className='shrink-0 text-sm opacity-90 italic'>Author Unknown</p>
+        ) : (
+          <Link
+            href={`/${userData?.username}`}
+            className='shrink-0 text-sm hover:underline'
+          >
+            {userData?.first_name}{' '}
+            {userData?.last_name ? userData?.last_name : ''}
+          </Link>
+        )
+      ) : (
+        <Skeleton className='h-3 w-28' />
+      )}
 
-      <p className='shrink-0 text-sm'>
-        {' / '}
-        {moment(date).format('MMM DD, YYYY')}
-      </p>
+      {!isDraft && (
+        <>
+          <span className='text-sm opacity-80'>{' — '}</span>
+
+          <p className='shrink-0 text-sm opacity-90'>
+            {moment(date).format('MMM DD, YYYY')}
+          </p>
+        </>
+      )}
     </div>
   );
 };
@@ -91,20 +101,23 @@ export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
 
   return (
     <div className='flex items-center overflow-x-hidden gap-[6px]'>
-      <p className='text-sm'>by</p>
+      <p className='text-sm opacity-90'>by</p>
 
-      <div className='shrink-0 p-[2px]'>
-        <ProfileFrame className='size-6 shadow-sm'>
+      <div className='shrink-0'>
+        <ProfileFrame className='size-7 shadow-sm'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
       </div>
 
-      <Link
-        href={`/${userData?.username}`}
-        className='font-medium text-sm md:text-base hover:underline'
-      >
-        {userData?.first_name} {userData?.last_name ? userData?.last_name : ''}
-      </Link>
+      <div>
+        <Link
+          href={`/${userData?.username}`}
+          className='font-medium text-sm md:text-base hover:underline'
+        >
+          {userData?.first_name}{' '}
+          {userData?.last_name ? userData?.last_name : ''}
+        </Link>
+      </div>
     </div>
   );
 };

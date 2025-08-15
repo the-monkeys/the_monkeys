@@ -48,6 +48,7 @@ export const ProfileImage = ({ username }: { username?: string }) => {
         width={32}
         height={32}
         className='w-full h-full object-cover'
+        priority
       />
     );
 
