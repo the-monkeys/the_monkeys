@@ -14,7 +14,7 @@ import { IUser } from '@/services/models/user';
 import { twMerge } from 'tailwind-merge';
 
 import Container from '../Container';
-import WSNotificationDropdown from './WSNotificationDropdown';
+import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
 const Nav = ({
@@ -74,7 +74,9 @@ const Nav = ({
 
         <div className='flex items-center space-x-[6px]'>
           <div className='flex items-center gap-[2px]'>
-            {!isAuthLoading && session && <WSNotificationDropdown />}
+            {!isAuthLoading && session && (
+              <NotificationDropdown session={session} />
+            )}
             <ThemeSwitch />
           </div>
 

@@ -5,7 +5,11 @@ import useSWR from 'swr';
 export const useGetAllNotifications = () => {
   const { data, error, isLoading } = useSWR<allNotificationsResponse>(
     `/notification/notifications`,
-    authFetcher
+    authFetcher,
+    {
+      revalidateOnFocus: true,
+      refreshInterval: 300000,
+    }
   );
 
   return {
