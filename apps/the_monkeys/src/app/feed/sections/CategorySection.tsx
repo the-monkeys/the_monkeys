@@ -41,20 +41,16 @@ const CategorySection = ({
           <div className='grid grid-cols-2 lg:grid-cols-3 gap-8'>
             {blogs?.blogs.slice(0, 6).map((blog) => {
               return (
-                <div className='col-span-2 md:col-span-1' key={blog?.blog_id}>
+                <div className='col-span-2 sm:col-span-1' key={blog?.blog_id}>
                   <TrendingBlogCardSmall blog={blog} />
                 </div>
               );
             })}
           </div>
 
-          <div className='grid grid-cols-2 gap-8'>
-            {blogs?.blogs.slice(6, 12).map((blog) => {
-              return (
-                <div className='col-span-2 lg:col-span-1' key={blog?.blog_id}>
-                  <FeedBlogCard blog={blog} />
-                </div>
-              );
+          <div className='max-w-4xl space-y-8'>
+            {blogs?.blogs.slice(6, 11).map((blog) => {
+              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
             })}
           </div>
         </div>

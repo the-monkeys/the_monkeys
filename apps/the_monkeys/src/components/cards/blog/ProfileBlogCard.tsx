@@ -6,6 +6,7 @@ import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { DeleteBlogDialog } from '@/components/blog/actions/DeleteBlogDialog';
 import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
 import {
+  BlogDescription,
   BlogImage,
   BlogPlaceholderImage,
   BlogTitle,
@@ -35,6 +36,7 @@ export const ProfileBlogCard = ({
   const date = blog?.published_time;
 
   const titleContent = purifyHTMLString(blog?.title);
+  const descriptionContent = purifyHTMLString(blog?.first_paragraph);
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
@@ -48,7 +50,7 @@ export const ProfileBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[210px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[200px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -74,10 +76,17 @@ export const ProfileBlogCard = ({
           ) : (
             <Link href={blogURL} className='w-full'>
               <BlogTitle
-                className='pt-[6px] font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
+                className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
                 title={titleContent || 'Untitled Post'}
               />
             </Link>
+          )}
+
+          {descriptionContent !== '' && (
+            <BlogDescription
+              description={descriptionContent}
+              className='pt-[6px] text-sm line-clamp-1 opacity-90'
+            />
           )}
         </div>
 

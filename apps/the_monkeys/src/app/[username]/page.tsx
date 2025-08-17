@@ -53,7 +53,7 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
     <>
       <ProfileSection paramsUser={params.username} user={user} />
 
-      <div className='max-w-5xl'>
+      <div className='max-w-4xl'>
         <Tabs defaultValue='posts' className='space-y-6'>
           <h6 className='pb-1 font-dm_sans font-medium text-xl truncate'>
             Latest from{' '}

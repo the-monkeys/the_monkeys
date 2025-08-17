@@ -28,7 +28,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[210px] md:h-[360px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='h-[200px] md:h-[360px] w-full bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -50,7 +50,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='pt-[10px] text-sm lg:text-base !leading-snug line-clamp-3 opacity-90'
+              className='pt-[6px] text-sm lg:text-base !leading-snug line-clamp-3 opacity-90'
             />
           )}
         </div>
@@ -87,6 +87,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
   const date = blog?.published_time;
 
   const titleContent = purifyHTMLString(blog?.title);
+  const descriptionContent = purifyHTMLString(blog?.first_paragraph);
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
@@ -94,7 +95,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='group h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[210px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='h-[200px] sm:h-[180px] w-full bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -108,10 +109,17 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
+              className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-1 sm:line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
+
+          {descriptionContent !== '' && (
+            <BlogDescription
+              description={descriptionContent}
+              className='pt-[6px] text-sm line-clamp-2 opacity-90'
+            />
+          )}
         </div>
 
         <div className='pt-3 w-full flex items-center gap-2'>

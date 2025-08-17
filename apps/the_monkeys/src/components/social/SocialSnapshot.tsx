@@ -6,7 +6,7 @@ import { SocialSnapshotDialog } from './SocialSnapshotDialog';
 
 export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
   return (
-    <div className='relative border-1 border-brand-orange bg-brand-orange/20 rounded-3xl overflow-hidden'>
+    <div className='relative border-2 border-brand-orange bg-brand-orange/10 rounded-2xl overflow-hidden'>
       <div className='w-full p-4 sm:p-6 flex items-center justify-between gap-4 flex-wrap'>
         <div className='space-y-2'>
           <h4 className='font-dm_sans font-semibold text-3xl sm:text-4xl leading-tight drop-shadow-sm'>
@@ -27,13 +27,14 @@ export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
         </div>
       </div>
 
-      <div className='absolute top-0 right-[20px] sm:right-[32px] h-full w-fit -z-20'>
+      <div className='absolute top-0 right-[10px] sm:right-[32px] h-full w-fit -z-20'>
         <Image
           src={'/social-snapshot-background.svg'}
           alt='Social Snapshot'
           width={100}
           height={100}
-          className='w-full h-full opacity-20 object-cover scale-125 sm:scale-150'
+          className='w-full h-full opacity-20 object-cover scale-110 sm:scale-150'
+          unoptimized
         />
       </div>
     </div>
