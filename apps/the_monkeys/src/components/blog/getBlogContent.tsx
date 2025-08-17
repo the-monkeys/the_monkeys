@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { twMerge } from 'tailwind-merge';
@@ -103,12 +105,15 @@ export const BlogImage = ({
   image: string;
   className?: string;
 }) => {
-  // need to optimize this further
   return (
-    <img
+    <Image
       src={image}
       alt={title}
+      loading='lazy'
+      height='500'
+      width='800'
       className={twMerge(className, 'h-full w-full object-cover object-center')}
+      quality={100}
     />
   );
 };
@@ -120,12 +125,14 @@ export const BlogPlaceholderImage = ({
   title: string;
   className?: string;
 }) => {
-  // need to optimize this further
   return (
-    <img
+    <Image
       src={placeholderImage.src}
       alt={title}
-      className={twMerge(className, 'h-full w-full object-cover object-top')}
+      height='500'
+      width='800'
+      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      quality={100}
     />
   );
 };

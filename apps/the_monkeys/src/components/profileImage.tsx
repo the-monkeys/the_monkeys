@@ -13,6 +13,7 @@ export const DefaultProfile = () => {
       height={100}
       width={100}
       className='w-full h-full object-cover'
+      unoptimized
     />
   );
 };
@@ -39,7 +40,7 @@ export const ProfileFrame = ({
 export const ProfileImage = ({ username }: { username?: string }) => {
   const { imageUrl, isLoading, isError } = useProfileImage(username);
 
-  if (isLoading)
+  if (isLoading || isError || imageUrl === '')
     return (
       <Image
         src='/default-profile.svg'
@@ -48,19 +49,7 @@ export const ProfileImage = ({ username }: { username?: string }) => {
         width={32}
         height={32}
         className='w-full h-full object-cover'
-        priority
-      />
-    );
-
-  if (isError || imageUrl === '')
-    return (
-      <Image
-        src='/default-profile.svg'
-        alt={`Author: ${username}`}
-        title={`Author: ${username}`}
-        width={32}
-        height={32}
-        className='w-full h-full object-cover'
+        unoptimized
       />
     );
 
@@ -69,9 +58,11 @@ export const ProfileImage = ({ username }: { username?: string }) => {
       src={imageUrl}
       alt={`Author: ${username}`}
       title={`Author: ${username}`}
-      width={32}
-      height={32}
+      width={50}
+      height={50}
       className='w-full h-full object-cover'
+      loading='lazy'
+      quality={100}
     />
   );
 };

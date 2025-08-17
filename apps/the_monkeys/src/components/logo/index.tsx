@@ -9,6 +9,7 @@ const Logo = () => {
       height={24}
       width={88}
       className='h-full w-full'
+      unoptimized
     />
   );
 };
