@@ -47,7 +47,8 @@ const Nav = ({
     <header
       className={twMerge(
         'sticky top-0 left-0 border-b-1 border-border-light/80 dark:border-border-dark/80 bg-background-light dark:bg-background-dark shadow-sm z-30',
-        `top-${top}`
+        `top-${top}`,
+        prevScrollpos === 0 && 'border-none shadow-none'
       )}
     >
       <Container className='w-full px-[10px] py-3 flex items-center justify-between gap-4'>

@@ -1,4 +1,7 @@
+import Link from 'next/link';
+
 import { PROFILE_TOPICS_SHOW_MAX_COUNT } from '@/constants/topics';
+import { Badge } from '@the-monkeys/ui/atoms/badge';
 
 import { TopicLabelLink, TopicLabelLinkProfile } from './topicLabels';
 
@@ -36,6 +39,9 @@ export const TopicLinksContainerCompact = ({
       {topics.slice(0, PROFILE_TOPICS_SHOW_MAX_COUNT).map((topic, index) => (
         <TopicLabelLinkProfile key={`${topic}_${index}`} topic={topic} />
       ))}
+      {topics.length > PROFILE_TOPICS_SHOW_MAX_COUNT && (
+        <p className='p-1 text-sm opacity-90'>more...</p>
+      )}
     </div>
   );
 };

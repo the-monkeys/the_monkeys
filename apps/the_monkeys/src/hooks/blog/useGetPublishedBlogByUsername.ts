@@ -15,7 +15,8 @@ const useGetPublishedBlogByUsername = ({
     `blog/user/${username}?limit=${limit}&offset=${offset}`,
     fetcherV2,
     {
-      revalidateOnFocus: false,
+      revalidateOnFocus: true,
+      revalidateIfStale: false,
       refreshInterval: 0,
     }
   );

@@ -42,7 +42,7 @@ export const AuthorProfileCard = ({
     : 'Not available';
 
   return (
-    <div className='flex flex-col gap-3'>
+    <div className='flex flex-col gap-[10px]'>
       <div className='flex items-end gap-3 flex-wrap'>
         <ProfileFrame className='size-[80px] ring-2 ring-border-light/40 dark:ring-border-dark/40'>
           <ProfileImage username={user?.username} />
@@ -109,7 +109,7 @@ export const AuthorProfileCard = ({
         )}
       </div>
 
-      <div className='mt-4 flex items-center flex-wrap gap-2'>
+      <div className='mt-3 flex items-center flex-wrap gap-2'>
         {user?.twitter && (
           <SocialLinkButton>
             <Link

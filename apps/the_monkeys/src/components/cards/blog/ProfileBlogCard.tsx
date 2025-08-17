@@ -91,19 +91,29 @@ export const ProfileBlogCard = ({
         </div>
 
         <div className='pt-3 w-full flex justify-between items-center gap-2'>
-          {blog?.tags.length ? (
-            <div className='w-fit flex items-center gap-1'>
-              <Link
-                href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-                target='_blank'
-                className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
-              >
-                {blog?.tags[0]}
-              </Link>
-            </div>
-          ) : (
-            <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
-          )}
+          <div className='flex items-center gap-[6px]'>
+            {blog?.tags.length ? (
+              <div className='w-fit flex items-center gap-1'>
+                <Link
+                  href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                  target='_blank'
+                  className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
+                >
+                  {blog?.tags[0]}
+                </Link>
+              </div>
+            ) : (
+              <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
+            )}
+
+            {!isDraft && (
+              <>
+                <p className='font-medium text-sm opacity-80'>{' · '}</p>
+
+                <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
+              </>
+            )}
+          </div>
 
           <div className='flex items-center gap-2'>
             {!isDraft && <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />}
