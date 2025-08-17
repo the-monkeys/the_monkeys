@@ -109,7 +109,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-1 sm:line-clamp-2'
+              className='pt-2 font-semibold text-lg leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
@@ -117,7 +117,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='pt-[6px] text-sm line-clamp-2 opacity-90'
+              className='pt-[6px] text-sm line-clamp-1 sm:line-clamp-2 opacity-90'
             />
           )}
         </div>
