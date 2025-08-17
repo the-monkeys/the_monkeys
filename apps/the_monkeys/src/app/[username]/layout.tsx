@@ -5,6 +5,8 @@ import { API_URL, API_URL_V2 } from '@/constants/api';
 import { baseUrl } from '@/constants/baseUrl';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 
+import monkeyslogoImg from '../../../public/logo-brand.svg';
+
 interface ProfileLayoutProps {
   children: React.ReactNode;
   params: { username: string };
@@ -34,41 +36,6 @@ const fetchUserData = async (
   }
 };
 
-const fetchUserProfileImage = async (
-  username: string
-): Promise<string | null> => {
-  try {
-    const response = await fetch(
-      `${API_URL}/files/profile/${username}/profile`
-    );
-
-    if (!response.ok) {
-      return null;
-    }
-
-    // Check if the response is a blob (image)
-    const contentType = response.headers.get('content-type');
-    if (contentType?.startsWith('image/')) {
-      // Create a blob URL from the response
-      const blob = await response.blob();
-      return URL.createObjectURL(blob);
-    }
-
-    // If not a blob, try to get the direct URL
-    return `${API_URL_V2}/files/profile/${username}/profile`;
-  } catch (error) {
-    console.error(`Failed to fetch profile image for user: ${username}`, error);
-    return null;
-  }
-};
-
-// Helper function to revoke blob URLs when they're no longer needed
-const revokeBlobUrl = (url: string) => {
-  if (url.startsWith('blob:')) {
-    URL.revokeObjectURL(url);
-  }
-};
-
 const truncateDescription = (text: string, maxLength: number): string => {
   if (!text) return '';
   return text.length > maxLength
@@ -80,7 +47,6 @@ export async function generateMetadata({
   params,
 }: ProfileLayoutProps): Promise<Metadata> {
   const username = params.username;
-  const defaultImage = `${baseUrl}/default-profile.jpg`;
 
   try {
     const userData = await fetchUserData(username);
@@ -95,7 +61,7 @@ export async function generateMetadata({
       };
     }
 
-    const profileImageUrl = await fetchUserProfileImage(username);
+    const profileImageUrl = monkeyslogoImg;
     const fullName = `${userData.first_name} ${userData.last_name}`;
     const description =
       userData.bio ||
@@ -108,9 +74,6 @@ export async function generateMetadata({
     const twitterHandle = userData.twitter
       ? userData.twitter.replace('https://twitter.com/', '').replace('@', '')
       : undefined;
-
-    // Use the profile image URL or fallback to default
-    const imageUrl = profileImageUrl || defaultImage;
 
     const metadata: Metadata = {
       title: `${fullName} (@${username}) | Monkeys`,
@@ -126,7 +89,7 @@ export async function generateMetadata({
         type: 'profile',
         images: [
           {
-            url: imageUrl,
+            url: profileImageUrl,
             width: 1200,
             height: 630,
             alt: `${fullName}'s profile picture`,
@@ -137,7 +100,7 @@ export async function generateMetadata({
         card: 'summary_large_image',
         title: `${fullName} (@${username})`,
         description: truncateDescription(description, 160),
-        images: [imageUrl],
+        images: [profileImageUrl],
         creator: twitterHandle ? `@${twitterHandle}` : undefined,
       },
       robots: {
