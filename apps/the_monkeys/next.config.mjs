@@ -12,6 +12,19 @@ const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
+  images: {
+    qualities: [80, 100],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'monkeys.support',
+      },
+      {
+        protocol: 'https',
+        hostname: 'dev.monkeys.support',
+      },
+    ],
+  },
   async redirects() {
     return [
       {

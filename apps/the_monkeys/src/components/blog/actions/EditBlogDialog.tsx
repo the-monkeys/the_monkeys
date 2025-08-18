@@ -62,10 +62,10 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
         setOpen(false);
       }
 
-      mutate(`blog/all/${username}`, undefined, {
+      mutate(`blog/user/${username}`, undefined, {
         revalidate: true,
       });
-      mutate(`/blog/my-drafts`);
+      mutate(`/blog/in-my-draft`);
 
       if (edit) {
         handleEdit(blogId);

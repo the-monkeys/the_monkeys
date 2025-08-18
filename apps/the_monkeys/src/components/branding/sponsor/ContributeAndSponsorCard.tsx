@@ -10,13 +10,8 @@ export const ContributeAndSponsorCard = ({
   className?: string;
 }) => {
   return (
-    <div
-      className={twMerge(
-        className,
-        'p-[1px] bg-gradient-to-r from-blue-500/80 to-pink-500/80 overflow-hidden'
-      )}
-    >
-      <div className='p-4 sm:p-6 bg-background-light dark:bg-background-dark space-y-6'>
+    <div className={twMerge(className, 'rounded-2xl overflow-hidden')}>
+      <div className='p-4 sm:p-6 bg-gradient-to-r from-blue-500/20 to-pink-500/20 space-y-6'>
         <div className='space-y-[6px]'>
           <h4 className='font-dm_sans font-medium text-2xl'>
             Together we build better
@@ -31,7 +26,7 @@ export const ContributeAndSponsorCard = ({
         <div className='w-full flex-1 flex gap-3 flex-wrap'>
           <Button
             variant='outline'
-            className='flex-1 rounded-sm !border-blue-500/50 hover:!bg-blue-500/25'
+            className='flex-1 rounded-full !border-blue-500/50 hover:!bg-blue-500/25'
             asChild
           >
             <Link
@@ -45,7 +40,7 @@ export const ContributeAndSponsorCard = ({
 
           <Button
             variant='outline'
-            className='flex-1 rounded-sm !border-pink-500/50 hover:!bg-pink-500/25'
+            className='flex-1 rounded-full !border-pink-500/50 hover:!bg-pink-500/25'
             asChild
           >
             <Link

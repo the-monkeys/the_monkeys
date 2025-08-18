@@ -4,6 +4,7 @@ import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import {
+  BlogDescription,
   BlogImage,
   BlogPlaceholderImage,
   BlogTitle,
@@ -26,6 +27,7 @@ export const FeedBlogCard = ({
   const date = blog?.published_time;
 
   const titleContent = purifyHTMLString(blog?.title);
+  const descriptionContent = purifyHTMLString(blog?.first_paragraph);
   const imageContent = blog?.first_image;
 
   const blogSlug = generateSlug(titleContent);
@@ -33,7 +35,7 @@ export const FeedBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[210px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[200px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -51,6 +53,13 @@ export const FeedBlogCard = ({
               title={titleContent || 'Untitled Post'}
             />
           </Link>
+
+          {descriptionContent !== '' && (
+            <BlogDescription
+              description={descriptionContent}
+              className='pt-[6px] text-sm line-clamp-1 opacity-90'
+            />
+          )}
         </div>
 
         <div className='pt-3 w-full flex justify-between items-center gap-2'>

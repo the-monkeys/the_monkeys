@@ -14,7 +14,7 @@ import { IUser } from '@/services/models/user';
 import { twMerge } from 'tailwind-merge';
 
 import Container from '../Container';
-import WSNotificationDropdown from './WSNotificationDropdown';
+import NotificationDropdown from './NotificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
 const Nav = ({
@@ -46,12 +46,12 @@ const Nav = ({
   return (
     <header
       className={twMerge(
-        'sticky top-0 left-0 border-b-1 border-border-light/80 dark:border-border-dark/80 bg-background-light dark:bg-background-dark z-30',
+        'sticky top-0 left-0 border-b-1 border-border-light/80 dark:border-border-dark/80 bg-background-light dark:bg-background-dark shadow-sm z-30',
         `top-${top}`,
-        prevScrollpos === 0 && 'border-none'
+        prevScrollpos === 0 && 'border-none shadow-none'
       )}
     >
-      <Container className='w-full px-[10px] py-[10px] flex items-center justify-between gap-4'>
+      <Container className='w-full px-[10px] py-3 flex items-center justify-between gap-4'>
         <div className='flex items-center gap-[10px] sm:gap-4'>
           <Link href={FEED_ROUTE} className='group flex items-center gap-[6px]'>
             <div className='w-9 flex justify-center items-center group-hover:opacity-85'>
@@ -74,7 +74,9 @@ const Nav = ({
 
         <div className='flex items-center space-x-[6px]'>
           <div className='flex items-center gap-[2px]'>
-            {!isAuthLoading && session && <WSNotificationDropdown />}
+            {!isAuthLoading && session && (
+              <NotificationDropdown session={session} />
+            )}
             <ThemeSwitch />
           </div>
 

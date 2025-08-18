@@ -33,8 +33,8 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
         </div>
       </Container>
 
-      <Container className='sm:pt-6 px-4 pb-6 grid grid-cols-3 gap-10 xl:gap-16'>
-        <div className='col-span-3 lg:col-span-2'>
+      <Container className='sm:pt-6 px-4 pb-6 grid grid-cols-3 gap-12'>
+        <div className='col-span-3 lg:col-span-2 max-w-4xl'>
           <div className='flex flex-col gap-8'>
             {blogs.slice(5, 15).map((blog) => {
               return <FeedBlogCard blog={blog} key={blog.blog_id} />;
@@ -48,7 +48,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
           </div>
 
           <div className='col-span-2 md:col-span-1 flex flex-col gap-6'>
-            <h6 className='px-1 pb-2 font-dm_sans font-semibold border-b-1 border-border-light dark:border-border-dark'>
+            <h6 className='px-1 pb-2 font-dm_sans font-medium text-lg border-b-1 border-border-light dark:border-border-dark'>
               Topics on the rise
             </h6>
 
@@ -63,7 +63,7 @@ const TrendingSection = ({ blogs }: { blogs: MetaBlog[] }) => {
           </div>
 
           <div className='col-span-2 md:col-span-1 flex flex-col gap-6'>
-            <h6 className='px-1 pb-2 font-dm_sans font-semibold border-b-1 border-border-light dark:border-border-dark'>
+            <h6 className='px-1 pb-2 font-dm_sans font-medium text-lg border-b-1 border-border-light dark:border-border-dark'>
               Authors making headlines
             </h6>
 

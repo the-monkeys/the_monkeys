@@ -5,11 +5,8 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { ProfileSectionSkeleton } from '@/components/skeletons/profileSkeleton';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
-import { Tabs, TabsContent } from '@the-monkeys/ui/atoms/tabs';
 
 import { Blogs } from './components/Blogs';
-import { Drafts } from './components/Drafts';
-import { NavigationTabs } from './components/NavigationTabs';
 import { ProfileSection } from './components/profile/ProfileSection';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
@@ -53,31 +50,15 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
     <>
       <ProfileSection paramsUser={params.username} user={user} />
 
-      <div className='max-w-5xl'>
-        <Tabs defaultValue='posts' className='space-y-6'>
-          <h6 className='pb-1 font-dm_sans font-medium text-xl truncate'>
-            Latest from{' '}
-            <span className='font-dm_sans font-semibold'>
-              {user?.first_name} {user?.last_name ? user?.last_name : ''}
-            </span>
-          </h6>
+      <div className='max-w-4xl space-y-8'>
+        <h6 className='pb-1 font-dm_sans font-medium text-xl truncate'>
+          Latest from{' '}
+          <span className='font-dm_sans font-semibold'>
+            {user?.first_name} {user?.last_name ? user?.last_name : ''}
+          </span>
+        </h6>
 
-          {data?.username === params.username ? (
-            <NavigationTabs username={params.username} user={data} />
-          ) : null}
-
-          <div className='w-full'>
-            <TabsContent className='w-full' value='posts'>
-              <Blogs username={params.username} user={data} />
-            </TabsContent>
-
-            <TabsContent className='w-full' value='drafts'>
-              <Drafts username={params.username} user={data} />
-            </TabsContent>
-          </div>
-        </Tabs>
-
-        {/* TODO: add section to showcase bookmarks, notification, word cloud etc. */}
+        <Blogs username={params.username} user={data} />
       </div>
     </>
   );

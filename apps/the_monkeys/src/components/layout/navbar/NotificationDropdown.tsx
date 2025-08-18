@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
+import { IUser } from '@/services/models/user';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   DropdownMenu,
@@ -12,9 +12,9 @@ import {
   DropdownMenuTrigger,
 } from '@the-monkeys/ui/atoms/dropdown-menu';
 import { Separator } from '@the-monkeys/ui/atoms/separator';
+import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
-const NotificationDropdown = () => {
-  const { status } = useSession();
+const NotificationDropdown = ({ session }: { session: IUser }) => {
   const { notifications, isLoading, isError } = useGetAllNotifications();
   const [open, setOpen] = useState<boolean>(false);
 
@@ -39,7 +39,7 @@ const NotificationDropdown = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      {status === 'unauthenticated' ? (
+      {!session ? (
         <DropdownMenuContent className='mt-3 mr-2 w-[250px] sm:w-[350px]'>
           <p className='py-4 px-2 text-sm opacity-80 text-center'>
             Login to view notifications.
@@ -47,7 +47,7 @@ const NotificationDropdown = () => {
         </DropdownMenuContent>
       ) : (
         <DropdownMenuContent className='mt-3 mr-2 w-[260px] sm:w-[360px] p-2 flex flex-col'>
-          <h3 className='px-1 font-dm_sans font-medium text-base sm:text-lg'>
+          <h3 className='px-1 font-dm_sans font-medium text-lg'>
             Notifications{' '}
             <span className='text-sm sm:text-base text-brand-orange'>
               {unreadNotifications?.length || '0'}
@@ -56,31 +56,47 @@ const NotificationDropdown = () => {
 
           <Separator className='mt-1 mb-2' />
 
-          <div className='mb-2 space-y-1'>
-            {unreadNotifications?.length ? (
-              unreadNotifications.slice(0, 5).map((notificationItem) => {
-                return (
-                  <div
-                    key={notificationItem.id}
-                    className='px-3 py-2 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-md'
-                  >
-                    <p className='flex-1 text-xs sm:text-sm capitalize break-words line-clamp-2'>
-                      {notificationItem?.message}
-                    </p>
-                  </div>
-                );
-              })
-            ) : (
-              <p className='py-4 text-sm sm:text-base text-center opacity-80'>
-                No notifications yet.
+          {isLoading ? (
+            <div className='mb-3 flex flex-col gap-1'>
+              <Skeleton className='w-full h-8' />
+              <Skeleton className='w-full h-8' />
+              <Skeleton className='w-full h-8' />
+              <Skeleton className='w-full h-8' />
+              <Skeleton className='w-full h-8' />
+            </div>
+          ) : isError ? (
+            <div className='px-2 py-4'>
+              <p className='py-4 text-sm text-center opacity-90'>
+                Error fetching notifications.
               </p>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className='mb-3 space-y-1'>
+              {unreadNotifications?.length ? (
+                unreadNotifications.slice(0, 5).map((notificationItem) => {
+                  return (
+                    <div
+                      key={notificationItem.id}
+                      className='px-3 py-2 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-md'
+                    >
+                      <p className='flex-1 text-xs sm:text-sm capitalize break-words line-clamp-2'>
+                        {notificationItem?.message}
+                      </p>
+                    </div>
+                  );
+                })
+              ) : (
+                <p className='py-4 text-sm sm:text-base text-center opacity-80'>
+                  No notifications yet.
+                </p>
+              )}
+            </div>
+          )}
 
           <Button
-            variant='secondary'
             size='sm'
             onClick={() => setOpen(false)}
+            disabled={isLoading || isError}
             asChild
           >
             <Link href='/notifications'>

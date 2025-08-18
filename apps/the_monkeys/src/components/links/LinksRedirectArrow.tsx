@@ -9,6 +9,7 @@ import Icon from '../icon';
 type LinksRedirectProps = {
   position?: 'Left' | 'Right';
   link: string;
+  target?: '_blank' | '_self';
   className?: string;
   children?: React.ReactNode;
 };
@@ -16,11 +17,16 @@ type LinksRedirectProps = {
 const LinksRedirectArrow: FC<LinksRedirectProps> = ({
   position = 'Right',
   link,
+  target = '_self',
   className,
   children,
 }) => {
   return (
-    <Link href={link} className={twMerge(className, 'group flex items-center')}>
+    <Link
+      target={target}
+      href={link}
+      className={twMerge(className, 'group flex items-center')}
+    >
       {position === 'Left' && (
         <Icon
           name='RiArrowLeft'

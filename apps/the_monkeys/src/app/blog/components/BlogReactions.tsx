@@ -58,11 +58,11 @@ export const BlogReactionsContainer = ({
 
   return (
     <div className='sticky left-0 bottom-[20px] mx-auto w-full flex items-center gap-2 z-20'>
-      <div className='flex-1 px-4 py-2 bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/60 dark:ring-border-dark/60'>
+      <div className='flex-1 px-[14px] py-[6px] bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/60 dark:ring-border-dark/60'>
         <BlogReactions blogId={blogId} />
       </div>
 
-      <div className='shrink-0 px-3 py-2 bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/60 dark:ring-border-dark/60'>
+      <div className='shrink-0 px-[10px] py-[6px] bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/60 dark:ring-border-dark/60'>
         <BlogShareDialog blogURL={url} size={20} />
       </div>
     </div>
