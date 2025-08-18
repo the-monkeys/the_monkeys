@@ -50,7 +50,7 @@ export const ProfileBlogCard = ({
 
   return (
     <div className='group flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <div className='shrink-0 h-[200px] sm:h-[130px] w-full sm:w-[200px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[200px] sm:h-[140px] w-full sm:w-[210px] bg-foreground-light dark:bg-foreground-dark rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -116,8 +116,6 @@ export const ProfileBlogCard = ({
           </div>
 
           <div className='flex items-center gap-2'>
-            {!isDraft && <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} />}
-
             {showModificationOptions && !isDraft && (
               <EditBlogDialog blogId={blogId} />
             )}
