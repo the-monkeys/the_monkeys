@@ -51,7 +51,7 @@ export const AuthorInfoCard = ({
         </div>
 
         <div className='flex items-end gap-3'>
-          <ProfileFrame className='-mb-[20px] size-[85px] ring-2 ring-foreground-light/50 dark:ring-foreground-dark/50'>
+          <ProfileFrame className='-mb-[20px] size-[80px] ring-2 ring-foreground-light/50 dark:ring-foreground-dark/50'>
             <ProfileImage username={userData?.username} />
           </ProfileFrame>
 
