@@ -38,12 +38,12 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className='mt-3 mr-2 w-[200px] sm:w-[220px]'>
-        <DropdownMenuItem asChild>
+        <DropdownMenuItem className='p-1' asChild>
           <Link
             href={`/${session?.username}`}
-            className='flex items-center gap-2'
+            className='flex items-center gap-2 overflow-hidden'
           >
-            <ProfileFrame className='size-8 sm:size-10 shrink-0'>
+            <ProfileFrame className='size-10 sm:size-12 shrink-0'>
               <ProfileImage username={session?.username} />
             </ProfileFrame>
 
@@ -52,7 +52,7 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
                 @{session?.username}
               </p>
 
-              <p className='font-dm_sans font-medium text-base'>
+              <p className='font-dm_sans font-medium text-base truncate'>
                 {session?.first_name}{' '}
                 {session?.last_name ? session?.last_name : ''}
               </p>
