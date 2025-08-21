@@ -12,7 +12,7 @@ const VerifyEmailPage = () => {
     <>
       <FormHeader>
         <FormHeading heading='Verify Your Email' />
-        <FormSubheading subheading='Check your inbox to confirm your email address' />
+        <FormSubheading subheading='Check your inbox to confirm your email address.' />
       </FormHeader>
 
       <VerifyEmailStatus />

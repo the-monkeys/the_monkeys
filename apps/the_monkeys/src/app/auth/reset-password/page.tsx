@@ -12,7 +12,7 @@ const ResetPasswordPage = () => {
     <>
       <FormHeader>
         <FormHeading heading='Set a New Password' />
-        <FormSubheading subheading='Choose a strong password to secure your account' />
+        <FormSubheading subheading='Choose a strong password to secure your account.' />
       </FormHeader>
 
       <ResetPasswordForm />

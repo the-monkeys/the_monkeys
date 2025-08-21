@@ -4,6 +4,7 @@ import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import moment from 'moment';
 
+import Icon from '../icon';
 import ProfileImage, { ProfileFrame } from '../profileImage';
 import {
   UserInfoCardSkeleton,
@@ -22,9 +23,9 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
   const userData = user?.user;
 
   return (
-    <div className='w-full flex gap-3'>
-      <Link href={`/${userData?.username}`} className='hover:opacity-80'>
-        <ProfileFrame className='size-10 ring-1 ring-border-light/40 dark:ring-border-dark/40'>
+    <div className='w-full flex gap-[10px]'>
+      <Link href={`/${userData?.username}`} className='hover:opacity-90'>
+        <ProfileFrame className='mt-1 size-10 sm:size-12 ring-1 ring-border-light/40 dark:ring-border-dark/40'>
           <ProfileImage username={userData?.username} />
         </ProfileFrame>
       </Link>
@@ -39,6 +40,21 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
         </Link>
 
         <span className='text-sm opacity-90 line-clamp-2'>{userData?.bio}</span>
+
+        <div className='pt-1 flex items-center gap-2 flex-wrap'>
+          <p className='text-sm font-medium'>
+            {user?.followers ? user.followers : '0'}{' '}
+            <span className='font-normal opacity-80'>Followers</span>
+          </p>
+
+          {userData?.location && (
+            <div className='flex items-center gap-1'>
+              <Icon name='RiMapPinUser' size={16} type='Fill' />
+
+              <p className='text-sm opacity-80'>{userData.location}</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

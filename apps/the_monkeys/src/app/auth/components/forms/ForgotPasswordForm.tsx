@@ -1,14 +1,10 @@
 'use client';
 
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { forgotPasswordSchema } from '@/lib/schema/auth';
 import { forgotPass } from '@/services/auth/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  RiCheckLine,
-  RiCloseCircleFill,
-  RiResetRightLine,
-} from '@remixicon/react';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -57,7 +53,7 @@ export default function ForgotPasswordForm() {
             name='email'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>Email</FormLabel>
+                <FormLabel className='text-sm'>Email</FormLabel>
                 <FormControl onChange={() => mutation.reset()}>
                   <div className='relative'>
                     <Input placeholder='Enter email address' {...field} />
@@ -72,7 +68,7 @@ export default function ForgotPasswordForm() {
                           mutation.reset();
                         }}
                       >
-                        <RiCloseCircleFill />
+                        <Icon name='RiCloseCircle' type='Fill' />
                       </button>
                     )}
                   </div>
@@ -82,9 +78,9 @@ export default function ForgotPasswordForm() {
             )}
           />
 
-          <div className='pt-6 flex gap-2 items-center'>
+          <div className='pt-6 flex'>
             <Button
-              variant={mutation.isSuccess ? 'outline' : 'default'}
+              variant={mutation.isSuccess ? 'secondary' : 'brand'}
               className='flex-1'
               disabled={mutation.isPending || mutation.isSuccess}
               aria-label={getButtonText()}
@@ -92,16 +88,17 @@ export default function ForgotPasswordForm() {
             >
               {mutation.isPending && <Loader className='mr-2' />}
               {!mutation.isPending && mutation.isSuccess && (
-                <RiCheckLine className='mr-2' />
+                <Icon name='RiCheck' className='mr-2' />
               )}
               {!mutation.isPending && mutation.isError && (
-                <RiResetRightLine size={18} className='mr-2' />
+                <Icon name='RiResetRight' className='mr-2' size={18} />
               )}
               {getButtonText()}
             </Button>
           </div>
         </form>
       </Form>
+
       <p className='text-alert-red text-center mx-auto w-11/12' role='alert'>
         {mutation.isError &&
           'An unexpected error occurred while submitting the form, please retry again or contact support'}

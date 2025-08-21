@@ -11,7 +11,7 @@ export const ContributeAndSponsorCard = ({
 }) => {
   return (
     <div className={twMerge(className, 'rounded-2xl overflow-hidden')}>
-      <div className='p-4 sm:p-6 bg-gradient-to-r from-blue-500/20 to-pink-500/20 space-y-6'>
+      <div className='p-4 sm:p-6 bg-gradient-to-r from-blue-500/[12%] to-pink-500/[12%] space-y-6'>
         <div className='space-y-[6px]'>
           <h4 className='font-dm_sans font-medium text-2xl'>
             Together we build better

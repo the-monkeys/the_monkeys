@@ -96,14 +96,19 @@ export const TrendingCardLargeSkeleton = ({
   className?: string;
 }) => {
   return (
-    <div className={twMerge(className, 'space-y-[10px]')}>
-      <Skeleton className='h-[220px] md:h-[360px] w-full' />
+    <div
+      className={twMerge(
+        className,
+        'flex flex-col sm:flex-row lg:flex-col gap-[10px]'
+      )}
+    >
+      <Skeleton className='shrink-0 h-[200px] sm:h-[260px] lg:h-[350px] w-full sm:w-1/2 lg:w-full' />
 
-      <div className='space-y-2'>
+      <div className='w-full space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
 
         <div className='w-full space-y-1'>
-          <Skeleton className='h-[20px] w-full' />
+          <Skeleton className='hidden sm:block h-[20px] w-full' />
           <Skeleton className='h-[20px] w-full' />
           <Skeleton className='h-[20px] w-1/2' />
         </div>
