@@ -163,9 +163,7 @@ export const ResetPasswordForm = () => {
             name='password'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>
-                  New Password
-                </FormLabel>
+                <FormLabel className='text-sm'>New Password</FormLabel>
                 <FormControl>
                   <PasswordInput
                     placeholder='Enter new password'
@@ -183,9 +181,7 @@ export const ResetPasswordForm = () => {
             name='confirmPassword'
             render={({ field }) => (
               <FormItem>
-                <FormLabel className='font-roboto text-sm'>
-                  Confirm Password
-                </FormLabel>
+                <FormLabel className='text-sm'>Confirm Password</FormLabel>
                 <FormControl>
                   <PasswordInput
                     placeholder='Enter new password'
@@ -213,10 +209,11 @@ export const ResetPasswordForm = () => {
             </li>
           </ul>
 
-          <div className='pt-4'>
+          <div className='pt-6 flex'>
             <Button
+              variant='brand'
               disabled={!resetTokenStatus.status || loading}
-              className='float-right'
+              className='flex-1'
               type='submit'
             >
               {loading && <Loader />}

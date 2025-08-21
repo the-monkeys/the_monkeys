@@ -1,8 +1,6 @@
-import Image from 'next/image';
-
 const FormHeading = ({ heading }: { heading: string; className?: string }) => {
   return (
-    <h1 className='font-dm_sans font-medium text-[28px] sm:text-3xl text-center sm:text-left'>
+    <h1 className='font-dm_sans font-medium text-3xl sm:text-4xl text-center'>
       {heading}
     </h1>
   );
@@ -14,11 +12,7 @@ const FormSubheading = ({
   subheading: string;
   className?: string;
 }) => {
-  return (
-    <p className='font-dm_sans text-sm sm:text-base opacity-80 text-center sm:text-left'>
-      {subheading}
-    </p>
-  );
+  return <p className='text-sm text-center opacity-90'>{subheading}</p>;
 };
 
 const FormHeader = ({
@@ -27,21 +21,7 @@ const FormHeader = ({
   className?: string;
   children: React.ReactNode;
 }) => {
-  return (
-    <div className='flex flex-col items-center sm:items-start gap-[4px]'>
-      <div className='py-2 flex flex-col items-start gap-1'>
-        <Image
-          src={'/logo-brand.svg'}
-          alt='Monkeys Logo'
-          title='Monkeys Logo'
-          height={22}
-          width={52}
-          className='drop-shadow-sm'
-        />
-      </div>
-      {children}
-    </div>
-  );
+  return <div className='p-6 flex flex-col items-center gap-2'>{children}</div>;
 };
 
 export { FormHeader, FormHeading, FormSubheading };

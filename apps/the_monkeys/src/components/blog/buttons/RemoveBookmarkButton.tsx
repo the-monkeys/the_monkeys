@@ -60,11 +60,7 @@ export const RemoveBookmarkButton = ({
       disabled={loading}
       title='Remove Bookmark'
     >
-      <Icon
-        name='RiIndeterminateCircle'
-        size={size}
-        className='text-alert-red'
-      />
+      <Icon name='RiBookmark2' size={size} className='text-alert-red' />
     </button>
   );
 };

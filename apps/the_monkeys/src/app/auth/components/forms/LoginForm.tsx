@@ -78,7 +78,7 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
           name='email'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>Email</FormLabel>
+              <FormLabel className='text-sm'>Email</FormLabel>
               <FormControl>
                 <Input
                   placeholder='Enter email address'
@@ -99,7 +99,8 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
           name='password'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>Password</FormLabel>
+              <FormLabel className='text-sm'>Password</FormLabel>
+
               <FormControl>
                 <PasswordInput
                   placeholder='Enter password'
@@ -110,11 +111,13 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
                   onChange={field.onChange}
                 />
               </FormControl>
-              <div className='flex justify-between'>
+
+              <div className='pt-[6px] flex justify-between'>
                 <FormMessage />
+
                 <Link
                   href='/auth/forgot-password'
-                  className='font-dm_sans text-sm hover:underline opacity-80 ml-auto'
+                  className='font-dm_sans text-sm hover:underline opacity-90 ml-auto'
                 >
                   Forgot your password?
                 </Link>
@@ -123,9 +126,10 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
           )}
         />
 
-        <div className='pt-6 flex gap-2 items-center'>
+        <div className='pt-6 flex'>
           <Button
-            className='flex-1 order-1 transition-colors duration-300'
+            variant='brand'
+            className='flex-1'
             disabled={mutation.isPending || isLoading}
           >
             {mutation.isPending && <Loader />} Login
