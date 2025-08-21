@@ -27,8 +27,8 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
-    <div className='h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[200px] md:h-[360px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
+    <div className='h-full w-full flex flex-col sm:flex-row [@media(min-width:1200px)]:flex-col gap-[10px] sm:gap-3 [@media(min-width:1200px)]:gap-[10px]'>
+      <div className='shrink-0 h-[200px] sm:h-[260px] lg:h-[350px] w-full sm:w-1/2 [@media(min-width:1200px)]:w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -42,7 +42,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='pt-2 font-semibold text-[20px] sm:text-3xl leading-[1.4] sm:leading-[1.34] hover:underline underline-offset-2 line-clamp-2'
+              className='pt-2 sm:pt-[10px] font-semibold text-lg sm:text-2xl md:text-3xl leading-[1.4] sm:leading-[1.34] hover:underline underline-offset-2 line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
@@ -50,7 +50,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='pt-[6px] text-sm lg:text-base !leading-snug line-clamp-3 opacity-90'
+              className='pt-[6px] sm:pt-2 text-sm lg:text-base line-clamp-2 sm:line-clamp-3 opacity-90'
             />
           )}
         </div>
@@ -117,7 +117,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='pt-[6px] text-sm line-clamp-1 sm:line-clamp-2 opacity-90'
+              className='pt-[6px] text-sm line-clamp-2 opacity-90'
             />
           )}
         </div>

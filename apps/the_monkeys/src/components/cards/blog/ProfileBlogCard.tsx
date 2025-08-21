@@ -85,7 +85,7 @@ export const ProfileBlogCard = ({
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='pt-[6px] text-sm line-clamp-1 opacity-90'
+              className='pt-[6px] text-sm line-clamp-2 sm:line-clamp-1 opacity-90'
             />
           )}
         </div>
