@@ -141,13 +141,11 @@ li.cdx-list__item {
   padding: 12px 16px !important;
   margin: 0 0 30px !important;
   position: relative;
-  background-color: #ededed7c;
-  border-left: 3px solid #cccccc;
+  border-left: 4px solid #cccccc;
 }
 
 .dark .cdx-quote {
-  background-color: #1e1e1e7c;
-  border-left: 3px solid #3f3f3f;
+  border-left: 4px solid #3f3f3f;
 }
 
 .cdx-quote__text {

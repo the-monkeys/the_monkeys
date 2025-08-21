@@ -9,7 +9,8 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         style={{
           padding: '10px 0',
           fontWeight: '400',
-          fontFamily: 'var(--font-dm_sans)',
+          fontSize: '1.2rem',
+          lineHeight: 1.5,
         }}
       >
         {children}
@@ -20,7 +21,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         style={{
           padding: '4px 0',
           fontWeight: '300',
-          opacity: '.8',
+          fontSize: '1rem',
+          lineHeight: 1.5,
+          opacity: '.96',
         }}
       >
         {children}
