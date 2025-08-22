@@ -76,7 +76,7 @@ export const BlogPageSkeleton = () => {
 export const FeedBlogCardSkeleton = () => {
   return (
     <div className='flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <Skeleton className='shrink-0 h-[230px] sm:h-[130px] w-full sm:w-[200px]' />
+      <Skeleton className='shrink-0 h-[230px] sm:h-[140px] w-full sm:w-[200px]' />
 
       <div className='w-full space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
@@ -141,13 +141,13 @@ export const TrendingCardSmallSkeleton = ({
 export const TopicsContainerSkeleton = () => {
   return (
     <div className='flex gap-2 flex-wrap'>
-      <Skeleton className='h-8 w-[160px] rounded-full' />
+      <Skeleton className='h-8 w-[152px] rounded-full' />
       <Skeleton className='h-8 w-[120px] rounded-full' />
-      <Skeleton className='h-8 w-[140px] rounded-full' />
+      <Skeleton className='h-8 w-[130px] rounded-full' />
       <Skeleton className='h-8 w-[100px] rounded-full' />
-      <Skeleton className='h-8 w-[135px] rounded-full' />
+      <Skeleton className='h-8 w-[132px] rounded-full' />
       <Skeleton className='h-8 w-[140px] rounded-full' />
-      <Skeleton className='h-8 w-[160px] rounded-full' />
+      <Skeleton className='h-8 w-[152px] rounded-full' />
       <Skeleton className='h-8 w-[150px] rounded-full' />
       <Skeleton className='h-8 w-[120px] rounded-full' />
     </div>

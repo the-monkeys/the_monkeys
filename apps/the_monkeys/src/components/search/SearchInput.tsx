@@ -49,7 +49,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
 
   return (
     <div className={twMerge(className)}>
-      <div className='relative px-3 py-[6px] flex items-center gap-[6px] bg-foreground-light/40 dark:bg-foreground-dark/40 rounded-full'>
+      <div className='mt-[2px] relative px-3 py-[6px] flex items-center gap-[6px] bg-foreground-light/40 dark:bg-foreground-dark/40 rounded-full'>
         <div className='p-1 flex justify-center'>
           <Icon
             name='RiSearch'
@@ -61,7 +61,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
         <input
           value={searchQuery}
           placeholder='Search'
-          className='w-full bg-transparent focus:outline-none'
+          className='w-full text-sm bg-transparent focus:outline-none'
           onChange={handleInputChange}
           onFocus={() => setFocused(true)}
           onBlur={handleBlur}
@@ -79,22 +79,18 @@ export const SearchInput = ({ className }: { className?: string }) => {
         {debouncedQuery && focused && (
           <div className='absolute top-full left-0 max-w-[520px] w-screen pr-2 pt-4 z-20 search-results-container'>
             <div className='p-4 flex flex-col gap-4 bg-background-light dark:bg-background-dark rounded-md border-1 border-border-light/40 dark:border-border-dark/40 shadow-lg'>
-              <div className='space-y-2'>
-                <h6 className='px-1 font-dm_sans font-medium opacity-90'>
-                  Posts
-                </h6>
+              <div>
+                <h6 className='px-1 font-dm_sans opacity-90'>Posts</h6>
 
-                <Separator className='opacity-60' />
+                <Separator className='mt-1 mb-2' />
 
                 <SearchPosts query={debouncedQuery} onClose={handleClose} />
               </div>
 
-              <div className='space-y-2'>
-                <h6 className='px-1 font-dm_sans font-medium opacity-90'>
-                  Authors
-                </h6>
+              <div>
+                <h6 className='px-1 font-dm_sans opacity-90'>Authors</h6>
 
-                <Separator className='opacity-60' />
+                <Separator className='mt-1 mb-2' />
 
                 {isSuccess ? (
                   <SearchUsers query={debouncedQuery} onClose={handleClose} />
@@ -139,7 +135,7 @@ export const SearchInputLink = () => {
       asChild
     >
       <Link href='/search'>
-        <Icon name='RiSearch' className='rotate-90' />
+        <Icon name='RiSearch' />
       </Link>
     </Button>
   );
