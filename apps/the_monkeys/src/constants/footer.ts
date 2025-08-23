@@ -1,9 +1,57 @@
-export const footerList = [
+import { IconName } from '@/components/icon';
+
+import {
+  MONKEYS_DISCORD,
+  MONKEYS_GITHUB,
+  MONKEYS_INSTAGRAM,
+  MONKEYS_TELEGRAM,
+  MONKEYS_X,
+  MONKEYS_YOUTUBE,
+} from './social';
+
+export const footerSocialsList: {
+  account: string;
+  link: string;
+  icon: IconName;
+}[] = [
+  {
+    account: 'github',
+    link: MONKEYS_GITHUB,
+    icon: 'RiGithub',
+  },
+  {
+    account: 'x',
+    link: MONKEYS_X,
+    icon: 'RiTwitterX',
+  },
+  {
+    account: 'youtube',
+    link: MONKEYS_YOUTUBE,
+    icon: 'RiYoutube',
+  },
+  {
+    account: 'discord',
+    link: MONKEYS_DISCORD,
+    icon: 'RiDiscord',
+  },
+  {
+    account: 'instagram',
+    link: MONKEYS_INSTAGRAM,
+    icon: 'RiInstagram',
+  },
+  {
+    account: 'telegram',
+    link: MONKEYS_TELEGRAM,
+    icon: 'RiTelegram2',
+  },
+];
+
+export const footerLinksList = [
   {
     heading: 'Company',
     items: [
       {
-        text: 'Monkeys',
+        text: 'Monkeys Feed',
         link: '/feed',
       },
       {

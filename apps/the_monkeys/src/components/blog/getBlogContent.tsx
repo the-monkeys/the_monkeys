@@ -109,11 +109,11 @@ export const BlogImage = ({
     <Image
       src={image}
       alt={title}
-      loading='lazy'
       height='500'
       width='800'
       className={twMerge(className, 'h-full w-full object-cover object-center')}
       quality={100}
+      priority
     />
   );
 };

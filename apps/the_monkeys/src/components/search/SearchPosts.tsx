@@ -30,7 +30,7 @@ const SearchBlogTitle = ({
     >
       <BlogTitle
         title={titleContent}
-        className='font-medium group-hover:underline leading-[1.3] line-clamp-2'
+        className='font-medium group-hover:underline leading-[1.4] line-clamp-2'
       />
     </Link>
   );

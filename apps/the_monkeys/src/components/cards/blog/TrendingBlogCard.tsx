@@ -28,7 +28,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='h-full w-full flex flex-col sm:flex-row [@media(min-width:1200px)]:flex-col gap-[10px] sm:gap-3 [@media(min-width:1200px)]:gap-[10px]'>
-      <div className='shrink-0 h-[200px] sm:h-[260px] lg:h-[350px] w-full sm:w-1/2 [@media(min-width:1200px)]:w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
+      <div className='shrink-0 h-[200px] sm:h-[260px] lg:h-[350px] w-full sm:w-1/2 [@media(min-width:1200px)]:w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-md shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
@@ -95,7 +95,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='group h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[200px] sm:h-[180px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
+      <div className='h-[200px] lg:h-[180px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-md shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (

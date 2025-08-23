@@ -1,6 +1,6 @@
 import Styles from './styles/backgroundStyles.module.css';
 
-export const BackgroundBanner = () => {
+export const BackgroundWaves = () => {
   return (
     <div className='w-full h-full relative flex flex-col justify-end items-center'>
       <div className={Styles.screen_overlay_linear}></div>
