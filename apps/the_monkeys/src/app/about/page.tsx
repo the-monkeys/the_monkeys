@@ -1,62 +1,105 @@
 import Link from 'next/link';
 
-import HomeBanner from '@/components/branding/HomeBanner';
-import { LinksSection } from '@/components/branding/LinksSection';
+import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
 import FeaturesGrid from '@/components/branding/featuresGrid';
+import MembersGrid from '@/components/branding/membersGrid';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import { CREATE_ROUTE } from '@/constants/routeConstants';
+import { CREATE_ROUTE, FEED_ROUTE } from '@/constants/routeConstants';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 const AboutPage = () => {
   return (
-    <div className='min-h-screen space-y-8 pb-10'>
-      <Container className='space-y-8'>
-        <HomeBanner />
+    <div className='min-h-[800px] px-4 space-y-10'>
+      <Container className='max-w-4xl space-y-10'>
+        <div className='relative py-12 flex flex-col items-center gap-2'>
+          <h4 className='p-2 font-dm_sans font-medium text-4xl md:text-5xl text-center animate-appear-up'>
+            Inspire
+            <span className='text-brand-orange'>.</span> Inform
+            <span className='text-brand-orange'>.</span> Innovate
+            <span className='text-brand-orange'>.</span>
+          </h4>
 
-        <h2 className='mx-auto w-fit pt-8 px-4 font-dm_sans text-lg sm:text-xl md:text-2xl text-center leading-7'>
-          With Monkeys, create content that truly makes a difference.
-        </h2>
-
-        <LinksSection />
-
-        <h2 className='mx-auto w-full sm:w-4/5 pt-[100px] px-4 font-dm_sans font-medium text-2xl sm:text-3xl leading-normal text-center'>
-          We are built to empower creativity, collaboration, and meaningful
-          storytelling.
-        </h2>
-      </Container>
-
-      <div className='bg-gradient-to-t from-brand-orange/80 from-[25%] via-brand-orange/20 to-transparent px-4 py-[80px]'>
-        <Container>
-          <FeaturesGrid />
-        </Container>
-      </div>
-
-      <Container>
-        <div className='py-[40px] sm:py-[80px] px-4 flex flex-col items-center gap-4'>
-          <p className='mt-6 text-base sm:text-lg md:text-xl text-center opacity-80'>
-            Start your journey today—collaborate, create, and share without
-            limits!
+          <p className='pt-3 text-sm md:text-base text-center tracking-tight'>
+            Monkeys is a platform for writers, creators, and thinkers to share
+            stories that inspire, inform, and spark innovation — a space to
+            collaborate, learn, and make an impact through meaningful
+            storytelling.
           </p>
 
-          <Button
-            size='lg'
-            variant='brand'
-            className='group px-6 rounded-full hover:text-text-dark hover:bg-opacity-100 shadow-md'
-            title='Create Post'
-            asChild
-          >
-            <Link href={`${CREATE_ROUTE}`}>
-              <div>
+          <div className='p-6 flex flex-col sm:flex-row justify-center items-center gap-4'>
+            <Button
+              variant='brand'
+              size='lg'
+              className='group rounded-full hover:!bg-background-light dark:hover:!bg-background-dark'
+              asChild
+            >
+              <Link href={CREATE_ROUTE}>
                 <Icon
                   name='RiPencil'
-                  className='mr-2 group-hover:animate-icon-shake'
-                />
-              </div>
-              <p className='font-dm_sans'>Start Writing</p>
-            </Link>
-          </Button>
+                  className='mr-[6px] group-hover:animate-icon-shake opacity-90'
+                />{' '}
+                Start Writing
+              </Link>
+            </Button>
+
+            <Button
+              size='lg'
+              className='group rounded-full hover:!bg-background-light dark:hover:!bg-background-dark'
+              asChild
+            >
+              <Link href={FEED_ROUTE}>
+                <Icon
+                  name='RiSearch'
+                  className='mr-[6px] group-hover:animate-icon-shake opacity-90'
+                />{' '}
+                Explore Content
+              </Link>
+            </Button>
+          </div>
+
+          <div className='absolute top-0 left-0 w-full h-full -z-10 opacity-80'>
+            <BackgroundWaves />
+          </div>
         </div>
+
+        <div className='py-8 flex flex-col items-center gap-3'>
+          <h5 className='pb-3 font-dm_sans font-semibold text-3xl text-center'>
+            Evolving Together
+          </h5>
+
+          <p className='text-sm md:text-base text-center'>
+            At Monkeys, we&apos;re more than just a writing platform. With{' '}
+            <span className='font-medium'>collaborative writing</span>,{' '}
+            <span className='font-medium'>AI integration</span>,{' '}
+            <span className='font-medium'>version control</span>, and{' '}
+            <span className='font-medium'>social snapshots</span>, we&apos;ve
+            set the stage for meaningful storytelling — and we continue to
+            evolve through community contributions.
+          </p>
+        </div>
+      </Container>
+
+      <Container className='max-w-3xl'>
+        <FeaturesGrid />
+      </Container>
+
+      <Container className='max-w-4xl py-8 space-y-10'>
+        <div className='py-8 flex flex-col items-center gap-3'>
+          <h5 className='pb-3 font-dm_sans font-semibold text-3xl text-center'>
+            The People Behind{' '}
+            <span className='font-dm_sans text-brand-orange tracking-tight'>
+              Monkeys
+            </span>
+          </h5>
+
+          <p className='text-sm md:text-base text-center'>
+            A collective of innovators, storytellers, and supporters coming
+            together to build something meaningful.
+          </p>
+        </div>
+
+        <MembersGrid />
       </Container>
     </div>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { BackgroundBanner } from '@/components/branding/BackgroundBanner';
+import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
 import Container from '@/components/layout/Container';
 import Logo from '@/components/logo';
 
@@ -22,7 +22,7 @@ export default async function AuthLayout({
     <Container className='p-4 max-w-4xl min-h-[800px] space-y-2'>
       <div className='relative h-[120px] w-full flex items-center justify-center'>
         <div className='absolute top-0 left-0 h-full w-full -z-10 opacity-80'>
-          <BackgroundBanner />
+          <BackgroundWaves />
         </div>
 
         <div className='size-12 drop-shadow-sm'>

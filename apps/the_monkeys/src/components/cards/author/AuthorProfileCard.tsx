@@ -22,7 +22,12 @@ import moment from 'moment';
 
 const SocialLinkButton = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Button variant='outline' size='icon' className='mt-3 rounded-full' asChild>
+    <Button
+      variant='outline'
+      size='icon'
+      className='mt-3 !border-1 rounded-full'
+      asChild
+    >
       {children}
     </Button>
   );
