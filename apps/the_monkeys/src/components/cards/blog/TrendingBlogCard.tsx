@@ -95,7 +95,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
 
   return (
     <div className='group h-full w-full flex flex-col gap-[10px]'>
-      <div className='h-[200px] sm:h-[180px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-md shadow-sm overflow-hidden'>
+      <div className='h-[200px] lg:h-[180px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-md shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
