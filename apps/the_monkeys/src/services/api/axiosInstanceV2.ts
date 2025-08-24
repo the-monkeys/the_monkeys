@@ -1,7 +1,5 @@
-import { API_URL_V2 } from '@/constants/api';
+import clientInfo from '@/utils/clientInfo';
 import axios from 'axios';
-import Bowser from 'bowser';
-import { publicIpv4 } from 'public-ip';
 
 const axiosInstanceV2 = axios.create({
   baseURL: '/api/v2',
@@ -11,7 +9,7 @@ const axiosInstanceV2 = axios.create({
 axiosInstanceV2.interceptors.request.use(
   async (config) => {
     // Get public IP address
-    const ip = await publicIpv4();
+    const ip = clientInfo.getIP();
     config.headers['Ip'] = ip;
 
     // Detect client browser and OS

@@ -16,5 +16,8 @@
 		"turbo": "^2.4.4",
 		"typescript": "^5.8.2"
 	},
-	"packageManager": "pnpm@10.10.0"
+	"packageManager": "pnpm@10.10.0",
+	"dependencies": {
+		"@editorjs/table": "^2.4.5"
+	}
 }
