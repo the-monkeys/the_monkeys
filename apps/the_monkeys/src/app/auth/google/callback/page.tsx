@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { googleSSOCallback } from '@/services/auth/auth';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Alert,
   AlertDescription,
@@ -26,10 +26,13 @@ import {
 export default function GoogleCallback() {
   const params = useSearchParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: googleSSOCallback,
-    onSuccess: () => {
+    onSuccess: (user) => {
+      queryClient.setQueryData(['auth'], user);
+
       toast({
         variant: 'success',
         title: 'Login successful',

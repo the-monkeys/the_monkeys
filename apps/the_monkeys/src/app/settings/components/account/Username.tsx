@@ -70,7 +70,7 @@ export const Username = ({ data }: { data: IUser }) => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
-          <div className='flex items-end flex-wrap gap-2'>
+          <div className='flex items-center gap-[6px]'>
             <div className='w-full sm:w-1/2'>
               <FormField
                 control={form.control}
@@ -91,7 +91,13 @@ export const Username = ({ data }: { data: IUser }) => {
               />
             </div>
 
-            <Button size='lg' disabled={mutation.isPending} type='submit'>
+            <Button
+              variant='secondary'
+              size='lg'
+              disabled={mutation.isPending}
+              type='submit'
+              className='shrink-0'
+            >
               {mutation.isPending && <Loader />} Update
             </Button>
           </div>

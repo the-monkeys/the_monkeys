@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { API_URL } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import { Button } from '@the-monkeys/ui/atoms/button';

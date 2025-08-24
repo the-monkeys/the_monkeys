@@ -1,11 +1,11 @@
-import { Metadata } from 'next';
+'use client';
 
-import Container from '@/components/layout/Container';
-import {
-  PageHeader,
-  PageHeading,
-  PageSubheading,
-} from '@/components/layout/pageHeading';
+import { useEffect } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { Loader } from '@/components/loader';
+import useAuth from '@/hooks/auth/useAuth';
 import {
   Tabs,
   TabsContent,
@@ -18,86 +18,90 @@ import { Notifications } from './components/Notifications';
 import { Profile } from './components/Profile';
 import { Security } from './components/Security';
 
-export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: 'Settings',
-  };
-}
+const SettingsPage = () => {
+  const { data, isError, isLoading } = useAuth();
+  const router = useRouter();
 
-const SettingsPage = async () => {
+  useEffect(() => {
+    if (!isLoading && (!data || isError)) {
+      router.replace('/feed');
+    }
+  }, [data, isError, isLoading, router]);
+
+  if (!data || isLoading) {
+    return (
+      <div className='p-8 flex flex-col items-center justify-center gap-1'>
+        <Loader size={42} />
+
+        {!data && !isLoading && (
+          <p className='text-sm text-center opacity-90'>
+            You are not logged in. Redirecting to feed.
+          </p>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <Container className='pb-12 !max-w-5xl space-y-6'>
-      <PageHeader>
-        <PageHeading heading='Settings' className='self-start' />
-        <PageSubheading
-          subheading='Customize your experience and manage your account settings.'
-          className='self-start'
-        />
-      </PageHeader>
+    <Tabs
+      defaultValue='profile'
+      className='px-4 grid grid-cols-4 gap-10 sm:gap-8'
+    >
+      <div className='col-span-4 md:col-span-1 flex flex-col'>
+        <TabsList className='font-dm_sans flex md:flex-col justify-evenly flex-wrap items-start gap-[6px]'>
+          <TabsTrigger
+            value='profile'
+            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+          >
+            <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
+              Profile
+            </p>
+          </TabsTrigger>
 
-      <Tabs
-        defaultValue='profile'
-        className='px-4 grid grid-cols-4 gap-4 md:gap-6'
-      >
-        <div className='col-span-4 md:col-span-1 flex flex-col'>
-          <TabsList className='py-3 font-dm_sans flex md:flex-col justify-evenly flex-wrap items-start gap-4 md:gap-3'>
-            <TabsTrigger
-              value='profile'
-              className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'
-            >
-              <p className='font-dm_sans'>Profile</p>
+          <TabsTrigger
+            value='account'
+            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+          >
+            <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
+              Account
+            </p>
+          </TabsTrigger>
 
-              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-brand-orange'></div>
-            </TabsTrigger>
+          <TabsTrigger
+            value='security'
+            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+          >
+            <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
+              Security
+            </p>
+          </TabsTrigger>
 
-            <TabsTrigger
-              value='account'
-              className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'
-            >
-              <p className='font-dm_sans'>Account</p>
+          <TabsTrigger
+            value='notifications'
+            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+          >
+            <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
+              Notifications
+            </p>
+          </TabsTrigger>
+        </TabsList>
+      </div>
 
-              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-brand-orange'></div>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value='security'
-              className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'
-            >
-              <p className='font-dm_sans'>Security</p>
-
-              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-brand-orange'></div>
-            </TabsTrigger>
-
-            <TabsTrigger
-              value='notifications'
-              className='md:w-full flex flex-row justify-start gap-2 opacity-80 data-[state=active]:opacity-100 hover:opacity-100'
-            >
-              <p className='font-dm_sans'>Notifications</p>
-
-              <div className='size-2 rounded-full bg-transparent group-data-[state=active]:bg-brand-orange'></div>
-            </TabsTrigger>
-          </TabsList>
-        </div>
-
-        <div className='col-span-4 md:col-span-3'>
-          <TabsContent className='min-h-screen' value='profile'>
-            <Profile />
-          </TabsContent>
-
-          <TabsContent className='min-h-screen w-full' value='account'>
-            <Account />
-          </TabsContent>
-
-          <TabsContent className='min-h-screen w-full' value='security'>
-            <Security />
-          </TabsContent>
-
-          <TabsContent className='min-h-screen w-full' value='notifications'>
-            <Notifications />
-          </TabsContent>
-        </div>
-      </Tabs>
-    </Container>
+      <div className='col-span-4 md:col-span-3'>
+        <TabsContent value='profile'>
+          <Profile data={data} />
+        </TabsContent>
+        <TabsContent value='account'>
+          <Account data={data} />
+        </TabsContent>
+        <TabsContent value='security'>
+          <Security data={data} />
+        </TabsContent>
+        <TabsContent value='notifications'>
+          <Notifications />
+        </TabsContent>
+      </div>
+    </Tabs>
   );
 };
 

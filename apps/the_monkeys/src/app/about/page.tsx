@@ -10,7 +10,7 @@ import { Button } from '@the-monkeys/ui/atoms/button';
 
 const AboutPage = () => {
   return (
-    <div className='min-h-[800px] px-4 space-y-10'>
+    <>
       <Container className='max-w-4xl space-y-10'>
         <div className='relative py-12 flex flex-col items-center gap-2'>
           <h4 className='p-2 font-dm_sans font-medium text-4xl md:text-5xl text-center animate-appear-up'>
@@ -101,7 +101,7 @@ const AboutPage = () => {
 
         <MembersGrid />
       </Container>
-    </div>
+    </>
   );
 };
 

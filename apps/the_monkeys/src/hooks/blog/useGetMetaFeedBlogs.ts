@@ -9,8 +9,8 @@ const useGetMetaFeedBlogs = ({ limit = 50 }: { limit?: number } = {}) => {
     {
       errorRetryInterval: 10000,
       errorRetryCount: 4,
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
+      revalidateOnFocus: true,
+      revalidateIfStale: true,
       refreshInterval: 60000,
     }
   );

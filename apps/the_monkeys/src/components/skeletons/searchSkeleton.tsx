@@ -3,9 +3,20 @@ import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 export const SearchResultsPostSkeleton = () => {
   return (
     <div className='space-y-2'>
-      <Skeleton className='h-[30px] w-full' />
-      <Skeleton className='h-[30px] w-full' />
-      <Skeleton className='h-[30px] w-full' />
+      <div className='p-1 w-full space-y-1'>
+        <Skeleton className='h-3 w-full' />
+        <Skeleton className='h-3 w-1/2' />
+      </div>
+
+      <div className='p-1 w-full space-y-1'>
+        <Skeleton className='h-3 w-full' />
+        <Skeleton className='h-3 w-1/2' />
+      </div>
+
+      <div className='p-1 w-full space-y-1'>
+        <Skeleton className='h-3 w-full' />
+        <Skeleton className='h-3 w-1/2' />
+      </div>
     </div>
   );
 };

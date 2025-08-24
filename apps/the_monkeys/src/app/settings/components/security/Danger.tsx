@@ -1,11 +1,9 @@
-'use client';
-
 import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
 import { Loader } from '@/components/loader';
-import useAuth from '@/hooks/auth/useAuth';
+import { IUser } from '@/services/models/user';
 import { deleteUser } from '@/services/user/user';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -19,8 +17,7 @@ import {
 import { Input } from '@the-monkeys/ui/atoms/input';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
-export const Danger = () => {
-  const { data } = useAuth();
+export const Danger = ({ data }: { data?: IUser }) => {
   const router = useRouter();
 
   const [deleteMessage, setDeleteMessage] = useState<string>('');
