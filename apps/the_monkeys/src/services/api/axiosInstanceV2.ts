@@ -1,7 +1,5 @@
-import { API_URL_V2 } from '@/constants/api';
+import clientInfo from '@/utils/clientInfo';
 import axios from 'axios';
-import Bowser from 'bowser';
-import { publicIpv4 } from 'public-ip';
 
 const axiosInstanceV2 = axios.create({
   baseURL: '/api/v2',
@@ -10,23 +8,25 @@ const axiosInstanceV2 = axios.create({
 
 axiosInstanceV2.interceptors.request.use(
   async (config) => {
-    // Get public IP address
-    const ip = await publicIpv4();
-    config.headers['Ip'] = ip;
+    try {
+      const info = await clientInfo.getInfoSafe();
 
-    // Detect client browser and OS
-    // const browser = Bowser.getParser(window.navigator.userAgent);
-    // const client = browser.getBrowserName();
-    // const os = browser.getOSName();
-    // config.headers['Client'] = client;
-    // config.headers['OS'] = os;
-    config.withCredentials = true;
+      if (config.headers) {
+        config.headers['Ip'] = info.ip;
+      }
+
+      config.withCredentials = true;
+    } catch (error) {
+      console.warn('Failed to add client info to request:', error);
+
+      if (config.headers) {
+        config.headers['Ip'] = 'unknown';
+      }
+    }
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error: unknown) => Promise.reject(error)
 );
 
 axiosInstanceV2.interceptors.response.use(
