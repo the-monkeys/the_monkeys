@@ -9,7 +9,7 @@ const inputVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"border-1 border-foreground-light/50 dark:border-foreground-dark/50 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark",
+					"border-1 border-border-light/60 dark:border-border-dark/60 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark",
 				ghost: "border-none",
 			},
 		},
