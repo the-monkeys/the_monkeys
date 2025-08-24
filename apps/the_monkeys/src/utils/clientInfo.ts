@@ -15,11 +15,12 @@ export interface ClientInfoData {
 export type DeviceType = 'mobile' | 'tablet' | 'desktop' | 'unknown';
 
 class ClientInfo {
-  private ip: string | null = null;
-  private browser: string | null = null;
-  private os: string | null = null;
+  private ip: string = 'unknown';
+  private browser: string = 'unknown';
+  private os: string = 'unknown';
   private device: DeviceType = 'unknown';
   private isInitialized: boolean = false;
+  private isInitializing: boolean = false;
   private initializationPromise: Promise<ClientInfoData> | null = null;
 
   async initialize(): Promise<ClientInfoData> {
@@ -33,16 +34,30 @@ class ClientInfo {
       return this.initializationPromise;
     }
 
+    this.isInitializing = true;
     this.initializationPromise = (async (): Promise<ClientInfoData> => {
       try {
-        this.ip = await publicIpv4().catch(() => 'unknown');
+        // Get public IP address with timeout
+        this.ip = await Promise.race([
+          publicIpv4(),
+          new Promise<string>((resolve) =>
+            setTimeout(() => resolve('unknown'), 5000)
+          ),
+        ]).catch(() => 'unknown');
 
-        const parser = Bowser.getParser(window.navigator.userAgent);
-        this.browser = parser.getBrowserName() || 'unknown';
-        this.os = parser.getOSName() || 'unknown';
+        try {
+          const parser = Bowser.getParser(window.navigator.userAgent);
+          this.browser = parser.getBrowserName() || 'unknown';
+          this.os = parser.getOSName() || 'unknown';
 
-        const platformType = parser.getPlatformType();
-        this.device = (platformType as DeviceType) || 'unknown';
+          const platformType = parser.getPlatformType();
+          this.device = (platformType as DeviceType) || 'unknown';
+        } catch (browserError) {
+          console.warn('Browser detection failed:', browserError);
+          this.browser = 'unknown';
+          this.os = 'unknown';
+          this.device = 'unknown';
+        }
 
         this.isInitialized = true;
         return this.getInfo();
@@ -56,6 +71,7 @@ class ClientInfo {
         this.isInitialized = true;
         return this.getInfo();
       } finally {
+        this.isInitializing = false;
         this.initializationPromise = null;
       }
     })();
@@ -65,13 +81,13 @@ class ClientInfo {
 
   getInfo(): ClientInfoData {
     if (!this.isInitialized) {
-      throw new Error('ClientInfo not initialized. Call initialize() first.');
+      return this.getFallbackInfo();
     }
 
     return {
-      ip: this.ip || 'unknown',
-      browser: this.browser || 'unknown',
-      os: this.os || 'unknown',
+      ip: this.ip,
+      browser: this.browser,
+      os: this.os,
       device: this.device,
       userAgent: window.navigator.userAgent,
       isMobile: this.device === 'mobile',
@@ -80,44 +96,68 @@ class ClientInfo {
     };
   }
 
-  // Quick access methods
-  getIP(): string {
-    if (!this.isInitialized) {
-      throw new Error('ClientInfo not initialized. Call initialize() first.');
-    }
-    return this.ip || 'unknown';
+  private getFallbackInfo(): ClientInfoData {
+    return {
+      ip: 'unknown',
+      browser: 'unknown',
+      os: 'unknown',
+      device: 'unknown',
+      userAgent: window.navigator.userAgent,
+      isMobile: false,
+      isTablet: false,
+      isDesktop: false,
+    };
   }
 
-  getBrowser(): string {
-    if (!this.isInitialized) {
-      throw new Error('ClientInfo not initialized. Call initialize() first.');
+  async getInfoSafe(): Promise<ClientInfoData> {
+    if (this.isInitialized) {
+      return this.getInfo();
     }
-    return this.browser || 'unknown';
+
+    if (this.isInitializing) {
+      return this.initializationPromise || this.initialize();
+    }
+
+    return this.initialize();
   }
 
-  getOS(): string {
-    if (!this.isInitialized) {
-      throw new Error('ClientInfo not initialized. Call initialize() first.');
-    }
-    return this.os || 'unknown';
+  async getIPSafe(): Promise<string> {
+    const info = await this.getInfoSafe();
+    return info.ip;
   }
 
-  getDevice(): DeviceType {
-    if (!this.isInitialized) {
-      throw new Error('ClientInfo not initialized. Call initialize() first.');
-    }
-    return this.device;
+  async getBrowserSafe(): Promise<string> {
+    const info = await this.getInfoSafe();
+    return info.browser;
   }
 
+  async getOSSafe(): Promise<string> {
+    const info = await this.getInfoSafe();
+    return info.os;
+  }
+
+  async getDeviceSafe(): Promise<DeviceType> {
+    const info = await this.getInfoSafe();
+    return info.device as DeviceType;
+  }
+
+  // Check if initialized
   isReady(): boolean {
     return this.isInitialized;
   }
+
+  // Check if initializing
+  isInitializingIP(): boolean {
+    return this.isInitializing;
+  }
 }
 
-// Create a singleton instance
 const clientInfo = new ClientInfo();
+
 if (typeof window !== 'undefined') {
-  clientInfo.initialize().catch(console.error);
+  clientInfo.initialize().catch((error) => {
+    console.warn('Background client info initialization failed:', error);
+  });
 }
 
 export default clientInfo;

@@ -8,22 +8,31 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const info = clientInfo.getInfo();
+    try {
+      // Use the safe method that handles initialization
+      const info = await clientInfo.getInfoSafe();
 
-    if (config.headers) {
-      config.headers['Ip'] = info.ip;
-      config.headers['Client'] = info.browser;
-      config.headers['OS'] = info.os;
-      config.headers['Device'] = info.device;
+      if (config.headers) {
+        config.headers['Ip'] = info.ip;
+        config.headers['Client'] = info.browser;
+        config.headers['OS'] = info.os;
+        config.headers['Device'] = info.device;
+      }
+
+      config.withCredentials = true;
+    } catch (error) {
+      console.warn('Failed to add client info to request:', error);
+      if (config.headers) {
+        config.headers['Ip'] = 'unknown';
+        config.headers['Client'] = 'unknown';
+        config.headers['OS'] = 'unknown';
+        config.headers['Device'] = 'unknown';
+      }
     }
-
-    config.withCredentials = true;
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error: unknown) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
