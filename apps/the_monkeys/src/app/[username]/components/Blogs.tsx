@@ -37,7 +37,7 @@ export const Blogs = ({
 
   if (isError)
     return (
-      <div className='min-h-screen'>
+      <div className='min-h-[800px]'>
         <p className='w-full text-sm opacity-80 text-center'>
           No blogs published yet.
         </p>

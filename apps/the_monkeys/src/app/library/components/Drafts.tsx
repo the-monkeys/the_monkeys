@@ -30,7 +30,7 @@ export const Drafts = ({ user }: { user?: IUser }) => {
 
   if (isError)
     return (
-      <div className='min-h-screen'>
+      <div className='min-h-[800px]'>
         <p className='w-full opacity-90 text-center'>No drafts created yet.</p>
       </div>
     );

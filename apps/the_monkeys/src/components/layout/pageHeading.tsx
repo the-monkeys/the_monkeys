@@ -42,7 +42,7 @@ const PageHeader = ({
     <div
       className={twMerge(
         className,
-        'px-4 py-[30px] flex flex-col items-center space-y-2'
+        'px-4 py-8 flex flex-col items-center space-y-2'
       )}
     >
       {children}

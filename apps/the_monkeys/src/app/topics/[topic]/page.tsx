@@ -24,6 +24,7 @@ export async function generateMetadata({
 
   return {
     title: `Posts on ${topic}`,
+    description: `Explore insightful posts, guides, and discussions on ${topic}. Stay informed with helpful information, tips, and resources.`,
   };
 }
 
@@ -36,7 +37,7 @@ const TopicBlogsPage = ({
 }) => {
   const topic = decodeURIComponent(params.topic);
   return (
-    <Container className='pb-12 px-4 min-h-screen'>
+    <Container className='pb-12 px-4 min-h-[800px]'>
       <PageHeader>
         <PageSubheading subheading='Explore more about' />
         <PageHeading heading={topic} className='text-center' />
