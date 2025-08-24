@@ -116,5 +116,8 @@ class ClientInfo {
 
 // Create a singleton instance
 const clientInfo = new ClientInfo();
+if (typeof window !== 'undefined') {
+  clientInfo.initialize().catch(console.error);
+}
 
 export default clientInfo;

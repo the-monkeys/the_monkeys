@@ -1,6 +1,5 @@
+import clientInfo from '@/utils/clientInfo';
 import axios from 'axios';
-import Bowser from 'bowser';
-import { publicIpv4 } from 'public-ip';
 
 const axiosInstanceNoAuth = axios.create({
   baseURL: '/api/v1',
@@ -9,16 +8,14 @@ const axiosInstanceNoAuth = axios.create({
 
 axiosInstanceNoAuth.interceptors.request.use(
   async (config) => {
-    // Get public IP address
-    const ip = await publicIpv4();
-    config.headers['Ip'] = ip;
+    const info = clientInfo.getInfo();
 
-    // Detect client browser and OS
-    const browser = Bowser.getParser(window.navigator.userAgent);
-    const client = browser.getBrowserName();
-    const os = browser.getOSName();
-    config.headers['Client'] = client;
-    config.headers['OS'] = os;
+    if (config.headers) {
+      config.headers['Ip'] = info.ip;
+      config.headers['Client'] = info.browser;
+      config.headers['OS'] = info.os;
+      config.headers['Device'] = info.device;
+    }
 
     return config;
   },
