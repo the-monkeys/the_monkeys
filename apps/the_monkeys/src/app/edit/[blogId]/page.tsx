@@ -233,7 +233,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Post must contain a title and content.',
+        description: 'Post must contain at least 3 content blocks.',
       });
       return;
     }
@@ -242,7 +242,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Post should start with Heading 1.',
+        description: 'Post should start with title (Heading 1).',
       });
       return;
     }
@@ -254,7 +254,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Only one title block is allowed in the post.',
+        description: 'Only one title block (Heading 1) is allowed in the post.',
       });
       return;
     }

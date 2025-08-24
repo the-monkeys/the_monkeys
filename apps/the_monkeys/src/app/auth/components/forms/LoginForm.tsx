@@ -31,10 +31,12 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: () => {
+    onSuccess: (user) => {
       queryClient.invalidateQueries({ queryKey: ['auth'] });
+      queryClient.setQueryData(['auth'], user);
 
       const callbackURL = params.get('callbackURL');
+
       if (callbackURL) {
         router.replace(callbackURL);
         return;

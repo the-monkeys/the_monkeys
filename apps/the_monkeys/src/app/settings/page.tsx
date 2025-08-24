@@ -30,8 +30,14 @@ const SettingsPage = () => {
 
   if (!data || isLoading) {
     return (
-      <div className='p-8 flex items-center justify-center'>
+      <div className='p-8 flex flex-col items-center justify-center gap-1'>
         <Loader size={42} />
+
+        {!data && !isLoading && (
+          <p className='text-sm text-center opacity-90'>
+            You are not logged in. Redirecting to feed.
+          </p>
+        )}
       </div>
     );
   }
