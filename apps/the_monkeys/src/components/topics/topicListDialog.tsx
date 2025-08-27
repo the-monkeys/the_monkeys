@@ -14,7 +14,9 @@ export default function TopicListDialog({ topics }: { topics: string[] }) {
     <>
       <Dialog>
         <DialogTrigger>
-          <p className='p-1 text-sm opacity-90'>more...</p>
+          <p className='p-1 text-sm opacity-90 underline underline-offset-2'>
+            show more...
+          </p>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
