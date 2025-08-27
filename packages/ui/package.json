@@ -37,7 +37,7 @@
 		"tailwind-merge": "^2.2.2"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
+		"@biomejs/biome": "2.2.2",
 		"@the-monkeys/config": "workspace:*",
 		"@types/react": "^18",
 		"@types/react-dom": "^18"
