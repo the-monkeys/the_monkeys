@@ -50,7 +50,7 @@
     "react-share": "^5.1.2",
     "socket.io-client": "^4.7.5",
     "sockjs-client": "^1.6.1",
-    "swr": "^2.2.5",
+    "swr": "^2.3.6",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.6",
