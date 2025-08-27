@@ -4,6 +4,7 @@ import { PROFILE_TOPICS_SHOW_MAX_COUNT } from '@/constants/topics';
 import { Badge } from '@the-monkeys/ui/atoms/badge';
 
 import { TopicLabelLink, TopicLabelLinkProfile } from './topicLabels';
+import TopicListDialog from './topicListDialog';
 
 export const TopicLinksContainer = ({ topics }: { topics?: string[] }) => {
   if (!topics || !topics.length)
@@ -40,7 +41,7 @@ export const TopicLinksContainerCompact = ({
         <TopicLabelLinkProfile key={`${topic}_${index}`} topic={topic} />
       ))}
       {topics.length > PROFILE_TOPICS_SHOW_MAX_COUNT && (
-        <p className='p-1 text-sm opacity-90'>more...</p>
+        <TopicListDialog topics={topics} />
       )}
     </div>
   );
