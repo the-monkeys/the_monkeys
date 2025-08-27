@@ -1,0 +1,140 @@
+version: 2
+updates:
+  # Root workspace - npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "the-monkeys/maintainers"
+    assignees:
+      - "the-monkeys/maintainers"
+    commit-message:
+      prefix: "chore(deps):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "automerge"
+    ignore:
+      # Ignore major version updates for critical dependencies
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+
+  # Main Next.js app
+  - package-ecosystem: "npm"
+    directory: "/apps/the_monkeys"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "the-monkeys/maintainers"
+    assignees:
+      - "the-monkeys/maintainers"
+    commit-message:
+      prefix: "chore(deps/app):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "app"
+      - "automerge"
+    ignore:
+      # Ignore major version updates for critical dependencies
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+
+  # UI Package
+  - package-ecosystem: "npm"
+    directory: "/packages/ui"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "the-monkeys/maintainers"
+    assignees:
+      - "the-monkeys/maintainers"
+    commit-message:
+      prefix: "chore(deps/ui):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "ui"
+      - "automerge"
+    ignore:
+      # Ignore major version updates for UI dependencies that might break components
+      - dependency-name: "@radix-ui/*"
+        update-types: ["version-update:semver-major"]
+
+  # Config Package
+  - package-ecosystem: "npm"
+    directory: "/packages/config"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "the-monkeys/maintainers"
+    assignees:
+      - "the-monkeys/maintainers"
+    commit-message:
+      prefix: "chore(deps/config):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "config"
+      - "automerge"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "the-monkeys/maintainers"
+    assignees:
+      - "the-monkeys/maintainers"
+    commit-message:
+      prefix: "chore(ci):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "automerge"
+
+  # Docker dependencies (if any Dockerfiles exist)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "the-monkeys/maintainers"
+    assignees:
+      - "the-monkeys/maintainers"
+    commit-message:
+      prefix: "chore(docker):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "automerge"
