@@ -77,7 +77,7 @@ export const UserInfoCardShowcase = ({
     <div className='flex items-center gap-1 flex-wrap'>
       {!isLoading ? (
         isError ? (
-          <p className='shrink-0 text-sm opacity-90 italic'>Author Unknown</p>
+          <p className='shrink-0 text-sm opacity-90 italic'>Unknown Author</p>
         ) : (
           <Link
             href={`/${userData?.username}`}
