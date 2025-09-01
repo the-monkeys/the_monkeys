@@ -27,8 +27,8 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
-    <div className='h-full w-full flex flex-col sm:flex-row [@media(min-width:1200px)]:flex-col gap-[10px] sm:gap-3 [@media(min-width:1200px)]:gap-[10px]'>
-      <div className='shrink-0 h-[200px] sm:h-[260px] lg:h-[350px] w-full sm:w-1/2 [@media(min-width:1200px)]:w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-md shadow-sm overflow-hidden'>
+    <div className='h-full w-full flex flex-col sm:flex-row [@media(min-width:1200px)]:flex-col gap-[10px] sm:gap-5 [@media(min-width:1200px)]:gap-[10px]'>
+      <div className='shrink-0 h-[200px] sm:h-[260px] [@media(min-width:1200px)]:h-[350px] w-full sm:w-1/2 [@media(min-width:1200px)]:w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-md shadow-sm overflow-hidden'>
         {!imageContent ? (
           <BlogPlaceholderImage title={titleContent} />
         ) : (
