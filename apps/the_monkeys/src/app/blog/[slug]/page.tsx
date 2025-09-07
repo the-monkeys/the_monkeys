@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import AdUnit from '@/components/AdSense/AdUnit';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
@@ -125,7 +126,7 @@ const BlogPage = () => {
             <UserInfoCardBlogPage id={authorId} />
           </Container>
         </div>
-
+        <AdUnit slot='4598536509' />
         <div className='p-4'>
           <Container className='max-w-3xl'>
             <div className='px-1 pb-4 overflow-hidden'>
