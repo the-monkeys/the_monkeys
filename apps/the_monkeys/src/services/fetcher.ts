@@ -13,7 +13,7 @@ export const fetcher = async (url: string) => {
     const response = await axiosInstanceNoAuth.get(url);
     return response.data;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('Error fetching data:', error, url);
     throw error;
   }
 };
@@ -26,7 +26,7 @@ export const fetcherV2 = async (url: string) => {
     const response = await axiosInstanceNoAuthV2.get(url);
     return response.data;
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('Error fetching data:', error, url);
     throw error;
   }
 };
