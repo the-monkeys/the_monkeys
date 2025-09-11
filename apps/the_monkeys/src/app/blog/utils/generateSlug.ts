@@ -1,7 +1,12 @@
-export const generateSlug = (text: string | undefined): string => {
-  if (!text) return 'untitled post';
-  return text
+export const generateSlug = (title: string): string => {
+  if (!title) return 'untitled-post';
+
+  return title
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
-    .replace(/^-+|-+$/g, ''); // Trim leading and trailing hyphens
+    .replace(/’/g, "'") // normalize curly apostrophes
+    .replace(/(\w)'s\b/g, '$1') // remove possessive 's
+    .replace(/'/g, '') // remove any remaining apostrophes
+    .replace(/[^a-z0-9]+/g, '-') // replace non-alphanumerics with hyphen
+    .replace(/-+/g, '-') // collapse multiple hyphens
+    .replace(/^-+|-+$/g, ''); // trim leading/trailing hyphens
 };
