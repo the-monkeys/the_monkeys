@@ -5,6 +5,8 @@ import { baseUrl } from '@/constants/baseUrl';
 import { FEED_ROUTE } from '@/constants/routeConstants';
 import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
 
+import { generateSlug } from './blog/utils/generateSlug';
+
 // Fetch posts from the API using fetch
 async function fetchBlogPosts(): Promise<MetaBlog[]> {
   try {
@@ -12,20 +14,18 @@ async function fetchBlogPosts(): Promise<MetaBlog[]> {
       'https://monkeys.support/api/v2/blog/meta-feed',
       {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
       }
     );
 
     if (!response.ok) {
-      console.error(`Failed to fetch posts: ${response.statusText}`);
+      console.error(
+        `Failed to fetch posts: ${response.status} ${response.statusText}`
+      );
       return [];
     }
 
     const data: GetMetaFeedBlogs = await response.json();
-    console.log(data);
-
     return data?.blogs || [];
   } catch (error) {
     console.error('Error fetching posts:', error);
@@ -35,6 +35,7 @@ async function fetchBlogPosts(): Promise<MetaBlog[]> {
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   noStore();
+
   const blogPosts = await fetchBlogPosts();
 
   const staticUrls: MetadataRoute.Sitemap = [
@@ -51,19 +52,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: MetaBlog) => {
-    // Extract the title from the blog's content
     const title = post?.title || 'Untitled Post';
-
-    // Generate a slug from the title
-    const slug = title
-      .toLowerCase() // Convert to lowercase
-      .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric characters with hyphens
-      .replace(/^-+|-+$/g, ''); // Trim leading and trailing hyphens
+    const slug = generateSlug(title);
 
     return {
-      url: `${baseUrl}/blog/${slug || 'untitled post'}-${post?.blog_id}`, // Fallback to 'untitled' if slug is empty
-      changeFrequency: 'monthly', // Updated for regular additions
+      url: `${baseUrl}/blog/${slug}-${post?.blog_id ?? 'unknown'}`,
+      changeFrequency: 'monthly',
       priority: 1,
+      lastModified: post?.published_time,
     };
   });
 
