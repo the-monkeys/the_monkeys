@@ -27,10 +27,12 @@ export const SearchPosts = ({ query }: { query: string }) => {
           No posts found for your search
         </p>
       ) : (
-        <div className='flex flex-col space-y-8'>
-          {blogs.map((blog) => {
-            return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
-          })}
+        <div className='max-w-4xl'>
+          <div className='flex flex-col gap-4'>
+            {blogs.slice(0, 8).map((blog) => {
+              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+            })}
+          </div>
         </div>
       )}
     </>

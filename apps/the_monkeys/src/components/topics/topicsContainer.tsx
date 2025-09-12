@@ -40,6 +40,7 @@ export const TopicLinksContainerCompact = ({
       {topics.slice(0, PROFILE_TOPICS_SHOW_MAX_COUNT).map((topic, index) => (
         <TopicLabelLinkProfile key={`${topic}_${index}`} topic={topic} />
       ))}
+
       {topics.length > PROFILE_TOPICS_SHOW_MAX_COUNT && (
         <TopicListDialog topics={topics} />
       )}

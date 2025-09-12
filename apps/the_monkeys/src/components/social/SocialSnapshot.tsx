@@ -6,10 +6,10 @@ import { SocialSnapshotDialog } from './SocialSnapshotDialog';
 
 export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
   return (
-    <div className='relative border-2 border-brand-orange bg-brand-orange/10 rounded-2xl overflow-hidden'>
+    <div className='relative border-1 border-brand-orange/40 bg-brand-orange/10 rounded-2xl overflow-hidden'>
       <div className='w-full p-4 sm:p-6 flex items-center justify-between gap-4 flex-wrap'>
-        <div className='space-y-2'>
-          <h4 className='font-dm_sans font-semibold text-3xl sm:text-4xl leading-tight drop-shadow-sm'>
+        <div className='space-y-3'>
+          <h4 className='font-dm_sans font-semibold text-3xl sm:text-4xl leading-tight tracking-tight drop-shadow-sm'>
             Social
             <span className='font-bold text-brand-orange'> .</span>
             <br />
@@ -17,8 +17,8 @@ export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
             <span className='font-bold text-brand-orange'> .</span>
           </h4>
 
-          <p className='text-sm sm:text-base'>
-            Instantly create a share-worthy social post from this content
+          <p className='text-sm'>
+            Instantly create a share-worthy social post for this post.
           </p>
         </div>
 

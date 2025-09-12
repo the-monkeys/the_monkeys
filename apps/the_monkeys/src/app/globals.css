@@ -9,7 +9,7 @@
   --blog-p-text-size: 18px;
   --blog-list-text-size: 18px;
   --blog-quote-text-size: 18px;
-  --blog-code-text-size: 18px;
+  --blog-code-text-size: 17px;
   --blog-table-text-size: 17px;
   --blog-text-height: 1.6;
 }
@@ -22,7 +22,7 @@
     --blog-p-text-size: 16px;
     --blog-list-text-size: 16px;
     --blog-quote-text-size: 16px;
-    --blog-code-text-size: 16px;
+    --blog-code-text-size: 15px;
     --blog-table-text-size: 15px;
     --blog-text-height: 1.6;
   }
@@ -38,7 +38,7 @@
 }
 
 .react-select__control {
-  @apply rounded-md border-1 border-foreground-light bg-background-light transition-all dark:border-foreground-dark dark:bg-background-dark;
+  @apply rounded-md border-1 border-foreground-light bg-background-light dark:border-foreground-dark dark:bg-background-dark;
 }
 
 .react-select__control--is-focused {

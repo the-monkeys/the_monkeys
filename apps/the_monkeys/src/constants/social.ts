@@ -35,7 +35,7 @@ export const notFoundList = [
   {
     title: 'Join Telegram',
     text: 'Be a part of our Telegram channel.',
-    icon: 'RiTelegram' as IconName,
+    icon: 'RiTelegram2' as IconName,
     link: MONKEYS_TELEGRAM,
   },
 ];

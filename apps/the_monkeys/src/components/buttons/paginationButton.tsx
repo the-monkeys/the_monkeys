@@ -11,7 +11,7 @@ export const PaginationPrevButton = ({
 }) => {
   return (
     <Button
-      variant='outline'
+      variant='secondary'
       size='lg'
       className='group flex items-center gap-1 rounded-full'
       onClick={onClick}
@@ -35,7 +35,7 @@ export const PaginationNextButton = ({
 }) => {
   return (
     <Button
-      variant='outline'
+      variant='secondary'
       size='lg'
       className='group flex items-center gap-1 rounded-full'
       onClick={onClick}
