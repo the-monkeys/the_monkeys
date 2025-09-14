@@ -6,7 +6,7 @@ import { WordCloudDialog } from './WordCloudDialog';
 export const WordCloudCard = ({ username }: { username: string }) => {
   const { tags, isLoading, isError } = useGetUserTags({ username: username });
 
-  const isEligible = Object.keys(tags?.tags!).length > 40;
+  const isEligible = Object.keys(tags?.tags ?? {}).length > 40;
 
   return (
     <div className='relative border-1 border-brand-orange/40 bg-brand-orange/10 rounded-2xl overflow-hidden'>
