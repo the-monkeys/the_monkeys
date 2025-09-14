@@ -226,12 +226,12 @@ export const SnapshotCanvas = ({
       </div>
 
       <Button
-        className='flex rounded-full items-center gap-2 shadow-md'
+        className='flex rounded-full items-center gap-2 shadow-sm'
         onClick={downloadImage}
         disabled={loading}
       >
         <Icon name='RiDownload2' size={18} />
-        <p>Download</p>
+        <p>Save</p>
       </Button>
     </div>
   );

@@ -20,7 +20,7 @@ const ProfilePageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='px-4 py-6 min-h-[800px] space-y-10'>
+    <Container className='px-4 py-6 min-h-[800px] space-y-4 lg:space-y-10'>
       {children}
     </Container>
   );

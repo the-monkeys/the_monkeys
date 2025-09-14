@@ -12,16 +12,13 @@ export const PaginationPrevButton = ({
   return (
     <Button
       variant='secondary'
-      size='lg'
       className='group flex items-center gap-1 rounded-full'
       onClick={onClick}
       disabled={disable}
     >
-      <Icon
-        name='RiArrowUpS'
-        className='-rotate-90 mr-[1px] ml-[2px] group-hover:mr-[2px] group-hover:ml-[1px] transition-transform'
-      />
-      <p className='mr-2'>Prev</p>
+      <Icon name='RiArrowUpS' className='-rotate-90' />
+
+      <p className='mr-2 text-sm'>Prev</p>
     </Button>
   );
 };
@@ -36,16 +33,13 @@ export const PaginationNextButton = ({
   return (
     <Button
       variant='secondary'
-      size='lg'
       className='group flex items-center gap-1 rounded-full'
       onClick={onClick}
       disabled={disable}
     >
-      <p className='ml-2'>Next</p>
-      <Icon
-        name='RiArrowUpS'
-        className='rotate-90 ml-[1px] mr-[2px] group-hover:ml-[2px] group-hover:mr-[1px] transition-transform'
-      />
+      <p className='ml-2 text-sm'>Next</p>
+
+      <Icon name='RiArrowUpS' className='rotate-90' />
     </Button>
   );
 };
