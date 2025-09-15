@@ -1,11 +1,9 @@
 import { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
-import { API_URL, API_URL_V2 } from '@/constants/api';
+import { API_URL, LIVE_URL } from '@/constants/api';
 import { baseUrl } from '@/constants/baseUrl';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
-
-import monkeyslogoImg from '../../../public/logo-brand.svg';
 
 interface ProfileLayoutProps {
   children: React.ReactNode;
@@ -61,7 +59,7 @@ export async function generateMetadata({
       };
     }
 
-    const profileImageUrl = monkeyslogoImg;
+    const profileImageUrl = `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`;
     const fullName = `${userData.first_name} ${userData.last_name}`;
     const description =
       userData.bio ||
