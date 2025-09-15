@@ -4,13 +4,13 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import Icon from '@/components/icon';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
 import { registerUserSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import { register } from '@/services/auth/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { RiInformationLine } from '@remixicon/react';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import {
@@ -78,7 +78,7 @@ export default function RegisterUserForm() {
           name='first_name'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>First Name</FormLabel>
+              <FormLabel className='text-sm'>First Name</FormLabel>
               <FormControl>
                 <Input
                   placeholder='Enter first Name'
@@ -97,7 +97,7 @@ export default function RegisterUserForm() {
           name='last_name'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>Last Name</FormLabel>
+              <FormLabel className='text-sm'>Last Name</FormLabel>
               <FormControl>
                 <Input
                   placeholder='Enter last Name'
@@ -116,7 +116,7 @@ export default function RegisterUserForm() {
           name='email'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>Email</FormLabel>
+              <FormLabel className='text-sm'>Email</FormLabel>
               <FormControl>
                 <Input
                   placeholder='Enter email address'
@@ -136,12 +136,16 @@ export default function RegisterUserForm() {
           name='password'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>
+              <FormLabel className='text-sm'>
                 <div className='flex items-center'>
                   Password
                   <Tooltip>
                     <TooltipTrigger type='button'>
-                      <RiInformationLine className='ml-2' size={18} />
+                      <Icon
+                        name='RiInformation'
+                        className='ml-2 opacity-90'
+                        size={18}
+                      />
                     </TooltipTrigger>
                     <TooltipContent asChild>
                       <ul className='p-4 bg-background-light dark:bg-background-dark border-1 border-border-light/25 dark:border-border-dark/25 rounded-lg space-y-1'>
@@ -182,9 +186,7 @@ export default function RegisterUserForm() {
           name='confirmPassword'
           render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className='font-roboto text-sm'>
-                Confirm Password
-              </FormLabel>
+              <FormLabel className='text-sm'>Confirm Password</FormLabel>
               <FormControl>
                 <PasswordInput
                   placeholder='Confirm Password'
@@ -200,8 +202,12 @@ export default function RegisterUserForm() {
           )}
         />
 
-        <div className='pt-6 flex flex-row-reverse  gap-2 items-center'>
-          <Button disabled={loading ? true : false} className='flex-1 order-1'>
+        <div className='pt-6 flex'>
+          <Button
+            variant='brand'
+            disabled={loading ? true : false}
+            className='flex-1'
+          >
             {loading && <Loader />} Register
           </Button>
         </div>

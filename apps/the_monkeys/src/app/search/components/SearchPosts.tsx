@@ -1,10 +1,6 @@
-import { useEffect, useState } from 'react';
-
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
-import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
-import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 
 export const SearchPosts = ({ query }: { query: string }) => {
   const { searchBlogs, searchBlogsLoading, searchBlogsError } =
@@ -28,13 +24,15 @@ export const SearchPosts = ({ query }: { query: string }) => {
     <>
       {!blogs || blogs === null ? (
         <p className='py-2 text-sm opacity-90 text-center'>
-          No results found for your search
+          No posts found for your search
         </p>
       ) : (
-        <div className='flex flex-col space-y-6 sm:space-y-8'>
-          {blogs.map((blog) => {
-            return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
-          })}
+        <div className='max-w-4xl'>
+          <div className='flex flex-col gap-4'>
+            {blogs.slice(0, 8).map((blog) => {
+              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+            })}
+          </div>
         </div>
       )}
     </>

@@ -1,5 +1,3 @@
-'use client';
-
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { updateEmailSchema } from '@/lib/schema/settings';
@@ -92,34 +90,36 @@ export const Email = ({ data }: { data: IUser }) => {
   };
 
   return (
-    <div className='p-1 space-y-2'>
-      <p className='text-sm opacity-80'>Registered Email: {data.email}</p>
+    <div className='p-1 space-y-4'>
+      <div className='space-y-2'>
+        <p className='text-sm opacity-80'>Registered Email: {data.email}</p>
 
-      {data.email_verification_status !== 'Verified' ? (
-        <Button
-          type='button'
-          size='lg'
-          className='mt-4'
-          onClick={reqVerification}
-          disabled={requestVerificationMutation.isPending ? true : false}
-        >
-          {requestVerificationMutation.isPending && <Loader />} Verify Email
-        </Button>
-      ) : (
-        <div className='mt-4 flex items-center gap-2'>
-          <Icon
-            name='RiVerifiedBadge'
-            type='Fill'
-            className='text-brand-orange'
-          />
+        {data.email_verification_status !== 'Verified' ? (
+          <Button
+            type='button'
+            size='lg'
+            className='mt-4'
+            onClick={reqVerification}
+            disabled={requestVerificationMutation.isPending ? true : false}
+          >
+            {requestVerificationMutation.isPending && <Loader />} Verify Email
+          </Button>
+        ) : (
+          <div className='mt-4 flex items-center gap-2'>
+            <Icon
+              name='RiVerifiedBadge'
+              type='Fill'
+              className='text-brand-orange'
+            />
 
-          <p>Email Verified</p>
-        </div>
-      )}
+            <p>Email Verified</p>
+          </div>
+        )}
+      </div>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
-          <div className='flex items-end flex-wrap gap-2'>
+          <div className='flex items-end gap-[6px]'>
             <div className='w-full sm:w-1/2'>
               <FormField
                 control={form.control}
@@ -140,9 +140,11 @@ export const Email = ({ data }: { data: IUser }) => {
             </div>
 
             <Button
+              variant='secondary'
               size='lg'
               type='submit'
               disabled={updateEmailMutation.isPending}
+              className='shrink-0'
             >
               {updateEmailMutation.isPending && <Loader />} Update
             </Button>

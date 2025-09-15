@@ -5,12 +5,10 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { ProfileSectionSkeleton } from '@/components/skeletons/profileSkeleton';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
-import { Tabs, TabsContent } from '@the-monkeys/ui/atoms/tabs';
 
 import { Blogs } from './components/Blogs';
-import { Drafts } from './components/Drafts';
-import { NavigationTabs } from './components/NavigationTabs';
 import { ProfileSection } from './components/profile/ProfileSection';
+import { WordCloudCard } from './components/wordCloud/WordCloud';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
   const { data } = useAuth();
@@ -53,35 +51,19 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
     <>
       <ProfileSection paramsUser={params.username} user={user} />
 
-      <div className='grid grid-cols-3 gap-10 overflow-x-hidden'>
-        <Tabs
-          defaultValue='posts'
-          className='col-span-3 lg:col-span-2 space-y-6'
-        >
-          <h6 className='pb-1 font-dm_sans font-medium text-xl truncate'>
+      <div className='grid grid-cols-3 gap-8'>
+        <div className='h-fit col-span-3 lg:col-span-1'>
+          <WordCloudCard username={params.username} />
+        </div>
+
+        <div className='col-span-3 lg:col-span-2 max-w-4xl space-y-6'>
+          <h6 className='font-dm_sans font-medium text-lg'>
             Latest from{' '}
-            <span className='font-dm_sans font-medium text-2xl'>
-              {user?.first_name} {user?.last_name}
-            </span>
+            <span className='font-dm_sans text-xl'>{user?.first_name}</span>
           </h6>
 
-          {data?.username === params.username ? (
-            <NavigationTabs username={params.username} user={data} />
-          ) : null}
-
-          <div className='w-full'>
-            <TabsContent className='w-full' value='posts'>
-              <Blogs username={params.username} user={data} />
-            </TabsContent>
-
-            <TabsContent className='w-full' value='drafts'>
-              <Drafts username={params.username} user={data} />
-            </TabsContent>
-          </div>
-        </Tabs>
-
-        {/* TODO: add section to showcase bookmarks and notificatoins for logged in users */}
-        <div className='col-span-3 lg:col-span-1'></div>
+          <Blogs username={params.username} user={data} />
+        </div>
       </div>
     </>
   );

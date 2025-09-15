@@ -89,3 +89,9 @@ export interface IsBookmarkedResponse {
 export interface bookmarksCountResponse {
   count: number;
 }
+
+// get user tags
+
+export interface GetUserTagsResponse {
+  tags: Record<string, number>;
+}

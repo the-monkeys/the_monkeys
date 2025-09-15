@@ -1,9 +1,12 @@
 import type { Metadata } from 'next';
 
-import { BackgroundBanner } from '@/components/branding/BackgroundBanner';
+import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
+import Container from '@/components/layout/Container';
+import Logo from '@/components/logo';
 
 const title = 'Authentication';
-const description = 'We are The Monkeys! A blogging and educational platform.';
+const description =
+  'Welcome to Monkeys — a platform for curious minds to explore, share, and grow through writing and learning';
 
 export const metadata: Metadata = {
   title,
@@ -16,16 +19,20 @@ export default async function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className='min-h-screen'>
-      <div className='relative py-16 sm:py-20 mb-10 space-y-3'>
-        <div className='absolute top-0 left-0 w-full h-full -z-10'>
-          <BackgroundBanner />
+    <Container className='p-4 max-w-4xl min-h-[800px] space-y-2'>
+      <div className='relative h-[120px] w-full flex items-center justify-center'>
+        <div className='absolute top-0 left-0 h-full w-full -z-10 opacity-80'>
+          <BackgroundWaves />
         </div>
 
-        <div className='mx-auto max-w-lg px-4 sm:px-6 py-6 rounded-2xl shadow-2xl shadow-brand-orange/25 bg-background-light dark:bg-background-dark space-y-8'>
-          {children}
+        <div className='size-12 drop-shadow-sm'>
+          <Logo />
         </div>
       </div>
-    </div>
+
+      <div className='mx-auto max-w-lg flex-1 h-full w-full flex flex-col gap-4'>
+        {children}
+      </div>
+    </Container>
   );
 }

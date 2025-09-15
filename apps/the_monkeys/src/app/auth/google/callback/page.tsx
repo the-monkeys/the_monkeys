@@ -7,10 +7,9 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { Loader } from '@/components/loader';
 import { googleSSOCallback } from '@/services/auth/auth';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Alert,
   AlertDescription,
@@ -27,10 +26,13 @@ import {
 export default function GoogleCallback() {
   const params = useSearchParams();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: googleSSOCallback,
-    onSuccess: () => {
+    onSuccess: (user) => {
+      queryClient.setQueryData(['auth'], user);
+
       toast({
         variant: 'success',
         title: 'Login successful',
@@ -54,19 +56,15 @@ export default function GoogleCallback() {
 
   return (
     <>
-      <div className='flex justify-end'>
-        <LinksRedirectArrow link='/feed'>
-          <p className='font-dm_sans font-medium'>Monkeys Showcase</p>
-        </LinksRedirectArrow>
-      </div>
-
       <FormHeader>
         <FormHeading heading='Welcome Back' />
-        <FormSubheading subheading='Log in to continue your journey' />
+        <FormSubheading subheading='Login with Google, and continue your journey.' />
       </FormHeader>
 
       {mutation.isIdle || mutation.isPending ? (
-        <Loader size={32} />
+        <div className='p-6 flex items-center justify-center'>
+          <Loader size={32} />
+        </div>
       ) : (
         <Alert variant={mutation.isSuccess ? 'constructive' : 'destructive'}>
           <Icon name='RiErrorWarning' />
@@ -79,12 +77,14 @@ export default function GoogleCallback() {
         </Alert>
       )}
 
-      <div className='mt-6 text-center'>
+      <div className='mt-4 text-center'>
+        <span>Go back to </span>
+
         <Link
           href='/auth/login'
-          className='font-dm_sans hover:underline text-brand-orange'
+          className='font-medium hover:underline text-brand-orange'
         >
-          Go back to login
+          Login
         </Link>
       </div>
     </>

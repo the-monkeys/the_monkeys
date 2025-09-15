@@ -2,7 +2,6 @@
 
 import React, { FC, useEffect, useRef } from 'react';
 
-import { editorConfig } from '@/config/editor/editorjs_readonly.config';
 import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
 
 export type EditorProps = {
@@ -38,10 +37,7 @@ const Editor: FC<EditorProps> = ({ data, onChange, config }) => {
   }, []);
 
   return (
-    <div
-      className='mx-auto w-full sm:w-4/5 px-4 space-y-6'
-      id='editorjs_editor-container'
-    ></div>
+    <div className='w-full px-4 space-y-6' id='editorjs_editor-container'></div>
   );
 };
 

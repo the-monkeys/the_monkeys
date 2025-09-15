@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import React from 'react';
 
-import { useSession } from '@/app/session-store-provider';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -11,9 +11,9 @@ import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 
 export const CategoryButton = ({ topics }: { topics: string[] }) => {
-  const { data: session, status } = useSession();
+  const { data: session } = useAuth();
   const { toast } = useToast();
-  const { user, isLoading } = useUser(session?.user?.username);
+  const { user, isLoading } = useUser(session?.username);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [statusTopic, setStatus] = useState<'success' | 'error' | null>(null);
@@ -42,7 +42,7 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
   // }, [user, topics]);
 
   const handleCategoryClick = async () => {
-    const username = session?.user?.username;
+    const username = session?.username;
 
     if (!username) {
       toast({
@@ -78,7 +78,7 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
   };
 
   const handleUnfollowCategory = async () => {
-    const username = session?.user?.username;
+    const username = session?.username;
 
     try {
       setLoading(true);

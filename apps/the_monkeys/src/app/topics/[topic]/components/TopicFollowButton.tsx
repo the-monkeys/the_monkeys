@@ -89,7 +89,8 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
   return (
     <div>
       <Button
-        variant={isFollowed ? 'default' : 'brand'}
+        variant={isFollowed ? 'secondary' : 'default'}
+        size='sm'
         className='rounded-full'
         onClick={isFollowed ? handleUnfollowButton : handleFollowButton}
         data-testid={isFollowed ? 'unFollowButton' : 'followButton'}

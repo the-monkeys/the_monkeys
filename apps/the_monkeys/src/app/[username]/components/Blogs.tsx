@@ -37,7 +37,7 @@ export const Blogs = ({
 
   if (isError)
     return (
-      <div className='min-h-screen'>
+      <div className='min-h-[800px]'>
         <p className='w-full text-sm opacity-80 text-center'>
           No blogs published yet.
         </p>
@@ -45,7 +45,7 @@ export const Blogs = ({
     );
 
   return (
-    <div className='flex flex-col gap-6'>
+    <div className='flex flex-col gap-4'>
       {isLoading ? (
         <FeedBlogCardListSkeleton count={PROFILE_POSTS_PER_PAGE} />
       ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
@@ -65,16 +65,20 @@ export const Blogs = ({
             })}
 
           {showPagination && (
-            <div className='py-4 flex justify-center gap-4 mt-6'>
-              <PaginationPrevButton
-                onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                disable={!hasPrevPage}
-              />
+            <div className='flex justify-start gap-[10px] mt-4'>
+              {hasPrevPage && (
+                <PaginationPrevButton
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                  disable={!hasPrevPage}
+                />
+              )}
 
-              <PaginationNextButton
-                onClick={() => setPage((prev) => prev + 1)}
-                disable={!hasNextPage}
-              />
+              {hasNextPage && (
+                <PaginationNextButton
+                  onClick={() => setPage((prev) => prev + 1)}
+                  disable={!hasNextPage}
+                />
+              )}
             </div>
           )}
         </>

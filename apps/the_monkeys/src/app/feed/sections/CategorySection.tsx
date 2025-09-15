@@ -22,40 +22,35 @@ const CategorySection = ({
   if (isError) return null;
 
   return (
-    <Container className='px-4 py-6'>
+    <Container className='px-4 pt-6'>
       <div className='mb-10'>
-        <h5 className='mt-2 py-1 font-dm_sans font-medium text-2xl break-words'>
+        <h5 className='mt-2 pb-3 font-dm_sans font-semibold text-2xl break-words'>
           {title}
         </h5>
 
-        <div className='flex items-end'>
-          <div className='w-[80px] h-1 bg-brand-orange' />
-          <div className='flex-grow h-[1px] bg-border-light dark:bg-border-dark' />
-        </div>
+        <div className='w-[100px] h-[2px] bg-brand-orange' />
       </div>
 
       {isLoading ? (
         <FeedCategorySectionSkeleton />
       ) : (
-        <div className='space-y-10 lg:space-y-12'>
-          <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
-            {blogs?.blogs.slice(0, 6).map((blog) => {
+        <div className='space-y-4 sm:space-y-10'>
+          <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
+            {blogs?.blogs.slice(0, 2).map((blog) => {
               return (
-                <div className='col-span-2 md:col-span-1' key={blog?.blog_id}>
+                <div className='col-span-2 sm:col-span-1' key={blog?.blog_id}>
                   <TrendingBlogCardSmall blog={blog} />
                 </div>
               );
             })}
           </div>
 
-          <div className='grid grid-cols-2 gap-6'>
-            {blogs?.blogs.slice(6, 12).map((blog) => {
-              return (
-                <div className='col-span-2 lg:col-span-1' key={blog?.blog_id}>
-                  <FeedBlogCard blog={blog} />
-                </div>
-              );
-            })}
+          <div className='max-w-4xl'>
+            <div className='flex flex-col gap-4'>
+              {blogs?.blogs.slice(2, 7).map((blog) => {
+                return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+              })}
+            </div>
           </div>
         </div>
       )}

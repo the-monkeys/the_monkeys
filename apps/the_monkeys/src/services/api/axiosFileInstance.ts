@@ -1,10 +1,9 @@
-import axios from 'axios';
-import Bowser from 'bowser';
-import { publicIpv4 } from 'public-ip';
+import clientInfo from '@/utils/clientInfo';
+import axios, { AxiosResponse } from 'axios';
 
 const axiosFileInstance = axios.create({
   baseURL: '/api/v1',
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'multipart/form-data',
   },
@@ -12,25 +11,24 @@ const axiosFileInstance = axios.create({
 
 axiosFileInstance.interceptors.request.use(
   async (config) => {
-    // Get public IP address
-    const ip = await publicIpv4();
-    config.headers['Ip'] = ip;
+    const info = clientInfo.getInfo();
 
-    // Detect client browser and OS
-    const browser = Bowser.getParser(window.navigator.userAgent);
-    const client = browser.getBrowserName();
-    const os = browser.getOSName();
-    config.headers['Client'] = client;
-    config.headers['OS'] = os;
+    if (config.headers) {
+      config.headers['Ip'] = info.ip;
+      config.headers['Client'] = info.browser;
+      config.headers['OS'] = info.os;
+      config.headers['Device'] = info.device;
+    }
+
     config.withCredentials = true;
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error: unknown) => Promise.reject(error)
 );
 
-axiosFileInstance.interceptors.response.use((response) => response);
+axiosFileInstance.interceptors.response.use(
+  (response: AxiosResponse) => response
+);
 
 export default axiosFileInstance;

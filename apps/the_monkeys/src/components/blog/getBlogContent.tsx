@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { twMerge } from 'tailwind-merge';
@@ -37,8 +39,8 @@ export const getCardContent = ({ blog }: { blog: Blog }) => {
   }
 
   return {
-    titleContent,
-    descriptionContent,
+    titleContent: purifyHTMLString(titleContent),
+    descriptionContent: purifyHTMLString(descriptionContent),
     imageContent,
   };
 };
@@ -52,13 +54,14 @@ export const BlogTitle = ({
 }) => {
   return (
     <h2
-      className={twMerge(className, 'capitalize')}
+      className={twMerge(className, 'w-fit capitalize tracking-tight')}
       dangerouslySetInnerHTML={{
         __html: purifyHTMLString(title),
       }}
     />
   );
 };
+
 export const BlogHeading = ({
   title,
   className,
@@ -68,7 +71,7 @@ export const BlogHeading = ({
 }) => {
   return (
     <h1
-      className={twMerge(className, 'capitalize')}
+      className={twMerge(className, 'w-fit capitalize tracking-tight')}
       dangerouslySetInnerHTML={{
         __html: purifyHTMLString(title),
       }}
@@ -102,12 +105,15 @@ export const BlogImage = ({
   image: string;
   className?: string;
 }) => {
-  // need to optimize this further
   return (
-    <img
+    <Image
       src={image}
       alt={title}
+      height='500'
+      width='800'
       className={twMerge(className, 'h-full w-full object-cover object-center')}
+      quality={100}
+      priority
     />
   );
 };
@@ -119,15 +125,14 @@ export const BlogPlaceholderImage = ({
   title: string;
   className?: string;
 }) => {
-  // need to optimize this further
   return (
-    <img
+    <Image
       src={placeholderImage.src}
       alt={title}
-      className={twMerge(
-        className,
-        'h-full w-full object-cover object-top md:object-center'
-      )}
+      height='500'
+      width='800'
+      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      quality={100}
     />
   );
 };

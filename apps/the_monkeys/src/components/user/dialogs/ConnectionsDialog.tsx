@@ -105,7 +105,9 @@ export const ConnectionsDialog = ({
                         <ConnectionCard
                           key={follower?.username}
                           first_name={follower.first_name}
-                          last_name={follower.last_name}
+                          last_name={
+                            follower.last_name ? follower.last_name : ''
+                          }
                           username={follower.username}
                         />
                       );
@@ -124,7 +126,9 @@ export const ConnectionsDialog = ({
                         <ConnectionCard
                           key={following?.username}
                           first_name={following.first_name}
-                          last_name={following.last_name}
+                          last_name={
+                            following.last_name ? following.last_name : ''
+                          }
                           username={following.username}
                         />
                       );

@@ -50,7 +50,7 @@ export const BlogsByTopic = ({ topic }: { topic: string }) => {
   }
 
   return (
-    <div className='flex flex-col gap-6'>
+    <div className='flex flex-col gap-2'>
       {blogs.blogs.map((blog) => {
         return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
       })}

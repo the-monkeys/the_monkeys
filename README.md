@@ -1,56 +1,58 @@
 <picture>
-  <img src="./apps/the_monkeys/public/logo-brand.svg" alt="Monkeys" style="height: 100px; width: 100px;">
+  <img src="./apps/the_monkeys/public/Banner.png" alt="Monkeys" style="height: 100%; width: 80%;">
 </picture>
 
 # Monkeys
 
-#### Inspire, Inform, Innovate
-With Monkeys, create content that truly makes a difference. We provide a dynamic space for individuals to share their knowledge and experiences across a wide array of topics. Whether you're passionate about science, technology, personal development, self-improvement, psychology, philosophy, fashion, health, or lifestyle, you'll find a place here to both learn and contribute.
+### Inspire, Inform, Innovate
 
-Our platform is designed with the belief that learning should be accessible to everyone. Dive into our diverse range of perspectives and insights, and expand your understanding of the world.
+Monkeys is a community built around **meaningful, accurate, and valuable content**.  
+Our mission is to help people access knowledge that enriches their lives—whether in science, technology, personal development, psychology, philosophy, or lifestyle.
 
-We also believe in the power of community. Engage with fellow readers, writers, and experts. Share your thoughts, offer feedback, and join the conversation. Your voice matters here, and together, we can create a vibrant and enriching environment for growth and learning.
+Unlike open forums that prioritize volume, we believe in **quality first**. Every perspective shared on Monkeys is meant to inspire growth, challenge thinking, and encourage deeper understanding.
 
-Explore, learn, and grow with The Monkeys. We're excited to have you on this journey with us!
+This is not just another content platform. It’s a space where members can trust what they read, knowing it comes from thoughtful, informed contributors.
+
+## Our Community
+
+We value:
+
+-   **Correctness** – Insights grounded in knowledge, not noise.
+-   **Clarity** – Content that informs, educates, and engages.
+-   **Contribution with Purpose** – Every piece shared should add real value.
+
+We encourage discussion, but always with the goal of **learning and growth**. Together, we’re building a more reliable and insightful community.
 
 ## Contributing
 
-To setup the repo or to contribute follow [CONTRIBUTING.md](/contributing.md)
+We welcome all kinds of contributions—whether they strengthen our technical foundation or enrich our content to help the platform flourish. If you’re passionate about sharing knowledge in a way that truly benefits others, we’d love to hear from you.
+
+Ways you can contribute:
+
+1. **Code Contributions** – Improve platform features, fix issues, or enhance reliability.
+2. **Documentation** – Help us keep information clear and up to date.
+3. **Content Creation** – Share well-researched, thoughtful articles or tutorials.
+4. **Feature Suggestions** – Have an idea that aligns with our vision? Let us know.
+
+All contributions are **reviewed carefully** to ensure they reflect the standards and purpose of Monkeys community.
 
 ## Backend
 
-The backbone of Monkeys platform is powered by a robust backend written in Go, housed in our dedicated repository.
+Our platform is powered by a robust backend written in Go, maintained in a dedicated repository.
 
-For those interested in exploring the architecture of our backend, or looking to contribute, we invite you to visit the repository. Dive into the code, understand the intricacies, and join our community of developers in enhancing the platform. Your contributions are invaluable in making The Monkeys a richer, more dynamic space for everyone.
+Backend repo: [Monkeys Backend](https://github.com/the-monkeys/monkeys_engine)
 
-Backend repo: [The Monkeys Backend](https://github.com/the-monkeys/monkeys_engine)
+If you’d like to contribute technically, we encourage you to explore the architecture, suggest improvements, or collaborate on features that make Monkeys a stronger, more reliable space.
 
 ## Guidelines
 
-To ensure smooth collaboration and maintain the quality of contributions, we have established some guidelines for raising issues and submitting pull requests (PRs). Please adhere to the given formats to help us address and integrate your contributions more efficiently.
+To keep our community focused and meaningful:
 
-#### 1. Raising an Issue
+1. **Issues** – Please follow the provided format when raising an issue. This helps us address matters efficiently.
+2. **Pull Requests** – PRs should align with our goals of clarity, correctness, and reliability. Use the prescribed format for faster reviews.
 
-When raising an issue, please follow the specified format provided in our repository. This helps us understand and resolve the problem quickly.
+By following these, you help us preserve the quality of Monkeys.
 
-#### 2. Submitting a Pull Request (PR)
+## Join Us
 
-When submitting a pull request, ensure you follow the provided format outlined in our repository. This helps us review and merge your changes effectively.
-
-By following these guidelines, you help maintain a high standard of collaboration and development on The Monkeys platform. We appreciate your cooperation and contributions!
-
-## Contributing
-
-We are thrilled to have you consider contributing to The Monkeys! Our platform thrives on the diverse knowledge and skills of our community.
-
-Whether you're an experienced developer, a tech enthusiast, a writer, or someone passionate about sharing insights, there's a place for you here. Here are a few ways you can contribute:
-
-1. **Code Contributions**: Help us improve and expand our platform. From fixing bugs to adding new features, your code is valuable.
-2. **Documentation**: Good documentation helps everyone. Contribute by improving our existing docs or adding new ones.
-3. **Community Engagement**: Participate in discussions, offer feedback, and help fellow contributors with their queries.
-4. **Content Creation**: Share your expertise by writing articles, tutorials, or creating video content about various topics covered on The Monkeys platform.
-5. **Feature Suggestions**: Have an idea for a new feature or an improvement? Share it with us and collaborate on bringing it to life.
-
-Every contribution, big or small, makes a difference. Join us in making The Monkeys an even better resource for everyone. We look forward to collaborating with you!
-
-<a href="https://github.com/the-monkeys/the_monkeys/graphs/contributors"> <img src="https://contrib.rocks/image?repo=the-monkeys/the_monkeys" /> </a>
+Monkeys is a place for those who care about knowledge that **Inspire, Inform, and Innovate**. If you share that vision, we invite you to be part of the journey—whether through contributions, thoughtful feedback, or meaningful discussion.

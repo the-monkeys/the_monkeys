@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 
 export const metadata: Metadata = {
-  title: 'Editing',
+  title: 'Edit Post',
 };
 
 const EditPageLayout = ({
@@ -11,7 +11,7 @@ const EditPageLayout = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  return <Container className='px-4 pb-12'>{children}</Container>;
+  return <Container className='px-4 pb-12 max-w-5xl'>{children}</Container>;
 };
 
 export default EditPageLayout;

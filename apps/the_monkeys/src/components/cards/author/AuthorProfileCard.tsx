@@ -8,6 +8,7 @@ import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ConnectionsDialog } from '@/components/user/dialogs/ConnectionsDialog';
 import { UpdateUsernameDialog } from '@/components/user/dialogs/UpdateUsernameDialog';
+import { ShowcaseProfileDialog } from '@/components/user/dialogs/showcaseProfileDialog';
 import {
   GITHUB_URL,
   INSTAGRAM_URL,
@@ -21,7 +22,12 @@ import moment from 'moment';
 
 const SocialLinkButton = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Button variant='outline' size='icon' className='rounded-full' asChild>
+    <Button
+      variant='outline'
+      size='icon'
+      className='mt-3 !border-1 rounded-full'
+      asChild
+    >
       {children}
     </Button>
   );
@@ -42,21 +48,24 @@ export const AuthorProfileCard = ({
     : 'Not available';
 
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-[10px]'>
       <div className='flex items-end gap-3 flex-wrap'>
-        <ProfileFrame className='size-[80px] ring-2 ring-border-light/40 dark:ring-border-dark/40'>
+        <ProfileFrame className='group relative size-[80px] ring-2 ring-border-light/40 dark:ring-border-dark/40'>
           <ProfileImage username={user?.username} />
+          <div className='hidden absolute inset-0 w-full h-full group-hover:flex justify-center items-center bg-black/20 backdrop-blur-sm'>
+            <ShowcaseProfileDialog username={user?.username} />
+          </div>
         </ProfileFrame>
 
-        <div className='space-y-1'>
-          <div className='flex item-center gap-[6px]'>
-            <p className='px-[2px] truncate'>{`@${user?.username}`}</p>
+        <div className='space-y-[2px]'>
+          <div className='flex item-center gap-[2px] md:gap-[6px]'>
+            <p className='px-[2px] text-sm sm:text-base truncate'>{`@${user?.username}`}</p>
 
             {isAuthenticated && <UpdateUsernameDialog user={user} />}
           </div>
 
-          <h2 className='w-fit font-dm_sans font-medium text-3xl text-brand-orange tracking-tight capitalize'>
-            {`${user?.first_name} ${user?.last_name}`}
+          <h2 className='w-fit font-dm_sans font-medium text-[1.5rem] sm:text-[1.8rem] tracking-tight capitalize'>
+            {user?.first_name} {user?.last_name ? user?.last_name : ''}
           </h2>
         </div>
       </div>
@@ -91,7 +100,7 @@ export const AuthorProfileCard = ({
         </div>
       </div>
 
-      {user?.bio && <p className='py-1 break-words'>{user.bio}</p>}
+      {user?.bio && <p className='py-1 text-sm break-words'>{user.bio}</p>}
 
       <div className='flex items-center gap-x-3 gap-y-2 flex-wrap'>
         <div className='flex items-center gap-[6px]'>
@@ -109,7 +118,7 @@ export const AuthorProfileCard = ({
         )}
       </div>
 
-      <div className='mt-4 flex items-center flex-wrap gap-2'>
+      <div className='flex items-center flex-wrap gap-2'>
         {user?.twitter && (
           <SocialLinkButton>
             <Link

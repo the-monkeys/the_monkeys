@@ -1,15 +1,13 @@
-'use client';
-
 import { useEffect, useState } from 'react';
 
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
-import useAuth from '@/hooks/auth/useAuth';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
+import { IUser } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -28,16 +26,14 @@ import {
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
 import { Calendar } from '@the-monkeys/ui/organism/calendar';
-import { format } from 'date-fns';
+import moment from 'moment';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Section } from './Section';
 import { parseDateTime } from './profile/parseDate';
 
-export const Profile = () => {
-  const { data } = useAuth();
-
+export const Profile = ({ data }: { data?: IUser }) => {
   const { data: user } = useGetAuthUserProfile(data?.username);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -109,7 +105,7 @@ export const Profile = () => {
                 Profile Photo
               </p>
 
-              <ProfileFrame className='size-28 sm:size-32'>
+              <ProfileFrame className='size-[100px] sm:size-[120px]'>
                 {data?.username && <ProfileImage username={data.username} />}
               </ProfileFrame>
 
@@ -225,7 +221,7 @@ export const Profile = () => {
                             onChange={field.onChange}
                             value={
                               field.value
-                                ? format(field.value, 'yyyy-MM-dd')
+                                ? moment(field.value).format('YYYY-MM-DD')
                                 : 'Pick a date'
                             }
                             className='w-full'
@@ -234,7 +230,7 @@ export const Profile = () => {
                         </div>
                       </PopoverTrigger>
 
-                      <PopoverContent className='w-auto'>
+                      <PopoverContent className='w-auto p-0'>
                         <Calendar
                           mode='single'
                           selected={
@@ -243,7 +239,7 @@ export const Profile = () => {
                           onSelect={(date) => {
                             if (date) {
                               const formattedDate = parseDateTime(
-                                format(date, 'yyyy-MM-dd')
+                                moment(date).format('YYYY-MM-DD')
                               );
                               field.onChange(formattedDate);
                             }
@@ -339,7 +335,7 @@ export const Profile = () => {
         </Section>
 
         <div className='flex justify-end'>
-          <Button disabled={loading ? true : false} type='submit'>
+          <Button size='lg' disabled={loading ? true : false} type='submit'>
             {loading && <Loader />} Save Changes
           </Button>
         </div>

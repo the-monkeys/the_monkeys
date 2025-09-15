@@ -1,3 +1,4 @@
+import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
@@ -6,6 +7,7 @@ import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
+import Table from '@editorjs/table';
 
 export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',
@@ -31,6 +33,9 @@ export const editorConfig: EditorConfig = {
     },
     image: {
       class: Image,
+    },
+    table: {
+      class: Table,
     },
     delimiter: Delimiter,
     code: {

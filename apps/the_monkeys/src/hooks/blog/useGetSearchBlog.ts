@@ -5,7 +5,11 @@ import useSWR from 'swr';
 export const useGetSearchBlog = (searchQuery?: string) => {
   const { data, error, isLoading } = useSWR<GetMetaFeedBlogs>(
     searchQuery ? `blog/search?search_term=${searchQuery}` : null,
-    authFetcherV2
+    authFetcherV2,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+    }
   );
 
   return {

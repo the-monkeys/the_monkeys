@@ -17,11 +17,11 @@ const LibraryPageLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <Container className='pb-12 px-4 min-h-screen space-y-10'>
+    <Container className='pb-12 px-4 min-h-[800px] space-y-6'>
       <PageHeader>
         <PageHeading heading='Library' />
         <PageSubheading
-          subheading='Explore and manage your bookmarks effortlessly.'
+          subheading='Explore and manage your bookmarks and drafts effortlessly.'
           className='text-center'
         />
       </PageHeader>

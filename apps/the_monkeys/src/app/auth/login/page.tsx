@@ -6,7 +6,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
-import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { API_URL } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -28,42 +27,31 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className='flex justify-end'>
-        <LinksRedirectArrow link='/feed'>
-          <p className='font-dm_sans font-medium'>Monkeys Showcase</p>
-        </LinksRedirectArrow>
-      </div>
-
       <FormHeader>
         <FormHeading heading='Welcome Back' />
-        <FormSubheading subheading='Log in to continue your journey' />
+        <FormSubheading subheading='Enter your credentials, or sign in instantly with Google.' />
       </FormHeader>
 
-      <div className='flex flex-col gap-4'>
-        <>
-          <LoginForm isLoading={isLoading || isFetching} />
+      <div className='flex flex-col gap-2'>
+        <LoginForm isLoading={isLoading || isFetching} />
 
-          <Button
-            variant='secondary'
-            className='w-full flex items-center gap-2'
-            asChild
+        <Button className='w-full flex items-center gap-2' asChild>
+          <Link href={API_URL + '/auth/google/login'} className='font-dm_sans'>
+            <Icon name='RiGoogle' type='Fill' />
+            <p className='font-dm_sans'>Login with Google</p>
+          </Link>
+        </Button>
+
+        <div className='mt-8 text-center'>
+          <span>New to Monkeys? </span>
+
+          <Link
+            href='/auth/register'
+            className='font-medium hover:underline text-brand-orange'
           >
-            <a href={API_URL + '/auth/google/login'}>
-              <Icon name='RiGoogle' type='Fill' />
-              <p>Login with Google</p>
-            </a>
-          </Button>
-
-          <div className='mt-6 text-center'>
-            <span className='font-dm_sans'>New to Monkeys? </span>
-            <Link
-              href='/auth/register'
-              className='font-dm_sans hover:underline text-brand-orange'
-            >
-              Join Monkeys
-            </Link>
-          </div>
-        </>
+            Join Monkeys
+          </Link>
+        </div>
       </div>
     </>
   );

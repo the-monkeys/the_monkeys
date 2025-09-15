@@ -132,6 +132,7 @@ export async function generateMetadata({
 
 const ProfilePageLayout = ({ children, params }: ProfileLayoutProps) => {
   return (
+
     <Container className='px-4 py-6 min-h-[800px] space-y-10'>
       <article itemScope itemType='https://schema.org/Person'>
         <meta itemProp='name' content={`@${params.username}`} />

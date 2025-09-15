@@ -15,18 +15,22 @@ const SearchUserCard = ({
 }) => {
   return (
     <div className='p-1 flex gap-2 items-center overflow-hidden'>
-      <ProfileFrame className='shrink-0 size-8'>
+      <ProfileFrame className='shrink-0 size-9'>
         <ProfileImage username={user?.username} />
       </ProfileFrame>
 
-      <Link
-        target='_blank'
-        href={`/${user.username}`}
-        className='w-fit capitalize hover:underline truncate'
-        onClick={onClose}
-      >
-        {user?.first_name} {user?.last_name}
-      </Link>
+      <div>
+        <Link
+          target='_blank'
+          href={`/${user.username}`}
+          className='w-fit capitalize hover:underline truncate'
+          onClick={onClose}
+        >
+          {user?.first_name} {user?.last_name ? user?.last_name : ''}
+        </Link>
+
+        <p className='text-sm opacity-90 truncate'>@{user?.username}</p>
+      </div>
     </div>
   );
 };
@@ -61,7 +65,7 @@ export const SearchUsers = ({
     <>
       {!users || users === null ? (
         <p className='text-sm opacity-80 text-center'>
-          No results found for your search
+          No authors found for your search
         </p>
       ) : (
         <div className='flex flex-col gap-2'>

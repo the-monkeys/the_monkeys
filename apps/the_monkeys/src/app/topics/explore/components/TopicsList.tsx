@@ -53,7 +53,7 @@ export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
           size='sm'
           variant='ghost'
           onClick={() => setShowAll((prev) => !prev)}
-          className='w-full rounded-none'
+          className='w-full'
         >
           {showAll ? 'Show Less' : `Show All (${totalTopics})`}
         </Button>

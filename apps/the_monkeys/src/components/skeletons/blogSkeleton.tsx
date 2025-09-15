@@ -25,7 +25,7 @@ export const EditorBlockSkeleton = () => {
       </div>
 
       <div className='space-y-1'>
-        <Skeleton className='w-full h-[250px]' />
+        <Skeleton className='w-full h-[300px]' />
       </div>
 
       <div className='space-y-1'>
@@ -54,11 +54,11 @@ export const EditorBlockSkeleton = () => {
 
 export const BlogPageSkeleton = () => {
   return (
-    <div className='space-y-10'>
-      <Container className='px-4 py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
+    <div className='px-4 space-y-8'>
+      <Container className='py-8 md:py-10 max-w-5xl flex flex-col items-center gap-4'>
         <Skeleton className='h-3 w-28' />
 
-        <div className='w-full space-y-2'>
+        <div className='pb-2 w-full space-y-2'>
           <Skeleton className='h-9 w-full' />
           <Skeleton className='mx-auto h-9 w-1/2' />
         </div>
@@ -66,12 +66,8 @@ export const BlogPageSkeleton = () => {
         <UserInfoCardSkeleton />
       </Container>
 
-      <Container className='px-4 max-w-3xl'>
+      <Container className='max-w-3xl'>
         <EditorBlockSkeleton />
-      </Container>
-
-      <Container className='py-4 max-w-5xl'>
-        <TopicsContainerSkeleton />
       </Container>
     </div>
   );
@@ -79,13 +75,16 @@ export const BlogPageSkeleton = () => {
 
 export const FeedBlogCardSkeleton = () => {
   return (
-    <div className='flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <Skeleton className='h-[230px] sm:h-[120px] w-full sm:w-[200px]' />
+    <div className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
+      <Skeleton className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px]' />
 
       <div className='w-full space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
-        <Skeleton className='h-[20px] w-full' />
-        <Skeleton className='h-[20px] w-1/2' />
+
+        <div className='w-full space-y-1'>
+          <Skeleton className='h-[20px] w-full' />
+          <Skeleton className='h-[20px] w-1/2' />
+        </div>
       </div>
     </div>
   );
@@ -97,14 +96,22 @@ export const TrendingCardLargeSkeleton = ({
   className?: string;
 }) => {
   return (
-    <div className={twMerge(className, 'space-y-[10px]')}>
-      <Skeleton className='h-[220px] md:h-[360px] w-full' />
+    <div
+      className={twMerge(
+        className,
+        'flex flex-col sm:flex-row lg:flex-col gap-[10px]'
+      )}
+    >
+      <Skeleton className='shrink-0 h-[200px] sm:h-[260px] lg:h-[350px] w-full sm:w-1/2 lg:w-full' />
 
-      <div className='space-y-2'>
+      <div className='w-full space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
-        <Skeleton className='h-[20px] w-full' />
-        <Skeleton className='h-[20px] w-full' />
-        <Skeleton className='h-[20px] w-1/2' />
+
+        <div className='w-full space-y-1'>
+          <Skeleton className='hidden sm:block h-[20px] w-full' />
+          <Skeleton className='h-[20px] w-full' />
+          <Skeleton className='h-[20px] w-1/2' />
+        </div>
       </div>
     </div>
   );
@@ -116,13 +123,16 @@ export const TrendingCardSmallSkeleton = ({
   className?: string;
 }) => {
   return (
-    <div className={twMerge(className, 'space-y-[10px]')}>
-      <Skeleton className='h-[220px] w-full' />
+    <div className={twMerge(className, 'space-y-3')}>
+      <Skeleton className='aspect-[3/2] h-[220px] sm:h-fit max-h-[300px] w-full' />
 
       <div className='space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
-        <Skeleton className='h-[20px] w-full' />
-        <Skeleton className='h-[20px] w-1/2' />
+
+        <div className='w-full space-y-1'>
+          <Skeleton className='h-[20px] w-full' />
+          <Skeleton className='h-[20px] w-1/2' />
+        </div>
       </div>
     </div>
   );
@@ -131,13 +141,13 @@ export const TrendingCardSmallSkeleton = ({
 export const TopicsContainerSkeleton = () => {
   return (
     <div className='flex gap-2 flex-wrap'>
-      <Skeleton className='h-8 w-[160px] rounded-full' />
+      <Skeleton className='h-8 w-[152px] rounded-full' />
       <Skeleton className='h-8 w-[120px] rounded-full' />
-      <Skeleton className='h-8 w-[140px] rounded-full' />
+      <Skeleton className='h-8 w-[130px] rounded-full' />
       <Skeleton className='h-8 w-[100px] rounded-full' />
-      <Skeleton className='h-8 w-[135px] rounded-full' />
+      <Skeleton className='h-8 w-[132px] rounded-full' />
       <Skeleton className='h-8 w-[140px] rounded-full' />
-      <Skeleton className='h-8 w-[160px] rounded-full' />
+      <Skeleton className='h-8 w-[152px] rounded-full' />
       <Skeleton className='h-8 w-[150px] rounded-full' />
       <Skeleton className='h-8 w-[120px] rounded-full' />
     </div>
@@ -146,29 +156,21 @@ export const TopicsContainerSkeleton = () => {
 
 export const FeedSkeleton = () => {
   return (
-    <Container className='px-4 py-8 min-h-screen space-y-10'>
-      <div className='grid grid-cols-2 gap-8'>
-        <TrendingCardLargeSkeleton className='col-span-2 sm:col-span-1' />
-
-        <div className='col-span-2 md:col-span-1 grid grid-cols-2 gap-6'>
-          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-        </div>
+    <Container className='px-4 py-8 min-h-screen space-y-14'>
+      <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
+        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       </div>
 
       <div className='grid grid-cols-3 gap-8 lg:gap-10 xl:gap-16'>
-        <div className='col-span-3 sm:col-span-2 space-y-4'>
+        <div className='col-span-3 lg:col-span-2 space-y-4'>
           <FeedBlogCardListSkeleton />
         </div>
 
-        <div className='col-span-3 sm:col-span-1 space-y-10'>
+        <div className='col-span-3 lg:col-span-1 space-y-10'>
           <TopicsContainerSkeleton />
 
-          <div className='grid grid-cols-2 gap-4'>
-            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
-            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
+          <div className='grid grid-cols-2 gap-6'>
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
@@ -183,7 +185,7 @@ export const FeedSkeleton = () => {
 
 export const FeedBlogCardListSkeleton = ({ count = 5 }: { count?: number }) => {
   return (
-    <div className='w-full space-y-6'>
+    <div className='w-full max-w-4xl space-y-8'>
       {Array.from({ length: count }).map((_, index) => (
         <FeedBlogCardSkeleton key={index} />
       ))}
@@ -193,9 +195,8 @@ export const FeedBlogCardListSkeleton = ({ count = 5 }: { count?: number }) => {
 
 export const FeedCategorySectionSkeleton = () => {
   return (
-    <div className='space-y-8'>
-      <div className='grid grid-cols-2 md:grid-cols-3 gap-6'>
-        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+    <div className='space-y-10'>
+      <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       </div>
@@ -207,7 +208,7 @@ export const FeedCategorySectionSkeleton = () => {
 
 export const BlogPageRecommendationSkeleton = () => {
   return (
-    <div className='grid grid-cols-2 lg:grid-cols-3 gap-6'>
+    <div className='grid grid-cols-2 lg:grid-cols-3 gap-8'>
       <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />

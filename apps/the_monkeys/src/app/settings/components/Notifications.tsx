@@ -5,11 +5,11 @@ import { EmailUpdates } from './notifications/EmailUpdates';
 export const Notifications = () => {
   return (
     <div className='space-y-8'>
-      <Section sectionTitle='Email Updates'>
+      <Section sectionTitle='Email' upcoming>
         <EmailUpdates />
       </Section>
 
-      <Section sectionTitle='WhatsApp Notifications'>
+      <Section sectionTitle='WhatsApp' upcoming>
         <ChatNotifications />
       </Section>
     </div>

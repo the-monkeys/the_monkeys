@@ -24,6 +24,7 @@ export async function generateMetadata({
 
   return {
     title: `Posts on ${topic}`,
+    description: `Explore insightful posts, guides, and discussions on ${topic}. Stay informed with helpful information, tips, and resources.`,
   };
 }
 
@@ -36,16 +37,16 @@ const TopicBlogsPage = ({
 }) => {
   const topic = decodeURIComponent(params.topic);
   return (
-    <Container className='pb-12 px-4 min-h-screen space-y-2'>
+    <Container className='pb-12 px-4 min-h-[800px]'>
       <PageHeader>
-        <PageSubheading subheading='Read about' />
+        <PageSubheading subheading='Explore more about' />
         <PageHeading heading={topic} className='text-center' />
       </PageHeader>
 
-      <div className='flex justify-center gap-2 flex-wrap'>
+      <div className='pb-12 md:pb-16 flex justify-center gap-2 flex-wrap'>
         <TopicFollowButton topic={topic} />
 
-        <Button variant='secondary' className='rounded-full' asChild>
+        <Button variant='secondary' size='sm' className='rounded-full' asChild>
           <Link href='/topics/explore' target='_blank'>
             <Icon name='RiCompass' className='mr-1' />
             Explore
@@ -53,7 +54,7 @@ const TopicBlogsPage = ({
         </Button>
       </div>
 
-      <div className='pt-10 mx-auto max-w-4xl min-h-[800px]'>
+      <div className='mx-auto max-w-4xl min-h-[800px]'>
         <BlogsByTopic topic={topic} />
       </div>
     </Container>

@@ -62,10 +62,10 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
         setOpen(false);
       }
 
-      mutate(`blog/all/${username}`, undefined, {
+      mutate(`blog/user/${username}`, undefined, {
         revalidate: true,
       });
-      mutate(`/blog/my-drafts`);
+      mutate(`/blog/in-my-draft`);
 
       if (edit) {
         handleEdit(blogId);
@@ -109,7 +109,7 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
         <DialogDescription className='hidden'></DialogDescription>
 
         <p className='opacity-80'>
-          Moving this blog to drafts will remove all the reactions it has
+          Moving this post to drafts will remove all the reactions it has
           received. Are you sure you want to proceed?
         </p>
 

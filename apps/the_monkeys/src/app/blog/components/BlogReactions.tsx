@@ -23,12 +23,12 @@ export const BlogReactions = ({
       <div className='p-1 flex justify-center items-center gap-1'>
         <Link
           href={LOGIN_ROUTE}
-          className='text-sm font-medium text-brand-orange hover:underline'
+          className='text-sm font-medium text-brand-orange underline'
         >
-          LOGIN
+          Login
         </Link>
 
-        <p className='text-sm'>to like or save this post.</p>
+        <p className='text-sm'>to interact with this post.</p>
       </div>
     );
 
@@ -57,12 +57,12 @@ export const BlogReactionsContainer = ({
   const url = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   return (
-    <div className='sticky left-0 bottom-[30px] mx-auto w-full flex items-center gap-3 z-20'>
-      <div className='flex-1 px-4 py-2 bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/80 dark:ring-border-dark/80'>
+    <div className='sticky left-0 bottom-[20px] mx-auto w-full flex items-center gap-2 z-20'>
+      <div className='flex-1 px-[14px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
         <BlogReactions blogId={blogId} />
       </div>
 
-      <div className='shrink-0 px-3 py-2 bg-background-light dark:bg-background-dark rounded-full shadow-sm ring-2 ring-border-light/80 dark:ring-border-dark/80'>
+      <div className='shrink-0 px-[10px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
         <BlogShareDialog blogURL={url} size={20} />
       </div>
     </div>

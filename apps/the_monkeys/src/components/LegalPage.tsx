@@ -11,18 +11,16 @@ const LegalPage = ({
   content: React.ReactNode;
 }) => {
   return (
-    <Container className='px-4 mb-20 min-h-screen sm:w-4/5 w-full space-y-6'>
+    <Container className='px-4 max-w-4xl min-h-[800px] sm:w-4/5 w-full space-y-6'>
       <PageHeader>
         <PageHeading heading={title} />
         <PageSubheading
           subheading={date}
-          className='text-brand-orange !opacity-100'
+          className='font-medium !text-base text-brand-orange !opacity-100'
         />
       </PageHeader>
 
-      <div className='font-light text-sm sm:text-base text-justify'>
-        {content}
-      </div>
+      <div className='text-sm sm:text-base text-justify'>{content}</div>
     </Container>
   );
 };

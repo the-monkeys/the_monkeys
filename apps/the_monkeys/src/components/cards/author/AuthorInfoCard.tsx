@@ -29,10 +29,10 @@ export const AuthorInfoCard = ({
     <div
       className={twMerge(
         className,
-        'border-1 border-foreground-light/50 dark:border-foreground-dark/50 rounded-md overflow-hidden'
+        'border-1 border-foreground-light/50 dark:border-foreground-dark/50 rounded-sm overflow-hidden'
       )}
     >
-      <div className='mb-[20px] p-2 w-full bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-2'>
+      <div className='mb-[20px] px-4 py-3 w-full bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-3'>
         <div className='flex items-center justify-end gap-[6px]'>
           {userData?.username !== session?.username && isSuccess && (
             <FollowButton username={userData?.username} />
@@ -51,28 +51,29 @@ export const AuthorInfoCard = ({
         </div>
 
         <div className='flex items-end gap-3'>
-          <ProfileFrame className='-mb-[20px] size-[85px] ring-2 ring-foreground-light/50 dark:ring-foreground-dark/50'>
+          <ProfileFrame className='-mb-[20px] size-[80px] ring-2 ring-foreground-light/50 dark:ring-foreground-dark/50'>
             <ProfileImage username={userData?.username} />
           </ProfileFrame>
 
           <div className='flex-1 overflow-hidden'>
-            <p className='font-dm_sans text-sm opacity-80 truncate'>
-              {`@${userData?.username}`}
-            </p>
+            <p className='text-sm truncate'>{`@${userData?.username}`}</p>
 
-            <h2 className='flex-1 font-dm_sans font-medium text-xl capitalize'>
-              {`${userData?.first_name} ${userData?.last_name}`}
+            <h2 className='flex-1 font-dm_sans font-medium text-2xl capitalize'>
+              {userData?.first_name}{' '}
+              {userData?.last_name ? userData?.last_name : ''}
             </h2>
           </div>
         </div>
       </div>
 
-      <div className='mt-[20px] px-4 pb-4 space-y-1'>
+      <div className='mt-[20px] px-4 pb-4 space-y-2'>
         {userData?.bio && (
-          <p className='py-2 leading-tight break-words'>{userData.bio}</p>
+          <p className='pt-2 leading-tight line-clamp-3 opacity-90'>
+            {userData.bio}
+          </p>
         )}
 
-        <div className='flex items-center gap-2'>
+        <div className='pt-2 flex items-center gap-2'>
           <p className='font-medium'>
             {user?.followers ? user.followers : '0'}{' '}
             <span className='font-normal opacity-80'>Followers</span>
