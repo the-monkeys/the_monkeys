@@ -54,7 +54,7 @@ export const BlogTitle = ({
 }) => {
   return (
     <h2
-      className={twMerge(className, 'w-fit capitalize')}
+      className={twMerge(className, 'w-fit capitalize tracking-tight')}
       dangerouslySetInnerHTML={{
         __html: purifyHTMLString(title),
       }}
@@ -71,7 +71,7 @@ export const BlogHeading = ({
 }) => {
   return (
     <h1
-      className={twMerge(className, 'w-fit capitalize')}
+      className={twMerge(className, 'w-fit capitalize tracking-tight')}
       dangerouslySetInnerHTML={{
         __html: purifyHTMLString(title),
       }}

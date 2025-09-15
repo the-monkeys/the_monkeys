@@ -51,12 +51,14 @@ export const ShareProfileDialog: FC<ShareProfileDialogProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button
-          className='p-1 flex items-center justify-center cursor-pointer hover:opacity-80'
+        <Button
+          variant='secondary'
+          size='icon'
+          className='p-1 rounded-full flex items-center justify-center'
           title='Share Profile'
         >
           <Icon name='RiShareForward' size={size} />
-        </button>
+        </Button>
       </DialogTrigger>
 
       <DialogContent>

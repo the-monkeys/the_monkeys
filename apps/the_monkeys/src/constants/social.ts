@@ -7,7 +7,7 @@ export const INSTAGRAM_URL = 'https://www.instagram.com';
 
 export const MONKEYS_YOUTUBE =
   'https://youtube.com/@monkeys-com-co?si=fxtY1R_NdwzZDWkZ';
-export const MONKEYS_DISCORD = 'https://discord.gg/6fK9YuV8FV';
+export const MONKEYS_DISCORD = 'https://discord.gg/gqahF9qKxx';
 export const MONKEYS_GITHUB = 'https://github.com/the-monkeys';
 export const MONKEYS_X = 'https://x.com/monkeys_com_co';
 export const MONKEYS_INSTAGRAM = 'https://www.instagram.com/monkeys_com_co/';
@@ -35,7 +35,7 @@ export const notFoundList = [
   {
     title: 'Join Telegram',
     text: 'Be a part of our Telegram channel.',
-    icon: 'RiTelegram' as IconName,
+    icon: 'RiTelegram2' as IconName,
     link: MONKEYS_TELEGRAM,
   },
 ];

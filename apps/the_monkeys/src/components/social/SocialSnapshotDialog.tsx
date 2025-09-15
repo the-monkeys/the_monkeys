@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { Blog } from '@/services/blog/blogTypes';
-import { purifyHTMLString } from '@/utils/purifyHTML';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -43,7 +42,7 @@ export const SocialSnapshotDialog = ({
         <Button
           variant='brand'
           size={size}
-          className='!text-base rounded-full hover:!bg-brand-orange/85 hover:!text-white'
+          className='!text-base rounded-xl hover:!bg-brand-orange/85 hover:!text-white'
           title='Create Snapshot'
         >
           Create Snapshot
