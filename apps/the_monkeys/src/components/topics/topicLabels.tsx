@@ -7,7 +7,7 @@ import Icon from '../icon';
 export const TopicLabelLink = ({ topic }: { topic: string }) => {
   return (
     <Link href={`/topics/${topic}`} className='group' target='_blank'>
-      <Badge variant='outline' className='px-4 py-[6px] cursor-pointer'>
+      <Badge variant='secondary' className='px-4 py-[6px] cursor-pointer'>
         {topic}{' '}
         <Icon
           name='RiArrowRightUp'

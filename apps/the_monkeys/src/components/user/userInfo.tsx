@@ -23,7 +23,7 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
   const userData = user?.user;
 
   return (
-    <div className='w-full flex gap-[10px]'>
+    <div className='w-full flex gap-3'>
       <Link href={`/${userData?.username}`} className='hover:opacity-90'>
         <ProfileFrame className='mt-1 size-10 sm:size-12 ring-1 ring-border-light/40 dark:ring-border-dark/40'>
           <ProfileImage username={userData?.username} />
@@ -77,11 +77,13 @@ export const UserInfoCardShowcase = ({
     <div className='flex items-center gap-1 flex-wrap'>
       {!isLoading ? (
         isError ? (
-          <p className='shrink-0 text-sm opacity-90 italic'>Unknown Author</p>
+          <p className='shrink-0 text-[13px] md:text-sm opacity-90 italic'>
+            Unknown Author
+          </p>
         ) : (
           <Link
             href={`/${userData?.username}`}
-            className='shrink-0 text-sm hover:underline'
+            className='shrink-0 text-[13px] md:text-sm hover:underline'
           >
             {userData?.first_name}{' '}
             {userData?.last_name ? userData?.last_name : ''}
@@ -93,9 +95,9 @@ export const UserInfoCardShowcase = ({
 
       {!isDraft && (
         <>
-          <span className='text-sm opacity-80'>{' — '}</span>
+          <span className='text-[13px] sm:text-sm'>{' - '}</span>
 
-          <p className='shrink-0 text-sm opacity-90'>
+          <p className='shrink-0 text-[13px] sm:text-sm opacity-90'>
             {moment(date).format('MMM DD, YYYY')}
           </p>
         </>

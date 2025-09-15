@@ -27,23 +27,18 @@ const CategorySectionCompact = ({
           {title}
         </h5>
 
-        <div className='flex items-end'>
-          <div className='w-[80px] h-1 bg-brand-orange' />
-          <div className='flex-grow h-[1px] bg-border-light/60 dark:bg-border-dark/60' />
-        </div>
+        <div className='w-[100px] h-[2px] bg-brand-orange' />
       </div>
 
       {isLoading ? (
         <FeedBlogCardListSkeleton />
       ) : (
-        <div className='flex flex-col gap-8'>
-          {blogs?.blogs.slice(0, 5).map((blog) => {
-            return (
-              <div className='col-span-2 lg:col-span-1' key={blog?.blog_id}>
-                <FeedBlogCard blog={blog} />
-              </div>
-            );
-          })}
+        <div className='max-w-4xl'>
+          <div className='flex flex-col gap-4'>
+            {blogs?.blogs.slice(0, 5).map((blog) => {
+              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+            })}
+          </div>
         </div>
       )}
     </div>

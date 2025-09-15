@@ -28,18 +28,15 @@ const CategorySection = ({
           {title}
         </h5>
 
-        <div className='flex items-end'>
-          <div className='w-[80px] h-1 bg-brand-orange' />
-          <div className='flex-grow h-[1px] bg-border-light/60 dark:bg-border-dark/60' />
-        </div>
+        <div className='w-[100px] h-[2px] bg-brand-orange' />
       </div>
 
       {isLoading ? (
         <FeedCategorySectionSkeleton />
       ) : (
-        <div className='space-y-8 sm:space-y-12 lg:space-y-14'>
-          <div className='grid grid-cols-2 lg:grid-cols-3 gap-8'>
-            {blogs?.blogs.slice(0, 6).map((blog) => {
+        <div className='space-y-4 sm:space-y-10'>
+          <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
+            {blogs?.blogs.slice(0, 2).map((blog) => {
               return (
                 <div className='col-span-2 sm:col-span-1' key={blog?.blog_id}>
                   <TrendingBlogCardSmall blog={blog} />
@@ -48,10 +45,12 @@ const CategorySection = ({
             })}
           </div>
 
-          <div className='max-w-4xl space-y-8'>
-            {blogs?.blogs.slice(6, 11).map((blog) => {
-              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
-            })}
+          <div className='max-w-4xl'>
+            <div className='flex flex-col gap-4'>
+              {blogs?.blogs.slice(2, 7).map((blog) => {
+                return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+              })}
+            </div>
           </div>
         </div>
       )}

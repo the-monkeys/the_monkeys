@@ -36,7 +36,7 @@ export const Drafts = ({ user }: { user?: IUser }) => {
     );
 
   return (
-    <div className='flex flex-col gap-8'>
+    <div className='flex flex-col gap-4'>
       {isLoading ? (
         <FeedBlogCardListSkeleton count={PROFILE_DRAFTS_PER_PAGE} />
       ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
@@ -59,16 +59,20 @@ export const Drafts = ({ user }: { user?: IUser }) => {
             })}
 
           {showPagination && (
-            <div className='py-4 flex justify-center gap-4 mt-6'>
-              <PaginationPrevButton
-                onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                disable={!hasPrevPage}
-              />
+            <div className='flex justify-center gap-[10px] mt-4'>
+              {hasPrevPage && (
+                <PaginationPrevButton
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                  disable={!hasPrevPage}
+                />
+              )}
 
-              <PaginationNextButton
-                onClick={() => setPage((prev) => prev + 1)}
-                disable={!hasNextPage}
-              />
+              {hasNextPage && (
+                <PaginationNextButton
+                  onClick={() => setPage((prev) => prev + 1)}
+                  disable={!hasNextPage}
+                />
+              )}
             </div>
           )}
         </>

@@ -4,7 +4,7 @@ import { notFoundList } from '@/constants/social';
 
 const NotFound = () => {
   return (
-    <Container className='min-h-[800px] px-4 pt-12 flex flex-col items-center space-y-8'>
+    <Container className='min-h-[800px] px-4 pt-12 flex flex-col items-center space-y-12'>
       <div className='space-y-1'>
         <p className='font-dm_sans font-medium text-center sm:text-left opacity-80'>
           Page Not Found

@@ -1,8 +1,8 @@
+import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogHeader,
+  DialogDescription,
   DialogTitle,
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
@@ -14,15 +14,15 @@ export default function TopicListDialog({ topics }: { topics: string[] }) {
     <>
       <Dialog>
         <DialogTrigger>
-          <p className='p-1 text-sm opacity-90 underline underline-offset-2'>
-            show more...
-          </p>
+          <Button variant='link' size='sm'>
+            show all...
+          </Button>
         </DialogTrigger>
+
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Topics</DialogTitle>
-            <DialogClose />
-          </DialogHeader>
+          <DialogTitle>Topics</DialogTitle>
+          <DialogDescription className='hidden'></DialogDescription>
+
           <div className='flex flex-row flex-wrap gap-2'>
             {topics.map((topic, idx) => (
               <TopicLabelLink key={idx} topic={topic} />

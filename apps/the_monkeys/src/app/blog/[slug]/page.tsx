@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 
+import AdUnit from '@/components/AdSense/AdUnit';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
@@ -119,13 +120,13 @@ const BlogPage = () => {
 
             <BlogHeading
               title={sanitizedBlogTitle || 'Untitled Post'}
-              className='pt-1 pb-3 font-dm_sans font-semibold text-[28px] sm:text-4xl !leading-tight text-center'
+              className='pt-1 pb-4 font-dm_sans font-semibold text-[28px] sm:text-3xl md:text-4xl !leading-[1.32] text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />
           </Container>
         </div>
-
+        <AdUnit slot='4598536509' />
         <div className='p-4'>
           <Container className='max-w-3xl'>
             <div className='px-1 pb-4 overflow-hidden'>
@@ -135,14 +136,14 @@ const BlogPage = () => {
             <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
 
             <div className='pt-10 space-y-12'>
-              <SocialSnapshotCard blog={blog} />
-
               <div className='space-y-4'>
-                <h5 className='font-dm_sans font-medium'>Topics included</h5>
+                <h6 className='font-dm_sans font-medium'>Topics included</h6>
                 <TopicLinksContainerCompact topics={tags} />
               </div>
 
               <AuthorInfoCard userId={authorId} />
+
+              <SocialSnapshotCard blog={blog} />
             </div>
           </Container>
         </div>
@@ -150,7 +151,7 @@ const BlogPage = () => {
         <div className='px-4 mt-12'>
           <Container className='max-w-5xl space-y-12'>
             <div className='space-y-6'>
-              <h6 className='px-1 pb-2 font-dm_sans font-medium text-lg border-b-1 border-border-light dark:border-border-dark'>
+              <h6 className='font-dm_sans font-medium text-lg'>
                 Explore similar content
               </h6>
 

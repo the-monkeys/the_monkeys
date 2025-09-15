@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 
 const axiosFileInstance = axios.create({
   baseURL: '/api/v1',
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     'Content-Type': 'multipart/form-data',
   },

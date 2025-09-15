@@ -22,7 +22,7 @@ export const ShowcaseProfileDialog = ({ username }: { username?: string }) => {
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <ProfileFrame className='size-[200px] md:size-[300px] ring-2 ring-foreground-light dark:ring-foreground-dark'>
+        <ProfileFrame className='mx-4 !rounded-none size-[200px] md:size-[300px] ring-2 ring-foreground-light dark:ring-foreground-dark'>
           <ProfileImage username={username} />
         </ProfileFrame>
       </DialogContent>

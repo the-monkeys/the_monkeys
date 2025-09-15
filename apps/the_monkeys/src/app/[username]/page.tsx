@@ -8,6 +8,7 @@ import useUser from '@/hooks/user/useUser';
 
 import { Blogs } from './components/Blogs';
 import { ProfileSection } from './components/profile/ProfileSection';
+import { WordCloudCard } from './components/wordCloud/WordCloud';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
   const { data } = useAuth();
@@ -50,15 +51,19 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
     <>
       <ProfileSection paramsUser={params.username} user={user} />
 
-      <div className='max-w-4xl space-y-8'>
-        <h6 className='pb-1 font-dm_sans font-medium text-xl truncate'>
-          Latest from{' '}
-          <span className='font-dm_sans font-semibold'>
-            {user?.first_name} {user?.last_name ? user?.last_name : ''}
-          </span>
-        </h6>
+      <div className='grid grid-cols-3 gap-8'>
+        <div className='h-fit col-span-3 lg:col-span-1'>
+          <WordCloudCard username={params.username} />
+        </div>
 
-        <Blogs username={params.username} user={data} />
+        <div className='col-span-3 lg:col-span-2 max-w-4xl space-y-6'>
+          <h6 className='font-dm_sans font-medium text-lg'>
+            Latest from{' '}
+            <span className='font-dm_sans text-xl'>{user?.first_name}</span>
+          </h6>
+
+          <Blogs username={params.username} user={data} />
+        </div>
       </div>
     </>
   );

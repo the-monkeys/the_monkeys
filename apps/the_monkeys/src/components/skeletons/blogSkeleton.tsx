@@ -75,8 +75,8 @@ export const BlogPageSkeleton = () => {
 
 export const FeedBlogCardSkeleton = () => {
   return (
-    <div className='flex flex-col sm:flex-row gap-[10px] sm:gap-4'>
-      <Skeleton className='shrink-0 h-[230px] sm:h-[140px] w-full sm:w-[200px]' />
+    <div className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
+      <Skeleton className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px]' />
 
       <div className='w-full space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
@@ -123,8 +123,8 @@ export const TrendingCardSmallSkeleton = ({
   className?: string;
 }) => {
   return (
-    <div className={twMerge(className, 'space-y-[10px]')}>
-      <Skeleton className='h-[220px] w-full' />
+    <div className={twMerge(className, 'space-y-3')}>
+      <Skeleton className='aspect-[3/2] h-[220px] sm:h-fit max-h-[300px] w-full' />
 
       <div className='space-y-2'>
         <Skeleton className='h-3 w-[100px]' />
@@ -157,15 +157,9 @@ export const TopicsContainerSkeleton = () => {
 export const FeedSkeleton = () => {
   return (
     <Container className='px-4 py-8 min-h-screen space-y-14'>
-      <div className='grid grid-cols-2 gap-8'>
-        <TrendingCardLargeSkeleton className='col-span-2 lg:col-span-1' />
-
-        <div className='col-span-2 lg:col-span-1 grid grid-cols-2 gap-8'>
-          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-          <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-        </div>
+      <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
+        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       </div>
 
       <div className='grid grid-cols-3 gap-8 lg:gap-10 xl:gap-16'>
@@ -180,8 +174,6 @@ export const FeedSkeleton = () => {
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
             <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
-            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
-            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
           </div>
         </div>
       </div>
@@ -193,7 +185,7 @@ export const FeedSkeleton = () => {
 
 export const FeedBlogCardListSkeleton = ({ count = 5 }: { count?: number }) => {
   return (
-    <div className='w-full space-y-8'>
+    <div className='w-full max-w-4xl space-y-8'>
       {Array.from({ length: count }).map((_, index) => (
         <FeedBlogCardSkeleton key={index} />
       ))}
@@ -204,8 +196,7 @@ export const FeedBlogCardListSkeleton = ({ count = 5 }: { count?: number }) => {
 export const FeedCategorySectionSkeleton = () => {
   return (
     <div className='space-y-10'>
-      <div className='grid grid-cols-2 md:grid-cols-3 gap-8'>
-        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
+      <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
         <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
       </div>
