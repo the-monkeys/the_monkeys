@@ -77,7 +77,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const purifiedDescription = purifyHTMLString(metaDescription);
 
   return {
-    title: purifiedTitle,
+    title: {
+      absolute: purifiedTitle,
+    },
     description: purifiedDescription,
     keywords: blog?.tags?.join(', ') || '',
     openGraph: {
