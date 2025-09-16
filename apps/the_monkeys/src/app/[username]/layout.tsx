@@ -74,7 +74,10 @@ export async function generateMetadata({
       : undefined;
 
     const metadata: Metadata = {
-      title: `${fullName} (@${username}) | Monkeys`,
+      title: {
+        default: `${fullName} (@${username}) | Monkeys`,
+        template: `%s | Monkeys`,
+      },
       description: truncateDescription(description, 160),
       keywords: userData.topics?.join(', ') || '',
       alternates: {
@@ -118,7 +121,10 @@ export async function generateMetadata({
   } catch (error) {
     console.error('Failed to generate metadata:', error);
     return {
-      title: `${username} | Monkeys`,
+      title: {
+        default: `${username} | Monkeys`,
+        template: `%s | Monkeys`,
+      },
       description: `View ${username}'s profile on Monkeys`,
       robots: {
         index: false,
