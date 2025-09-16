@@ -68,7 +68,7 @@ export async function generateMetadata({
           ? `Interests: ${userData.topics.join(', ')}.`
           : ''
       }`;
-    const profileUrl = `${baseUrl}/@${username}`;
+    const profileUrl = `${baseUrl}/${username}`;
     const twitterHandle = userData.twitter
       ? userData.twitter.replace('https://twitter.com/', '').replace('@', '')
       : undefined;
@@ -129,12 +129,35 @@ export async function generateMetadata({
 }
 
 const ProfilePageLayout = ({ children, params }: ProfileLayoutProps) => {
+  const schemaPerson = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: params.username,
+    alternateName: `@${params.username}`,
+    url: `${baseUrl}/${params.username}`,
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Monkeys',
+    },
+  };
+
   return (
     <Container className='px-4 py-6 min-h-[800px] space-y-10'>
       <article itemScope itemType='https://schema.org/Person'>
+        {/* H1 for SEO */}
+        <h1 className='text-2xl hidden font-bold'>
+          Profile of @{params.username}
+        </h1>
+
         <meta itemProp='name' content={`@${params.username}`} />
         {children}
       </article>
+
+      {/* JSON-LD schema */}
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaPerson) }}
+      />
     </Container>
   );
 };
