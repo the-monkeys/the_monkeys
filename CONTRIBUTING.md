@@ -1,7 +1,9 @@
 # CONTRIBUTING
+
 To setup the repo follow the steps mentioned below
 
 ## Prerequisites
+
 1. Install node
 2. Install pnpm (optional)
 3. curl (optional)
@@ -25,9 +27,14 @@ pnpm install
 ```
 
 ## Environment setup
+
 1. Create `.env.local` file in `apps/the_monkeys`
 
 2. Copy variable names from `.env.example` to `.env.local`
+
+## Setup local dev server
+
+See [CONFIGURE.md](/apps/the_monkeys/CONFIGURE.md), for steps to setup the dev server
 
 ## Building and running
 
