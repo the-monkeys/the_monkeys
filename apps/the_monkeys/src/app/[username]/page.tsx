@@ -51,7 +51,7 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
     <>
       <ProfileSection paramsUser={params.username} user={user} />
 
-      <div className='grid grid-cols-3 gap-8 mt-4'>
+      <div className='grid grid-cols-3 gap-8 mt-4 sm:mt-6 lg:mt-10'>
         <div className='h-fit col-span-3 lg:col-span-1'>
           <WordCloudCard username={params.username} />
         </div>
