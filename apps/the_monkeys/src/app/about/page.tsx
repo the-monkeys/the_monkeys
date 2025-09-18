@@ -85,18 +85,30 @@ const AboutPage = () => {
       </Container>
 
       <Container className='max-w-4xl py-8 space-y-10'>
-        <div className='py-8 flex flex-col items-center gap-3'>
-          <h5 className='pb-3 font-dm_sans font-semibold text-3xl text-center'>
-            The People Behind{' '}
-            <span className='font-dm_sans text-brand-orange tracking-tight'>
-              Monkeys
-            </span>
-          </h5>
+        <div className='py-12 flex flex-col items-center gap-6'>
+          <div className='text-center space-y-4'>
+            <h5 className='font-dm_sans font-bold text-4xl md:text-5xl tracking-tight animate-appear-up'>
+              The People Behind{' '}
+              <span className='relative inline-block'>
+                <span className='font-dm_sans text-brand-orange tracking-tight bg-gradient-to-r from-brand-orange to-orange-400 bg-clip-text text-transparent'>
+                  Monkeys
+                </span>
+                <div className='absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-brand-orange/20 to-orange-400/20 rounded-full'></div>
+              </span>
+            </h5>
 
-          <p className='text-sm md:text-base text-center'>
-            A collective of innovators, storytellers, and supporters coming
-            together to build something meaningful.
-          </p>
+            <p className='text-base md:text-lg text-center max-w-2xl mx-auto leading-relaxed text-text-light dark:text-text-dark opacity-90'>
+              Meet the passionate innovators, storytellers, and builders who are shaping the future of collaborative writing and meaningful content creation.
+            </p>
+          </div>
+
+          <div className='flex items-center gap-2 mt-6'>
+            <div className='w-12 h-[1px] bg-gradient-to-r from-transparent to-border-light dark:to-border-dark'></div>
+            <div className='w-2 h-2 rounded-full bg-brand-orange/60'></div>
+            <div className='w-2 h-2 rounded-full bg-brand-orange/40'></div>
+            <div className='w-2 h-2 rounded-full bg-brand-orange/20'></div>
+            <div className='w-12 h-[1px] bg-gradient-to-l from-transparent to-border-light dark:to-border-dark'></div>
+          </div>
         </div>
 
         <MembersGrid />
