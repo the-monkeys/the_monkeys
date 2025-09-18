@@ -1,10 +1,15 @@
+import Image from 'next/image';
+
 import { teamInfo } from '@/constants/team';
 
 const getRoleColor = (position: string) => {
   if (position.includes('Founder')) return 'from-purple-500 to-purple-700';
-  if (position.includes('Lead') || position.includes('Maintainer')) return 'from-blue-500 to-blue-700';
-  if (position.includes('Engineer') || position.includes('Developer')) return 'from-green-500 to-green-700';
-  if (position.includes('Marketing') || position.includes('Growth')) return 'from-orange-500 to-orange-700';
+  if (position.includes('Lead') || position.includes('Maintainer'))
+    return 'from-blue-500 to-blue-700';
+  if (position.includes('Engineer') || position.includes('Developer'))
+    return 'from-green-500 to-green-700';
+  if (position.includes('Marketing') || position.includes('Growth'))
+    return 'from-orange-500 to-orange-700';
   if (position.includes('AI')) return 'from-pink-500 to-pink-700';
   if (position.includes('Research')) return 'from-indigo-500 to-indigo-700';
   return 'from-gray-500 to-gray-700';
@@ -15,7 +20,8 @@ const getRoleIcon = (position: string) => {
   if (position.includes('Lead') || position.includes('Maintainer')) return '🛠️';
   if (position.includes('Frontend')) return '🎨';
   if (position.includes('Backend')) return '⚙️';
-  if (position.includes('Marketing') || position.includes('Growth')) return '📈';
+  if (position.includes('Marketing') || position.includes('Growth'))
+    return '📈';
   if (position.includes('AI')) return '🤖';
   if (position.includes('Research')) return '🔬';
   if (position.includes('Fullstack')) return '💻';
@@ -37,7 +43,7 @@ const MembersGrid = () => {
               key={index}
               style={{
                 animationDelay: `${index * 100}ms`,
-                animationFillMode: 'both'
+                animationFillMode: 'both',
               }}
             >
               {/* Role Icon Badge */}
@@ -50,9 +56,11 @@ const MembersGrid = () => {
                 <div className='relative'>
                   <div className='size-20 border-2 border-transparent bg-gradient-to-br from-brand-orange/20 to-brand-orange/10 p-1 rounded-full group-hover:scale-105 transition-all duration-300'>
                     <div className='size-full rounded-full overflow-hidden border-2 border-background-light dark:border-background-dark'>
-                      <img
+                      <Image
                         src={info.avatar_url || './default-profile.svg'}
                         alt={info.name}
+                        width={80}
+                        height={80}
                         className='h-full w-full object-cover group-hover:scale-110 transition-all duration-300'
                       />
                     </div>
@@ -69,7 +77,9 @@ const MembersGrid = () => {
                   </h6>
 
                   {/* Position with gradient background */}
-                  <div className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r ${roleColor} text-white text-xs font-medium shadow-sm group-hover:shadow-md transition-shadow duration-300`}>
+                  <div
+                    className={`inline-block px-3 py-1 rounded-full bg-gradient-to-r ${roleColor} text-white text-xs font-medium shadow-sm group-hover:shadow-md transition-shadow duration-300`}
+                  >
                     {info.position}
                   </div>
                 </div>
@@ -92,7 +102,7 @@ const MembersGrid = () => {
         className='relative mt-16 p-8 bg-gradient-to-br from-background-light to-background-light/50 dark:from-background-dark dark:to-background-dark/50 border-1 border-border-light dark:border-border-dark rounded-3xl animate-appear-up hover:shadow-lg hover:shadow-brand-orange/5 transition-all duration-300'
         style={{
           animationDelay: `${teamInfo.length * 100 + 200}ms`,
-          animationFillMode: 'both'
+          animationFillMode: 'both',
         }}
       >
         <div className='absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
@@ -107,13 +117,28 @@ const MembersGrid = () => {
           </h6>
 
           <p className='text-base text-text-light dark:text-text-dark opacity-80 max-w-2xl mx-auto leading-relaxed'>
-            Behind every feature, every improvement, and every innovation are the incredible contributors who believe in our mission. From code contributions to feedback, from bug reports to feature ideas — you make Monkeys what it is.
+            Behind every feature, every improvement, and every innovation are
+            the incredible contributors who believe in our mission. From code
+            contributions to feedback, from bug reports to feature ideas — you
+            make Monkeys what it is.
           </p>
 
           <div className='flex items-center justify-center gap-2 pt-2'>
-            <div className='text-2xl animate-bounce' style={{ animationDelay: '0ms' }}>🙏</div>
-            <span className='text-sm font-medium text-brand-orange'>Thank you to all our contributors!</span>
-            <div className='text-2xl animate-bounce' style={{ animationDelay: '200ms' }}>🚀</div>
+            <div
+              className='text-2xl animate-bounce'
+              style={{ animationDelay: '0ms' }}
+            >
+              🙏
+            </div>
+            <span className='text-sm font-medium text-brand-orange'>
+              Thank you to all our contributors!
+            </span>
+            <div
+              className='text-2xl animate-bounce'
+              style={{ animationDelay: '200ms' }}
+            >
+              🚀
+            </div>
           </div>
         </div>
       </div>

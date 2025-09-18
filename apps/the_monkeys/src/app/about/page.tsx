@@ -98,7 +98,9 @@ const AboutPage = () => {
             </h5>
 
             <p className='text-base md:text-lg text-center max-w-2xl mx-auto leading-relaxed text-text-light dark:text-text-dark opacity-90'>
-              Meet the passionate innovators, storytellers, and builders who are shaping the future of collaborative writing and meaningful content creation.
+              Meet the passionate innovators, storytellers, and builders who are
+              shaping the future of collaborative writing and meaningful content
+              creation.
             </p>
           </div>
 
