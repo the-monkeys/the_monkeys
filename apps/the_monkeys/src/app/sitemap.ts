@@ -41,13 +41,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticUrls: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}`,
-      changeFrequency: 'monthly',
+      changeFrequency: 'daily',
       priority: 0.8,
     },
     {
       url: `${baseUrl}${FEED_ROUTE}`,
       changeFrequency: 'daily',
-      priority: 1,
+      priority: 0.8,
     },
   ];
 
