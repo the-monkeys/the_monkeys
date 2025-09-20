@@ -35,13 +35,47 @@ export const metadata: Metadata = {
     },
   },
   title: {
-    template: 'Monkeys - %s',
-    default: 'Monkeys - Inspire, Inform, Innovate',
+    template: '%s | Monkeys - Collaborative Blogging & Insightful Content',
+    default:
+      'Monkeys - Inspire, Inform, Innovate with Collaborative Blogging and Expert Articles',
   },
   description:
-    'Your go-to source for the latest in technology, business, sports, and entertainment — worldwide, on Monkeys.',
+    'Monkeys is your premier source for the latest technology, business, sports, entertainment, and collaborative blogging. Discover interconnected articles, expert insights, and innovative content that keeps you informed and inspired worldwide.',
+  keywords: [
+    'collaborative blogging',
+    'technology news',
+    'business insights',
+    'sports updates',
+    'entertainment news',
+    'content writing',
+    'interconnected articles',
+    'topic clustering',
+    'innovative content',
+    'expert articles',
+  ],
+  openGraph: {
+    title: 'Monkeys - Collaborative Blogging & Insightful Content',
+    description:
+      'Explore the latest in technology, business, sports, and entertainment with Monkeys. Join a collaborative platform where expert writers build interconnected, insightful articles.',
+    siteName: 'Monkeys',
+    url: 'https://monkeys.com.co/',
+    images: [
+      {
+        url: 'https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be',
+        width: 1200,
+        height: 630,
+        alt: 'Monkeys - Collaborative Blogging Platform',
+      },
+    ],
+    type: 'website',
+  },
   twitter: {
     card: 'summary_large_image',
+    title: 'Monkeys - Collaborative Blogging & Insightful Content',
+    description:
+      'Stay informed with Monkeys, your go-to platform for technology, business, sports, entertainment, and collaborative articles that inspire and innovate.',
+    images: ['https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be'],
+    site: '@monkeys_com_co',
   },
   verification: {
     google: 'WIMiYru73CLiTFT9yEP2zIgQCv07AxBETTstbKe7Fws',
