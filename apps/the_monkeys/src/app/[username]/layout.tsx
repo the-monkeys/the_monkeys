@@ -50,7 +50,7 @@ export async function generateMetadata({
     const userData = await fetchUserData(username);
     if (!userData) {
       return {
-        title: `${username} | Monkeys`,
+        title: `${username} `,
         description: `View ${username}'s profile on Monkeys`,
         robots: {
           index: false,
