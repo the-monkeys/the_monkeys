@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Loader } from '@/components/loader';
 import { IUser } from '@/services/models/user';
 import { deleteUser } from '@/services/user/user';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -17,6 +17,7 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const Danger = ({ data }: { data?: IUser }) => {
   const [deleteMessage, setDeleteMessage] = useState<string>('');
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: deleteUser,
@@ -26,7 +27,7 @@ export const Danger = ({ data }: { data?: IUser }) => {
         title: 'Success',
         description: 'Your account has been deleted successfully.',
       });
-      window.location.href = '/feed'; // this will force window to reload and push to feed
+      queryClient.setQueryData(['auth'], null);
     },
     onError: (err) => {
       if (err instanceof Error) {
