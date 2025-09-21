@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
-
 import { Loader } from '@/components/loader';
 import { IUser } from '@/services/models/user';
 import { deleteUser } from '@/services/user/user';
@@ -18,8 +16,6 @@ import { Input } from '@the-monkeys/ui/atoms/input';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const Danger = ({ data }: { data?: IUser }) => {
-  const router = useRouter();
-
   const [deleteMessage, setDeleteMessage] = useState<string>('');
 
   const mutation = useMutation({
@@ -30,8 +26,7 @@ export const Danger = ({ data }: { data?: IUser }) => {
         title: 'Success',
         description: 'Your account has been deleted successfully.',
       });
-
-      router.replace('/');
+      window.location.href = '/feed'; // this will force window to reload and push to feed
     },
     onError: (err) => {
       if (err instanceof Error) {
