@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { DM_Sans, Inter } from 'next/font/google';
+import Script from 'next/script';
 
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
@@ -35,47 +36,13 @@ export const metadata: Metadata = {
     },
   },
   title: {
-    template: '%s | Monkeys - Collaborative Blogging & Insightful Content',
-    default:
-      'Monkeys - Inspire, Inform, Innovate with Collaborative Blogging and Expert Articles',
+    template: 'Monkeys - %s',
+    default: 'Monkeys - Inspire, Inform, Innovate',
   },
   description:
-    'Monkeys is your premier source for the latest technology, business, sports, entertainment, and collaborative blogging. Discover interconnected articles, expert insights, and innovative content that keeps you informed and inspired worldwide.',
-  keywords: [
-    'collaborative blogging',
-    'technology news',
-    'business insights',
-    'sports updates',
-    'entertainment news',
-    'content writing',
-    'interconnected articles',
-    'topic clustering',
-    'innovative content',
-    'expert articles',
-  ],
-  openGraph: {
-    title: 'Monkeys - Collaborative Blogging & Insightful Content',
-    description:
-      'Explore the latest in technology, business, sports, and entertainment with Monkeys. Join a collaborative platform where expert writers build interconnected, insightful articles.',
-    siteName: 'Monkeys',
-    url: 'https://monkeys.com.co/',
-    images: [
-      {
-        url: 'https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be',
-        width: 1200,
-        height: 630,
-        alt: 'Monkeys - Collaborative Blogging Platform',
-      },
-    ],
-    type: 'website',
-  },
+    'Your go-to source for the latest in technology, business, sports, and entertainment — worldwide, on Monkeys.',
   twitter: {
     card: 'summary_large_image',
-    title: 'Monkeys - Collaborative Blogging & Insightful Content',
-    description:
-      'Stay informed with Monkeys, your go-to platform for technology, business, sports, entertainment, and collaborative articles that inspire and innovate.',
-    images: ['https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be'],
-    site: '@monkeys_com_co',
   },
   verification: {
     google: 'WIMiYru73CLiTFT9yEP2zIgQCv07AxBETTstbKe7Fws',
@@ -129,6 +96,16 @@ const RootLayout = async ({
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
+        {/* Microsoft Clarity */}
+        <Script id='microsoft-clarity' strategy='afterInteractive'>
+          {`
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "terxckyygm");
+      `}
+        </Script>
       </head>
       <body
         className={`${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
