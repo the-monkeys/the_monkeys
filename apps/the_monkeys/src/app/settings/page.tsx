@@ -23,12 +23,12 @@ const SettingsPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && (!data || isError)) {
+    /*if (!isLoading && (!data || isError)) {
       router.replace('/feed');
-    }
+    }*/
   }, [data, isError, isLoading, router]);
 
-  if (!data || isLoading) {
+  /*if (!data || isLoading) {
     return (
       <div className='p-8 flex flex-col items-center justify-center gap-1'>
         <Loader size={42} />
@@ -40,7 +40,7 @@ const SettingsPage = () => {
         )}
       </div>
     );
-  }
+  }*/
 
   return (
     <Tabs
