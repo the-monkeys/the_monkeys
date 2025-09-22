@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -21,6 +21,8 @@ export const Danger = ({ data }: { data?: IUser }) => {
   const router = useRouter();
 
   const [deleteMessage, setDeleteMessage] = useState<string>('');
+
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
 
   const mutation = useMutation({
     mutationFn: deleteUser,
@@ -53,6 +55,21 @@ export const Danger = ({ data }: { data?: IUser }) => {
   const onAccountDelete = async () => {
     if (data?.username) mutation.mutate(data?.username);
   };
+
+  useEffect(() => {
+    const enterKeyEvent = (event: KeyboardEvent) => {
+      if (
+        event.key === 'Enter' &&
+        deleteMessage === 'delete my account' &&
+        !mutation.isPending
+      ) {
+        deleteButtonRef.current?.click();
+      }
+    };
+    window.addEventListener('keydown', enterKeyEvent);
+
+    return () => window.removeEventListener('keydown', enterKeyEvent);
+  }, [deleteMessage, mutation.isPending]);
 
   return (
     <div className='p-1 space-y-2'>
@@ -94,6 +111,7 @@ export const Danger = ({ data }: { data?: IUser }) => {
 
           <div>
             <Button
+              ref={deleteButtonRef}
               type='button'
               variant='destructive'
               className='w-fit float-right'
