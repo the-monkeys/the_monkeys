@@ -102,7 +102,7 @@ export const Danger = ({ data }: { data?: IUser }) => {
 
             <div>
               <Button
-                type='button'
+                type='submit'
                 variant='destructive'
                 className='w-fit float-right'
                 disabled={
