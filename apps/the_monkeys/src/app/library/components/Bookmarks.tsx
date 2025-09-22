@@ -32,7 +32,13 @@ export const Bookmarks = () => {
   }
 
   if (!blogs?.blogs) {
-    return null;
+    return (
+      <div className='min-h-[800px]'>
+        <p className='w-full opacity-90 text-center'>
+          No posts bookmarked yet.
+        </p>
+      </div>
+    );
   }
 
   if (isError)
