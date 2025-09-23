@@ -25,15 +25,6 @@ const nextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/feed',
-        permanent: false,
-      },
-    ];
-  },
 };
 
 const withMDX = createMDX({});
