@@ -14,23 +14,23 @@ export const updateProfileSchema = z.object({
   date_of_birth: z.string().optional(),
   twitter: z
     .string()
-    .regex(/^[a-zA-Z0-9_]+$/, 'Please enter a valid X username')
-    .max(15)
+    .regex(/^[a-zA-Z0-9-_.]+$/, 'Please enter a valid X username')
+    .max(50)
     .optional(),
   linkedin: z
     .string()
-    .regex(/^[a-zA-Z0-9-]+$/, 'Please enter a valid LinkedIn username')
+    .regex(/^[a-zA-Z0-9-_.]+$/, 'Please enter a valid LinkedIn username')
     .max(50)
     .optional(),
   instagram: z
     .string()
-    .regex(/^[a-zA-Z0-9._]+$/, 'Please enter a valid Instagram username')
-    .max(30)
+    .regex(/^[a-zA-Z0-9-_.]+$/, 'Please enter a valid Instagram username')
+    .max(50)
     .optional(),
   github: z
     .string()
-    .regex(/^[a-zA-Z0-9-]+$/, 'Please enter a valid GitHub username')
-    .max(39)
+    .regex(/^[a-zA-Z0-9-_.]+$/, 'Please enter a valid GitHub username')
+    .max(50)
     .optional(),
 });
 
