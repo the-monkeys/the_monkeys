@@ -54,6 +54,13 @@ export const Danger = ({ data }: { data?: IUser }) => {
     if (data?.username) mutation.mutate(data?.username);
   };
 
+  const deleteFormSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (deleteMessage === 'delete my account' && !mutation.isPending) {
+      onAccountDelete();
+    }
+  };
+
   return (
     <div className='p-1 space-y-2'>
       <p className='text-sm opacity-80'>
@@ -78,33 +85,34 @@ export const Danger = ({ data }: { data?: IUser }) => {
             irreversible and cannot be undone.
           </p>
 
-          <div className='space-y-2'>
-            <p className='font-medium text-sm'>
-              {`To confirm, type "delete my account" in the box below`}
-            </p>
+          <form onSubmit={deleteFormSubmit} className='space-y-4'>
+            <div className='space-y-2'>
+              <p className='font-medium text-sm'>
+                {`To confirm, type "delete my account" in the box below`}
+              </p>
 
-            <Input
-              value={deleteMessage}
-              placeholder='Enter required text'
-              onChange={(e) => {
-                setDeleteMessage(e.target.value);
-              }}
-            ></Input>
-          </div>
+              <Input
+                value={deleteMessage}
+                placeholder='Enter required text'
+                onChange={(e) => {
+                  setDeleteMessage(e.target.value);
+                }}
+              ></Input>
+            </div>
 
-          <div>
-            <Button
-              type='button'
-              variant='destructive'
-              className='w-fit float-right'
-              onClick={onAccountDelete}
-              disabled={
-                deleteMessage !== 'delete my account' || mutation.isPending
-              }
-            >
-              {mutation.isPending && <Loader />}I Agree, Delete
-            </Button>
-          </div>
+            <div>
+              <Button
+                type='submit'
+                variant='destructive'
+                className='w-fit float-right'
+                disabled={
+                  deleteMessage !== 'delete my account' || mutation.isPending
+                }
+              >
+                {mutation.isPending && <Loader />}I Agree, Delete
+              </Button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
