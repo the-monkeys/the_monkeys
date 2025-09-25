@@ -1,5 +1,7 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { FeedSkeleton } from '@/components/skeletons/blogSkeleton';
@@ -11,15 +13,18 @@ import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 
 import CategorySection from './feed/sections/CategorySection';
 import CategorySectionCompact from './feed/sections/CategorySectionCompact';
+// lazy sections
 import TrendingSection from './feed/sections/TrendingSection';
 
 const LandingPage = () => {
   const { blogs, isError, isLoading } = useGetMetaFeedBlogs({
     limit: 30,
   });
+
   const filteredBlogs = blogs?.blogs?.filter(
     (blog) => blog?.first_image && blog?.tags?.length
   );
+
   if (isLoading) {
     return <FeedSkeleton />;
   }
@@ -50,26 +55,39 @@ const LandingPage = () => {
         Monkeys - Quality Blogging Community for Technology, Business, Science,
         Lifestyle, Philosophy, and More
       </h1>
-      <TrendingSection blogs={filteredBlogs} />
 
-      {/* TODO: optimize category sections */}
+      {/* Critical section loads first */}
+      <Suspense fallback={<FeedSkeleton />}>
+        <TrendingSection blogs={filteredBlogs} />
+      </Suspense>
 
+      {/* Secondary sections load in parallel */}
       <div className='space-y-8'>
-        {orderedCategories.map(({ title, category }, index) => {
-          return (
-            <CategorySection title={title} category={category} key={index} />
-          );
-        })}
+        {orderedCategories.map(({ title, category }, index) => (
+          <Suspense
+            key={index}
+            fallback={
+              <div className='h-40 bg-gray-200 animate-pulse rounded-md' />
+            }
+          >
+            <CategorySection title={title} category={category} />
+          </Suspense>
+        ))}
       </div>
 
       <Container className='mt-8 grid grid-cols-2 gap-8'>
-        {orderedCompactCategories.map(({ title, category }, index) => {
-          return (
-            <div className='col-span-2 lg:col-span-1' key={index}>
+        {orderedCompactCategories.map(({ title, category }, index) => (
+          <Suspense
+            key={index}
+            fallback={
+              <div className='h-32 bg-gray-200 animate-pulse rounded-md' />
+            }
+          >
+            <div className='col-span-2 lg:col-span-1'>
               <CategorySectionCompact title={title} category={category} />
             </div>
-          );
-        })}
+          </Suspense>
+        ))}
       </Container>
     </div>
   );
