@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Loader } from '@/components/loader';
 import { IUser } from '@/services/models/user';
 import { deleteUser } from '@/services/user/user';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -19,7 +19,7 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const Danger = ({ data }: { data?: IUser }) => {
   const router = useRouter();
-
+  const queryClient = useQueryClient();
   const [deleteMessage, setDeleteMessage] = useState<string>('');
 
   const mutation = useMutation({
@@ -30,8 +30,8 @@ export const Danger = ({ data }: { data?: IUser }) => {
         title: 'Success',
         description: 'Your account has been deleted successfully.',
       });
-
-      router.replace('/');
+      queryClient.setQueryData(['auth'], null);
+      router.replace('/feed'); //optional: fallback to redirect user to feed
     },
     onError: (err) => {
       if (err instanceof Error) {
