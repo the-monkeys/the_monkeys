@@ -46,6 +46,10 @@ const LandingPage = () => {
 
   return (
     <div className='min-h-screen'>
+      <h1 className='text-2xl font-bold hidden'>
+        Monkeys - Quality Blogging Community for Technology, Business, Science,
+        Lifestyle, Philosophy, and More
+      </h1>
       <TrendingSection blogs={filteredBlogs} />
 
       {/* TODO: optimize category sections */}
