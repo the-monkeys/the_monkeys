@@ -2,6 +2,7 @@
 
 import { Suspense } from 'react';
 
+import AdUnit from '@/components/AdSense/AdUnit';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { FeedSkeleton } from '@/components/skeletons/blogSkeleton';
@@ -74,6 +75,8 @@ const LandingPage = () => {
           </Suspense>
         ))}
       </div>
+      {/* home page ad unit */}
+      <AdUnit slot='3779794725' />
 
       <Container className='mt-8 grid grid-cols-2 gap-8'>
         {orderedCompactCategories.map(({ title, category }, index) => (
