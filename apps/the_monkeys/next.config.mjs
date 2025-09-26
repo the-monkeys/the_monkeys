@@ -8,14 +8,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: {
-    domains: ['monkeys.support', 'dev.themonkeys.site'],
-  },
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
   images: {
     qualities: [80, 100],
+    domains: ['monkeys.support', 'dev.themonkeys.site'],
     remotePatterns: [
       {
         protocol: 'https',
