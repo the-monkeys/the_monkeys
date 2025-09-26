@@ -25,7 +25,7 @@ const Editor: FC<EditorProps> = ({ data }) => {
         editorInstance.current = null;
       }
     };
-  }, []);
+  }, [data]);
 
   return (
     <div
