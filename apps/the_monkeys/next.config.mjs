@@ -3,6 +3,8 @@ import createMDX from '@next/mdx';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  // Only use standalone for Docker builds, not for Netlify/Vercel
+  output: process.env.DOCKER_BUILD ? 'standalone' : undefined,
   eslint: {
     ignoreDuringBuilds: true,
   },
