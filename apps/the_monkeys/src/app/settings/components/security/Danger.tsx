@@ -56,7 +56,6 @@ export const Danger = ({ data }: { data?: IUser }) => {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    console.log(formData);
     const deleteMessage = formData.get('deleteMessage');
 
     if (deleteMessage === 'delete my account' && !mutation.isPending) {
