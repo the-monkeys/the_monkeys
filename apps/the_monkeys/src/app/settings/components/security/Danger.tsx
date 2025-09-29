@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -19,6 +19,8 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const Danger = ({ data }: { data?: IUser }) => {
   const router = useRouter();
+
+  const [deleteMessage, setDeleteMessage] = useState<string>('');
 
   const mutation = useMutation({
     mutationFn: deleteUser,
@@ -52,12 +54,8 @@ export const Danger = ({ data }: { data?: IUser }) => {
     if (data?.username) mutation.mutate(data?.username);
   };
 
-  const deleteFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const deleteFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const deleteMessage = formData.get('deleteMessage');
-
     if (deleteMessage === 'delete my account' && !mutation.isPending) {
       onAccountDelete();
     }
@@ -94,9 +92,11 @@ export const Danger = ({ data }: { data?: IUser }) => {
               </p>
 
               <Input
-                name='deleteMessage'
+                value={deleteMessage}
                 placeholder='Enter required text'
-                required
+                onChange={(e) => {
+                  setDeleteMessage(e.target.value);
+                }}
               ></Input>
             </div>
 
@@ -105,7 +105,9 @@ export const Danger = ({ data }: { data?: IUser }) => {
                 type='submit'
                 variant='destructive'
                 className='w-fit float-right'
-                disabled={mutation.isPending}
+                disabled={
+                  deleteMessage !== 'delete my account' || mutation.isPending
+                }
               >
                 {mutation.isPending && <Loader />}I Agree, Delete
               </Button>
