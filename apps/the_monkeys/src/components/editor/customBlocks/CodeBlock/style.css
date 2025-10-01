@@ -1,0 +1,81 @@
+.custom-code-wrapper {
+  background: #f2f2f2;
+  /* background: #f1c79d; */
+  color: #414141;
+  border-radius: 8px;
+  outline: none;
+  overflow-x: scroll;
+}
+.custom-code-editor {
+  display: block;
+  min-height: 100px;
+  font-family: monospace;
+  white-space: pre;
+
+  /* background: #f9f8f7; */
+
+  font-family: monospace !important;
+  font-size: 14px;
+  padding: 16px;
+  min-height: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  /* color: #414141; */
+  outline: none;
+  /* border: 1px solid rgb(4, 4, 4); */
+  white-space: pre;
+}
+.custom-code-editor:empty::before {
+  content: attr(data-placeholder);
+  color: #888;
+  font-style: italic;
+  pointer-events: none;
+}
+
+.dark .custom-code-editor {
+  background: #1e1e1e;
+  color: #f8f8f2;
+}
+
+.code-copy-button {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  margin-left: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  background: #e3e3e3;
+  color: e1dede;
+  border: none;
+  border-radius: 2px;
+  transition: background 0.2s ease;
+}
+
+.custom-code-editor:empty::before {
+  content: attr(data-placeholder);
+  color: #888;
+  font-style: italic;
+  pointer-events: none;
+}
+
+.code-toolbar {
+  position: absolute;
+  top: 0.6em;
+  left: 0.6em;
+  display: flex;
+  gap: 0.5em;
+}
+.custom-code-container {
+  position: relative;
+  padding-top: 2.5em; /* make space for the toolbar */
+}
+
+.copy-icon {
+  width: 16px;
+  height: 16px;
+}
