@@ -47,9 +47,8 @@
 
 /* tool bar action button */
 .ce-toolbar__actions {
-    @apply top-2;
-
-  }
+  @apply top-2;
+}
 @media (max-width: 1112px) {
   .ce-toolbar__actions {
     @apply top-12;
