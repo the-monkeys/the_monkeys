@@ -1,10 +1,13 @@
 'use client';
 
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import { FeedSkeleton } from '@/components/skeletons/blogSkeleton';
+import {
+  FeedCategorySectionSkeleton,
+  FeedSkeleton,
+} from '@/components/skeletons/blogSkeleton';
 import {
   orderedCategories,
   orderedCompactCategories,
@@ -50,26 +53,31 @@ const BlogFeedPage = () => {
 
   return (
     <div className='min-h-screen'>
-      <TrendingSection blogs={filteredBlogs} />
+      <h1 className='text-2xl font-bold hidden'>
+        Monkeys - Quality Blogging Community for Technology, Business, Science,
+        Lifestyle, Philosophy, and More
+      </h1>
 
-      {/* TODO: optimize category sections */}
+      <Suspense fallback={<FeedSkeleton />}>
+        <TrendingSection blogs={filteredBlogs} />
+      </Suspense>
 
       <div className='space-y-8'>
-        {orderedCategories.map(({ title, category }, index) => {
-          return (
-            <CategorySection title={title} category={category} key={index} />
-          );
-        })}
+        {orderedCategories.map(({ title, category }, index) => (
+          <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
+            <CategorySection title={title} category={category} />
+          </Suspense>
+        ))}
       </div>
 
       <Container className='mt-8 grid grid-cols-2 gap-8'>
-        {orderedCompactCategories.map(({ title, category }, index) => {
-          return (
-            <div className='col-span-2 lg:col-span-1' key={index}>
+        {orderedCompactCategories.map(({ title, category }, index) => (
+          <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
+            <div className='col-span-2 lg:col-span-1'>
               <CategorySectionCompact title={title} category={category} />
             </div>
-          );
-        })}
+          </Suspense>
+        ))}
       </Container>
     </div>
   );
