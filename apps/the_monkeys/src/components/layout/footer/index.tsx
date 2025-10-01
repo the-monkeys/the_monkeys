@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Icon, { IconName } from '@/components/icon';
 import Logo from '@/components/logo';
 import { footerLinksList, footerSocialsList } from '@/constants/footer';
-import { FEED_ROUTE } from '@/constants/routeConstants';
+import { HOME_ROUTE} from '@/constants/routeConstants';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import Container from '../Container';
@@ -69,7 +69,7 @@ const Footer = () => {
         <div className='grid grid-cols-3 gap-14 lg:gap-4'>
           <div className='col-span-3 lg:col-span-1 space-y-2'>
             <Link
-              href={FEED_ROUTE}
+              href={HOME_ROUTE}
               className='group w-fit flex items-center gap-[6px]'
             >
               <div className='size-10 flex justify-center items-center filter group-hover:brightness-90'>
