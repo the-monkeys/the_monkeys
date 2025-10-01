@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { DM_Sans, Inter } from 'next/font/google';
+import Script from 'next/script';
 
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
@@ -35,16 +36,61 @@ export const metadata: Metadata = {
     },
   },
   title: {
-    template: 'Monkeys - %s',
-    default: 'Monkeys - Inspire, Inform, Innovate',
+    template:
+      '%s | Monkeys - Quality Blogging Community & Trusted Content Platform',
+    default:
+      'Monkeys - Inspire, Inform, Innovate with Quality Blogs, Expert Articles & Trusted Content',
   },
   description:
-    'Your go-to source for the latest in technology, business, sports, and entertainment — worldwide, on Monkeys.',
+    'Monkeys is a trusted blogging community where writers publish meaningful, accurate, and valuable content. Explore quality blogs in science, technology, philosophy, lifestyle, and more.',
+  keywords: [
+    'quality blogging platform',
+    'trusted content community',
+    'publish blogs online',
+    'expert articles',
+    'science blogs',
+    'technology blogs',
+    'philosophy blogs',
+    'lifestyle blogs',
+    'personal development articles',
+    'collaborative writing',
+  ],
+  openGraph: {
+    title: 'Monkeys - Quality Blogging Community & Trusted Content Platform',
+    description:
+      'Join Monkeys, a community for thoughtful voices and meaningful blogs. Publish and read expert articles across science, philosophy, technology, lifestyle, and more.',
+    siteName: 'Monkeys',
+    url: 'https://monkeys.com.co/',
+    images: [
+      {
+        url: 'https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be',
+        width: 1200,
+        height: 630,
+        alt: 'Monkeys - Collaborative Blogging Platform',
+      },
+    ],
+    type: 'website',
+  },
   twitter: {
     card: 'summary_large_image',
+    title: 'Monkeys - Quality Blogging Community & Trusted Content Platform',
+    description:
+      'Monkeys is where writers publish meaningful blogs and readers discover trusted content across science, lifestyle, philosophy, and more.',
+    images: ['https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be'],
+    site: '@monkeys_com_co',
   },
   verification: {
     google: 'WIMiYru73CLiTFT9yEP2zIgQCv07AxBETTstbKe7Fws',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+    },
   },
 };
 
@@ -95,6 +141,16 @@ const RootLayout = async ({
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
+        {/* Microsoft Clarity */}
+        <Script id='microsoft-clarity' strategy='afterInteractive'>
+          {`
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "terxckyygm");
+      `}
+        </Script>
       </head>
       <body
         className={`${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
