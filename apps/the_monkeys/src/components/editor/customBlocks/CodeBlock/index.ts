@@ -50,7 +50,6 @@ export default class CustomCodeTool {
     const wrapper = document.createElement('div');
     wrapper.className = 'custom-code-wrapper';
 
-    // Code block
     const pre = document.createElement('pre');
     const code = document.createElement('code');
 
@@ -76,7 +75,6 @@ export default class CustomCodeTool {
 
     pre.appendChild(code);
 
-    // Copy button
     const copyButton = document.createElement('button');
     copyButton.setAttribute('aria-label', 'Copy code to clipboard');
     const copyIcon = document.createElement('img');

@@ -3,7 +3,8 @@
   color: #414141;
   border-radius: 8px;
   outline: none;
-  overflow-x: scroll;
+  overflow-x: auto;
+  padding-bottom: 4px;
 }
 
 .custom-code-editor {

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useRouter } from 'next/navigation';
 
 import { Loader } from '@/components/loader';
 import { IUser } from '@/services/models/user';
 import { deleteUser } from '@/services/user/user';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -19,8 +19,6 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const Danger = ({ data }: { data?: IUser }) => {
   const router = useRouter();
-  const queryClient = useQueryClient();
-  const [deleteMessage, setDeleteMessage] = useState<string>('');
 
   const mutation = useMutation({
     mutationFn: deleteUser,
@@ -30,8 +28,8 @@ export const Danger = ({ data }: { data?: IUser }) => {
         title: 'Success',
         description: 'Your account has been deleted successfully.',
       });
-      queryClient.setQueryData(['auth'], null);
-      router.replace('/feed'); //optional: fallback to redirect user to feed
+
+      router.replace('/');
     },
     onError: (err) => {
       if (err instanceof Error) {
@@ -52,6 +50,17 @@ export const Danger = ({ data }: { data?: IUser }) => {
 
   const onAccountDelete = async () => {
     if (data?.username) mutation.mutate(data?.username);
+  };
+
+  const deleteFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const deleteMessage = formData.get('deleteMessage');
+
+    if (deleteMessage === 'delete my account' && !mutation.isPending) {
+      onAccountDelete();
+    }
   };
 
   return (
@@ -78,33 +87,30 @@ export const Danger = ({ data }: { data?: IUser }) => {
             irreversible and cannot be undone.
           </p>
 
-          <div className='space-y-2'>
-            <p className='font-medium text-sm'>
-              {`To confirm, type "delete my account" in the box below`}
-            </p>
+          <form onSubmit={deleteFormSubmit} className='space-y-4'>
+            <div className='space-y-2'>
+              <p className='font-medium text-sm'>
+                {`To confirm, type "delete my account" in the box below`}
+              </p>
 
-            <Input
-              value={deleteMessage}
-              placeholder='Enter required text'
-              onChange={(e) => {
-                setDeleteMessage(e.target.value);
-              }}
-            ></Input>
-          </div>
+              <Input
+                name='deleteMessage'
+                placeholder='Enter required text'
+                required
+              ></Input>
+            </div>
 
-          <div>
-            <Button
-              type='button'
-              variant='destructive'
-              className='w-fit float-right'
-              onClick={onAccountDelete}
-              disabled={
-                deleteMessage !== 'delete my account' || mutation.isPending
-              }
-            >
-              {mutation.isPending && <Loader />}I Agree, Delete
-            </Button>
-          </div>
+            <div>
+              <Button
+                type='submit'
+                variant='destructive'
+                className='w-fit float-right'
+                disabled={mutation.isPending}
+              >
+                {mutation.isPending && <Loader />}I Agree, Delete
+              </Button>
+            </div>
+          </form>
         </DialogContent>
       </Dialog>
     </div>
