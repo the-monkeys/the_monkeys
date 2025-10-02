@@ -18,15 +18,22 @@ export default class CustomCodeTool {
   static get isReadOnlySupported() {
     return true;
   }
+
+  static get sanitize() {
+    return {
+      code: true,
+      language: true,
+    };
+  }
   constructor({
     data = {},
     api,
-    config, // todo: add configuration
+    // config, // todo: add configuration
     readOnly = false,
   }: {
     data?: { code?: string; language?: string };
     api: any;
-    config?: any;
+    // config?: any;
     readOnly?: boolean;
   }) {
     this.api = api;
@@ -50,15 +57,18 @@ export default class CustomCodeTool {
     this.codeEl = code as HTMLDivElement;
     code.className = `custom-code-editor language-${this.data.language}`;
     code.textContent = this.data.code;
+
     if (!this.readOnly) {
-      code.setAttribute('contenteditable', 'true');
-      code.setAttribute('spellcheck', 'false');
+      Object.assign(code, {
+        contentEditable: 'true',
+        spellcheck: 'false',
+      });
       code.setAttribute('data-placeholder', 'Write your code here...');
-      code.setAttribute('tab-index', '0');
+      code.setAttribute('tabindex', '0');
       code.setAttribute('role', 'textbox');
 
       code.addEventListener('input', () => {
-        this.data.code = code.innerText;
+        this.data.code = code.textContent || '';
       });
 
       code.addEventListener('paste', (e) => this._handlePaste(e));
@@ -68,21 +78,23 @@ export default class CustomCodeTool {
 
     // Copy button
     const copyButton = document.createElement('button');
+    copyButton.setAttribute('aria-label', 'Copy code to clipboard');
     const copyIcon = document.createElement('img');
     copyButton.className = 'code-copy-button';
-    // Use a valid image URL or SVG data string for the icon
+
     copyIcon.src = this.COPY_ICON;
 
     copyIcon.className = 'copy-icon';
     const copyLabel = document.createElement('span');
     copyLabel.className = 'copy-label';
     copyLabel.textContent = 'Copy';
+
+    // Use a DocumentFragment to group copy icon and label before appending
     const fragment = document.createDocumentFragment();
-    fragment.appendChild(copyIcon);
-    fragment.appendChild(copyLabel);
+    copyButton.append(copyIcon, copyLabel);
+    // Append grouped elements to the copy button
     copyButton.append(fragment);
 
-    // copyButton.innerText = 'Copy';
     copyButton.addEventListener('click', () => this._handleCopy(copyButton));
     wrapper.appendChild(copyButton);
     wrapper.appendChild(pre);
@@ -96,75 +108,74 @@ export default class CustomCodeTool {
     };
   }
 
-  static get sanitize() {
-    return {
-      code: true,
-      language: true,
-    };
-  }
-
+  // helper function - when user paste code inside the code wrapper
   _handlePaste(e: ClipboardEvent) {
     e.preventDefault();
     e.stopPropagation();
 
-    const text = e.clipboardData?.getData('text/plain') || '';
+    const clipboardText = e.clipboardData?.getData('text/plain');
+    if (!clipboardText) return;
 
-    //  Insert plain text at caret using DOM Range API
     const selection = window.getSelection();
-    if (!selection || !selection.rangeCount) return;
+    if (!selection || selection.rangeCount === 0) return;
 
     const range = selection.getRangeAt(0);
     range.deleteContents();
-    const textNode = document.createTextNode(text);
-    range.insertNode(textNode);
 
-    // Move cursor after inserted text
-    range.setStartAfter(textNode);
-    range.setEndAfter(textNode);
+    const insertedNode = document.createTextNode(clipboardText);
+    range.insertNode(insertedNode);
+
+    // Move caret to immediately after the inserted text
+    range.setStartAfter(insertedNode);
+    range.setEndAfter(insertedNode);
     selection.removeAllRanges();
     selection.addRange(range);
 
-    // Update internal data and re-highlight
-    this.data.code = this.codeEl.innerText;
-    // setTimeout(() => this._highlightCode(), 0);
+    // Sync internal model with UI
+    this.data.code = this.codeEl.textContent || '';
   }
 
+  // helper function - handle copy button logic and also show ui feedback
   async _handleCopy(copyButton: HTMLButtonElement) {
     const textToCopy = this.codeEl?.innerText || '';
-    const label = copyButton.querySelector('.copy-label') as HTMLSpanElement;
-    const icon = copyButton.querySelector('.copy-icon') as HTMLImageElement;
+
+    const label = copyButton.querySelector(
+      '.copy-label'
+    ) as HTMLSpanElement | null;
+    const icon = copyButton.querySelector(
+      '.copy-icon'
+    ) as HTMLImageElement | null;
+
+    if (!label || !icon) {
+      console.warn('Copy button label or icon missing');
+      return;
+    }
+
     const defaultText = 'Copy';
     const copiedText = 'Copied!';
     const errorText = 'Error';
-    const successIcon =
-      'https://raw.githubusercontent.com/Remix-Design/RemixIcon/master/icons/System/checkbox-circle-line.svg'; // check box svg
-    // cross check box
-    const errorIcon =
-      'https://raw.githubusercontent.com/Remix-Design/RemixIcon/master/icons/System/error-warning-line.svg'; // warning svg
 
-    const resetButton = () => {
-      label.textContent = defaultText;
-      icon.src = this.COPY_ICON;
+    const successIcon =
+      'https://raw.githubusercontent.com/Remix-Design/RemixIcon/master/icons/System/checkbox-circle-line.svg';
+    const errorIcon =
+      'https://raw.githubusercontent.com/Remix-Design/RemixIcon/master/icons/System/error-warning-line.svg';
+
+    const setFeedback = (text: string, iconUrl: string) => {
+      label.textContent = text;
+      icon.src = iconUrl;
+
+      setTimeout(() => {
+        label.textContent = defaultText;
+        icon.src = this.COPY_ICON;
+      }, 1500);
     };
+
     try {
-      navigator.clipboard
-        .writeText(textToCopy)
-        .then(() => {
-          label.textContent = copiedText;
-          icon.src = successIcon;
-          setTimeout(resetButton, 1500);
-        })
-        .catch((err) => {
-          console.log('error:', err);
-          label.textContent = errorText;
-          icon.src = errorIcon;
-          setTimeout(resetButton, 1500);
-        });
+      await navigator.clipboard.writeText(textToCopy);
+      setFeedback(copiedText, successIcon);
     } catch (err) {
-      console.log('error:', err);
-      label.textContent = errorText;
-      icon.src = errorIcon;
-      setTimeout(resetButton, 1500);
+      console.error('Failed to copy code:', err);
+      setFeedback(errorText, errorIcon);
     }
   }
 }
