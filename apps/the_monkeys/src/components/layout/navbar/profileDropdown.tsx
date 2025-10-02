@@ -37,7 +37,7 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='mt-3 mr-2 w-[200px] sm:w-[220px]'>
+      <DropdownMenuContent className='mt-2 mr-2 w-[200px] sm:w-[220px]'>
         <DropdownMenuItem className='p-1' asChild>
           <Link
             href={`/${session?.username}`}
@@ -48,13 +48,12 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
             </ProfileFrame>
 
             <div className='flex-1 flex flex-col overflow-hidden'>
-              <p className='text-[13px] opacity-80 truncate'>
-                @{session?.username}
-              </p>
-
               <p className='font-dm_sans font-medium text-base truncate'>
                 {session?.first_name}{' '}
                 {session?.last_name ? session?.last_name : ''}
+              </p>
+              <p className='text-[13px] opacity-80 truncate'>
+                @{session?.username}
               </p>
             </div>
           </Link>
