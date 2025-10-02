@@ -16,28 +16,28 @@ export const updateProfileSchema = z.object({
     .string()
     .max(50)
     .refine((val) => !val || /^[a-zA-Z0-9-_.]+$/.test(val), {
-      message: 'Please enter a valid X username',
+      message: 'Please enter a valid username',
     })
     .optional(),
   linkedin: z
     .string()
     .max(50)
     .refine((val) => !val || /^[a-zA-Z0-9-_.]+$/.test(val), {
-      message: 'Please enter a valid LinkedIn username',
+      message: 'Please enter a valid username',
     })
     .optional(),
   instagram: z
     .string()
     .max(50)
     .refine((val) => !val || /^[a-zA-Z0-9-_.]+$/.test(val), {
-      message: 'Please enter a valid Instagram username',
+      message: 'Please enter a valid username',
     })
     .optional(),
   github: z
     .string()
     .max(50)
     .refine((val) => !val || /^[a-zA-Z0-9-_.]+$/.test(val), {
-      message: 'Please enter a valid GitHub username',
+      message: 'Please enter a valid username',
     })
     .optional(),
 });
