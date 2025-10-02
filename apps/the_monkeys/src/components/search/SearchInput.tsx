@@ -1,8 +1,9 @@
 'use client';
 
-import { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
@@ -16,6 +17,7 @@ import { SearchUsers } from './SearchUsers';
 
 export const SearchInput = ({ className }: { className?: string }) => {
   const { isSuccess } = useAuth();
+  const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
@@ -23,6 +25,12 @@ export const SearchInput = ({ className }: { className?: string }) => {
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
+  };
+
+  const handleEnterKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (searchQuery.trim() && event.key === 'Enter') {
+      router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
+    }
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -65,6 +73,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
           onChange={handleInputChange}
           onFocus={() => setFocused(true)}
           onBlur={handleBlur}
+          onKeyDown={handleEnterKey}
         />
 
         {searchQuery.trim() && (
