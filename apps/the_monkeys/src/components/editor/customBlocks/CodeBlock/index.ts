@@ -1,4 +1,4 @@
-require('./style.css');
+import './style.css';
 
 export default class CustomCodeTool {
   data: { code: string; language: string };

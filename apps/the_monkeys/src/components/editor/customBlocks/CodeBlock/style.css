@@ -7,6 +7,11 @@
   padding-bottom: 4px;
 }
 
+.dark .custom-code-wrapper{
+  background: #1e1e1e;
+  color: #f8f8f2;
+}
+
 .custom-code-editor {
   display: block;
   min-height: 100px;
@@ -47,7 +52,7 @@
   font-size: 12px;
   cursor: pointer;
   background: #e3e3e3;
-  color: e1dede;
+  color: #000000;
   border: none;
   border-radius: 2px;
   transition: background 0.2s ease;
