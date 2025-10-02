@@ -21,6 +21,7 @@ export const CollaborativeWriting = () => {
             </p>
           </div>
           <div className='mb-1 h-[10px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-full' />
+          <div className='mb-1 h-[10px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-full' />
           <div className='relative mb-1 h-[10px] w-1/4 bg-brand-orange rounded-full'>
             <Icon
               name='RiNavigation'
