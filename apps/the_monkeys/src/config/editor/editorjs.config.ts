@@ -1,3 +1,4 @@
+import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import { API_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
 import CodeTool from '@editorjs/code';
@@ -36,10 +37,10 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       },
     },
     code: {
-      class: CodeTool,
-      config: {
-        placeholder: 'Add your code snippet...',
-      },
+      class: CustomCodeTool,
+      // config: {
+      //   placeholder: 'Add your code snippet...',
+      // },
     },
     delimiter: Delimiter,
     quote: {
