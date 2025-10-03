@@ -1,6 +1,6 @@
 # Configure local dev server
 
-Our dev server runs on a custom domain `local.monkeys.com.co`, 
+Our dev server runs on a custom domain `local.monkeys.com.co`,
 so you need to edit your system's `etc/hosts` file so the domain maps to 127.0.0.1
 
 ## For Linux/ macOS

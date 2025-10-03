@@ -1,9 +1,9 @@
 ---
 name: 🚀 Feature Request
 about: Suggest an idea to improve this project
-title: '[Feature]: '
+title: "[Feature]: "
 labels: enhancement
-assignees: ''
+assignees: ""
 ---
 
 ### 🔰 Feature Type

@@ -2,24 +2,26 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title:
-    'Catch What’s Trending - Latest Technology, Business, Sports & Entertainment News',
+    'Monkeys Feed - Quality Blogs on Technology, Business, Science, Lifestyle & More',
   description:
-    'Stay updated with the latest and most comprehensive news in technology, business, sports, and entertainment worldwide. Your go-to source for trending stories, expert insights, and breaking updates on Monkeys.',
+    'Explore Monkeys Feed for the latest quality blogs and expert articles on technology, business, science, lifestyle, philosophy, and more. Stay informed with meaningful, accurate, and inspiring content.',
   keywords: [
-    'technology news',
-    'business news',
-    'sports updates',
-    'entertainment news',
-    'trending stories',
-    'latest news',
-    'breaking news',
-    'global news',
+    'quality blogs',
+    'technology articles',
+    'business insights',
+    'science blogs',
+    'philosophy content',
+    'lifestyle blogs',
+    'personal development articles',
+    'trusted blogging community',
+    'expert articles',
+    'thoughtful content',
   ],
   openGraph: {
     title:
-      'Catch What’s Trending - Latest Technology, Business, Sports & Entertainment News',
+      'Monkeys Feed - Quality Blogs on Technology, Business, Science, Lifestyle & More',
     description:
-      'Stay updated with the latest and most comprehensive news in technology, business, sports, and entertainment worldwide. Your go-to source for trending stories, expert insights, and breaking updates on Monkeys.',
+      'Discover Monkeys Feed for trusted blogs and expert articles in technology, business, science, lifestyle, philosophy, and more. A community built for meaningful and inspiring content.',
     url: 'https://monkeys.com.co/feed',
     siteName: 'Monkeys',
     type: 'website',
@@ -47,8 +49,8 @@ const BlogFeedPageLayout = ({
   return (
     <div className='min-h-[800px]'>
       <h1 className='text-2xl font-bold hidden'>
-        Monkeys Blog Feed - Latest Technology, Business, Sports & Entertainment
-        News
+        Monkeys - Quality Blogging Community for Technology, Business, Science,
+        Lifestyle, Philosophy, and More
       </h1>
       {children}
     </div>
