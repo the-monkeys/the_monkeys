@@ -12,6 +12,7 @@ import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
+import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
 export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
@@ -30,7 +31,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
     <div>
       <article className='h-full w-full flex flex-col sm:flex-row [@media(min-width:1200px)]:flex-col gap-[10px] sm:gap-5 [@media(min-width:1200px)]:gap-[10px]'>
         <div className='shrink-0 h-[200px] sm:h-[260px] [@media(min-width:1200px)]:h-[350px] w-full sm:w-1/2 [@media(min-width:1200px)]:w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
-          {!imageContent ? (
+          {isNonValidBannerImage(imageContent) ? (
             <BlogPlaceholderImage title={titleContent} />
           ) : (
             <BlogImage title={titleContent} image={imageContent} />
@@ -99,7 +100,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
     <div className='pb-4 h-full border-b-1 sm:border-b-0 border-border-light/60 dark:border-border-dark/60'>
       <article className='h-full w-full flex flex-col gap-3'>
         <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit max-h-[300px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
-          {!imageContent ? (
+          {isNonValidBannerImage(imageContent) ? (
             <BlogPlaceholderImage title={titleContent} />
           ) : (
             <BlogImage title={titleContent} image={imageContent} />

@@ -1,3 +1,4 @@
+import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import Code from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
@@ -39,10 +40,10 @@ export const editorConfig: EditorConfig = {
     },
     delimiter: Delimiter,
     code: {
-      class: Code,
-      config: {
-        placholder: '',
-      },
+      class: CustomCodeTool,
+      // config: {
+      //   placholder: '',
+      // },
     },
     quote: {
       class: Quote,
