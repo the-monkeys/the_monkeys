@@ -22,12 +22,12 @@ export const metadata: Metadata = {
       'Monkeys Feed - Quality Blogs on Technology, Business, Science, Lifestyle & More',
     description:
       'Discover Monkeys Feed for trusted blogs and expert articles in technology, business, science, lifestyle, philosophy, and more. A community built for meaningful and inspiring content.',
-    url: 'https://monkeys.com.co/feed',
+    url: 'https://monkeys.com.co/',
     siteName: 'Monkeys',
     type: 'website',
   },
   alternates: {
-    canonical: 'https://monkeys.com.co/feed',
+    canonical: 'https://monkeys.com.co/',
   },
   robots: {
     index: true,
