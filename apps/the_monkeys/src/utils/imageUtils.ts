@@ -1,19 +1,8 @@
 export const isNonValidBannerImage = (filename: string): boolean => {
-  if (!filename) return true;
+  if (!filename || filename.trim() === '') return true;
 
-  const staticImageExtensions = [
-    '.jpg',
-    '.jpeg',
-    '.png',
-    '.bmp',
-    '.tiff',
-    '.tif',
-    '.webp',
-    '.heic',
-    '.heif',
-    '.raw',
-  ];
+  const NOT_ALLOWED_EXT = ['.gif', '.apng'];
   const lowerFilename = filename.toLowerCase();
 
-  return !staticImageExtensions.some((ext) => lowerFilename.endsWith(ext));
+  return NOT_ALLOWED_EXT.some((ext) => lowerFilename.endsWith(ext));
 };
