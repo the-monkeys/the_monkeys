@@ -36,28 +36,29 @@ export const metadata: Metadata = {
     },
   },
   title: {
-    template: '%s | Monkeys - Collaborative Blogging & Insightful Content',
+    template:
+      '%s | Monkeys - Quality Blogging Community & Trusted Content Platform',
     default:
-      'Monkeys - Inspire, Inform, Innovate with Collaborative Blogging and Expert Articles',
+      'Monkeys - Inspire, Inform, Innovate with Quality Blogs, Expert Articles & Trusted Content',
   },
   description:
-    'Monkeys is your premier source for the latest technology, business, sports, entertainment, and collaborative blogging. Discover interconnected articles, expert insights, and innovative content that keeps you informed and inspired worldwide.',
+    'Monkeys is a trusted blogging community where writers publish meaningful, accurate, and valuable content. Explore quality blogs in science, technology, philosophy, lifestyle, and more.',
   keywords: [
-    'collaborative blogging',
-    'technology news',
-    'business insights',
-    'sports updates',
-    'entertainment news',
-    'content writing',
-    'interconnected articles',
-    'topic clustering',
-    'innovative content',
+    'quality blogging platform',
+    'trusted content community',
+    'publish blogs online',
     'expert articles',
+    'science blogs',
+    'technology blogs',
+    'philosophy blogs',
+    'lifestyle blogs',
+    'personal development articles',
+    'collaborative writing',
   ],
   openGraph: {
-    title: 'Monkeys - Collaborative Blogging & Insightful Content',
+    title: 'Monkeys - Quality Blogging Community & Trusted Content Platform',
     description:
-      'Explore the latest in technology, business, sports, and entertainment with Monkeys. Join a collaborative platform where expert writers build interconnected, insightful articles.',
+      'Join Monkeys, a community for thoughtful voices and meaningful blogs. Publish and read expert articles across science, philosophy, technology, lifestyle, and more.',
     siteName: 'Monkeys',
     url: 'https://monkeys.com.co/',
     images: [
@@ -72,14 +73,24 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Monkeys - Collaborative Blogging & Insightful Content',
+    title: 'Monkeys - Quality Blogging Community & Trusted Content Platform',
     description:
-      'Stay informed with Monkeys, your go-to platform for technology, business, sports, entertainment, and collaborative articles that inspire and innovate.',
+      'Monkeys is where writers publish meaningful blogs and readers discover trusted content across science, lifestyle, philosophy, and more.',
     images: ['https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be'],
     site: '@monkeys_com_co',
   },
   verification: {
     google: 'WIMiYru73CLiTFT9yEP2zIgQCv07AxBETTstbKe7Fws',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    nocache: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+    },
   },
 };
 
