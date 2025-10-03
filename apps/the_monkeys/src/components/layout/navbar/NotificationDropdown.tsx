@@ -18,9 +18,10 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
   const { notifications, isLoading, isError } = useGetAllNotifications();
   const [open, setOpen] = useState<boolean>(false);
 
-  const unreadNotifications = notifications?.notifications.notification.filter(
-    (notificationItem) => !notificationItem.seen
-  );
+  const unreadNotifications =
+    notifications?.notifications?.notification?.filter(
+      (notificationItem) => !notificationItem.seen
+    ) || [];
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -40,13 +41,13 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
       </DropdownMenuTrigger>
 
       {!session ? (
-        <DropdownMenuContent className='mt-3 mr-2 w-[250px] sm:w-[350px]'>
+        <DropdownMenuContent className='mt-2 mr-2 w-[250px] sm:w-[350px]'>
           <p className='py-4 px-2 text-sm opacity-80 text-center'>
             Login to view notifications.
           </p>
         </DropdownMenuContent>
       ) : (
-        <DropdownMenuContent className='mt-3 mr-2 w-[260px] sm:w-[360px] p-2 flex flex-col'>
+        <DropdownMenuContent className='mt-2 mr-2 w-[260px] sm:w-[360px] p-2 flex flex-col'>
           <h3 className='px-1 font-dm_sans font-medium text-lg'>
             Notifications{' '}
             <span className='text-sm sm:text-base text-brand-orange'>
