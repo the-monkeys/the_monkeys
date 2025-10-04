@@ -11,10 +11,14 @@
 		"format": "turbo run format"
 	},
 	"devDependencies": {
+		"@types/prismjs": "^1.26.5",
 		"husky": "^9.1.7",
 		"pnpm": "^10.10.0",
 		"turbo": "^2.4.4",
 		"typescript": "^5.8.2"
 	},
-	"packageManager": "pnpm@10.10.0"
+	"packageManager": "pnpm@10.10.0",
+	"dependencies": {
+		"prismjs": "^1.30.0"
+	}
 }

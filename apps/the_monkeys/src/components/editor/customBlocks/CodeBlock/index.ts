@@ -1,5 +1,11 @@
+import Prism from 'prismjs';
+import 'prismjs/components/prism-javascript';
+
 import './style.css';
 
+require('prismjs/themes/prism.css');
+
+// Todo: handle dark mode for code block
 export default class CustomCodeTool {
   data: { code: string; language: string };
   api: any;
@@ -42,7 +48,7 @@ export default class CustomCodeTool {
       'https://raw.githubusercontent.com/Remix-Design/RemixIcon/master/icons/Document/file-copy-line.svg';
     this.data = {
       code: data?.code || '',
-      language: data?.language || 'plaintext',
+      language: data?.language || 'javascript',
     };
     this.codeEl = document.createElement('div');
   }
@@ -62,7 +68,7 @@ export default class CustomCodeTool {
         contentEditable: 'true',
         spellcheck: 'false',
         tabindex: '0',
-        role: 'textbox'
+        role: 'textbox',
       });
       code.setAttribute('data-placeholder', 'Write your code here...');
 
@@ -70,7 +76,13 @@ export default class CustomCodeTool {
         this.data.code = code.textContent || '';
       });
 
+      code.addEventListener('blur', () => {
+        Prism.highlightElement(code);
+      });
+
       code.addEventListener('paste', (e) => this._onPaste(e));
+    } else {
+      Prism.highlightElement(code);
     }
 
     pre.appendChild(code);
