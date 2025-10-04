@@ -14,12 +14,11 @@ import { SearchUsers } from './components/SearchUsers';
 
 const SearchPage = () => {
   const { isSuccess } = useAuth();
-  const searchParams = useSearchParams();
-  const searchQueryParam = searchParams.get('query');
 
-  const [searchQuery, setSearchQuery] = useState<string>(
-    searchQueryParam || ''
-  );
+  const searchParams = useSearchParams();
+  const searchQueryParam = searchParams.get('query') || '';
+
+  const [searchQuery, setSearchQuery] = useState<string>(searchQueryParam);
   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,17 +33,25 @@ const SearchPage = () => {
     return () => clearTimeout(handler);
   }, [searchQuery]);
 
+  useEffect(() => {
+    setDebouncedQuery(searchQueryParam);
+  }, [searchQueryParam]);
+
   return (
     <div className='space-y-12'>
       <div className='relative mx-auto max-w-3xl flex items-center gap-2'>
-        <div className='p-1 flex justify-center'>
+        <div className='p-1 flex justify-center sm:hidden'>
           <Icon name='RiSearch' />
         </div>
+
+        <h3 className='w-full hidden sm:flex sm:justify-center sm:text-xl'>
+          Showing results for {searchQueryParam} :
+        </h3>
 
         <input
           value={searchQuery}
           placeholder='e.g. Layoffs'
-          className='py-2 px-1 w-full bg-transparent focus:outline-none border-b-2 border-border-light dark:border-border-dark border-opacity-40 focus:border-opacity-100'
+          className='py-2 px-1 w-full block sm:hidden bg-transparent focus:outline-none border-b-2 border-border-light dark:border-border-dark border-opacity-40 focus:border-opacity-100'
           onChange={handleInputChange}
         />
 
