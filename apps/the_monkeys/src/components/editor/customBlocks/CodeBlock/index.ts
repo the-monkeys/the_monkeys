@@ -61,16 +61,16 @@ export default class CustomCodeTool {
       Object.assign(code, {
         contentEditable: 'true',
         spellcheck: 'false',
+        tabindex: '0',
+        role: 'textbox'
       });
       code.setAttribute('data-placeholder', 'Write your code here...');
-      code.setAttribute('tabindex', '0');
-      code.setAttribute('role', 'textbox');
 
       code.addEventListener('input', () => {
         this.data.code = code.textContent || '';
       });
 
-      code.addEventListener('paste', (e) => this._handlePaste(e));
+      code.addEventListener('paste', (e) => this._onPaste(e));
     }
 
     pre.appendChild(code);
@@ -107,7 +107,7 @@ export default class CustomCodeTool {
   }
 
   // helper function - when user paste code inside the code wrapper
-  _handlePaste(e: ClipboardEvent) {
+  _onPaste(e: ClipboardEvent) {
     e.preventDefault();
     e.stopPropagation();
 
