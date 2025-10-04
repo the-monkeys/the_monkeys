@@ -5,7 +5,7 @@ import FeaturesGrid from '@/components/branding/featuresGrid';
 import MembersGrid from '@/components/branding/membersGrid';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import { CREATE_ROUTE, FEED_ROUTE } from '@/constants/routeConstants';
+import { CREATE_ROUTE, HOME_ROUTE } from '@/constants/routeConstants';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 const AboutPage = () => {
@@ -48,7 +48,7 @@ const AboutPage = () => {
               className='group rounded-full hover:!bg-background-light dark:hover:!bg-background-dark'
               asChild
             >
-              <Link href={FEED_ROUTE}>
+              <Link href={HOME_ROUTE}>
                 <Icon
                   name='RiSearch'
                   className='mr-[6px] group-hover:animate-icon-shake opacity-90'

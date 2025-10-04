@@ -9,7 +9,7 @@ import LoginButton from '@/components/buttons/loginButton';
 import Logo from '@/components/logo';
 import { SearchInput, SearchInputLink } from '@/components/search/SearchInput';
 import ThemeSwitch from '@/components/themeSwitch';
-import { FEED_ROUTE } from '@/constants/routeConstants';
+import { HOME_ROUTE } from '@/constants/routeConstants';
 import { IUser } from '@/services/models/user';
 import { twMerge } from 'tailwind-merge';
 
@@ -53,7 +53,7 @@ const Nav = ({
     >
       <Container className='w-full max-w-[1500px] px-[10px] py-3 flex items-center justify-between gap-4'>
         <div className='flex items-center gap-[10px] sm:gap-4'>
-          <Link href={FEED_ROUTE} className='group flex items-center gap-[6px]'>
+          <Link href={HOME_ROUTE} className='group flex items-center gap-[6px]'>
             <div className='w-9 flex justify-center items-center filter group-hover:brightness-90'>
               <Logo />
             </div>

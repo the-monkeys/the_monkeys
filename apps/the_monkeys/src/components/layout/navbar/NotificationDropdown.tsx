@@ -18,9 +18,10 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
   const { notifications, isLoading, isError } = useGetAllNotifications();
   const [open, setOpen] = useState<boolean>(false);
 
-  const unreadNotifications = notifications?.notifications.notification.filter(
-    (notificationItem) => !notificationItem.seen
-  );
+  const unreadNotifications =
+    notifications?.notifications?.notification?.filter(
+      (notificationItem) => !notificationItem.seen
+    ) || [];
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
