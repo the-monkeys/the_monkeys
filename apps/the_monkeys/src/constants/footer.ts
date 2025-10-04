@@ -52,7 +52,7 @@ export const footerLinksList = [
     items: [
       {
         text: 'Monkeys Feed',
-        link: '/feed',
+        link: '/',
       },
       {
         text: 'About Us',

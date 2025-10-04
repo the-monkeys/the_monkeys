@@ -24,7 +24,7 @@ const SettingsPage = () => {
 
   useEffect(() => {
     if (!isLoading && (!data || isError)) {
-      router.replace('/feed');
+      router.replace('/');
     }
   }, [data, isError, isLoading, router]);
 
