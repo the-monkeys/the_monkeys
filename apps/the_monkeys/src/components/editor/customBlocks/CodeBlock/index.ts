@@ -1,9 +1,9 @@
 import Prism from 'prismjs';
 import 'prismjs/components/prism-javascript';
 
-import './style.css';
+import './styles/style.css';
+import './styles/prismjs.css'
 
-require('prismjs/themes/prism.css');
 
 // Todo: handle dark mode for code block
 export default class CustomCodeTool {

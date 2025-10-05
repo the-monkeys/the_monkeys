@@ -1,33 +1,30 @@
-@import url(https://fonts.googleapis.com/css?family=Questrial);
-@import url(https://fonts.googleapis.com/css?family=Arvo);
 .custom-code-wrapper {
   background: #f2f2f2;
   color: #414141;
   border-radius: 8px;
   outline: none;
   overflow-x: auto;
-  padding-bottom: 4px;
+  /* padding-bottom: 4px; */
+  position: relative;
 }
 
-.dark .custom-code-wrapper{
+.dark .custom-code-wrapper {
   background: #1e1e1e;
   color: #f8f8f2;
 }
 
 .custom-code-editor {
   display: block;
-  min-height: 100px;
-  font-family: monospace;
-  white-space: pre;
   font-family: monospace !important;
   font-size: 14px;
-  padding: 16px;
-  min-height: 15px;
+  padding: 32px 16px 16px 16px;
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
   outline: none;
-  white-space: pre;
+  background: transparent;
+  color: inherit;
+
 }
 
 .custom-code-editor:empty::before {
@@ -38,36 +35,37 @@
 }
 
 .dark .custom-code-editor {
-  background: #1e1e1e;
+  background: transparent;
   color: #f8f8f2;
 }
 
 .code-copy-button {
   display: flex;
-  gap: 2px;
+  gap: 4px;
   align-items: center;
   position: absolute;
   top: 8px;
   right: 8px;
-  margin-left: 8px;
-  padding: 4px 8px;
+  padding: 3px 6px;
   font-size: 12px;
   cursor: pointer;
   background: #e3e3e3;
   color: #000000;
   border: none;
   border-radius: 2px;
-  transition: background 0.2s ease;
+  user-select: none;
+  z-index: 10;
 }
 
-.custom-code-editor:empty::before {
-  content: attr(data-placeholder);
-  color: #888;
-  font-style: italic;
-  pointer-events: none;
+.code-copy-button:hover {
+  background: #e6e5e5;
 }
 
 .copy-icon {
   width: 16px;
   height: 16px;
 }
+
+
+
+/* PrismJS default theme for syntax highlighting */
