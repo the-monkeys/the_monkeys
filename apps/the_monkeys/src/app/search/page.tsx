@@ -34,7 +34,9 @@ const SearchPage = () => {
   }, [searchQuery]);
 
   useEffect(() => {
-    setDebouncedQuery(searchQueryParam);
+    if (searchQueryParam.trim()) {
+      setDebouncedQuery(searchQueryParam);
+    }
   }, [searchQueryParam]);
 
   return (
@@ -44,8 +46,9 @@ const SearchPage = () => {
           <Icon name='RiSearch' />
         </div>
 
-        <h3 className='w-full hidden sm:flex sm:justify-center sm:text-xl'>
-          Showing results for {searchQueryParam} :
+        <h3 className='hidden sm:block sm:text-2xl'>
+          <span className='opacity-80'>Showing results for&nbsp;</span>
+          {searchQueryParam}
         </h3>
 
         <input
@@ -57,7 +60,7 @@ const SearchPage = () => {
 
         {searchQuery.trim() && (
           <button
-            className='absolute top-[50%] -translate-y-[50%] right-[10px]'
+            className='absolute top-[50%] -translate-y-[50%] right-[10px] sm:hidden'
             onClick={() => setSearchQuery('')}
           >
             <Icon name='RiClose' size={16} className='text-alert-red' />
