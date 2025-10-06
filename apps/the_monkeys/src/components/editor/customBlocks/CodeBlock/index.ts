@@ -1,9 +1,12 @@
 import Prism from 'prismjs';
+// needed by php
+import components from 'prismjs/components';
 import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-markup';
 
+// This is key!
+import './styles/prismjs.css';
 import './styles/style.css';
-import './styles/prismjs.css'
-
 
 // Todo: handle dark mode for code block
 export default class CustomCodeTool {
@@ -60,6 +63,65 @@ export default class CustomCodeTool {
     const code = document.createElement('code');
 
     this.codeEl = code as HTMLDivElement;
+
+    const selectWrapper = document.createElement('div');
+    selectWrapper.className = 'select-wrapper';
+    if (!this.readOnly) {
+      const selectEl = document.createElement('select');
+      selectEl.className = 'language-select';
+
+      const supportedLanguages = [
+        'plain text',
+        'javascript',
+        'html',
+        'css',
+        'python',
+        'java',
+        'c',
+        'cpp',
+        'bash',
+        'typescript',
+        'json',
+        'php',
+        'ruby',
+        'go',
+      ];
+
+      supportedLanguages.forEach((lang) => {
+        const option = document.createElement('option');
+        option.value = lang;
+        option.textContent = lang.toUpperCase();
+        if (lang === this.data.language) {
+          option.selected = true;
+        }
+        selectEl.appendChild(option);
+      });
+
+      selectEl.addEventListener('change', async (e) => {
+        const newLang = (e.target as HTMLSelectElement).value;
+        this.data.language = newLang;
+
+        try {
+          await this._loadPrismLanguage(newLang);
+        } catch (err) {
+          console.warn(`Prism: Failed to load language '${newLang}'`, err);
+        }
+
+        code.className = `custom-code-editor language-${newLang}`;
+        Prism.highlightElement(code);
+      });
+
+      selectWrapper.appendChild(selectEl);
+    } else {
+      const langLabel = document.createElement('div');
+      langLabel.className = 'language-label';
+      langLabel.textContent = this.data.language.toUpperCase();
+      selectWrapper.appendChild(langLabel);
+    }
+
+    code.className = `custom-code-editor language-${this.data.language}`;
+    code.textContent = this.data.code;
+
     code.className = `custom-code-editor language-${this.data.language}`;
     code.textContent = this.data.code;
 
@@ -106,6 +168,7 @@ export default class CustomCodeTool {
     copyButton.append(fragment);
 
     copyButton.addEventListener('click', () => this._handleCopy(copyButton));
+    wrapper.appendChild(selectWrapper);
     wrapper.appendChild(copyButton);
     wrapper.appendChild(pre);
     return wrapper;
@@ -187,5 +250,40 @@ export default class CustomCodeTool {
       console.error('Failed to copy code:', err);
       setFeedback(errorText, errorIcon);
     }
+  }
+
+  async _loadPrismLanguage(lang: string): Promise<void> {
+    if (Prism.languages[lang]) return;
+
+    const { languages } = components;
+
+    const loadLanguage = async (language: string) => {
+      if (Prism.languages[language]) return;
+
+      const langMeta = languages[language];
+
+      if (!langMeta) {
+        console.warn(`Language "${language}" is not supported by PrismJS.`);
+        return;
+      }
+
+      // Load dependencies first
+      const deps = langMeta.require
+        ? Array.isArray(langMeta.require)
+          ? langMeta.require
+          : [langMeta.require]
+        : [];
+      for (const dep of deps) {
+        await loadLanguage(dep);
+      }
+
+      try {
+        await import(`prismjs/components/prism-${language}.js`);
+      } catch (err) {
+        console.warn(`Failed to load Prism language: ${language}`, err);
+      }
+    };
+
+    return loadLanguage(lang);
   }
 }

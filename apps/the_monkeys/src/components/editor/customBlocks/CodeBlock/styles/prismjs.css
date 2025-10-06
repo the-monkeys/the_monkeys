@@ -1,14 +1,12 @@
-
-.token{
-      font-family: monospace !important;
-
+.token {
+  font-family: monospace !important;
 }
 
-code[class*="language-"],
-pre[class*="language-"] {
+code[class*='language-'],
+pre[class*='language-'] {
   color: black;
   background: none;
-    font-family: monospace !important;
+  font-family: monospace !important;
 
   font-size: 1em;
   text-align: left;
@@ -23,21 +21,20 @@ pre[class*="language-"] {
   hyphens: none;
 }
 
-.dark code[class*="language-"],
-.dark pre[class*="language-"] {
+.dark code[class*='language-'],
+.dark pre[class*='language-'] {
   text-shadow: none;
 }
 
-
 @media print {
-  code[class*="language-"],
-  pre[class*="language-"] {
+  code[class*='language-'],
+  pre[class*='language-'] {
     text-shadow: none;
   }
 }
 
 /* Code blocks */
-pre[class*="language-"] {
+pre[class*='language-'] {
   /* padding: 1em; */
   /* margin: 0.5em 0; */
   overflow: auto;
@@ -45,13 +42,13 @@ pre[class*="language-"] {
   border-radius: 5px;
 }
 
-.dark pre[class*="language-"] {
+.dark pre[class*='language-'] {
   background: #1e1e1e;
   color: #f8f8f2;
 }
 
 /* Inline code */
-:not(pre) > code[class*="language-"] {
+:not(pre) > code[class*='language-'] {
   padding: 0.1em 0.3em;
   border-radius: 0.3em;
   white-space: normal;
@@ -90,7 +87,6 @@ pre[class*="language-"] {
 .token.builtin,
 .token.inserted {
   color: #690;
-
 }
 
 .token.operator,
@@ -109,8 +105,7 @@ pre[class*="language-"] {
 
 .token.function,
 .token.class-name {
-  color: #DD4A68;
-
+  color: #dd4a68;
 }
 
 .token.regex,
@@ -176,7 +171,6 @@ pre[class*="language-"] {
 .dark .token.attr-value,
 .dark .token.keyword {
   color: #569cd6;
-
 }
 
 .dark .token.function,

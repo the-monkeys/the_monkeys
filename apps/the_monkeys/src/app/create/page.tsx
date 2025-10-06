@@ -222,7 +222,6 @@ const CreatePage = () => {
     const timer = setTimeout(() => {
       const formattedData = formatData(data);
       const success = sendData(formattedData);
-
       if (success) {
         setIsSaving(true);
         // Automatically clear saving status after 3 seconds if no response
@@ -272,7 +271,6 @@ const CreatePage = () => {
     }
 
     setBlogPublishLoading(true);
-
     try {
       await axiosInstance.post(`/blog/publish/${blogId}`, formatData(data));
       toast({

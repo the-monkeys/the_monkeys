@@ -24,7 +24,6 @@
   outline: none;
   background: transparent;
   color: inherit;
-
 }
 
 .custom-code-editor:empty::before {
@@ -44,7 +43,7 @@
   gap: 4px;
   align-items: center;
   position: absolute;
-  top: 8px;
+  top: 4px;
   right: 8px;
   padding: 3px 6px;
   font-size: 12px;
@@ -66,6 +65,45 @@
   height: 16px;
 }
 
+.select-wrapper {
+  display: inline-block;
+  position: relative;
+}
 
+.language-select {
+  color: black;
+  background-color: #e3e3e3;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  margin-top: 4px;
+  margin-left: 4px;
+  padding: 1px 2px;
+  width: auto;
+}
 
-/* PrismJS default theme for syntax highlighting */
+.dark .language-select {
+  background-color: #414141;
+  color: whitesmoke;
+}
+
+.language-select:focus-visible {
+  outline: none;
+}
+
+.language-label {
+  color: black;
+  background-color: transparent;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  margin-top: 4px;
+  margin-left: 4px;
+  padding: 1px 2px;
+  width: auto;
+}
+
+.dark .language-label {
+  background-color: transparent;
+  color: whitesmoke;
+}
+
+/* <svg aria-hidden="true" role="graphics-symbol" viewBox="0 0 30 30" class="chevronDown" style="width: 10px; height: 100%; display: block; fill: var(--c-icoTer); flex-shrink: 0; margin-inline-start: 4px;"><polygon points="15,17.4 4.8,7 2,9.8 15,23 28,9.8 25.2,7 "></polygon></svg> */
