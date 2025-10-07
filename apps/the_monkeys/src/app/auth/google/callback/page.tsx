@@ -38,7 +38,7 @@ export default function GoogleCallback() {
         title: 'Login successful',
       });
 
-      router.replace('/feed');
+      router.replace('/');
     },
     onError: () => {
       toast({

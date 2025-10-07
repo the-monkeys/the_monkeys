@@ -47,7 +47,7 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
         title: 'Login Successful',
         description: 'You have successfully logged in. Welcome back!',
       });
-      router.replace('/feed');
+      router.replace('/');
     },
     onError: (err) => {
       console.log(err);
