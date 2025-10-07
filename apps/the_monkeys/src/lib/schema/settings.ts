@@ -12,10 +12,34 @@ export const updateProfileSchema = z.object({
     .optional(),
   bio: z.string().max(500).optional(),
   date_of_birth: z.string().optional(),
-  twitter: z.string().max(50).optional(),
-  linkedin: z.string().max(50).optional(),
-  instagram: z.string().max(50).optional(),
-  github: z.string().max(50).optional(),
+  twitter: z
+    .string()
+    .max(50)
+    .refine((val) => !val || /^[a-zA-Z0-9-_.]+$/.test(val), {
+      message: 'Please enter a valid username',
+    })
+    .optional(),
+  linkedin: z
+    .string()
+    .max(50)
+    .refine((val) => !val || /^[a-zA-Z0-9-_.]+$/.test(val), {
+      message: 'Please enter a valid username',
+    })
+    .optional(),
+  instagram: z
+    .string()
+    .max(50)
+    .refine((val) => !val || /^[a-zA-Z0-9-_.]+$/.test(val), {
+      message: 'Please enter a valid username',
+    })
+    .optional(),
+  github: z
+    .string()
+    .max(50)
+    .refine((val) => !val || /^[a-zA-Z0-9-_.]+$/.test(val), {
+      message: 'Please enter a valid username',
+    })
+    .optional(),
 });
 
 export const updateProfileDetailsSchema = z.object({
