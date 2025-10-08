@@ -1,0 +1,41 @@
+# Ignore node_modules everywhere (you copy them via layers)
+**/node_modules
+.pnpm-store
+.pnpm-debug.log
+
+# Ignore build artifacts
+**/dist
+**/.turbo
+**/.next
+**/build
+**/out
+
+# Ignore lockfiles if not needed (you can keep them if needed)
+npm-lock.json
+yarn.lock
+
+# Mac system files
+.DS_Store
+
+# IDE and editor settings
+.vscode
+.idea
+*.swp
+
+# Logs
+*.log
+logs
+
+# Env & secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Git
+.git
+.gitignore
+
+# Docker files (don't re-copy Dockerfile itself)
+Dockerfile
+.dockerignore
