@@ -1,0 +1,108 @@
+.custom-code-wrapper {
+  background: #f2f2f2;
+  color: #414141;
+  border-radius: 8px;
+  outline: none;
+  overflow-x: auto;
+  /* padding-bottom: 4px; */
+  position: relative;
+}
+
+.dark .custom-code-wrapper {
+  background: #1e1e1e;
+  color: #f8f8f2;
+}
+
+.custom-code-editor {
+  display: block;
+  font-family: monospace !important;
+  font-size: 14px;
+  padding: 32px 16px 16px 16px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  overflow-x: auto;
+}
+
+.custom-code-editor:empty::before {
+  content: attr(data-placeholder);
+  color: #888;
+  font-style: italic;
+  pointer-events: none;
+}
+
+.dark .custom-code-editor {
+  background: transparent;
+  color: #f8f8f2;
+}
+
+.code-copy-button {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  padding: 3px 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: #e3e3e3;
+  color: #000000;
+  border: none;
+  border-radius: 2px;
+  user-select: none;
+  z-index: 10;
+}
+
+.code-copy-button:hover {
+  background: #e6e5e5;
+}
+
+.copy-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.select-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.language-select {
+  color: black;
+  background-color: #e3e3e3;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  margin-top: 4px;
+  margin-left: 4px;
+  padding: 1px 2px;
+  width: auto;
+}
+
+.dark .language-select {
+  background-color: #414141;
+  color: whitesmoke;
+}
+
+.language-select:focus-visible {
+  outline: none;
+}
+
+.language-label {
+  color: black;
+  background-color: transparent;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  margin-top: 4px;
+  margin-left: 4px;
+  padding: 1px 2px;
+  width: auto;
+}
+
+.dark .language-label {
+  background-color: transparent;
+  color: whitesmoke;
+}
