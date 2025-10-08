@@ -20,6 +20,7 @@ const SearchPage = () => {
 
   const [searchQuery, setSearchQuery] = useState<string>(searchQueryParam);
   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<'posts' | 'authors'>('posts');
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -46,7 +47,7 @@ const SearchPage = () => {
           <Icon name='RiSearch' />
         </div>
 
-        <h3 className='hidden sm:block sm:text-2xl'>
+        <h3 className='hidden sm:block sm:text-2xl mx-auto'>
           <span className='opacity-80'>Showing results for&nbsp;</span>
           {searchQueryParam}
         </h3>
@@ -70,33 +71,55 @@ const SearchPage = () => {
 
       {/* need to add pagination to search results */}
       {debouncedQuery.trim() && (
-        <div className='grid grid-cols-3 gap-10 lg:gap-12'>
-          <div className='col-span-3 lg:col-span-1 space-y-6'>
-            <h6 className='font-dm_sans font-medium text-lg'>Authors</h6>
+        <div className='space-y-8'>
+          <div className='flex gap-4 border-b border-border-light dark:border-border-dark'>
+            <button
+              onClick={() => setActiveTab('posts')}
+              className={`pb-3 px-1 font-dm_sans font-medium text-lg transition-colors relative 
+                ${activeTab === 'posts' ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
+            >
+              Posts
+              {activeTab === 'posts' && (
+                <span className='absolute bottom-0 left-0 right-0 h-0.5 bg-brand-orange'></span>
+              )}
+            </button>
 
-            {isSuccess ? (
-              <SearchUsers query={debouncedQuery} />
-            ) : (
-              <div className='py-2 flex justify-center items-center gap-1'>
-                <Link
-                  href={LOGIN_ROUTE}
-                  className='font-medium text-sm text-brand-orange underline'
-                >
-                  Login
-                </Link>
-
-                <p className='text-sm opacity-90 text-center'>
-                  to find authors.
-                </p>
-              </div>
-            )}
+            <button
+              onClick={() => setActiveTab('authors')}
+              className={`pb-3 px-1 font-dm_sans font-medium text-lg transition-colors relative 
+                ${activeTab === 'authors' ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
+            >
+              Authors
+              {activeTab === 'authors' && (
+                <span className='absolute bottom-0 left-0 right-0 h-0.5 bg-brand-orange'></span>
+              )}
+            </button>
           </div>
 
-          <div className='col-span-3 lg:col-span-2 space-y-6'>
-            <h6 className='font-dm_sans font-medium text-lg'>Posts</h6>
+          {activeTab === 'posts' ? (
+            <>
+              <SearchPosts query={debouncedQuery} />
+            </>
+          ) : (
+            <div>
+              {isSuccess ? (
+                <SearchUsers query={debouncedQuery} />
+              ) : (
+                <div className='py-8 flex justify-center items-center gap-1'>
+                  <Link
+                    href={LOGIN_ROUTE}
+                    className='font-medium text-sm text-brand-orange underline'
+                  >
+                    Login
+                  </Link>
 
-            <SearchPosts query={debouncedQuery} />
-          </div>
+                  <p className='text-sm opacity-90 text-center'>
+                    to find authors.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

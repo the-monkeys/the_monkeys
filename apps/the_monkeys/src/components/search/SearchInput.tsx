@@ -31,6 +31,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
     event.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/search?query=${encodeURIComponent(searchQuery)}`);
+      setFocused(false);
     }
   };
 
