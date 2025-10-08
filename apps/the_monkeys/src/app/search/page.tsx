@@ -8,6 +8,12 @@ import { useSearchParams } from 'next/navigation';
 import Icon from '@/components/icon';
 import { LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@the-monkeys/ui/atoms/tabs';
 
 import { SearchPosts } from './components/SearchPosts';
 import { SearchUsers } from './components/SearchUsers';
@@ -20,7 +26,6 @@ const SearchPage = () => {
 
   const [searchQuery, setSearchQuery] = useState<string>(searchQueryParam);
   const [debouncedQuery, setDebouncedQuery] = useState<string>('');
-  const [activeTab, setActiveTab] = useState<'posts' | 'authors'>('posts');
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -47,7 +52,7 @@ const SearchPage = () => {
           <Icon name='RiSearch' />
         </div>
 
-        <h3 className='hidden sm:block sm:text-2xl mx-auto'>
+        <h3 className='hidden sm:block sm:text-xl mx-auto'>
           <span className='opacity-80'>Showing results for&nbsp;</span>
           {searchQueryParam}
         </h3>
@@ -71,55 +76,49 @@ const SearchPage = () => {
 
       {/* need to add pagination to search results */}
       {debouncedQuery.trim() && (
-        <div className='space-y-8'>
-          <div className='flex gap-4 border-b border-border-light dark:border-border-dark'>
-            <button
-              onClick={() => setActiveTab('posts')}
-              className={`pb-3 px-1 font-dm_sans font-medium text-lg transition-colors relative 
-                ${activeTab === 'posts' ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
-            >
-              Posts
-              {activeTab === 'posts' && (
-                <span className='absolute bottom-0 left-0 right-0 h-0.5 bg-brand-orange'></span>
-              )}
-            </button>
+        <div className='mx-auto max-w-4xl min-h-[800px]'>
+          <Tabs defaultValue='posts' className='space-y-8'>
+            <TabsList className='pb-4 flex justify-start sm:justify-center gap-2'>
+              <TabsTrigger value='posts'>
+                <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
+                  Posts
+                </p>
+                <div className='mt-[6px] h-[2px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+              </TabsTrigger>
 
-            <button
-              onClick={() => setActiveTab('authors')}
-              className={`pb-3 px-1 font-dm_sans font-medium text-lg transition-colors relative 
-                ${activeTab === 'authors' ? 'opacity-100' : 'opacity-80 hover:opacity-100'}`}
-            >
-              Authors
-              {activeTab === 'authors' && (
-                <span className='absolute bottom-0 left-0 right-0 h-0.5 bg-brand-orange'></span>
-              )}
-            </button>
-          </div>
+              <TabsTrigger value='authors'>
+                <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
+                  Authors
+                </p>
+                <div className='mt-[6px] h-[2px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+              </TabsTrigger>
+            </TabsList>
 
-          {activeTab === 'posts' ? (
-            <>
-              <SearchPosts query={debouncedQuery} />
-            </>
-          ) : (
-            <div>
-              {isSuccess ? (
-                <SearchUsers query={debouncedQuery} />
-              ) : (
-                <div className='py-8 flex justify-center items-center gap-1'>
-                  <Link
-                    href={LOGIN_ROUTE}
-                    className='font-medium text-sm text-brand-orange underline'
-                  >
-                    Login
-                  </Link>
+            <div className='w-full'>
+              <TabsContent className='w-full' value='posts'>
+                <SearchPosts query={debouncedQuery} />
+              </TabsContent>
 
-                  <p className='text-sm opacity-90 text-center'>
-                    to find authors.
-                  </p>
-                </div>
-              )}
+              <TabsContent className='w-full' value='authors'>
+                {isSuccess ? (
+                  <SearchUsers query={debouncedQuery} />
+                ) : (
+                  <div className='flex justify-center items-center gap-1'>
+                    <Link
+                      href={LOGIN_ROUTE}
+                      className='font-medium text-sm text-brand-orange underline'
+                    >
+                      Login
+                    </Link>
+
+                    <p className='text-sm opacity-90 text-center'>
+                      to find authors.
+                    </p>
+                  </div>
+                )}
+              </TabsContent>
             </div>
-          )}
+          </Tabs>
         </div>
       )}
     </div>
