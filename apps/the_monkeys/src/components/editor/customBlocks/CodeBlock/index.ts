@@ -51,7 +51,7 @@ export default class CustomCodeTool {
       'https://raw.githubusercontent.com/Remix-Design/RemixIcon/master/icons/Document/file-copy-line.svg';
     this.data = {
       code: data?.code || '',
-      language: data?.language || 'javascript',
+      language: data?.language || 'plain text',
     };
     this.codeEl = document.createElement('div');
   }

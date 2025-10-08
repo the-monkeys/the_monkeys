@@ -24,6 +24,7 @@
   outline: none;
   background: transparent;
   color: inherit;
+  overflow-x: auto;
 }
 
 .custom-code-editor:empty::before {
