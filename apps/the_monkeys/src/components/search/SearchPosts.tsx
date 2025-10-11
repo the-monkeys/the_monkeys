@@ -49,7 +49,7 @@ export const SearchPosts = ({
     useGetSearchBlog({
       searchQuery: query.trim() ? query : undefined,
       limit: 5,
-      offset: 0
+      offset: 0,
     });
 
   if (searchBlogsLoading) {
