@@ -1,10 +1,24 @@
+import React, { useState } from 'react';
+
+import {
+  PaginationNextButton,
+  PaginationPrevButton,
+} from '@/components/buttons/paginationButton';
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import { PROFILE_POSTS_PER_PAGE } from '@/constants/posts';
 import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
 
 export const SearchPosts = ({ query }: { query: string }) => {
+  const [page, setPage] = useState<number>(0);
+  const offset = page * PROFILE_POSTS_PER_PAGE;
+
   const { searchBlogs, searchBlogsLoading, searchBlogsError } =
-    useGetSearchBlog(query.trim() ? query : undefined);
+    useGetSearchBlog({
+      searchQuery: query.trim() ? query : undefined,
+      limit: 10,
+      offset,
+    });
 
   if (searchBlogsLoading) {
     return <FeedBlogCardListSkeleton />;
@@ -20,6 +34,15 @@ export const SearchPosts = ({ query }: { query: string }) => {
 
   const blogs = searchBlogs?.blogs;
 
+  const hasNextPage =
+    blogs &&
+    blogs?.length &&
+    blogs?.length > (page + 1) * PROFILE_POSTS_PER_PAGE;
+
+  const hasPrevPage = page > 0;
+  const showPagination =
+    blogs?.length && blogs?.length > PROFILE_POSTS_PER_PAGE;
+
   return (
     <>
       {!blogs || blogs === null ? (
@@ -33,6 +56,24 @@ export const SearchPosts = ({ query }: { query: string }) => {
               return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
             })}
           </div>
+
+          {showPagination && (
+            <div className='flex justify-center gap-[10px] mt-4'>
+              {hasPrevPage && (
+                <PaginationPrevButton
+                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                  disable={!hasPrevPage}
+                />
+              )}
+
+              {hasNextPage && (
+                <PaginationNextButton
+                  onClick={() => setPage((prev) => prev + 1)}
+                  disable={!hasNextPage}
+                />
+              )}
+            </div>
+          )}
         </div>
       )}
     </>
