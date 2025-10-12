@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import Script from 'next/script';
 
@@ -9,11 +9,21 @@ type Props = {
 };
 
 export default function AdUnit({ slot }: Props) {
+  const adRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     try {
-      // @ts-ignore
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-    } catch {}
+      if (typeof window === 'undefined') return;
+      // Only push once per ad element
+
+      if (adRef.current && !adRef.current.dataset.adLoaded) {
+        // @ts-ignore
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+        adRef.current.dataset.adLoaded = 'true';
+      }
+    } catch (err) {
+      console.error('AdSense error:', err);
+    }
   }, []);
 
   return (
@@ -25,13 +35,16 @@ export default function AdUnit({ slot }: Props) {
         async
         crossOrigin='anonymous'
       />
+
       <ins
+        ref={adRef as any}
         className='adsbygoogle'
         style={{ display: 'block', textAlign: 'center' }}
         data-ad-layout='in-article'
         data-ad-format='fluid'
         data-ad-client='ca-pub-4687427997504601'
         data-ad-slot={slot}
+        data-full-width-responsive='true'
       />
     </>
   );
