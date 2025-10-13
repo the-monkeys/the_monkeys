@@ -16,7 +16,7 @@ export const SearchPosts = ({ query }: { query: string }) => {
   const { searchBlogs, searchBlogsLoading, searchBlogsError } =
     useGetSearchBlog({
       searchQuery: query.trim() ? query : undefined,
-      limit: 10,
+      limit: PROFILE_POSTS_PER_PAGE,
       offset,
     });
 
@@ -36,12 +36,12 @@ export const SearchPosts = ({ query }: { query: string }) => {
 
   const hasNextPage =
     blogs &&
-    blogs?.length &&
-    blogs?.length > (page + 1) * PROFILE_POSTS_PER_PAGE;
+    searchBlogs?.total_blogs &&
+    searchBlogs?.total_blogs > (page + 1) * PROFILE_POSTS_PER_PAGE;
 
   const hasPrevPage = page > 0;
   const showPagination =
-    blogs?.length && blogs?.length > PROFILE_POSTS_PER_PAGE;
+    (searchBlogs?.total_blogs ?? 0) > PROFILE_POSTS_PER_PAGE;
 
   return (
     <>
