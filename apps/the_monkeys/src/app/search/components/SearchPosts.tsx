@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import {
   PaginationNextButton,
@@ -11,16 +11,18 @@ import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
 
 export const SearchPosts = ({ query }: { query: string }) => {
   const [page, setPage] = useState<number>(0);
+  const [currentQuery, setCurrentQuery] = useState<string>(query);
 
-  useEffect(() => {
+  if (currentQuery !== query) {
+    setCurrentQuery(query);
     setPage(0);
-  }, [query]);
+  }
 
   const offset = page * PROFILE_POSTS_PER_PAGE;
 
   const { searchBlogs, searchBlogsLoading, searchBlogsError } =
     useGetSearchBlog({
-      searchQuery: query.trim() ? query : undefined,
+      searchQuery: currentQuery.trim(),
       limit: PROFILE_POSTS_PER_PAGE,
       offset,
     });
