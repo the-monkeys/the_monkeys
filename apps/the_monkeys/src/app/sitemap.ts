@@ -42,10 +42,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}`,
       changeFrequency: 'daily',
-      priority: 0.8,
+      priority: 1,
     },
     {
       url: `${baseUrl}${FEED_ROUTE}`,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/topics/explore`,
+      changeFrequency: 'daily',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/topics/sitemap.xml`,
       changeFrequency: 'daily',
       priority: 0.8,
     },
@@ -58,7 +68,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     return {
       url: `${baseUrl}/blog/${slug}-${post?.blog_id ?? 'unknown'}`,
       changeFrequency: 'monthly',
-      priority: 1,
+      priority: 0.9,
       lastModified: post?.published_time,
     };
   });
