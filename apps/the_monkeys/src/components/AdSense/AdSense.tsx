@@ -1,11 +1,16 @@
-import React from 'react';
-
 import Script from 'next/script';
+
+import { shouldLoadAdSense } from '@/utils/environment';
 
 type AdSenseType = {
   pId: string;
 };
 const AdSense = ({ pId }: AdSenseType) => {
+  // Don't render anything if AdSense should not be loaded
+  if (!shouldLoadAdSense()) {
+    return null;
+  }
+
   return (
     <Script
       async
