@@ -16,6 +16,8 @@ import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
 
+import { generateSlug } from '../blog/utils/generateSlug';
+
 const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
   loading: () => (
@@ -130,6 +132,8 @@ const CreatePage = () => {
   const username = session?.username;
   const blogIdRef = useRef(`${Math.random().toString(36).substring(7)}`);
   const blogId = blogIdRef.current;
+  const title =
+    data.blocks.find((block) => block.id === 'title')?.data.text || 'No Title';
 
   // WebSocket management
   const { isConnected, connectionStatus, sendData } = useWebSocket(
@@ -205,6 +209,7 @@ const CreatePage = () => {
             })) || [],
         },
         tags: blogTopics,
+        slug: generateSlug(title),
       };
     },
     [accountId, blogTopics]
@@ -312,13 +317,16 @@ const CreatePage = () => {
         </div>
 
         <div className='flex items-center gap-2'>
-          <ChooseTopicDialog
+          {/* The Topics are moved in the publish dialog */}
+          {/* <ChooseTopicDialog
             blogTopics={blogTopics}
             setBlogTopics={setBlogTopics}
-          />
+          /> */}
 
           <PublishBlogDialog
             topics={blogTopics}
+            setTopics={setBlogTopics}
+            data={data}
             isPublishing={blogPublishLoading}
             handlePublish={handlePublishStep}
           />
