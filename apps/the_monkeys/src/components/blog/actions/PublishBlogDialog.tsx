@@ -30,7 +30,7 @@ export const PublishBlogDialog = ({
 }: {
   topics: string[];
   setTopics: React.Dispatch<React.SetStateAction<string[]>>;
-  data: OutputData;
+  data: OutputData | null;
   handlePublish: () => void;
   isPublishing: boolean;
 }) => {
@@ -40,15 +40,15 @@ export const PublishBlogDialog = ({
   const { topics: allTopics } = useGetAllTopics();
 
   const title =
-    data.blocks.find((block) => block.id === 'title')?.data.text || 'No Title';
-  const contentBlock = data.blocks.find((block) => block.type === 'paragraph');
+    data?.blocks.find((block) => block.id === 'title')?.data.text || 'No Title';
+  const contentBlock = data?.blocks.find((block) => block.type === 'paragraph');
   // slice the content to first 200 characters for preview
   // Also remove &nbsp; and other HTML entities if any
   const content = contentBlock
     ? contentBlock.data.text.slice(0, 200).replace(/&nbsp;/g, ' ')
     : 'No Content';
 
-  const imageBlock = data.blocks.find((block) => block.type === 'image');
+  const imageBlock = data?.blocks.find((block) => block.type === 'image');
   const imageExtension = imageBlock
     ? imageBlock.data.file.url.split('.').pop()
     : null;
