@@ -1,9 +1,7 @@
-
-
-.center{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .custom-embed-input {
@@ -35,12 +33,10 @@
 }
 
 .twitter-embed-container {
- 
   transform-origin: top left;
   background-color: #121212;
 }
 
-.twitter-tweet > iframe{
-    max-width: 25vw;
+.twitter-tweet > iframe {
+  max-width: 25vw;
 }
-

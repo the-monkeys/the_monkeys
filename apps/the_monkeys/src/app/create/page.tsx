@@ -271,7 +271,7 @@ const CreatePage = () => {
     }
 
     setBlogPublishLoading(true);
-    console.log("payload:>>>", formatData(data));
+    console.log('payload:>>>', formatData(data));
     try {
       await axiosInstance.post(`/blog/publish/${blogId}`, formatData(data));
       toast({
@@ -304,8 +304,9 @@ const CreatePage = () => {
           )}
         >
           <div
-            className={`inline-block size-2 rounded-full ${isConnected ? 'bg-alert-green' : 'bg-alert-red'
-              }`}
+            className={`inline-block size-2 rounded-full ${
+              isConnected ? 'bg-alert-green' : 'bg-alert-red'
+            }`}
           />
 
           <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>

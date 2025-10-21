@@ -1,4 +1,5 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
+import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
@@ -8,7 +9,6 @@ import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
-import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 
 export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',

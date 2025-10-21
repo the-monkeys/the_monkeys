@@ -32,8 +32,6 @@ declare module '@editorjs/quote' {
   export = Quote;
 }
 
-
-
 declare module '@editorjs/table' {
   import Table from '@editorjs/table';
   export = Table;
