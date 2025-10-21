@@ -2,8 +2,7 @@ import { MetadataRoute } from 'next';
 import { unstable_noStore as noStore } from 'next/cache';
 
 import { baseUrl } from '@/constants/baseUrl';
-
-import { generateSlug } from '../blog/utils/generateSlug';
+import { topicToSlug } from '@/utils/topicUtils';
 
 // Fetch topics from the API
 async function fetchTopics(): Promise<string[]> {
@@ -50,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const topics = await fetchTopics();
 
   const topicUrls: MetadataRoute.Sitemap = topics.map((topic: string) => ({
-    url: `${baseUrl}/topics/${encodeURIComponent(generateSlug(topic))}`,
+    url: `${baseUrl}/topics/${topicToSlug(topic)}`,
     changeFrequency: 'weekly',
     priority: 0.6,
     lastModified: new Date().toISOString(),
