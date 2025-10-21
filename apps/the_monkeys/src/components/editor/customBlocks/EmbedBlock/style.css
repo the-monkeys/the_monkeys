@@ -1,0 +1,46 @@
+
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-embed-input {
+  padding: 8px;
+  width: 100%;
+}
+
+.custom-embed-fallback {
+  border: 2px solid #ccc;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.custom-embed-fallback img {
+  width: 120px;
+  height: auto;
+  margin-right: 12px;
+}
+
+.custom-embed-fallback .title {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.custom-embed-fallback .url {
+  font-size: 12px;
+  color: #555;
+}
+
+.twitter-embed-container {
+ 
+  transform-origin: top left;
+  background-color: #121212;
+}
+
+.twitter-tweet > iframe{
+    max-width: 25vw;
+}
+

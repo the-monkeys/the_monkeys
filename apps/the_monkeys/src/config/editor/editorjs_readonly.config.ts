@@ -8,6 +8,7 @@ import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
+import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 
 export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',
@@ -43,6 +44,9 @@ export const editorConfig: EditorConfig = {
       // config: {
       //   placholder: '',
       // },
+    },
+    embed: {
+      class: CustomEmbed,
     },
     quote: {
       class: Quote,
