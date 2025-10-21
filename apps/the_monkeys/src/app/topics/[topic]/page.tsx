@@ -10,6 +10,7 @@ import {
   PageSubheading,
 } from '@/components/layout/pageHeading';
 import { LIVE_URL } from '@/constants/api';
+import { slugToTopic, topicToSlug } from '@/utils/topicUtils';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { BlogsByTopic } from './components/BlogsByTopic';
@@ -46,11 +47,12 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   noStore();
 
-  const topic = decodeURIComponent(params.topic) || 'Various Topics';
+  // Convert slug back to topic name
+  const topic = slugToTopic(params.topic) || 'Various Topics';
   const topicData = await fetchTopicData(topic);
   const blogCount = topicData?.blogs?.length || 0;
 
-  const topicUrl = `${LIVE_URL}/topics/${encodeURIComponent(topic)}`;
+  const topicUrl = `${LIVE_URL}/topics/${params.topic}`;
   const topicImage = `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`;
 
   // Generate dynamic title and description based on content
@@ -119,7 +121,7 @@ export async function generateMetadata({
 
 // Generate structured data for topic pages
 function generateTopicSchema(topic: string, blogCount: number) {
-  const topicUrl = `${LIVE_URL}/topics/${encodeURIComponent(topic)}`;
+  const topicUrl = `${LIVE_URL}/topics/${topicToSlug(topic)}`;
 
   return {
     '@context': 'https://schema.org',
@@ -175,7 +177,8 @@ const TopicBlogsPage = async ({
     topic: string;
   };
 }) => {
-  const topic = decodeURIComponent(params.topic);
+  // Convert slug back to topic name
+  const topic = slugToTopic(params.topic);
   const topicData = await fetchTopicData(topic);
   const blogCount = topicData?.blogs?.length || 0;
   const topicSchema = generateTopicSchema(topic, blogCount);
