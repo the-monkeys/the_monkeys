@@ -5,10 +5,10 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
+import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
-import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
@@ -51,6 +51,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   const accountId = session?.account_id;
   const username = session?.username;
+
+  const title = blog?.blog?.blocks[0]?.data?.text;
+  const slug = generateSlug(title);
+  const blogSlug = `${slug}-${blogId}`;
 
   // Keep refs updated
   useEffect(() => {
@@ -105,6 +109,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             })) || [],
         },
         tags: blogTopics,
+        slug: blogSlug,
       };
     },
     []
@@ -309,7 +314,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         </div>
       ) : (
         <div className='relative min-h-screen'>
-          <div className='pt-4 pb-3 flex flex-col sm:flex-row justify-between items-center gap-2'>
+          <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
             <div
               className={twMerge(
                 'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',

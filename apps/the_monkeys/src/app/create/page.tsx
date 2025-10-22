@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
-import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -135,6 +134,8 @@ const CreatePage = () => {
   const title =
     data.blocks.find((block) => block.id === 'title')?.data.text || 'No Title';
 
+  const slug = generateSlug(title);
+  const blogSlug = `${slug}-${blogId}`;
   // WebSocket management
   const { isConnected, connectionStatus, sendData } = useWebSocket(
     blogId,
@@ -209,7 +210,7 @@ const CreatePage = () => {
             })) || [],
         },
         tags: blogTopics,
-        slug: generateSlug(title),
+        slug: blogSlug,
       };
     },
     [accountId, blogTopics]
@@ -298,7 +299,7 @@ const CreatePage = () => {
 
   return (
     <div className='relative min-h-screen'>
-      <div className='pt-4 pb-3 flex flex-col sm:flex-row justify-between items-center gap-2'>
+      <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
         <div
           className={twMerge(
             'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',

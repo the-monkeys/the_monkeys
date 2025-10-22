@@ -1,11 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-
-import Image from 'next/image';
-
 import FormSearchSelect from '@/components/FormSearchSelect';
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
@@ -15,11 +10,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
 import { Label } from '@the-monkeys/ui/atoms/label';
 import { twMerge } from 'tailwind-merge';
+
+import { BlogDescription, BlogImage, BlogTitle } from '../getBlogContent';
 
 export const PublishBlogDialog = ({
   topics,
@@ -34,19 +32,12 @@ export const PublishBlogDialog = ({
   handlePublish: () => void;
   isPublishing: boolean;
 }) => {
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'mobile'>(
-    'desktop'
-  );
   const { topics: allTopics } = useGetAllTopics();
 
   const title =
     data?.blocks.find((block) => block.id === 'title')?.data.text || 'No Title';
   const contentBlock = data?.blocks.find((block) => block.type === 'paragraph');
-  // slice the content to first 200 characters for preview
-  // Also remove &nbsp; and other HTML entities if any
-  const content = contentBlock
-    ? contentBlock.data.text.slice(0, 200).replace(/&nbsp;/g, ' ')
-    : 'No Content';
+  const content = contentBlock?.data.text ?? 'No Description';
 
   const imageBlock = data?.blocks.find((block) => block.type === 'image');
   const imageExtension = imageBlock
@@ -90,88 +81,59 @@ export const PublishBlogDialog = ({
         </Button>
       </DialogTrigger>
 
-      <DialogContent className='!max-w-4xl'>
-        <div>
-          <DialogTitle className='font-dm_sans text-2xl font-bold'>
-            Ready to Share?
-          </DialogTitle>
-          <DialogDescription className='max-w-2xl font-dm_sans text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 mb-6'>
-            Once published, your post will be visible to everyone. You can edit
-            it later, but changes will be reflected publicly.
-          </DialogDescription>
-        </div>
+      <DialogContent className='max-w-4xl sm:max-w-5xl h-fit max-h-[80vh] overflow-y-auto space-y-10'>
+        <DialogHeader>
+          <DialogTitle>Publish Post</DialogTitle>
 
-        <div className='grid md:grid-cols-2 gap-6'>
+          <DialogDescription className='!text-sm'>
+            Review your post and choose topics before publishing.
+          </DialogDescription>
+        </DialogHeader>
+        <div className='grid sm:grid-cols-2 gap-8 pb-10'>
           {/* Preview Column */}
-          <div className='space-y-3'>
-            <div className='flex flex-row justify-between items-center'>
-              <p className='font-dm_sans font-semibold text-sm text-neutral-700 dark:text-neutral-300'>
-                Preview
-              </p>
-              <Button
-                type='button'
-                variant={'outline'}
-                size={'icon'}
-                onClick={() =>
-                  setPreviewMode(
-                    previewMode === 'desktop' ? 'mobile' : 'desktop'
-                  )
-                }
-                className='p-0 bg-transparent border-none cursor-pointer hidden md:flex'
-                aria-label='Toggle preview mode'
-              >
-                <Icon
-                  name={
-                    previewMode === 'desktop'
-                      ? 'RiComputerLine'
-                      : 'RiSmartphoneLine'
-                  }
-                  type='NIL'
-                  className='text-brand-orange'
-                  size={16}
-                />
-              </Button>
-            </div>
-            <div
-              className={`${previewMode === 'mobile' ? 'border border-neutral-300 dark:border-neutral-700 rounded-lg p-4 w-[375px] mx-auto' : ''} space-y-3`}
-            >
+          <div className='col-span-2 sm:col-span-1 space-y-3'>
+            <p className='font-dm_sans font-medium text-base sm:text-lg'>
+              Post Preview
+            </p>
+            <div className={`space-y-3`}>
               <div className='space-y-1'>
-                {/* maintain the ratio of 16:9, crop the image if needed */}
-                <Image
-                  src={imageUrl}
-                  alt='Preview'
-                  width={400}
-                  height={300}
-                  className={`w-full ${previewMode === 'mobile' ? 'h-48' : 'h-60'} border border-neutral-200 dark:border-neutral-700 object-contain`}
-                />
-                {invalidImage && (
-                  <p className='text-xs font-normal text-alert-red'>
-                    The first image type is not supported. Displaying a
-                    placeholder instead.
+                <div className='w-full aspect-[3/2]'>
+                  <BlogImage image={imageUrl} title='Post Image Preview' />
+                </div>
+                {(invalidImage || imageBlock === undefined) && (
+                  <p className='text-xs sm:text-sm font-normal text-alert-red'>
+                    The image type is not supported or no image found.
+                    Displaying a default image instead.
                   </p>
                 )}
               </div>
-              <div className='space-y-2'>
-                <h3
-                  className={`font-dm_sans font-bold text-xl leading-tight text-neutral-900 dark:text-neutral-100 line-clamp-2`}
-                >
-                  {title}
-                </h3>
-                <p className='font-dm_sans text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 line-clamp-3'>
-                  {content}
-                </p>
+              <div className='space-y-3'>
+                <div className='space-y-1'>
+                  <Label className='text-sm opacity-90'>Title</Label>
+                  <BlogTitle
+                    className='font-semibold text-[1.12rem] sm:text-[1.25rem] leading-[1.4] line-clamp-2'
+                    title={title}
+                  />
+                </div>
+                <div className='space-y-1'>
+                  <Label className='text-sm opacity-90'>Description</Label>
+                  <BlogDescription
+                    className='text-[0.9rem] sm:text-[1rem] line-clamp-3 sm:line-clamp-2'
+                    description={content}
+                  />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Topics and Publish Button Column */}
-          <div className='flex flex-col justify-between space-y-6'>
-            <div className='space-y-3'>
+          <div className='flex flex-col justify-between h-full col-span-2 sm:col-span-1 space-y-6'>
+            <div className='space-y-4'>
               <div className='space-y-1'>
-                <Label className='font-dm_sans font-semibold text-sm text-neutral-700 dark:text-neutral-300'>
+                <Label className='font-dm_sans font-medium'>
                   Topics Included
                 </Label>
-                <p className='font-normal text-xs text-neutral-500'>
+                <p className='font-normal text-xs opacity-90'>
                   You can add up to {BLOG_TOPICS_MAX_COUNT} topics to your blog.
                   Choose from the list or add your own.
                 </p>
@@ -185,26 +147,31 @@ export const PublishBlogDialog = ({
               />
 
               <div className='flex items-center justify-between'>
-                <p className='px-1 text-sm text-neutral-500'>
+                <p className='px-1 text-sm opacity-90'>
                   Topics added:{' '}
                   <span
                     className={twMerge(
-                      'font-dm_sans font-medium text-neutral-700 dark:text-neutral-300',
+                      'font-medium text-alert-green',
                       topics.length > BLOG_TOPICS_MAX_COUNT && '!text-alert-red'
                     )}
                   >
                     {topics.length}
                   </span>
                 </p>
+                {topics.length > BLOG_TOPICS_MAX_COUNT && (
+                  <p className='text-xs sm:text-sm font-normal text-alert-red'>
+                    Up to {BLOG_TOPICS_MAX_COUNT} topics allowed.
+                  </p>
+                )}
               </div>
             </div>
 
             <div className='flex justify-end pt-4'>
               <Button
                 type='button'
-                className='font-dm_sans font-semibold'
                 onClick={handlePublish}
                 disabled={isPublishing}
+                variant={'brand'}
               >
                 {isPublishing && <Loader />}
                 {isPublishing ? 'Publishing...' : 'Publish Now'}
