@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
+import { createTopicUrl } from '@/utils/topicUtils';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { TopicButton } from './TopicButton';
@@ -30,7 +31,7 @@ export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
           <li key={topic} className='group flex items-center justify-between'>
             <div className='flex-1'>
               <Link
-                href={`/topics/${topic}`}
+                href={createTopicUrl(topic)}
                 className='text-sm opacity-80 group-hover:opacity-100 truncate'
               >
                 {topic}
