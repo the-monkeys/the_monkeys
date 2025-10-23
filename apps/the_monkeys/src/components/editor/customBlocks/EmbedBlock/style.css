@@ -1,4 +1,4 @@
-.center {
+.embed-center {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,6 +16,8 @@
   max-width: 600px; 
   margin: 0 auto;  
   padding-bottom: 350px;
+    margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 .yt-iframe {
@@ -29,7 +31,7 @@
 
 
 /* Center the whole Facebook container */
-.fb-center-wrapper {
+.fb-wrapper {
   display: flex;
   justify-content: center;
   width: 100%;
@@ -62,4 +64,14 @@ border-color: rgb(162, 28, 13);
 /* box-shadow: 0 0 3px grey; */
 border: salmon;
 
+}
+
+.embed-default-message{
+  color: rgb(247, 96, 96);
+}
+
+.twt-wrapper iframe {
+  background-color: black !important;
+  /* Or if it still shows, try: */
+  background: none !important;
 }

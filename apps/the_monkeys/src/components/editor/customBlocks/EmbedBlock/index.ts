@@ -1,16 +1,12 @@
 import './style.css';
-import {
-  Facebook,
-  Instagram,
-  Twitter,
-  Youtube,
-} from './utils/function';
+import {  renderInstagramEmbed, renderTwitterEmbed, renderUnsupportedEmbed, renderYouTubeEmbed } from './utils/function';
 
 type EmbedData = {
   url: string;
   service: string;
   ogTitle?: string;
   ogImage?: string;
+  ogDescription?: string
 };
 
 export default class CustomEmbed {
@@ -60,10 +56,14 @@ container.className = "embed-input-container"
     const input = document.createElement('input');
 
     container.appendChild(input)
-    input.placeholder = 'Paste URL (Twitter, YouTube, Instagram, Facebook)';
+    input.placeholder = 'Paste URL (Twitter, YouTube, Instagram)';
     input.value = this.data.url || '';
     input.className = 'embed-input';
     input.id = 'embed-input-id'
+    input.autocomplete = 'off';
+    input.autocapitalize = 'off';
+    input.spellcheck = false;
+
 
     input.addEventListener('paste', (e: ClipboardEvent) => {
       const pastedUrl = e.clipboardData?.getData('text');
@@ -88,16 +88,31 @@ container.className = "embed-input-container"
     return this.data;
   }
 
-  detectService(url: string): { service: string } {
-    if (url.includes('youtube.com') || url.includes('youtu.be'))
-      return { service: 'youtube' };
-    if (url.includes('x.com') || url.includes('twitter.com'))
-      return { service: 'twitter' };
-    if (url.includes('instagram.com')) return { service: 'instagram' };
-    if (url.includes('facebook.com')) return { service: 'facebook' };
-    if (url.includes('linkedin.com')) return { service: 'linkedin' };
+detectService(url: string): { service: string } {
+  if (!url || typeof url !== 'string') {
     return { service: 'unknown' };
   }
+
+  const patterns: Record<string, RegExp> = {
+    youtube: /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com|youtu\.be)(?:\/|$)/i,
+    twitter: /^(?:https?:\/\/)?(?:www\.|mobile\.)?(?:x\.com|twitter\.com)(?:\/|$)/i,
+    instagram: /^(?:https?:\/\/)?(?:www\.|m\.)?instagram\.com(?:\/|$)/i,
+    // facebook: /^(?:https?:\/\/)?(?:www\.|m\.)?facebook\.com(?:\/|$)/i,
+    linkedin: /^(?:https?:\/\/)?(?:[a-z]{2,3}\.)?linkedin\.com(?:\/|$)/i,
+  };
+
+
+  const sanitizedUrl = url.trim().replace(/\s+/g, '').replace(/\/+$/, '');
+
+  for (const [service, regex] of Object.entries(patterns)) {
+    if (regex.test(sanitizedUrl)) {
+      return { service };
+    }
+  }
+
+  return { service: 'unknown' };
+}
+
 
   async showPreview() {
     this.wrapper.innerHTML = ''; // clear previous
@@ -107,23 +122,23 @@ container.className = "embed-input-container"
 
     switch (service) {
       case 'youtube':
-        Youtube(this.wrapper, url);
+        renderYouTubeEmbed(this.wrapper, url);
         break;
 
       case 'twitter':
-        Twitter(this.wrapper, url);
+        renderTwitterEmbed(this.wrapper, url);
         break;
 
       case 'instagram':
-        Instagram(this.wrapper, url);
+        renderInstagramEmbed(this.wrapper, url);
         break;
 
-      case 'facebook':
-        Facebook(this.wrapper, url);
-        break;
+      // case 'facebook':
+      //   renderFacebookEmbed(this.wrapper, url);
+      //   break;
 
       default:
-        console.log('Service not supported');
+        renderUnsupportedEmbed(this.wrapper);
     }
   }
 }
