@@ -62,11 +62,12 @@ export const Youtube = (wrapper: HTMLElement, url: string): void => {
     : new URL(url).searchParams.get('v');
   if (videoId) {
     const container = document.createElement('div');
-    container.className = 'center';
+    container.className = 'center yt-wrapper';
     const iframe = document.createElement('iframe');
+    iframe.className = "yt-iframe"
     container.appendChild(iframe);
-    iframe.width = '560';
-    iframe.height = '315';
+    // iframe.width = '560';
+    // iframe.height = '315';
     iframe.src = `https://www.youtube.com/embed/${videoId}`;
     iframe.allowFullscreen = false;
     wrapper.appendChild(container);
@@ -80,13 +81,14 @@ export const Facebook = (wrapper: HTMLElement, url: string): void => {
     fbRoot.id = 'fb-root';
     document.body.appendChild(fbRoot);
   }
+
   const container = document.createElement('div');
-  container.className = 'center';
+  container.className = 'fb-center-wrapper';
+
   const fbDiv = document.createElement('div');
-  fbDiv.className = 'fb-post';
+  fbDiv.className = 'fb-post fb-container';
   fbDiv.setAttribute('data-href', url);
-  fbDiv.setAttribute('data-width', '400');
-  fbDiv.setAttribute('data-height', '200');
+
   container.appendChild(fbDiv);
   wrapper.appendChild(container);
 
@@ -103,5 +105,9 @@ export const Facebook = (wrapper: HTMLElement, url: string): void => {
     };
     wrapper.appendChild(script);
   }
-  return;
 };
+
+
+
+
+

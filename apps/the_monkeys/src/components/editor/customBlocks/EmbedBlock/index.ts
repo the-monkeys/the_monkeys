@@ -1,10 +1,14 @@
 import './style.css';
-import { Facebook, Instagram, Twitter, Youtube } from './utils/function';
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Youtube,
+} from './utils/function';
 
 type EmbedData = {
   url: string;
   service: string;
-  // optionally you can store ogTitle, ogImage etc for fallback
   ogTitle?: string;
   ogImage?: string;
 };
@@ -51,11 +55,15 @@ export default class CustomEmbed {
         this.showPreview();
       }
     }
-
+const container = document.createElement('form');
+container.className = "embed-input-container"
     const input = document.createElement('input');
+
+    container.appendChild(input)
     input.placeholder = 'Paste URL (Twitter, YouTube, Instagram, Facebook)';
     input.value = this.data.url || '';
-    input.className = 'custom-embed-input';
+    input.className = 'embed-input';
+    input.id = 'embed-input-id'
 
     input.addEventListener('paste', (e: ClipboardEvent) => {
       const pastedUrl = e.clipboardData?.getData('text');
@@ -67,7 +75,7 @@ export default class CustomEmbed {
     });
 
     this.wrapper.innerHTML = ''; // clear existing
-    this.wrapper.appendChild(input);
+    this.wrapper.appendChild(container);
 
     if (this.data.url) {
       this.showPreview();
@@ -87,6 +95,7 @@ export default class CustomEmbed {
       return { service: 'twitter' };
     if (url.includes('instagram.com')) return { service: 'instagram' };
     if (url.includes('facebook.com')) return { service: 'facebook' };
+    if (url.includes('linkedin.com')) return { service: 'linkedin' };
     return { service: 'unknown' };
   }
 
