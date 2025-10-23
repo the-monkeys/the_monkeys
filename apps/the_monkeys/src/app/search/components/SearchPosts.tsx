@@ -6,7 +6,7 @@ import {
 } from '@/components/buttons/paginationButton';
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
-import { PROFILE_POSTS_PER_PAGE } from '@/constants/posts';
+import { SEARCH_POSTS_PER_PAGE } from '@/constants/posts';
 import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
 
 export const SearchPosts = ({ query }: { query: string }) => {
@@ -18,12 +18,12 @@ export const SearchPosts = ({ query }: { query: string }) => {
     setPage(0);
   }
 
-  const offset = page * PROFILE_POSTS_PER_PAGE;
+  const offset = page * SEARCH_POSTS_PER_PAGE;
 
   const { searchBlogs, searchBlogsLoading, searchBlogsError } =
     useGetSearchBlog({
       searchQuery: currentQuery.trim(),
-      limit: PROFILE_POSTS_PER_PAGE,
+      limit: SEARCH_POSTS_PER_PAGE,
       offset,
     });
 
@@ -44,11 +44,11 @@ export const SearchPosts = ({ query }: { query: string }) => {
   const hasNextPage =
     blogs &&
     searchBlogs?.total_blogs &&
-    searchBlogs?.total_blogs > (page + 1) * PROFILE_POSTS_PER_PAGE;
+    searchBlogs?.total_blogs > (page + 1) * SEARCH_POSTS_PER_PAGE;
 
   const hasPrevPage = page > 0;
   const showPagination =
-    (searchBlogs?.total_blogs ?? 0) > PROFILE_POSTS_PER_PAGE;
+    (searchBlogs?.total_blogs ?? 0) > SEARCH_POSTS_PER_PAGE;
 
   return (
     <>
@@ -58,8 +58,8 @@ export const SearchPosts = ({ query }: { query: string }) => {
         </p>
       ) : (
         <div className='max-w-4xl'>
-          <div className='flex flex-col gap-4'>
-            {blogs.slice(0, 8).map((blog) => {
+          <div className='flex flex-col gap-4 pb-4'>
+            {blogs.map((blog) => {
               return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
             })}
           </div>

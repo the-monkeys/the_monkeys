@@ -1,9 +1,9 @@
 'use client';
 
-import { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { LOGIN_ROUTE } from '@/constants/routeConstants';
@@ -20,65 +20,73 @@ import { SearchUsers } from './components/SearchUsers';
 
 const SearchPage = () => {
   const { isSuccess } = useAuth();
+  const router = useRouter();
 
   const searchParams = useSearchParams();
   const searchQueryParam = searchParams.get('query') || '';
 
   const [searchQuery, setSearchQuery] = useState<string>(searchQueryParam);
-  const [debouncedQuery, setDebouncedQuery] = useState<string>('');
+
+  useEffect(() => {
+    setSearchQuery(searchQueryParam);
+  }, [searchQueryParam]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
   };
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedQuery(searchQuery);
-    }, 300);
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
+    const formData = new FormData(e.currentTarget);
+    const searchText = formData.get('searchText') as string;
 
-  useEffect(() => {
-    if (searchQueryParam.trim()) {
-      setDebouncedQuery(searchQueryParam);
+    if (searchText?.trim()) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set('query', searchText.trim());
+      router.push(`/search?${params.toString()}`);
     }
-  }, [searchQueryParam]);
+  };
 
   return (
-    <div className='space-y-12'>
-      <div className='relative mx-auto max-w-3xl flex items-center gap-2'>
-        <div className='p-1 flex justify-center sm:hidden'>
+    <div className='space-y-4'>
+      <form
+        onSubmit={handleFormSubmit}
+        className='relative mx-auto max-w-3xl flex items-center gap-2 pb-4 sm:hidden'
+      >
+        <div className='p-1 flex justify-center'>
           <Icon name='RiSearch' />
         </div>
 
-        <h3 className='hidden sm:block sm:text-xl mx-auto'>
-          <span className='opacity-80'>Showing results for&nbsp;</span>
-          {searchQueryParam}
-        </h3>
-
         <input
+          name='searchText'
           value={searchQuery}
           placeholder='e.g. Layoffs'
-          className='py-2 px-1 w-full block sm:hidden bg-transparent focus:outline-none border-b-2 border-border-light dark:border-border-dark border-opacity-40 focus:border-opacity-100'
+          className='py-2 px-1 w-full bg-transparent focus:outline-none border-b-2 border-border-light dark:border-border-dark border-opacity-40 focus:border-opacity-100'
           onChange={handleInputChange}
+          required
         />
 
         {searchQuery.trim() && (
           <button
-            className='absolute top-[50%] -translate-y-[50%] right-[10px] sm:hidden'
+            type='button'
+            className='absolute top-[50%] -translate-y-[50%] right-[10px]'
             onClick={() => setSearchQuery('')}
           >
             <Icon name='RiClose' size={16} className='text-alert-red' />
           </button>
         )}
-      </div>
+      </form>
 
-      {/* need to add pagination to search results */}
-      {debouncedQuery.trim() && (
+      <h3 className='w-full text-center block sm:text-lg mx-auto pb-2 font-medium'>
+        Showing results for&nbsp;
+        <span className='text-brand-orange'>{searchQueryParam}</span>
+      </h3>
+
+      {searchQueryParam.trim() && (
         <div className='mx-auto max-w-4xl min-h-[800px]'>
           <Tabs defaultValue='posts' className='space-y-8'>
-            <TabsList className='pb-4 flex justify-start sm:justify-center gap-2'>
+            <TabsList className='pb-4 flex justify-center gap-2'>
               <TabsTrigger value='posts'>
                 <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
                   Posts
@@ -96,12 +104,12 @@ const SearchPage = () => {
 
             <div className='w-full'>
               <TabsContent className='w-full' value='posts'>
-                <SearchPosts query={debouncedQuery} />
+                <SearchPosts query={searchQueryParam} />
               </TabsContent>
 
               <TabsContent className='w-full' value='authors'>
                 {isSuccess ? (
-                  <SearchUsers query={debouncedQuery} />
+                  <SearchUsers query={searchQueryParam} />
                 ) : (
                   <div className='flex justify-center items-center gap-1'>
                     <Link
