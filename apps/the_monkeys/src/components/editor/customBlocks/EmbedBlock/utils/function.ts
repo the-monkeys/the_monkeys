@@ -1,4 +1,3 @@
-
 type EmbedHandler = (wrapper: HTMLElement, url?: string) => void;
 
 const loadScriptOnce = (src: string, onLoad: () => void): void => {
@@ -11,7 +10,8 @@ const loadScriptOnce = (src: string, onLoad: () => void): void => {
   script.src = src;
   script.async = true;
   script.onload = onLoad;
-  script.onerror = () => console.error(`[Embed Error] Failed to load script: ${src}`);
+  script.onerror = () =>
+    console.error(`[Embed Error] Failed to load script: ${src}`);
   document.body.appendChild(script);
 };
 
@@ -49,9 +49,7 @@ export const renderTwitterEmbed: EmbedHandler = (wrapper, url) => {
   blockquote.className = 'twitter-tweet';
   blockquote.setAttribute('data-conversation', 'none');
   blockquote.setAttribute('data-theme', 'dark');
-  blockquote.setAttribute('data-transparent', 'true'); 
-  
-  
+  blockquote.setAttribute('data-transparent', 'true');
 
   blockquote.innerHTML = `<a href="${normalizedUrl}"></a>`;
 
@@ -81,7 +79,8 @@ export const renderYouTubeEmbed: EmbedHandler = (wrapper, url) => {
     console.error('[YouTubeEmbed] Invalid YouTube URL:', err);
   }
 
-  if (!videoId) return console.warn('[YouTubeEmbed] Unable to extract video ID');
+  if (!videoId)
+    return console.warn('[YouTubeEmbed] Unable to extract video ID');
 
   const container = document.createElement('div');
   container.className = 'embed-center yt-wrapper';
@@ -101,6 +100,10 @@ export const renderYouTubeEmbed: EmbedHandler = (wrapper, url) => {
   container.appendChild(iframe);
   wrapper.appendChild(container);
 };
+
+/* commented facebook logic because it only allows embedding of videos from public posts.
+ Embedding private or restricted posts requires changing their visibility to public
+*/
 
 // export const renderFacebookEmbed: EmbedHandler = (wrapper, url) => {
 //   if (!url) return console.warn('[FacebookEmbed] Invalid URL');

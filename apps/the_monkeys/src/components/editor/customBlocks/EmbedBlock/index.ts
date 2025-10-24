@@ -1,12 +1,17 @@
 import './style.css';
-import {  renderInstagramEmbed, renderTwitterEmbed, renderUnsupportedEmbed, renderYouTubeEmbed } from './utils/function';
+import {
+  renderInstagramEmbed,
+  renderTwitterEmbed,
+  renderUnsupportedEmbed,
+  renderYouTubeEmbed,
+} from './utils/function';
 
 type EmbedData = {
   url: string;
   service: string;
   ogTitle?: string;
   ogImage?: string;
-  ogDescription?: string
+  ogDescription?: string;
 };
 
 export default class CustomEmbed {
@@ -41,7 +46,25 @@ export default class CustomEmbed {
   static get toolbox() {
     return {
       title: 'Embed',
-      icon: '<svg width="14" height="14"><path d="M2 7h10M7 2v10"/></svg>',
+      icon: `<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <!-- Left angle bracket -->
+  <polyline points="7 7 3 12 7 17" />
+  <!-- Backward slash -->
+  <line x1="13" y1="7" x2="11" y2="17" />
+  <!-- Right angle bracket -->
+  <polyline points="17 7 21 12 17 17" />
+</svg>
+`,
     };
   }
 
@@ -51,19 +74,18 @@ export default class CustomEmbed {
         this.showPreview();
       }
     }
-const container = document.createElement('form');
-container.className = "embed-input-container"
+    const container = document.createElement('form');
+    container.className = 'embed-input-container';
     const input = document.createElement('input');
 
-    container.appendChild(input)
+    container.appendChild(input);
     input.placeholder = 'Paste URL (Twitter, YouTube, Instagram)';
     input.value = this.data.url || '';
     input.className = 'embed-input';
-    input.id = 'embed-input-id'
+    input.id = 'embed-input-id';
     input.autocomplete = 'off';
     input.autocapitalize = 'off';
     input.spellcheck = false;
-
 
     input.addEventListener('paste', (e: ClipboardEvent) => {
       const pastedUrl = e.clipboardData?.getData('text');
@@ -88,31 +110,31 @@ container.className = "embed-input-container"
     return this.data;
   }
 
-detectService(url: string): { service: string } {
-  if (!url || typeof url !== 'string') {
+  detectService(url: string): { service: string } {
+    if (!url || typeof url !== 'string') {
+      return { service: 'unknown' };
+    }
+
+    const patterns: Record<string, RegExp> = {
+      youtube:
+        /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com|youtu\.be)(?:\/|$)/i,
+      twitter:
+        /^(?:https?:\/\/)?(?:www\.|mobile\.)?(?:x\.com|twitter\.com)(?:\/|$)/i,
+      instagram: /^(?:https?:\/\/)?(?:www\.|m\.)?instagram\.com(?:\/|$)/i,
+      // facebook: /^(?:https?:\/\/)?(?:www\.|m\.)?facebook\.com(?:\/|$)/i,
+      linkedin: /^(?:https?:\/\/)?(?:[a-z]{2,3}\.)?linkedin\.com(?:\/|$)/i,
+    };
+
+    const sanitizedUrl = url.trim().replace(/\s+/g, '').replace(/\/+$/, '');
+
+    for (const [service, regex] of Object.entries(patterns)) {
+      if (regex.test(sanitizedUrl)) {
+        return { service };
+      }
+    }
+
     return { service: 'unknown' };
   }
-
-  const patterns: Record<string, RegExp> = {
-    youtube: /^(?:https?:\/\/)?(?:www\.|m\.)?(?:youtube\.com|youtu\.be)(?:\/|$)/i,
-    twitter: /^(?:https?:\/\/)?(?:www\.|mobile\.)?(?:x\.com|twitter\.com)(?:\/|$)/i,
-    instagram: /^(?:https?:\/\/)?(?:www\.|m\.)?instagram\.com(?:\/|$)/i,
-    // facebook: /^(?:https?:\/\/)?(?:www\.|m\.)?facebook\.com(?:\/|$)/i,
-    linkedin: /^(?:https?:\/\/)?(?:[a-z]{2,3}\.)?linkedin\.com(?:\/|$)/i,
-  };
-
-
-  const sanitizedUrl = url.trim().replace(/\s+/g, '').replace(/\/+$/, '');
-
-  for (const [service, regex] of Object.entries(patterns)) {
-    if (regex.test(sanitizedUrl)) {
-      return { service };
-    }
-  }
-
-  return { service: 'unknown' };
-}
-
 
   async showPreview() {
     this.wrapper.innerHTML = ''; // clear previous

@@ -8,15 +8,15 @@
 
 .yt-wrapper {
   position: relative;
-  padding-bottom: 56.25%; 
+  padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   max-width: 100%;
   background: transparent;
-  max-width: 600px; 
-  margin: 0 auto;  
+  max-width: 600px;
+  margin: 0 auto;
   padding-bottom: 350px;
-    margin-top: 2rem;
+  margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
@@ -29,7 +29,6 @@
   border: 0;
 }
 
-
 /* Center the whole Facebook container */
 .fb-wrapper {
   display: flex;
@@ -41,37 +40,33 @@
 .fb-container,
 .fb-post,
 .fb-container iframe {
-  max-width: 320px; 
+  max-width: 320px;
   max-height: auto;
 }
 
-.embed-input-container{
+.embed-input-container {
   display: flex;
   align-items: left;
   justify-content: start;
 }
 
-
-.embed-input{
+.embed-input {
   background-color: transparent;
   padding: 10px 20px;
   width: 100%;
 }
 
-.embed-input:focus{
+.embed-input:focus {
   outline: salmon;
-border-color: rgb(162, 28, 13);
-/* box-shadow: 0 0 3px grey; */
-border: salmon;
-
+  border-color: rgb(162, 28, 13);
+  /* box-shadow: 0 0 3px grey; */
+  border: salmon;
 }
 
-.embed-default-message{
+.embed-default-message {
   color: rgb(247, 96, 96);
 }
 
-.twt-wrapper iframe {
-  background-color: black !important;
-  /* Or if it still shows, try: */
-  background: none !important;
+body #app{
+  background-color: transparent;
 }
