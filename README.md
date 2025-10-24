@@ -44,6 +44,22 @@ Backend repo: [Monkeys Backend](https://github.com/the-monkeys/monkeys_engine)
 
 If you’d like to contribute technically, we encourage you to explore the architecture, suggest improvements, or collaborate on features that make Monkeys a stronger, more reliable space.
 
+## 🚀 Quick Start
+
+### Docker Deployment
+```bash
+# Setup and deploy
+cp .env.production.example .env.production
+docker-compose up -d
+```
+
+### Development
+```bash
+# Install and run
+pnpm install
+pnpm dev
+```
+
 ## Guidelines
 
 To keep our community focused and meaningful:
