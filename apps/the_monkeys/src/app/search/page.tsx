@@ -78,56 +78,58 @@ const SearchPage = () => {
         )}
       </form>
 
-      <h3 className='w-full text-center block sm:text-lg mx-auto pb-2 font-medium'>
-        Showing results for&nbsp;
-        <span className='text-brand-orange'>{searchQueryParam}</span>
-      </h3>
-
       {searchQueryParam.trim() && (
-        <div className='mx-auto max-w-4xl min-h-[800px]'>
-          <Tabs defaultValue='posts' className='space-y-8'>
-            <TabsList className='pb-4 flex justify-center gap-2'>
-              <TabsTrigger value='posts'>
-                <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
-                  Posts
-                </p>
-                <div className='mt-[6px] h-[2px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
-              </TabsTrigger>
+        <>
+          <h3 className='w-full text-center block sm:text-lg mx-auto pb-2 font-medium'>
+            Showing results for&nbsp;
+            <span className='text-brand-orange'>{searchQueryParam}</span>
+          </h3>
 
-              <TabsTrigger value='authors'>
-                <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
-                  Authors
-                </p>
-                <div className='mt-[6px] h-[2px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
-              </TabsTrigger>
-            </TabsList>
+          <div className='mx-auto max-w-4xl min-h-[800px]'>
+            <Tabs defaultValue='posts' className='space-y-8'>
+              <TabsList className='pb-4 flex justify-center gap-2'>
+                <TabsTrigger value='posts'>
+                  <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
+                    Posts
+                  </p>
+                  <div className='mt-[6px] h-[2px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+                </TabsTrigger>
 
-            <div className='w-full'>
-              <TabsContent className='w-full' value='posts'>
-                <SearchPosts query={searchQueryParam} />
-              </TabsContent>
+                <TabsTrigger value='authors'>
+                  <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
+                    Authors
+                  </p>
+                  <div className='mt-[6px] h-[2px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+                </TabsTrigger>
+              </TabsList>
 
-              <TabsContent className='w-full' value='authors'>
-                {isSuccess ? (
-                  <SearchUsers query={searchQueryParam} />
-                ) : (
-                  <div className='flex justify-center items-center gap-1'>
-                    <Link
-                      href={LOGIN_ROUTE}
-                      className='font-medium text-sm text-brand-orange underline'
-                    >
-                      Login
-                    </Link>
+              <div className='w-full'>
+                <TabsContent className='w-full' value='posts'>
+                  <SearchPosts query={searchQueryParam} />
+                </TabsContent>
 
-                    <p className='text-sm opacity-90 text-center'>
-                      to find authors.
-                    </p>
-                  </div>
-                )}
-              </TabsContent>
-            </div>
-          </Tabs>
-        </div>
+                <TabsContent className='w-full' value='authors'>
+                  {isSuccess ? (
+                    <SearchUsers query={searchQueryParam} />
+                  ) : (
+                    <div className='flex justify-center items-center gap-1'>
+                      <Link
+                        href={LOGIN_ROUTE}
+                        className='font-medium text-sm text-brand-orange underline'
+                      >
+                        Login
+                      </Link>
+
+                      <p className='text-sm opacity-90 text-center'>
+                        to find authors.
+                      </p>
+                    </div>
+                  )}
+                </TabsContent>
+              </div>
+            </Tabs>
+          </div>
+        </>
       )}
     </div>
   );
