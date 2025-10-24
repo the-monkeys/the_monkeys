@@ -1,4 +1,5 @@
 import { IconName } from '@/components/icon';
+import { createTopicUrl } from '@/utils/topicUtils';
 
 import {
   MONKEYS_DISCORD,
@@ -77,19 +78,19 @@ export const footerLinksList = [
     items: [
       {
         text: 'Artificial Intelligence',
-        link: '/topics/Artificial Intelligence',
+        link: createTopicUrl('Artificial Intelligence'),
       },
       {
         text: 'Corportate Layoffs',
-        link: '/topics/Corporate Layoffs',
+        link: createTopicUrl('Corporate Layoffs'),
       },
       {
         text: 'Sports',
-        link: '/topics/Sports',
+        link: createTopicUrl('Sports'),
       },
       {
         text: 'Healthcare',
-        link: '/topics/Healthcare',
+        link: createTopicUrl('Healthcare'),
       },
       {
         text: 'Explore All',
