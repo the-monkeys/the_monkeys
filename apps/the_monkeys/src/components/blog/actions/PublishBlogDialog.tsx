@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
 import { Label } from '@the-monkeys/ui/atoms/label';
+import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { twMerge } from 'tailwind-merge';
 
 import { BlogDescription, BlogImage, BlogTitle } from '../getBlogContent';
@@ -97,7 +98,9 @@ export const PublishBlogDialog = ({
             </p>
             <div className={`space-y-3`}>
               <div className='space-y-1'>
-                <div className='w-full aspect-[3/2]'>
+                <div className='w-full aspect-[3/2] relative'>
+                  <Skeleton className='absolute inset-0 -z-10 w-full h-full' />
+
                   <BlogImage image={imageUrl} title='Post Image Preview' />
                 </div>
                 {(invalidImage || imageBlock === undefined) && (
