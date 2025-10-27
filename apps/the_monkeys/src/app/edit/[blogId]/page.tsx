@@ -16,6 +16,7 @@ import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { format } from 'path';
 import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
@@ -51,10 +52,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   const accountId = session?.account_id;
   const username = session?.username;
-
-  const title = blog?.blog?.blocks[0]?.data?.text;
-  const slug = generateSlug(title);
-  const blogSlug = `${slug}-${blogId}`;
 
   // Keep refs updated
   useEffect(() => {
@@ -95,6 +92,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Format data
   const formatData = useCallback(
     (data: OutputData, accountId: string | undefined, blogTopics: string[]) => {
+      const title = data?.blocks[0]?.data.text || 'No Title';
+      const slug = generateSlug(title);
+      const blogSlug = `${slug}-${blogId}`;
+
+      console.log({ blogSlug });
       return {
         owner_account_id: accountId,
         author_list: [accountId],

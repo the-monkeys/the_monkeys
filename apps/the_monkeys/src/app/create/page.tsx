@@ -131,11 +131,7 @@ const CreatePage = () => {
   const username = session?.username;
   const blogIdRef = useRef(`${Math.random().toString(36).substring(7)}`);
   const blogId = blogIdRef.current;
-  const title =
-    data.blocks.find((block) => block.id === 'title')?.data.text || 'No Title';
 
-  const slug = generateSlug(title);
-  const blogSlug = `${slug}-${blogId}`;
   // WebSocket management
   const { isConnected, connectionStatus, sendData } = useWebSocket(
     blogId,
@@ -196,6 +192,12 @@ const CreatePage = () => {
   // Format data for transmission
   const formatData = useCallback(
     (data: OutputData) => {
+      const title =
+        data.blocks.find((block) => block.id === 'title')?.data.text ||
+        'No Title';
+
+      const slug = generateSlug(title);
+      const blogSlug = `${slug}-${blogId}`;
       return {
         owner_account_id: accountId,
         author_list: [accountId],
