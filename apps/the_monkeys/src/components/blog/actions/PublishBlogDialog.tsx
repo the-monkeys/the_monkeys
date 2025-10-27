@@ -101,7 +101,11 @@ export const PublishBlogDialog = ({
                 <div className='w-full aspect-[3/2] relative'>
                   <Skeleton className='absolute inset-0 -z-10 w-full h-full' />
 
-                  <BlogImage image={imageUrl} title='Post Image Preview' />
+                  <BlogImage
+                    image={imageUrl}
+                    title='Post Image Preview'
+                    className='bg-background-light dark:bg-background-dark'
+                  />
                 </div>
                 {(invalidImage || imageBlock === undefined) && (
                   <p className='text-xs sm:text-sm font-normal text-alert-red'>
