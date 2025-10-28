@@ -46,11 +46,11 @@ If you’d like to contribute technically, we encourage you to explore the archi
 
 ## 🚀 Quick Start
 
-### Docker Deployment
+### Development
 ```bash
-# Setup and deploy
-cp .env.production.example .env.production
-docker-compose up -d
+# Install and run
+pnpm run install-deps
+pnpm run dev
 ```
 
 ## Guidelines
