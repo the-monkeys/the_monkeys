@@ -3,8 +3,7 @@ import createMDX from '@next/mdx';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-    output: process.env.DOCKER_BUILD ? 'standalone' : undefined,
-  eslint: {
+    eslint: {
     ignoreDuringBuilds: true,
   },
   images: {

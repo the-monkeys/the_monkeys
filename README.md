@@ -53,12 +53,6 @@ cp .env.production.example .env.production
 docker-compose up -d
 ```
 
-### Development
-```bash
-# Install and run
-pnpm run install-deps
-pnpm run dev
-```
 ## Guidelines
 
 To keep our community focused and meaningful:
