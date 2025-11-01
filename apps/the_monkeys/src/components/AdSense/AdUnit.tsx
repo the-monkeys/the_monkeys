@@ -4,8 +4,6 @@ import { useEffect, useRef } from 'react';
 
 import Script from 'next/script';
 
-import { shouldLoadAdSense } from '@/utils/environment';
-
 type Props = {
   slot: string;
 };
@@ -15,7 +13,7 @@ export default function AdUnit({ slot }: Props) {
 
   useEffect(() => {
     try {
-      if (typeof window === 'undefined' || !shouldLoadAdSense()) return;
+      if (typeof window === 'undefined') return;
       // Only push once per ad element
 
       if (adRef.current && !adRef.current.dataset.adLoaded) {
@@ -27,11 +25,6 @@ export default function AdUnit({ slot }: Props) {
       console.error('AdSense error:', err);
     }
   }, []);
-
-  // Don't render anything if AdSense should not be loaded
-  if (!shouldLoadAdSense()) {
-    return null;
-  }
 
   return (
     <>
