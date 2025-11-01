@@ -249,7 +249,7 @@ const CreatePage = () => {
       return;
     }
 
-    if (data.blocks[0].type !== 'header' && data?.blocks[0].data.level !== 1) {
+    if (data.blocks[0].type !== 'title' && data?.blocks[0].data.level !== 1) {
       toast({
         variant: 'destructive',
         title: 'Error',
