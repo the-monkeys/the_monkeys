@@ -5,7 +5,6 @@ import Script from 'next/script';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { LIVE_URL } from '@/constants/api';
-import { shouldLoadAnalytics } from '@/utils/environment';
 import { TooltipProvider } from '@the-monkeys/ui/atoms/tooltip';
 import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 
@@ -143,17 +142,16 @@ const RootLayout = async ({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
         {/* Microsoft Clarity - Only load in production */}
-        {shouldLoadAnalytics() && (
-          <Script id='microsoft-clarity' strategy='afterInteractive'>
-            {`
+
+        <Script id='microsoft-clarity' strategy='afterInteractive'>
+          {`
           (function(c,l,a,r,i,t,y){
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window, document, "clarity", "script", "terxckyygm");
         `}
-          </Script>
-        )}
+        </Script>
       </head>
       <body
         className={`${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
