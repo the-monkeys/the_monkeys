@@ -98,7 +98,7 @@ export const PublishBlogDialog = ({
             </p>
             <div className={`space-y-3`}>
               <div className='space-y-1'>
-                <div className='w-full aspect-[3/2] relative'>
+                <div className='w-full aspect-[3/2] relative rounded-sm overflow-hidden'>
                   <Skeleton className='absolute inset-0 -z-10 w-full h-full' />
 
                   <BlogImage

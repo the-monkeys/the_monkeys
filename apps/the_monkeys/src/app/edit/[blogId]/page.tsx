@@ -96,7 +96,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       const slug = generateSlug(title);
       const blogSlug = `${slug}-${blogId}`;
 
-      console.log({ blogSlug });
       return {
         owner_account_id: accountId,
         author_list: [accountId],
