@@ -1,5 +1,6 @@
 import './style.css';
 import {
+  renderFacebookEmbed,
   renderInstagramEmbed,
   renderTwitterEmbed,
   renderUnsupportedEmbed,
@@ -155,12 +156,12 @@ export default class CustomEmbed {
         renderInstagramEmbed(this.wrapper, url);
         break;
 
-      // case 'facebook':
-      //   renderFacebookEmbed(this.wrapper, url);
-      //   break;
+      case 'facebook':
+        renderFacebookEmbed(this.wrapper, url);
+        break;
 
       default:
-        renderUnsupportedEmbed(this.wrapper);
+        renderUnsupportedEmbed(this.wrapper, url);
     }
   }
 }

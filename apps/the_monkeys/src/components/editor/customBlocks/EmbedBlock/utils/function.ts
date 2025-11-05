@@ -101,45 +101,64 @@ export const renderYouTubeEmbed: EmbedHandler = (wrapper, url) => {
   wrapper.appendChild(container);
 };
 
-/* commented facebook logic because it only allows embedding of videos from public posts.
- Embedding private or restricted posts requires changing their visibility to public
-*/
 
-// export const renderFacebookEmbed: EmbedHandler = (wrapper, url) => {
-//   if (!url) return console.warn('[FacebookEmbed] Invalid URL');
 
-//   if (!document.getElementById('fb-root')) {
-//     const fbRoot = document.createElement('div');
-//     fbRoot.id = 'fb-root';
-//     document.body.appendChild(fbRoot);
-//   }
+export const renderFacebookEmbed: EmbedHandler = (wrapper, url) => {
+  if (!url) return console.warn('[FacebookEmbed] Invalid URL');
 
-//   const container = document.createElement('div');
-//   container.className = ' fb-wrapper';
+  if (!document.getElementById('fb-root')) {
+    const fbRoot = document.createElement('div');
+    fbRoot.id = 'fb-root';
+    document.body.appendChild(fbRoot);
+  }
 
-//   const fbPost = document.createElement('div');
-//   fbPost.className = 'fb-post';
-//   fbPost.setAttribute('data-href', url);
-
-//   container.appendChild(fbPost);
-//   wrapper.appendChild(container);
-
-//   const parseFacebook = () => (window as any).FB?.XFBML?.parse(wrapper);
-
-//   if ((window as any).FB?.XFBML?.parse) {
-//     parseFacebook();
-//   } else {
-//     loadScriptOnce(
-//       'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0',
-//       parseFacebook
-//     );
-//   }
-// };
-
-export const renderUnsupportedEmbed: EmbedHandler = (wrapper) => {
   const container = document.createElement('div');
-  container.className = 'embed-default-message';
-  container.textContent =
-    " This embed type isn't supported yet, or there was an error loading the preview.";
+  container.className = ' fb-wrapper';
+
+  const fbPost = document.createElement('div');
+  fbPost.className = 'fb-post';
+  fbPost.setAttribute('data-href', url);
+
+  container.appendChild(fbPost);
   wrapper.appendChild(container);
+
+  const parseFacebook = () => (window as any).FB?.XFBML?.parse(wrapper);
+
+  if ((window as any).FB?.XFBML?.parse) {
+    parseFacebook();
+  } else {
+    loadScriptOnce(
+      'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0',
+      parseFacebook
+    );
+  }
+};
+
+export const renderUnsupportedEmbed: EmbedHandler = (wrapper, url) => {
+  if (!wrapper) return; // Safety check
+
+  const container = document.createElement('a');
+
+  if (typeof url === 'string' && url.trim().length > 0) {
+    try {
+      // Validate and normalize the URL
+      const safeUrl = new URL(url, window.location.origin);
+      container.href = safeUrl.toString();
+      container.textContent = safeUrl.href;
+      container.target = '_blank';
+      container.rel = 'noopener noreferrer';
+    } catch {
+      // Fallback for invalid URLs
+      container.textContent = 'Invalid link';
+      container.removeAttribute('href');
+    }
+  } else {
+    container.textContent = 'Invalid link';
+  }
+
+  // Use DocumentFragment to minimize reflow/repaint cost
+  const fragment = document.createDocumentFragment();
+  fragment.appendChild(container);
+  wrapper.textContent = ''; // Clear previous content safely
+  wrapper.appendChild(fragment);
 };
