@@ -101,7 +101,7 @@ describe('LoginForm', () => {
       password: 'John1spassword',
     });
     expect(routerReplaceStub).toHaveBeenCalled();
-    expect(routerReplaceStub).toHaveBeenCalledWith('/feed');
+    expect(routerReplaceStub).toHaveBeenCalledWith('/');
   });
 
   it('Successful login - with callback url', async () => {
