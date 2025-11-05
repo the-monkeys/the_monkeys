@@ -101,8 +101,6 @@ export const renderYouTubeEmbed: EmbedHandler = (wrapper, url) => {
   wrapper.appendChild(container);
 };
 
-
-
 export const renderFacebookEmbed: EmbedHandler = (wrapper, url) => {
   if (!url) return console.warn('[FacebookEmbed] Invalid URL');
 
