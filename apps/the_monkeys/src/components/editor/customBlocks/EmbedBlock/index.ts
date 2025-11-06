@@ -5,7 +5,7 @@ import {
   renderTwitterEmbed,
   renderUnsupportedEmbed,
   renderYouTubeEmbed,
-} from './utils/function';
+} from './utils/embed-function';
 
 type EmbedData = {
   url: string;
@@ -80,7 +80,7 @@ export default class CustomEmbed {
     const input = document.createElement('input');
 
     container.appendChild(input);
-    input.placeholder = 'Paste URL (Twitter, YouTube, Instagram)';
+    input.placeholder = 'Paste URL (Twitter, YouTube, Instagram, Facebook)';
     input.value = this.data.url || '';
     input.className = 'embed-input';
     input.id = 'embed-input-id';
@@ -97,7 +97,6 @@ export default class CustomEmbed {
       }
     });
 
-    this.wrapper.innerHTML = ''; // clear existing
     this.wrapper.appendChild(container);
 
     if (this.data.url) {
@@ -122,8 +121,7 @@ export default class CustomEmbed {
       twitter:
         /^(?:https?:\/\/)?(?:www\.|mobile\.)?(?:x\.com|twitter\.com)(?:\/|$)/i,
       instagram: /^(?:https?:\/\/)?(?:www\.|m\.)?instagram\.com(?:\/|$)/i,
-      // facebook: /^(?:https?:\/\/)?(?:www\.|m\.)?facebook\.com(?:\/|$)/i,
-      linkedin: /^(?:https?:\/\/)?(?:[a-z]{2,3}\.)?linkedin\.com(?:\/|$)/i,
+      facebook: /^(?:https?:\/\/)?(?:www\.|m\.)?facebook\.com(?:\/|$)/i,
     };
 
     const sanitizedUrl = url.trim().replace(/\s+/g, '').replace(/\/+$/, '');
@@ -138,7 +136,7 @@ export default class CustomEmbed {
   }
 
   async showPreview() {
-    this.wrapper.innerHTML = ''; // clear previous
+    this.wrapper.innerHTML = '';
 
     const { url, service } = this.data;
     if (!url) return;

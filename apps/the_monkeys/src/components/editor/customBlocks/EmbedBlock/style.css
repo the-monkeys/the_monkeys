@@ -52,14 +52,13 @@
 
 .embed-input {
   background-color: transparent;
-  padding: 10px 20px;
+  padding: 10px 0px;
   width: 100%;
 }
 
 .embed-input:focus {
   outline: salmon;
   border-color: rgb(162, 28, 13);
-  /* box-shadow: 0 0 3px grey; */
   border: salmon;
 }
 
