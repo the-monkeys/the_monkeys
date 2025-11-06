@@ -271,7 +271,6 @@ const CreatePage = () => {
     }
 
     setBlogPublishLoading(true);
-    console.log('payload:>>>', formatData(data));
     try {
       await axiosInstance.post(`/blog/publish/${blogId}`, formatData(data));
       toast({
