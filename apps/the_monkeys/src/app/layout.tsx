@@ -5,10 +5,12 @@ import Script from 'next/script';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { LIVE_URL } from '@/constants/api';
+import { destroyGrowthbook, getGrowthbook } from '@/lib/growthbook';
 import { TooltipProvider } from '@the-monkeys/ui/atoms/tooltip';
 import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 
 import './globals.css';
+import GrowthbookClientProvider from './growthbook-provider';
 import { QueryClientMount } from './query-client-mount';
 import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
@@ -134,6 +136,12 @@ const RootLayout = async ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
+  const growthbook = await getGrowthbook();
+
+  const features = growthbook.getFeatures();
+
+  destroyGrowthbook(growthbook);
+
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
@@ -141,33 +149,34 @@ const RootLayout = async ({
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
-        {/* Microsoft Clarity - Only load in production */}
-
+        {/* Microsoft Clarity */}
         <Script id='microsoft-clarity' strategy='afterInteractive'>
           {`
-          (function(c,l,a,r,i,t,y){
-              c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-              t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-              y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "terxckyygm");
-        `}
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "terxckyygm");
+      `}
         </Script>
       </head>
       <body
         className={`${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
         <Toaster />
-        <SWRProvider>
-          <QueryClientMount>
-            <ThemeProviders>
-              <TooltipProvider>
-                <Navbar />
-                <main>{children}</main>
-                <Footer />
-              </TooltipProvider>
-            </ThemeProviders>
-          </QueryClientMount>
-        </SWRProvider>
+        <GrowthbookClientProvider features={features}>
+          <SWRProvider>
+            <QueryClientMount>
+              <ThemeProviders>
+                <TooltipProvider>
+                  <Navbar />
+                  <main>{children}</main>
+                  <Footer />
+                </TooltipProvider>
+              </ThemeProviders>
+            </QueryClientMount>
+          </SWRProvider>
+        </GrowthbookClientProvider>
       </body>
     </html>
   );
