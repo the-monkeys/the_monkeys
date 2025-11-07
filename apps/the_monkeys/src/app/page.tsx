@@ -14,6 +14,7 @@ import {
   orderedCompactCategories,
 } from '@/config/categoryConfig';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
 import CategorySection from './feed/sections/CategorySection';
 import CategorySectionCompact from './feed/sections/CategorySectionCompact';
@@ -27,6 +28,8 @@ const LandingPage = () => {
   const filteredBlogs = blogs?.blogs?.filter(
     (blog) => blog?.first_image && blog?.tags?.length
   );
+
+  const devTest = useFeatureIsOn('gb-test');
 
   if (isLoading) {
     return <FeedSkeleton />;
@@ -54,6 +57,11 @@ const LandingPage = () => {
 
   return (
     <div className='min-h-screen'>
+      {devTest && (
+        <div className='bg-alert-green/20 text-alert-green text-center py-1 text-sm'>
+          <p>GrowthBook Feature Testing Enabled</p>
+        </div>
+      )}
       <h1 className='text-2xl font-bold hidden'>
         Monkeys - Quality Blogging Community for Technology, Business, Science,
         Lifestyle, Philosophy, and More
