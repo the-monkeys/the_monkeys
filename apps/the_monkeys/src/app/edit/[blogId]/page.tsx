@@ -5,10 +5,10 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
+import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
-import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
@@ -16,6 +16,7 @@ import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { format } from 'path';
 import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
@@ -91,6 +92,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Format data
   const formatData = useCallback(
     (data: OutputData, accountId: string | undefined, blogTopics: string[]) => {
+      const title = data?.blocks[0]?.data.text || 'No Title';
+      const slug = generateSlug(title);
+      const blogSlug = `${slug}-${blogId}`;
+
       return {
         owner_account_id: accountId,
         author_list: [accountId],
@@ -105,6 +110,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             })) || [],
         },
         tags: blogTopics,
+        slug: blogSlug,
       };
     },
     []
@@ -309,7 +315,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         </div>
       ) : (
         <div className='relative min-h-screen'>
-          <div className='pt-4 pb-3 flex flex-col sm:flex-row justify-between items-center gap-2'>
+          <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
             <div
               className={twMerge(
                 'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',
@@ -328,13 +334,15 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             </div>
 
             <div className='flex items-center gap-2'>
-              <ChooseTopicDialog
+              {/* <ChooseTopicDialog
                 blogTopics={blogTopics}
                 setBlogTopics={setBlogTopics}
-              />
+              /> */}
 
               <PublishBlogDialog
                 topics={blogTopics}
+                setTopics={setBlogTopics}
+                data={data}
                 isPublishing={blogPublishLoading}
                 handlePublish={handlePublishStep}
               />
