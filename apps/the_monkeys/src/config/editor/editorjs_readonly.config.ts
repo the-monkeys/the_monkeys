@@ -1,6 +1,7 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
+import HyperLinkTool from '@/components/editor/customBlocks/HyperlinkBlock';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -47,6 +48,10 @@ export const editorConfig: EditorConfig = {
     },
     embed: {
       class: CustomEmbed,
+    },
+    hyperlink: {
+      class: HyperLinkTool,
+      inlineToolbar: true,
     },
     quote: {
       class: Quote,

@@ -13,7 +13,7 @@
 	"devDependencies": {
 		"@types/prismjs": "^1.26.5",
 		"husky": "^9.1.7",
-		"pnpm": "^10.20.0",
+		"pnpm": "^10.21.0",
 		"turbo": "^2.4.4",
 		"typescript": "^5.8.2"
 	},
