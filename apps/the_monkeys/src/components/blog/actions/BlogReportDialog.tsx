@@ -2,6 +2,8 @@
 
 import React, { FC, useState } from 'react';
 
+import Link from 'next/link';
+
 import Icon from '@/components/icon';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -116,58 +118,70 @@ export const BlogReportDialog: FC<BlogReportDialogProps> = ({
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className='space-y-8'>
-          <div className='space-y-4'>
-            <Label className=''>Why are you reporting this post?</Label>
-            <RadioGroup
-              className='grid grid-cols-1 gap-3'
-              value={reasonType}
-              onValueChange={(value) => setReasonType(value as ReasonType)}
-            >
-              {reasonOptions.map((option) => (
-                <div key={option.value} className='flex items-center space-x-2'>
-                  <RadioGroupItem value={option.value} id={option.value} />
-                  <Label
-                    htmlFor={option.value}
-                    className='text-sm cursor-pointer'
+        {isError || !session ? (
+          <div className='w-full flex flex-col items-center justify-center space-y-5 pb-3'>
+            <p className='text-sm'>You must be logged in to report a post.</p>
+            <Button variant='brand' asChild>
+              <Link href='/auth/login'>Login</Link>
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className='space-y-8'>
+            <div className='space-y-4'>
+              <Label className=''>Why are you reporting this post?</Label>
+              <RadioGroup
+                className='grid grid-cols-1 gap-3'
+                value={reasonType}
+                onValueChange={(value) => setReasonType(value as ReasonType)}
+              >
+                {reasonOptions.map((option) => (
+                  <div
+                    key={option.value}
+                    className='flex items-center space-x-2'
                   >
-                    {option.label}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
+                    <RadioGroupItem value={option.value} id={option.value} />
+                    <Label
+                      htmlFor={option.value}
+                      className='text-sm cursor-pointer'
+                    >
+                      {option.label}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
 
-          <div className='space-y-1'>
-            <Label className='text-sm opacity-80'>
-              Additional Info {`(optional)`}
-            </Label>
-            <Textarea
-              value={reporterNotes}
-              onChange={(e) => setReporterNotes(e.target.value)}
-              rows={3}
-              className='max-h-24'
-              placeholder='Provide more details to the moderators'
-            />
-          </div>
+            <div className='space-y-1'>
+              <Label className='text-sm opacity-80'>
+                Additional Info {`(optional)`}
+              </Label>
+              <Textarea
+                value={reporterNotes}
+                onChange={(e) => setReporterNotes(e.target.value)}
+                rows={3}
+                className='max-h-24'
+                placeholder='Provide more details to the moderators'
+              />
+            </div>
 
-          <div className='flex justify-end gap-2 pt-2'>
-            <Button
-              type='button'
-              variant={'outline'}
-              onClick={handleCloseButton}
-            >
-              Cancel
-            </Button>
-            <Button
-              type='submit'
-              variant={'destructive'}
-              disabled={!reasonType || loading}
-            >
-              Report
-            </Button>
-          </div>
-        </form>
+            <div className='flex justify-end gap-2 pt-2'>
+              <Button
+                type='button'
+                variant={'outline'}
+                onClick={handleCloseButton}
+              >
+                Cancel
+              </Button>
+              <Button
+                type='submit'
+                variant={'destructive'}
+                disabled={!reasonType || loading}
+              >
+                Report
+              </Button>
+            </div>
+          </form>
+        )}
       </DialogContent>
     </Dialog>
   );
