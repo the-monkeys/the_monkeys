@@ -1,14 +1,11 @@
 import Prism from 'prismjs';
-// needed by php
 import components from 'prismjs/components';
 import 'prismjs/components/prism-javascript';
 import 'prismjs/components/prism-markup';
 
-// This is key!
 import './styles/prismjs.css';
 import './styles/style.css';
 
-// Todo: handle dark mode for code block
 export default class CustomCodeTool {
   data: { code: string; language: string };
   api: any;
