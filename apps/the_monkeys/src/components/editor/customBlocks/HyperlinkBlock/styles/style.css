@@ -1,0 +1,162 @@
+* {
+  text-decoration: none;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+:root {
+  --brand-orange: rgba(255, 85, 66, 1);
+  --light-bg-color: #f2f2f2;
+  --light-text-color: #414141;
+  --dark-bg-color: #1e1e1e;
+  --dark-text-color: #f8f8f2;
+  --placeholder-color: #999;
+  --triangle-color: #f2f2f2;
+}
+
+[data-theme='dark'] {
+  --dialogue-bg: #1e1e1e;
+  --triangle-color: #1e1e1e;
+}
+
+.custom-hyperlink-inline-tool {
+  color: var(--light-text-color);
+  transition: color 0.2s ease;
+}
+.custom-hyperlink-inline-tool:hover {
+  color: var(--brand-orange);
+}
+
+.dark .custom-hyperlink-inline-tool {
+  color: var(--dark-text-color);
+}
+
+.hyperlink-anchor-tag {
+  text-decoration: none !important;
+  color: var(--brand-orange);
+  font-weight: 400;
+}
+
+/* Insert-Link-Tooltip Style */
+.hyperlink-insert-tooltip {
+  max-width: 20rem;
+  position: absolute;
+  z-index: 1000;
+  /*padding: 5px;*/
+  border-radius: 6px;
+  background-color: var(--light-bg-color);
+  color: var(--light-text-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+}
+
+.hyperlink-insert-tooltip::after {
+  content: '';
+  position: absolute;
+  top: -18px;
+  left: 10px;
+  border-width: 8px;
+  border-style: solid;
+  border-color: transparent transparent #ddd transparent;
+}
+
+.dark .hyperlink-insert-tooltip {
+  background-color: var(--dark-bg-color);
+  color: var(--dark-text-color);
+}
+
+.dark .hyperlink-insert-tooltip::after {
+  border-color: transparent transparent var(--dark-bg-color) transparent;
+}
+
+.hyperlink-insert-input-wrapper {
+  width: 100%;
+}
+
+.hyperlink-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  background-color: inherit;
+  box-sizing: border-box;
+}
+
+.hyperlink-input:focus {
+  outline: none;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.hyperlink-input::placeholder {
+  color: var(--placeholder-color);
+}
+
+@media (max-width: 650px) {
+  .hyperlink-insert-tooltip {
+    max-width: 15rem;
+    width: 90%;
+  }
+
+  .hyperlink-modal-content {
+    padding: 20px;
+  }
+}
+
+/* Preview CSS Style */
+
+.hyperlink-preview-tooltip {
+  max-width: 300px;
+  background-color: var(--light-bg-color);
+  color: var(--light-text-color);
+  padding: 0.25rem 0.75rem 0.5rem 0.75rem;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 10000;
+  pointer-events: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
+
+.dark .hyperlink-preview-tooltip {
+  background-color: var(--dark-bg-color);
+  color: var(--dark-text-color);
+}
+
+.hyperlink-preview-tooltip .hyperlink-preview-left-div {
+  width: 75%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.hyperlink-preview-left-div .hyperlink-preview-text-header {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--brand-orange);
+}
+
+.hyperlink-preview-left-div .hyperlink-preview-url {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.hyperlink-preview-tooltip .hyperlink-preview-copyBtn {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 2rem;
+}
+
+.truncate-text {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
