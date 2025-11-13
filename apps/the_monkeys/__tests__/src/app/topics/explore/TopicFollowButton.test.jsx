@@ -41,7 +41,7 @@ describe('TopicFollowButton Component', () => {
 
     renderWithProviders(<TopicFollowButton topic='myTestTopic' />);
     const followButton = screen.getByTestId('followButton');
-    expect(followButton.textContent).toContain('Follow Topic');
+    expect(followButton.textContent).toContain('Follow');
   });
 
   it('renders Unfollow button when topic is followed', () => {
@@ -52,7 +52,7 @@ describe('TopicFollowButton Component', () => {
 
     renderWithProviders(<TopicFollowButton topic='myTestTopic' />);
     const unFollowButton = screen.getByTestId('unFollowButton');
-    expect(unFollowButton.textContent).toContain('Unfollow Topic');
+    expect(unFollowButton.textContent).toContain('Unfollow');
   });
 
   it('calls API to follow topic when Follow button is clicked', async () => {
