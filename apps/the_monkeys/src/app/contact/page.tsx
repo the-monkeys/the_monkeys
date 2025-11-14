@@ -1,13 +1,29 @@
 'use client';
 
+import React, { useEffect, useState } from 'react';
+
 import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
+import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { Button } from '@the-monkeys/ui/atoms/button';
+import { number } from 'zod';
 
 import InputField from './components/InputField';
+import { generateCaptcha } from './utils/captcha';
 import { COMPANY_SIZE, SUBJECT_OPTIONS } from './utils/dropDownOptions';
+import handleFormSubmit from './utils/handleFormSubmit';
 
 const ContactPage = () => {
+  const [captcha, setCaptcha] = useState<{
+    firstNum: number;
+    secondNum: number;
+  }>({ firstNum: 0, secondNum: 0 });
+
+  useEffect(() => {
+    const { value1, value2 } = generateCaptcha();
+    setCaptcha({ firstNum: value1, secondNum: value2 });
+  }, []);
+
   return (
     <Container className='max-w-5xl w-full min-h-screen flex flex-col sm:flex-row sm:justify-between justify-center items-start pt-32 pb-16 gap-10 overflow-hidden'>
       <div className='w-full sm:w-1/2 relative flex flex-col items-center sm:items-start gap-4 p-6'>
@@ -31,7 +47,9 @@ const ContactPage = () => {
 
       <form
         className='w-full sm:w-1/2 relative flex flex-col gap-6 p-6'
-        onSubmit={(e) => {}}
+        onSubmit={(e) => {
+          handleFormSubmit(e);
+        }}
       >
         <div className='w-full flex flex-col sm:flex-row gap-4'>
           <InputField
@@ -67,6 +85,7 @@ const ContactPage = () => {
                   className='bg-foreground-light dark:bg-foreground-dark'
                   key={index}
                   value={size?.value}
+                  aria-hidden='true'
                 >
                   {size?.value}
                 </option>
@@ -81,11 +100,24 @@ const ContactPage = () => {
         </div>
 
         <InputField label='Subject' name='subject' required>
-          <select className='px-4 h-10 text-sm rounded-md outline-none bg-foreground-light/40 dark:bg-foreground-dark/40 border-1 border-border-light/60 dark:border-border-dark/60 focus-visible:border-2 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark'>
+          <select
+            className='px-4 h-10 text-sm rounded-md outline-none bg-foreground-light/40 dark:bg-foreground-dark/40 border-1 border-border-light/60 dark:border-border-dark/60 focus-visible:border-2 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark'
+            defaultValue=''
+          >
+            <option
+              className='bg-foreground-light dark:bg-foreground-dark'
+              value=''
+              disabled
+              selected
+            >
+              Please select
+            </option>
             {SUBJECT_OPTIONS.map((value, index) => (
               <option
                 className='bg-foreground-light dark:bg-foreground-dark'
                 key={index}
+                value={value?.subject}
+                aria-hidden='true'
               >
                 {value?.subject}
               </option>
@@ -101,11 +133,31 @@ const ContactPage = () => {
           ></textarea>
         </InputField>
 
+        <div className='w-full flex flex-col sm:flex-row gap-4'>
+          <InputField
+            label={`Verify you're human`}
+            name='captcha-field'
+            value={`${captcha?.firstNum} + ${captcha?.secondNum}`}
+            readOnly
+          />
+          <InputField
+            name='captcha-field-value'
+            type='number'
+            required
+            placeholder='?'
+          />
+        </div>
+
         <Button
           variant='brand'
           type='submit'
           className='group rounded hover:!bg-background-light dark:hover:!bg-background-dark'
         >
+          <Icon
+            name='RiSendPlane'
+            type='Fill'
+            className='mr-[6px] group-hover:animate-icon-shake opacity-90'
+          />{' '}
           Send Message
         </Button>
       </form>

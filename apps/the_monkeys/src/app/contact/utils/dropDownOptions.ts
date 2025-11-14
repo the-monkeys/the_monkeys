@@ -26,9 +26,6 @@ export const COMPANY_SIZE = [
 
 export const SUBJECT_OPTIONS = [
   {
-    subject: 'Please select',
-  },
-  {
     subject: 'Feature Request',
   },
   {
