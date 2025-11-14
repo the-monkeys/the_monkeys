@@ -47,8 +47,6 @@ export const BlogReportDialog: FC<BlogReportDialogProps> = ({
   const { data: session, isError } = useAuth();
 
   const handleCloseButton = () => {
-    setReasonType('');
-    setReporterNotes('');
     setOpen(false);
   };
 
@@ -92,6 +90,8 @@ export const BlogReportDialog: FC<BlogReportDialogProps> = ({
           variant: 'success',
         });
 
+        setReasonType('');
+        setReporterNotes('');
         handleCloseButton();
       }
     } catch (error) {
