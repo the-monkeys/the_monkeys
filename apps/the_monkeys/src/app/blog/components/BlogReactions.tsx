@@ -1,12 +1,14 @@
 import Link from 'next/link';
 
 import { LikesCount } from '@/components/blog/LikesCount';
+import { BlogReportDialog } from '@/components/blog/actions/BlogReportDialog';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 import { twMerge } from 'tailwind-merge';
 
 export const BlogReactions = ({
@@ -56,10 +58,21 @@ export const BlogReactionsContainer = ({
 }) => {
   const url = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
+  const reportFeatureEnabled = useFeatureIsOn('reports-frontend');
+
   return (
     <div className='sticky left-0 bottom-[20px] mx-auto w-full flex items-center gap-2 z-20'>
       <div className='flex-1 px-[14px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
         <BlogReactions blogId={blogId} />
+      </div>
+
+      <div
+        className={twMerge(
+          'shrink-0 px-[10px] py-[6px] bg-alert-red/60 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-alert-red',
+          !reportFeatureEnabled && 'hidden'
+        )}
+      >
+        {blogId && <BlogReportDialog size={24} blogId={blogId} />}
       </div>
 
       <div className='shrink-0 px-[10px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
