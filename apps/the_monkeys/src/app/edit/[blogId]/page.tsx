@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
+import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
@@ -334,18 +335,21 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             </div>
 
             <div className='flex items-center gap-2'>
-              {/* <ChooseTopicDialog
-                blogTopics={blogTopics}
-                setBlogTopics={setBlogTopics}
-              /> */}
-
-              <PublishBlogDialog
+              <PublishBlogDrawer
                 topics={blogTopics}
                 setTopics={setBlogTopics}
                 data={data}
                 isPublishing={blogPublishLoading}
                 handlePublish={handlePublishStep}
               />
+
+              {/* <PublishBlogDialog
+                topics={blogTopics}
+                setTopics={setBlogTopics}
+                data={data}
+                isPublishing={blogPublishLoading}
+                handlePublish={handlePublishStep}
+              /> */}
             </div>
           </div>
 
