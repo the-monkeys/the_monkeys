@@ -1,6 +1,5 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
-import HyperLinkTool from '@/components/editor/customBlocks/HyperlinkBlock';
 import { API_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
 import Delimiter from '@editorjs/delimiter';
@@ -17,7 +16,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
   tools: {
     header: {
       class: Header,
-      inlineToolbar: ['bold', 'italic', 'hyperlink'],
+      inlineToolbar: true,
       config: {
         levels: [1, 2, 3],
         defaultLevel: 2,
@@ -25,14 +24,14 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     },
     paragraph: {
       class: Paragraph,
-      inlineToolbar: ['bold', 'italic', 'hyperlink'],
+      inlineToolbar: true,
       config: {
         placeholder: '',
       },
     },
     list: {
       class: List,
-      inlineToolbar: ['bold', 'italic', 'hyperlink'],
+      inlineToolbar: true,
       config: {
         defaultStyle: 'unordered',
       },
@@ -43,15 +42,10 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     embed: {
       class: CustomEmbed,
     },
-    hyperlink: {
-      class: HyperLinkTool,
-      inlineToolbar: true,
-      shortcut: 'ctrl + L',
-    },
     delimiter: Delimiter,
     quote: {
       class: Quote,
-      inlineToolbar: false,
+      inlineToolbar: true,
       config: {
         quotePlaceholder: '',
       },
@@ -82,7 +76,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     },
     table: {
       class: Table,
-      inlineToolbar: ['bold', 'italic', 'hyperlink'],
+      inlineToolbar: true,
       config: {
         rows: 3,
         cols: 2,
