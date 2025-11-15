@@ -757,26 +757,9 @@ li.cdx-list__item {
 }
 
 /** Hyperlink style */
-.ce-paragraph,
-.ce-block {
-  a {
-    position: relative;
-    text-decoration: none;
-    color: #ff5542;
-    font-weight: 500;
-  }
-
-  a::after {
-    content: attr(href);
-    display: none;
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 0.25rem;
-  }
-
-  a:hover::after {
-    display: block;
-  }
+.ce-paragraph a,
+.ce-block a{
+  position: relative;
+  color: #ff5542;
+  font-weight: 500;
 }
