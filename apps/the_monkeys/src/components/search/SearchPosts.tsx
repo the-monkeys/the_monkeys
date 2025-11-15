@@ -46,7 +46,11 @@ export const SearchPosts = ({
   // TODO: Cache the search results using zustand store
 
   const { searchBlogs, searchBlogsLoading, searchBlogsError } =
-    useGetSearchBlog(query.trim() ? query : undefined);
+    useGetSearchBlog({
+      searchQuery: query.trim() ? query : undefined,
+      limit: 5,
+      offset: 0,
+    });
 
   if (searchBlogsLoading) {
     return <SearchResultsPostSkeleton />;

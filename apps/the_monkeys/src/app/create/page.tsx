@@ -8,13 +8,14 @@ import { useRouter } from 'next/navigation';
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
-import { ChooseTopicDialog } from '@/components/topics/actions/ChooseTopicDialog';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
+
+import { generateSlug } from '../blog/utils/generateSlug';
 
 const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
@@ -191,6 +192,12 @@ const CreatePage = () => {
   // Format data for transmission
   const formatData = useCallback(
     (data: OutputData) => {
+      const title =
+        data.blocks.find((block) => block.id === 'title')?.data.text ||
+        'No Title';
+
+      const slug = generateSlug(title);
+      const blogSlug = `${slug}-${blogId}`;
       return {
         owner_account_id: accountId,
         author_list: [accountId],
@@ -205,6 +212,7 @@ const CreatePage = () => {
             })) || [],
         },
         tags: blogTopics,
+        slug: blogSlug,
       };
     },
     [accountId, blogTopics]
@@ -249,7 +257,7 @@ const CreatePage = () => {
       return;
     }
 
-    if (data.blocks[0].type !== 'header' && data?.blocks[0].data.level !== 1) {
+    if (data.blocks[0].type !== 'title' && data?.blocks[0].data.level !== 1) {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -293,7 +301,7 @@ const CreatePage = () => {
 
   return (
     <div className='relative min-h-screen'>
-      <div className='pt-4 pb-3 flex flex-col sm:flex-row justify-between items-center gap-2'>
+      <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
         <div
           className={twMerge(
             'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',
@@ -312,13 +320,16 @@ const CreatePage = () => {
         </div>
 
         <div className='flex items-center gap-2'>
-          <ChooseTopicDialog
+          {/* The Topics are moved in the publish dialog */}
+          {/* <ChooseTopicDialog
             blogTopics={blogTopics}
             setBlogTopics={setBlogTopics}
-          />
+          /> */}
 
           <PublishBlogDialog
             topics={blogTopics}
+            setTopics={setBlogTopics}
+            data={data}
             isPublishing={blogPublishLoading}
             handlePublish={handlePublishStep}
           />
