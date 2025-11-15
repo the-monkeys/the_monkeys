@@ -1,0 +1,9 @@
+services:
+  app:
+    image: ghcr.io/the-monkeys/the_monkeys:latest
+    ports:
+      - "3000:3000"
+    env_file: .env.production
+    restart: unless-stopped
+    mem_limit: 512m
+    cpus: 0.5

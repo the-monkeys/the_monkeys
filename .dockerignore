@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.env*
+!.env.production.example
+*.log
+coverage
+.turbo
+.vscode
+.idea
+README.md
+*.md
+Dockerfile
+docker-compose*
+deploy.*
