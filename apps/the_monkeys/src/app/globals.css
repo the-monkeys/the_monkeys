@@ -759,7 +759,6 @@ li.cdx-list__item {
 /** Hyperlink style */
 .ce-paragraph a,
 .ce-block a{
-  position: relative;
   color: #ff5542;
   font-weight: 500;
 }
