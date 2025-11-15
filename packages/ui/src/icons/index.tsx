@@ -3,24 +3,21 @@ import { cn } from "../utils";
 export const CloseIcon = ({
 	className,
 	size = 24,
-}: { className?: string; size?: number | string }) => {
+}: {
+	className?: string;
+	size?: number | string;
+}) => {
 	return (
 		<svg
-			className={cn("w-6 h-6 text-gray-800 dark:text-white", className)}
+			className={cn("w-6 h-6 text-text-light dark:text-text-dark", className)}
 			aria-hidden="true"
 			xmlns="http://www.w3.org/2000/svg"
 			width={size}
 			height={size}
-			fill="none"
+			fill="currentColor"
 			viewBox="0 0 24 24"
 		>
-			<path
-				stroke="currentColor"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				stroke-width="2"
-				d="M6 18 17.94 6M18 18 6.06 6"
-			/>
+			<path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z" />
 		</svg>
 	);
 };
@@ -28,9 +25,12 @@ export const CloseIcon = ({
 export const CheckIcon = ({
 	className,
 	size = 24,
-}: { className?: string; size?: number | string }) => (
+}: {
+	className?: string;
+	size?: number | string;
+}) => (
 	<svg
-		className={cn("w-6 h-6 text-gray-800 dark:text-white", className)}
+		className={cn("w-6 h-6 text-text-light dark:text-text-dark", className)}
 		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}
@@ -51,9 +51,12 @@ export const CheckIcon = ({
 export const AngleUp = ({
 	className,
 	size = 24,
-}: { className?: string; size?: number | string }) => (
+}: {
+	className?: string;
+	size?: number | string;
+}) => (
 	<svg
-		className={cn("w-6 h-6 text-gray-800 dark:text-white", className)}
+		className={cn("w-6 h-6 text-text-light dark:text-text-dark", className)}
 		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}
@@ -74,9 +77,12 @@ export const AngleUp = ({
 export const AngleRight = ({
 	className,
 	size = 24,
-}: { className?: string; size?: number | string }) => (
+}: {
+	className?: string;
+	size?: number | string;
+}) => (
 	<svg
-		className={cn("w-6 h-6 text-gray-800 dark:text-white", className)}
+		className={cn("w-6 h-6 text-text-light dark:text-text-dark", className)}
 		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}
@@ -97,9 +103,12 @@ export const AngleRight = ({
 export const AngleDown = ({
 	className,
 	size = 24,
-}: { className?: string; size?: number | string }) => (
+}: {
+	className?: string;
+	size?: number | string;
+}) => (
 	<svg
-		className={cn("w-6 h-6 text-gray-800 dark:text-white", className)}
+		className={cn("w-6 h-6 text-text-light dark:text-text-dark", className)}
 		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}
@@ -120,9 +129,12 @@ export const AngleDown = ({
 export const AngleLeft = ({
 	className,
 	size = 24,
-}: { className?: string; size?: number | string }) => (
+}: {
+	className?: string;
+	size?: number | string;
+}) => (
 	<svg
-		className={cn("w-6 h-6 text-gray-800 dark:text-white", className)}
+		className={cn("w-6 h-6 text-text-light dark:text-text-dark", className)}
 		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}
@@ -143,9 +155,12 @@ export const AngleLeft = ({
 export const ArrowRight = ({
 	className,
 	size = 24,
-}: { className?: string; size?: number | string }) => (
+}: {
+	className?: string;
+	size?: number | string;
+}) => (
 	<svg
-		className={cn("w-6 h-6 text-gray-800 dark:text-white", className)}
+		className={cn("w-6 h-6 text-text-light dark:text-text-dark", className)}
 		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}
@@ -166,9 +181,12 @@ export const ArrowRight = ({
 export const ArrowLeft = ({
 	className,
 	size = 24,
-}: { className?: string; size?: number | string }) => (
+}: {
+	className?: string;
+	size?: number | string;
+}) => (
 	<svg
-		className={cn("w-6 h-6 text-gray-800 dark:text-white", className)}
+		className={cn("w-6 h-6 text-text-light dark:text-text-dark", className)}
 		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
 		width={size}

@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
+import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
@@ -320,19 +321,21 @@ const CreatePage = () => {
         </div>
 
         <div className='flex items-center gap-2'>
-          {/* The Topics are moved in the publish dialog */}
-          {/* <ChooseTopicDialog
-            blogTopics={blogTopics}
-            setBlogTopics={setBlogTopics}
-          /> */}
-
-          <PublishBlogDialog
+          <PublishBlogDrawer
             topics={blogTopics}
             setTopics={setBlogTopics}
             data={data}
             isPublishing={blogPublishLoading}
             handlePublish={handlePublishStep}
           />
+
+          {/* <PublishBlogDialog
+            topics={blogTopics}
+            setTopics={setBlogTopics}
+            data={data}
+            isPublishing={blogPublishLoading}
+            handlePublish={handlePublishStep}
+          /> */}
         </div>
       </div>
 
