@@ -1,28 +1,43 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { Button } from '@the-monkeys/ui/atoms/button';
-import { number } from 'zod';
 
 import InputField from './components/InputField';
 import { generateCaptcha } from './utils/captcha';
 import { COMPANY_SIZE, SUBJECT_OPTIONS } from './utils/dropDownOptions';
 import handleFormSubmit from './utils/handleFormSubmit';
+import { ContactFormInputs } from '@/lib/schema/contact';
 
 const ContactPage = () => {
   const [captcha, setCaptcha] = useState<{
-    firstNum: number;
-    secondNum: number;
-  }>({ firstNum: 0, secondNum: 0 });
+    firstNum: number | null;
+    secondNum: number | null;
+  }>({ firstNum: null, secondNum: null });
 
-  useEffect(() => {
+  const [formErrors, setFormErrors] = useState<
+    Partial<Record<keyof ContactFormInputs, string>>
+  >({});
+
+  const clearError = (name: keyof ContactFormInputs) => {
+    setFormErrors((prev) => {
+      const { [name]: removed, ...rest} = prev;
+      return rest;
+    });
+  };
+
+  const refreshCaptcha = useCallback(() => {
     const { value1, value2 } = generateCaptcha();
     setCaptcha({ firstNum: value1, secondNum: value2 });
   }, []);
+
+  useEffect(() => {
+    refreshCaptcha();
+  }, [refreshCaptcha]);
 
   return (
     <Container className='max-w-5xl w-full min-h-screen flex flex-col sm:flex-row sm:justify-between justify-center items-start pt-32 pb-16 gap-10 overflow-hidden'>
@@ -48,7 +63,7 @@ const ContactPage = () => {
       <form
         className='w-full sm:w-1/2 relative flex flex-col gap-6 p-6'
         onSubmit={(e) => {
-          handleFormSubmit(e);
+          handleFormSubmit(e, refreshCaptcha, setFormErrors);
         }}
       >
         <div className='w-full flex flex-col sm:flex-row gap-4'>
@@ -57,35 +72,43 @@ const ContactPage = () => {
             name='first-name'
             placeholder='John'
             required
+            error={formErrors['first-name']}
+            onValueChange={() => clearError('first-name')}
           />
           <InputField
             label='Last name'
             name='last-name'
             placeholder='Doe'
             required
+            error={formErrors['last-name']}
+            onValueChange={() => clearError('last-name')}
           />
         </div>
 
         <InputField
           label='Email'
           name='email'
-          type='email'
           placeholder='you@example.com'
           required
+          error={formErrors['email']}
+          onValueChange={() => clearError('email')}
         />
 
         <div className='w-full flex flex-col sm:flex-row gap-4'>
-          <InputField label='Company size' name='company-size'>
+          <InputField label='Company size' name='company-size'
+            error={formErrors['company-size']}
+            onValueChange={() => clearError('company-size')}
+          >
             <select
               className='px-4 h-10 text-sm rounded-md outline-none bg-foreground-light/40 dark:bg-foreground-dark/40 border-1 border-border-light/60 dark:border-border-dark/60 focus-visible:border-2 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark'
               defaultValue='Please select'
+              name='company-size'
             >
               {COMPANY_SIZE.map((size, index) => (
                 <option
                   className='bg-foreground-light dark:bg-foreground-dark'
                   key={index}
                   value={size?.value}
-                  aria-hidden='true'
                 >
                   {size?.value}
                 </option>
@@ -96,13 +119,19 @@ const ContactPage = () => {
             label='Company name'
             name='company-name'
             placeholder='XYZ Corp'
+            error={formErrors['company-name']}
+            onValueChange={() => clearError('company-name')}
           />
         </div>
 
-        <InputField label='Subject' name='subject' required>
+        <InputField label='Subject' name='subject' required
+          error={formErrors['subject']}
+          onValueChange={() => clearError('subject')}
+        >
           <select
             className='px-4 h-10 text-sm rounded-md outline-none bg-foreground-light/40 dark:bg-foreground-dark/40 border-1 border-border-light/60 dark:border-border-dark/60 focus-visible:border-2 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark'
-            defaultValue=''
+            defaultValue='Please select'
+            name='subject'
           >
             <option
               className='bg-foreground-light dark:bg-foreground-dark'
@@ -125,7 +154,10 @@ const ContactPage = () => {
           </select>
         </InputField>
 
-        <InputField label='Your message' name='message'>
+        <InputField label='Your message' name='message'
+          error={formErrors['message']}
+          onValueChange={() => clearError('message')}
+        >
           <textarea
             className='py-2 px-4 rounded-md text-sm min-h-[100px] outline-none bg-foreground-light/40 dark:bg-foreground-dark/40 border-1 border-border-light/60 dark:border-border-dark/60 focus-visible:border-2 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark'
             name='message'
@@ -137,14 +169,31 @@ const ContactPage = () => {
           <InputField
             label={`Verify you're human`}
             name='captcha-field'
-            value={`${captcha?.firstNum} + ${captcha?.secondNum}`}
+            value={captcha.firstNum !== null && captcha.secondNum !== null ? `${captcha?.firstNum} + ${captcha?.secondNum} =` : ''}
             readOnly
           />
+
+          <Button
+            variant='default'
+            type='button'
+            className='rounded mt-6 mr-2'
+            title='Refresh captcha'
+          >
+            <Icon 
+              name='RiRestartLine' 
+              type='Line' 
+              className=''
+            />
+          </Button>
+
           <InputField
+            label='Your answer'
             name='captcha-field-value'
             type='number'
             required
             placeholder='?'
+            error={formErrors['captcha-field-value']}
+            onValueChange={() => clearError('captcha-field-value')}
           />
         </div>
 

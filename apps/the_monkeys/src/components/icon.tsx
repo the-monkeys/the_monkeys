@@ -69,7 +69,8 @@ export type IconName =
   | 'RiVerifiedBadge'
   | 'RiEye'
   | 'RiEyeClose'
-  | 'RiSendPlane';
+  | 'RiSendPlane'
+  | 'RiRestartLine';
 
 export type IconProps = {
   name: IconName;

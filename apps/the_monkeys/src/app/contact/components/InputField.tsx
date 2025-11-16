@@ -17,6 +17,8 @@ interface inputFieldProps {
   defaultValue?: string;
   value?: string;
   onChange?: InputChangeHandler;
+  error?: string;
+  onValueChange?: () => void;
 }
 
 const InputField = ({
@@ -30,9 +32,15 @@ const InputField = ({
   defaultValue = '',
   value,
   onChange,
+  error,
+  onValueChange
 }: inputFieldProps) => {
   const inputId = name;
-  const readOnlyStyle = readOnly ? 'pointer-events-none' : '';
+  const readOnlyStyle = readOnly ? 'pointer-events-none text-center' : '';
+
+  const handleChange: InputChangeHandler = () => {
+    onValueChange?.();
+  };
 
   const inputProps = {
     id: inputId,
@@ -42,7 +50,7 @@ const InputField = ({
     required: required,
     readOnly: readOnly,
     className: `bg-foreground-light/40 dark:bg-foreground-dark/40 ${readOnlyStyle}`,
-    ...(value !== undefined ? { value, onChange } : { defaultValue }),
+    ...(value !== undefined ? { value, onChange: handleChange } : { defaultValue, onChange: handleChange }),
   };
 
   return (
@@ -56,6 +64,7 @@ const InputField = ({
       ) : (
         <Input {...inputProps} />
       )}
+      {error && <span className='text-red-500 text-xs mt-1'>{error}</span>}
     </div>
   );
 };
