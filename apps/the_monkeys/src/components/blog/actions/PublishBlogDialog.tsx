@@ -90,8 +90,8 @@ export const PublishBlogDialog = ({
             Review your post and choose topics before publishing.
           </DialogDescription>
         </DialogHeader>
+
         <div className='grid sm:grid-cols-2 gap-8 pb-10'>
-          {/* Preview Column */}
           <div className='col-span-2 sm:col-span-1 space-y-3'>
             <p className='font-dm_sans font-medium text-base sm:text-lg'>
               Post Preview
@@ -133,7 +133,6 @@ export const PublishBlogDialog = ({
             </div>
           </div>
 
-          {/* Topics and Publish Button Column */}
           <div className='flex flex-col justify-between h-full col-span-2 sm:col-span-1 space-y-6'>
             <div className='space-y-4'>
               <div className='space-y-1'>

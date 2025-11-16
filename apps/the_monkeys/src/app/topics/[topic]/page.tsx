@@ -194,29 +194,26 @@ const TopicBlogsPage = async ({
       <Container className='pb-12 px-4 min-h-[800px]'>
         {/* Breadcrumb Navigation */}
         <nav className='my-6' aria-label='Breadcrumb'>
-          <ol className='flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400'>
+          <ol className='flex items-center space-x-1 text-sm'>
             <li>
-              <Link
-                href='/'
-                className='hover:text-gray-900 dark:hover:text-gray-100'
-              >
+              <Link href='/' className='opacity-80 hover:opacity-100'>
                 Home
               </Link>
             </li>
+
             <li className='flex items-center'>
               <Icon name='RiArrowRight' className='mx-2' size={16} />
               <Link
                 href='/topics/explore'
-                className='hover:text-gray-900 dark:hover:text-gray-100'
+                className='opacity-80 hover:opacity-100'
               >
                 Topics
               </Link>
             </li>
+
             <li className='flex items-center'>
               <Icon name='RiArrowRight' className='mx-2' size={16} />
-              <span className='text-gray-900 dark:text-gray-100 font-medium'>
-                {topic}
-              </span>
+              <span className='font-medium'>{topic}</span>
             </li>
           </ol>
         </nav>
@@ -224,8 +221,9 @@ const TopicBlogsPage = async ({
         <PageHeader>
           <PageSubheading subheading='Explore more about' />
           <PageHeading heading={topic} className='text-center' />
+
           {blogCount > 0 && (
-            <p className='text-center text-gray-600 dark:text-gray-400 mt-2'>
+            <p className='text-center opacity-80 mt-2'>
               {blogCount} article{blogCount !== 1 ? 's' : ''} found
             </p>
           )}
