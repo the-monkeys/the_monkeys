@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
+import { ContactFormInputs } from '@/lib/schema/contact';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import InputField from './components/InputField';
 import { generateCaptcha } from './utils/captcha';
 import { COMPANY_SIZE, SUBJECT_OPTIONS } from './utils/dropDownOptions';
 import handleFormSubmit from './utils/handleFormSubmit';
-import { ContactFormInputs } from '@/lib/schema/contact';
 
 const ContactPage = () => {
   const [captcha, setCaptcha] = useState<{
@@ -23,21 +23,42 @@ const ContactPage = () => {
     Partial<Record<keyof ContactFormInputs, string>>
   >({});
 
+  const [isRotating, setIsRotating] = useState(false);
+  const rotationTimerRef = useRef<NodeJS.Timeout | null>(null);
+
   const clearError = (name: keyof ContactFormInputs) => {
     setFormErrors((prev) => {
-      const { [name]: removed, ...rest} = prev;
+      const { [name]: removed, ...rest } = prev;
       return rest;
     });
   };
 
   const refreshCaptcha = useCallback(() => {
+    if (rotationTimerRef.current) {
+      clearTimeout(rotationTimerRef.current);
+    }
+
+    setIsRotating(true);
+
     const { value1, value2 } = generateCaptcha();
     setCaptcha({ firstNum: value1, secondNum: value2 });
+
+    rotationTimerRef.current = setTimeout(() => {
+      setIsRotating(false);
+    }, 200);
   }, []);
 
   useEffect(() => {
     refreshCaptcha();
+
+    return () => {
+      if (rotationTimerRef.current) {
+        clearTimeout(rotationTimerRef.current);
+      }
+    };
   }, [refreshCaptcha]);
+
+  const captchaError = formErrors['captcha-field-value'];
 
   return (
     <Container className='max-w-5xl w-full min-h-screen flex flex-col sm:flex-row sm:justify-between justify-center items-start pt-32 pb-16 gap-10 overflow-hidden'>
@@ -95,7 +116,9 @@ const ContactPage = () => {
         />
 
         <div className='w-full flex flex-col sm:flex-row gap-4'>
-          <InputField label='Company size' name='company-size'
+          <InputField
+            label='Company size'
+            name='company-size'
             error={formErrors['company-size']}
             onValueChange={() => clearError('company-size')}
           >
@@ -124,7 +147,10 @@ const ContactPage = () => {
           />
         </div>
 
-        <InputField label='Subject' name='subject' required
+        <InputField
+          label='Subject'
+          name='subject'
+          required
           error={formErrors['subject']}
           onValueChange={() => clearError('subject')}
         >
@@ -154,7 +180,9 @@ const ContactPage = () => {
           </select>
         </InputField>
 
-        <InputField label='Your message' name='message'
+        <InputField
+          label='Your message'
+          name='message'
           error={formErrors['message']}
           onValueChange={() => clearError('message')}
         >
@@ -165,34 +193,45 @@ const ContactPage = () => {
           ></textarea>
         </InputField>
 
-        <div className='w-full flex flex-col sm:flex-row gap-4'>
-          <InputField
-            label={`Verify you're human`}
-            name='captcha-field'
-            value={captcha.firstNum !== null && captcha.secondNum !== null ? `${captcha?.firstNum} + ${captcha?.secondNum} =` : ''}
-            readOnly
-          />
-
-          <Button
-            variant='default'
-            type='button'
-            className='rounded mt-6 mr-2'
-            title='Refresh captcha'
-          >
-            <Icon 
-              name='RiRestartLine' 
-              type='Line' 
-              className=''
+        <div className='w-full flex flex-col sm:flex-row items-end gap-8'>
+          <div className='w-full flex gap-1'>
+            <InputField
+              className='max-w-max w-full'
+              label={`Verify you're human`}
+              name='captcha-field'
+              value={
+                captcha.firstNum !== null && captcha.secondNum !== null
+                  ? `${captcha?.firstNum} + ${captcha?.secondNum} = ?`
+                  : ''
+              }
+              required
+              readOnly
             />
-          </Button>
+
+            <Button
+              variant='default'
+              type='button'
+              className='h-10 mr-2 flex-shrink-0 self-end border border-border-light/60 dark:border-border-dark/60 rounded bg-foreground-light/40 dark:bg-foreground-dark/40'
+              title='Refresh captcha'
+              onClick={(e) => {
+                e.stopPropagation();
+                refreshCaptcha();
+              }}
+            >
+              <Icon
+                name='RiRestartLine'
+                type='NIL'
+                className={`w-5 h-5 text-text-light dark:text-text-dark ${isRotating ? 'animate-loader-rotate duration-200' : ''}`}
+              />
+            </Button>
+          </div>
 
           <InputField
-            label='Your answer'
+            className={`w-full flex-shrink self-end ${captchaError ? 'text-red-500 font-semibold' : ''}`}
             name='captcha-field-value'
-            type='number'
+            type='text'
             required
-            placeholder='?'
-            error={formErrors['captcha-field-value']}
+            placeholder='Answer'
             onValueChange={() => clearError('captcha-field-value')}
           />
         </div>

@@ -1,7 +1,7 @@
-import { FormEvent, Dispatch, SetStateAction } from 'react';
-import { ZodError} from 'zod';
+import { Dispatch, FormEvent, SetStateAction } from 'react';
 
-import { contactFormSchema, ContactFormInputs } from '@/lib/schema/contact';
+import { ContactFormInputs, contactFormSchema } from '@/lib/schema/contact';
+import { ZodError } from 'zod';
 
 type FormErrorState = Partial<Record<keyof ContactFormInputs, string>>;
 
@@ -26,9 +26,9 @@ const handleFormSubmit = async (
     const [num1Str, , num2Str] = captchaEquation.split(' ');
     const expectedAnswer = parseInt(num1Str) + parseInt(num2Str);
 
-    if(userAnswer !== expectedAnswer) {
+    if (userAnswer !== expectedAnswer) {
       setFormErrors({
-        'captcha-field-value': 'Incorrect answer'
+        'captcha-field-value': 'Incorrect answer',
       });
       refreshCaptcha();
       return;
@@ -40,19 +40,17 @@ const handleFormSubmit = async (
     alert('Message sent successfully!');
     refreshCaptcha();
     e.currentTarget.reset();
-
   } catch (error) {
-    if(error instanceof ZodError) {
+    if (error instanceof ZodError) {
       const fieldErrors = error.formErrors.fieldErrors;
 
       const newErrors: FormErrorState = {};
-      Object.entries(fieldErrors).forEach( ([field, messages]) => {
+      Object.entries(fieldErrors).forEach(([field, messages]) => {
         newErrors[field as keyof ContactFormInputs] = messages?.[0];
       });
       setFormErrors(newErrors);
       refreshCaptcha();
-
-    }else {
+    } else {
       console.error('Submission failed:', error);
       alert('An unexpected error occurred during form submission.');
       refreshCaptcha();

@@ -14,6 +14,7 @@ interface inputFieldProps {
   required?: boolean;
   children?: ReactNode;
   readOnly?: boolean;
+  className?: string;
   defaultValue?: string;
   value?: string;
   onChange?: InputChangeHandler;
@@ -29,11 +30,12 @@ const InputField = ({
   required = false,
   children,
   readOnly = false,
+  className = '',
   defaultValue = '',
   value,
   onChange,
   error,
-  onValueChange
+  onValueChange,
 }: inputFieldProps) => {
   const inputId = name;
   const readOnlyStyle = readOnly ? 'pointer-events-none text-center' : '';
@@ -49,15 +51,19 @@ const InputField = ({
     placeholder: placeholder,
     required: required,
     readOnly: readOnly,
-    className: `bg-foreground-light/40 dark:bg-foreground-dark/40 ${readOnlyStyle}`,
-    ...(value !== undefined ? { value, onChange: handleChange } : { defaultValue, onChange: handleChange }),
+    className: `bg-foreground-light/40 dark:bg-foreground-dark/40 ${className} ${readOnlyStyle}`,
+    ...(value !== undefined
+      ? { value, onChange: handleChange }
+      : { defaultValue, onChange: handleChange }),
   };
 
   return (
     <div className='w-full flex flex-col'>
-      <label htmlFor={inputId} className='w-full flex'>
+      <label htmlFor={inputId} className='w-full flex whitespace-nowrap'>
         {label}{' '}
-        {required && <span className='text-brand-orange'>&nbsp; *</span>}
+        {label?.trim() && required && (
+          <span className='text-brand-orange'>&nbsp; *</span>
+        )}
       </label>
       {children ? (
         React.cloneElement(children as React.ReactElement, { id: inputId })
