@@ -1,37 +1,62 @@
 'use client';
 
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
+import useAuth from '@/hooks/auth/useAuth';
 import { ContactFormInputs } from '@/lib/schema/contact';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import InputField from './components/InputField';
+import StaticText from './components/StaticText';
 import { generateCaptcha } from './utils/captcha';
 import { COMPANY_SIZE, SUBJECT_OPTIONS } from './utils/dropDownOptions';
 import handleFormSubmit from './utils/handleFormSubmit';
 
+type FormErrorState = Partial<Record<keyof ContactFormInputs, string>>;
+type InputElement = ChangeEvent<
+  HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+>;
+
 const ContactPage = () => {
+  const { data } = useAuth();
+
   const [captcha, setCaptcha] = useState<{
     firstNum: number | null;
     secondNum: number | null;
   }>({ firstNum: null, secondNum: null });
 
-  const [formErrors, setFormErrors] = useState<
-    Partial<Record<keyof ContactFormInputs, string>>
-  >({});
+  const [formErrors, setFormErrors] = useState<FormErrorState>({});
+
+  const [formData, setFormData] = useState<ContactFormInputs>(() => ({
+    'first-name': data?.first_name ?? '',
+    'last-name': data?.last_name ?? '',
+    email: data?.email ?? '',
+    'company-size': '',
+    'company-name': '',
+    subject: '',
+    message: '',
+    'captcha-field-value': '',
+    'captcha-field': '',
+  }));
 
   const [isRotating, setIsRotating] = useState(false);
   const rotationTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const clearError = (name: keyof ContactFormInputs) => {
-    setFormErrors((prev) => {
-      const { [name]: removed, ...rest } = prev;
-      return rest;
-    });
-  };
+  const handleInputChange = useCallback((e: InputElement) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name as keyof ContactFormInputs]: value,
+    }));
+  }, []);
 
   const refreshCaptcha = useCallback(() => {
     if (rotationTimerRef.current) {
@@ -58,28 +83,18 @@ const ContactPage = () => {
     };
   }, [refreshCaptcha]);
 
+  const clearError = (name: keyof ContactFormInputs) => {
+    setFormErrors((prev) => {
+      const { [name]: removed, ...rest } = prev;
+      return rest;
+    });
+  };
+
   const captchaError = formErrors['captcha-field-value'];
 
   return (
-    <Container className='max-w-5xl w-full min-h-screen flex flex-col sm:flex-row sm:justify-between justify-center items-start pt-32 pb-16 gap-10 overflow-hidden'>
-      <div className='w-full sm:w-1/2 relative flex flex-col items-center sm:items-start gap-4 p-6'>
-        <h2 className='text-4xl md:text-5xl font-dm_sans font-bold text-center'>
-          Got an Idea<span className='text-brand-orange'>?</span>&nbsp; Found an
-          Issue<span className='text-brand-orange'>?</span>
-          <br />
-          {`Let's Connect`}
-          <span className='text-brand-orange'>.</span>
-        </h2>
-        <p className='pt-3 text-base sm:text-lg text-center tracking-tight'>
-          Our community is evolving. Get in touch with the team behind &nbsp;
-          <span className='font-semibold'>Monkeys</span>&nbsp; and explore
-          partnership, collaboration, or support opportunities.
-        </p>
-
-        <div className='absolute top-0 left-0 w-full h-full -z-10 opacity-80'>
-          <BackgroundWaves />
-        </div>
-      </div>
+    <Container className='max-w-5xl w-full min-h-screen flex flex-col md:flex-row md:justify-between justify-center items-start pt-32 pb-16 gap-10 overflow-hidden'>
+      <StaticText />
 
       <form
         className='w-full sm:w-1/2 relative flex flex-col gap-6 p-6'
@@ -94,7 +109,9 @@ const ContactPage = () => {
             placeholder='John'
             required
             error={formErrors['first-name']}
+            value={formData['first-name']}
             onValueChange={() => clearError('first-name')}
+            onChange={handleInputChange}
           />
           <InputField
             label='Last name'
@@ -102,7 +119,9 @@ const ContactPage = () => {
             placeholder='Doe'
             required
             error={formErrors['last-name']}
+            value={formData['last-name']}
             onValueChange={() => clearError('last-name')}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -112,7 +131,9 @@ const ContactPage = () => {
           placeholder='you@example.com'
           required
           error={formErrors['email']}
+          value={formData['email']}
           onValueChange={() => clearError('email')}
+          onChange={handleInputChange}
         />
 
         <div className='w-full flex flex-col sm:flex-row gap-4'>
@@ -120,7 +141,9 @@ const ContactPage = () => {
             label='Company size'
             name='company-size'
             error={formErrors['company-size']}
+            value={formData['company-size']}
             onValueChange={() => clearError('company-size')}
+            onChange={handleInputChange}
           >
             <select
               className='px-4 h-10 text-sm rounded-md outline-none bg-foreground-light/40 dark:bg-foreground-dark/40 border-1 border-border-light/60 dark:border-border-dark/60 focus-visible:border-2 focus-visible:border-foreground-light dark:focus-visible:border-foreground-dark'
@@ -143,7 +166,9 @@ const ContactPage = () => {
             name='company-name'
             placeholder='XYZ Corp'
             error={formErrors['company-name']}
+            value={formData['company-name']}
             onValueChange={() => clearError('company-name')}
+            onChange={handleInputChange}
           />
         </div>
 
@@ -152,6 +177,7 @@ const ContactPage = () => {
           name='subject'
           required
           error={formErrors['subject']}
+          value={formData['subject']}
           onValueChange={() => clearError('subject')}
         >
           <select
@@ -172,7 +198,6 @@ const ContactPage = () => {
                 className='bg-foreground-light dark:bg-foreground-dark'
                 key={index}
                 value={value?.subject}
-                aria-hidden='true'
               >
                 {value?.subject}
               </option>
@@ -184,6 +209,7 @@ const ContactPage = () => {
           label='Your message'
           name='message'
           error={formErrors['message']}
+          value={formData['message']}
           onValueChange={() => clearError('message')}
         >
           <textarea
@@ -196,13 +222,13 @@ const ContactPage = () => {
         <div className='w-full flex flex-col sm:flex-row items-end gap-8'>
           <div className='w-full flex gap-1'>
             <InputField
-              className='max-w-max w-full'
+              className='w-full'
               label={`Verify you're human`}
               name='captcha-field'
               value={
                 captcha.firstNum !== null && captcha.secondNum !== null
                   ? `${captcha?.firstNum} + ${captcha?.secondNum} = ?`
-                  : ''
+                  : formData['captcha-field']
               }
               required
               readOnly
@@ -232,7 +258,9 @@ const ContactPage = () => {
             type='text'
             required
             placeholder='Answer'
+            value={formData['captcha-field-value']}
             onValueChange={() => clearError('captcha-field-value')}
+            onChange={handleInputChange}
           />
         </div>
 

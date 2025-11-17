@@ -40,8 +40,9 @@ const InputField = ({
   const inputId = name;
   const readOnlyStyle = readOnly ? 'pointer-events-none text-center' : '';
 
-  const handleChange: InputChangeHandler = () => {
+  const handleChange: InputChangeHandler = (e) => {
     onValueChange?.();
+    onChange?.(e);
   };
 
   const inputProps = {
