@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/the-monkeys/the_monkeys:latest
+    image: f2bc89de9833
     ports:
       - "3000:3000"
     env_file: .env.production
