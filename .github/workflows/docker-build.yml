@@ -32,3 +32,5 @@ jobs:
           cache-to: type=gha,mode=max
           build-args: |
             DOCKER_BUILD=1
+            NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=test
+            NEXT_PUBLIC_GROWTHBOOK_API_HOST=test
