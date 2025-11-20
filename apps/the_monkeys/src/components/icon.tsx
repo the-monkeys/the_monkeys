@@ -70,7 +70,11 @@ export type IconName =
   | 'RiEye'
   | 'RiEyeClose'
   | 'RiSendPlane'
-  | 'RiRestartLine';
+  | 'RiRestartLine'
+  | 'RiLightbulbLine'
+  | 'RiMessage3Line'
+  | 'RiBugLine'
+  | 'RiMessageLine';
 
 export type IconProps = {
   name: IconName;

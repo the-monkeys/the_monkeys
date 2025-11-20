@@ -36,9 +36,9 @@ const ContactPage = () => {
   const [formErrors, setFormErrors] = useState<FormErrorState>({});
 
   const [formData, setFormData] = useState<ContactFormInputs>(() => ({
-    'first-name': data?.first_name ?? '',
-    'last-name': data?.last_name ?? '',
-    email: data?.email ?? '',
+    'first-name': '',
+    'last-name': '',
+    email: '',
     'company-size': '',
     'company-name': '',
     subject: '',
@@ -73,6 +73,18 @@ const ContactPage = () => {
     }, 200);
   }, []);
 
+  // Fill up user data when user is logged in
+  useEffect(() => {
+    if (data) {
+      setFormData((prev) => ({
+        ...prev,
+        'first-name': data?.first_name ?? '',
+        'last-name': data?.last_name ?? '',
+        email: data.email ?? '',
+      }));
+    }
+  }, [data]);
+
   useEffect(() => {
     refreshCaptcha();
 
@@ -90,16 +102,14 @@ const ContactPage = () => {
     });
   };
 
-  const captchaError = formErrors['captcha-field-value'];
-
   return (
     <Container className='max-w-5xl w-full min-h-screen flex flex-col md:flex-row md:justify-between justify-center items-start pt-32 pb-16 gap-10 overflow-hidden'>
       <StaticText />
 
       <form
-        className='w-full sm:w-1/2 relative flex flex-col gap-6 p-6'
+        className='w-full sm:w-1/2 relative flex flex-col gap-6 p-6 align-top'
         onSubmit={(e) => {
-          handleFormSubmit(e, refreshCaptcha, setFormErrors);
+          handleFormSubmit(e, refreshCaptcha, setFormErrors, setFormData, data);
         }}
       >
         <div className='w-full flex flex-col sm:flex-row gap-4'>
@@ -187,7 +197,7 @@ const ContactPage = () => {
           >
             <option
               className='bg-foreground-light dark:bg-foreground-dark'
-              value=''
+              value='Please select'
               disabled
               selected
             >
@@ -253,7 +263,7 @@ const ContactPage = () => {
           </div>
 
           <InputField
-            className={`w-full flex-shrink self-end ${captchaError ? 'text-red-500 font-semibold' : ''}`}
+            className='w-full flex-shrink self-end'
             name='captcha-field-value'
             type='text'
             required

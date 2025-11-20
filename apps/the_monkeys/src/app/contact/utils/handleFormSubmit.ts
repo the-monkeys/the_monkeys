@@ -1,6 +1,7 @@
 import { Dispatch, FormEvent, SetStateAction } from 'react';
 
 import { ContactFormInputs, contactFormSchema } from '@/lib/schema/contact';
+import { toast } from '@the-monkeys/ui/hooks/use-toast.js';
 import { ZodError } from 'zod';
 
 type FormErrorState = Partial<Record<keyof ContactFormInputs, string>>;
@@ -8,7 +9,9 @@ type FormErrorState = Partial<Record<keyof ContactFormInputs, string>>;
 const handleFormSubmit = async (
   e: FormEvent<HTMLFormElement>,
   refreshCaptcha: () => void,
-  setFormErrors: Dispatch<SetStateAction<FormErrorState>>
+  setFormErrors: Dispatch<SetStateAction<FormErrorState>>,
+  setFormData: Dispatch<SetStateAction<ContactFormInputs>>,
+  userData?: { first_name?: string; last_name?: string; email?: string }
 ) => {
   e.preventDefault();
   setFormErrors({});
@@ -30,14 +33,41 @@ const handleFormSubmit = async (
       setFormErrors({
         'captcha-field-value': 'Incorrect answer',
       });
+      toast({
+        variant: 'destructive',
+        title: 'Captcha verification failed.',
+        description: 'Please try again.',
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        'captcha-field-value': '',
+      }));
+
       refreshCaptcha();
       return;
     }
 
-    console.log('✅ Captcha Succeeded. Ready to submit to API:', validData);
     // TODO: API call to backend to send form data
 
-    alert('Message sent successfully!');
+    toast({
+      variant: 'success',
+      title: 'Message sent successfully.',
+      description: "We'll get back to you soon.",
+    });
+
+    setFormData({
+      'first-name': userData?.first_name ?? '',
+      'last-name': userData?.last_name ?? '',
+      email: userData?.email ?? '',
+      'company-size': '',
+      'company-name': '',
+      subject: '',
+      message: '',
+      'captcha-field-value': '',
+      'captcha-field': '',
+    });
+
     refreshCaptcha();
     e.currentTarget.reset();
   } catch (error) {
@@ -52,7 +82,11 @@ const handleFormSubmit = async (
       refreshCaptcha();
     } else {
       console.error('Submission failed:', error);
-      alert('An unexpected error occurred during form submission.');
+      toast({
+        variant: 'destructive',
+        title: 'An unexpected error occurred.',
+        description: 'Please try again later.',
+      });
       refreshCaptcha();
     }
   }
