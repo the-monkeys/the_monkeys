@@ -1,6 +1,6 @@
 services:
   app:
-    image: f2bc89de9833
+    image: docker pull ghcr.io/the-monkeys/the_monkeys:latest
     ports:
       - "3000:3000"
     env_file: .env.production
