@@ -1,18 +1,14 @@
 import { z } from 'zod';
 
 export const contactFormSchema = z.object({
-  'first-name': z.string().min(1, 'First name is required'),
-  'last-name': z.string().min(1, 'Last name is required'),
-  'company-name': z.string().optional(),
-  message: z.string().optional(),
-
+  first_name: z.string().min(1, 'First name is required'),
+  last_name: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
-
-  'company-size': z.string().optional(),
+  company_size: z.string().optional(),
+  company_name: z.string().optional(),
   subject: z.string().min(1, 'Please select a subject'),
-
-  'captcha-field': z.string(),
-  'captcha-field-value': z.string().min(1, 'Captcha answer is required'),
+  message: z.string().optional(),
+  captcha_answer: z.string().min(1, 'Please answer the captcha'),
 });
 
-export type ContactFormInputs = z.infer<typeof contactFormSchema>;
+export type contactFormSchema = z.infer<typeof contactFormSchema>;
