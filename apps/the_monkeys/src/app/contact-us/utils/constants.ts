@@ -6,9 +6,3 @@ export const SUBJECTS = [
   'Technical Support/ Bug Report',
   'Account Related Help',
 ];
-
-export const generateCaptcha = () => {
-  const a = Math.floor(Math.random() * 90) + 10;
-  const b = Math.floor(Math.random() * 10) + 1;
-  return { a, b, answer: a + b };
-};

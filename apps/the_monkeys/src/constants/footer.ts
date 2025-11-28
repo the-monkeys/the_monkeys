@@ -67,10 +67,6 @@ export const footerLinksList = [
         text: 'Advertise with Us',
         link: '#',
       },
-      {
-        text: 'Feedback',
-        link: '#',
-      },
     ],
   },
   {

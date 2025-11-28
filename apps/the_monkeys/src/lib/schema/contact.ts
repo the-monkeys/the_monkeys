@@ -8,7 +8,6 @@ export const contactFormSchema = z.object({
   company_name: z.string().optional(),
   subject: z.string().min(1, 'Please select a subject'),
   message: z.string().optional(),
-  captcha_answer: z.string().min(1, 'Please answer the captcha'),
 });
 
 export type contactFormSchema = z.infer<typeof contactFormSchema>;
