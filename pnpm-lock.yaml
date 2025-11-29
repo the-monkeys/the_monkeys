@@ -43,8 +43,8 @@ importers:
         specifier: 2.9.0
         version: 2.9.0
       '@editorjs/list':
-        specifier: 1.10.0
-        version: 1.10.0
+        specifier: 2.0.9
+        version: 2.0.9
       '@editorjs/paragraph':
         specifier: 2.11.4
         version: 2.11.4
@@ -579,8 +579,8 @@ packages:
   '@editorjs/image@2.9.0':
     resolution: {integrity: sha512-xItihKJFiWJ06SMtLWQZvzHv4LRPNAFZYaHAXesBFzXvWwUrtVaVMcNSf0eNnw3InrPO3Po1vZRRgpsT+Ya3Bg==}
 
-  '@editorjs/list@1.10.0':
-    resolution: {integrity: sha512-zXCHaNcIscpefnteBOS3x+98f/qBgEVsv+OvtKoTDZipMNqck2uVG+X2qMQr8xcwtJrj9ySX54lUac9FDlAHnA==}
+  '@editorjs/list@2.0.9':
+    resolution: {integrity: sha512-rUTgDSt5wygD3Dp24bNyp6vvye/Xf4UWju0ZuvWeP13Z4cu2z1Jb5JFSTEhCou72XUGuf4xVhtsd8cm/bwUS1g==}
 
   '@editorjs/paragraph@2.11.4':
     resolution: {integrity: sha512-OuTINHoHrJwKxlpTm6FtiXazwagALJbP49hfbQWBOLTNiBICncqPe1hdGfgDpeEgH9ZEGZsJelhEDxw2iwcmPA==}
@@ -5195,9 +5195,9 @@ snapshots:
     dependencies:
       '@codexteam/icons': 0.0.6
 
-  '@editorjs/list@1.10.0':
+  '@editorjs/list@2.0.9':
     dependencies:
-      '@codexteam/icons': 0.0.4
+      '@codexteam/icons': 0.3.3
 
   '@editorjs/paragraph@2.11.4':
     dependencies:

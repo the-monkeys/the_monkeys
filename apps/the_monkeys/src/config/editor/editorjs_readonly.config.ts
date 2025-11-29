@@ -5,7 +5,7 @@ import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
-import List from '@editorjs/list';
+import EditorjsList from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
@@ -27,9 +27,10 @@ export const editorConfig: EditorConfig = {
       },
     },
     list: {
-      class: List,
+      class: EditorjsList,
       config: {
         defaultStyle: 'unordered',
+        maxLevel: 3,
       },
     },
     image: {
