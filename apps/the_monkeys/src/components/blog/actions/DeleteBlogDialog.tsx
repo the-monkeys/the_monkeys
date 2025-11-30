@@ -33,21 +33,51 @@ export const DeleteBlogDialog = ({
   const username = session?.username;
 
   async function deleteBlogById(blogId?: string) {
+    if (!blogId) return;
+
     setLoading(true);
 
     try {
       const response = await axiosInstance.delete(`/blog/${blogId}`);
 
       if (response.status === 200) {
+        {
+          isDraft
+            ? mutate(`/blog/in-my-draft`, undefined, { revalidate: true })
+            : mutate(`blog/all/${username}`);
+        }
+
+        // Optimistically updating the cached data
+        /*if(isDraft) {
+          await mutate(
+            (key) => {
+              return typeof key === 'string' && key.startsWith('/blog/in-my-draft');
+            },
+            async (currentData: any) => {
+              if (!currentData || !currentData?.blogs) return currentData;
+
+              // Filter out the deleted blog
+              const updatedBlogs = currentData.blogs.filter(
+                (blog: any) => blog.blog_id !== blogId
+              );
+
+              return {
+                ...currentData,
+                blogs: updatedBlogs,
+                total_blogs: currentData.total_blogs ? currentData.total_blogs - 1 : 0,
+              };
+            },
+            { revalidate: false }
+          );
+        }else {
+          mutate(`blog/all/${username}`);
+        }*/
+
         toast({
           variant: 'success',
           title: 'Success',
           description: 'Deleted successfully',
         });
-
-        {
-          isDraft ? mutate(`/blog/my-drafts`) : mutate(`blog/all/${username}`);
-        }
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
