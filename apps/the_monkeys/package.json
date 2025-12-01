@@ -20,6 +20,8 @@
     "@editorjs/paragraph": "2.11.4",
     "@editorjs/quote": "2.7.2",
     "@editorjs/table": "^2.4.5",
+    "@growthbook/growthbook": "^1.6.2",
+    "@growthbook/growthbook-react": "^1.6.2",
     "@hookform/resolvers": "^3.3.4",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",

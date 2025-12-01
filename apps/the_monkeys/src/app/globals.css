@@ -755,3 +755,10 @@ li.cdx-list__item {
   box-shadow: none !important;
   padding-top: 0px !important;
 }
+
+/** Hyperlink style */
+.ce-paragraph a,
+.ce-block a {
+  color: #ff5542;
+  font-weight: 500;
+}

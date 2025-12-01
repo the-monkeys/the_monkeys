@@ -38,11 +38,20 @@ export const FeedBlogCard = ({
     <div className='pb-4 border-b-1 border-border-light/60 dark:border-border-dark/60'>
       <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
         <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[210px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
-          {isNonValidBannerImage(imageContent) ? (
-            <BlogPlaceholderImage title={titleContent} />
-          ) : (
-            <BlogImage title={titleContent} image={imageContent} />
-          )}
+          <Link href={blogURL} className='group'>
+            {isNonValidBannerImage(imageContent) ? (
+              <BlogPlaceholderImage
+                title={titleContent}
+                className='group-hover:scale-105 transition-transform duration-200'
+              />
+            ) : (
+              <BlogImage
+                title={titleContent}
+                image={imageContent}
+                className='group-hover:scale-105 transition-transform duration-200'
+              />
+            )}
+          </Link>
         </div>
 
         <div className='w-full flex flex-col justify-between gap-[10px]'>

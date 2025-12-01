@@ -100,11 +100,20 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
     <div className='pb-4 h-full border-b-1 sm:border-b-0 border-border-light/60 dark:border-border-dark/60'>
       <article className='h-full w-full flex flex-col gap-3'>
         <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit max-h-[300px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
-          {isNonValidBannerImage(imageContent) ? (
-            <BlogPlaceholderImage title={titleContent} />
-          ) : (
-            <BlogImage title={titleContent} image={imageContent} />
-          )}
+          <Link href={blogURL} className='group'>
+            {isNonValidBannerImage(imageContent) ? (
+              <BlogPlaceholderImage
+                title={titleContent}
+                className='group-hover:scale-105 transition-transform duration-200'
+              />
+            ) : (
+              <BlogImage
+                title={titleContent}
+                image={imageContent}
+                className='group-hover:scale-105 transition-transform duration-200'
+              />
+            )}
+          </Link>
         </div>
 
         <div className='h-full w-full flex flex-col justify-between gap-[10px]'>
