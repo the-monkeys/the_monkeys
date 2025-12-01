@@ -5,7 +5,7 @@ export function createGrowthbook(attributes?: Record<string, any>) {
     apiHost: process.env.NEXT_PUBLIC_GROWTHBOOK_API_HOST!,
     clientKey: process.env.NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY!,
     attributes: {
-      environment: process.env.NEXT_PUBLIC_ENVIRONMENT || 'production',
+      environment: process.env.NEXT_PUBLIC_GROWTHBOOK_ENV || 'production',
       ...attributes,
     },
   });
