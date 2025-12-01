@@ -1,4 +1,5 @@
 import clientInfo from '@/utils/clientInfo';
+import { getAllRequestHeaders } from '@/utils/requestHeaders';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
@@ -9,24 +10,23 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config) => {
     try {
-      // Use the safe method that handles initialization
-      const info = await clientInfo.getInfoSafe();
+      const analyticsHeaders = await getAllRequestHeaders();
 
-      if (config.headers) {
-        config.headers['Ip'] = info.ip;
-        config.headers['Client'] = info.browser;
-        config.headers['OS'] = info.os;
-        config.headers['Device'] = info.device;
+      if (config.headers && typeof config.headers.set === 'function') {
+        for (const [key, value] of Object.entries(analyticsHeaders)) {
+          config.headers.set(key, value);
+        }
       }
 
       config.withCredentials = true;
     } catch (error) {
-      console.warn('Failed to add client info to request:', error);
-      if (config.headers) {
-        config.headers['Ip'] = 'unknown';
-        config.headers['Client'] = 'unknown';
-        config.headers['OS'] = 'unknown';
-        config.headers['Device'] = 'unknown';
+      console.warn('Failed to add analytics headers:', error);
+
+      if (config.headers && typeof config.headers.set === 'function') {
+        config.headers.set('X-IP', 'unknown');
+        config.headers.set('X-Client', 'unknown');
+        config.headers.set('X-OS', 'unknown');
+        config.headers.set('X-Device', 'unknown');
       }
     }
 

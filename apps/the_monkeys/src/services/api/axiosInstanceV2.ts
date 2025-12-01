@@ -1,4 +1,5 @@
 import clientInfo from '@/utils/clientInfo';
+import { getAllRequestHeaders } from '@/utils/requestHeaders';
 import axios from 'axios';
 
 const axiosInstanceV2 = axios.create({
@@ -9,18 +10,23 @@ const axiosInstanceV2 = axios.create({
 axiosInstanceV2.interceptors.request.use(
   async (config) => {
     try {
-      const info = await clientInfo.getInfoSafe();
+      const analyticsHeaders = await getAllRequestHeaders();
 
-      if (config.headers) {
-        config.headers['Ip'] = info.ip;
+      if (config.headers && typeof config.headers.set === 'function') {
+        for (const [key, value] of Object.entries(analyticsHeaders)) {
+          config.headers.set(key, value);
+        }
       }
 
       config.withCredentials = true;
     } catch (error) {
-      console.warn('Failed to add client info to request:', error);
+      console.warn('Failed to add analytics headers:', error);
 
-      if (config.headers) {
-        config.headers['Ip'] = 'unknown';
+      if (config.headers && typeof config.headers.set === 'function') {
+        config.headers.set('X-IP', 'unknown');
+        config.headers.set('X-Client', 'unknown');
+        config.headers.set('X-OS', 'unknown');
+        config.headers.set('X-Device', 'unknown');
       }
     }
 
