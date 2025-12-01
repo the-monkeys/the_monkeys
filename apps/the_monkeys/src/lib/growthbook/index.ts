@@ -1,19 +1,12 @@
-import { GrowthBook } from '@growthbook/growthbook';
+import { GrowthBook } from '@growthbook/growthbook-react';
 
-export async function getGrowthbook() {
-  const growthbook = new GrowthBook({
-    apiHost: process.env.NEXT_PUBLIC_GROWTHBOOK_API_HOST,
-    clientKey: process.env.NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY,
+export function createGrowthbook(attributes?: Record<string, any>) {
+  return new GrowthBook({
+    apiHost: process.env.NEXT_PUBLIC_GROWTHBOOK_API_HOST!,
+    clientKey: process.env.NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY!,
+    attributes: {
+      environment: process.env.NEXT_PUBLIC_ENVIRONMENT || 'production',
+      ...attributes,
+    },
   });
-
-  await growthbook.init({
-    //enable streaming updates
-    streaming: true,
-  });
-
-  return growthbook;
-}
-
-export function destroyGrowthbook(growthbook: GrowthBook) {
-  growthbook.destroy();
 }
