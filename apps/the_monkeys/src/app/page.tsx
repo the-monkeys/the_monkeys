@@ -31,6 +31,8 @@ const LandingPage = () => {
 
   const devTest = useFeatureIsOn('gb-test');
 
+  console.log(devTest);
+
   if (isLoading) {
     return <FeedSkeleton />;
   }
@@ -67,12 +69,12 @@ const LandingPage = () => {
         Lifestyle, Philosophy, and More
       </h1>
 
-      {/* Critical section loads first */}
+      {/* Load Trending section first */}
       <Suspense fallback={<FeedSkeleton />}>
         <TrendingSection blogs={filteredBlogs} />
       </Suspense>
 
-      {/* Secondary sections load in parallel */}
+      {/* Load Category section in parallel */}
       <div className='space-y-8'>
         {orderedCategories.map(({ title, category }, index) => (
           <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
@@ -81,7 +83,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      {/* home page ad unit */}
+      {/* Ad Unit -> Home Page */}
       <AdUnit slot='3779794725' />
 
       <Container className='mt-8 grid grid-cols-2 gap-8'>
