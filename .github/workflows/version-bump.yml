@@ -1,0 +1,27 @@
+name: Auto Version Bump
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    types:
+      - labeled
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Bump version on PR merge with labels
+        uses: haya14busa/action-bumpr@v1
+        with:
+          github_token: ${{ github.token }}
+          default_bump_level: patch
+          tag_as_user: "GitHub Action"
+          tag_as_email: "action@github.com"
