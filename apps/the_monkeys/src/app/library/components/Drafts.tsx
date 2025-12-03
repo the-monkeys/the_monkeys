@@ -54,6 +54,7 @@ export const Drafts = ({ user }: { user?: IUser }) => {
                   modificationEnable={true}
                   isDraft={true}
                   key={blog?.blog_id}
+                  page={page}
                 />
               );
             })}

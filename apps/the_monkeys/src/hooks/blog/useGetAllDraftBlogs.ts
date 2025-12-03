@@ -16,6 +16,7 @@ const useGetAllDraftBlogs = ({
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      keepPreviousData: true,
     }
   );
 
