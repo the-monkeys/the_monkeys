@@ -68,7 +68,11 @@ export type IconName =
   | 'RiErrorWarning'
   | 'RiVerifiedBadge'
   | 'RiEye'
-  | 'RiEyeClose';
+  | 'RiEyeClose'
+  | 'RiLightbulb'
+  | 'RiMessage3'
+  | 'RiMessage'
+  | 'RiBug';
 
 export type IconProps = {
   name: IconName;
