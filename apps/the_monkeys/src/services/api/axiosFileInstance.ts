@@ -1,4 +1,5 @@
 import clientInfo from '@/utils/clientInfo';
+import { getAllRequestHeaders } from '@/utils/requestHeaders';
 import axios, { AxiosResponse } from 'axios';
 
 const axiosFileInstance = axios.create({
@@ -11,16 +12,26 @@ const axiosFileInstance = axios.create({
 
 axiosFileInstance.interceptors.request.use(
   async (config) => {
-    const info = clientInfo.getInfo();
+    try {
+      const analyticsHeaders = await getAllRequestHeaders();
 
-    if (config.headers) {
-      config.headers['Ip'] = info.ip;
-      config.headers['Client'] = info.browser;
-      config.headers['OS'] = info.os;
-      config.headers['Device'] = info.device;
+      if (config.headers && typeof config.headers.set === 'function') {
+        for (const [key, value] of Object.entries(analyticsHeaders)) {
+          config.headers.set(key, value);
+        }
+      }
+
+      config.withCredentials = true;
+    } catch (error) {
+      console.warn('Failed to add analytics headers:', error);
+
+      if (config.headers && typeof config.headers.set === 'function') {
+        config.headers.set('X-IP', 'unknown');
+        config.headers.set('X-Client', 'unknown');
+        config.headers.set('X-OS', 'unknown');
+        config.headers.set('X-Device', 'unknown');
+      }
     }
-
-    config.withCredentials = true;
 
     return config;
   },
