@@ -9,6 +9,8 @@ const useGetDraftBlogDetail = (blogId: string | null) => {
     enabled: !!blogId,
     refetchOnMount: true,
     refetchOnReconnect: true,
+    staleTime: 0,
+    gcTime: 0,
   });
 
   return {
