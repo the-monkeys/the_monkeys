@@ -1,15 +1,17 @@
 import { Blog } from '@/services/blog/blogTypes';
 import { authFetcherV2 } from '@/services/fetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 
 const useGetDraftBlogDetail = (blogId: string | null) => {
-  const { data, error, isLoading } = useSWR<Blog>(
-    blogId ? `/blog/my-draft/${blogId}` : null,
-    authFetcherV2,
-    {
-      revalidateIfStale: false,
-    }
-  );
+  const { data, error, isLoading } = useQuery<Blog>({
+    queryKey: ['draft-blog', blogId],
+    queryFn: () => authFetcherV2(`/blog/my-draft/${blogId}`),
+    enabled: !!blogId,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    staleTime: 0,
+    gcTime: 0,
+  });
 
   return {
     blog: data,
