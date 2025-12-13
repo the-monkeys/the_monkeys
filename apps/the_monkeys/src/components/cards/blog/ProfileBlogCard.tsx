@@ -24,11 +24,13 @@ export const ProfileBlogCard = ({
   isAuthenticated,
   modificationEnable = false,
   isDraft = false,
+  page,
 }: {
   blog: MetaBlog;
   isAuthenticated: boolean;
   modificationEnable: boolean;
   isDraft?: boolean;
+  page?: number;
 }) => {
   const router = useRouter();
 
@@ -145,7 +147,11 @@ export const ProfileBlogCard = ({
               )}
 
               {showModificationOptions && (
-                <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
+                <DeleteBlogDialog
+                  blogId={blogId}
+                  isDraft={isDraft}
+                  page={page ?? 0}
+                />
               )}
             </div>
           </div>
