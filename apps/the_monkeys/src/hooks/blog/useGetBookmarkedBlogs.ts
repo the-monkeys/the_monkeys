@@ -15,6 +15,7 @@ const useGetBookmarkedBlogs = ({
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      keepPreviousData: true,
     }
   );
 

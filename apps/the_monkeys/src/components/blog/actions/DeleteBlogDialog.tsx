@@ -7,6 +7,7 @@ import { Loader } from '@/components/loader';
 import { PROFILE_DRAFTS_PER_PAGE } from '@/constants/posts';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
+import { updateSwrCache as updateDraftCache } from '@/utils/swrCacheValidation';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -44,46 +45,6 @@ export const DeleteBlogDialog = ({
 
     setLoading(true);
 
-    /*
-    try {
-      const response = await axiosInstance.delete(`/blog/${blogId}`);
-
-      if (response.status === 200) {
-        {
-          isDraft
-            ? await mutate(
-              `/blog/in-my-draft?limit=${PROFILE_DRAFTS_PER_PAGE}&offset=${offset}`,
-              undefined,
-              { revalidate: true }
-            ) : await mutate(`blog/all/${username}`);
-        }
-
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Deleted successfully',
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to delete blog.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setOpen(false);
-      setLoading(false);
-    }
-    */
-
     const cacheKey = isDraft
       ? `/blog/in-my-draft?limit=${PROFILE_DRAFTS_PER_PAGE}&offset=${offset}`
       : `blog/all/${username}`;
@@ -99,45 +60,24 @@ export const DeleteBlogDialog = ({
             throw new Error('Failed to delete blog');
           }
 
-          // Return the updated data
-          if (!currentData || !currentData?.blogs) return currentData;
+          toast({
+            variant: 'success',
+            title: 'Success',
+            description: 'Deleted successfully',
+          });
 
-          const updatedBlogs = currentData.blogs.filter(
-            (blog: any) => blog.blog_id !== blogId
-          );
-
-          return {
-            ...currentData,
-            blogs: updatedBlogs,
-            total_blogs: Math.max((currentData.total_blogs || 0) - 1, 0),
-          };
+          return updateDraftCache(currentData, blogId);
         },
         {
           optimisticData: (currentData: any) => {
-            // Immediately show the updated UI
-            if (!currentData || !currentData?.blogs) return currentData;
-
-            const updatedBlogs = currentData.blogs.filter(
-              (blog: any) => blog.blog_id !== blogId
-            );
-
-            return {
-              ...currentData,
-              blogs: updatedBlogs,
-              total_blogs: Math.max((currentData.total_blogs || 0) - 1, 0),
-            };
+            // Render the updated UI instantly
+            return updateDraftCache(currentData, blogId);
           },
           rollbackOnError: true,
           populateCache: true,
           revalidate: false,
         }
       );
-
-      toast({
-        variant: 'success',
-        title: 'Success',
-        description: 'Deleted successfully',
-      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

@@ -19,9 +19,11 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 export const FeedBlogCard = ({
   blog,
   showBookmarkOption = false,
+  page,
 }: {
   blog: MetaBlog;
   showBookmarkOption?: boolean;
+  page?: number;
 }) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
@@ -95,7 +97,7 @@ export const FeedBlogCard = ({
             </div>
 
             {showBookmarkOption && (
-              <BookmarkButton blogId={blog?.blog_id} size={16} />
+              <BookmarkButton blogId={blog?.blog_id} size={16} page={page} />
             )}
           </div>
         </div>

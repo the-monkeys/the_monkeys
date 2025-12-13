@@ -41,7 +41,7 @@ export const Bookmarks = () => {
     );
   }
 
-  if (isError)
+  if (isError) {
     return (
       <div className='min-h-[800px]'>
         <p className='w-full opacity-90 text-center'>
@@ -49,6 +49,7 @@ export const Bookmarks = () => {
         </p>
       </div>
     );
+  }
 
   return (
     <div className='flex flex-col gap-4'>
@@ -67,6 +68,7 @@ export const Bookmarks = () => {
                   blog={blog}
                   key={blog?.blog_id}
                   showBookmarkOption={true}
+                  page={page}
                 />
               );
             })}

@@ -3,8 +3,10 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
+import { BOOKMARKS_PER_PAGE } from '@/constants/posts';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
 import axiosInstance from '@/services/api/axiosInstance';
+import { updateSwrCache as updateBookmarkCache } from '@/utils/swrCacheValidation';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { mutate } from 'swr';
 
@@ -12,14 +14,17 @@ export const BookmarkButton = ({
   blogId,
   size = 18,
   isDisable = false,
+  page = 0,
 }: {
   blogId?: string;
   size?: number;
   isDisable?: boolean;
+  page?: number;
 }) => {
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(blogId);
-
   const [loading, setLoading] = useState<boolean>(false);
+
+  const offset = page * BOOKMARKS_PER_PAGE;
 
   if (isLoading) {
     return (
@@ -89,22 +94,37 @@ export const BookmarkButton = ({
     const previousBookmarkStatus = bookmarkStatus;
 
     mutate(`/user/is-bookmarked/${blogId}`, { bookMarked: false }, false);
+    const cacheKey = `blog/in-my-bookmark?limit=${BOOKMARKS_PER_PAGE}&offset=${offset}`;
 
     try {
-      const response = await axiosInstance.post(
-        `/user/remove-bookmark/${blogId}`
+      await mutate(
+        cacheKey,
+        async (currentData: any) => {
+          const response = await axiosInstance.post(
+            `/user/remove-bookmark/${blogId}`
+          );
+
+          if (response.status !== 200) {
+            throw new Error('Failed to remove bookmarked post.');
+          }
+
+          toast({
+            variant: 'success',
+            title: 'Success',
+            description: 'Removed bookmark successfully.',
+          });
+
+          return updateBookmarkCache(currentData, blogId ?? '');
+        },
+        {
+          optimisticData: (currentData: any) => {
+            return updateBookmarkCache(currentData, blogId ?? '');
+          },
+          rollbackOnError: true,
+          populateCache: true,
+          revalidate: false,
+        }
       );
-
-      if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Removed bookmark successfully.',
-        });
-
-        mutate(`/user/is-bookmarked/${blogId}`);
-        mutate(`/user/count-bookmarks/${blogId}`);
-      }
     } catch (err: unknown) {
       mutate(
         `/user/is-bookmarked/${blogId}`,
