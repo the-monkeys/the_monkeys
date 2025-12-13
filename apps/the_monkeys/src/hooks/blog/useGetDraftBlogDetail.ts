@@ -8,6 +8,7 @@ const useGetDraftBlogDetail = (blogId: string | null) => {
     authFetcherV2,
     {
       revalidateIfStale: false,
+      revalidateOnMount: true,
     }
   );
 
