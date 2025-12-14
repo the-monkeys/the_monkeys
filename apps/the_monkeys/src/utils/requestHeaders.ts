@@ -1,4 +1,5 @@
 import clientInfo from './clientInfo';
+import sessionManager from './sessionManager';
 
 export async function getAllRequestHeaders() {
   const info = await clientInfo.getInfoSafe();
@@ -24,5 +25,9 @@ export async function getAllRequestHeaders() {
     'X-Screen-Resolution': `${window.screen.width}x${window.screen.height}`,
     'X-Color-Depth': `${window.screen.colorDepth}`,
     'X-Is-Secure-Context': String(window.isSecureContext),
+
+    // Session tracking
+    'X-Session-ID': sessionManager.getSessionId(),
+    'X-Visitor-ID': sessionManager.getVisitorId(),
   };
 }
