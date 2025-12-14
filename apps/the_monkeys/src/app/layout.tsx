@@ -11,7 +11,6 @@ import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 import './globals.css';
 import GrowthbookClientProvider from './growthbook-provider';
 import { QueryClientMount } from './query-client-mount';
-import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 
 const inter = Inter({
@@ -148,17 +147,15 @@ const RootLayout = async ({
       >
         <Toaster />
         <GrowthbookClientProvider>
-          <SWRProvider>
-            <QueryClientMount>
-              <ThemeProviders>
-                <TooltipProvider>
-                  <Navbar />
-                  <main>{children}</main>
-                  <Footer />
-                </TooltipProvider>
-              </ThemeProviders>
-            </QueryClientMount>
-          </SWRProvider>
+          <QueryClientMount>
+            <ThemeProviders>
+              <TooltipProvider>
+                <Navbar />
+                <main>{children}</main>
+                <Footer />
+              </TooltipProvider>
+            </ThemeProviders>
+          </QueryClientMount>
         </GrowthbookClientProvider>
 
         {/* Microsoft Clarity */}

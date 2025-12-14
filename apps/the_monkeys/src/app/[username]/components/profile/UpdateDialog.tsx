@@ -8,9 +8,11 @@ import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
+import { USER_QUERY_KEY } from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -30,7 +32,6 @@ import {
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
-import { mutate } from 'swr';
 import { z } from 'zod';
 
 const updateProfileSchema = z.object({
@@ -41,6 +42,7 @@ const updateProfileSchema = z.object({
 });
 
 export const UpdateDialog = ({ data }: { data: IUser }) => {
+  const queryClient = useQueryClient();
   const {
     data: user,
     isLoading,
@@ -87,11 +89,8 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
 
       setOpen(false);
 
-      mutate(`/user/public/${data.username}`, `${data.username}`, {
-        revalidate: true,
-      });
-      mutate(`/user/${data.username}`, `${data.username}`, {
-        revalidate: true,
+      queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY, data.username],
       });
     } catch (err) {
       toast({

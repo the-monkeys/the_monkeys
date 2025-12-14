@@ -3,20 +3,19 @@
 import { useEffect, useState } from 'react';
 
 import fetcher from '@/services/fileFetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
+
+export const PROFILE_IMAGE_QUERY_KEY = 'profile-image';
 
 const useProfileImage = (username: string | undefined) => {
   const [imageUrl, setImageUrl] = useState<string>('');
 
-  const { data, error, isLoading } = useSWR<Blob>(
-    username ? `/files/profile/${username}/profile` : null,
-    fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      refreshInterval: 0,
-    }
-  );
+  const { data, error, isLoading, isError } = useQuery<Blob, Error>({
+    queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+    queryFn: () => fetcher(`/files/profile/${username}/profile`),
+    enabled: !!username,
+    staleTime: 5 * 60 * 1000,
+  });
 
   useEffect(() => {
     if (!data) return;
@@ -30,7 +29,7 @@ const useProfileImage = (username: string | undefined) => {
   return {
     imageUrl,
     isLoading,
-    isError: error,
+    isError: isError || !!error,
   };
 };
 

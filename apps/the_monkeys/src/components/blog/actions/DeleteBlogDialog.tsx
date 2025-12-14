@@ -5,7 +5,10 @@ import React from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
+import { ALL_DRAFT_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetAllDraftBlogs';
+import { BLOGS_BY_USERNAME_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogByUsername';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -15,7 +18,6 @@ import {
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 export const DeleteBlogDialog = ({
   blogId,
@@ -26,6 +28,7 @@ export const DeleteBlogDialog = ({
   isDraft?: boolean;
   size?: number;
 }) => {
+  const queryClient = useQueryClient();
   const { data: session } = useAuth();
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
@@ -45,8 +48,14 @@ export const DeleteBlogDialog = ({
           description: 'Deleted successfully',
         });
 
-        {
-          isDraft ? mutate(`/blog/my-drafts`) : mutate(`blog/all/${username}`);
+        if (isDraft) {
+          queryClient.invalidateQueries({
+            queryKey: [ALL_DRAFT_BLOGS_QUERY_KEY],
+          });
+        } else {
+          queryClient.invalidateQueries({
+            queryKey: [BLOGS_BY_USERNAME_QUERY_KEY, username],
+          });
         }
       }
     } catch (err: unknown) {

@@ -1,11 +1,13 @@
 import React from 'react';
 
 import Icon from '@/components/icon';
+import { ALL_TOPICS_QUERY_KEY } from '@/hooks/user/useGetAllTopics';
+import { USER_QUERY_KEY } from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 interface TopicButtonProps {
   topic: string;
@@ -22,6 +24,7 @@ export const TopicButton = ({
   onSuccess,
   user,
 }: TopicButtonProps) => {
+  const queryClient = useQueryClient();
   if (!user) return null;
 
   const handleCategoryClick = async () => {
@@ -42,8 +45,10 @@ export const TopicButton = ({
 
       onSuccess();
 
-      mutate('/user/topics');
-      mutate(`/user/public/${username}`);
+      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY, username],
+      });
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -63,8 +68,10 @@ export const TopicButton = ({
 
       onSuccess();
 
-      mutate('/user/topics');
-      mutate(`/user/public/${username}`);
+      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY, username],
+      });
     } catch (error: any) {
       toast({
         title: 'Error',

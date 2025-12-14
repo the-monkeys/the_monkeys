@@ -4,17 +4,20 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import useAuth from '@/hooks/auth/useAuth';
-import useUser from '@/hooks/user/useUser';
+import { ALL_TOPICS_QUERY_KEY } from '@/hooks/user/useGetAllTopics';
+import { PROFILE_TOPICS_QUERY_KEY } from '@/hooks/user/useGetProfileTopics';
+import useUser, { USER_QUERY_KEY } from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
 import { followTopicApi, unfollowTopicApi } from '@/services/user/user';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 interface TopicFollowButtonProps {
   topic: string;
 }
 const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -49,8 +52,11 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
         title: 'Topic followed',
         description: `You have successfully followed ${topic}`,
       });
-      mutate('/user/topics');
-      mutate(`/user/public/${username}`);
+      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: [PROFILE_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY, username],
+      });
     } catch (error: any) {
       toast({
         title: 'Error',
@@ -75,8 +81,11 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
         title: 'Topic Unfollowed',
         description: `You have successfully unfollowed ${topic}`,
       });
-      mutate('/user/topics');
-      mutate(`/user/public/${username}`);
+      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: [PROFILE_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY, username],
+      });
     } catch (error: any) {
       toast({
         title: 'Error',

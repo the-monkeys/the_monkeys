@@ -1,6 +1,8 @@
 import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
+
+export const BLOGS_BY_USERNAME_QUERY_KEY = 'blogs-by-username';
 
 const useGetPublishedBlogByUsername = ({
   username,
@@ -11,19 +13,19 @@ const useGetPublishedBlogByUsername = ({
   limit: number;
   offset: number;
 }) => {
-  const { data, error, isLoading } = useSWR<GetMetaFeedBlogs>(
-    `blog/user/${username}?limit=${limit}&offset=${offset}`,
-    fetcherV2,
+  const { data, error, isLoading, isError } = useQuery<GetMetaFeedBlogs, Error>(
     {
-      revalidateOnFocus: true,
-      revalidateIfStale: false,
-      refreshInterval: 0,
+      queryKey: [BLOGS_BY_USERNAME_QUERY_KEY, username, limit, offset],
+      queryFn: () =>
+        fetcherV2(`blog/user/${username}?limit=${limit}&offset=${offset}`),
+      enabled: !!username,
+      staleTime: 60 * 1000,
     }
   );
 
   return {
     blogs: data,
-    isError: error,
+    isError: isError || !!error,
     isLoading,
   };
 };

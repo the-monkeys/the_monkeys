@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
-import { Loader } from '@/components/loader';
+import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 export const RemoveBookmarkButton = ({
   blogId,
@@ -13,6 +13,7 @@ export const RemoveBookmarkButton = ({
   blogId?: string;
   size?: number;
 }) => {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
 
   const onPostRemoveBookmark = async () => {
@@ -30,7 +31,9 @@ export const RemoveBookmarkButton = ({
           description: 'Removed bookmark successfully.',
         });
 
-        mutate(`blog/my-bookmarks`);
+        queryClient.invalidateQueries({
+          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
+        });
       }
     } catch (err: unknown) {
       if (err instanceof Error) {

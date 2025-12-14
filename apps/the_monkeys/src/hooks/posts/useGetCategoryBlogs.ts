@@ -1,26 +1,25 @@
 import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
+
+export const CATEGORY_BLOGS_QUERY_KEY = 'category-blogs';
 
 const useGetCategoryBlogs = ({
   category,
   limit = 15,
 }: { category?: string; limit?: number } = {}) => {
-  const { data, error, isLoading } = useSWR<GetMetaFeedBlogs>(
-    `/posts/${category}?limit=${limit}`,
-    fetcherV2,
+  const { data, error, isLoading, isError } = useQuery<GetMetaFeedBlogs, Error>(
     {
-      errorRetryInterval: 10000,
-      errorRetryCount: 4,
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-      refreshInterval: 180000,
+      queryKey: [CATEGORY_BLOGS_QUERY_KEY, category, limit],
+      queryFn: () => fetcherV2(`/posts/${category}?limit=${limit}`),
+      enabled: !!category,
+      staleTime: 3 * 60 * 1000, // 3 minutes
     }
   );
 
   return {
     blogs: data,
-    isError: error,
+    isError: isError || !!error,
     isLoading,
   };
 };

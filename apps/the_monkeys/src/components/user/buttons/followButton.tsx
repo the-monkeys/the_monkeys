@@ -2,12 +2,16 @@ import { useState } from 'react';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { useIsFollowingUser } from '@/hooks/user/useUserConnections';
+import {
+  CONNECTION_COUNT_QUERY_KEY,
+  IS_FOLLOWING_USER_QUERY_KEY,
+  useIsFollowingUser,
+} from '@/hooks/user/useUserConnections';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 export const FollowButton = ({
@@ -17,6 +21,7 @@ export const FollowButton = ({
   username?: string;
   className?: string;
 }) => {
+  const queryClient = useQueryClient();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -32,8 +37,12 @@ export const FollowButton = ({
       const response = await axiosInstance.post(`/user/follow/${username}`);
 
       if (response.status === 200) {
-        mutate(`/user/is-followed/${username}`);
-        mutate(`/user/connection-count/${username}`);
+        queryClient.invalidateQueries({
+          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
+        });
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -61,8 +70,12 @@ export const FollowButton = ({
       const response = await axiosInstance.post(`/user/unfollow/${username}`);
 
       if (response.status === 200) {
-        mutate(`/user/is-followed/${username}`);
-        mutate(`/user/connection-count/${username}`);
+        queryClient.invalidateQueries({
+          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
+        });
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -116,6 +129,7 @@ export const FollowButtonIcon = ({
   username?: string;
   className?: string;
 }) => {
+  const queryClient = useQueryClient();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -131,8 +145,12 @@ export const FollowButtonIcon = ({
       const response = await axiosInstance.post(`/user/follow/${username}`);
 
       if (response.status === 200) {
-        mutate(`/user/is-followed/${username}`);
-        mutate(`/user/connection-count/${username}`);
+        queryClient.invalidateQueries({
+          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
+        });
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -160,8 +178,12 @@ export const FollowButtonIcon = ({
       const response = await axiosInstance.post(`/user/unfollow/${username}`);
 
       if (response.status === 200) {
-        mutate(`/user/is-followed/${username}`);
-        mutate(`/user/connection-count/${username}`);
+        queryClient.invalidateQueries({
+          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
+        });
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
