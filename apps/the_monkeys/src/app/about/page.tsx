@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import Link from 'next/link';
 
 import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
@@ -5,26 +6,97 @@ import FeaturesGrid from '@/components/branding/featuresGrid';
 import MembersGrid from '@/components/branding/membersGrid';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
+import { LIVE_URL } from '@/constants/api';
 import { CREATE_ROUTE, HOME_ROUTE } from '@/constants/routeConstants';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
+export const metadata: Metadata = {
+  title: 'About Us | Monkeys - Trusted Collaborative Blogging Community',
+  description:
+    'Monkeys is a trusted content community for writers and thinkers. Learn about our mission to foster collaborative writing, expert articles, and meaningful storytelling across science, technology, and philosophy.',
+  keywords: [
+    'about monkeys',
+    'collaborative writing platform',
+    'trusted content community',
+    'expert articles',
+    'quality blogging',
+    'social storytelling',
+    'writers community',
+    'tech and science blogs',
+  ],
+  alternates: {
+    canonical: '/about',
+  },
+  openGraph: {
+    title: {
+      absolute: 'About Us | Monkeys - Trusted Collaborative Blogging Community',
+    },
+    description:
+      'Join Monkeys, the trusted community where collaborative writing meets expert insights. Discover how we empower writers to publish meaningful content.',
+    url: `${LIVE_URL}/about`,
+    images: [
+      {
+        url: `${LIVE_URL}/opengraph-image.png`,
+        width: 1200,
+        height: 630,
+        alt: 'About Monkeys Community',
+      },
+    ],
+  },
+};
+
 const AboutPage = () => {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'AboutPage',
+    name: 'About Monkeys',
+    description:
+      'Monkeys is a trusted content community for writers and thinkers, fostering collaborative writing and expert articles.',
+    url: `${LIVE_URL}/about`,
+    mainEntity: {
+      '@type': 'Organization',
+      name: 'Monkeys',
+      url: LIVE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${LIVE_URL}/opengraph-image.png`,
+      },
+      sameAs: [
+        'https://x.com/monkeys_com_co',
+        'https://www.instagram.com/monkeys_com_co?igsh=ZnhjYWZqN3hidThj',
+      ],
+      knowsAbout: [
+        'Collaborative Blogging',
+        'Quality Content',
+        'Expert Articles',
+        'Social Storytelling',
+      ],
+    },
+  };
+
   return (
     <>
+      <script
+        type='application/ld+json'
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Container className='max-w-4xl space-y-10'>
         <div className='relative pt-16 flex flex-col items-center gap-2'>
-          <h4 className='p-2 font-dm_sans font-medium text-4xl md:text-5xl text-center animate-appear-up'>
+          <h1 className='p-2 font-dm_sans font-medium text-4xl md:text-5xl text-center animate-appear-up'>
             Inspire
             <span className='text-brand-orange'>.</span> Inform
             <span className='text-brand-orange'>.</span> Innovate
             <span className='text-brand-orange'>.</span>
-          </h4>
+          </h1>
 
           <p className='pt-3 text-base md:text-lg text-center tracking-tight'>
-            We are a platform for <span className='font-semibold'>writers</span>{' '}
-            and, <span className='font-semibold'>thinkers</span> to share
-            stories that inspire, inform, and spark innovation — make an impact
-            through meaningful storytelling.
+            Monkeys is a{' '}
+            <span className='font-semibold'>Trusted Content Community</span> for{' '}
+            <span className='font-semibold'>writers</span> and{' '}
+            <span className='font-semibold'>thinkers</span>. We are a platform
+            to share stories that inspire, inform, and spark innovation — make
+            an impact through meaningful{' '}
+            <span className='font-semibold'>collaborative storytelling</span>.
           </p>
 
           <div className='p-6 flex flex-col sm:flex-row justify-center items-center gap-4'>
@@ -65,20 +137,23 @@ const AboutPage = () => {
 
         <div className='py-10 space-y-10'>
           <div className='py-8 flex flex-col items-center gap-4'>
-            <h5 className='pb-3 font-dm_sans font-semibold text-4xl md:text-5xl text-center'>
+            <h2 className='pb-3 font-dm_sans font-semibold text-4xl md:text-5xl text-center'>
               Evolving{' '}
               <span className='font-dm_sans text-brand-orange tracking-tight'>
-                Together
+                Collaborative Blogging
               </span>
-            </h5>
+            </h2>
 
             <p className='text-base md:text-lg text-center'>
-              We&apos;re more than just a writing platform. With{' '}
-              <span className='font-semibold'>collaborative writing</span>,{' '}
-              <span className='font-semibold'>AI integration</span>,{' '}
+              We&apos;re more than just a typical writing platform. With{' '}
+              <span className='font-semibold'>collaborative writing</span>{' '}
+              tools, <span className='font-semibold'>AI integration</span> for
+              better content,{' '}
               <span className='font-semibold'>version control</span>, and{' '}
               <span className='font-semibold'>social snapshots</span>,
-              we&apos;ve set the stage for meaningful storytelling.
+              we&apos;ve built the ultimate environment for{' '}
+              <span className='font-semibold'>expert articles</span> and
+              meaningful storytelling.
             </p>
           </div>
 
