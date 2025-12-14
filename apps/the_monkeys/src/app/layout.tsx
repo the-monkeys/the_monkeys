@@ -130,8 +130,6 @@ const schema = {
   ],
 };
 
-
-
 const RootLayout = async ({
   children,
 }: Readonly<{
