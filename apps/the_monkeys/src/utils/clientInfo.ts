@@ -14,6 +14,12 @@ export interface ClientInfoData {
 
 export type DeviceType = 'mobile' | 'tablet' | 'desktop' | 'unknown';
 
+type EnvironmentInfo = {
+  viewportWidth: string;
+  viewportHeight: string;
+  darkMode: string;
+};
+
 class ClientInfo {
   private ip: string = 'unknown';
   private browser: string = 'unknown';
@@ -139,6 +145,16 @@ class ClientInfo {
   async getDeviceSafe(): Promise<DeviceType> {
     const info = await this.getInfoSafe();
     return info.device as DeviceType;
+  }
+
+  getEnvironmentInfo(): EnvironmentInfo {
+    return {
+      viewportWidth: window.innerWidth.toString(),
+      viewportHeight: window.innerHeight.toString(),
+      darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? '1'
+        : '0',
+    };
   }
 
   // Check if initialized

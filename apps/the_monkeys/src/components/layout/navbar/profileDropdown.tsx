@@ -8,6 +8,7 @@ import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
+import sessionManager from '@/utils/sessionManager';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   DropdownMenu,
@@ -23,6 +24,7 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
 
   const handleSignout = async () => {
     await axiosInstance.get('/auth/logout');
+    sessionManager.endSession();
 
     queryClient.resetQueries({ queryKey: ['auth'] });
   };
