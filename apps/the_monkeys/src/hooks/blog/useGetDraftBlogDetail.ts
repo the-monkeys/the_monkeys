@@ -9,7 +9,10 @@ const useGetDraftBlogDetail = (blogId: string | null) => {
     queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
     queryFn: () => authFetcherV2(`/blog/my-draft/${blogId}`),
     enabled: !!blogId,
-    staleTime: 60 * 1000,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    staleTime: 0,
+    gcTime: 0,
   });
 
   return {

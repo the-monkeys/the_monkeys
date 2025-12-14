@@ -8,7 +8,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import { ALL_DRAFT_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetAllDraftBlogs';
 import { BLOGS_BY_USERNAME_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogByUsername';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -33,32 +33,31 @@ export const DeleteBlogDialog = ({
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
 
+
   const username = session?.username;
 
-  async function deleteBlogById(blogId?: string) {
-    setLoading(true);
+  const deleteBlogMutation = useMutation({
+    mutationFn: (blogId?: string) => axiosInstance.delete(`/blog/${blogId}`),
+    onSuccess: () => {
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Deleted successfully',
+      });
 
-    try {
-      const response = await axiosInstance.delete(`/blog/${blogId}`);
-
-      if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Deleted successfully',
+      if (isDraft) {
+        queryClient.invalidateQueries({
+          queryKey: [ALL_DRAFT_BLOGS_QUERY_KEY],
         });
-
-        if (isDraft) {
-          queryClient.invalidateQueries({
-            queryKey: [ALL_DRAFT_BLOGS_QUERY_KEY],
-          });
-        } else {
-          queryClient.invalidateQueries({
-            queryKey: [BLOGS_BY_USERNAME_QUERY_KEY, username],
-          });
-        }
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: [BLOGS_BY_USERNAME_QUERY_KEY, username],
+        });
       }
-    } catch (err: unknown) {
+
+      setOpen(false);
+    },
+    onError: (err: unknown) => {
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -72,11 +71,11 @@ export const DeleteBlogDialog = ({
           description: 'An unknown error occurred.',
         });
       }
-    } finally {
-      setOpen(false);
+    },
+    onSettled: () => {
       setLoading(false);
-    }
-  }
+    },
+  });
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -104,7 +103,10 @@ export const DeleteBlogDialog = ({
             type='button'
             variant='destructive'
             className='w-fit float-right'
-            onClick={() => deleteBlogById(blogId)}
+            onClick={() => {
+              setLoading(true);
+              deleteBlogMutation.mutate(blogId);
+            }}
             disabled={isLoading}
           >
             {isLoading && <Loader />}

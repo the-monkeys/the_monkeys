@@ -17,7 +17,9 @@ const useGetAllDraftBlogs = ({
       queryKey: [ALL_DRAFT_BLOGS_QUERY_KEY, limit, offset],
       queryFn: () =>
         authFetcherV2(`/blog/in-my-draft?limit=${limit}&offset=${offset}`),
-      staleTime: 60 * 1000,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: true,
     }
   );
 
