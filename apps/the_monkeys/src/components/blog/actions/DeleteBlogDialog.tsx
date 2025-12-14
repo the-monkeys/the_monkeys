@@ -33,7 +33,6 @@ export const DeleteBlogDialog = ({
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [open, setOpen] = React.useState<boolean>(false);
 
-
   const username = session?.username;
 
   const deleteBlogMutation = useMutation({
