@@ -14,6 +14,7 @@ import {
   orderedCompactCategories,
 } from '@/config/categoryConfig';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
+import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
 import CategorySection from './feed/sections/CategorySection';
 import CategorySectionCompact from './feed/sections/CategorySectionCompact';
@@ -27,6 +28,10 @@ const LandingPage = () => {
   const filteredBlogs = blogs?.blogs?.filter(
     (blog) => blog?.first_image && blog?.tags?.length
   );
+
+  const devTest = useFeatureIsOn('gb-test');
+
+  console.log(devTest);
 
   if (isLoading) {
     return <FeedSkeleton />;
@@ -54,17 +59,22 @@ const LandingPage = () => {
 
   return (
     <div className='min-h-screen'>
+      {devTest && (
+        <div className='bg-alert-green/20 text-alert-green text-center py-1 text-sm'>
+          <p>GrowthBook Feature Testing Enabled</p>
+        </div>
+      )}
       <h1 className='text-2xl font-bold hidden'>
         Monkeys - Quality Blogging Community for Technology, Business, Science,
         Lifestyle, Philosophy, and More
       </h1>
 
-      {/* Critical section loads first */}
+      {/* Load Trending section first */}
       <Suspense fallback={<FeedSkeleton />}>
         <TrendingSection blogs={filteredBlogs} />
       </Suspense>
 
-      {/* Secondary sections load in parallel */}
+      {/* Load Category section in parallel */}
       <div className='space-y-8'>
         {orderedCategories.map(({ title, category }, index) => (
           <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
@@ -73,7 +83,7 @@ const LandingPage = () => {
         ))}
       </div>
 
-      {/* home page ad unit */}
+      {/* Ad Unit -> Home Page */}
       <AdUnit slot='3779794725' />
 
       <Container className='mt-8 grid grid-cols-2 gap-8'>
