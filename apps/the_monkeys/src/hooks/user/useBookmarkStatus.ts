@@ -3,16 +3,15 @@ import {
   bookmarksCountResponse,
 } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
 
 export const useIsPostBookmarked = (blogId: string | undefined) => {
-  const { data, isLoading, error } = useSWR<IsBookmarkedResponse>(
-    `/user/is-bookmarked/${blogId}`,
-    authFetcher,
-    {
-      revalidateIfStale: false,
-    }
-  );
+  const { data, isLoading, error } = useQuery<IsBookmarkedResponse>({
+    queryKey: ['is-bookmarked', blogId],
+    queryFn: () => authFetcher(`/user/is-bookmarked/${blogId}`),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   return {
     bookmarkStatus: data,
@@ -22,14 +21,12 @@ export const useIsPostBookmarked = (blogId: string | undefined) => {
 };
 
 export const useGetBookmarksCount = (blogId: string | undefined) => {
-  const { data, isLoading, error } = useSWR<bookmarksCountResponse>(
-    `/user/count-bookmarks/${blogId}`,
-    authFetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateIfStale: false,
-    }
-  );
+  const { data, isLoading, error } = useQuery<bookmarksCountResponse>({
+    queryKey: ['count-bookmarks', blogId],
+    queryFn: () => authFetcher(`/user/count-bookmarks/${blogId}`),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
 
   return {
     bookmarks: data,
