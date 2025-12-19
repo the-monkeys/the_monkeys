@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
 import { contactFormSchema } from '@/lib/schema/contact';
+import axiosInstance from '@/services/api/axiosInstance';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -13,7 +14,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from '@the-monkeys/ui/atoms/select';
@@ -66,28 +66,35 @@ const ContactForm = () => {
 
   const onSubmit = async (values: z.infer<typeof contactFormSchema>) => {
     setLoading(true);
-    console.log({ ...values });
 
-    // mock form submission
-    await new Promise((resolve) => setTimeout(resolve, 1800));
+    try {
+      const res = await axiosInstance.post('/contact', values);
+      const result = await res.data?.message;
 
-    toast({
-      variant: 'success',
-      title: 'Success',
-      description: 'Your message has been sent successfully.',
-    });
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: result || 'Your message has been sent successfully.',
+      });
 
-    form.reset({
-      first_name: user?.first_name || '',
-      last_name: user?.last_name || '',
-      email: user?.email || '',
-      company_size: '',
-      company_name: '',
-      subject: '',
-      message: '',
-    });
-
-    setLoading(false);
+      form.reset({
+        first_name: user?.first_name || '',
+        last_name: user?.last_name || '',
+        email: user?.email || '',
+        company_size: '',
+        company_name: '',
+        subject: '',
+        message: '',
+      });
+    } catch (err: unknown) {
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description: 'Failed to send message. Please try again later.',
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

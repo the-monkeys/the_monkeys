@@ -39,7 +39,7 @@ const ContactPage = () => {
             <p className='text-sm md:text-base opacity-90'>
               We&apos;d love to hear from you, whether it&apos;s a{' '}
               <span className='font-medium'>feedback</span> or a{' '}
-              <span className='font-medium'>collaboration</span> inquiry. Send
+              <span className='font-medium'>collaboration</span> enquiry. Send
               us a message anytime!
             </p>
           </div>
