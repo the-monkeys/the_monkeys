@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
+import { ALL_NOTIFICATIONS_QUERY_KEY } from '@/hooks/notification/useGetAllNotifications';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 import { z } from 'zod';
 
 const markReadSchema = z.object({
@@ -23,6 +24,7 @@ export const MarkReadButton = ({
   notificationIds?: { id: number }[];
   userId?: string;
 }) => {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
 
   const onMarkRead = async () => {
@@ -44,7 +46,9 @@ export const MarkReadButton = ({
         description: 'Notification marked as read.',
       });
 
-      mutate(`/notification/notifications`);
+      queryClient.invalidateQueries({
+        queryKey: [ALL_NOTIFICATIONS_QUERY_KEY],
+      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

@@ -7,7 +7,10 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
+import { ALL_DRAFT_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetAllDraftBlogs';
+import { BLOGS_BY_USERNAME_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogByUsername';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -17,9 +20,9 @@ import {
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
+  const queryClient = useQueryClient();
   const { data: session } = useAuth();
   const [isLoading, setIsLoading] = React.useState<{
     button1: boolean;
@@ -62,10 +65,10 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
         setOpen(false);
       }
 
-      mutate(`blog/user/${username}`, undefined, {
-        revalidate: true,
+      queryClient.invalidateQueries({
+        queryKey: [BLOGS_BY_USERNAME_QUERY_KEY, username],
       });
-      mutate(`/blog/in-my-draft`);
+      queryClient.invalidateQueries({ queryKey: [ALL_DRAFT_BLOGS_QUERY_KEY] });
 
       if (edit) {
         handleEdit(blogId);

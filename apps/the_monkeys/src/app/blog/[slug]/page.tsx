@@ -1,167 +1,121 @@
-'use client';
+import type { Metadata } from 'next';
 
-import dynamic from 'next/dynamic';
-import { useParams } from 'next/navigation';
+import { getCardContent } from '@/components/blog/getBlogContent';
+import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import { USER_PROFILE_QUERY_KEY } from '@/hooks/user/useGetProfileInfoByUserId';
+import { Blog } from '@/services/blog/blogTypes';
+import { authFetcher, authFetcherV2 } from '@/services/fetcher';
+import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
+import { getQueryClient } from '@/utils/get-query-client';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
-import AdUnit from '@/components/AdSense/AdUnit';
-import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
-import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
-import Icon from '@/components/icon';
-import Container from '@/components/layout/Container';
-import {
-  BlogPageSkeleton,
-  EditorBlockSkeleton,
-} from '@/components/skeletons/blogSkeleton';
-import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
-import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
-import { UserInfoCardBlogPage } from '@/components/user/userInfo';
-import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
-import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
-import { purifyHTMLString } from '@/utils/purifyHTML';
-import moment from 'moment';
-
-import { BlogReactionsContainer } from '../components/BlogReactions';
-import { BlogRecommendations } from '../components/BlogRecommendations';
+import BlogPageClient from './BlogPageClient';
 import { generateBlogSchema } from './utils';
 
-const Editor = dynamic(() => import('@/components/editor/preview'), {
-  ssr: false,
-  loading: () => <EditorBlockSkeleton />,
-});
+interface Props {
+  params: { slug: string };
+}
 
-const BlogPage = () => {
-  const params = useParams();
+const getBlogIdFromSlug = (slug: string) => {
+  return typeof slug === 'string' ? slug.split('-').pop() : '';
+};
 
-  const fullSlug = params?.slug || '';
-  const urlBlogId =
-    typeof fullSlug === 'string' ? fullSlug.split('-').pop() : '';
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const fullSlug = params.slug;
+  const blogId = getBlogIdFromSlug(fullSlug);
 
-  const { blog, isError, isLoading } =
-    useGetPublishedBlogDetailByBlogId(urlBlogId);
-  const authorId = blog?.owner_account_id;
+  try {
+    const blog = (await authFetcherV2(`/blog/${blogId}`)) as Blog;
+    if (!blog) return { title: 'Blog Not Found' };
 
-  const { user } = useGetProfileInfoById(authorId);
-  const authorName = user?.user?.username || 'Monkeys Author';
+    const { titleContent, descriptionContent, imageContent } = getCardContent({
+      blog,
+    });
 
-  if (isLoading) {
-    return <BlogPageSkeleton />;
+    return {
+      title: titleContent,
+      description: descriptionContent,
+      openGraph: {
+        images: [imageContent],
+        title: titleContent,
+        description: descriptionContent,
+        type: 'article',
+        publishedTime: blog.published_time,
+        authors: [blog.owner_account_id || 'Monkeys Author'],
+        tags: blog.tags,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: titleContent,
+        description: descriptionContent,
+        images: [imageContent],
+      },
+    };
+  } catch (error) {
+    return {
+      title: 'Monkeys - Blog',
+    };
+  }
+}
+
+export default async function BlogPage({ params }: Props) {
+  const queryClient = getQueryClient();
+  const fullSlug = params.slug;
+  const blogId = getBlogIdFromSlug(fullSlug);
+
+  if (!blogId) return null;
+
+  // Prefetch Blog
+  await queryClient.prefetchQuery({
+    queryKey: [BLOG_DETAIL_QUERY_KEY, blogId],
+    queryFn: () => authFetcherV2(`/blog/${blogId}`),
+  });
+
+  const blog = queryClient.getQueryData<Blog>([BLOG_DETAIL_QUERY_KEY, blogId]);
+
+  if (blog?.owner_account_id) {
+    await queryClient.prefetchQuery({
+      queryKey: [USER_PROFILE_QUERY_KEY, blog.owner_account_id],
+      queryFn: () =>
+        authFetcher(`/user/public/account/${blog.owner_account_id}`),
+    });
   }
 
-  if (isError || !blog) {
-    return (
-      <div className='px-4 pt-12 flex flex-col items-center justify-center'>
-        <div className='p-4 flex items-center'>
-          <p className='font-dm_sans font-bold text-6xl'>4</p>
-          <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
-          <p className='font-dm_sans font-bold text-6xl'>4</p>
-        </div>
+  // Prepare JSON-LD
+  let jsonLd = null;
+  if (blog) {
+    const { titleContent, descriptionContent, imageContent } = getCardContent({
+      blog,
+    });
+    const authorId = blog.owner_account_id;
 
-        <h2 className='py-1 font-dm_sans font-medium text-lg text-center'>
-          Page not found — but at least you found us!
-        </h2>
+    const authorData = queryClient.getQueryData<GetProfileInfoByIdResponse>([
+      USER_PROFILE_QUERY_KEY,
+      authorId,
+    ]);
+    const authorName = authorData?.user?.username || 'Monkeys Author';
 
-        <p className='text-base opacity-90 text-center'>
-          Try refreshing, or swing by again later.
-        </p>
-      </div>
+    jsonLd = generateBlogSchema(
+      titleContent,
+      descriptionContent,
+      imageContent,
+      blog?.published_time,
+      fullSlug,
+      blog?.tags,
+      authorName,
+      blog
     );
   }
 
-  const blogId = blog?.blog_id;
-  const date = blog?.published_time || blog?.blog?.time;
-  const tags = blog?.tags;
-
-  const blogTitle = blog?.blog.blocks[0].data.text;
-  const sanitizedBlogTitle = purifyHTMLString(blogTitle);
-
-  const blogDataWithoutHeading = () => {
-    const firstBlock = blog?.blog?.blocks[0];
-
-    if (firstBlock.type !== 'header') return blog?.blog;
-
-    return {
-      ...blog.blog,
-      blocks: blog?.blog.blocks.slice(1),
-    };
-  };
-
-  const { titleContent, descriptionContent, imageContent } = getCardContent({
-    blog,
-  });
-
   return (
-    <>
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(
-            generateBlogSchema(
-              titleContent,
-              descriptionContent,
-              imageContent,
-              blog?.published_time,
-              fullSlug,
-              tags,
-              authorName,
-              blog
-            )
-          ),
-        }}
-      />
-
-      <>
-        <div className='px-4'>
-          <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
-            <p className='text-sm opacity-90'>
-              {moment(date).format('MMM DD, yyyy')}
-              {' / '}
-              {moment(date).utc().format('hh:mm A')} UTC
-            </p>
-
-            <BlogHeading
-              title={sanitizedBlogTitle || 'Untitled Post'}
-              className='pt-1 pb-4 font-dm_sans font-semibold text-[28px] sm:text-3xl md:text-4xl !leading-[1.32] text-center'
-            />
-
-            <UserInfoCardBlogPage id={authorId} />
-          </Container>
-        </div>
-        <AdUnit slot='4598536509' />
-        <div className='p-4'>
-          <Container className='max-w-3xl'>
-            <div className='px-1 pb-4 overflow-hidden'>
-              <Editor key={blogId} data={blogDataWithoutHeading()} />
-            </div>
-
-            <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
-
-            <div className='pt-10 space-y-12'>
-              <div className='space-y-4'>
-                <h6 className='font-dm_sans font-medium'>Topics included</h6>
-                <TopicLinksContainerCompact topics={tags} />
-              </div>
-
-              <AuthorInfoCard userId={authorId} />
-
-              <SocialSnapshotCard blog={blog} />
-            </div>
-          </Container>
-        </div>
-
-        <div className='px-4 mt-12'>
-          <Container className='max-w-5xl space-y-12'>
-            <div className='space-y-6'>
-              <h6 className='font-dm_sans font-medium text-lg'>
-                Explore similar content
-              </h6>
-
-              <BlogRecommendations blogId={blogId} topics={tags} />
-            </div>
-          </Container>
-        </div>
-      </>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      {jsonLd && (
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <BlogPageClient urlBlogId={blogId} fullSlug={fullSlug} />
+    </HydrationBoundary>
   );
-};
-
-export default BlogPage;
+}

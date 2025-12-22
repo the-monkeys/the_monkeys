@@ -7,7 +7,9 @@ import Image from 'next/image';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
+import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
 import axiosFileInstance from '@/services/api/axiosFileInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -19,10 +21,10 @@ import {
 import { Input } from '@the-monkeys/ui/atoms/input';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useDropzone } from 'react-dropzone';
-import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 export const UpdateProfileDialog = () => {
+  const queryClient = useQueryClient();
   const { data, isSuccess: isAuthenticated } = useAuth();
 
   const [uploadError, setUploadError] = useState<string>('');
@@ -83,7 +85,9 @@ export const UpdateProfileDialog = () => {
         setOpen(false);
       }
 
-      mutate(`/files/profile/${data?.username}/profile`);
+      queryClient.invalidateQueries({
+        queryKey: [PROFILE_IMAGE_QUERY_KEY, data?.username],
+      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

@@ -1,16 +1,22 @@
 import { GetAllTopicsAPIResponse } from '@/services/category/categoryTypes';
 import { fetcher } from '@/services/fetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
+
+export const ALL_TOPICS_QUERY_KEY = 'all-topics';
 
 const useGetAllTopics = () => {
-  const { data, error, isLoading } = useSWR<GetAllTopicsAPIResponse>(
-    '/user/topics',
-    fetcher
-  );
+  const { data, error, isLoading, isError } = useQuery<
+    GetAllTopicsAPIResponse,
+    Error
+  >({
+    queryKey: [ALL_TOPICS_QUERY_KEY],
+    queryFn: () => fetcher('/user/topics'),
+    staleTime: 5 * 60 * 1000,
+  });
 
   return {
     topics: data,
-    isError: error,
+    isError: isError || !!error,
     isLoading,
   };
 };

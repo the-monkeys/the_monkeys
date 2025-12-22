@@ -2,7 +2,12 @@ import { MetadataRoute } from 'next';
 import { unstable_noStore as noStore } from 'next/cache';
 
 import { baseUrl } from '@/constants/baseUrl';
-import { FEED_ROUTE } from '@/constants/routeConstants';
+import {
+  ABOUT_ROUTE,
+  EXPLORE_TOPICS_ROUTE,
+  FEED_ROUTE,
+  TOPIC_SITEMAP_ROUTE,
+} from '@/constants/routeConstants';
 import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
 
 import { generateSlug } from './blog/utils/generateSlug';
@@ -50,12 +55,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/topics/explore`,
+      url: `${baseUrl}${ABOUT_ROUTE}`,
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}${EXPLORE_TOPICS_ROUTE}`,
       changeFrequency: 'daily',
       priority: 0.6,
     },
     {
-      url: `${baseUrl}/topics/sitemap.xml`,
+      url: `${baseUrl}${TOPIC_SITEMAP_ROUTE}`,
       changeFrequency: 'daily',
       priority: 0.8,
     },

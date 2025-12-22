@@ -1,10 +1,14 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
-import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
+import {
+  LIKES_COUNT_QUERY_KEY,
+  LIKE_STATUS_QUERY_KEY,
+  useIsPostLiked,
+} from '@/hooks/user/useLikeStatus';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 export const LikeButton = ({
   blogId,
@@ -15,6 +19,7 @@ export const LikeButton = ({
   size?: number;
   isDisable?: boolean;
 }) => {
+  const queryClient = useQueryClient();
   const { likeStatus, isLoading, isError } = useIsPostLiked(blogId);
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,20 +43,18 @@ export const LikeButton = ({
   const onPostLike = async () => {
     setLoading(true);
 
-    const previousLikeStatus = likeStatus;
-
-    mutate(`/user/is-liked/${blogId}`, { isLiked: true }, false);
-
     try {
       const response = await axiosInstance.post(`/user/like/${blogId}`);
 
       if (response.status === 200) {
-        mutate(`/user/is-liked/${blogId}`);
-        mutate(`/user/count-likes/${blogId}`);
+        queryClient.invalidateQueries({
+          queryKey: [LIKE_STATUS_QUERY_KEY, blogId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [LIKES_COUNT_QUERY_KEY, blogId],
+        });
       }
     } catch (err: unknown) {
-      mutate(`/user/is-liked/${blogId}`, previousLikeStatus, false);
-
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -73,20 +76,18 @@ export const LikeButton = ({
   const onPostDislike = async () => {
     setLoading(true);
 
-    const previousLikeStatus = likeStatus;
-
-    mutate(`/user/is-liked/${blogId}`, { isLiked: false }, false);
-
     try {
       const response = await axiosInstance.post(`/user/unlike/${blogId}`);
 
       if (response.status === 200) {
-        mutate(`/user/is-liked/${blogId}`);
-        mutate(`/user/count-likes/${blogId}`);
+        queryClient.invalidateQueries({
+          queryKey: [LIKE_STATUS_QUERY_KEY, blogId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [LIKES_COUNT_QUERY_KEY, blogId],
+        });
       }
     } catch (err: unknown) {
-      mutate(`/user/is-liked/${blogId}`, previousLikeStatus, false);
-
       if (err instanceof Error) {
         toast({
           variant: 'error',

@@ -1,6 +1,8 @@
 import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { authFetcherV2 } from '@/services/fetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
+
+export const BLOG_SEARCH_QUERY_KEY = 'blog-search';
 
 export const useGetSearchBlog = ({
   searchQuery,
@@ -11,20 +13,21 @@ export const useGetSearchBlog = ({
   limit: number;
   offset: number;
 }) => {
-  const { data, error, isLoading } = useSWR<GetMetaFeedBlogs>(
-    searchQuery
-      ? `blog/search?limit=${limit}&offset=${offset}&search_term=${searchQuery}`
-      : null,
-    authFetcherV2,
+  const { data, error, isLoading, isError } = useQuery<GetMetaFeedBlogs, Error>(
     {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
+      queryKey: [BLOG_SEARCH_QUERY_KEY, searchQuery, limit, offset],
+      queryFn: () =>
+        authFetcherV2(
+          `blog/search?limit=${limit}&offset=${offset}&search_term=${searchQuery}`
+        ),
+      enabled: !!searchQuery,
+      staleTime: 60 * 1000,
     }
   );
 
   return {
     searchBlogs: data,
     searchBlogsLoading: isLoading,
-    searchBlogsError: error,
+    searchBlogsError: isError || !!error,
   };
 };

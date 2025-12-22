@@ -4,13 +4,15 @@ import React from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
-import useUser from '@/hooks/user/useUser';
+import { ALL_TOPICS_QUERY_KEY } from '@/hooks/user/useGetAllTopics';
+import useUser, { USER_QUERY_KEY } from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 export const CategoryButton = ({ topics }: { topics: string[] }) => {
+  const queryClient = useQueryClient();
   const { data: session } = useAuth();
   const { toast } = useToast();
   const { user, isLoading } = useUser(session?.username);
@@ -61,8 +63,10 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
       });
 
       setStatus('success');
-      mutate('/user/topics');
-      mutate(`/user/public/${username}`);
+      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY, username],
+      });
       setIsAllTopicsFollowed(true);
       setIsSomeTopicsFollowed(false);
     } catch (error: any) {
@@ -89,8 +93,10 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
       });
 
       setStatus('success');
-      mutate('/user/topics');
-      mutate(`/user/public/${username}`);
+      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY, username],
+      });
       setIsAllTopicsFollowed(false);
       setIsSomeTopicsFollowed(false);
     } catch (error: any) {

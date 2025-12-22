@@ -13,12 +13,14 @@ import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
-import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
+import useGetDraftBlogDetail, {
+  DRAFT_BLOG_DETAIL_QUERY_KEY,
+} from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import { OutputData } from '@editorjs/editorjs';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { format } from 'path';
-import { mutate } from 'swr';
 import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -31,6 +33,7 @@ const Editor = dynamic(() => import('@/components/editor'), {
 });
 
 const EditPage = ({ params }: { params: { blogId: string } }) => {
+  const queryClient = useQueryClient();
   const blogId = params.blogId;
   const { data: session } = useAuth();
   const router = useRouter();
@@ -281,7 +284,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       });
 
       // Invalidate cache and redirect
-      mutate(`/blog/my-drafts/${blogId}`);
+      queryClient.invalidateQueries({
+        queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+      });
       router.push(`/${username}`);
     } catch (error) {
       console.error('Publish error:', error);
@@ -293,7 +298,16 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     } finally {
       setBlogPublishLoading(false);
     }
-  }, [data, accountId, blogId, blogTopics, formatData, router, username]);
+  }, [
+    data,
+    accountId,
+    blogId,
+    blogTopics,
+    formatData,
+    router,
+    username,
+    queryClient,
+  ]);
 
   // Initialize editor data
   useEffect(() => {
@@ -305,8 +319,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Fetch draft blog data on mount
   useEffect(() => {
-    mutate(`/blog/my-drafts/${blogId}`);
-  }, [blogId]);
+    queryClient.invalidateQueries({
+      queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+    });
+  }, [blogId, queryClient]);
 
   return (
     <>
