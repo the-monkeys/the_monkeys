@@ -61,14 +61,10 @@ export const footerLinksList = [
       },
       {
         text: 'Contact Us',
-        link: 'mailto:mail.themonkeys.life@gmail.com',
+        link: '/contact-us',
       },
       {
         text: 'Advertise with Us',
-        link: '#',
-      },
-      {
-        text: 'Feedback',
         link: '#',
       },
     ],
