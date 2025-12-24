@@ -5,8 +5,8 @@ import { useState } from 'react';
 import Icon from '@/components/icon';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 export const BookmarkButton = ({
   blogId,
@@ -18,7 +18,7 @@ export const BookmarkButton = ({
   isDisable?: boolean;
 }) => {
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(blogId);
-
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState<boolean>(false);
 
   if (isLoading) {
@@ -42,7 +42,7 @@ export const BookmarkButton = ({
 
     const previousBookmarkStatus = bookmarkStatus;
 
-    mutate(`/user/is-bookmarked/${blogId}`, { bookMarked: true }, false);
+    queryClient.setQueryData(['is-bookmarked', blogId], { bookMarked: true });
 
     try {
       const response = await axiosInstance.post(`/user/bookmark/${blogId}`);
@@ -54,15 +54,16 @@ export const BookmarkButton = ({
           description: 'Blog bookmarked successfully.',
         });
 
-        mutate(`/user/is-bookmarked/${blogId}`);
-        mutate(`/user/count-bookmarks/${blogId}`);
-        mutate(`/blog/my-bookmarks`);
+        queryClient.invalidateQueries({ queryKey: ['is-bookmarked', blogId] });
+        queryClient.invalidateQueries({
+          queryKey: ['count-bookmarks', blogId],
+        });
+        queryClient.invalidateQueries({ queryKey: ['bookmarked-blogs'] });
       }
     } catch (err: unknown) {
-      mutate(
-        `/user/is-bookmarked/${blogId}`,
-        { bookMarked: previousBookmarkStatus },
-        false
+      queryClient.setQueryData(
+        ['is-bookmarked', blogId],
+        previousBookmarkStatus
       );
 
       if (err instanceof Error) {
@@ -85,10 +86,9 @@ export const BookmarkButton = ({
 
   const onPostRemoveBookmark = async () => {
     setLoading(true);
-
     const previousBookmarkStatus = bookmarkStatus;
 
-    mutate(`/user/is-bookmarked/${blogId}`, { bookMarked: false }, false);
+    queryClient.setQueryData(['is-bookmarked', blogId], { bookMarked: false });
 
     try {
       const response = await axiosInstance.post(
@@ -102,21 +102,23 @@ export const BookmarkButton = ({
           description: 'Removed bookmark successfully.',
         });
 
-        mutate(`/user/is-bookmarked/${blogId}`);
-        mutate(`/user/count-bookmarks/${blogId}`);
+        queryClient.invalidateQueries({ queryKey: ['is-bookmarked', blogId] });
+        queryClient.invalidateQueries({
+          queryKey: ['count-bookmarks', blogId],
+        });
+        queryClient.invalidateQueries({ queryKey: ['bookmarked-blogs'] });
       }
     } catch (err: unknown) {
-      mutate(
-        `/user/is-bookmarked/${blogId}`,
-        { bookMarked: previousBookmarkStatus },
-        false
+      queryClient.setQueryData(
+        ['is-bookmarked', blogId],
+        previousBookmarkStatus
       );
 
       if (err instanceof Error) {
         toast({
           variant: 'error',
           title: 'Error',
-          description: err.message || 'Failed to remove post bookmark.',
+          description: err.message || 'Failed to remove bookmarked post.',
         });
       } else {
         toast({

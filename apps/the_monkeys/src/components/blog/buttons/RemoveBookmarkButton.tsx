@@ -1,10 +1,7 @@
-import { useState } from 'react';
-
 import Icon from '@/components/icon';
-import { Loader } from '@/components/loader';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 export const RemoveBookmarkButton = ({
   blogId,
@@ -13,26 +10,21 @@ export const RemoveBookmarkButton = ({
   blogId?: string;
   size?: number;
 }) => {
-  const [loading, setLoading] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
-  const onPostRemoveBookmark = async () => {
-    setLoading(true);
+  const { mutate: onPostRemoveBookmark, isPending } = useMutation({
+    mutationFn: (blogId) =>
+      axiosInstance.delete(`/user/remove-bookmark/${blogId}`),
+    onSuccess: () => {
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Removed bookmark successfully.',
+      });
 
-    try {
-      const response = await axiosInstance.post(
-        `/user/remove-bookmark/${blogId}`
-      );
-
-      if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Removed bookmark successfully.',
-        });
-
-        mutate(`blog/my-bookmarks`);
-      }
-    } catch (err: unknown) {
+      queryClient.invalidateQueries({ queryKey: ['bookmarked-blogs'] });
+    },
+    onError: (err: unknown) => {
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -46,18 +38,22 @@ export const RemoveBookmarkButton = ({
           description: 'An unknown error occurred.',
         });
       }
-    } finally {
-      setLoading(false);
+    },
+  });
+
+  const handleBookmarkRemoveClick = () => {
+    if (blogId) {
+      onPostRemoveBookmark();
     }
   };
 
   return (
     <button
       className={`group p-1 flex items-center justify-center hover:opacity-80 ${
-        loading ? 'cursor-default opacity-50' : 'cursor-pointer'
+        isPending ? 'cursor-default opacity-50' : 'cursor-pointer'
       }`}
-      onClick={onPostRemoveBookmark}
-      disabled={loading}
+      onClick={handleBookmarkRemoveClick}
+      disabled={isPending}
       title='Remove Bookmark'
     >
       <Icon name='RiBookmark2' size={size} className='text-alert-red' />
