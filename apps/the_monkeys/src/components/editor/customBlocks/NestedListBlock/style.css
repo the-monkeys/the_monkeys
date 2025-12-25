@@ -1,0 +1,38 @@
+.cdx-list {
+  margin: 0;
+  padding-left: 20px !important;
+  outline: none;
+  list-style-position: outside !important;
+  list-style-image: none !important;
+  box-sizing: border-box;
+}
+
+ul.cdx-list {
+  list-style-type: disc !important;
+}
+
+ol.cdx-list {
+  list-style-type: decimal !important;
+}
+
+.cdx-list__item {
+  padding: 5px 0;
+  line-height: 1.6em;
+  display: list-item !important;
+}
+
+/* Hide default markers if you want custom ones, otherwise leave default */
+.cdx-list__sublist {
+  margin-top: 4px;
+  padding-left: 20px !important;
+  list-style-position: outside !important;
+  list-style-type: inherit !important;
+}
+
+.cdx-list__item-content {
+  display: inline-block;
+  vertical-align: top;
+  min-width: 1px;
+  outline: none !important;
+  border: none !important;
+}
