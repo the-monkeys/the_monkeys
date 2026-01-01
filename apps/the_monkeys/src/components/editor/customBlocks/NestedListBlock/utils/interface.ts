@@ -1,6 +1,6 @@
 import { API } from '@editorjs/editorjs';
 
-export interface ConstructorData {
+export interface ConstructorArgs {
   api: API;
   data?: ListData | LegacyListData;
   config?: ListConfig;
@@ -12,30 +12,25 @@ export interface ListNode {
   items: ListNode[]; // Recursive structure
 }
 
-export interface ListData {
-  style: 'ordered' | 'unordered';
-  items: ListNode[];
-}
-
 export interface ListConfig {
   defaultStyle?: 'ordered' | 'unordered';
   maxLevel?: number;
 }
 
 export interface LegacyListData {
-  style: 'ordered' | 'unordered';
+  style: ListStyle;
   items: string[];
 }
+export type ListToolData = ListData | LegacyListData;
 
-/**
- * Editor.js API types (Simplified for this context)
- 
-interface API {
-    styles: {
-        block: string;
-        inlineToolButton: string;
-    };
-    selection: {
-        findParentTag: (tagName: string, className?: string) => HTMLElement | null;
-    };
-}*/
+export type ListStyle = 'unordered' | 'ordered';
+
+export interface ListItemData {
+  content: string;
+  items?: ListItemData[];
+}
+
+export interface ListData {
+  style: ListStyle;
+  items: ListItemData[];
+}
