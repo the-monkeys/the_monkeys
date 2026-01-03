@@ -11,7 +11,6 @@ import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 import './globals.css';
 import GrowthbookClientProvider from './growthbook-provider';
 import { QueryClientMount } from './query-client-mount';
-import SWRProvider from './swr-provider';
 import { ThemeProviders } from './theme-provider';
 
 const inter = Inter({
@@ -142,6 +141,23 @@ const RootLayout = async ({
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
+      </head>
+      <body
+        className={`${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
+      >
+        <Toaster />
+        <GrowthbookClientProvider>
+          <QueryClientMount>
+            <ThemeProviders>
+              <TooltipProvider>
+                <Navbar />
+                <main>{children}</main>
+                <Footer />
+              </TooltipProvider>
+            </ThemeProviders>
+          </QueryClientMount>
+        </GrowthbookClientProvider>
+
         {/* Microsoft Clarity */}
         <Script id='microsoft-clarity' strategy='afterInteractive'>
           {`
@@ -152,24 +168,6 @@ const RootLayout = async ({
         })(window, document, "clarity", "script", "terxckyygm");
       `}
         </Script>
-      </head>
-      <body
-        className={`${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
-      >
-        <Toaster />
-        <GrowthbookClientProvider>
-          <SWRProvider>
-            <QueryClientMount>
-              <ThemeProviders>
-                <TooltipProvider>
-                  <Navbar />
-                  <main>{children}</main>
-                  <Footer />
-                </TooltipProvider>
-              </ThemeProviders>
-            </QueryClientMount>
-          </SWRProvider>
-        </GrowthbookClientProvider>
       </body>
     </html>
   );

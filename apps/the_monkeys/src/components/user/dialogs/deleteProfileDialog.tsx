@@ -5,7 +5,9 @@ import { useState } from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
+import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
 import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -15,9 +17,9 @@ import {
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { mutate } from 'swr';
 
 export const DeleteProfileDialog = () => {
+  const queryClient = useQueryClient();
   const { data } = useAuth();
 
   const [open, setOpen] = useState<boolean>();
@@ -41,7 +43,9 @@ export const DeleteProfileDialog = () => {
         setOpen(false);
       }
 
-      mutate(`/files/profile/${data?.username}/profile`);
+      queryClient.invalidateQueries({
+        queryKey: [PROFILE_IMAGE_QUERY_KEY, data?.username],
+      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

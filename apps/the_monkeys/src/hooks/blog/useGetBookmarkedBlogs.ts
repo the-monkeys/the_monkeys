@@ -1,6 +1,8 @@
 import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { authFetcherV2 } from '@/services/fetcher';
-import useSWR from 'swr';
+import { useQuery } from '@tanstack/react-query';
+
+export const BOOKMARKED_BLOGS_QUERY_KEY = 'bookmarked-blogs';
 
 const useGetBookmarkedBlogs = ({
   limit = 10,
@@ -9,18 +11,18 @@ const useGetBookmarkedBlogs = ({
   limit: number;
   offset: number;
 }) => {
-  const { data, error, isLoading } = useSWR<GetMetaFeedBlogs>(
-    `blog/in-my-bookmark?limit=${limit}&offset=${offset}`,
-    authFetcherV2,
+  const { data, error, isLoading, isError } = useQuery<GetMetaFeedBlogs, Error>(
     {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
+      queryKey: [BOOKMARKED_BLOGS_QUERY_KEY, limit, offset],
+      queryFn: () =>
+        authFetcherV2(`blog/in-my-bookmark?limit=${limit}&offset=${offset}`),
+      staleTime: 60 * 1000,
     }
   );
 
   return {
     blogs: data,
-    isError: error,
+    isError: isError || !!error,
     isLoading,
   };
 };
