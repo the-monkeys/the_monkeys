@@ -5,7 +5,7 @@ import {
 import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
 
-export const BOOKMARK_STATUS_QUERY_KEY = 'bookmark-status';
+export const BOOKMARK_STATUS_QUERY_KEY = 'is-bookmarked';
 export const BOOKMARKS_COUNT_QUERY_KEY = 'bookmarks-count';
 
 export const useIsPostBookmarked = (blogId: string | undefined) => {
@@ -15,8 +15,10 @@ export const useIsPostBookmarked = (blogId: string | undefined) => {
   >({
     queryKey: [BOOKMARK_STATUS_QUERY_KEY, blogId],
     queryFn: () => authFetcher(`/user/is-bookmarked/${blogId}`),
-    enabled: !!blogId,
     staleTime: 60 * 1000,
+    enabled: !!blogId,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   return {
@@ -33,8 +35,10 @@ export const useGetBookmarksCount = (blogId: string | undefined) => {
   >({
     queryKey: [BOOKMARKS_COUNT_QUERY_KEY, blogId],
     queryFn: () => authFetcher(`/user/count-bookmarks/${blogId}`),
-    enabled: !!blogId,
     staleTime: 60 * 1000,
+    enabled: !!blogId,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
   return {

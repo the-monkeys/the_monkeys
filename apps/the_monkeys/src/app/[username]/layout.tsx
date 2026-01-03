@@ -60,7 +60,7 @@ export async function generateMetadata({
     }
 
     const profileImageUrl = `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`;
-    const fullName = `${userData.first_name} ${userData.last_name}`;
+    const fullName = `${userData.first_name} ${userData.last_name ?? ''}`;
     const description =
       userData.bio ||
       `${fullName}'s profile on Monkeys. ${
