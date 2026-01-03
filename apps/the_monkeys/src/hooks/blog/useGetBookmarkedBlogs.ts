@@ -17,6 +17,9 @@ const useGetBookmarkedBlogs = ({
       queryFn: () =>
         authFetcherV2(`blog/in-my-bookmark?limit=${limit}&offset=${offset}`),
       staleTime: 60 * 1000,
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
     }
   );
 

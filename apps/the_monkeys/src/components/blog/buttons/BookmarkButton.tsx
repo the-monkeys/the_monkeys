@@ -62,9 +62,6 @@ export const BookmarkButton = ({
         queryClient.invalidateQueries({
           queryKey: [BOOKMARKS_COUNT_QUERY_KEY, blogId],
         });
-        queryClient.invalidateQueries({
-          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
-        });
       }
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -105,6 +102,9 @@ export const BookmarkButton = ({
         });
         queryClient.invalidateQueries({
           queryKey: [BOOKMARKS_COUNT_QUERY_KEY, blogId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
         });
       }
     } catch (err: unknown) {
