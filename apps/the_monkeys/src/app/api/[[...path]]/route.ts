@@ -108,6 +108,40 @@ async function proxyRequest(
       }
     }
 
+    // We clone the stream so we can "spy" on it without breaking the response to the user
+    const [logStream, responseStream] = upstreamResponse.body
+      ? upstreamResponse.body.tee()
+      : [null, null];
+
+    if (logStream) {
+      // Run this in the background (don't await it) to see chunks flowing
+      (async () => {
+        const reader = logStream.getReader();
+        let totalBytes = 0;
+        let chunkCount = 0;
+        const startTime = Date.now();
+
+        console.log('🌊 Stream started...');
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          chunkCount++;
+          totalBytes += value.length;
+          const elapsed = Date.now() - startTime;
+
+          // This log proves data is arriving in pieces over time!
+          console.log(
+            `📦 Chunk #${chunkCount}: ${value.length} bytes at ${elapsed}ms`
+          );
+        }
+        console.log(
+          `✅ Stream finished. Total: ${totalBytes} bytes in ${chunkCount} chunks.`
+        );
+      })();
+    }
+
     // Stream Response Back to Client
     return new Response(upstreamResponse.body, {
       status: upstreamResponse.status,
