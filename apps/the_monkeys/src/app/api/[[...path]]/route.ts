@@ -93,57 +93,56 @@ async function proxyRequest(
       }
     });
 
-    // Handle Set-Cookie Correctly (Split multiple cookies)
-    // This ensures cookies like 'RefreshToken' and 'SessionId' are both set.
+    // Handle Set-Cookie Correctly
     if (typeof upstreamResponse.headers.getSetCookie === 'function') {
       const setCookies = upstreamResponse.headers.getSetCookie();
       for (const cookie of setCookies) {
         responseHeaders.append('Set-Cookie', cookie);
       }
     } else {
-      // Fallback for older runtimes
+      // Fallback
       const rawCookie = upstreamResponse.headers.get('Set-Cookie');
       if (rawCookie) {
         responseHeaders.set('Set-Cookie', rawCookie);
       }
     }
 
-    // We clone the stream so we can "spy" on it without breaking the response to the user
-    const [logStream, responseStream] = upstreamResponse.body
-      ? upstreamResponse.body.tee()
-      : [null, null];
-
-    if (logStream) {
-      // Run this in the background (don't await it) to see chunks flowing
-      (async () => {
-        const reader = logStream.getReader();
-        let totalBytes = 0;
-        let chunkCount = 0;
-        const startTime = Date.now();
-
-        console.log('🌊 Stream started...');
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          chunkCount++;
-          totalBytes += value.length;
-          const elapsed = Date.now() - startTime;
-
-          // This log proves data is arriving in pieces over time!
-          console.log(
-            `📦 Chunk #${chunkCount}: ${value.length} bytes at ${elapsed}ms`
-          );
-        }
-        console.log(
-          `✅ Stream finished. Total: ${totalBytes} bytes in ${chunkCount} chunks.`
-        );
-      })();
+    // NEW LOGGING LOGIC (Using TransformStream)
+    // --------------------------------------------------------
+    if (!upstreamResponse.body) {
+      return new Response(null, {
+        status: upstreamResponse.status,
+        headers: responseHeaders,
+      });
     }
 
+    let started = false;
+    const startTime = Date.now();
+
+    const logStream = new TransformStream({
+      transform(chunk, controller) {
+        // This runs EVERY time a piece of data passes through
+        if (!started) {
+          console.log(
+            `🌊 Stream STARTED at ${Date.now() - startTime}ms after fetch`
+          );
+          started = true;
+        }
+        controller.enqueue(chunk); // Pass the data along to the browser
+      },
+      flush(controller) {
+        // This runs when the stream is fully finished
+        console.log(
+          `✅ Stream FINISHED at ${Date.now() - startTime}ms total duration`
+        );
+      },
+    });
+
+    // We pipe the original body THROUGH our logger
+    const loggedBody = upstreamResponse.body.pipeThrough(logStream);
+
     // Stream Response Back to Client
-    return new Response(upstreamResponse.body, {
+    return new Response(loggedBody, {
       status: upstreamResponse.status,
       statusText: upstreamResponse.statusText,
       headers: responseHeaders,
