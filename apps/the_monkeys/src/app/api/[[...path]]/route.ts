@@ -116,33 +116,8 @@ async function proxyRequest(
       });
     }
 
-    let started = false;
-    const startTime = Date.now();
-
-    const logStream = new TransformStream({
-      transform(chunk, controller) {
-        // This runs EVERY time a piece of data passes through
-        if (!started) {
-          console.log(
-            `🌊 Stream STARTED at ${Date.now() - startTime}ms after fetch`
-          );
-          started = true;
-        }
-        controller.enqueue(chunk); // Pass the data along to the browser
-      },
-      flush(controller) {
-        // This runs when the stream is fully finished
-        console.log(
-          `✅ Stream FINISHED at ${Date.now() - startTime}ms total duration`
-        );
-      },
-    });
-
-    // We pipe the original body THROUGH our logger
-    const loggedBody = upstreamResponse.body.pipeThrough(logStream);
-
     // Stream Response Back to Client
-    return new Response(loggedBody, {
+    return new Response(upstreamResponse.body, {
       status: upstreamResponse.status,
       statusText: upstreamResponse.statusText,
       headers: responseHeaders,
