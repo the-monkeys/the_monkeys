@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import dynamic from 'next/dynamic';
 
 import AdUnit from '@/components/AdSense/AdUnit';
@@ -38,6 +40,54 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const authorId = blog?.owner_account_id;
 
   const { user } = useGetProfileInfoById(authorId);
+
+  useEffect(() => {
+    const startTime = Date.now();
+    let hasSent = false;
+
+    // Function to transmit data
+    const sendData = () => {
+      const durationMs = Date.now() - startTime;
+      // Only send if substantial time spent (>1s) and not already sent
+      if (!hasSent && durationMs > 1000 && urlBlogId) {
+        hasSent = true;
+
+        const payload = JSON.stringify({
+          duration_ms: durationMs,
+          interaction_type: 'read_duration',
+        });
+        const url = `/api/v2/blog/${urlBlogId}/activity`;
+
+        // navigator.sendBeacon is more reliable for page unloads
+        // Use fetch with keepalive as it supports application/json headers reliably
+        // compared to sendBeacon which can be tricky with non-text types
+        fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+          keepalive: true,
+        }).catch((err) => {
+          // Only log internal errors if valuable
+          // console.error(err);
+        });
+      }
+    };
+
+    // Handle visibility change (e.g. switching tabs, minimizing window)
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        sendData();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    // Cleanup function for component unmount
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      sendData();
+    };
+  }, [urlBlogId]);
 
   if (isLoading) {
     return <BlogPageSkeleton />;
