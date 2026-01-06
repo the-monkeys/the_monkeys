@@ -16,6 +16,7 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
   // Removing certain headers causing issues
   headers.delete('host');
   headers.delete('content-length');
+  headers.delete('connection');
 
   let targetUrl = '';
   const clientUrl = new URL(req.url);
@@ -41,6 +42,7 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
 
   // content compression should be handled by browser itself
   responseHeaders.delete('content-encoding');
+  responseHeaders.delete('connection');
 
   responseHeaders.delete('set-cookie');
   if (typeof response.headers.getSetCookie === 'function') {
