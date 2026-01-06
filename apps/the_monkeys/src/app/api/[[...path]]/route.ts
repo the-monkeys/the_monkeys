@@ -13,31 +13,24 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
   if (authToken) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
-  // Removing certain headers causing issues
-  headers.delete('host');
-  headers.delete('content-length');
+  // Removing certain issue causing headers
   headers.delete('connection');
 
-  let targetUrl = '';
   const clientUrl = new URL(req.url);
-
-  // GET uses pathname, others use params.path construction
-  if (params?.path) {
-    targetUrl = `${apiOrigin}/api/${params.path.join('/')}${clientUrl.search}`;
-  } else {
-    targetUrl = `${apiOrigin}${clientUrl.pathname}${clientUrl.search}`;
-  }
+  const upstreamPath = params?.path
+    ? `/api/${params.path.join('/')}`
+    : clientUrl.pathname;
+  const targetUrl = `${apiOrigin}${upstreamPath}${clientUrl.search}`;
 
   // Fetch Stream and pass directly in the body
   const response = await fetch(targetUrl, {
     method: req.method,
     headers,
     body: req.method !== 'GET' && req.method !== 'HEAD' ? req.body : undefined,
-    // @ts-ignore: Required for Node.js streaming
+    // @ts-ignore: Required for Node.js bi-directional streaming
     duplex: 'half',
   });
 
-  // Response Headers
   const responseHeaders = new Headers(response.headers);
 
   // content compression should be handled by browser itself
@@ -61,37 +54,12 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
   });
 }
 
-export async function GET(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
-  return proxyRequest(req, params);
-}
+export const GET = proxyRequest;
 
-export async function POST(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
-  return proxyRequest(req, params);
-}
+export const POST = proxyRequest;
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
-  return proxyRequest(req, params);
-}
+export const PUT = proxyRequest;
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
-  return proxyRequest(req, params);
-}
+export const DELETE = proxyRequest;
 
-export async function PATCH(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
-  return proxyRequest(req, params);
-}
+export const PATCH = proxyRequest;
