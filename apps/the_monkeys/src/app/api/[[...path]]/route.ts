@@ -1,170 +1,95 @@
 import { cookies } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
 
 import { API_URL } from '@/constants/api';
 
 export const dynamic = 'force-dynamic';
 
-const HOP_BY_HOP_HEADERS = new Set([
-  'connection',
-  'keep-alive',
-  'proxy-authenticate',
-  'proxy-authorization',
-  'te',
-  'trailer',
-  'transfer-encoding',
-  'upgrade',
-  'content-encoding',
-  'content-length',
-  'host',
-]);
+async function proxyRequest(req: Request, params?: { path: string[] }) {
+  const cookieStore = cookies();
+  const authToken = cookieStore.get('mat');
+  const apiOrigin = new URL(API_URL!).origin;
 
-async function proxyRequest(
-  req: NextRequest,
-  context?: { params: { path?: string[] } }
-) {
-  try {
-    const apiBaseUrl = new URL(API_URL!).origin;
-    if (!apiBaseUrl) {
-      throw new Error('API_URL environment variable is not defined');
-    }
-
-    const clientUrl = new URL(req.url);
-
-    // Determine the target path
-    let upstreamPath = '';
-
-    // (/api/v2/blog/...)
-    if (context?.params?.path) {
-      upstreamPath = `/api${context.params.path.length > 0 ? '/' + context.params.path.join('/') : ''}`;
-    } else {
-      // Fallback pathname
-      upstreamPath = clientUrl.pathname;
-    }
-
-    // Construct final URL
-    const upstreamUrl = new URL(
-      `${upstreamPath}${clientUrl.search}`,
-      apiBaseUrl
-    );
-
-    // Request Headers
-    const requestHeaders = new Headers();
-
-    // Copy valid headers from the incoming request
-    req.headers.forEach((value, key) => {
-      if (!HOP_BY_HOP_HEADERS.has(key.toLowerCase())) {
-        requestHeaders.set(key, value);
-      }
-    });
-
-    // set the cookies
-    const cookieStore = cookies();
-    const authToken = cookieStore.get('mat');
-
-    if (authToken) {
-      requestHeaders.set('Authorization', `Bearer ${authToken.value}`);
-    }
-
-    // Configure Fetch Options (Streaming Enabled)
-    const fetchOptions: RequestInit = {
-      method: req.method,
-      headers: requestHeaders,
-      cache: 'no-store',
-      redirect: 'manual',
-    };
-
-    // Attach Body for non-GET/HEAD requests
-    if (req.method !== 'GET' && req.method !== 'HEAD' && req.body) {
-      fetchOptions.body = req.body;
-
-      // @ts-ignore: Required for Node.js fetch to stream the body
-      fetchOptions.duplex = 'half';
-    }
-
-    // Execute Upstream Request
-    const upstreamResponse = await fetch(upstreamUrl.toString(), fetchOptions);
-
-    const responseHeaders = new Headers();
-
-    upstreamResponse.headers.forEach((value, key) => {
-      if (!HOP_BY_HOP_HEADERS.has(key.toLowerCase())) {
-        responseHeaders.set(key, value);
-      }
-    });
-
-    // Handle Set-Cookie Correctly
-    if (typeof upstreamResponse.headers.getSetCookie === 'function') {
-      const setCookies = upstreamResponse.headers.getSetCookie();
-      for (const cookie of setCookies) {
-        responseHeaders.append('Set-Cookie', cookie);
-      }
-    } else {
-      // Fallback
-      const rawCookie = upstreamResponse.headers.get('Set-Cookie');
-      if (rawCookie) {
-        responseHeaders.set('Set-Cookie', rawCookie);
-      }
-    }
-
-    // NEW LOGGING LOGIC (Using TransformStream)
-    // --------------------------------------------------------
-    if (!upstreamResponse.body) {
-      return new Response(null, {
-        status: upstreamResponse.status,
-        headers: responseHeaders,
-      });
-    }
-
-    // Stream Response Back to Client
-    return new Response(upstreamResponse.body, {
-      status: upstreamResponse.status,
-      statusText: upstreamResponse.statusText,
-      headers: responseHeaders,
-    });
-  } catch (error) {
-    console.error('Proxy Streaming Error:', error);
-    return NextResponse.json(
-      {
-        error: 'Internal Proxy Error',
-        details: error instanceof Error ? error.message : String(error),
-      },
-      { status: 502 }
-    );
+  const headers = new Headers(req.headers);
+  if (authToken) {
+    headers.set('Authorization', `Bearer ${authToken.value}`);
   }
+  // Removing certain headers causing issues
+  headers.delete('host');
+  headers.delete('content-length');
+
+  let targetUrl = '';
+  const clientUrl = new URL(req.url);
+
+  // GET uses pathname, others use params.path construction
+  if (params?.path) {
+    targetUrl = `${apiOrigin}/api/${params.path.join('/')}${clientUrl.search}`;
+  } else {
+    targetUrl = `${apiOrigin}${clientUrl.pathname}${clientUrl.search}`;
+  }
+
+  // Fetch Stream and pass directly in the body
+  const response = await fetch(targetUrl, {
+    method: req.method,
+    headers,
+    body: req.method !== 'GET' && req.method !== 'HEAD' ? req.body : undefined,
+    // @ts-ignore: Required for Node.js streaming
+    duplex: 'half',
+  });
+
+  // Response Headers
+  const responseHeaders = new Headers(response.headers);
+
+  // content compression should be handled by browser itself
+  responseHeaders.delete('content-encoding');
+
+  responseHeaders.delete('set-cookie');
+  if (typeof response.headers.getSetCookie === 'function') {
+    for (const cookie of response.headers.getSetCookie()) {
+      responseHeaders.append('Set-Cookie', cookie);
+    }
+  } else {
+    const sc = response.headers.get('Set-Cookie');
+    if (sc) responseHeaders.set('Set-Cookie', sc);
+  }
+
+  // Return Stream
+  return new Response(response.body, {
+    status: response.status,
+    headers: responseHeaders,
+  });
 }
 
 export async function GET(
-  req: NextRequest,
-  { params }: { params: { path?: string[] } }
+  req: Request,
+  { params }: { params: { path: string[] } }
 ) {
-  return proxyRequest(req, { params });
+  return proxyRequest(req, params);
 }
 
 export async function POST(
-  req: NextRequest,
-  { params }: { params: { path?: string[] } }
+  req: Request,
+  { params }: { params: { path: string[] } }
 ) {
-  return proxyRequest(req, { params });
+  return proxyRequest(req, params);
 }
 
 export async function PUT(
-  req: NextRequest,
-  { params }: { params: { path?: string[] } }
+  req: Request,
+  { params }: { params: { path: string[] } }
 ) {
-  return proxyRequest(req, { params });
+  return proxyRequest(req, params);
 }
 
 export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { path?: string[] } }
+  req: Request,
+  { params }: { params: { path: string[] } }
 ) {
-  return proxyRequest(req, { params });
+  return proxyRequest(req, params);
 }
 
 export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { path?: string[] } }
+  req: Request,
+  { params }: { params: { path: string[] } }
 ) {
-  return proxyRequest(req, { params });
+  return proxyRequest(req, params);
 }
