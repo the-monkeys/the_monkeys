@@ -9,7 +9,7 @@ export interface ConstructorArgs {
 
 export interface ListNode {
   content: string;
-  items: ListNode[]; // Recursive structure
+  items: ListNode[];
 }
 
 export interface ListConfig {
