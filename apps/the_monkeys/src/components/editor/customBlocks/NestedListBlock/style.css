@@ -1,54 +1,60 @@
-/* 1. Main List Container */
+/* Main List Container */
 .cdx-list {
   margin: 0;
-  padding-left: 40px !important; /* Space for the bullets */
+  padding-left: 40px !important;
   outline: none;
   box-sizing: border-box;
   display: block;
 }
 
-/* 2. Remove the "Rectangular Box" (Focus Ring) */
 .cdx-list__item-content {
   display: inline-block;
   vertical-align: top;
   min-height: 24px;
   width: auto;
-  outline: none !important; /* Kills default browser outline */
-  box-shadow: none !important; /* Kills Tailwind 'ring' or shadow borders */
-  border: none !important; /* Kills any explicit borders */
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
   background: transparent !important;
 }
 
-/* 3. Force visibility of markers */
+/* Unordered List Style */
 ul.cdx-list,
 ul .cdx-list__sublist {
   list-style: disc outside !important;
 }
 
-ol.cdx-list,
-ol .cdx-list__sublist {
+ul .cdx-list__sublist {
+  list-style: circle outside !important;
+}
+
+ul .cdx-list__sublist .cdx-list__sublist {
+  list-style: square outside !important;
+}
+
+/* Ordered List Style */
+ol.cdx-list {
   list-style: decimal outside !important;
 }
 
-/* 4. Ensure List Items behave correctly */
+ol.cdx-list ol.cdx-list__sublist {
+  list-style-type: lower-alpha !important;
+}
+
+ol.cdx-list ol.cdx-list__sublist ol.cdx-list__sublist {
+  list-style-type: lower-roman !important;
+}
+
 .cdx-list__item {
-  display: list-item !important; /* Crucial: Forces the element to allow bullets */
+  display: list-item !important;
   padding: 2px 0 2px 5px;
   line-height: 1.6;
 }
 
-/* 5. Handle Nested Lists Indentation */
+/* Nested Lists Indentation */
 .cdx-list__sublist {
   margin-top: 5px;
   margin-bottom: 5px;
-  padding-left: 40px !important; /* Increased from 20px to make indentation obvious */
+  padding-left: 40px !important;
   display: block !important;
-}
-
-/* Optional: Change bullet style for nested items for visual clarity */
-ul .cdx-list__sublist {
-  list-style: circle outside !important;
-}
-ul .cdx-list__sublist .cdx-list__sublist {
-  list-style: square outside !important;
 }
