@@ -9,6 +9,9 @@ export default class NestedList implements BlockTool {
   private readOnly: boolean;
   private wrapper!: HTMLElement;
   private maxLevel: number = 3;
+  static get isReadOnlySupported() {
+    return true;
+  }
 
   /**
    * We bind this method in the constructor or use an arrow function
