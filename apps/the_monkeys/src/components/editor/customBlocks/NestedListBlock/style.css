@@ -1,36 +1,54 @@
+/* 1. Main List Container */
 .cdx-list {
   margin: 0;
-  padding-left: 20px;
+  padding-left: 40px !important; /* Space for the bullets */
   outline: none;
-  list-style-position: outside;
-  list-style-image: none;
+  box-sizing: border-box;
+  display: block;
 }
 
-ul.cdx-list {
-  list-style-type: disc;
-}
-
-ol.cdx-list {
-  list-style-type: decimal;
-}
-
-.cdx-list__item {
-  display: list-item;
-  padding: 4px 0;
-  line-height: 1.6;
-  outline: none;
-  border: none;
-}
-
+/* 2. Remove the "Rectangular Box" (Focus Ring) */
 .cdx-list__item-content {
-  display: inline;
-  outline: none;
-  border: none;
-  min-width: 1px;
+  display: inline-block;
+  vertical-align: top;
+  min-height: 24px;
+  width: auto;
+  outline: none !important; /* Kills default browser outline */
+  box-shadow: none !important; /* Kills Tailwind 'ring' or shadow borders */
+  border: none !important; /* Kills any explicit borders */
+  background: transparent !important;
 }
 
+/* 3. Force visibility of markers */
+ul.cdx-list,
+ul .cdx-list__sublist {
+  list-style: disc outside !important;
+}
+
+ol.cdx-list,
+ol .cdx-list__sublist {
+  list-style: decimal outside !important;
+}
+
+/* 4. Ensure List Items behave correctly */
+.cdx-list__item {
+  display: list-item !important; /* Crucial: Forces the element to allow bullets */
+  padding: 2px 0 2px 5px;
+  line-height: 1.6;
+}
+
+/* 5. Handle Nested Lists Indentation */
 .cdx-list__sublist {
-  margin-top: 4px;
-  padding-left: 20px;
-  list-style-position: outside;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 40px !important; /* Increased from 20px to make indentation obvious */
+  display: block !important;
+}
+
+/* Optional: Change bullet style for nested items for visual clarity */
+ul .cdx-list__sublist {
+  list-style: circle outside !important;
+}
+ul .cdx-list__sublist .cdx-list__sublist {
+  list-style: square outside !important;
 }
