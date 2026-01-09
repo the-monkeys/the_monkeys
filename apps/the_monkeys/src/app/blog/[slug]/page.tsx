@@ -18,7 +18,7 @@ import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
-import moment from 'moment';
+import { format } from 'date-fns';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
@@ -113,19 +113,19 @@ const BlogPage = () => {
         <div className='px-4'>
           <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
             <p className='text-sm opacity-90'>
-              {moment(date).format('MMM DD, yyyy')}
+              {format(new Date(date), 'MMM dd, yyyy')}
               {' / '}
-              {moment(date).utc().format('hh:mm A')} UTC
+              {format(new Date(date), 'hh:mm a')}
             </p>
 
             <BlogHeading
-              title={sanitizedBlogTitle || 'Untitled Post'}
+              title={sanitizedBlogTitle || 'Give this post a title'}
               className='pt-1 pb-4 font-dm_sans font-semibold text-[28px] sm:text-3xl md:text-4xl !leading-[1.32] text-center'
             />
 
             <UserInfoCardBlogPage id={authorId} />
           </Container>
-        </div>
+        </div >
         <AdUnit slot='4598536509' />
         <div className='p-4'>
           <Container className='max-w-3xl'>

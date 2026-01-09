@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
 import { Calendar } from '@the-monkeys/ui/organism/calendar';
-import moment from 'moment';
+import { format } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -221,7 +221,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
                             onChange={field.onChange}
                             value={
                               field.value
-                                ? moment(field.value).format('YYYY-MM-DD')
+                                ? format(new Date(field.value), 'yyyy-MM-dd')
                                 : 'Pick a date'
                             }
                             className='w-full'
@@ -239,7 +239,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
                           onSelect={(date) => {
                             if (date) {
                               const formattedDate = parseDateTime(
-                                moment(date).format('YYYY-MM-DD')
+                                format(date, 'yyyy-MM-dd')
                               );
                               field.onChange(formattedDate);
                             }

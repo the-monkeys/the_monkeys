@@ -1,16 +1,16 @@
 import { Activity } from '@/services/activity/activityApiTypes';
-import moment from 'moment';
+import { format } from 'date-fns';
 
 export const ActivityCard = ({ activity }: { activity: Activity }) => {
   return (
     <div className='pb-2 flex items-start gap-2 sm:gap-4'>
       <div>
         <p className='font-dm_sans text-xs sm:text-sm group-hover:text-brand-orange'>
-          {moment(activity.timestamp.toString()).format('MMM DD, YYYY')}
+          {format(new Date(activity.timestamp.toString()), 'MMM dd, yyyy')}
         </p>
 
         <p className='text-xs opacity-80'>
-          {moment(activity.timestamp.toString()).format('h:mm A')}
+          {format(new Date(activity.timestamp.toString()), 'h:mm a')}
         </p>
       </div>
 

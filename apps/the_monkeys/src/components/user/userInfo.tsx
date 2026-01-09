@@ -1,8 +1,9 @@
 import Link from 'next/link';
 
+import { format } from 'date-fns';
+
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
-import moment from 'moment';
 
 import Icon from '../icon';
 import ProfileImage, { ProfileFrame } from '../profileImage';
@@ -93,12 +94,12 @@ export const UserInfoCardShowcase = ({
         <Skeleton className='h-3 w-28' />
       )}
 
-      {!isDraft && (
+      {!isDraft && date && (
         <>
           <span className='text-[13px] sm:text-sm'>{' - '}</span>
 
           <p className='shrink-0 text-[13px] sm:text-sm opacity-90'>
-            {moment(date).format('MMM DD, YYYY')}
+            {format(new Date(date), 'MMM dd, yyyy')}
           </p>
         </>
       )}

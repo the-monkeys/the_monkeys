@@ -18,7 +18,7 @@ import {
 import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
-import moment from 'moment';
+import { format, fromUnixTime } from 'date-fns';
 
 const SocialLinkButton = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -44,7 +44,7 @@ export const AuthorProfileCard = ({
     useGetConnectionCount(user?.username);
 
   const joinedDate = user?.created_at
-    ? moment.unix(user?.created_at.seconds).format('MMM, YYYY')
+    ? format(fromUnixTime(user.created_at.seconds), 'MMM, yyyy')
     : 'Not available';
 
   return (

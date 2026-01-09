@@ -7,9 +7,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: {
-    domains: ['monkeys.support', 'dev.themonkeys.site'],
-  },
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
@@ -23,6 +20,16 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'dev.monkeys.support',
+      },
+      {
+        protocol: 'http',
+        hostname: '127.0.0.1',
+        port: '8081',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8081',
       },
     ],
   },

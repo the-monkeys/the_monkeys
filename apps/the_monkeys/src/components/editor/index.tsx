@@ -2,7 +2,7 @@
 
 import React, { FC, useEffect, useRef } from 'react';
 
-import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
+import { EditorConfig, OutputData } from '@editorjs/editorjs';
 
 export type EditorProps = {
   data: OutputData;
@@ -11,22 +11,39 @@ export type EditorProps = {
 };
 
 const Editor: FC<EditorProps> = ({ data, onChange, config }) => {
-  const editorInstance = useRef<EditorJS | null>(null);
+  const editorInstance = useRef<any | null>(null);
+  const isInitializing = useRef(false);
 
   useEffect(() => {
-    if (!editorInstance.current) {
-      editorInstance.current = new EditorJS({
-        ...config,
-        data: data,
-        onChange: async (api, event: any) => {
-          if (onChange) {
-            const savedData = await api.saver.save();
+    // Dynamically import EditorJS and plugins only on client-side mount
+    const initEditor = async () => {
+      if (editorInstance.current || isInitializing.current) return;
 
-            onChange(savedData);
-          }
-        },
-      });
-    }
+      isInitializing.current = true;
+
+      try {
+        const EditorJS = (await import('@editorjs/editorjs')).default;
+        // Check again to be safe
+        if (!editorInstance.current) {
+          editorInstance.current = new EditorJS({
+            ...config,
+            data: data,
+            onChange: async (api: any, event: any) => {
+              if (onChange) {
+                const savedData = await api.saver.save();
+                onChange(savedData);
+              }
+            },
+          });
+        }
+      } catch (error) {
+        console.error('Editor initialization failed', error);
+      } finally {
+        isInitializing.current = false;
+      }
+    };
+
+    initEditor();
 
     return () => {
       if (editorInstance.current && editorInstance.current.destroy) {
