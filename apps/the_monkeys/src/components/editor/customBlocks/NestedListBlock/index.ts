@@ -278,7 +278,8 @@ export default class NestedList implements BlockTool {
 
     const selection = window.getSelection();
     // Only act if cursor is at the very beginning of the item, and no range is selected
-    if (selection && (selection.anchorOffset !== 0 || !selection.isCollapsed)) return;
+    if (selection && (selection.anchorOffset !== 0 || !selection.isCollapsed))
+      return;
 
     const currentItem = target.closest('.cdx-list__item') as HTMLElement;
     const parent = currentItem.parentElement as HTMLElement;
