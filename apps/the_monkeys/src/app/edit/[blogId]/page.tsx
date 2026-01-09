@@ -114,6 +114,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         slug: blogSlug,
       };
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -215,6 +216,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, blogId, formatData]);
 
   // Auto-save when data changes

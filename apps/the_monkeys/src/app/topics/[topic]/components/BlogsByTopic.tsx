@@ -32,6 +32,7 @@ export const BlogsByTopic = ({ topic }: { topic: string }) => {
     };
 
     fetchBlogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (blogsLoading) {

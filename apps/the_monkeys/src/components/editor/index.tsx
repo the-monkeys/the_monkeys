@@ -51,6 +51,7 @@ const Editor: FC<EditorProps> = ({ data, onChange, config }) => {
         editorInstance.current = null;
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

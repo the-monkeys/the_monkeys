@@ -216,6 +216,7 @@ const CreatePage = () => {
         slug: blogSlug,
       };
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [accountId, blogTopics]
   );
 
@@ -245,6 +246,7 @@ const CreatePage = () => {
         clearTimeout(saveTimer);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, isConnected, formatData, sendData]);
 
   // Handle blog publishing

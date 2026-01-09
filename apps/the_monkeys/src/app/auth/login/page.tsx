@@ -23,7 +23,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isSuccess) router.replace('/');
-  }, [isSuccess]);
+  });
 
   return (
     <>

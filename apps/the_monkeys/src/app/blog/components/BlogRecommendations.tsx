@@ -36,6 +36,7 @@ export const BlogRecommendations = ({
     };
 
     fetchBlogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (blogsLoading) {

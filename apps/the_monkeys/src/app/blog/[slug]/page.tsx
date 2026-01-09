@@ -125,7 +125,7 @@ const BlogPage = () => {
 
             <UserInfoCardBlogPage id={authorId} />
           </Container>
-        </div >
+        </div>
         <AdUnit slot='4598536509' />
         <div className='p-4'>
           <Container className='max-w-3xl'>

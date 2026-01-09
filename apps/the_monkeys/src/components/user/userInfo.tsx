@@ -1,9 +1,8 @@
 import Link from 'next/link';
 
-import { format } from 'date-fns';
-
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
+import { format } from 'date-fns';
 
 import Icon from '../icon';
 import ProfileImage, { ProfileFrame } from '../profileImage';
