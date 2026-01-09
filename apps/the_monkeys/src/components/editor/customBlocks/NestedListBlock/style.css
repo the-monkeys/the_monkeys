@@ -1,10 +1,9 @@
 /* Main List Container */
 .cdx-list {
-  margin: 0;
-  padding-left: 40px !important;
   outline: none;
   box-sizing: border-box;
   display: block;
+  /* margin & padding handled by globals.css */
 }
 
 .cdx-list__item-content {
@@ -47,14 +46,14 @@ ol.cdx-list ol.cdx-list__sublist ol.cdx-list__sublist {
 
 .cdx-list__item {
   display: list-item !important;
-  padding: 2px 0 2px 5px;
-  line-height: 1.6;
+  padding-left: 5px; /* keep small left padding for text alignment */
+  /* padding, line-height, font-size handled by globals.css */
 }
 
 /* Nested Lists Indentation */
 .cdx-list__sublist {
   margin-top: 5px;
   margin-bottom: 5px;
-  padding-left: 40px !important;
+  padding-left: 30px !important; /* Match globals.css padding */
   display: block !important;
 }

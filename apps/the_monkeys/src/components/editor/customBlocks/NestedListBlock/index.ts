@@ -48,7 +48,7 @@ export default class NestedList implements BlockTool {
     );
 
     // Ensure the block is never completely empty on initialization
-    if (normalizedItems.length === 0) {
+    if (normalizedItems.length === 0 && !this.readOnly) {
       normalizedItems.push({ content: '', items: [] });
     }
 
@@ -205,7 +205,11 @@ export default class NestedList implements BlockTool {
     return li;
   }
 
-  private renderItem(item: ListItemData): HTMLLIElement {
+  private renderItem(item: ListItemData | string): HTMLLIElement {
+    if (typeof item === 'string') {
+      return this.createListItem(item);
+    }
+
     const li = this.createListItem(item.content);
 
     if (item.items && item.items.length > 0) {
@@ -273,8 +277,8 @@ export default class NestedList implements BlockTool {
     if (!target.classList.contains('cdx-list__item-content')) return;
 
     const selection = window.getSelection();
-    // Only act if cursor is at the very beginning of the item
-    if (selection && selection.anchorOffset !== 0) return;
+    // Only act if cursor is at the very beginning of the item, and no range is selected
+    if (selection && (selection.anchorOffset !== 0 || !selection.isCollapsed)) return;
 
     const currentItem = target.closest('.cdx-list__item') as HTMLElement;
     const parent = currentItem.parentElement as HTMLElement;
@@ -387,6 +391,26 @@ export default class NestedList implements BlockTool {
     if (parent.classList.contains('cdx-list__sublist')) {
       const parentLi = parent.parentElement as HTMLElement;
       const grandParent = parentLi.parentElement as HTMLElement;
+
+      // Move following siblings of the item into the item as a sublist (Google Drive behavior)
+      const nextSiblings = [];
+      let next = item.nextElementSibling;
+      while (next) {
+        nextSiblings.push(next);
+        next = next.nextElementSibling;
+      }
+
+      if (nextSiblings.length > 0) {
+        let itemSublist = item.querySelector('.cdx-list__sublist');
+        if (!itemSublist) {
+          itemSublist = document.createElement(parent.tagName);
+          itemSublist.className = 'cdx-list__sublist';
+          item.appendChild(itemSublist);
+        }
+        nextSiblings.forEach((sibling) => {
+          itemSublist!.appendChild(sibling);
+        });
+      }
 
       if (parentLi.nextSibling) {
         grandParent.insertBefore(item, parentLi.nextSibling);
