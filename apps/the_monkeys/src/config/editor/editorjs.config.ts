@@ -1,6 +1,6 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
+import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
-import CustomList from '@/components/editor/customBlocks/NestedListBlock';
 import { API_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
 import Delimiter from '@editorjs/delimiter';

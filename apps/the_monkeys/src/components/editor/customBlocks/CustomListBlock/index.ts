@@ -3,7 +3,7 @@ import { API, BlockTool, ToolboxConfig } from '@editorjs/editorjs';
 import './style.css';
 import { ConstructorArgs, ListItemData, ListToolData } from './utils/interface';
 
-export default class NestedList implements BlockTool {
+export default class CustomList implements BlockTool {
   private api: API;
   private data: ListToolData;
   private readOnly: boolean;

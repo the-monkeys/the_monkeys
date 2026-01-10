@@ -1,6 +1,6 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
+import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
-import CustomList from '@/components/editor/customBlocks/NestedListBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
