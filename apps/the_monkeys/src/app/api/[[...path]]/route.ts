@@ -2,113 +2,65 @@ import { cookies } from 'next/headers';
 
 import { API_URL } from '@/constants/api';
 
-export async function GET(req: Request) {
-  const url = new URL(req.url);
-  const headers = new Headers(req.headers);
-
-  const apiURL = new URL(API_URL!).origin;
-
-  const response = await fetch(`${apiURL}${url.pathname}${url.search}`, {
-    method: req.method,
-    headers,
-  });
-
-  response.headers.delete('Content-Encoding');
-  return response;
-}
-
-export async function POST(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
+async function proxyRequest(req: Request, params?: { path: string[] }) {
   const cookieStore = cookies();
   const authToken = cookieStore.get('mat');
+  const apiOrigin = new URL(API_URL!).origin;
 
   const headers = new Headers(req.headers);
   if (authToken) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
 
-  const apiURL = new URL(API_URL!).origin;
+  const clientUrl = new URL(req.url);
+  const upstreamPath = params?.path
+    ? `/api/${params.path.join('/')}`
+    : clientUrl.pathname;
+  const targetUrl = `${apiOrigin}${upstreamPath}${clientUrl.search}`;
 
-  const responseHeaders = new Headers();
-  const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
-    method: req.method,
-    headers,
-    body: req.body,
-    //@ts-ignore
-    duplex: 'half',
-  });
+  try {
+    // Fetch Stream and pass directly in the body
+    const response = await fetch(targetUrl, {
+      method: req.method,
+      headers,
+      body:
+        req.method !== 'GET' && req.method !== 'HEAD' ? req.body : undefined,
+      cache: 'no-store',
+      // @ts-ignore: Required for Node.js bi-directional streaming
+      duplex: 'half',
+    });
 
-  responseHeaders.set('Set-Cookie', response.headers.get('Set-Cookie') || '');
-  const data = await response.json();
+    const responseHeaders = new Headers(response.headers);
 
-  return new Response(JSON.stringify(data), {
-    status: response.status,
-    headers: responseHeaders,
-  });
-}
+    // content compression should be handled by browser itself
+    responseHeaders.delete('content-encoding');
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
-  const cookieStore = cookies();
-  const authToken = cookieStore.get('mat');
+    responseHeaders.delete('set-cookie');
+    if (typeof response.headers.getSetCookie === 'function') {
+      for (const cookie of response.headers.getSetCookie()) {
+        responseHeaders.append('Set-Cookie', cookie);
+      }
+    } else {
+      const sc = response.headers.get('Set-Cookie');
+      if (sc) responseHeaders.set('Set-Cookie', sc);
+    }
 
-  const headers = new Headers(req.headers);
-  if (authToken) {
-    headers.set('Authorization', `Bearer ${authToken.value}`);
+    // Return Stream
+    return new Response(response.body, {
+      status: response.status,
+      headers: responseHeaders,
+    });
+  } catch (error) {
+    console.error('Proxy Error:', error);
+    return new Response(JSON.stringify({ error: 'Proxy Connection Failed' }), {
+      status: 502,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
-
-  const apiURL = new URL(API_URL!).origin;
-
-  const responseHeaders = new Headers();
-  const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
-    method: req.method,
-    headers,
-    body: req.body,
-    //@ts-ignore
-    duplex: 'half',
-  });
-
-  responseHeaders.set('Set-Cookie', response.headers.get('Set-Cookie') || '');
-  const data = await response.json();
-
-  return new Response(JSON.stringify(data), {
-    status: response.status,
-    headers: responseHeaders,
-  });
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { path: string[] } }
-) {
-  const cookieStore = cookies();
-  const authToken = cookieStore.get('mat');
-
-  const headers = new Headers(req.headers);
-  if (authToken) {
-    headers.set('Authorization', `Bearer ${authToken.value}`);
-  }
-
-  const apiURL = new URL(API_URL!).origin;
-
-  const responseHeaders = new Headers();
-  const response = await fetch(`${apiURL}/api/${params.path.join('/')}`, {
-    method: req.method,
-    headers,
-    body: req.body,
-    //@ts-ignore
-    duplex: 'half',
-  });
-
-  responseHeaders.set('Set-Cookie', response.headers.get('Set-Cookie') || '');
-  const data = await response.json();
-
-  return new Response(JSON.stringify(data), {
-    status: response.status,
-    headers: responseHeaders,
-  });
-}
+export const GET = proxyRequest;
+export const POST = proxyRequest;
+export const PUT = proxyRequest;
+export const DELETE = proxyRequest;
+export const PATCH = proxyRequest;
