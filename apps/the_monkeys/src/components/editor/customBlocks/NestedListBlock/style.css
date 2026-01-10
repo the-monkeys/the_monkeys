@@ -3,7 +3,6 @@
   outline: none;
   box-sizing: border-box;
   display: block;
-  /* margin & padding handled by globals.css */
 }
 
 .cdx-list__item-content {
@@ -46,14 +45,13 @@ ol.cdx-list ol.cdx-list__sublist ol.cdx-list__sublist {
 
 .cdx-list__item {
   display: list-item !important;
-  padding-left: 5px; /* keep small left padding for text alignment */
-  /* padding, line-height, font-size handled by globals.css */
+  padding-left: 5px;
 }
 
 /* Nested Lists Indentation */
 .cdx-list__sublist {
   margin-top: 5px;
   margin-bottom: 5px;
-  padding-left: 30px !important; /* Match globals.css padding */
+  padding-left: 30px !important;
   display: block !important;
 }

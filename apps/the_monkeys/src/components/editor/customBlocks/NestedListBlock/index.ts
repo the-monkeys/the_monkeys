@@ -9,14 +9,8 @@ export default class NestedList implements BlockTool {
   private readOnly: boolean;
   private wrapper!: HTMLElement;
   private maxLevel: number = 3;
-  static get isReadOnlySupported() {
-    return true;
-  }
+  private backspaceTimeout?: NodeJS.Timeout;
 
-  /**
-   * We bind this method in the constructor or use an arrow function
-   * so we can pass the exact same reference to removeEventListener.
-   */
   private readonly onKeyDown: (event: KeyboardEvent) => void;
 
   constructor({ data, api, readOnly }: ConstructorArgs) {
@@ -24,17 +18,25 @@ export default class NestedList implements BlockTool {
     this.readOnly = !!readOnly;
 
     this.onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Enter') this.handleEnter(event);
-      else if (event.key === 'Backspace') this.handleBackspace(event);
-      else if (event.key === 'Tab') this.handleTab(event);
+      if (this.readOnly) return;
+
+      switch (event.key) {
+        case 'Enter':
+          this.handleEnter(event);
+          break;
+        case 'Backspace':
+          this.handleBackspace(event);
+          break;
+        case 'Tab':
+          this.handleTab(event);
+          break;
+      }
     };
 
-    // Data Normalization:
-    // Ensures we always work with the ListItemData[] structure,
-    // even if legacy data (strings) is passed.
     const incomingItems =
       data && data.items && data.items.length > 0 ? data.items : [];
 
+    // Data Normalization
     const normalizedItems: ListItemData[] = (incomingItems as any[]).map(
       (item) => {
         if (typeof item === 'string') {
@@ -58,10 +60,14 @@ export default class NestedList implements BlockTool {
     };
   }
 
-  /**
-   * Returns the toolbox configuration.
-   * Allows users to create either a Bullet or Numbered list directly.
-   */
+  static get isReadOnlySupported() {
+    return true;
+  }
+
+  static get enableLineBreaks() {
+    return true;
+  }
+
   static get toolbox(): ToolboxConfig {
     return [
       {
@@ -101,11 +107,25 @@ export default class NestedList implements BlockTool {
     ];
   }
 
+  private removeEvents() {
+    if (this.wrapper) {
+      this.wrapper.removeEventListener('keydown', this.onKeyDown);
+    }
+  }
+
+  private bindEvents() {
+    if (this.wrapper && !this.readOnly) {
+      this.wrapper.addEventListener('keydown', this.onKeyDown);
+    }
+  }
+
   /**
    * Switches the list style (UL <-> OL).
    */
   private toggleTune(style: 'ordered' | 'unordered') {
     if (this.data.style === style) return;
+
+    this.removeEvents();
 
     this.data.style = style;
     const newTag = style === 'ordered' ? 'ol' : 'ul';
@@ -113,35 +133,34 @@ export default class NestedList implements BlockTool {
     newWrapper.className = 'cdx-list';
 
     // Move existing children to the new wrapper
+    const fragment = document.createDocumentFragment();
     while (this.wrapper.firstChild) {
-      newWrapper.appendChild(this.wrapper.firstChild);
+      fragment.appendChild(this.wrapper.firstChild);
     }
-
-    // Cleanup old events
-    if (this.wrapper) {
-      this.wrapper.removeEventListener('keydown', this.onKeyDown);
-    }
+    newWrapper.appendChild(fragment);
 
     this.wrapper.parentNode?.replaceChild(newWrapper, this.wrapper);
     this.wrapper = newWrapper;
 
-    // Attach events to new wrapper
-    if (!this.readOnly) {
-      this.wrapper.addEventListener('keydown', this.onKeyDown);
-    }
+    this.bindEvents();
 
-    // update nested lists to match the style
+    // update nested lists
     this.updateSublistsStyles(this.wrapper, newTag);
   }
 
   private updateSublistsStyles(parent: HTMLElement, newTag: string) {
     const sublists = parent.querySelectorAll('.cdx-list__sublist');
+
     sublists.forEach((oldSublist) => {
       const newSublist = document.createElement(newTag);
       newSublist.className = 'cdx-list__sublist';
+
+      const fragment = document.createDocumentFragment();
       while (oldSublist.firstChild) {
-        newSublist.appendChild(oldSublist.firstChild);
+        fragment.appendChild(oldSublist.firstChild);
       }
+      newSublist.appendChild(fragment);
+
       oldSublist.parentNode?.replaceChild(newSublist, oldSublist);
     });
   }
@@ -155,18 +174,17 @@ export default class NestedList implements BlockTool {
     );
     this.wrapper.className = 'cdx-list';
 
+    const fragment = document.createDocumentFragment();
     this.data.items.forEach((item) => {
       if (typeof item === 'string') {
-        this.wrapper.appendChild(this.createListItem(item));
+        fragment.appendChild(this.createListItem(item));
       } else {
-        this.wrapper.appendChild(this.renderItem(item));
+        fragment.appendChild(this.renderItem(item));
       }
     });
+    this.wrapper.appendChild(fragment);
 
-    if (!this.readOnly) {
-      this.wrapper.addEventListener('keydown', this.onKeyDown);
-    }
-
+    this.bindEvents();
     return this.wrapper;
   }
 
@@ -175,8 +193,9 @@ export default class NestedList implements BlockTool {
    * Cleans up event listeners when the block is removed to prevent memory leaks.
    */
   destroy() {
-    if (this.wrapper) {
-      this.wrapper.removeEventListener('keydown', this.onKeyDown);
+    this.removeEvents();
+    if (this.backspaceTimeout) {
+      clearTimeout(this.backspaceTimeout);
     }
   }
 
@@ -184,7 +203,7 @@ export default class NestedList implements BlockTool {
    * Saves the block content.
    * Returns 'any' to satisfy the generic BlockTool interface.
    */
-  save(root: HTMLElement): any {
+  save(root: HTMLElement): ListToolData {
     const items = this.readItems(root);
     return {
       style: root.tagName === 'OL' ? 'ordered' : 'unordered',
@@ -232,11 +251,14 @@ export default class NestedList implements BlockTool {
   private getLevel(element: HTMLElement): number {
     let level = 1;
     let parent = element.parentElement;
-    while (parent && parent !== this.wrapper) {
+    let safetyCounter = 0;
+
+    while (parent && parent !== this.wrapper && safetyCounter < 10) {
       if (parent.classList.contains('cdx-list__sublist')) {
         level++;
       }
       parent = parent.parentElement;
+      safetyCounter++;
     }
     return level;
   }
@@ -249,10 +271,25 @@ export default class NestedList implements BlockTool {
     event.stopPropagation();
 
     const currentItem = target.closest('.cdx-list__item') as HTMLElement;
+
+    const content = target.innerHTML.trim();
+    const isEmpty = !content || content === '<br>';
+
+    if (isEmpty) {
+      const parent = currentItem.parentElement as HTMLElement;
+
+      if (parent.classList.contains('cdx-list__sublist')) {
+        this.outdentItem(currentItem);
+        return;
+      }
+
+      this.convertBlockToParagraph();
+      return;
+    }
+
     const newItem = this.createListItem('');
     const sublist = currentItem.querySelector('.cdx-list__sublist');
 
-    // If item has children, prepend new item to children. Otherwise, append sibling.
     if (sublist) {
       sublist.insertBefore(newItem, sublist.firstChild);
     } else {
@@ -267,10 +304,9 @@ export default class NestedList implements BlockTool {
   }
 
   /**
-   * Backspace Logic:
-   * 1. Outdent if nested.
-   * 2. Merge with previous item if at root level.
-   * 3. Convert to Paragraph if list is empty.
+   * Outdent if nested.
+   * Merge with previous item if at root level.
+   * Convert to Paragraph if list is empty.
    */
   private handleBackspace(event: KeyboardEvent) {
     const target = event.target as HTMLElement;
@@ -285,7 +321,7 @@ export default class NestedList implements BlockTool {
     const parent = currentItem.parentElement as HTMLElement;
     const previousItem = currentItem.previousElementSibling as HTMLElement;
 
-    // Case 1: Outdent (Level 2/3 -> Parent)
+    // Case 1: Outdent
     if (parent.classList.contains('cdx-list__sublist')) {
       event.preventDefault();
       event.stopPropagation();
@@ -313,39 +349,25 @@ export default class NestedList implements BlockTool {
       if (currentSublist) {
         const previousSublist =
           previousItem.querySelector('.cdx-list__sublist');
+
         if (!previousSublist) {
           previousItem.appendChild(currentSublist);
         } else {
+          const fragment = document.createDocumentFragment();
           while (currentSublist.firstChild) {
-            previousSublist.appendChild(currentSublist.firstChild);
+            fragment.appendChild(currentSublist.firstChild);
           }
+          previousSublist.appendChild(fragment);
         }
       }
 
       currentItem.remove();
-      // Set focus to the end of the previous item (where text was merged)
       this.focusItem(previousItem, true);
     } else {
       // Case 3: Empty First Item -> Convert to Paragraph
       if (target.innerHTML.trim() === '' || target.innerHTML === '<br>') {
         event.preventDefault();
-
-        const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
-
-        // Replace list block with a new Paragraph block
-        this.api.blocks.insert(
-          'paragraph',
-          { text: '' },
-          {},
-          currentBlockIndex,
-          true
-        );
-        this.api.blocks.delete(currentBlockIndex + 1);
-
-        // Delay to allow DOM update before setting caret
-        setTimeout(() => {
-          this.api.caret.setToBlock(currentBlockIndex);
-        }, 10);
+        this.convertBlockToParagraph();
       }
     }
   }
@@ -359,13 +381,11 @@ export default class NestedList implements BlockTool {
 
     const currentItem = target.closest('.cdx-list__item') as HTMLElement;
 
-    // Shift+Tab: Outdent
     if (event.shiftKey) {
       this.outdentItem(currentItem);
       return;
     }
 
-    // Tab: Indent (if max level not reached)
     const currentLevel = this.getLevel(currentItem);
     if (currentLevel >= this.maxLevel) {
       return;
@@ -393,7 +413,6 @@ export default class NestedList implements BlockTool {
       const parentLi = parent.parentElement as HTMLElement;
       const grandParent = parentLi.parentElement as HTMLElement;
 
-      // Move following siblings of the item into the item as a sublist (Google Drive behavior)
       const nextSiblings = [];
       let next = item.nextElementSibling;
       while (next) {
@@ -408,9 +427,12 @@ export default class NestedList implements BlockTool {
           itemSublist.className = 'cdx-list__sublist';
           item.appendChild(itemSublist);
         }
+
+        const fragment = document.createDocumentFragment();
         nextSiblings.forEach((sibling) => {
-          itemSublist!.appendChild(sibling);
+          fragment.appendChild(sibling);
         });
+        itemSublist!.appendChild(fragment);
       }
 
       if (parentLi.nextSibling) {
@@ -427,21 +449,35 @@ export default class NestedList implements BlockTool {
     }
   }
 
+  /**
+   * Helper to exit list mode and create a paragraph
+   */
+  private convertBlockToParagraph() {
+    const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
+
+    this.api.blocks.insert(
+      'paragraph',
+      { text: '' },
+      {},
+      currentBlockIndex,
+      true
+    );
+    this.api.blocks.delete(currentBlockIndex + 1);
+  }
+
   private focusItem(item: HTMLElement, atEnd: boolean = false) {
     const content = item.querySelector(
       '.cdx-list__item-content'
     ) as HTMLElement;
     if (content) {
       content.focus();
+
       if (
         typeof window.getSelection !== 'undefined' &&
         typeof document.createRange !== 'undefined'
       ) {
         const range = document.createRange();
         range.selectNodeContents(content);
-
-        // range.collapse(false) collapses the range to the END of the content.
-        // range.collapse(true) collapses to the START.
         range.collapse(!atEnd);
 
         const sel = window.getSelection();
@@ -468,9 +504,5 @@ export default class NestedList implements BlockTool {
     });
 
     return items;
-  }
-
-  static get enableLineBreaks() {
-    return true;
   }
 }
