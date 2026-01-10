@@ -1,6 +1,7 @@
-import clientInfo from '@/utils/clientInfo';
 import { getAllRequestHeaders } from '@/utils/requestHeaders';
 import axios, { AxiosResponse } from 'axios';
+
+import { setupRefreshInterceptor } from './interceptors';
 
 const axiosFileInstance = axios.create({
   baseURL: '/api/v1',
@@ -38,8 +39,6 @@ axiosFileInstance.interceptors.request.use(
   (error: unknown) => Promise.reject(error)
 );
 
-axiosFileInstance.interceptors.response.use(
-  (response: AxiosResponse) => response
-);
+setupRefreshInterceptor(axiosFileInstance);
 
 export default axiosFileInstance;

@@ -1,6 +1,7 @@
-import clientInfo from '@/utils/clientInfo';
 import { getAllRequestHeaders } from '@/utils/requestHeaders';
 import axios from 'axios';
+
+import { setupRefreshInterceptor } from './interceptors';
 
 const axiosInstance = axios.create({
   baseURL: '/api/v1',
@@ -35,18 +36,6 @@ axiosInstance.interceptors.request.use(
   (error: unknown) => Promise.reject(error)
 );
 
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // Handle common errors
-    if (error.response) {
-      // For example, redirect to login if 401
-      // if (error.response.status === 401) {
-      //   window.location.href = '/login';
-      // }
-    }
-    return Promise.reject(error);
-  }
-);
+setupRefreshInterceptor(axiosInstance);
 
 export default axiosInstance;
