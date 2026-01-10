@@ -9,7 +9,6 @@ export default class NestedList implements BlockTool {
   private readOnly: boolean;
   private wrapper!: HTMLElement;
   private maxLevel: number = 3;
-  private backspaceTimeout?: NodeJS.Timeout;
 
   private readonly onKeyDown: (event: KeyboardEvent) => void;
 
@@ -166,7 +165,7 @@ export default class NestedList implements BlockTool {
   }
 
   /**
-   * Main render method. Creates the DOM structure.
+   * Creates the DOM structure.
    */
   render(): HTMLElement {
     this.wrapper = document.createElement(
@@ -188,21 +187,10 @@ export default class NestedList implements BlockTool {
     return this.wrapper;
   }
 
-  /**
-   * Editor.js Lifecycle Method.
-   * Cleans up event listeners when the block is removed to prevent memory leaks.
-   */
   destroy() {
     this.removeEvents();
-    if (this.backspaceTimeout) {
-      clearTimeout(this.backspaceTimeout);
-    }
   }
 
-  /**
-   * Saves the block content.
-   * Returns 'any' to satisfy the generic BlockTool interface.
-   */
   save(root: HTMLElement): ListToolData {
     const items = this.readItems(root);
     return {
