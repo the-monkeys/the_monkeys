@@ -9,53 +9,56 @@ export default class CustomList implements BlockTool {
   private readOnly: boolean;
   private wrapper!: HTMLElement;
   private maxLevel: number = 3;
+  private backspaceTimeout: number | null = null;
 
-  private readonly onKeyDown: (event: KeyboardEvent) => void;
+  private static readonly ICONS = {
+    UNORDERED:
+      '<svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 6h2v2H4zM8 6h12v2H8zM4 11h2v2H4zM8 11h12v2H8zM4 16h2v2H4zM8 16h12v2H8z"/></svg>',
+    ORDERED:
+      '<svg width="18" height="18" viewBox="0 0 24 24"><path d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z"/></svg>',
+  };
 
   constructor({ data, api, readOnly }: ConstructorArgs) {
     this.api = api;
     this.readOnly = !!readOnly;
 
-    this.onKeyDown = (event: KeyboardEvent) => {
-      if (this.readOnly) return;
-
-      switch (event.key) {
-        case 'Enter':
-          this.handleEnter(event);
-          break;
-        case 'Backspace':
-          this.handleBackspace(event);
-          break;
-        case 'Tab':
-          this.handleTab(event);
-          break;
-      }
-    };
-
-    const incomingItems =
-      data && data.items && data.items.length > 0 ? data.items : [];
+    const incomingItems = data && Array.isArray(data.items) ? data.items : [];
 
     // Data Normalization
-    const normalizedItems: ListItemData[] = (incomingItems as any[]).map(
-      (item) => {
-        if (typeof item === 'string') {
-          return { content: item, items: [] };
-        }
+    const normalizedItems: ListItemData[] = incomingItems.map((item) => {
+      if (typeof item === 'string') {
+        return { content: item, items: [] };
+      }
+      if (typeof item === 'object' && item !== null) {
         return {
-          content: item.content,
-          items: item.items || [],
+          content: item.content || '',
+          items: Array.isArray(item.items) ? item.items : [],
         };
       }
-    );
+      return { content: '', items: [] };
+    });
 
-    // Ensure the block is never completely empty on initialization
+    // block is never completely empty on initialization
     if (normalizedItems.length === 0 && !this.readOnly) {
       normalizedItems.push({ content: '', items: [] });
     }
 
     this.data = {
-      style: data && data.style ? data.style : 'unordered',
+      style:
+        data && (data.style === 'ordered' || data.style === 'unordered')
+          ? data.style
+          : 'unordered',
       items: normalizedItems,
+    };
+  }
+
+  static get sanitize() {
+    return {
+      style: false,
+      items: {
+        content: true,
+        items: true,
+      },
     };
   }
 
@@ -70,16 +73,27 @@ export default class CustomList implements BlockTool {
   static get toolbox(): ToolboxConfig {
     return [
       {
-        title: 'Bullet List',
-        icon: '<svg width="18" height="18" viewBox="0 0 24 24"><path d="M4 6h2v2H4zM8 6h12v2H8zM4 11h2v2H4zM8 11h12v2H8zM4 16h2v2H4zM8 16h12v2H8z"/></svg>',
+        title: 'Unordered List',
+        icon: CustomList.ICONS.UNORDERED,
         data: { style: 'unordered' },
       },
       {
-        title: 'Numbered List',
-        icon: '<svg width="18" height="18" viewBox="0 0 24 24"><path d="M2 17h2v.5H3v1h1v.5H2v1h3v-4H2v1zm1-9h1V4H2v1h1v3zm-1 3h1.8L2 13.1v.9h3v-1H3.2L5 10.9V10H2v1zm5-6v2h14V5H7zm0 14h14v-2H7v2zm0-6h14v-2H7v2z"/></svg>',
+        title: 'Ordered List',
+        icon: CustomList.ICONS.ORDERED,
         data: { style: 'ordered' },
       },
     ];
+  }
+
+  destroy() {
+    this.removeEvents();
+  }
+
+  save(root: HTMLElement): ListToolData {
+    return {
+      style: root.tagName === 'OL' ? 'ordered' : 'unordered',
+      items: this.retrieveItems(Array.from(root.children)),
+    };
   }
 
   /**
@@ -90,7 +104,7 @@ export default class CustomList implements BlockTool {
       {
         name: 'unordered',
         label: 'Unordered',
-        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6h11v2H9zM4 6h2v2H4zM9 11h11v2H9zM4 11h2v2H4zM9 16h11v2H9zM4 16h2v2H4z" fill="currentColor"/></svg>',
+        icon: CustomList.ICONS.UNORDERED,
         closeOnActivate: true,
         isActive: this.data.style === 'unordered',
         onActivate: () => this.toggleTune('unordered'),
@@ -98,7 +112,7 @@ export default class CustomList implements BlockTool {
       {
         name: 'ordered',
         label: 'Ordered',
-        icon: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M10 6h10v2H10zM4 6h3v2H4zM10 11h10v2H10zM4 11h3v2H4zM10 16h10v2H10zM4 16h3v2H4z" fill="currentColor"/></svg>',
+        icon: CustomList.ICONS.ORDERED,
         closeOnActivate: true,
         isActive: this.data.style === 'ordered',
         onActivate: () => this.toggleTune('ordered'),
@@ -106,9 +120,29 @@ export default class CustomList implements BlockTool {
     ];
   }
 
+  private onKeyDown = (event: KeyboardEvent) => {
+    if (this.readOnly) return;
+
+    switch (event.key) {
+      case 'Enter':
+        this.handleEnter(event);
+        break;
+      case 'Backspace':
+        this.handleBackspace(event);
+        break;
+      case 'Tab':
+        this.handleTab(event);
+        break;
+    }
+  };
+
   private removeEvents() {
     if (this.wrapper) {
       this.wrapper.removeEventListener('keydown', this.onKeyDown);
+    }
+    if (this.backspaceTimeout) {
+      clearTimeout(this.backspaceTimeout);
+      this.backspaceTimeout = null;
     }
   }
 
@@ -187,18 +221,6 @@ export default class CustomList implements BlockTool {
     return this.wrapper;
   }
 
-  destroy() {
-    this.removeEvents();
-  }
-
-  save(root: HTMLElement): ListToolData {
-    const items = this.readItems(root);
-    return {
-      style: root.tagName === 'OL' ? 'ordered' : 'unordered',
-      items: items,
-    };
-  }
-
   private createListItem(contentHTML: string = ''): HTMLLIElement {
     const li = document.createElement('li');
     li.className = 'cdx-list__item';
@@ -261,7 +283,8 @@ export default class CustomList implements BlockTool {
     const currentItem = target.closest('.cdx-list__item') as HTMLElement;
 
     const content = target.innerHTML.trim();
-    const isEmpty = !content || content === '<br>';
+    const isEmpty =
+      !target.textContent?.trim() && (content === '' || content === '<br>');
 
     if (isEmpty) {
       const parent = currentItem.parentElement as HTMLElement;
@@ -271,7 +294,7 @@ export default class CustomList implements BlockTool {
         return;
       }
 
-      this.convertBlockToParagraph();
+      this.breakOutOfList(currentItem);
       return;
     }
 
@@ -309,7 +332,6 @@ export default class CustomList implements BlockTool {
     const parent = currentItem.parentElement as HTMLElement;
     const previousItem = currentItem.previousElementSibling as HTMLElement;
 
-    // Case 1: Outdent
     if (parent.classList.contains('cdx-list__sublist')) {
       event.preventDefault();
       event.stopPropagation();
@@ -317,7 +339,18 @@ export default class CustomList implements BlockTool {
       return;
     }
 
-    // Case 2: Merge with Previous Item (Level 1)
+    // Break out of list if empty root item
+    const content = target.innerHTML.trim();
+    const textContent = target.textContent?.trim() || '';
+
+    // Check if visually empty
+    if (textContent === '' && (content === '' || content === '<br>')) {
+      event.preventDefault();
+      this.breakOutOfList(currentItem);
+      return;
+    }
+
+    // Merge with Previous Item
     if (previousItem) {
       event.preventDefault();
       event.stopPropagation();
@@ -327,12 +360,12 @@ export default class CustomList implements BlockTool {
       ) as HTMLElement;
       const currentHTML = target.innerHTML;
 
-      // Merge text: Append current text to previous item
+      // Append current text to previous item
       if (currentHTML !== '' && currentHTML !== '<br>') {
         previousContent.innerHTML += currentHTML;
       }
 
-      // Merge children: Move sublists from current to previous
+      // Move sublists from current to previous
       const currentSublist = currentItem.querySelector('.cdx-list__sublist');
       if (currentSublist) {
         const previousSublist =
@@ -351,12 +384,6 @@ export default class CustomList implements BlockTool {
 
       currentItem.remove();
       this.focusItem(previousItem, true);
-    } else {
-      // Case 3: Empty First Item -> Convert to Paragraph
-      if (target.innerHTML.trim() === '' || target.innerHTML === '<br>') {
-        event.preventDefault();
-        this.convertBlockToParagraph();
-      }
     }
   }
 
@@ -437,22 +464,6 @@ export default class CustomList implements BlockTool {
     }
   }
 
-  /**
-   * Helper to exit list mode and create a paragraph
-   */
-  private convertBlockToParagraph() {
-    const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
-
-    this.api.blocks.insert(
-      'paragraph',
-      { text: '' },
-      {},
-      currentBlockIndex,
-      true
-    );
-    this.api.blocks.delete(currentBlockIndex + 1);
-  }
-
   private focusItem(item: HTMLElement, atEnd: boolean = false) {
     const content = item.querySelector(
       '.cdx-list__item-content'
@@ -475,22 +486,97 @@ export default class CustomList implements BlockTool {
     }
   }
 
-  private readItems(list: HTMLElement): ListItemData[] {
-    const items: ListItemData[] = [];
-    const distinctItems = Array.from(list.children).filter(
-      (el) => el.tagName === 'LI'
-    );
+  /**
+   * Universal method to extract data from a list of LI elements
+   */
+  private retrieveItems(items: Element[]): ListItemData[] {
+    const data: ListItemData[] = [];
 
-    distinctItems.forEach((li) => {
-      const contentEl = li.querySelector(':scope > .cdx-list__item-content');
-      const sublist = li.querySelector(':scope > .cdx-list__sublist');
+    items.forEach((item) => {
+      // Ensure we only process List Items
+      if (item.tagName !== 'LI') return;
 
-      items.push({
+      const contentEl = item.querySelector(':scope > .cdx-list__item-content');
+      const sublist = item.querySelector(':scope > .cdx-list__sublist');
+
+      data.push({
         content: contentEl ? contentEl.innerHTML : '',
-        items: sublist ? this.readItems(sublist as HTMLElement) : [],
+        // Recursion: Pass the sublist's children back to this same method
+        items: sublist ? this.retrieveItems(Array.from(sublist.children)) : [],
       });
     });
 
-    return items;
+    return data;
+  }
+
+  private breakOutOfList(currentItem: HTMLElement) {
+    const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
+    const nextSiblings: Element[] = [];
+    let next = currentItem.nextElementSibling;
+    while (next) {
+      nextSiblings.push(next);
+      next = next.nextElementSibling;
+    }
+
+    const prevSibling = currentItem.previousElementSibling;
+    const itemsAfter = this.retrieveItems(nextSiblings);
+
+    // Remove from DOM
+    currentItem.remove();
+    nextSiblings.forEach((el) => el.remove());
+
+    let newParagraphIndex = -1;
+
+    if (!prevSibling) {
+      newParagraphIndex = currentBlockIndex;
+      this.api.blocks.insert(
+        'paragraph',
+        { text: '' },
+        {},
+        currentBlockIndex,
+        false
+      );
+
+      if (itemsAfter.length > 0) {
+        this.api.blocks.insert(
+          'list',
+          { style: this.data.style, items: itemsAfter },
+          {},
+          currentBlockIndex + 1,
+          false
+        );
+      }
+
+      const originalBlockNewIndex =
+        currentBlockIndex + (itemsAfter.length > 0 ? 2 : 1);
+      this.api.blocks.delete(originalBlockNewIndex);
+    } else {
+      newParagraphIndex = currentBlockIndex + 1;
+      this.api.blocks.insert(
+        'paragraph',
+        { text: '' },
+        {},
+        currentBlockIndex + 1,
+        false
+      );
+
+      if (itemsAfter.length > 0) {
+        this.api.blocks.insert(
+          'list',
+          { style: this.data.style, items: itemsAfter },
+          {},
+          currentBlockIndex + 2,
+          false
+        );
+      }
+    }
+
+    if (this.backspaceTimeout) {
+      clearTimeout(this.backspaceTimeout);
+    }
+
+    this.backspaceTimeout = window.setTimeout(() => {
+      this.api.caret.setToBlock(newParagraphIndex);
+    }, 10);
   }
 }
