@@ -1,4 +1,5 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
+import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import { API_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -30,7 +31,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       },
     },
     list: {
-      class: List,
+      class: CustomList,
       inlineToolbar: true,
       config: {
         defaultStyle: 'unordered',

@@ -1,0 +1,57 @@
+/* Main List Container */
+.cdx-list {
+  outline: none;
+  box-sizing: border-box;
+  display: block;
+}
+
+.cdx-list__item-content {
+  display: inline-block;
+  vertical-align: top;
+  min-height: 24px;
+  width: auto;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Unordered List Style */
+ul.cdx-list,
+ul .cdx-list__sublist {
+  list-style: disc outside !important;
+}
+
+ul .cdx-list__sublist {
+  list-style: circle outside !important;
+}
+
+ul .cdx-list__sublist .cdx-list__sublist {
+  list-style: square outside !important;
+}
+
+/* Ordered List Style */
+ol.cdx-list {
+  list-style: decimal outside !important;
+}
+
+ol.cdx-list ol.cdx-list__sublist {
+  list-style-type: lower-alpha !important;
+}
+
+ol.cdx-list ol.cdx-list__sublist ol.cdx-list__sublist {
+  list-style-type: lower-roman !important;
+}
+
+.cdx-list__item {
+  display: list-item !important;
+  padding-left: 5px;
+}
+
+/* Nested Lists Indentation */
+.cdx-list__sublist {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 30px !important;
+  display: block !important;
+}

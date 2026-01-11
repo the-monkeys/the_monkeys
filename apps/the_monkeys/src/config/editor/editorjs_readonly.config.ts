@@ -1,4 +1,5 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
+import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import Delimiter from '@editorjs/delimiter';
@@ -27,7 +28,7 @@ export const editorConfig: EditorConfig = {
       },
     },
     list: {
-      class: List,
+      class: CustomList,
       config: {
         defaultStyle: 'unordered',
       },

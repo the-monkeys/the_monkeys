@@ -16,7 +16,6 @@
     "@editorjs/editorjs": "2.29.1",
     "@editorjs/header": "2.8.1",
     "@editorjs/image": "2.9.0",
-    "@editorjs/list": "1.10.0",
     "@editorjs/paragraph": "2.11.4",
     "@editorjs/quote": "2.7.2",
     "@editorjs/table": "^2.4.5",
