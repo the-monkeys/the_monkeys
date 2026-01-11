@@ -5,6 +5,7 @@ import { API_URL } from '@/constants/api';
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const headers = new Headers(req.headers);
+  headers.delete('connection');
 
   const apiURL = new URL(API_URL!).origin;
 
@@ -25,6 +26,7 @@ export async function POST(
   const authToken = cookieStore.get('mat');
 
   const headers = new Headers(req.headers);
+  headers.delete('connection');
   if (authToken) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
@@ -57,6 +59,7 @@ export async function PUT(
   const authToken = cookieStore.get('mat');
 
   const headers = new Headers(req.headers);
+  headers.delete('connection');
   if (authToken) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
@@ -89,6 +92,7 @@ export async function DELETE(
   const authToken = cookieStore.get('mat');
 
   const headers = new Headers(req.headers);
+  headers.delete('connection');
   if (authToken) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
