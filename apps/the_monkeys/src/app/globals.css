@@ -762,3 +762,34 @@ li.cdx-list__item {
   color: #ff5542;
   font-weight: 500;
 }
+
+/* Cursor Visibility Fixes */
+.ce-block__content,
+.cdx-list__item-content,
+[contenteditable] {
+  caret-color: #1e1e1e !important;
+}
+
+.dark .ce-block__content,
+.dark .cdx-list__item-content,
+.dark [contenteditable] {
+  caret-color: #ededed !important;
+}
+
+/* Toolbar Visibility Fixes */
+.ce-toolbar__actions {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Ensure the plus/settings buttons are visible */
+.ce-toolbar__plus, 
+.ce-toolbar__settings-btn {
+    display: inline-flex !important;
+    opacity: 1 !important;
+}
+
+/* Ensure hover state is visible */
+.ce-block:hover .ce-toolbar__actions {
+    opacity: 1 !important;
+}

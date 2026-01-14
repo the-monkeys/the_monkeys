@@ -136,9 +136,24 @@ export default class CustomList implements BlockTool {
     }
   };
 
+  private onClick = (event: MouseEvent) => {
+    const target = event.target as HTMLElement;
+    const listItem = target.closest('.cdx-list__item') as HTMLElement;
+
+    if (listItem) {
+      const content = listItem.querySelector(
+        '.cdx-list__item-content'
+      ) as HTMLElement;
+      if (content && target !== content && !content.contains(target)) {
+        this.focusItem(listItem);
+      }
+    }
+  };
+
   private removeEvents() {
     if (this.wrapper) {
       this.wrapper.removeEventListener('keydown', this.onKeyDown);
+      this.wrapper.removeEventListener('click', this.onClick);
     }
     if (this.backspaceTimeout) {
       clearTimeout(this.backspaceTimeout);
@@ -149,6 +164,7 @@ export default class CustomList implements BlockTool {
   private bindEvents() {
     if (this.wrapper && !this.readOnly) {
       this.wrapper.addEventListener('keydown', this.onKeyDown);
+      this.wrapper.addEventListener('click', this.onClick);
     }
   }
 
