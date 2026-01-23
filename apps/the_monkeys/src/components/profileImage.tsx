@@ -59,15 +59,9 @@ export const ProfileImage = ({
     return '??';
   };
 
-  if (isLoading) {
+  if (isLoading || isError || !imageUrl || imgLoadError)
     return (
-      <div className='w-full h-full bg-gray-200 dark:bg-gray-800 animate-pulse' />
-    );
-  }
-
-  if (isError || !imageUrl || imgLoadError)
-    return (
-      <div className='w-full h-full flex items-center justify-center bg-brand-orange text-white font-medium text-xs sm:text-sm select-none'>
+      <div className='w-full h-full flex items-center justify-center bg-brand-orange text-white font-bold text-xs sm:text-sm select-none border border-black/5 dark:border-white/5'>
         {getInitials()}
       </div>
     );

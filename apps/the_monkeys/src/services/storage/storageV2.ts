@@ -59,6 +59,13 @@ export const storageV2 = {
         return response.data;
     },
 
+    deleteProfileImage: async (userId: string) => {
+        const response = await axiosInstanceV2.delete(
+            `/storage/profiles/${userId}/profile`
+        );
+        return response.data;
+    },
+
     // Blog Images
     uploadBlogImage: async (blogId: string, file: File) => {
         const formData = new FormData();
