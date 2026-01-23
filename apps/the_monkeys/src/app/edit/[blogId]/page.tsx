@@ -55,7 +55,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [blogTopics, setBlogTopics] = useState<string[]>([]);
-  const [token, setToken] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
 
@@ -69,34 +68,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     blogTopicsRef.current = blogTopics;
   }, [data, accountId, blogTopics]);
 
-  // Get WebSocket token
-  useEffect(() => {
-    if (!session) return;
-
-    const fetchToken = async () => {
-      try {
-        const response = await axiosInstance.get('/auth/ws-token');
-        setToken(response.data.token);
-      } catch (error) {
-        console.error('Failed to get WebSocket token:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Connection Error',
-          description:
-            'Failed to establish connection. Please refresh the page.',
-        });
-      }
-    };
-
-    fetchToken();
-
-    // Refresh token every 5 minutes
-    const tokenRefreshInterval = setInterval(fetchToken, 5 * 60 * 1000);
-
-    return () => {
-      clearInterval(tokenRefreshInterval);
-    };
-  }, [session]);
 
   // Format data
   const formatData = useCallback(
@@ -127,9 +98,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   const [editorConfig, setEditorConfig] = useState<EditorConfig | null>(null);
 
-  // WebSocket management
   useEffect(() => {
-    if (!token || !blogId) return;
+    if (!blogId) return;
 
     let isMounted = true;
     const MAX_RETRIES = 5;
@@ -144,7 +114,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
       setConnectionStatus('Connecting...');
       const ws = new WebSocket(
-        `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`
+        `${WSS_URL_V2}/blog/draft/${blogId}`
       );
 
       ws.onopen = () => {
@@ -204,7 +174,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
     // Handle tab visibility changes
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && !isConnected && token) {
+      if (document.visibilityState === 'visible' && !isConnected) {
         // Reconnect immediately when tab becomes visible
         if (reconnectTimeoutRef.current) {
           clearTimeout(reconnectTimeoutRef.current);
@@ -225,7 +195,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [token, blogId, formatData]);
+  }, [blogId, formatData]);
 
   // Auto-save when data changes
   useEffect(() => {
@@ -333,10 +303,53 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Initialize editor data
   useEffect(() => {
-    if (blog && !data) {
-      setData(blog.blog || { time: Date.now(), blocks: [], version: '' });
-      setBlogTopics(blog.tags || []);
-    }
+    const initializeData = async () => {
+      if (blog && !data) {
+        const blogData = blog.blog || {
+          time: Date.now(),
+          blocks: [],
+          version: '',
+        };
+
+        // Pre-resolve V2 image URLs for EditorJS
+        if (blogData.blocks && blogData.blocks.length > 0) {
+          const resolvedBlocks = await Promise.all(
+            blogData.blocks.map(async (block) => {
+              if (
+                block.type === 'image' &&
+                block.data?.file?.url?.endsWith('/url')
+              ) {
+                try {
+                  const res = await fetch(block.data.file.url);
+                  const urlData = await res.json();
+                  if (urlData && urlData.url) {
+                    return {
+                      ...block,
+                      data: {
+                        ...block.data,
+                        file: {
+                          ...block.data.file,
+                          url: urlData.url,
+                        },
+                      },
+                    };
+                  }
+                } catch (err) {
+                  console.error('Failed to resolve image URL in editor:', err);
+                }
+              }
+              return block;
+            })
+          );
+          blogData.blocks = resolvedBlocks;
+        }
+
+        setData(blogData);
+        setBlogTopics(blog.tags || []);
+      }
+    };
+
+    initializeData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [blog]);
 
@@ -365,9 +378,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               )}
             >
               <div
-                className={`inline-block size-2 rounded-full ${
-                  isConnected ? 'bg-alert-green' : 'bg-alert-red'
-                }`}
+                className={`inline-block size-2 rounded-full ${isConnected ? 'bg-alert-green' : 'bg-alert-red'
+                  }`}
               />
 
               <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>

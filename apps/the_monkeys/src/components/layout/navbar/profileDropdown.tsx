@@ -34,7 +34,10 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
       <DropdownMenuTrigger>
         <div className='hover:opacity-80 cursor-pointer'>
           <ProfileFrame className='size-9 border-1 border-border-light/80 dark:border-border-dark/80'>
-            <ProfileImage username={session?.username} />
+            <ProfileImage
+              username={session?.username}
+              initials={`${session?.first_name?.[0] || ''}${session?.last_name?.[0] || ''}`}
+            />
           </ProfileFrame>
         </div>
       </DropdownMenuTrigger>
@@ -46,7 +49,10 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
             className='flex items-center gap-2 overflow-hidden'
           >
             <ProfileFrame className='size-10 sm:size-12 shrink-0'>
-              <ProfileImage username={session?.username} />
+              <ProfileImage
+                username={session?.username}
+                initials={`${session?.first_name?.[0] || ''}${session?.last_name?.[0] || ''}`}
+              />
             </ProfileFrame>
 
             <div className='flex-1 flex flex-col overflow-hidden'>

@@ -1,3 +1,7 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+
 import Image from 'next/image';
 
 import { Blog } from '@/services/blog/blogTypes';
@@ -105,16 +109,52 @@ export const BlogImage = ({
   image: string;
   className?: string;
 }) => {
+  const [imgSrc, setImgSrc] = useState<string>(image);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const resolveUrl = async () => {
+      // Check if image is a Storage V2 API URL (ends in /url)
+      if (image && image.includes('/storage/posts/') && image.endsWith('/url')) {
+        try {
+          const res = await fetch(image);
+          const data = await res.json();
+          if (data && data.url) {
+            setImgSrc(data.url);
+          }
+        } catch (error) {
+          console.error('Failed to resolve V2 Image URL:', error);
+        }
+      } else {
+        setImgSrc(image);
+      }
+    };
+
+    resolveUrl();
+  }, [image]);
+
   return (
-    <Image
-      src={image}
-      alt={title}
-      height='500'
-      width='800'
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
-      quality={100}
-      priority
-    />
+    <div className={twMerge(className, 'relative overflow-hidden bg-gray-200 dark:bg-gray-800')}>
+      <Image
+        src={imgSrc}
+        alt={title}
+        height='500'
+        width='800'
+        className={twMerge(
+          'h-full w-full object-cover object-center transition-opacity duration-500',
+          isLoading ? 'opacity-0' : 'opacity-100'
+        )}
+        quality={100}
+        priority={false}
+        onLoad={() => setIsLoading(false)}
+        onError={() => setIsLoading(false)} // Prevent indefinite loading state
+      />
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-brand-orange"></div>
+        </div>
+      )}
+    </div>
   );
 };
 

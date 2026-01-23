@@ -26,7 +26,10 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
     <div className='w-full flex gap-3'>
       <Link href={`/${userData?.username}`} className='hover:opacity-90'>
         <ProfileFrame className='mt-1 size-10 sm:size-12 ring-1 ring-border-light/40 dark:ring-border-dark/40'>
-          <ProfileImage username={userData?.username} />
+          <ProfileImage
+            username={userData?.username}
+            initials={`${userData?.first_name?.[0] || ''}${userData?.last_name?.[0] || ''}`}
+          />
         </ProfileFrame>
       </Link>
 
@@ -123,7 +126,10 @@ export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
 
       <div className='shrink-0'>
         <ProfileFrame className='size-7 shadow-sm'>
-          <ProfileImage username={userData?.username} />
+          <ProfileImage
+            username={userData?.username}
+            initials={`${userData?.first_name?.[0] || ''}${userData?.last_name?.[0] || ''}`}
+          />
         </ProfileFrame>
       </div>
 

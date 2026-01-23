@@ -2,32 +2,30 @@
 
 import { useEffect, useState } from 'react';
 
-import fetcher from '@/services/fileFetcher';
+import { storageV2 } from '@/services/storage/storageV2';
 import { useQuery } from '@tanstack/react-query';
 
 export const PROFILE_IMAGE_QUERY_KEY = 'profile-image';
 
 const useProfileImage = (username: string | undefined) => {
-  const [imageUrl, setImageUrl] = useState<string>('');
-
-  const { data, error, isLoading, isError } = useQuery<Blob, Error>({
+  const { data, error, isLoading, isError } = useQuery({
     queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    queryFn: () => fetcher(`/files/profile/${username}/profile`),
+    queryFn: async () => {
+      if (!username) return null;
+      try {
+        const res = await storageV2.getProfileImageUrl(username);
+        return res.url;
+      } catch (error) {
+        // Fallback or handle 404
+        throw error;
+      }
+    },
     enabled: !!username,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 15 * 60 * 1000, // 15 minutes
   });
 
-  useEffect(() => {
-    if (!data) return;
-
-    const objectUrl = URL.createObjectURL(data);
-    setImageUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl); // Cleanup on unmount
-  }, [data]);
-
   return {
-    imageUrl,
+    imageUrl: data || '',
     isLoading,
     isError: isError || !!error,
   };
