@@ -1,8 +1,12 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
+import PdfTool from '@/components/editor/customBlocks/PdfBlock';
+import VideoTool from '@/components/editor/customBlocks/VideoBlock';
 import { API_URL, API_URL_V2 } from '@/constants/api';
 import { storageV2 } from '@/services/storage/storageV2';
+// @ts-ignore
+import AttachesTool from '@editorjs/attaches';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -11,10 +15,6 @@ import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
-// @ts-ignore
-import AttachesTool from '@editorjs/attaches';
-import VideoTool from '@/components/editor/customBlocks/VideoBlock';
-import PdfTool from '@/components/editor/customBlocks/PdfBlock';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'editorjs_editor-container',
@@ -63,7 +63,10 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
           async uploadByFile(file: File) {
             try {
               const response = await storageV2.uploadBlogImage(blogId, file);
-              const urlData = await storageV2.getBlogImageUrl(blogId, response.fileName);
+              const urlData = await storageV2.getBlogImageUrl(
+                blogId,
+                response.fileName
+              );
 
               return {
                 success: 1,
@@ -100,7 +103,10 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
           async uploadByFile(file: File) {
             try {
               const response = await storageV2.uploadBlogFile(blogId, file);
-              const urlData = await storageV2.getBlogFileUrl(blogId, response.fileName);
+              const urlData = await storageV2.getBlogFileUrl(
+                blogId,
+                response.fileName
+              );
 
               return {
                 success: 1,
@@ -135,7 +141,10 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
         uploader: async (file: File) => {
           try {
             const response = await storageV2.uploadBlogFile(blogId, file);
-            const urlData = await storageV2.getBlogFileUrl(blogId, response.fileName);
+            const urlData = await storageV2.getBlogFileUrl(
+              blogId,
+              response.fileName
+            );
             return {
               success: 1,
               file: {
@@ -163,7 +172,10 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
         uploader: async (file: File) => {
           try {
             const response = await storageV2.uploadBlogFile(blogId, file);
-            const urlData = await storageV2.getBlogFileUrl(blogId, response.fileName);
+            const urlData = await storageV2.getBlogFileUrl(
+              blogId,
+              response.fileName
+            );
             return {
               success: 1,
               file: {

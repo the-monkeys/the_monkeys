@@ -115,7 +115,11 @@ export const BlogImage = ({
   useEffect(() => {
     const resolveUrl = async () => {
       // Check if image is a Storage V2 API URL (ends in /url)
-      if (image && image.includes('/storage/posts/') && image.endsWith('/url')) {
+      if (
+        image &&
+        image.includes('/storage/posts/') &&
+        image.endsWith('/url')
+      ) {
         try {
           const res = await fetch(image);
           const data = await res.json();
@@ -134,7 +138,12 @@ export const BlogImage = ({
   }, [image]);
 
   return (
-    <div className={twMerge(className, 'relative overflow-hidden bg-gray-200 dark:bg-gray-800')}>
+    <div
+      className={twMerge(
+        className,
+        'relative overflow-hidden bg-gray-200 dark:bg-gray-800'
+      )}
+    >
       <Image
         src={imgSrc}
         alt={title}
@@ -150,8 +159,8 @@ export const BlogImage = ({
         onError={() => setIsLoading(false)} // Prevent indefinite loading state
       />
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-brand-orange"></div>
+        <div className='absolute inset-0 flex items-center justify-center'>
+          <div className='h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-brand-orange'></div>
         </div>
       )}
     </div>

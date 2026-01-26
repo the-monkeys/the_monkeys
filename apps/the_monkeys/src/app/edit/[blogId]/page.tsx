@@ -68,7 +68,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     blogTopicsRef.current = blogTopics;
   }, [data, accountId, blogTopics]);
 
-
   // Format data
   const formatData = useCallback(
     (data: OutputData, accountId: string | undefined, blogTopics: string[]) => {
@@ -113,9 +112,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
 
       setConnectionStatus('Connecting...');
-      const ws = new WebSocket(
-        `${WSS_URL_V2}/blog/draft/${blogId}`
-      );
+      const ws = new WebSocket(`${WSS_URL_V2}/blog/draft/${blogId}`);
 
       ws.onopen = () => {
         if (!isMounted) return;
@@ -378,8 +375,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               )}
             >
               <div
-                className={`inline-block size-2 rounded-full ${isConnected ? 'bg-alert-green' : 'bg-alert-red'
-                  }`}
+                className={`inline-block size-2 rounded-full ${
+                  isConnected ? 'bg-alert-green' : 'bg-alert-red'
+                }`}
               />
 
               <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>

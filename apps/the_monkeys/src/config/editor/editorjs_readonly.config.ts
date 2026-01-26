@@ -1,7 +1,11 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
+import PdfTool from '@/components/editor/customBlocks/PdfBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
+import VideoTool from '@/components/editor/customBlocks/VideoBlock';
+// @ts-ignore
+import AttachesTool from '@editorjs/attaches';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -10,10 +14,6 @@ import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
-// @ts-ignore
-import AttachesTool from '@editorjs/attaches';
-import VideoTool from '@/components/editor/customBlocks/VideoBlock';
-import PdfTool from '@/components/editor/customBlocks/PdfBlock';
 
 export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',
@@ -66,7 +66,12 @@ export const editorConfig: EditorConfig = {
           const wrapper = super.render();
           const data = (this as any).data;
 
-          if (data && data.file && data.file.url && data.file.url.toLowerCase().endsWith('.pdf')) {
+          if (
+            data &&
+            data.file &&
+            data.file.url &&
+            data.file.url.toLowerCase().endsWith('.pdf')
+          ) {
             // 1. Make the entire card clickable
             wrapper.style.cursor = 'pointer';
             wrapper.onclick = (e: MouseEvent) => {
@@ -78,10 +83,14 @@ export const editorConfig: EditorConfig = {
             };
 
             // 3. Optional: Fix dark mode visibility by ensuring the icon/text color is consistent
-            // The user mentioned the down arrow is not visible in dark mode. 
-            // Since we are making it all clickable, we can just let the default UI be, 
+            // The user mentioned the down arrow is not visible in dark mode.
+            // Since we are making it all clickable, we can just let the default UI be,
             // but let's make sure the background on hover feels interactive.
-            wrapper.classList.add('hover:bg-gray-50', 'dark:hover:bg-zinc-900', 'transition-colors');
+            wrapper.classList.add(
+              'hover:bg-gray-50',
+              'dark:hover:bg-zinc-900',
+              'transition-colors'
+            );
           }
           return wrapper;
         }
