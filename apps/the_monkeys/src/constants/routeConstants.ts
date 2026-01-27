@@ -29,10 +29,13 @@ export type NavItem = {
 };
 
 export const DISCOVER_ITEMS: NavItem[] = [
-  { href: HOME_ROUTE, label: 'Feed', icon: 'RiNewspaper' },
-  { href: EVENTS_ROUTE, label: 'Community', icon: 'RiGroup' },
-  { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
-  { href: FEED_ROUTE, label: 'For You', icon: 'RiBard', requiresAuth: true },
+  {
+    href: FEED_ROUTE,
+    label: 'For You',
+    icon: 'RiNewspaper',
+    requiresAuth: true,
+  },
+  { href: EVENTS_ROUTE, label: 'Events', icon: 'RiGroup' },
   {
     href: '/snapshot/new',
     label: 'Studio',
@@ -45,11 +48,11 @@ export const DISCOVER_ITEMS: NavItem[] = [
     icon: 'RiBookShelf',
     requiresAuth: true,
   },
-
   {
     href: SETTINGS_ROUTE,
     label: 'Settings',
     icon: 'RiSettings3',
     requiresAuth: true,
   },
+  { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
 ];

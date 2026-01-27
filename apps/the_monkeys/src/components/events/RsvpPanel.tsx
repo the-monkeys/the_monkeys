@@ -4,9 +4,10 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { LOGIN_ROUTE } from '@/constants/routeConstants';
+import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
-import { formatPrice, isEventEnded } from '@/lib/eventTime';
+import { loginHref } from '@/lib/authRedirect';
+import { formatPrice, isEventEnded, isRsvpClosed } from '@/lib/eventTime';
 import { openRazorpay } from '@/lib/razorpayCheckout';
 import {
   EventItem,
@@ -43,13 +44,17 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
   const [code, setCode] = useState('');
   const [discount, setDiscount] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
+  const [allUpcoming, setAllUpcoming] = useState(false);
 
   const selected = tiers.find((t) => t.id === tierId) || tiers[0];
   const closed = isEventEnded(event);
+  const rsvpClosed = isRsvpClosed(event);
   const going =
     viewerStatus === 'confirmed' ||
     viewerStatus === 'waitlisted' ||
     viewerStatus === 'pending_payment';
+  const selectedFree = !!selected && !(selected.price > 0);
+  const canRsvpSeries = !!event.series_id && selectedFree && !going;
 
   const onRsvp = async () => {
     if (!selected) return;
@@ -58,6 +63,7 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
       const res = await rsvpEvent(event.slug, {
         ticket_tier_id: selected.id,
         coupon_code: code.trim() || undefined,
+        scope: canRsvpSeries && allUpcoming ? 'series' : undefined,
       });
 
       if (
@@ -126,6 +132,16 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
           {event.status === 'cancelled'
             ? 'This event is cancelled.'
             : 'This meetup has ended.'}
+        </p>
+      </aside>
+    );
+  }
+
+  if (rsvpClosed && !going) {
+    return (
+      <aside className='rounded-lg border border-border-light dark:border-border-dark/60 p-5'>
+        <p className='font-inter text-sm text-gray-500'>
+          RSVP for this meetup has closed.
         </p>
       </aside>
     );
@@ -218,9 +234,28 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
         </p>
       )}
 
+      {canRsvpSeries && (
+        <label className='flex items-start gap-2 font-inter text-sm'>
+          <input
+            type='checkbox'
+            className='mt-1'
+            checked={allUpcoming}
+            onChange={(e) => setAllUpcoming(e.target.checked)}
+          />
+          <span>RSVP all upcoming in this series</span>
+        </label>
+      )}
+      {!!event.series_id && selected && selected.price > 0 && !going && (
+        <p className='font-inter text-sm text-gray-500'>
+          RSVP each date separately for paid meetups.
+        </p>
+      )}
+
       {!session ? (
         <Button asChild variant='brand' className='w-full'>
-          <Link href={LOGIN_ROUTE}>Log in to RSVP</Link>
+          <Link href={loginHref(`${EVENTS_ROUTE}/${event.slug}`)}>
+            Log in to RSVP
+          </Link>
         </Button>
       ) : going ? (
         <Button
@@ -242,7 +277,9 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
             ? 'Please wait…'
             : selected && selected.price > 0
               ? 'Get ticket'
-              : 'RSVP'}
+              : allUpcoming && canRsvpSeries
+                ? 'RSVP all upcoming'
+                : 'RSVP'}
         </Button>
       )}
     </aside>

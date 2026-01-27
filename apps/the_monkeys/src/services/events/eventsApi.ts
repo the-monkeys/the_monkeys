@@ -178,7 +178,11 @@ export const validateCoupon = (
 
 export const rsvpEvent = (
   slug: string,
-  body: { ticket_tier_id: number; coupon_code?: string }
+  body: {
+    ticket_tier_id: number;
+    coupon_code?: string;
+    scope?: 'this' | 'series';
+  }
 ) =>
   axiosInstance
     .post<RsvpResp>(`${root}/${encodeURIComponent(slug)}/rsvp`, body)

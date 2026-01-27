@@ -78,6 +78,62 @@ export function formatEventCardWhen(
   return `${date} · ${time}`;
 }
 
+/** Compact extra series dates on a collapsed card: "Sep 5 · 12 · 19". */
+export function formatUpcomingDates(
+  dates: ProtoTime[] | undefined,
+  timezone?: string
+): string {
+  if (!dates || dates.length < 2) return '';
+  const parsed = dates
+    .map((d) => parseEventTime(d))
+    .filter((d): d is Date => !!d);
+  if (parsed.length < 2) return '';
+  const tz = timezone || undefined;
+  return parsed
+    .map((d, i) => {
+      const day = d.toLocaleString(undefined, { day: 'numeric', timeZone: tz });
+      const month = d.toLocaleString(undefined, {
+        month: 'short',
+        timeZone: tz,
+      });
+      if (i === 0) return `${month} ${day}`;
+      const prevMonth = parsed[i - 1].toLocaleString(undefined, {
+        month: 'short',
+        timeZone: tz,
+      });
+      return prevMonth === month ? day : `${month} ${day}`;
+    })
+    .join(' · ');
+}
+
+/** Safety net for an older gateway that still returns every occurrence. */
+export function uniqueSeriesEvents(events: EventItem[]): EventItem[] {
+  const earliest = new Map<number, EventItem>();
+  for (const e of events) {
+    if (!e.series_id) continue;
+    const prev = earliest.get(e.series_id);
+    if (!prev) {
+      earliest.set(e.series_id, e);
+      continue;
+    }
+    const prevMs = parseEventTime(prev.start_time)?.getTime() ?? 0;
+    const nextMs = parseEventTime(e.start_time)?.getTime() ?? Infinity;
+    if (nextMs < prevMs) earliest.set(e.series_id, e);
+  }
+  const seen = new Set<number>();
+  const out: EventItem[] = [];
+  for (const e of events) {
+    if (!e.series_id) {
+      out.push(e);
+      continue;
+    }
+    if (seen.has(e.series_id)) continue;
+    seen.add(e.series_id);
+    out.push(earliest.get(e.series_id)!);
+  }
+  return out;
+}
+
 export function eventTypeLabel(type?: EventType | string): string {
   if (type === 'in_person') return 'In person';
   if (type === 'hybrid') return 'Hybrid';
@@ -97,6 +153,26 @@ export function isEventEnded(
   if (event.status === 'completed' || event.status === 'cancelled') return true;
   const end = parseEventTime(event.end_time);
   return !!end && end.getTime() < Date.now();
+}
+
+export function isRsvpClosed(
+  event?: Pick<EventItem, 'rsvp_closes_at'>
+): boolean {
+  if (!event) return false;
+  const closes = parseEventTime(event.rsvp_closes_at);
+  return !!closes && closes.getTime() < Date.now();
+}
+
+const RSVP_CLOSE_HOURS = [12, 24, 72, 168] as const;
+
+export function rsvpCloseHoursFromEvent(event?: EventItem): number {
+  if (!event) return 0;
+  if (event.rsvp_close_hours_before) return event.rsvp_close_hours_before;
+  const start = parseEventTime(event.start_time);
+  const closes = parseEventTime(event.rsvp_closes_at);
+  if (!start || !closes) return 0;
+  const hours = Math.round((start.getTime() - closes.getTime()) / 3_600_000);
+  return RSVP_CLOSE_HOURS.find((h) => Math.abs(h - hours) <= 1) ?? 0;
 }
 
 export function isHost(

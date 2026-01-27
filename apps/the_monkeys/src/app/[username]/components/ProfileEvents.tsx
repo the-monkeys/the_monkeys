@@ -6,6 +6,7 @@ import { TextTabs } from '@/components/TextTabs';
 import { EventGridCard } from '@/components/events/EventGridCard';
 import { Loader } from '@/components/loader';
 import { useUserEvents } from '@/hooks/events/useEventQueries';
+import { uniqueSeriesEvents } from '@/lib/eventTime';
 
 export function ProfileEvents({ username }: { username: string }) {
   const [when, setWhen] = useState<'upcoming' | 'past'>('upcoming');
@@ -13,7 +14,10 @@ export function ProfileEvents({ username }: { username: string }) {
     date: when,
     limit: 12,
   });
-  const events = data?.events || [];
+  const events =
+    when === 'past'
+      ? data?.events || []
+      : uniqueSeriesEvents(data?.events || []);
 
   return (
     <div>

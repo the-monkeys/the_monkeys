@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -15,6 +15,7 @@ import {
 import { useEventList } from '@/hooks/events/useEventQueries';
 import { useGroupList } from '@/hooks/groups/useGroupQueries';
 import { useIPLocation } from '@/hooks/useIPLocation';
+import { uniqueSeriesEvents } from '@/lib/eventTime';
 import { geoRadiusSteps } from '@/lib/geoSearch';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -108,15 +109,15 @@ function GridSkeleton({ count = 4 }: { count?: number }) {
   );
 }
 
-function EventGrid({ events }: { events: EventItem[] }) {
+const EventGrid = memo(function EventGrid({ events }: { events: EventItem[] }) {
   return (
     <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-      {events.map((event) => (
+      {uniqueSeriesEvents(events).map((event) => (
         <EventGridCard key={event.id || event.slug} event={event} />
       ))}
     </div>
   );
-}
+});
 
 // -----------------------------------------------------------------------------
 // Main landing
@@ -198,7 +199,10 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
       sort: sortBy === 'soonest' ? undefined : sortBy,
       user_lat: !manualOverride && hasCoords ? ipLocation.latitude : undefined,
       user_lng: !manualOverride && hasCoords ? ipLocation.longitude : undefined,
-      radius: !manualOverride && hasCoords ? currentRadius : undefined,
+      radius:
+        !manualOverride && hasCoords && currentRadius > 0
+          ? currentRadius
+          : undefined,
     }),
     [
       q,
@@ -236,6 +240,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   const nearbyInPerson = popularEvents.filter(
     (e) => e.event_type === 'in_person'
   );
+  const lookingForInPerson = typeFilter === 'all' || typeFilter === 'in-person';
 
   useEffect(() => {
     setRadiusIndex(0);
@@ -245,19 +250,25 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   // Virtual/hybrid are already included globally and must not freeze the radius.
   useEffect(() => {
     if (
+      lookingForInPerson &&
       popular.isSuccess &&
+      !popular.isFetching &&
       nearbyInPerson.length === 0 &&
       !manualOverride &&
       hasCoords &&
+      currentRadius > 0 &&
       radiusIndex < radiusSteps.length - 1
     ) {
       setRadiusIndex((prev) => prev + 1);
     }
   }, [
+    lookingForInPerson,
     popular.isSuccess,
+    popular.isFetching,
     nearbyInPerson.length,
     manualOverride,
     hasCoords,
+    currentRadius,
     radiusIndex,
     radiusSteps.length,
   ]);

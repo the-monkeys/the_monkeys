@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 
 import Link from 'next/link';
 
+import { BackButton } from '@/components/buttons/backButton';
 import { EventActions } from '@/components/events/EventActions';
 import { EventEmpty } from '@/components/events/EventCard';
 import { EventComments } from '@/components/events/EventComments';
@@ -21,6 +22,7 @@ import { EventSidebarMeta } from '@/components/events/detail/EventSidebarMeta';
 import { EventStickyBar } from '@/components/events/detail/EventStickyBar';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useEventDetail } from '@/hooks/events/useEventQueries';
 import {
@@ -81,6 +83,9 @@ export default function EventDetailClient({ slug }: { slug: string }) {
     <>
       {/* Extra bottom padding leaves room for the fixed registration bar. */}
       <div className='mx-auto max-w-5xl pb-28'>
+        <div className='mb-4'>
+          <BackButton href={EVENTS_ROUTE} />
+        </div>
         {/* Cover as a full-width hero at the top of the page, above the grid,
             so it reads as the event's banner rather than an inline figure. */}
         {event.cover_image && (

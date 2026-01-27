@@ -94,12 +94,14 @@ export type EventItem = {
   // Advanced RSVP window & guests.
   rsvp_opens_at?: ProtoTime;
   rsvp_closes_at?: ProtoTime;
+  rsvp_close_hours_before?: number;
   allow_guests?: boolean;
   max_guests_per_rsvp?: number;
   // Recurring series.
   series_id?: number;
   series_occurrence_at?: ProtoTime;
   recurrence_text?: string;
+  upcoming_dates?: ProtoTime[];
   // Registration questions.
   questions?: EventQuestion[];
   // Organizer-authored FAQ (optional; rendered only when present).
@@ -166,6 +168,8 @@ export type EventBody = {
   group_slug?: string;
   visibility?: EventVisibility;
   recurrence?: Recurrence;
+  rsvp_closes_at?: string;
+  rsvp_close_hours_before?: number;
 };
 
 export type RecurrenceFreq = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -176,6 +180,7 @@ export type Recurrence = {
   by_day?: string[];
   count?: number;
   until?: string;
+  rsvp_close_hours_before?: number;
 };
 
 export type EventVisibility =

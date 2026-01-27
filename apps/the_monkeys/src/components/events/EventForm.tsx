@@ -19,6 +19,7 @@ import {
   defaultTimezone,
   fromLocalInput,
   isEventEnded,
+  rsvpCloseHoursFromEvent,
   toLocalInput,
 } from '@/lib/eventTime';
 import {
@@ -49,6 +50,14 @@ const TYPES: { value: EventType; label: string }[] = [
 // Only communities the viewer runs may host events; the backend enforces the
 // same rule, so this list is a convenience, not the security boundary.
 const ORGANIZER_ROLES = new Set(['organizer', 'co_organizer']);
+
+const RSVP_CLOSE_OPTIONS: { value: number; label: string }[] = [
+  { value: 0, label: 'Off' },
+  { value: 12, label: '12 hours before' },
+  { value: 24, label: '1 day before' },
+  { value: 72, label: '3 days before' },
+  { value: 168, label: '1 week before' },
+];
 
 function splitList(value: string): string[] {
   return value
@@ -113,6 +122,12 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   );
   const [repeatUntil, setRepeatUntil] = useState('');
   const [repeatCount, setRepeatCount] = useState(12);
+  const [rsvpClosesVal, setRsvpClosesVal] = useState(
+    toLocalInput(event?.rsvp_closes_at)
+  );
+  const [rsvpCloseHours, setRsvpCloseHours] = useState(
+    rsvpCloseHoursFromEvent(event)
+  );
   const ended = isEventEnded(event);
   // Recomputed once on mount; a stale minute is harmless and the browser plus
   // the submit guard both re-validate against the real clock.
@@ -190,6 +205,20 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     }
     setDateError('');
 
+    const isSeries = !!event?.series_id || repeatFreq !== 'off';
+    if (!isSeries && rsvpClosesVal) {
+      const closes = fromLocalInput(rsvpClosesVal);
+      const closeMs = new Date(closes).getTime();
+      if (!ended && closeMs < nowMs - 60_000) {
+        setDateError('Last day to RSVP cannot be in the past.');
+        return;
+      }
+      if (closeMs >= startMs) {
+        setDateError('Last day to RSVP must be before the meetup starts.');
+        return;
+      }
+    }
+
     const body: EventBody = {
       title: String(form.get('title') || '').trim(),
       description: String(form.get('description') || '').trim(),
@@ -239,8 +268,15 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             repeatEnd === 'until' && repeatUntil
               ? new Date(`${repeatUntil}T23:59:59`).toISOString()
               : undefined,
+          rsvp_close_hours_before: rsvpCloseHours || undefined,
         };
+      } else if (rsvpClosesVal) {
+        body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
       }
+    } else if (event.series_id) {
+      body.rsvp_close_hours_before = rsvpCloseHours;
+    } else if (rsvpClosesVal) {
+      body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
     }
 
     onSubmit(body, coverFile ?? undefined);
@@ -440,6 +476,35 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           )}
         </div>
       )}
+
+      {!ended && (!!event?.series_id || repeatFreq !== 'off') ? (
+        <Field label='Close RSVP'>
+          <select
+            value={rsvpCloseHours}
+            onChange={(e) => setRsvpCloseHours(Number(e.target.value) || 0)}
+            className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+          >
+            {RSVP_CLOSE_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        </Field>
+      ) : !ended ? (
+        <Field label='Last day to RSVP'>
+          <Input
+            type='datetime-local'
+            min={minStart}
+            max={startVal || undefined}
+            value={rsvpClosesVal}
+            onChange={(e) => {
+              setRsvpClosesVal(e.target.value);
+              if (dateError) setDateError('');
+            }}
+          />
+        </Field>
+      ) : null}
 
       <fieldset>
         <legend className='mb-2 font-inter text-sm font-medium'>Type</legend>

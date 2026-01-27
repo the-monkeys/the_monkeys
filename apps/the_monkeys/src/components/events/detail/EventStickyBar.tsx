@@ -10,6 +10,7 @@ import {
   eventPriceLabel,
   formatEventWhen,
   isEventEnded,
+  isRsvpClosed,
   spotsLeft,
 } from '@/lib/eventTime';
 import { cn } from '@/lib/utils';
@@ -39,6 +40,7 @@ export function EventStickyBar({
   const [visible, setVisible] = useState(false);
   const left = spotsLeft(event);
   const closed = isEventEnded(event);
+  const rsvpClosed = isRsvpClosed(event);
   const going =
     viewerStatus === 'confirmed' ||
     viewerStatus === 'waitlisted' ||
@@ -117,16 +119,18 @@ export function EventStickyBar({
             <Button
               variant={going ? 'outline' : 'brand'}
               className='h-11 min-w-[112px] px-5'
-              disabled={closed}
+              disabled={closed || (rsvpClosed && !going)}
               onClick={handleAttend}
             >
               {closed
                 ? event.status === 'cancelled'
                   ? 'Cancelled'
                   : 'Ended'
-                : going
-                  ? 'You’re in'
-                  : 'Attend'}
+                : rsvpClosed && !going
+                  ? 'Closed'
+                  : going
+                    ? 'You’re in'
+                    : 'Attend'}
             </Button>
           )}
         </div>
