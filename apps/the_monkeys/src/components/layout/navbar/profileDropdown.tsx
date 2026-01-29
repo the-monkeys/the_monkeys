@@ -36,7 +36,8 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
           <ProfileFrame className='size-9 border-1 border-border-light/80 dark:border-border-dark/80'>
             <ProfileImage
               username={session?.username}
-              initials={`${session?.first_name?.[0] || ''}${session?.last_name?.[0] || ''}`}
+              firstName={session?.first_name}
+              lastName={session?.last_name}
             />
           </ProfileFrame>
         </div>
@@ -51,7 +52,8 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
             <ProfileFrame className='size-10 sm:size-12 shrink-0'>
               <ProfileImage
                 username={session?.username}
-                initials={`${session?.first_name?.[0] || ''}${session?.last_name?.[0] || ''}`}
+                firstName={session?.first_name}
+                lastName={session?.last_name}
               />
             </ProfileFrame>
 

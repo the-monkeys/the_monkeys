@@ -28,7 +28,8 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
         <ProfileFrame className='mt-1 size-10 sm:size-12 ring-1 ring-border-light/40 dark:ring-border-dark/40'>
           <ProfileImage
             username={userData?.username}
-            initials={`${userData?.first_name?.[0] || ''}${userData?.last_name?.[0] || ''}`}
+            firstName={userData?.first_name}
+            lastName={userData?.last_name}
           />
         </ProfileFrame>
       </Link>
@@ -128,7 +129,8 @@ export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
         <ProfileFrame className='size-7 shadow-sm'>
           <ProfileImage
             username={userData?.username}
-            initials={`${userData?.first_name?.[0] || ''}${userData?.last_name?.[0] || ''}`}
+            firstName={userData?.first_name}
+            lastName={userData?.last_name}
           />
         </ProfileFrame>
       </div>

@@ -37,27 +37,42 @@ export const ProfileFrame = ({
   );
 };
 
+import { decodeBlurHashToDataURL } from '@/utils/blurhash';
+
 export const ProfileImage = ({
   username,
   initials,
+  firstName,
+  lastName,
 }: {
   username?: string;
   initials?: string;
+  firstName?: string;
+  lastName?: string;
 }) => {
-  const { imageUrl, isLoading, isError } = useProfileImage(username);
+  const { imageUrl, blurHash, isLoading, isError } = useProfileImage(username);
   const [imgLoadError, setImgLoadError] = React.useState(false);
+  const [isImgLoading, setIsImgLoading] = React.useState(true);
 
   // Reset error when url changes
   React.useEffect(() => {
     setImgLoadError(false);
+    setIsImgLoading(true);
   }, [imageUrl]);
 
   // Helper to generate initials if not provided
   const getInitials = () => {
     if (initials) return initials.toUpperCase().slice(0, 2);
+    if (firstName || lastName) {
+      const first = firstName?.[0] || '';
+      const last = lastName?.[0] || '';
+      return (first + last).toUpperCase();
+    }
     if (username) return username.slice(0, 2).toUpperCase();
     return '??';
   };
+
+  const blurDataURL = decodeBlurHashToDataURL(blurHash);
 
   if (isLoading || isError || !imageUrl || imgLoadError)
     return (
@@ -73,9 +88,15 @@ export const ProfileImage = ({
       title={`Author: ${username}`}
       width={50}
       height={50}
-      className='w-full h-full object-cover'
+      className={twMerge(
+        'w-full h-full object-cover transition-opacity duration-500',
+        isImgLoading && blurDataURL ? 'opacity-0' : 'opacity-100'
+      )}
       loading='lazy'
       quality={100}
+      placeholder={blurDataURL ? 'blur' : 'empty'}
+      blurDataURL={blurDataURL}
+      onLoad={() => setIsImgLoading(false)}
       onError={() => setImgLoadError(true)}
     />
   );

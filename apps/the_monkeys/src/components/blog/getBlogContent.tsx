@@ -100,6 +100,8 @@ export const BlogDescription = ({
   );
 };
 
+import { decodeBlurHashToDataURL } from '@/utils/blurhash';
+
 export const BlogImage = ({
   title,
   image,
@@ -110,24 +112,24 @@ export const BlogImage = ({
   className?: string;
 }) => {
   const [imgSrc, setImgSrc] = useState<string>(image);
+  const [blurHash, setBlurHash] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const resolveUrl = async () => {
       // Check if image is a Storage V2 API URL (ends in /url)
-      if (
-        image &&
-        image.includes('/storage/posts/') &&
-        image.endsWith('/url')
-      ) {
+      if (image && image.includes('/storage/posts/') && image.endsWith('/url')) {
         try {
-          const res = await fetch(image);
+          // Fetch meta instead of just url to get blurhash
+          const metaUrl = image.replace('/url', '/meta');
+          const res = await fetch(metaUrl);
           const data = await res.json();
-          if (data && data.url) {
-            setImgSrc(data.url);
+          if (data) {
+            if (data.url) setImgSrc(data.url);
+            if (data.blurhash) setBlurHash(data.blurhash);
           }
         } catch (error) {
-          console.error('Failed to resolve V2 Image URL:', error);
+          console.error('Failed to resolve V2 Image Metadata:', error);
         }
       } else {
         setImgSrc(image);
@@ -136,6 +138,8 @@ export const BlogImage = ({
 
     resolveUrl();
   }, [image]);
+
+  const blurDataURL = decodeBlurHashToDataURL(blurHash);
 
   return (
     <div
@@ -155,10 +159,12 @@ export const BlogImage = ({
         )}
         quality={100}
         priority={false}
+        placeholder={blurDataURL ? 'blur' : 'empty'}
+        blurDataURL={blurDataURL}
         onLoad={() => setIsLoading(false)}
         onError={() => setIsLoading(false)} // Prevent indefinite loading state
       />
-      {isLoading && (
+      {isLoading && !blurDataURL && (
         <div className='absolute inset-0 flex items-center justify-center'>
           <div className='h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-brand-orange'></div>
         </div>

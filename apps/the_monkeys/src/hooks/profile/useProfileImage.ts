@@ -13,10 +13,15 @@ const useProfileImage = (username: string | undefined) => {
     queryFn: async () => {
       if (!username) return null;
       try {
-        const res = await storageV2.getProfileImageUrl(username);
-        return res.url;
-      } catch (error) {
-        // Fallback or handle 404
+        const res = await storageV2.getProfileImageMeta(username);
+        return {
+          url: res.etag ? `${res.url}?v=${res.etag}` : res.url,
+          blurhash: res.blurhash,
+        };
+      } catch (error: any) {
+        if (error?.response?.status === 404) {
+          return null;
+        }
         throw error;
       }
     },
@@ -25,7 +30,8 @@ const useProfileImage = (username: string | undefined) => {
   });
 
   return {
-    imageUrl: data || '',
+    imageUrl: data?.url || '',
+    blurHash: data?.blurhash || '',
     isLoading,
     isError: isError || !!error,
   };
