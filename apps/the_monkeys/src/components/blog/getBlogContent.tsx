@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import Image from 'next/image';
 
+import { SmartImage } from '@/components/common/SmartImage';
 import { Blog } from '@/services/blog/blogTypes';
 import { decodeBlurHashToDataURL } from '@/utils/blurhash';
 import { purifyHTMLString } from '@/utils/purifyHTML';
@@ -112,67 +113,41 @@ export const BlogImage = ({
 }) => {
   const [imgSrc, setImgSrc] = useState<string>(image);
   const [blurHash, setBlurHash] = useState<string | undefined>(undefined);
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const resolveUrl = async () => {
-      // Check if image is a Storage V2 API URL (ends in /url)
-      if (
-        image &&
-        image.includes('/storage/posts/') &&
-        image.endsWith('/url')
-      ) {
-        try {
-          // Fetch meta instead of just url to get blurhash
-          const metaUrl = image.replace('/url', '/meta');
-          const res = await fetch(metaUrl);
-          const data = await res.json();
-          if (data) {
-            if (data.url) setImgSrc(data.url);
-            if (data.blurhash) setBlurHash(data.blurhash);
-          }
-        } catch (error) {
-          console.error('Failed to resolve V2 Image Metadata:', error);
+  const resolveUrl = useCallback(async () => {
+    // Check if image is a Storage V2 API URL (ends in /url)
+    if (image && image.includes('/storage/posts/') && image.endsWith('/url')) {
+      try {
+        const metaUrl = image.replace('/url', '/meta');
+        const res = await fetch(metaUrl);
+        const data = await res.json();
+        if (data) {
+          if (data.url) setImgSrc(data.url);
+          if (data.blurhash) setBlurHash(data.blurhash);
         }
-      } else {
-        setImgSrc(image);
+      } catch (error) {
+        console.error('Failed to resolve V2 Image Metadata:', error);
       }
-    };
-
-    resolveUrl();
+    } else {
+      setImgSrc(image);
+    }
   }, [image]);
 
-  const blurDataURL = decodeBlurHashToDataURL(blurHash);
+  useEffect(() => {
+    resolveUrl();
+  }, [resolveUrl]);
 
   return (
-    <div
-      className={twMerge(
-        className,
-        'relative overflow-hidden bg-gray-200 dark:bg-gray-800'
-      )}
-    >
-      <Image
-        src={imgSrc}
-        alt={title}
-        height='500'
-        width='800'
-        className={twMerge(
-          'h-full w-full object-cover object-center transition-opacity duration-500',
-          isLoading ? 'opacity-0' : 'opacity-100'
-        )}
-        quality={100}
-        priority={false}
-        placeholder={blurDataURL ? 'blur' : 'empty'}
-        blurDataURL={blurDataURL}
-        onLoad={() => setIsLoading(false)}
-        onError={() => setIsLoading(false)} // Prevent indefinite loading state
-      />
-      {isLoading && !blurDataURL && (
-        <div className='absolute inset-0 flex items-center justify-center'>
-          <div className='h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-brand-orange'></div>
-        </div>
-      )}
-    </div>
+    <SmartImage
+      src={imgSrc}
+      alt={title}
+      blurHash={blurHash}
+      width={800}
+      height={500}
+      containerClassName={className}
+      quality={100}
+      priority={false}
+    />
   );
 };
 
@@ -184,12 +159,12 @@ export const BlogPlaceholderImage = ({
   className?: string;
 }) => {
   return (
-    <Image
+    <SmartImage
       src={placeholderImage.src}
       alt={title}
-      height='500'
-      width='800'
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      height={500}
+      width={800}
+      containerClassName={className}
       quality={100}
     />
   );

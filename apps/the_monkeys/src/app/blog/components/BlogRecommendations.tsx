@@ -36,7 +36,7 @@ export const BlogRecommendations = ({
     };
 
     fetchBlogs();
-  }, []);
+  }, [topics]);
 
   if (blogsLoading) {
     return <BlogPageRecommendationSkeleton />;

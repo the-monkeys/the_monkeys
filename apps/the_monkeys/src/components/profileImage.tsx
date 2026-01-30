@@ -2,6 +2,7 @@ import React from 'react';
 
 import Image from 'next/image';
 
+import { SmartImage } from '@/components/common/SmartImage';
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import { decodeBlurHashToDataURL } from '@/utils/blurhash';
 import { twMerge } from 'tailwind-merge';
@@ -81,21 +82,15 @@ export const ProfileImage = ({
     );
 
   return (
-    <Image
+    <SmartImage
       src={imageUrl}
       alt={`Author: ${username}`}
       title={`Author: ${username}`}
       width={50}
       height={50}
-      className={twMerge(
-        'w-full h-full object-cover transition-opacity duration-500',
-        isImgLoading && blurDataURL ? 'opacity-0' : 'opacity-100'
-      )}
-      loading='lazy'
+      blurHash={blurHash}
+      containerClassName='w-full h-full'
       quality={100}
-      placeholder={blurDataURL ? 'blur' : 'empty'}
-      blurDataURL={blurDataURL}
-      onLoad={() => setIsImgLoading(false)}
       onError={() => setImgLoadError(true)}
     />
   );

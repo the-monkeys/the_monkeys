@@ -1,5 +1,6 @@
 import Image from 'next/image';
 
+import { SmartImage } from '@/components/common/SmartImage';
 import { Blog } from '@/services/blog/blogTypes';
 
 import { SocialSnapshotDialog } from './SocialSnapshotDialog';
@@ -28,12 +29,13 @@ export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
       </div>
 
       <div className='absolute top-0 right-[10px] sm:right-[32px] h-full w-fit -z-20'>
-        <Image
+        <SmartImage
           src={'/social-snapshot-background.svg'}
           alt='Social Snapshot'
           width={100}
           height={100}
-          className='w-full h-full opacity-20 object-cover scale-110 sm:scale-150'
+          containerClassName='w-full h-full bg-transparent dark:bg-transparent'
+          className='opacity-20 object-cover scale-110 sm:scale-150'
           unoptimized
         />
       </div>

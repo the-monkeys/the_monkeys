@@ -1,14 +1,14 @@
-import Image from 'next/image';
+import { SmartImage } from '@/components/common/SmartImage';
 
 const Logo = () => {
   return (
-    <Image
+    <SmartImage
       src={'/logo-brand.svg'}
       alt='Monkeys Logo'
       title='Monkeys Logo'
       height={24}
       width={88}
-      className='h-full w-full'
+      containerClassName='h-full w-full bg-transparent dark:bg-transparent'
       unoptimized
     />
   );

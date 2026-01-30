@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import Image from 'next/image';
 
+import { SmartImage } from '@/components/common/SmartImage';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
@@ -167,12 +168,13 @@ export const UpdateProfileDialog = () => {
         {selectedImage && (
           <div className='overflow-hidden'>
             <div className='mx-auto w-fit h-44 sm:h-52 overflow-hidden'>
-              <Image
+              <SmartImage
                 src={URL.createObjectURL(selectedImage)}
                 alt='Selected Image'
                 width={150}
                 height={150}
-                className='h-full w-full object-contain'
+                containerClassName='h-full w-full'
+                className='object-contain'
               />
             </div>
 
