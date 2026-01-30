@@ -192,7 +192,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [blogId, formatData]);
+  }, [blogId, formatData, isConnected]);
 
   // Auto-save when data changes
   useEffect(() => {
@@ -375,8 +375,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               )}
             >
               <div
-                className={`inline-block size-2 rounded-full ${isConnected ? 'bg-alert-green' : 'bg-alert-red'
-                  }`}
+                className={`inline-block size-2 rounded-full ${
+                  isConnected ? 'bg-alert-green' : 'bg-alert-red'
+                }`}
               />
 
               <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>
