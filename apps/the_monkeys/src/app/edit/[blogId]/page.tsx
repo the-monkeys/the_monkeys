@@ -92,7 +92,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         slug: blogSlug,
       };
     },
-    []
+    [blogId]
   );
 
   const [editorConfig, setEditorConfig] = useState<EditorConfig | null>(null);
@@ -375,9 +375,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               )}
             >
               <div
-                className={`inline-block size-2 rounded-full ${
-                  isConnected ? 'bg-alert-green' : 'bg-alert-red'
-                }`}
+                className={`inline-block size-2 rounded-full ${isConnected ? 'bg-alert-green' : 'bg-alert-red'
+                  }`}
               />
 
               <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>

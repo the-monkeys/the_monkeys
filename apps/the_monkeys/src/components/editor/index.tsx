@@ -39,7 +39,7 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
         editorInstance.current = null;
       }
     };
-  }, []);
+  }, [config, data, onChange]);
 
   return (
     <div className='w-full px-4 space-y-6' id='editorjs_editor-container'></div>
