@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 
 import useProfileImage from '@/hooks/profile/useProfileImage';
+import { decodeBlurHashToDataURL } from '@/utils/blurhash';
 import { twMerge } from 'tailwind-merge';
 
 export const DefaultProfile = () => {
@@ -36,8 +37,6 @@ export const ProfileFrame = ({
     </div>
   );
 };
-
-import { decodeBlurHashToDataURL } from '@/utils/blurhash';
 
 export const ProfileImage = ({
   username,

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 import { Blog } from '@/services/blog/blogTypes';
+import { decodeBlurHashToDataURL } from '@/utils/blurhash';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { twMerge } from 'tailwind-merge';
 
@@ -100,8 +101,6 @@ export const BlogDescription = ({
   );
 };
 
-import { decodeBlurHashToDataURL } from '@/utils/blurhash';
-
 export const BlogImage = ({
   title,
   image,
@@ -118,7 +117,11 @@ export const BlogImage = ({
   useEffect(() => {
     const resolveUrl = async () => {
       // Check if image is a Storage V2 API URL (ends in /url)
-      if (image && image.includes('/storage/posts/') && image.endsWith('/url')) {
+      if (
+        image &&
+        image.includes('/storage/posts/') &&
+        image.endsWith('/url')
+      ) {
         try {
           // Fetch meta instead of just url to get blurhash
           const metaUrl = image.replace('/url', '/meta');

@@ -783,13 +783,13 @@ li.cdx-list__item {
 }
 
 /* Ensure the plus/settings buttons are visible */
-.ce-toolbar__plus, 
+.ce-toolbar__plus,
 .ce-toolbar__settings-btn {
-    display: inline-flex !important;
-    opacity: 1 !important;
+  display: inline-flex !important;
+  opacity: 1 !important;
 }
 
 /* Ensure hover state is visible */
 .ce-block:hover .ce-toolbar__actions {
-    opacity: 1 !important;
+  opacity: 1 !important;
 }

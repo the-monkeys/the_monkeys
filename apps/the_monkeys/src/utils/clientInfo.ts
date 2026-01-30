@@ -1,5 +1,4 @@
 import Bowser from 'bowser';
-import { publicIpv4 } from 'public-ip';
 
 export interface ClientInfoData {
   ip: string;
@@ -45,7 +44,11 @@ class ClientInfo {
       try {
         // Get public IP address with timeout
         this.ip = await Promise.race([
-          publicIpv4(),
+          (async () => {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            return data.ip || 'unknown';
+          })(),
           new Promise<string>((resolve) =>
             setTimeout(() => resolve('unknown'), 5000)
           ),
