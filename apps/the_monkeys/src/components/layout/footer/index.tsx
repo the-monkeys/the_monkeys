@@ -111,8 +111,9 @@ const Footer = () => {
         <div className='mt-12 flex justify-center items-center gap-4 flex-wrap'>
           <div className='w-full mx-auto'>
             <p className='py-6 font-medium text-xs text-center'>
-              <span className='font-normal'>© 2025</span> BUDDHICINTAKA PVT.
-              LTD. <span className='font-normal'>All rights reserved.</span>
+              <span className='font-normal'>© {new Date().getFullYear()}</span>
+              &nbsp;BUDDHICINTAKA PVT. LTD.&nbsp;
+              <span className='font-normal'>All rights reserved.</span>
             </p>
           </div>
         </div>
