@@ -12,6 +12,7 @@ import { TabsContent } from '@the-monkeys/ui/atoms/tabs';
 
 import { Bookmarks } from './components/Bookmarks';
 import { Drafts } from './components/Drafts';
+import { Scheduled } from './components/Scheduled';
 
 const LibraryPage = () => {
   const router = useRouter();
@@ -61,6 +62,14 @@ const LibraryPage = () => {
 
             <div className='mt-[6px] h-[2px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
           </TabsTrigger>
+
+          <TabsTrigger value='scheduled'>
+            <p className='px-[10px] font-dm_sans text-sm sm:text-base opacity-80 group-hover:opacity-100 group-data-[state=active]:opacity-100'>
+              Scheduled
+            </p>
+
+            <div className='mt-[6px] h-[2px] w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+          </TabsTrigger>
         </TabsList>
 
         <div className='w-full'>
@@ -70,6 +79,10 @@ const LibraryPage = () => {
 
           <TabsContent className='w-full' value='drafts'>
             <Drafts user={session} />
+          </TabsContent>
+
+          <TabsContent className='w-full' value='scheduled'>
+            <Scheduled />
           </TabsContent>
         </div>
       </Tabs>

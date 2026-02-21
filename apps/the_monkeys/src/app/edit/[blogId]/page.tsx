@@ -23,6 +23,7 @@ import useGetDraftBlogDetail, {
   DRAFT_BLOG_DETAIL_QUERY_KEY,
 } from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
+import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
@@ -347,6 +348,96 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     });
   }, [blogId, queryClient]);
 
+  // Handle blog scheduling
+  const handleScheduleStep = useCallback(
+    async (scheduleTime: string, timezone: string) => {
+      if (!data || data.blocks.length <= 2) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Post must contain at least 3 content blocks.',
+        });
+        return;
+      }
+
+      if (
+        data.blocks[0].type !== 'header' &&
+        data?.blocks[0].data.level !== 1
+      ) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Post should start with title (Heading 1).',
+        });
+        return;
+      }
+
+      const titleBlockCount = data.blocks.filter(
+        (block) => block.type === 'title'
+      ).length;
+      if (titleBlockCount > 1) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description:
+            'Only one title block (Heading 1) is allowed in the post.',
+        });
+        return;
+      }
+
+      setBlogPublishLoading(true);
+
+      try {
+        const formatted = formatData(data, accountId, blogTopics);
+
+        // Attempt to save latest changes via WS before scheduling
+        if (webSocketRef.current?.readyState === WebSocket.OPEN) {
+          webSocketRef.current.send(JSON.stringify(formatted));
+        }
+
+        const payload = {
+          tags: formatted.tags,
+          slug: formatted.slug,
+          schedule_time: scheduleTime,
+          timezone: timezone,
+        };
+
+        await axiosInstanceV2.post(`/blog/${blogId}/schedule_blog`, payload);
+
+        toast({
+          variant: 'success',
+          title: 'Blog Scheduled Successfully',
+          description: 'Your post has been scheduled!',
+        });
+
+        // Invalidate cache and redirect
+        queryClient.invalidateQueries({
+          queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+        });
+        router.push(`/library?source=scheduled`);
+      } catch (error) {
+        console.error('Schedule error:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error Scheduling Blog',
+          description: 'There was an error while scheduling. Please try again.',
+        });
+      } finally {
+        setBlogPublishLoading(false);
+      }
+    },
+    [
+      data,
+      accountId,
+      blogId,
+      blogTopics,
+      formatData,
+      router,
+      username,
+      queryClient,
+    ]
+  );
+
   return (
     <>
       {isLoading ? (
@@ -380,15 +471,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
                 data={data}
                 isPublishing={blogPublishLoading}
                 handlePublish={handlePublishStep}
+                handleSchedule={handleScheduleStep}
               />
-
-              {/* <PublishBlogDialog
-                topics={blogTopics}
-                setTopics={setBlogTopics}
-                data={data}
-                isPublishing={blogPublishLoading}
-                handlePublish={handlePublishStep}
-              /> */}
             </div>
           </div>
 

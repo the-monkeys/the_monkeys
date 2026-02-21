@@ -10,10 +10,11 @@ import { SelectInputStyles } from './styles/SelectInputStyles';
 
 interface FormSearchSelectProps {
   defaultSelected?: { value: string; label: string }[];
-  onChange: (selected: { value: string; label: string }[]) => void;
+  onChange: (selected: any) => void;
   onInputChange?: (inputValue: string) => void;
   options: { value: string; label: string }[];
   placeholder?: string;
+  isMulti?: boolean;
 }
 
 const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
@@ -22,16 +23,17 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
   onInputChange,
   options,
   placeholder,
+  isMulti = true,
 }) => {
   const { theme } = useTheme();
 
   const handleChange = (selectedOptions: any) => {
-    onChange(selectedOptions as { value: string; label: string }[]);
+    onChange(selectedOptions);
   };
 
   return (
     <CreatableSelect
-      isMulti
+      isMulti={isMulti}
       defaultValue={defaultSelected}
       onChange={handleChange}
       onInputChange={onInputChange}

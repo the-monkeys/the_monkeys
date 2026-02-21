@@ -1,5 +1,5 @@
 {
-	"name": "@the-monkeys",
+	"name": "the-monkeys",
 	"private": true,
 	"scripts": {
 		"build": "turbo run lint build",
