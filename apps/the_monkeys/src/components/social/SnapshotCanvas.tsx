@@ -120,19 +120,19 @@ export const SnapshotCanvas = ({
   // Layout (1080×1350 — Instagram Post, asymmetric editorial)
   const margin = 64;
   // Photo: right-side, overlapping title + desc box
-  const photoW = 520;
-  const photoH = 650;
+  const photoW = 580;
+  const photoH = 860;
   const photoX = width - margin - photoW + 20;
-  const photoY = 120;
+  const photoY = 80;
   const photoR = 10;
   // Title: top-left, overlaps slightly onto the photo
-  const titleY = 135;
-  const titleMaxW = photoX - margin + 80; // 80px overlap onto photo
-  // Description box: overlapped by photo from above
+  const titleY = 130;
+  const titleMaxW = photoX - margin + 160; // overlap onto photo for more text room
+  // Description box: drawn on top of the photo
   const boxX = margin;
-  const boxY = 620;
+  const boxY = 740;
   const boxW = width - margin * 2;
-  const boxH = 380;
+  const boxH = 400;
   const boxR = 6;
 
   const drawBase = useCallback(
@@ -168,16 +168,7 @@ export const SnapshotCanvas = ({
 
       const { bg: image, logo: logoImg } = imageCache.current;
 
-      // --- Description box (filled background + border, drawn first so photo overlaps) ---
-      ctx.fillStyle = colors.boxBg;
-      ctx.beginPath();
-      ctx.roundRect(boxX, boxY, boxW, boxH, boxR);
-      ctx.fill();
-      ctx.strokeStyle = colors.boxBorder;
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      // --- Photo: right side, overlapping title and desc zones ---
+      // --- Photo: right side ---
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(photoX, photoY, photoW, photoH, photoR);
@@ -206,27 +197,33 @@ export const SnapshotCanvas = ({
       ctx.roundRect(photoX, photoY, photoW, photoH, photoR);
       ctx.stroke();
 
+      // --- Description box (drawn after photo so it appears on top) ---
+      ctx.fillStyle = colors.boxBg;
+      ctx.beginPath();
+      ctx.roundRect(boxX, boxY, boxW, boxH, boxR);
+      ctx.fill();
+      ctx.strokeStyle = colors.boxBorder;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
       // --- Orange accent bar — top-left ---
       ctx.fillStyle = colors.accent;
-      ctx.fillRect(margin, 100, 50, 5);
+      ctx.fillRect(margin, 96, 50, 5);
 
       // --- Logo + brand at bottom-right ---
-      const logoH = 32;
+      const logoH = 40;
       const logoW = logoH * 1.21;
-      const footerY = boxY + boxH + 60;
+      const footerY = boxY + boxH + 64;
+      const brandTextW = 120; // approx width of "Monkeys" at 34px
+      const brandTotalW = logoW + 4 + brandTextW;
+      const brandX = width - margin - brandTotalW;
 
-      ctx.drawImage(
-        logoImg,
-        width - margin - logoW - 140,
-        footerY - logoH,
-        logoW,
-        logoH
-      );
-      ctx.font = '400 30px "DM Sans", sans-serif';
+      ctx.drawImage(logoImg, brandX, footerY - logoH, logoW, logoH);
+      ctx.font = '400 34px "DM Sans", sans-serif';
       ctx.fillStyle = colors.brand;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'bottom';
-      ctx.fillText('Monkeys', width - margin - 140 + 6, footerY + 2);
+      ctx.fillText('Monkeys', brandX + logoW + 4, footerY + 2);
     },
     [imageURL, logoURL, width, height, colors]
   );
@@ -239,7 +236,7 @@ export const SnapshotCanvas = ({
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
 
-      wrapText(ctx, title, margin, titleY, titleMaxW, 86, 4);
+      wrapText(ctx, title, margin, titleY, titleMaxW, 86, 7);
 
       // Description: inside box, fills the box area
       if (description) {
@@ -318,7 +315,7 @@ export const SnapshotCanvas = ({
   const boxLeftPct = ((boxX + 36) / width) * 100;
   const boxWidthPct = ((boxW - 72) / width) * 100;
   const boxHeightPct = ((boxH - 64) / height) * 100;
-  const accentTopPct = (100 / height) * 100;
+  const accentTopPct = (96 / height) * 100;
 
   return (
     <div className='flex flex-col gap-3'>
