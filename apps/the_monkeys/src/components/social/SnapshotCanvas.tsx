@@ -107,9 +107,19 @@ export const SnapshotCanvas = ({
       const canvasAspect = width / height;
 
       try {
-        const imageSrc = imageURL?.startsWith('http')
-          ? `/api/proxy-image?url=${encodeURIComponent(imageURL)}`
-          : '/social-snapshot-placeholder.png';
+        // Relative URLs (e.g. /api/v2/storage/posts/...) are same-origin and
+        // can be drawn on canvas directly. Absolute external URLs need to be
+        // proxied to avoid CORS tainting the canvas.
+        let imageSrc: string;
+        if (!imageURL) {
+          imageSrc = '/social-snapshot-placeholder.png';
+        } else if (imageURL.startsWith('/')) {
+          imageSrc = imageURL;
+        } else if (imageURL.startsWith('http')) {
+          imageSrc = `/api/proxy-image?url=${encodeURIComponent(imageURL)}`;
+        } else {
+          imageSrc = '/social-snapshot-placeholder.png';
+        }
 
         // background image
         const [image, logoImg] = await Promise.all([
