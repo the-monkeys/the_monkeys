@@ -9,9 +9,12 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { PROFILE_DRAFTS_PER_PAGE } from '@/constants/posts';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 import { IUser } from '@/services/models/user';
+import { usePagination } from '@/hooks/user/usePagination';
 
 export const Drafts = ({ user }: { user?: IUser }) => {
-  const [page, setPage] = useState<number>(0);
+
+  const { page, next, prev } = usePagination()
+
   const offset = page * PROFILE_DRAFTS_PER_PAGE;
 
   const { blogs, isLoading, isError } = useGetAllDraftBlogs({
@@ -34,6 +37,8 @@ export const Drafts = ({ user }: { user?: IUser }) => {
         <p className='w-full opacity-90 text-center'>No drafts created yet.</p>
       </div>
     );
+
+
 
   return (
     <div className='flex flex-col gap-4'>
@@ -62,14 +67,14 @@ export const Drafts = ({ user }: { user?: IUser }) => {
             <div className='flex justify-center gap-[10px] mt-4'>
               {hasPrevPage && (
                 <PaginationPrevButton
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                  onClick={prev}
                   disable={!hasPrevPage}
                 />
               )}
 
               {hasNextPage && (
                 <PaginationNextButton
-                  onClick={() => setPage((prev) => prev + 1)}
+                  onClick={next}
                   disable={!hasNextPage}
                 />
               )}

@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
   PaginationNextButton,
   PaginationPrevButton,
@@ -8,9 +6,12 @@ import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { BOOKMARKS_PER_PAGE } from '@/constants/posts';
 import useGetBookmarkedBlogs from '@/hooks/blog/useGetBookmarkedBlogs';
+import { usePagination } from '@/hooks/user/usePagination';
 
 export const Bookmarks = () => {
-  const [page, setPage] = useState<number>(0);
+
+  const { page, next, prev } = usePagination()
+
   const offset = page * BOOKMARKS_PER_PAGE;
 
   const { blogs, isLoading, isError } = useGetBookmarkedBlogs({
@@ -50,6 +51,8 @@ export const Bookmarks = () => {
       </div>
     );
 
+
+
   return (
     <div className='flex flex-col gap-4'>
       {isLoading ? (
@@ -75,14 +78,14 @@ export const Bookmarks = () => {
             <div className='flex justify-center gap-[10px] mt-4'>
               {hasPrevPage && (
                 <PaginationPrevButton
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+                  onClick={prev}
                   disable={!hasPrevPage}
                 />
               )}
 
               {hasNextPage && (
                 <PaginationNextButton
-                  onClick={() => setPage((prev) => prev + 1)}
+                  onClick={next}
                   disable={!hasNextPage}
                 />
               )}
