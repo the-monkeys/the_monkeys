@@ -11,7 +11,6 @@ import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
 import { usePagination } from '@/hooks/user/usePagination';
 
 export const SearchPosts = ({ query }: { query: string }) => {
-
   const { page, next, prev } = usePagination();
 
   // const [currentQuery, setCurrentQuery] = useState<string>(query);
@@ -53,8 +52,6 @@ export const SearchPosts = ({ query }: { query: string }) => {
   const showPagination =
     (searchBlogs?.total_blogs ?? 0) > SEARCH_POSTS_PER_PAGE;
 
-
-
   return (
     <>
       {!blogs || blogs === null ? (
@@ -72,17 +69,11 @@ export const SearchPosts = ({ query }: { query: string }) => {
           {showPagination && (
             <div className='flex justify-center gap-[10px] mt-4'>
               {hasPrevPage && (
-                <PaginationPrevButton
-                  onClick={prev}
-                  disable={!hasPrevPage}
-                />
+                <PaginationPrevButton onClick={prev} disable={!hasPrevPage} />
               )}
 
               {hasNextPage && (
-                <PaginationNextButton
-                  onClick={next}
-                  disable={!hasNextPage}
-                />
+                <PaginationNextButton onClick={next} disable={!hasNextPage} />
               )}
             </div>
           )}

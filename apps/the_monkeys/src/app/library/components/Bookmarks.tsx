@@ -9,8 +9,7 @@ import useGetBookmarkedBlogs from '@/hooks/blog/useGetBookmarkedBlogs';
 import { usePagination } from '@/hooks/user/usePagination';
 
 export const Bookmarks = () => {
-
-  const { page, next, prev } = usePagination()
+  const { page, next, prev } = usePagination();
 
   const offset = page * BOOKMARKS_PER_PAGE;
 
@@ -51,8 +50,6 @@ export const Bookmarks = () => {
       </div>
     );
 
-
-
   return (
     <div className='flex flex-col gap-4'>
       {isLoading ? (
@@ -77,17 +74,11 @@ export const Bookmarks = () => {
           {showPagination && (
             <div className='flex justify-center gap-[10px] mt-4'>
               {hasPrevPage && (
-                <PaginationPrevButton
-                  onClick={prev}
-                  disable={!hasPrevPage}
-                />
+                <PaginationPrevButton onClick={prev} disable={!hasPrevPage} />
               )}
 
               {hasNextPage && (
-                <PaginationNextButton
-                  onClick={next}
-                  disable={!hasNextPage}
-                />
+                <PaginationNextButton onClick={next} disable={!hasNextPage} />
               )}
             </div>
           )}
