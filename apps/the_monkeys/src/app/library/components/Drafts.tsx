@@ -1,4 +1,4 @@
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 
 import {
   PaginationNextButton,
@@ -77,7 +77,7 @@ const DraftsInner = ({ user }: { user?: IUser }) => {
   );
 };
 
-export const Draft = ({ user }: { user?: IUser }) => {
+export const Drafts = ({ user }: { user?: IUser }) => {
   return (
     <Suspense fallback={<FeedBlogCardListSkeleton />}>
       <DraftsInner user={user} />
