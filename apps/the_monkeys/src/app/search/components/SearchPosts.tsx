@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense } from 'react';
 
 import {
   PaginationNextButton,
@@ -8,21 +8,15 @@ import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { SEARCH_POSTS_PER_PAGE } from '@/constants/posts';
 import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
+import { usePagination } from '@/hooks/user/usePagination';
 
-export const SearchPosts = ({ query }: { query: string }) => {
-  const [page, setPage] = useState<number>(0);
-  const [currentQuery, setCurrentQuery] = useState<string>(query);
-
-  if (currentQuery !== query) {
-    setCurrentQuery(query);
-    setPage(0);
-  }
-
+const SearchPostsInner = ({ query }: { query: string }) => {
+  const { page, next, prev } = usePagination();
   const offset = page * SEARCH_POSTS_PER_PAGE;
 
   const { searchBlogs, searchBlogsLoading, searchBlogsError } =
     useGetSearchBlog({
-      searchQuery: currentQuery.trim(),
+      searchQuery: query.trim(),
       limit: SEARCH_POSTS_PER_PAGE,
       offset,
     });
@@ -67,22 +61,24 @@ export const SearchPosts = ({ query }: { query: string }) => {
           {showPagination && (
             <div className='flex justify-center gap-[10px] mt-4'>
               {hasPrevPage && (
-                <PaginationPrevButton
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                  disable={!hasPrevPage}
-                />
+                <PaginationPrevButton onClick={prev} disable={!hasPrevPage} />
               )}
 
               {hasNextPage && (
-                <PaginationNextButton
-                  onClick={() => setPage((prev) => prev + 1)}
-                  disable={!hasNextPage}
-                />
+                <PaginationNextButton onClick={next} disable={!hasNextPage} />
               )}
             </div>
           )}
         </div>
       )}
     </>
+  );
+};
+
+export const SearchPosts = ({ query }: { query: string }) => {
+  return (
+    <Suspense fallback={<FeedBlogCardListSkeleton />}>
+      <SearchPostsInner query={query} />
+    </Suspense>
   );
 };

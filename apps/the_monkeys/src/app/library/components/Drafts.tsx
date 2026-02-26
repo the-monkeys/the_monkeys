@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense } from 'react';
 
 import {
   PaginationNextButton,
@@ -8,10 +8,12 @@ import { ProfileBlogCard } from '@/components/cards/blog/ProfileBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { PROFILE_DRAFTS_PER_PAGE } from '@/constants/posts';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
+import { usePagination } from '@/hooks/user/usePagination';
 import { IUser } from '@/services/models/user';
 
-export const Drafts = ({ user }: { user?: IUser }) => {
-  const [page, setPage] = useState<number>(0);
+const DraftsInner = ({ user }: { user?: IUser }) => {
+  const { page, next, prev } = usePagination();
+
   const offset = page * PROFILE_DRAFTS_PER_PAGE;
 
   const { blogs, isLoading, isError } = useGetAllDraftBlogs({
@@ -61,22 +63,24 @@ export const Drafts = ({ user }: { user?: IUser }) => {
           {showPagination && (
             <div className='flex justify-center gap-[10px] mt-4'>
               {hasPrevPage && (
-                <PaginationPrevButton
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                  disable={!hasPrevPage}
-                />
+                <PaginationPrevButton onClick={prev} disable={!hasPrevPage} />
               )}
 
               {hasNextPage && (
-                <PaginationNextButton
-                  onClick={() => setPage((prev) => prev + 1)}
-                  disable={!hasNextPage}
-                />
+                <PaginationNextButton onClick={next} disable={!hasNextPage} />
               )}
             </div>
           )}
         </>
       )}
     </div>
+  );
+};
+
+export const Drafts = ({ user }: { user?: IUser }) => {
+  return (
+    <Suspense fallback={<FeedBlogCardListSkeleton />}>
+      <DraftsInner user={user} />
+    </Suspense>
   );
 };
