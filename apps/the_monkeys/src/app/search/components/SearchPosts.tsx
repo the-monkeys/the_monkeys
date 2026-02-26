@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense } from 'react';
 
 import {
   PaginationNextButton,
@@ -10,16 +10,8 @@ import { SEARCH_POSTS_PER_PAGE } from '@/constants/posts';
 import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
 import { usePagination } from '@/hooks/user/usePagination';
 
-export const SearchPosts = ({ query }: { query: string }) => {
+const SearchPostsInner = ({ query }: { query: string }) => {
   const { page, next, prev } = usePagination();
-
-  // const [currentQuery, setCurrentQuery] = useState<string>(query);
-  // if (currentQuery !== query) {
-  //   setCurrentQuery(query);
-  //   page = 0;
-
-  // }
-
   const offset = page * SEARCH_POSTS_PER_PAGE;
 
   const { searchBlogs, searchBlogsLoading, searchBlogsError } =
@@ -80,5 +72,13 @@ export const SearchPosts = ({ query }: { query: string }) => {
         </div>
       )}
     </>
+  );
+};
+
+export const SearchPosts = ({ query }: { query: string }) => {
+  return (
+    <Suspense fallback={<FeedBlogCardListSkeleton />}>
+      <SearchPostsInner query={query} />
+    </Suspense>
   );
 };

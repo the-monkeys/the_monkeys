@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense } from 'react';
 
 import {
   PaginationNextButton,
@@ -8,16 +8,12 @@ import { ProfileBlogCard } from '@/components/cards/blog/ProfileBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { PROFILE_POSTS_PER_PAGE } from '@/constants/posts';
 import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
+import { usePagination } from '@/hooks/user/usePagination';
 import { IUser } from '@/services/models/user';
 
-export const Blogs = ({
-  username,
-  user,
-}: {
-  username: string;
-  user?: IUser;
-}) => {
-  const [page, setPage] = useState<number>(0);
+const BlogsInner = ({ username, user }: { username: string; user?: IUser }) => {
+  const { page, next, prev } = usePagination({ paramName: 'blogPage' });
+
   const offset = page * PROFILE_POSTS_PER_PAGE;
 
   const { blogs, isLoading, isError } = useGetPublishedBlogByUsername({
@@ -67,22 +63,30 @@ export const Blogs = ({
           {showPagination && (
             <div className='flex justify-start gap-[10px] mt-4'>
               {hasPrevPage && (
-                <PaginationPrevButton
-                  onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-                  disable={!hasPrevPage}
-                />
+                <PaginationPrevButton onClick={prev} disable={!hasPrevPage} />
               )}
 
               {hasNextPage && (
-                <PaginationNextButton
-                  onClick={() => setPage((prev) => prev + 1)}
-                  disable={!hasNextPage}
-                />
+                <PaginationNextButton onClick={next} disable={!hasNextPage} />
               )}
             </div>
           )}
         </>
       )}
     </div>
+  );
+};
+
+export const Blogs = ({
+  username,
+  user,
+}: {
+  username: string;
+  user?: IUser;
+}) => {
+  return (
+    <Suspense fallback={<FeedBlogCardListSkeleton />}>
+      <BlogsInner username={username} user={user}></BlogsInner>
+    </Suspense>
   );
 };

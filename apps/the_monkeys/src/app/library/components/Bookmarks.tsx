@@ -1,3 +1,5 @@
+import { Suspense } from 'react';
+
 import {
   PaginationNextButton,
   PaginationPrevButton,
@@ -8,7 +10,7 @@ import { BOOKMARKS_PER_PAGE } from '@/constants/posts';
 import useGetBookmarkedBlogs from '@/hooks/blog/useGetBookmarkedBlogs';
 import { usePagination } from '@/hooks/user/usePagination';
 
-export const Bookmarks = () => {
+const BookmarksInner = () => {
   const { page, next, prev } = usePagination();
 
   const offset = page * BOOKMARKS_PER_PAGE;
@@ -85,5 +87,13 @@ export const Bookmarks = () => {
         </>
       )}
     </div>
+  );
+};
+
+export const Bookmarks = () => {
+  return (
+    <Suspense fallback={<FeedBlogCardListSkeleton />}>
+      <BookmarksInner />
+    </Suspense>
   );
 };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 import {
   PaginationNextButton,
@@ -11,7 +11,7 @@ import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 import { usePagination } from '@/hooks/user/usePagination';
 import { IUser } from '@/services/models/user';
 
-export const Drafts = ({ user }: { user?: IUser }) => {
+const DraftsInner = ({ user }: { user?: IUser }) => {
   const { page, next, prev } = usePagination();
 
   const offset = page * PROFILE_DRAFTS_PER_PAGE;
@@ -74,5 +74,13 @@ export const Drafts = ({ user }: { user?: IUser }) => {
         </>
       )}
     </div>
+  );
+};
+
+export const Draft = ({ user }: { user?: IUser }) => {
+  return (
+    <Suspense fallback={<FeedBlogCardListSkeleton />}>
+      <DraftsInner user={user} />
+    </Suspense>
   );
 };
