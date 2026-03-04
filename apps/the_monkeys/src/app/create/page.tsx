@@ -5,13 +5,13 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
+import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
@@ -300,6 +300,75 @@ const CreatePage = () => {
     }
   }, [data, blogId, formatData, router, username]);
 
+  // Handle blog scheduling
+  const handleScheduleStep = useCallback(
+    async (scheduleTime: string, timezone: string) => {
+      if (!data || data.blocks.length <= 2) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Post must contain at least 3 content blocks.',
+        });
+        return;
+      }
+
+      if (data.blocks[0].type !== 'title' && data?.blocks[0].data.level !== 1) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Post should start with title (Heading 1).',
+        });
+        return;
+      }
+
+      const titleBlockCount = data.blocks.filter(
+        (block) => block.type === 'title'
+      ).length;
+      if (titleBlockCount > 1) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description:
+            'Only one title block (Heading 1) is allowed in the post.',
+        });
+        return;
+      }
+
+      setBlogPublishLoading(true);
+      try {
+        const formatted = formatData(data);
+
+        // Attempt to save latest changes via WS before scheduling
+        sendData(formatted);
+
+        const payload = {
+          tags: formatted.tags,
+          slug: formatted.slug,
+          schedule_time: scheduleTime,
+          timezone: timezone,
+        };
+
+        await axiosInstanceV2.post(`/blog/${blogId}/schedule_blog`, payload);
+        toast({
+          variant: 'success',
+          title: 'Blog Scheduled Successfully',
+          description: 'Your post has been scheduled!',
+        });
+        router.push(`/library?source=scheduled`);
+      } catch (error) {
+        console.error('Schedule error:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error Scheduling Blog',
+          description: 'There was an error while scheduling. Please try again.',
+        });
+      } finally {
+        setBlogPublishLoading(false);
+      }
+    },
+    [data, blogId, formatData, router, username]
+  );
+
   return (
     <div className='relative min-h-screen'>
       <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
@@ -327,6 +396,7 @@ const CreatePage = () => {
             data={data}
             isPublishing={blogPublishLoading}
             handlePublish={handlePublishStep}
+            handleSchedule={handleScheduleStep}
           />
 
           {/* <PublishBlogDialog
