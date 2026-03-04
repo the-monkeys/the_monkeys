@@ -1,7 +1,11 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
+import PdfTool from '@/components/editor/customBlocks/PdfBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
+import VideoTool from '@/components/editor/customBlocks/VideoBlock';
+// @ts-ignore
+import AttachesTool from '@editorjs/attaches';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -55,6 +59,48 @@ export const editorConfig: EditorConfig = {
         quotePlaceholder: '',
         captionPlaceholder: '',
       },
+    },
+    attaches: {
+      class: class extends AttachesTool {
+        render() {
+          const wrapper = super.render();
+          const data = (this as any).data;
+
+          if (
+            data &&
+            data.file &&
+            data.file.url &&
+            data.file.url.toLowerCase().endsWith('.pdf')
+          ) {
+            // 1. Make the entire card clickable
+            wrapper.style.cursor = 'pointer';
+            wrapper.onclick = (e: MouseEvent) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const readerUrl = `/read/pdf?url=${encodeURIComponent(data.file.url)}&title=${encodeURIComponent(data.file.title || data.file.name || 'PDF Document')}`;
+              // 2. Open in same tab
+              window.location.href = readerUrl;
+            };
+
+            // 3. Optional: Fix dark mode visibility by ensuring the icon/text color is consistent
+            // The user mentioned the down arrow is not visible in dark mode.
+            // Since we are making it all clickable, we can just let the default UI be,
+            // but let's make sure the background on hover feels interactive.
+            wrapper.classList.add(
+              'hover:bg-gray-50',
+              'dark:hover:bg-zinc-900',
+              'transition-colors'
+            );
+          }
+          return wrapper;
+        }
+      },
+    },
+    video: {
+      class: VideoTool,
+    },
+    pdf: {
+      class: PdfTool,
     },
   },
 };

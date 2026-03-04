@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
+import { SmartImage } from '@/components/common/SmartImage';
 import { Blog } from '@/services/blog/blogTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
@@ -74,12 +75,12 @@ export const SocialSnapshotDialog = ({
                     key={index}
                     onClick={() => setSelectedImage(image)}
                   >
-                    <Image
+                    <SmartImage
                       src={image}
                       alt={`Social snapshot option ${index + 1}`}
                       width={200}
                       height={200}
-                      className='w-full h-full object-cover'
+                      containerClassName='w-full h-full'
                     />
                   </div>
                 );

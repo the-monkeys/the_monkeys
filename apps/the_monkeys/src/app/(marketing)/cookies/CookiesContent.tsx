@@ -8,8 +8,8 @@ export const CookiesContent = () => {
   return (
     <MDXProvider>
       <LegalPage
-        title='Cookies Policy'
-        date='01-12-2024'
+        title='Cookie Policy'
+        date='30-01-2026'
         content={<Content />}
       />
     </MDXProvider>

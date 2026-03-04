@@ -1,8 +1,12 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
-import { API_URL } from '@/constants/api';
-import axiosInstance from '@/services/api/axiosInstance';
+import PdfTool from '@/components/editor/customBlocks/PdfBlock';
+import VideoTool from '@/components/editor/customBlocks/VideoBlock';
+import { API_URL, API_URL_V2 } from '@/constants/api';
+import { storageV2 } from '@/services/storage/storageV2';
+// @ts-ignore
+import AttachesTool from '@editorjs/attaches';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -57,20 +61,29 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
         captionPlaceholder: '',
         uploader: {
           async uploadByFile(file: File) {
-            const formData = new FormData();
-            formData.append('file', file);
+            try {
+              const response = await storageV2.uploadBlogImage(blogId, file);
+              const urlData = await storageV2.getBlogImageUrl(
+                blogId,
+                response.fileName
+              );
 
-            const response = await axiosInstance.post(
-              `/files/post/${blogId}`,
-              formData
-            );
-
-            return {
-              success: 1,
-              file: {
-                url: `${API_URL}/files/post/${blogId}/${response.data.new_file_name}`,
-              },
-            };
+              return {
+                success: 1,
+                file: {
+                  url: urlData.url,
+                  name: response.fileName, // Store for potential deletion
+                },
+              };
+            } catch (error) {
+              console.error('Image upload failed:', error);
+              return {
+                success: 0,
+                file: {
+                  url: '',
+                },
+              };
+            }
           },
         },
       },
@@ -81,6 +94,100 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       config: {
         rows: 3,
         cols: 2,
+      },
+    },
+    attaches: {
+      class: AttachesTool,
+      config: {
+        uploader: {
+          async uploadByFile(file: File) {
+            try {
+              const response = await storageV2.uploadBlogFile(blogId, file);
+              const urlData = await storageV2.getBlogFileUrl(
+                blogId,
+                response.fileName
+              );
+
+              return {
+                success: 1,
+                file: {
+                  url: urlData.url,
+                  name: response.fileName,
+                  size: response.size,
+                  title: file.name,
+                  extension: file.name.split('.').pop(),
+                },
+              };
+            } catch (error) {
+              console.error('File upload failed:', error);
+              return {
+                success: 0,
+              };
+            }
+          },
+        },
+      },
+    },
+    video: {
+      class: VideoTool,
+      config: {
+        onRemove: async (fileName: string) => {
+          try {
+            await storageV2.deleteBlogFile(blogId, fileName);
+          } catch (error) {
+            console.error('Failed to delete video from storage:', error);
+          }
+        },
+        uploader: async (file: File) => {
+          try {
+            const response = await storageV2.uploadBlogFile(blogId, file);
+            const urlData = await storageV2.getBlogFileUrl(
+              blogId,
+              response.fileName
+            );
+            return {
+              success: 1,
+              file: {
+                url: urlData.url,
+                name: response.fileName,
+              },
+            };
+          } catch (error) {
+            console.error('Video upload failed:', error);
+            return { success: 0 };
+          }
+        },
+      },
+    },
+    pdf: {
+      class: PdfTool,
+      config: {
+        onRemove: async (fileName: string) => {
+          try {
+            await storageV2.deleteBlogFile(blogId, fileName);
+          } catch (error) {
+            console.error('Failed to delete PDF from storage:', error);
+          }
+        },
+        uploader: async (file: File) => {
+          try {
+            const response = await storageV2.uploadBlogFile(blogId, file);
+            const urlData = await storageV2.getBlogFileUrl(
+              blogId,
+              response.fileName
+            );
+            return {
+              success: 1,
+              file: {
+                url: urlData.url,
+                name: response.fileName,
+              },
+            };
+          } catch (error) {
+            console.error('PDF upload failed:', error);
+            return { success: 0 };
+          }
+        },
       },
     },
   },

@@ -24,6 +24,11 @@ const nextConfig = {
         hostname: '127.0.0.1',
         port: '8081',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8081',
+      },
     ],
   },
   experimental: {

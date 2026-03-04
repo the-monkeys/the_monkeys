@@ -28,7 +28,8 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
       cache: 'no-store',
       // @ts-ignore: Required for Node.js bi-directional streaming
       duplex: 'half',
-    });
+      signal: AbortSignal.timeout(60 * 60 * 1000), // 1 hour timeout for large uploads
+    } as any);
 
     const responseHeaders = new Headers(response.headers);
 

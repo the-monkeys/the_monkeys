@@ -9,7 +9,7 @@ export const PrivacyContent = () => {
     <MDXProvider>
       <LegalPage
         title='Privacy Policy'
-        date='01-12-2024'
+        date='30-01-2026'
         content={<Content />}
       />
     </MDXProvider>

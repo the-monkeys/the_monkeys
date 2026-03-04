@@ -1,3 +1,4 @@
+import { SmartImage } from '@/components/common/SmartImage';
 import { teamInfo } from '@/constants/team';
 
 const getYearColor = (year: string) => {
@@ -19,10 +20,13 @@ const MembersGrid = () => {
           >
             <div className='h-full flex flex-col items-center text-center space-y-4'>
               <div className='size-20 ring-[6px] border-2 border-background-light dark:border-background-dark rounded-full overflow-hidden ring-brand-orange/40 group-hover:ring-[4px] group-hover:scale-105 transition-transform'>
-                <img
+                <SmartImage
                   src={info.avatar_url || './default-profile.svg'}
                   alt={info.name}
-                  className='h-full w-full rounded-full group-hover:scale-105 transition-transform'
+                  width={80}
+                  height={80}
+                  containerClassName='h-full w-full rounded-full'
+                  className='group-hover:scale-105 transition-transform'
                 />
               </div>
 

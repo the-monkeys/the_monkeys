@@ -5,7 +5,7 @@ import { setupRefreshInterceptor } from './interceptors';
 
 const axiosInstanceV2 = axios.create({
   baseURL: '/api/v2',
-  timeout: 30000,
+  timeout: 3600000,
 });
 
 axiosInstanceV2.interceptors.request.use(

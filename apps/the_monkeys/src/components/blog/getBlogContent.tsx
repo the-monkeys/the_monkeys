@@ -1,6 +1,12 @@
+'use client';
+
+import { useCallback, useEffect, useState } from 'react';
+
 import Image from 'next/image';
 
+import { SmartImage } from '@/components/common/SmartImage';
 import { Blog } from '@/services/blog/blogTypes';
+import { decodeBlurHashToDataURL } from '@/utils/blurhash';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { twMerge } from 'tailwind-merge';
 
@@ -105,15 +111,42 @@ export const BlogImage = ({
   image: string;
   className?: string;
 }) => {
+  const [imgSrc, setImgSrc] = useState<string>(image);
+  const [blurHash, setBlurHash] = useState<string | undefined>(undefined);
+
+  const resolveUrl = useCallback(async () => {
+    // Check if image is a Storage V2 API URL (ends in /url)
+    if (image && image.includes('/storage/posts/') && image.endsWith('/url')) {
+      try {
+        const metaUrl = image.replace('/url', '/meta');
+        const res = await fetch(metaUrl);
+        const data = await res.json();
+        if (data) {
+          if (data.url) setImgSrc(data.url);
+          if (data.blurhash) setBlurHash(data.blurhash);
+        }
+      } catch (error) {
+        console.error('Failed to resolve V2 Image Metadata:', error);
+      }
+    } else {
+      setImgSrc(image);
+    }
+  }, [image]);
+
+  useEffect(() => {
+    resolveUrl();
+  }, [resolveUrl]);
+
   return (
-    <Image
-      src={image}
+    <SmartImage
+      src={imgSrc}
       alt={title}
-      height='500'
-      width='800'
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      blurHash={blurHash}
+      width={800}
+      height={500}
+      containerClassName={className}
       quality={100}
-      priority
+      priority={false}
     />
   );
 };
@@ -126,12 +159,12 @@ export const BlogPlaceholderImage = ({
   className?: string;
 }) => {
   return (
-    <Image
+    <SmartImage
       src={placeholderImage.src}
       alt={title}
-      height='500'
-      width='800'
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      height={500}
+      width={800}
+      containerClassName={className}
       quality={100}
     />
   );

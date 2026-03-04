@@ -51,7 +51,11 @@ export const AuthorProfileCard = ({
     <div className='flex flex-col gap-[10px]'>
       <div className='flex items-end gap-3 flex-wrap'>
         <ProfileFrame className='group relative size-[80px] ring-2 ring-border-light/40 dark:ring-border-dark/40'>
-          <ProfileImage username={user?.username} />
+          <ProfileImage
+            username={user?.username}
+            firstName={user?.first_name}
+            lastName={user?.last_name}
+          />
           <div className='hidden absolute inset-0 w-full h-full group-hover:flex justify-center items-center bg-black/20 backdrop-blur-sm'>
             <ShowcaseProfileDialog username={user?.username} />
           </div>

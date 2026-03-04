@@ -2,7 +2,9 @@ import React from 'react';
 
 import Image from 'next/image';
 
+import { SmartImage } from '@/components/common/SmartImage';
 import useProfileImage from '@/hooks/profile/useProfileImage';
+import { decodeBlurHashToDataURL } from '@/utils/blurhash';
 import { twMerge } from 'tailwind-merge';
 
 export const DefaultProfile = () => {
@@ -37,32 +39,59 @@ export const ProfileFrame = ({
   );
 };
 
-export const ProfileImage = ({ username }: { username?: string }) => {
-  const { imageUrl, isLoading, isError } = useProfileImage(username);
+export const ProfileImage = ({
+  username,
+  initials,
+  firstName,
+  lastName,
+}: {
+  username?: string;
+  initials?: string;
+  firstName?: string;
+  lastName?: string;
+}) => {
+  const { imageUrl, blurHash, isLoading, isError } = useProfileImage(username);
+  const [imgLoadError, setImgLoadError] = React.useState(false);
+  const [isImgLoading, setIsImgLoading] = React.useState(true);
 
-  if (isLoading || isError || imageUrl === '')
+  // Reset error when url changes
+  React.useEffect(() => {
+    setImgLoadError(false);
+    setIsImgLoading(true);
+  }, [imageUrl]);
+
+  // Helper to generate initials if not provided
+  const getInitials = () => {
+    if (initials) return initials.toUpperCase().slice(0, 2);
+    if (firstName || lastName) {
+      const first = firstName?.[0] || '';
+      const last = lastName?.[0] || '';
+      return (first + last).toUpperCase();
+    }
+    if (username) return username.slice(0, 2).toUpperCase();
+    return '??';
+  };
+
+  const blurDataURL = decodeBlurHashToDataURL(blurHash);
+
+  if (isLoading || isError || !imageUrl || imgLoadError)
     return (
-      <Image
-        src='/default-profile.svg'
-        alt={`Author: ${username}`}
-        title={`Author: ${username}`}
-        width={32}
-        height={32}
-        className='w-full h-full object-cover'
-        unoptimized
-      />
+      <div className='w-full h-full flex items-center justify-center bg-brand-orange text-white font-bold text-xs sm:text-sm select-none border border-black/5 dark:border-white/5'>
+        {getInitials()}
+      </div>
     );
 
   return (
-    <Image
+    <SmartImage
       src={imageUrl}
       alt={`Author: ${username}`}
       title={`Author: ${username}`}
       width={50}
       height={50}
-      className='w-full h-full object-cover'
-      loading='lazy'
+      blurHash={blurHash}
+      containerClassName='w-full h-full'
       quality={100}
+      onError={() => setImgLoadError(true)}
     />
   );
 };
