@@ -33,7 +33,16 @@ export const DeleteProfileDialog = () => {
         `/storage/profiles/${data?.username}/profile`
       );
 
-      if (response.status === 202) {
+      if (response.status === 200) {
+        // Remove cached profile image so the UI drops the old blob immediately.
+        queryClient.setQueryData(
+          [PROFILE_IMAGE_QUERY_KEY, data?.username],
+          null
+        );
+        queryClient.invalidateQueries({
+          queryKey: [PROFILE_IMAGE_QUERY_KEY, data?.username],
+        });
+
         toast({
           variant: 'success',
           title: 'Success',
@@ -42,10 +51,6 @@ export const DeleteProfileDialog = () => {
 
         setOpen(false);
       }
-
-      queryClient.invalidateQueries({
-        queryKey: [PROFILE_IMAGE_QUERY_KEY, data?.username],
-      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

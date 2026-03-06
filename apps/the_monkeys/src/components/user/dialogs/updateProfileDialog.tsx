@@ -75,20 +75,20 @@ export const UpdateProfileDialog = () => {
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
-      if (response.status === 202) {
+      if (response.status === 201) {
+        // Invalidate the cached profile image so useProfileImage refetches the new one.
+        queryClient.invalidateQueries({
+          queryKey: [PROFILE_IMAGE_QUERY_KEY, data?.username],
+        });
+
         toast({
           variant: 'success',
           title: 'Success',
           description: 'Your profile photo has been updated successfully.',
         });
         setSelectedImage(undefined);
-
         setOpen(false);
       }
-
-      queryClient.invalidateQueries({
-        queryKey: [PROFILE_IMAGE_QUERY_KEY, data?.username],
-      });
     } catch (err: unknown) {
       if (err instanceof Error) {
         toast({

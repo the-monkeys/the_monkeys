@@ -15,10 +15,15 @@ const useProfileImage = (username: string | undefined) => {
     queryFn: () => fetcher(`/storage/profiles/${username}/profile`),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
+    retry: false, // Don't retry on 404 (deleted profile pic)
   });
 
   useEffect(() => {
-    if (!data) return;
+    // Profile was deleted or fetch failed — clear the displayed image.
+    if (!data) {
+      setImageUrl('');
+      return;
+    }
 
     const objectUrl = URL.createObjectURL(data);
     setImageUrl(objectUrl);
