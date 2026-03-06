@@ -1,7 +1,7 @@
-import axiosInstance from './api/axiosInstance';
+import axiosInstanceV2 from './api/axiosInstanceV2';
 
 const fetcher = (url: string) =>
-  axiosInstance
+  axiosInstanceV2
     .get(url, { responseType: 'blob' })
     .then((response) => response.data);
 

@@ -26,6 +26,7 @@ const nextConfig = {
       },
     ],
   },
+  transpilePackages: ['public-ip'],
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
