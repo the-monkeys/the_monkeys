@@ -12,7 +12,7 @@ const useProfileImage = (username: string | undefined) => {
 
   const { data, error, isLoading, isError } = useQuery<Blob, Error>({
     queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    queryFn: () => fetcher(`/files/profile/${username}/profile`),
+    queryFn: () => fetcher(`/storage/profiles/${username}/profile`),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
   });

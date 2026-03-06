@@ -6,7 +6,7 @@ import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
 import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
-import axiosInstance from '@/services/api/axiosInstance';
+import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
@@ -29,8 +29,8 @@ export const DeleteProfileDialog = () => {
     setLoading(true);
 
     try {
-      const response = await axiosInstance.delete(
-        `/files/profile/${data?.username}/profile`
+      const response = await axiosInstanceV2.delete(
+        `/storage/profiles/${data?.username}/profile`
       );
 
       if (response.status === 202) {
