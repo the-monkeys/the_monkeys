@@ -1,8 +1,7 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
-import { API_URL } from '@/constants/api';
-import axiosInstance from '@/services/api/axiosInstance';
+import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -60,15 +59,22 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await axiosInstance.post(
-              `/files/post/${blogId}`,
+            // Upload via v2 storage API (MinIO-backed).
+            // The v2 response includes a CDN URL in `response.data.url`
+            // generated server-side from MINIO_CDN_URL config.
+            // Storing the CDN URL directly means:
+            //   - No runtime URL resolution on read
+            //   - CDN/domain change = one-time ES migration, not code change
+            //   - v1 routes are untouched, no frontend dependency on them
+            const response = await axiosInstanceV2.post(
+              `/storage/posts/${blogId}`,
               formData
             );
 
             return {
               success: 1,
               file: {
-                url: `${API_URL}/files/post/${blogId}/${response.data.new_file_name}`,
+                url: response.data.url,
               },
             };
           },
