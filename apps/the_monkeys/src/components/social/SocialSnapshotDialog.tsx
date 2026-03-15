@@ -26,7 +26,18 @@ export const SocialSnapshotDialog = ({
 }) => {
   const [selectedImage, setSelectedImage] = useState<string>('');
 
-  const { titleContent } = getCardContent({ blog });
+  const { titleContent, descriptionContent } = getCardContent({ blog });
+
+  const [editTitle, setEditTitle] = useState(titleContent || '');
+  const [editDescription, setEditDescription] = useState(
+    descriptionContent || ''
+  );
+
+  // Sync when blog data changes (e.g. navigation)
+  useEffect(() => {
+    setEditTitle(titleContent || '');
+    setEditDescription(descriptionContent || '');
+  }, [titleContent, descriptionContent]);
 
   const images = blog?.blog?.blocks
     .filter((block) => block.type === 'image' && block.data.file.url)
@@ -55,35 +66,35 @@ export const SocialSnapshotDialog = ({
         <DialogHeader>
           <DialogTitle>Social Snapshot</DialogTitle>
           <DialogDescription>
-            Turn posts into a shareable snapshot you can download.
+            Hover over the image and click the text to edit. Pick an image, then
+            download.
           </DialogDescription>
         </DialogHeader>
 
-        <div className='pt-4 flex flex-col items-center gap-4'>
+        <div className='pt-2 flex flex-col gap-4'>
+          {/* Image picker */}
           <div className='flex gap-3 flex-wrap'>
             {images.length ? (
-              images.map((image, index) => {
-                return (
-                  <div
-                    className={twMerge(
-                      'shrink-0 h-[60px] w-[80px] overflow-hidden ring-2 cursor-pointer hover:opacity-100',
-                      selectedImage === image
-                        ? 'opacity-100 ring-brand-orange'
-                        : 'opacity-90 ring-border-light dark:ring-border-dark'
-                    )}
-                    key={index}
-                    onClick={() => setSelectedImage(image)}
-                  >
-                    <Image
-                      src={image}
-                      alt={`Social snapshot option ${index + 1}`}
-                      width={200}
-                      height={200}
-                      className='w-full h-full object-cover'
-                    />
-                  </div>
-                );
-              })
+              images.map((image, index) => (
+                <div
+                  className={twMerge(
+                    'shrink-0 h-[60px] w-[80px] overflow-hidden ring-2 cursor-pointer hover:opacity-100',
+                    selectedImage === image
+                      ? 'opacity-100 ring-brand-orange'
+                      : 'opacity-90 ring-border-light dark:ring-border-dark'
+                  )}
+                  key={index}
+                  onClick={() => setSelectedImage(image)}
+                >
+                  <Image
+                    src={image}
+                    alt={`Social snapshot option ${index + 1}`}
+                    width={200}
+                    height={200}
+                    className='w-full h-full object-cover'
+                  />
+                </div>
+              ))
             ) : (
               <p className='p-2 text-sm opacity-90'>
                 No image available. Using default background.
@@ -91,11 +102,15 @@ export const SocialSnapshotDialog = ({
             )}
           </div>
 
-          <div className='flex-1'>
+          {/* Canvas preview with inline editing */}
+          <div className='flex-1 flex justify-center'>
             <SnapshotCanvas
               id={blog?.blog_id}
-              title={titleContent}
+              title={editTitle}
+              description={editDescription}
               imageURL={selectedImage}
+              onTitleChange={setEditTitle}
+              onDescriptionChange={setEditDescription}
             />
           </div>
         </div>
