@@ -16,13 +16,16 @@ import {
 import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import moment from 'moment';
 
+import { BlogAnalyticsDashboard } from '../components/BlogAnalyticsDashboard';
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
+import { BlogStats } from '../components/BlogStats';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -39,7 +42,9 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
     useGetPublishedBlogDetailByBlogId(urlBlogId);
   const authorId = blog?.owner_account_id;
 
+  const { data: session } = useAuth();
   const { user } = useGetProfileInfoById(authorId);
+  const isOwner = !!session?.account_id && session.account_id === authorId;
 
   useEffect(() => {
     const startTime = Date.now();
@@ -135,11 +140,13 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
     <>
       <div className='px-4'>
         <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
-          <p className='text-sm opacity-90'>
-            {moment(date).format('MMM DD, yyyy')}
-            {' / '}
-            {moment(date).utc().format('hh:mm A')} UTC
-          </p>
+          <div className='flex items-center gap-3 text-sm opacity-90'>
+            <p>
+              {moment(date).format('MMM DD, yyyy')}
+              {' / '}
+              {moment(date).utc().format('hh:mm A')} UTC
+            </p>
+          </div>
 
           <BlogHeading
             title={sanitizedBlogTitle || 'Untitled Post'}
@@ -148,6 +155,8 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
 
           <UserInfoCardBlogPage id={authorId} />
         </Container>
+
+        <BlogAnalyticsDashboard blogId={blogId} />
       </div>
       <AdUnit slot='4598536509' />
       <div className='p-4'>
