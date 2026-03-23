@@ -28,31 +28,23 @@ const NotificationsPage = () => {
     );
   }
 
-  let unreadNotifications: { id: number }[] = [];
-
-  if (notifications?.notifications) {
-    unreadNotifications = notifications?.notifications.notification.filter(
-      (notification) => !notification.seen
-    );
-  }
-
   return (
     <div className='mx-auto w-full sm:w-4/5 md:w-3/5 px-4 flex flex-col items-center sm:items-end space-y-4'>
       <MarkReadButton
-        notificationIds={unreadNotifications}
+        notificationIds={notifications.map((n) => ({
+          id: n.notification_id,
+        }))}
         userId={session?.username}
       />
 
       <div className='w-full space-y-2'>
-        {notifications?.notifications.notification.length ? (
-          notifications?.notifications.notification.map((notificationItem) => {
-            return (
-              <NotificationCard
-                key={notificationItem.id}
-                notificationData={notificationItem}
-              />
-            );
-          })
+        {notifications.length ? (
+          notifications.map((notif) => (
+            <NotificationCard
+              key={notif.notification_id}
+              frnNotificationData={notif}
+            />
+          ))
         ) : (
           <p className='col-span-2 sm:col-span-3 text-center opacity-80'>
             No notifications yet.

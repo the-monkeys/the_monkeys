@@ -18,11 +18,6 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
   const { notifications, isLoading, isError } = useGetAllNotifications();
   const [open, setOpen] = useState<boolean>(false);
 
-  const unreadNotifications =
-    notifications?.notifications?.notification?.filter(
-      (notificationItem) => !notificationItem.seen
-    ) || [];
-
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
@@ -32,7 +27,7 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
           className='relative rounded-full hover:opacity-80 cursor-pointer'
           title='View Notifications'
         >
-          {unreadNotifications && unreadNotifications.length ? (
+          {notifications.length ? (
             <Icon name='RiNotification3' type='Fill' />
           ) : (
             <Icon name='RiNotification3' />
@@ -51,7 +46,7 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
           <h3 className='px-1 font-dm_sans font-medium text-lg'>
             Notifications{' '}
             <span className='text-sm sm:text-base text-brand-orange'>
-              {unreadNotifications?.length || '0'}
+              {notifications.length || '0'}
             </span>
           </h3>
 
@@ -73,19 +68,20 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
             </div>
           ) : (
             <div className='mb-3 space-y-1'>
-              {unreadNotifications?.length ? (
-                unreadNotifications.slice(0, 5).map((notificationItem) => {
-                  return (
-                    <div
-                      key={notificationItem.id}
-                      className='px-3 py-2 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-md'
-                    >
-                      <p className='flex-1 text-xs sm:text-sm capitalize break-words line-clamp-2'>
-                        {notificationItem?.message}
-                      </p>
-                    </div>
-                  );
-                })
+              {notifications.length ? (
+                notifications.slice(0, 5).map((notif) => (
+                  <div
+                    key={notif.notification_id}
+                    className='px-3 py-2 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-md'
+                  >
+                    <p className='font-medium text-xs sm:text-sm break-words line-clamp-1'>
+                      {notif.title}
+                    </p>
+                    <p className='text-xs opacity-80 break-words line-clamp-1'>
+                      {notif.body}
+                    </p>
+                  </div>
+                ))
               ) : (
                 <p className='py-4 text-sm sm:text-base text-center opacity-80'>
                   No notifications yet.
