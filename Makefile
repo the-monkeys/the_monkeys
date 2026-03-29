@@ -9,9 +9,9 @@ all: dev
 # Setup hosts file (one-time, requires sudo/admin)
 setup-hosts:
 ifeq ($(OS),Windows_NT)
-	powershell -Command "Start-Process powershell -ArgumentList '-NoProfile -Command Add-Content -Path C:\Windows\System32\drivers\etc\hosts -Value \"`n127.0.0.1 local.monkeys.com.co\"' -Verb RunAs"
+	powershell -ExecutionPolicy Bypass -File "scripts/setup-hosts.ps1"
 else
-	sudo sh -c 'echo "127.0.0.1 local.monkeys.com.co" >> /etc/hosts'
+	bash scripts/setup-hosts.sh
 endif
 
 # Development server
