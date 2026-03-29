@@ -8,7 +8,7 @@ ENTRY="127.0.0.1 local.monkeys.com.co"
 # Check if running as root
 if [ "$EUID" -ne 0 ]; then
     echo "This script requires admin privileges. Requesting sudo..."
-    sudo "$0"
+    sudo "$(readlink -f "$0")"
     exit
 fi
 

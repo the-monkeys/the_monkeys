@@ -11,7 +11,7 @@ setup-hosts:
 ifeq ($(OS),Windows_NT)
 	powershell -ExecutionPolicy Bypass -File "scripts/setup-hosts.ps1"
 else
-	bash scripts/setup-hosts.sh
+	bash ./scripts/setup-hosts.sh
 endif
 
 # Development server
