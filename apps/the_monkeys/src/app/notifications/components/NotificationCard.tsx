@@ -12,9 +12,9 @@ export const NotificationCard = ({
   frnNotificationData?: FRNNotification;
 }) => {
   // Support both legacy (Postgres) and FRN notification shapes
-  const title = frnNotificationData?.title ?? 'Notification';
+  const title = frnNotificationData?.content?.title ?? 'Notification';
   const body =
-    frnNotificationData?.body ?? notificationData?.message ?? '';
+    frnNotificationData?.content?.body ?? notificationData?.message ?? '';
   const category = frnNotificationData?.category;
   const isSeen = notificationData?.seen ?? false;
 

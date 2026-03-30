@@ -1,9 +1,8 @@
+import axiosInstance from '@/services/api/axiosInstance';
 import {
   FRNNotification,
   FRNNotificationListResponse,
 } from '@/services/notification/notificationTypes';
-import axiosInstance from '@/services/api/axiosInstance';
-import { FRN_URL } from '@/constants/api';
 import { useQuery } from '@tanstack/react-query';
 
 export const ALL_NOTIFICATIONS_QUERY_KEY = 'notifications';

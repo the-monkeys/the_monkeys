@@ -30,9 +30,13 @@ const WSNotificationDropdown = () => {
         total: number;
       }>('/notification/frn?page_size=20&channel=in_app');
 
-      const list = (data.notifications ?? []).filter((n) => n.status !== 'failed');
+      const list = (data.notifications ?? []).filter(
+        (n) => n.status !== 'failed'
+      );
       setNotifications(list);
-      setUnreadCount(list.filter((n) => n.status !== 'read' && n.status !== 'seen').length);
+      setUnreadCount(
+        list.filter((n) => n.status !== 'read' && n.status !== 'seen').length
+      );
       hasFetched.current = true;
     } catch {
       // Gateway or FRN unreachable
@@ -45,9 +49,7 @@ const WSNotificationDropdown = () => {
     try {
       await axiosInstance.post('/notification/frn/read-all');
       setUnreadCount(0);
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, status: 'read' }))
-      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, status: 'read' })));
     } catch {
       // non-blocking
     }
@@ -81,8 +83,7 @@ const WSNotificationDropdown = () => {
         try {
           const payload = JSON.parse(event.data);
           // SSE wraps notification under a "notification" key
-          const notif: FRNNotification =
-            payload.notification ?? payload;
+          const notif: FRNNotification = payload.notification ?? payload;
           if (!notif.notification_id) return;
           setNotifications((prev) => {
             // Prepend, deduplicate by id
@@ -149,10 +150,13 @@ const WSNotificationDropdown = () => {
   };
 
   return (
-    <DropdownMenu open={open} onOpenChange={(isOpen) => {
-      setOpen(isOpen);
-      if (isOpen) markAllRead();
-    }}>
+    <DropdownMenu
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        if (isOpen) markAllRead();
+      }}
+    >
       <DropdownMenuTrigger asChild>
         <Button
           variant='ghost'

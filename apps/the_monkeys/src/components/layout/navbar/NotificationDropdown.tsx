@@ -75,10 +75,10 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
                     className='px-3 py-2 bg-foreground-light/25 dark:bg-foreground-dark/25 rounded-md'
                   >
                     <p className='font-medium text-xs sm:text-sm break-words line-clamp-1'>
-                      {notif.title}
+                      {notif.content?.title}
                     </p>
                     <p className='text-xs opacity-80 break-words line-clamp-1'>
-                      {notif.body}
+                      {notif.content?.body}
                     </p>
                   </div>
                 ))
