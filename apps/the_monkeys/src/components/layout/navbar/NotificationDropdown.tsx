@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
 import { IUser } from '@/services/models/user';
+import { NotificationBody } from '@/services/notification/NotificationBody';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   DropdownMenu,
@@ -78,7 +79,7 @@ const NotificationDropdown = ({ session }: { session: IUser }) => {
                       {notif.content?.title}
                     </p>
                     <p className='text-xs opacity-80 break-words line-clamp-1'>
-                      {notif.content?.body}
+                      <NotificationBody notif={notif} />
                     </p>
                   </div>
                 ))

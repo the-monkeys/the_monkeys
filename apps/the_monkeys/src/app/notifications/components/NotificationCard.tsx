@@ -1,3 +1,4 @@
+import { NotificationBody } from '@/services/notification/NotificationBody';
 import {
   FRNNotification,
   Notification,
@@ -13,8 +14,7 @@ export const NotificationCard = ({
 }) => {
   // Support both legacy (Postgres) and FRN notification shapes
   const title = frnNotificationData?.content?.title ?? 'Notification';
-  const body =
-    frnNotificationData?.content?.body ?? notificationData?.message ?? '';
+  const legacyBody = notificationData?.message ?? '';
   const category = frnNotificationData?.category;
   const isSeen = notificationData?.seen ?? false;
 
@@ -39,7 +39,11 @@ export const NotificationCard = ({
         </h4>
 
         <p className='text-xs sm:text-sm opacity-80 capitalize break-words'>
-          {body}
+          {frnNotificationData ? (
+            <NotificationBody notif={frnNotificationData} />
+          ) : (
+            legacyBody
+          )}
         </p>
       </div>
     </div>

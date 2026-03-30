@@ -51,3 +51,18 @@ export interface FRNNotificationListResponse {
 export interface FRNUnreadCountResponse {
   count: number;
 }
+
+/**
+ * Resolve template placeholders in a notification body.
+ * FRN stores the raw template (e.g. "{{follower_name}} started following you")
+ * and passes variable values in content.data. This function substitutes them.
+ */
+export function resolveBody(notif: FRNNotification): string {
+  const body = notif.content?.body || notif.content?.title || '';
+  const data = notif.content?.data;
+  if (!data || !body) return body;
+  return body.replace(/\{\{\s*\.?\s*(\w+)\s*\}\}/g, (_, key: string) => {
+    const val = data[key];
+    return val != null ? String(val) : '';
+  });
+}

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import Icon from '@/components/icon';
 import { FRN_URL } from '@/constants/api';
 import axiosInstance from '@/services/api/axiosInstance';
+import { NotificationBody } from '@/services/notification/NotificationBody';
 import { FRNNotification } from '@/services/notification/notificationTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
@@ -85,13 +86,19 @@ const WSNotificationDropdown = () => {
           // SSE wraps notification under a "notification" key
           const notif: FRNNotification = payload.notification ?? payload;
           if (!notif.notification_id) return;
-          setNotifications((prev) => {
-            // Prepend, deduplicate by id
-            if (prev.some((n) => n.notification_id === notif.notification_id))
-              return prev;
-            return [notif, ...prev];
-          });
-          setUnreadCount((c) => c + 1);
+
+          // If the SSE payload has full content, render it immediately.
+          // Otherwise refetch from API to get the complete in_app notification.
+          if (notif.content?.body) {
+            setNotifications((prev) => {
+              if (prev.some((n) => n.notification_id === notif.notification_id))
+                return prev;
+              return [notif, ...prev];
+            });
+            setUnreadCount((c) => c + 1);
+          } else {
+            fetchNotifications();
+          }
         } catch {
           // ignore malformed events
         }
@@ -205,7 +212,7 @@ const WSNotificationDropdown = () => {
                   </p>
                 </div>
                 <p className='font-medium text-xs sm:text-sm break-words line-clamp-2'>
-                  {notif.content?.body || notif.content?.title || ''}
+                  <NotificationBody notif={notif} />
                 </p>
               </div>
             ))
