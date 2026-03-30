@@ -21,7 +21,7 @@ export const MarkReadButton = ({
   notificationIds,
   userId,
 }: {
-  notificationIds?: { id: number }[];
+  notificationIds?: { id: string }[];
   userId?: string;
 }) => {
   const queryClient = useQueryClient();
