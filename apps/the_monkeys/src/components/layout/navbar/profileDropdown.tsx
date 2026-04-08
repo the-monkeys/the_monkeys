@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
+import ThemeSwitch from '@/components/themeSwitch';
 import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
@@ -17,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@the-monkeys/ui/atoms/dropdown-menu';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 const ProfileDropdown = ({ session }: { session?: IUser }) => {
   const router = useRouter();
@@ -39,8 +41,8 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='mt-2 mr-2 w-[200px] sm:w-[220px]'>
-        <DropdownMenuItem className='p-1' asChild>
+      <DropdownMenuContent className='mt-2 mr-2 w-[100px] sm:w-[180px]'>
+        <DropdownMenuItem className='p-2' asChild>
           <Link
             href={`/${session?.username}`}
             className='flex items-center gap-2 overflow-hidden'
@@ -54,33 +56,15 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
                 {session?.first_name}{' '}
                 {session?.last_name ? session?.last_name : ''}
               </p>
-              <p className='text-[13px] opacity-80 truncate'>
-                @{session?.username}
-              </p>
+              <p className='text-[13px] opacity-80 truncate'>View profile</p>
             </div>
           </Link>
         </DropdownMenuItem>
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem asChild>
-          <Link
-            href={`${LIBRARY_ROUTE}?source=bookmarks`}
-            className='flex w-full items-center gap-2'
-          >
-            <Icon name='RiBookmark' size={18} />
-            <p className='font-dm_sans text-sm sm:text-base'>Bookmarks</p>
-          </Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuItem asChild>
-          <Link
-            href={`${LIBRARY_ROUTE}?source=drafts`}
-            className='flex w-full items-center gap-2'
-          >
-            <Icon name='RiEdit2' size={18} />
-            <p className='font-dm_sans text-sm sm:text-base'>Drafts</p>
-          </Link>
+        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+          <ThemeSwitch />
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
@@ -99,6 +83,8 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
             <p className='font-dm_sans text-sm sm:text-base'>Activity</p>
           </Link>
         </DropdownMenuItem>
+
+        <Separator />
 
         <DropdownMenuItem asChild>
           <button

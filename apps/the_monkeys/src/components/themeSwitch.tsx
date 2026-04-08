@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import { Button } from '@the-monkeys/ui/atoms/button';
+import Icon from '@/components/icon';
 import { useTheme } from 'next-themes';
-
-import Icon from './icon';
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
@@ -13,38 +11,29 @@ const ThemeSwitch = () => {
 
   useEffect(() => setMounted(true), []);
 
-  if (!mounted)
+  if (!mounted) {
     return (
-      <div className='mr-1 size-8 rounded-full bg-foreground-light dark:bg-foreground-dark animate-pulse'></div>
-    );
-
-  if (resolvedTheme === 'dark') {
-    return (
-      <Button
-        variant='ghost'
-        size='icon'
-        className='rounded-full hover:opacity-80 cursor-pointer'
-        onClick={() => setTheme('light')}
-        title='Switch Theme'
-      >
-        <Icon name='RiMoon' className='animate-theme-spin direction-reverse' />
-      </Button>
+      <div className='flex w-full items-center gap-2 opacity-50 pointer-events-none'>
+        <div className='size-[18px] rounded-full bg-foreground-light dark:bg-foreground-dark animate-pulse' />
+        <p className='font-dm_sans text-sm sm:text-base'>Theme</p>
+      </div>
     );
   }
 
-  if (resolvedTheme === 'light') {
-    return (
-      <Button
-        variant='ghost'
-        size='icon'
-        className='rounded-full hover:opacity-80 cursor-pointer'
-        onClick={() => setTheme('dark')}
-        title='Switch Theme'
-      >
-        <Icon name='RiSun' className='animate-theme-spin' />
-      </Button>
-    );
-  }
+  const isDark = resolvedTheme === 'dark';
+
+  return (
+    <button
+      type='button'
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      className='flex w-full items-center gap-2'
+    >
+      <Icon name={isDark ? 'RiSun' : 'RiMoon'} size={18} />
+      <p className='font-dm_sans text-sm sm:text-base'>
+        {isDark ? 'Light mode' : 'Dark mode'}
+      </p>
+    </button>
+  );
 };
 
 export default ThemeSwitch;

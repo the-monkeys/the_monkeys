@@ -1,125 +1,92 @@
 import Link from 'next/link';
 
-import Icon, { IconName } from '@/components/icon';
+import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { footerLinksList, footerSocialsList } from '@/constants/footer';
-import { HOME_ROUTE } from '@/constants/routeConstants';
-import { Button } from '@the-monkeys/ui/atoms/button';
+import { PARENT_COMPANY_ROUTE } from '@/constants/routeConstants';
+import { cn } from '@/lib/utils';
 
-import Container from '../Container';
-
-const FooterSocialLink = ({
-  social,
-}: {
-  social: { account: string; icon: IconName; link: string };
-}) => {
-  return (
-    <Button
-      variant='outline'
-      size='icon'
-      className='group !border-1 rounded-full'
-      asChild
-    >
-      <Link target='_blank' href={social.link}>
-        <Icon
-          name={social.icon}
-          type='Fill'
-          className='opacity-80 group-hover:opacity-100'
-        />
-      </Link>
-    </Button>
-  );
+type SidebarFooterProps = {
+  collapsed?: boolean;
 };
 
-const FooterLinksList = ({
-  heading,
-  items,
-}: {
-  heading: string;
-  items: {
-    text: string;
-    link: string;
-  }[];
-}) => {
+function SocialLinks() {
   return (
-    <div className='min-w-[140px] space-y-4'>
-      <h4 className='font-dm_sans font-medium text-lg'>{heading}</h4>
-
-      <ul className='space-y-[6px] sm:space-y-2'>
-        {items.map((item, index) => (
-          <li key={index}>
-            <Link
-              target='_blank'
-              href={item.link}
-              className='text-sm hover:underline opacity-90'
-            >
-              {item.text}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <div className='flex items-center justify-center gap-2 mb-3'>
+      {footerSocialsList.map((social) => (
+        <a
+          key={social.account}
+          href={social.link}
+          target='_blank'
+          rel='noopener noreferrer'
+          title={social.account}
+          className='inline-flex h-7 w-7 items-center justify-center rounded-full text-text-light/60 transition-colors hover:bg-brand-orange/10 hover:text-brand-orange dark:text-text-dark/60 dark:hover:bg-brand-orange/10'
+        >
+          <Icon name={social.icon} size={14} />
+        </a>
+      ))}
     </div>
   );
-};
+}
 
-const Footer = () => {
+function LegalLinks() {
+  const legal = footerLinksList.find((g) => g.heading === 'Legal');
+  if (!legal) return null;
   return (
-    <footer className='mt-20 border-t-1 border-border-light dark:border-border-dark'>
-      <Container className='max-w-[1500px] px-4 py-14 z-10'>
-        <div className='grid grid-cols-3 gap-14 lg:gap-4'>
-          <div className='col-span-3 lg:col-span-1 space-y-2'>
-            <Link
-              href={HOME_ROUTE}
-              className='group w-fit flex items-center gap-[6px]'
-            >
-              <div className='size-10 flex justify-center items-center filter group-hover:brightness-90'>
-                <Logo />
-              </div>
-
-              <div className='pt-2'>
-                <p className='font-dm_sans font-medium tracking-tight text-[27.8px] group-hover:opacity-90'>
-                  Monkeys
-                </p>
-              </div>
-            </Link>
-
-            <p className='text-xs'>
-              A product of{' '}
-              <span className='font-medium'>BUDDHICINTAKA PVT. LTD.</span>
-            </p>
-
-            <div className='py-6 flex flex-wrap gap-2'>
-              {footerSocialsList.map((val, index) => {
-                return <FooterSocialLink key={index} social={val} />;
-              })}
-            </div>
-          </div>
-
-          <div className='col-span-3 lg:col-span-2 flex gap-12 justify-between lg:justify-end items-start flex-wrap'>
-            {footerLinksList.map((val, index) => {
-              return (
-                <FooterLinksList
-                  key={index}
-                  heading={val.heading}
-                  items={val.items}
-                />
-              );
-            })}
-          </div>
-        </div>
-
-        <div className='mt-12 flex justify-center items-center gap-4 flex-wrap'>
-          <div className='w-full mx-auto'>
-            <p className='py-6 font-medium text-xs text-center'>
-              <span className='font-normal'>© {new Date().getFullYear()}</span>
-              &nbsp;BUDDHICINTAKA PVT. LTD.&nbsp;
-              <span className='font-normal'>All rights reserved.</span>
-            </p>
-          </div>
-        </div>
-      </Container>
-    </footer>
+    <div className='flex flex-wrap items-center justify-center gap-x-2 gap-y-1 mb-3'>
+      {legal.items.map((item) => (
+        <Link
+          key={item.link}
+          href={item.link}
+          className='text-[9px] text-text-light/40 dark:text-text-dark/40 hover:text-brand-orange transition-colors'
+        >
+          {item.text}
+        </Link>
+      ))}
+    </div>
   );
-};
+}
 
-export default Footer;
+function Branding() {
+  return (
+    <div className='flex items-center justify-center gap-2'>
+      <div className='w-4 flex justify-center items-center shrink-0'>
+        <Logo />
+      </div>
+      <p className='text-[10px] font-normal text-text-light/40 dark:text-text-dark/40'>
+        A product by{' '}
+        <a
+          href={PARENT_COMPANY_ROUTE}
+          target='_blank'
+          rel='noopener noreferrer'
+          className='hover:text-brand-orange transition-colors underline'
+        >
+          Buddhicintaka
+        </a>
+      </p>
+    </div>
+  );
+}
+
+export function SidebarFooter({ collapsed }: SidebarFooterProps) {
+  return (
+    <div
+      className={cn(
+        'shrink-0 pt-3 px-2 pb-4',
+        !collapsed &&
+          'border-t-[0.5px] border-border-light dark:border-border-dark'
+      )}
+    >
+      {!collapsed && (
+        // Collapsed: just show logo centered
+        <>
+          <SocialLinks />
+          <LegalLinks />
+          <Branding />
+        </>
+      )}
+    </div>
+  );
+}
+
+export default SidebarFooter;
