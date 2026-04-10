@@ -65,19 +65,11 @@ function Branding() {
 
 export function SidebarFooter() {
   return (
-    <div className='shrink-0 border-t-[0.5px] border-border-light dark:border-border-dark pt-1.5 px-2 pb-2'>
-      {/* Expanded state: Desktop and larger tablets */}
+    <div className='shrink-0 md:border-t-[0.5px] border-border-light dark:border-border-dark pt-1.5 px-2 pb-2'>
       <div className='hidden md:block'>
         <SocialLinks />
         <LegalLinks />
         <Branding />
-      </div>
-
-      {/* Collapsed state: Mobile and small tablets */}
-      <div className='md:hidden flex flex-col items-center justify-center p-1'>
-        <div className='w-5 h-5 flex justify-center items-center opacity-50 contrast-0 grayscale'>
-          <Logo />
-        </div>
       </div>
     </div>
   );
