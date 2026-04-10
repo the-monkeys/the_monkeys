@@ -2,10 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 
-import {
-  FeedSidebarDesktop,
-  FeedSidebarMobile,
-} from '@/components/layout/feed/FeedSidebar';
+import { FeedSidebarDesktop } from '@/components/layout/feed/FeedSidebar';
 
 import Navbar from '../navbar';
 import { RightRail } from './RightRail';
@@ -36,14 +33,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className='mx-auto flex w-full max-w-[1500px] flex-col lg:flex-row'>
-      {/* Mobile menu for sidebar */}
-      <div className='flex items-center justify-between px-[10px] py-3 lg:hidden'>
-        <FeedSidebarMobile />
-      </div>
-
-      {/* Left Sidebar - sticky full height */}
-      <div className='hidden lg:block sticky top-0 h-screen shrink-0 border-r-[0.5px] border-border-light dark:border-border-dark overflow-visible'>
+    <div className='mx-auto flex w-full max-w-[1500px] flex-row'>
+      {/* Left Sidebar - responsive (collapsed on small screens, expanded on large screens) */}
+      <div className='sticky top-0 h-screen shrink-0 border-r-[0.5px] border-border-light dark:border-border-dark overflow-visible'>
         <FeedSidebarDesktop />
       </div>
 

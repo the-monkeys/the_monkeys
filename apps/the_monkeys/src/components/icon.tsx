@@ -76,7 +76,13 @@ export type IconName =
   | 'RiMenu2'
   | 'RiArrowRightS'
   | 'RiArrowLeftS'
-  | 'RiBookShelf';
+  | 'RiBookShelf'
+  | 'RiSparkle2'
+  | 'RiTimeline'
+  | 'RiBellLine'
+  | 'RiSettings5Line'
+  | 'RiBard'
+  | 'RiMenu4';
 
 export type IconProps = {
   name: IconName;

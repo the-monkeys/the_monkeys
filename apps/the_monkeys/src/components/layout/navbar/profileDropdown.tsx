@@ -63,10 +63,6 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <ThemeSwitch />
-        </DropdownMenuItem>
-
         <DropdownMenuItem asChild>
           <Link href='/settings' className='flex w-full items-center gap-2'>
             <Icon name='RiSettings3' size={18} />

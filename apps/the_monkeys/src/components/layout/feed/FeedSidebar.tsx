@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useState } from 'react';
+import { Suspense } from 'react';
 
 import Link from 'next/link';
 import {
@@ -10,24 +10,19 @@ import {
 } from 'next/navigation';
 
 import Icon, { IconName } from '@/components/icon';
-import { SidebarFooter } from '@/components/layout/footer';
+import Footer from '@/components/layout/footer';
 import Logo from '@/components/logo';
-import { SIDEBAR_COLLAPSED_KEY } from '@/constants/layoutStorage';
 import {
   ACTIVITY_ROUTE,
   EXPLORE_TOPICS_ROUTE,
   FEED_ROUTE,
   HOME_ROUTE,
   LIBRARY_ROUTE,
+  NOTIFICATIONS_ROUTE,
+  SETTINGS_ROUTE,
 } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { cn } from '@/lib/utils';
-import {
-  Drawer,
-  DrawerContent,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@the-monkeys/ui/atoms/drawer';
 
 const pathMatches = (pathname: string, hrefPath: string) => {
   if (hrefPath === HOME_ROUTE) {
@@ -66,16 +61,15 @@ type NavItem = {
 
 const discoverItems: NavItem[] = [
   { href: HOME_ROUTE, label: 'Feed', icon: 'RiNewspaper' },
+  { href: FEED_ROUTE, label: 'For You', icon: 'RiBard' },
   { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
+  { href: ACTIVITY_ROUTE, label: 'Activity', icon: 'RiMenu4' },
+  { href: LIBRARY_ROUTE, label: 'Library', icon: 'RiBookShelf' },
+  { href: NOTIFICATIONS_ROUTE, label: 'Notifications', icon: 'RiNotification3' },
+  { href: SETTINGS_ROUTE, label: 'Settings', icon: 'RiSettings3' },
 ];
 
-const libraryItems: NavItem[] = [
-  {
-    href: `${LIBRARY_ROUTE}`,
-    label: 'Library',
-    icon: 'RiBookShelf',
-  },
-];
+const libraryItems: NavItem[] = [];
 
 const linkBase = (active: boolean) =>
   cn(
@@ -89,18 +83,14 @@ function NavRows({
   pathname,
   searchParams,
   items,
-  onNavigate,
-  collapsed,
 }: {
   pathname: string;
   searchParams: ReadonlyURLSearchParams;
   items: NavItem[];
-  onNavigate?: () => void;
-  collapsed?: boolean;
 }) {
   return (
     <nav
-      className={`flex flex-col gap-0.5 ${collapsed ? 'mt-4' : ''}`}
+      className='flex flex-col gap-0.5'
       aria-label='Navigation'
     >
       {items.map(({ href, label, icon }) => {
@@ -109,20 +99,19 @@ function NavRows({
           <Link
             key={href}
             href={href}
-            title={collapsed ? label : undefined}
-            onClick={onNavigate}
+            title={label}
             className={cn(
               linkBase(active),
-              collapsed ? 'justify-center px-2' : 'gap-3 px-3'
+              'px-0 justify-center md:px-3 md:justify-start md:gap-3'
             )}
           >
             <Icon
               name={icon}
               size={18}
-              className={cn('shrink-0', active && 'text-brand-orange')}
+              className={cn('shrink-0', active && 'text-brand-orange ')}
             />
-            {!collapsed && label}
-            {collapsed && <span className='sr-only'>{label}</span>}
+            <span className='hidden md:inline'>{label}</span>
+            <span className='sr-only md:hidden'>{label}</span>
           </Link>
         );
       })}
@@ -139,55 +128,28 @@ function SidebarFallback() {
   );
 }
 
-function SidebarInner({
-  onNavigate,
-  variant,
-  collapsed,
-}: {
-  onNavigate?: () => void;
-  variant: 'desktop' | 'drawer';
-  collapsed?: boolean;
-}) {
+function SidebarInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session, isLoading } = useAuth();
-  const isCollapsed = variant === 'desktop' && collapsed;
 
   return (
-    <div
-      className={cn(
-        'flex flex-col h-full',
-        variant === 'drawer' && 'max-h-[85vh]'
-      )}
-    >
-      {variant === 'drawer' && (
-        <div className='border-b border-border-light px-4 pb-3 pt-4 dark:border-border-dark shrink-0'>
-          <DrawerTitle className='font-dm_sans text-lg font-medium' />
-        </div>
-      )}
-
+    <div className='flex flex-col h-full'>
       {/* Scrollable nav area */}
       <div className='flex-1 overflow-y-auto overflow-x-hidden'>
         {/* LOGO */}
-        <div className='px-3 pb-2 mt-4'>
+        <div className='px-2 md:px-3 pb-2 mt-4'>
           <Link href={HOME_ROUTE} className='group flex items-center gap-[6px]'>
             <div className='w-9 flex justify-center items-center filter group-hover:brightness-90'>
               <Logo />
             </div>
-            <div className='hidden md:block pt-1'>
-              <p
-                className={cn(
-                  'font-dm_sans font-medium tracking-tight text-[25px] group-hover:opacity-90',
-                  collapsed ? 'hidden' : 'block'
-                )}
-              >
-                Monkeys
-              </p>
-            </div>
+            <p className='hidden md:block pt-1 font-dm_sans font-medium tracking-tight text-[25px] group-hover:opacity-90'>
+              Monkeys
+            </p>
           </Link>
         </div>
 
-        <div className='mt-8 px-3'>
+        <div className='mt-8 px-0 md:px-3'>
           <NavRows
             pathname={pathname}
             searchParams={searchParams}
@@ -196,93 +158,25 @@ function SidebarInner({
                 ? [...discoverItems, ...libraryItems]
                 : discoverItems
             }
-            onNavigate={onNavigate}
-            collapsed={isCollapsed}
           />
         </div>
       </div>
 
       {/* Footer - always pinned to bottom, never scrolls */}
-      <SidebarFooter collapsed={isCollapsed} />
-    </div>
-  );
-}
-
-export function FeedSidebarMobile() {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className='lg:hidden'>
-      <Drawer
-        direction='left'
-        open={open}
-        onOpenChange={setOpen}
-        repositionInputs={false}
-      >
-        <DrawerTrigger asChild>
-          <button
-            type='button'
-            className='inline-flex h-10 items-center gap-2 rounded-full border border-border-light bg-background-light px-3 font-dm_sans text-sm font-medium shadow-sm dark:border-border-dark dark:bg-background-dark'
-            aria-label='Open navigation menu'
-          >
-            <Icon name='RiMenu2' size={20} />
-            Menu
-          </button>
-        </DrawerTrigger>
-        <DrawerContent className='h-full max-h-full rounded-none p-0'>
-          <Suspense fallback={<SidebarFallback />}>
-            <SidebarInner variant='drawer' onNavigate={() => setOpen(false)} />
-          </Suspense>
-        </DrawerContent>
-      </Drawer>
+      <Footer/>
     </div>
   );
 }
 
 export function FeedSidebarDesktop() {
-  const [collapsed, setCollapsed] = useState(false);
-
-  useEffect(() => {
-    try {
-      if (localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === '1')
-        setCollapsed(true);
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  const toggleCollapsed = () => {
-    setCollapsed((c) => {
-      const next = !c;
-      try {
-        localStorage.setItem(SIDEBAR_COLLAPSED_KEY, next ? '1' : '0');
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  };
-
   return (
     <aside
-      className={cn(
-        'hidden shrink-0 relative transition-[width] duration-200 ease-out lg:block',
-        collapsed ? 'w-[76px]' : 'w-[238px]'
-      )}
+      className='shrink-0 relative transition-[width] duration-200 ease-out w-[76px] md:w-[238px]'
       aria-label='Site navigation'
     >
-      <button
-        type='button'
-        onClick={toggleCollapsed}
-        className='absolute -right-3.5 top-1/2 -translate-y-1/2 z-50 flex h-7 w-7 items-center justify-center rounded-full bg-brand-orange text-white shadow-md border-1 border-background-light dark:border-background-dark transition-colors hover:bg-brand-orange/80'
-        aria-expanded={!collapsed}
-        aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-      >
-        <Icon name={collapsed ? 'RiArrowRightS' : 'RiArrowLeftS'} size={16} />
-      </button>
       <div className='sticky top-0 h-screen overflow-hidden'>
         <Suspense fallback={<SidebarFallback />}>
-          <SidebarInner variant='desktop' collapsed={collapsed} />
+          <SidebarInner />
         </Suspense>
       </div>
     </aside>

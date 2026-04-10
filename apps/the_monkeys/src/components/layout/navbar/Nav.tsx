@@ -8,6 +8,7 @@ import { IUser } from '@/services/models/user';
 import Container from '../Container';
 import WSNotificationDropdown from './WSNotificationDropdown';
 import ProfileDropdown from './profileDropdown';
+import ThemeSwitch from '@/components/themeSwitch';
 
 const Nav = ({
   session,
@@ -30,7 +31,9 @@ const Nav = ({
           {session ? (
             <div className='flex items-center gap-2'>
               {isAuthLoading ? null : <CreateButton />}
-              <WSNotificationDropdown />
+              {/* <WSNotificationDropdown /> */}
+                        <ThemeSwitch />
+              
               <ProfileDropdown session={session} />
             </div>
           ) : (

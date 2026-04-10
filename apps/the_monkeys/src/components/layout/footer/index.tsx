@@ -4,11 +4,7 @@ import Icon from '@/components/icon';
 import Logo from '@/components/logo';
 import { footerLinksList, footerSocialsList } from '@/constants/footer';
 import { PARENT_COMPANY_ROUTE } from '@/constants/routeConstants';
-import { cn } from '@/lib/utils';
 
-type SidebarFooterProps = {
-  collapsed?: boolean;
-};
 
 function SocialLinks() {
   return (
@@ -68,23 +64,24 @@ function Branding() {
   );
 }
 
-export function SidebarFooter({ collapsed }: SidebarFooterProps) {
+export function SidebarFooter() {
   return (
     <div
-      className={cn(
-        'shrink-0 pt-3 px-2 pb-4',
-        !collapsed &&
-          'border-t-[0.5px] border-border-light dark:border-border-dark'
-      )}
+      className='shrink-0 border-t-[0.5px] border-border-light dark:border-border-dark pt-3 px-2 pb-4'
     >
-      {!collapsed && (
-        // Collapsed: just show logo centered
-        <>
-          <SocialLinks />
-          <LegalLinks />
-          <Branding />
-        </>
-      )}
+      {/* Expanded state: Desktop and larger tablets */}
+      <div className='hidden md:block'>
+        <SocialLinks />
+        <LegalLinks />
+        <Branding />
+      </div>
+
+      {/* Collapsed state: Mobile and small tablets */}
+      <div className='md:hidden flex flex-col items-center justify-center p-1'>
+        <div className='w-5 h-5 flex justify-center items-center opacity-50 contrast-0 grayscale'>
+          <Logo />
+        </div>
+      </div>
     </div>
   );
 }
