@@ -5,7 +5,6 @@ import Logo from '@/components/logo';
 import { footerLinksList, footerSocialsList } from '@/constants/footer';
 import { PARENT_COMPANY_ROUTE } from '@/constants/routeConstants';
 
-
 function SocialLinks() {
   return (
     <div className='flex items-center justify-center gap-2 mb-3'>
@@ -66,9 +65,7 @@ function Branding() {
 
 export function SidebarFooter() {
   return (
-    <div
-      className='shrink-0 border-t-[0.5px] border-border-light dark:border-border-dark pt-3 px-2 pb-4'
-    >
+    <div className='shrink-0 border-t-[0.5px] border-border-light dark:border-border-dark pt-3 px-2 pb-4'>
       {/* Expanded state: Desktop and larger tablets */}
       <div className='hidden md:block'>
         <SocialLinks />

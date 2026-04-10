@@ -3,12 +3,12 @@
 import { CreateButton } from '@/components/buttons/createButton';
 import LoginButton from '@/components/buttons/loginButton';
 import { SearchInput, SearchInputLink } from '@/components/search/SearchInput';
+import ThemeSwitch from '@/components/themeSwitch';
 import { IUser } from '@/services/models/user';
 
 import Container from '../Container';
 import WSNotificationDropdown from './WSNotificationDropdown';
 import ProfileDropdown from './profileDropdown';
-import ThemeSwitch from '@/components/themeSwitch';
 
 const Nav = ({
   session,
@@ -32,8 +32,8 @@ const Nav = ({
             <div className='flex items-center gap-2'>
               {isAuthLoading ? null : <CreateButton />}
               {/* <WSNotificationDropdown /> */}
-                        <ThemeSwitch />
-              
+              <ThemeSwitch />
+
               <ProfileDropdown session={session} />
             </div>
           ) : (

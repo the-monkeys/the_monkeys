@@ -65,7 +65,11 @@ const discoverItems: NavItem[] = [
   { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
   { href: ACTIVITY_ROUTE, label: 'Activity', icon: 'RiMenu4' },
   { href: LIBRARY_ROUTE, label: 'Library', icon: 'RiBookShelf' },
-  { href: NOTIFICATIONS_ROUTE, label: 'Notifications', icon: 'RiNotification3' },
+  {
+    href: NOTIFICATIONS_ROUTE,
+    label: 'Notifications',
+    icon: 'RiNotification3',
+  },
   { href: SETTINGS_ROUTE, label: 'Settings', icon: 'RiSettings3' },
 ];
 
@@ -89,10 +93,7 @@ function NavRows({
   items: NavItem[];
 }) {
   return (
-    <nav
-      className='flex flex-col gap-0.5'
-      aria-label='Navigation'
-    >
+    <nav className='flex flex-col gap-0.5' aria-label='Navigation'>
       {items.map(({ href, label, icon }) => {
         const active = itemIsActive(pathname, searchParams, href);
         return (
@@ -163,7 +164,7 @@ function SidebarInner() {
       </div>
 
       {/* Footer - always pinned to bottom, never scrolls */}
-      <Footer/>
+      <Footer />
     </div>
   );
 }

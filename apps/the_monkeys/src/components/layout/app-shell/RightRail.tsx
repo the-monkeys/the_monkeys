@@ -22,6 +22,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import { cn } from '@/lib/utils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+
 import SidebarFooter from '../footer';
 
 const REGISTER_HREF = '/auth/register';
