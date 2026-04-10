@@ -11,7 +11,6 @@ import { HOME_ROUTE } from '@/constants/routeConstants';
 import { IUser } from '@/services/models/user';
 
 import Container from '../Container';
-import WSNotificationDropdown from './WSNotificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
 const Nav = ({

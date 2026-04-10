@@ -11,7 +11,6 @@ import {
 
 import Icon, { IconName } from '@/components/icon';
 import Footer from '@/components/layout/footer';
-import Logo from '@/components/logo';
 import {
   ACTIVITY_ROUTE,
   EXPLORE_TOPICS_ROUTE,
@@ -136,7 +135,6 @@ function SidebarInner() {
 
   return (
     <div className='flex flex-col h-full min-h-0'>
-      {/* Scrollable nav area */}
       <div className='flex-1 overflow-y-auto overflow-x-hidden mt-8 px-0'>
         <div className='mt-4 px-0 md:px-3'>
           <NavRows
@@ -145,12 +143,15 @@ function SidebarInner() {
             items={
               session && !isLoading
                 ? [...discoverItems, ...libraryItems]
-                : discoverItems
+                : discoverItems.filter(
+                    (item) =>
+                      item.href === HOME_ROUTE ||
+                      item.href === EXPLORE_TOPICS_ROUTE
+                  )
             }
           />
         </div>
       </div>
-
       <Footer />
     </div>
   );
