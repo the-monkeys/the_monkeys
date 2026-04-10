@@ -65,7 +65,7 @@ function Branding() {
 
 export function SidebarFooter() {
   return (
-    <div className='shrink-0 border-t-[0.5px] border-border-light dark:border-border-dark pt-3 px-2 pb-4'>
+    <div className='shrink-0 border-t-[0.5px] border-border-light dark:border-border-dark pt-1.5 px-2 pb-2'>
       {/* Expanded state: Desktop and larger tablets */}
       <div className='hidden md:block'>
         <SocialLinks />

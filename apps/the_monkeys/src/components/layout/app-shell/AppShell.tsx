@@ -33,16 +33,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className='mx-auto flex w-full max-w-[1500px] flex-row'>
-      {/* Left Sidebar - responsive (collapsed on small screens, expanded on large screens) */}
-      <div className='sticky top-0 h-screen shrink-0 border-r-[0.5px] border-border-light dark:border-border-dark overflow-visible'>
-        <FeedSidebarDesktop />
-      </div>
-
-      {/* Center + Right: flex col, navbar spans full width */}
-      <div className='flex min-w-0 flex-1 flex-col'>
-        <Navbar />
-
+    <div className='mx-auto flex w-full max-w-[1500px] flex-col'>
+      <Navbar />
+      <div className='flex min-w-0 flex-1 '>
+        <div className='sticky top-[60px] h-[calc(100vh-60px)] shrink-0 border-r-[0.5px] border-border-light dark:border-border-dark overflow-visible '>
+          <FeedSidebarDesktop />
+        </div>
         {/* Content row below navbar */}
         <div className='flex min-w-0 flex-1'>
           {/* Main content */}

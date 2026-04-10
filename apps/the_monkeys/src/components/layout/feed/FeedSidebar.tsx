@@ -135,22 +135,10 @@ function SidebarInner() {
   const { data: session, isLoading } = useAuth();
 
   return (
-    <div className='flex flex-col h-full'>
+    <div className='flex flex-col h-full min-h-0'>
       {/* Scrollable nav area */}
-      <div className='flex-1 overflow-y-auto overflow-x-hidden'>
-        {/* LOGO */}
-        <div className='px-2 md:px-3 pb-2 mt-4'>
-          <Link href={HOME_ROUTE} className='group flex items-center gap-[6px]'>
-            <div className='w-9 flex justify-center items-center filter group-hover:brightness-90'>
-              <Logo />
-            </div>
-            <p className='hidden md:block pt-1 font-dm_sans font-medium tracking-tight text-[25px] group-hover:opacity-90'>
-              Monkeys
-            </p>
-          </Link>
-        </div>
-
-        <div className='mt-8 px-0 md:px-3'>
+      <div className='flex-1 overflow-y-auto overflow-x-hidden mt-8 px-0'>
+        <div className='mt-4 px-0 md:px-3'>
           <NavRows
             pathname={pathname}
             searchParams={searchParams}
@@ -163,7 +151,6 @@ function SidebarInner() {
         </div>
       </div>
 
-      {/* Footer - always pinned to bottom, never scrolls */}
       <Footer />
     </div>
   );
@@ -172,10 +159,10 @@ function SidebarInner() {
 export function FeedSidebarDesktop() {
   return (
     <aside
-      className='shrink-0 relative transition-[width] duration-200 ease-out w-[76px] md:w-[238px]'
+      className='h-full shrink-0 relative transition-[width] duration-200 ease-out w-[76px] md:w-[238px]'
       aria-label='Site navigation'
     >
-      <div className='sticky top-0 h-screen overflow-hidden'>
+      <div className='h-full overflow-hidden flex flex-col'>
         <Suspense fallback={<SidebarFallback />}>
           <SidebarInner />
         </Suspense>
