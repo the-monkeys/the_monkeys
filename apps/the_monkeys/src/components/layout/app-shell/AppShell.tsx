@@ -26,7 +26,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // Blog reading mode: only show main content
   if (isBlogReading) {
     return (
-      <div className='mx-auto w-full max-w-[1000px]'>
+      <div className='mx-auto w-full max-w-[1500px]'>
+        <Navbar />
         <div className='px-[10px] py-4 sm:px-4 lg:px-8 lg:py-6'>{children}</div>
       </div>
     );
