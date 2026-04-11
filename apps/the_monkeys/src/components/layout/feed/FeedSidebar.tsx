@@ -76,9 +76,9 @@ const libraryItems: NavItem[] = [];
 
 const linkBase = (active: boolean) =>
   cn(
-    'flex items-center rounded-xl py-2.5 font-dm_sans text-sm transition-colors',
+    'flex items-center rounded-md py-2.5 font-dm_sans text-sm transition-colors',
     active
-      ? 'bg-brand-orange/10 font-medium text-brand-orange'
+      ? 'dark:bg-foreground-dark/40 bg-foreground-light/40 font-medium'
       : 'text-text-light/90 opacity-90 hover:bg-foreground-light/40 hover:opacity-100 dark:text-text-dark/90 dark:hover:bg-foreground-dark/30'
   );
 
@@ -102,13 +102,13 @@ function NavRows({
             title={label}
             className={cn(
               linkBase(active),
-              'px-0 justify-center md:px-3 md:justify-start md:gap-3'
+              'px-0 justify-center md:px-3 md:justify-start md:gap-3 text-sm '
             )}
           >
             <Icon
               name={icon}
               size={18}
-              className={cn('shrink-0', active && 'text-brand-orange ')}
+              className={cn('shrink-0', active && '')}
             />
             <span className='hidden md:inline'>{label}</span>
             <span className='sr-only md:hidden'>{label}</span>
@@ -122,8 +122,8 @@ function NavRows({
 function SidebarFallback() {
   return (
     <div className='space-y-3 p-3'>
-      <div className='h-[88px] animate-pulse rounded-xl bg-foreground-light/20 dark:bg-foreground-dark/20' />
-      <div className='h-24 animate-pulse rounded-xl bg-foreground-light/15 dark:bg-foreground-dark/15' />
+      <div className='h-[88px] animate-pulse rounded-md bg-foreground-light/20 dark:bg-foreground-dark/20' />
+      <div className='h-24 animate-pulse rounded-md bg-foreground-light/15 dark:bg-foreground-dark/15' />
     </div>
   );
 }
@@ -135,7 +135,7 @@ function SidebarInner() {
 
   return (
     <div className='flex flex-col h-full min-h-0'>
-      <div className='flex-1 overflow-y-auto overflow-x-hidden mt-8 px-0'>
+      <div className='flex-1 overflow-y-auto overflow-x-hidden pt-4 px-0'>
         <div className='mt-4 px-0 md:px-3'>
           <NavRows
             pathname={pathname}

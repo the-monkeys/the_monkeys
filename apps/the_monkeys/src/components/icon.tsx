@@ -82,7 +82,8 @@ export type IconName =
   | 'RiBellLine'
   | 'RiSettings5Line'
   | 'RiBard'
-  | 'RiMenu4';
+  | 'RiMenu4'
+  | 'RiAdd';
 
 export type IconProps = {
   name: IconName;

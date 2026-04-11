@@ -42,11 +42,11 @@ const Nav = ({
         </div>
 
         <div className='flex items-center space-x-[6px]'>
+          <ThemeSwitch />
           {session ? (
             <div className='flex items-center gap-2'>
               {isAuthLoading ? null : <CreateButton />}
               {/* <WSNotificationDropdown /> */}
-              <ThemeSwitch />
 
               <ProfileDropdown session={session} />
             </div>

@@ -51,10 +51,10 @@ export const footerLinksList = [
   {
     heading: 'Company',
     items: [
-      {
-        text: 'Monkeys Feed',
-        link: '/',
-      },
+      // {
+      //   text: 'Feed',
+      //   link: '/',
+      // },
       {
         text: 'About Us',
         link: '/about',
@@ -63,10 +63,10 @@ export const footerLinksList = [
         text: 'Contact Us',
         link: '/contact-us',
       },
-      {
-        text: 'Advertise with Us',
-        link: '#',
-      },
+      // {
+      //   text: 'Advertise',
+      //   link: '#',
+      // },
     ],
   },
   {

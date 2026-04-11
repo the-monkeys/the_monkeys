@@ -17,7 +17,7 @@ function SocialLinks() {
           title={social.account}
           className='inline-flex h-7 w-7 items-center justify-center rounded-full text-text-light/60 transition-colors hover:bg-brand-orange/10 hover:text-brand-orange dark:text-text-dark/60 dark:hover:bg-brand-orange/10'
         >
-          <Icon name={social.icon} size={14} />
+          <Icon name={social.icon} size={16} />
         </a>
       ))}
     </div>
@@ -25,7 +25,12 @@ function SocialLinks() {
 }
 
 function LegalLinks() {
-  const legal = footerLinksList.find((g) => g.heading === 'Legal');
+  const legalGroup = footerLinksList.find((g) => g.heading === 'Legal');
+  const companyGroup = footerLinksList.find((g) => g.heading === 'Company');
+  const legal =
+    legalGroup && companyGroup
+      ? { items: [...companyGroup.items, ...legalGroup.items] }
+      : legalGroup || companyGroup;
   if (!legal) return null;
   return (
     <div className='flex flex-wrap items-center justify-center gap-x-2 gap-y-1 mb-3'>
@@ -33,7 +38,7 @@ function LegalLinks() {
         <Link
           key={item.link}
           href={item.link}
-          className='text-[9px] text-text-light/40 dark:text-text-dark/40 hover:text-brand-orange transition-colors'
+          className='text-xs text-text-light/40 dark:text-text-dark/40 hover:text-brand-orange transition-colors'
         >
           {item.text}
         </Link>
@@ -63,11 +68,30 @@ function Branding() {
   );
 }
 
+function Company() {
+  const company = footerLinksList.find((g) => g.heading === 'Company');
+  if (!company) return null;
+  return (
+    <div className='flex flex-wrap items-center justify-center gap-x-2 gap-y-1 mb-3'>
+      {company.items.map((item) => (
+        <Link
+          key={item.link}
+          href={item.link}
+          className='text-xs text-text-light/40 dark:text-text-dark/40 hover:text-brand-orange transition-colors'
+        >
+          {item.text}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 export function SidebarFooter() {
   return (
-    <div className='shrink-0 md:border-t-[0.5px] border-border-light dark:border-border-dark pt-1.5 px-2 pb-2'>
+    <div className='shrink-0  px-2 pb-2'>
       <div className='hidden md:block'>
         <SocialLinks />
+        {/* <Company/> */}
         <LegalLinks />
         <Branding />
       </div>

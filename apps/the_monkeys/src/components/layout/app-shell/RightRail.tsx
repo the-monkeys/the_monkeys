@@ -4,26 +4,16 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
-import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
 import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
 import { RecommendedUserCard } from '@/components/user/userInfo';
 import { RAIL_AUTH_CARD_DISMISSED_KEY } from '@/constants/layoutStorage';
-import {
-  BLOG_ROUTE,
-  LOGIN_ROUTE,
-  TOPIC_ROUTE,
-} from '@/constants/routeConstants';
+import { LOGIN_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { recommendedUsers } from '@/constants/social';
 import { recommendedTopics } from '@/constants/topics';
 import useAuth from '@/hooks/auth/useAuth';
-import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import { cn } from '@/lib/utils';
-import { purifyHTMLString } from '@/utils/purifyHTML';
-
-import SidebarFooter from '../footer';
 
 const REGISTER_HREF = '/auth/register';
 
@@ -38,9 +28,7 @@ function RailSection({
 }) {
   return (
     <section className={cn('space-y-3', className)}>
-      <h2 className='font-dm_sans text-[13px] font-semibold uppercase tracking-wider text-text-light/55 dark:text-text-dark/55'>
-        {title}
-      </h2>
+      <h2 className='font-dm_sans font-medium text-lg'>{title}</h2>
       {children}
     </section>
   );
@@ -121,21 +109,24 @@ export function RightRail() {
 
   return (
     <aside
-      className='hidden w-[272px] shrink-0 xl:block border-l-[0.5px] border-border-light dark:border-border-dark'
+      className='hidden w-[350px] shrink-0 xl:block '
       aria-label='Featured and community'
     >
-      <div className='sticky top-0 h-screen overflow-y-auto px-4 py-8 space-y-6 pb-10'>
+      <div className='sticky top-0 h-screen overflow-y-auto px-4 py-7 space-y-6 pb-10'>
         {!isLoading && !session && <DismissibleAuthCard />}
 
-        <RailSection title='Featured topics'>
+        <RailSection title='Topics on the rise'>
           <RailSurface>
-            <TopicLinksContainer topics={recommendedTopics.slice(0, 8)} />
-            <LinksRedirectArrow
-              className='mt-3'
-              link={`${TOPIC_ROUTE}/explore`}
-            >
-              <p className='px-1 text-sm'>Explore more topics</p>
-            </LinksRedirectArrow>
+            <div className='col-span-2 lg:col-span-1 flex flex-col gap-6'>
+              <TopicLinksContainer topics={recommendedTopics} />
+
+              <LinksRedirectArrow
+                target='_blank'
+                link={`${TOPIC_ROUTE}/explore`}
+              >
+                <p className='px-2 text-sm'>Explore more topics</p>
+              </LinksRedirectArrow>
+            </div>
           </RailSurface>
         </RailSection>
 

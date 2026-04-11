@@ -32,11 +32,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     );
   }
 
+  const isFeed =
+    pathname === '/' || pathname === '/feed' || pathname?.endsWith('/feed');
   return (
     <div className='mx-auto flex w-full max-w-[1500px] flex-col'>
       <Navbar />
       <div className='flex min-w-0 flex-1 '>
-        <div className='sticky top-[60px] h-[calc(100vh-60px)] shrink-0 border-r-[0.5px] border-border-light dark:border-border-dark overflow-visible '>
+        <div className='sticky top-[60px] h-[calc(100vh-60px)] shrink-0  overflow-visible '>
           <FeedSidebarDesktop />
         </div>
         {/* Content row below navbar */}
@@ -45,7 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className='min-w-0 flex-1 px-4 py-4 lg:py-6'>{children}</div>
 
           {/* Right Rail - self-sticky, only visible xl+ */}
-          <RightRail />
+          {isFeed && <RightRail />}
         </div>
       </div>
     </div>
