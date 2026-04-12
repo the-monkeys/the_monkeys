@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 
-import { FeedSidebarDesktop } from '@/components/layout/feed/FeedSidebar';
+import { FeedSidebarDesktop } from '@/components/layout/Sidebar';
 
 import Navbar from '../navbar';
 import { RightRail } from './RightRail';
