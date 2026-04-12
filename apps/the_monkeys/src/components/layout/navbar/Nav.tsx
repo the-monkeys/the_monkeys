@@ -33,15 +33,15 @@ const Nav = ({
             </p>
           </Link>
 
-          <div className='flex items-center justify-center gap-[10px] sm:gap-4'>
-            <div className='block sm:hidden'>
-              <SearchInputLink />
-            </div>
+          <div>
             <SearchInput className='hidden sm:block w-[180px] md:w-[280px]' />
           </div>
         </div>
 
         <div className='flex items-center space-x-[6px]'>
+          <div className='block sm:hidden'>
+            <SearchInputLink />
+          </div>
           <ThemeSwitch />
           {session ? (
             <div className='flex items-center gap-2'>
