@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 
 import AdUnit from '@/components/AdSense/AdUnit';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
+import { BackButton } from '@/components/buttons/backButton';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
@@ -137,13 +138,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
     <>
       <div className='px-4'>
         <Container className='pt-6 max-w-5xl'>
-          <button
-            onClick={() => router.back()}
-            className='flex items-center gap-1 text-sm opacity-70 hover:opacity-100 transition-opacity'
-          >
-            <Icon name='RiArrowLeft' size={18} />
-            Back
-          </button>
+          <BackButton />
         </Container>
       </div>
       <div className='px-4'>
