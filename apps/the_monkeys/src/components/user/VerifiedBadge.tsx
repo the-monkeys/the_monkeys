@@ -21,13 +21,16 @@ export const VerifiedBadge = ({
   if (isVerified !== true) return null;
 
   if (!showText) {
+    // The icon itself is decorative (aria-hidden), so any explanation goes on a
+    // wrapping element where the native `title` attribute is valid.
     return (
-      <RiVerifiedBadgeFill
-        size={size}
-        className={twMerge('text-brand-orange shrink-0', className)}
-        aria-hidden
-        title='Verified account'
-      />
+      <span title='Verified account'>
+        <RiVerifiedBadgeFill
+          size={size}
+          className={twMerge('text-brand-orange shrink-0', className)}
+          aria-hidden
+        />
+      </span>
     );
   }
 
