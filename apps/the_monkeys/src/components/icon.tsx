@@ -72,7 +72,18 @@ export type IconName =
   | 'RiLightbulb'
   | 'RiMessage3'
   | 'RiMessage'
-  | 'RiBug';
+  | 'RiBug'
+  | 'RiMenu2'
+  | 'RiArrowRightS'
+  | 'RiArrowLeftS'
+  | 'RiBookShelf'
+  | 'RiSparkle2'
+  | 'RiTimeline'
+  | 'RiBellLine'
+  | 'RiSettings5Line'
+  | 'RiBard'
+  | 'RiMenu4'
+  | 'RiAdd';
 
 export type IconProps = {
   name: IconName;

@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import { DM_Sans, Inter } from 'next/font/google';
 import Script from 'next/script';
 
+import { AppShell } from '@/components/layout/app-shell/AppShell';
 import Footer from '@/components/layout/footer';
 import Navbar from '@/components/layout/navbar';
 import { LIVE_URL } from '@/constants/api';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 import { TooltipProvider } from '@the-monkeys/ui/atoms/tooltip';
 import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 
@@ -150,9 +152,12 @@ const RootLayout = async ({
           <QueryClientMount>
             <ThemeProviders>
               <TooltipProvider>
-                <Navbar />
-                <main>{children}</main>
-                <Footer />
+                {/* <Navbar /> */}
+                {/* <Separator /> */}
+                <main>
+                  <AppShell>{children}</AppShell>
+                </main>
+                {/* <Separator /> */}
               </TooltipProvider>
             </ThemeProviders>
           </QueryClientMount>

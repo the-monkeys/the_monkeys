@@ -3,9 +3,11 @@
 import { useEffect } from 'react';
 
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 
 import AdUnit from '@/components/AdSense/AdUnit';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
+import { BackButton } from '@/components/buttons/backButton';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
@@ -35,6 +37,7 @@ interface BlogPageClientProps {
 }
 
 const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
+  const router = useRouter();
   const { blog, isError, isLoading } =
     useGetPublishedBlogDetailByBlogId(urlBlogId);
   const authorId = blog?.owner_account_id;
@@ -134,7 +137,12 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   return (
     <>
       <div className='px-4'>
-        <Container className='pt-8 sm:pt-10 pb-6 max-w-5xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
+        <Container className='pt-6 max-w-5xl'>
+          <BackButton />
+        </Container>
+      </div>
+      <div className='px-4'>
+        <Container className='pt-4 sm:pt-6 pb-6 max-w-5xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
           <p className='text-sm opacity-90'>
             {moment(date).format('MMM DD, yyyy')}
             {' / '}

@@ -9,3 +9,7 @@ export const BLOG_ROUTE = '/blog';
 export const EXPLORE_TOPICS_ROUTE = '/topics/explore';
 export const TOPIC_ROUTE = '/topics';
 export const TOPIC_SITEMAP_ROUTE = '/topics/sitemap.xml';
+export const NOTIFICATIONS_ROUTE = '/notifications';
+export const SETTINGS_ROUTE = '/settings';
+
+export const PARENT_COMPANY_ROUTE = 'https://buddhicintaka.com/';
