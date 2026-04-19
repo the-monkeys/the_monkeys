@@ -13,6 +13,12 @@ const APIEndpoint = {
   FORGOT_PASS: '/auth/forgot-pass',
   VALIDATE_SESSION: '/auth/validate-session',
   GOOGLE_CALLBACK: '/auth/google/callback',
+  // OTP-based registration
+  INITIATE_REGISTRATION: '/auth/register/initiate',
+  VERIFY_REGISTRATION_OTP: '/auth/register/verify-otp',
+  RESEND_REGISTRATION_OTP: '/auth/register/resend-otp',
+  // OTP-based password reset
+  VERIFY_RESET_OTP: '/auth/verify-reset-otp',
 } as const;
 
 interface getResetPasswordTokenApiResponse {
@@ -125,6 +131,66 @@ export async function googleSSOCallback(code: string) {
   const response = await axiosInstance.get<IUser>(APIEndpoint.GOOGLE_CALLBACK, {
     params: { code },
   });
+
+  return response.data;
+}
+
+// OTP-based registration
+export async function initiateRegistration(data: {
+  first_name: string;
+  last_name?: string;
+  email: string;
+  password: string;
+}) {
+  const response = await axiosInstance.post<{
+    message: string;
+    expires_in: number;
+  }>(APIEndpoint.INITIATE_REGISTRATION, data, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  return response.data;
+}
+
+export async function verifyRegistrationOTP(data: {
+  email: string;
+  otp_code: string;
+}) {
+  const response = await axiosInstance.post<IUser>(
+    APIEndpoint.VERIFY_REGISTRATION_OTP,
+    data,
+    {
+      headers: { 'Content-Type': 'application/json' },
+      withCredentials: true,
+    }
+  );
+
+  return new User(response.data);
+}
+
+export async function resendRegistrationOTP(data: { email: string }) {
+  const response = await axiosInstance.post<{
+    message: string;
+    expires_in: number;
+  }>(APIEndpoint.RESEND_REGISTRATION_OTP, data, {
+    headers: { 'Content-Type': 'application/json' },
+  });
+
+  return response.data;
+}
+
+// OTP-based password reset
+export async function verifyResetOTP(data: {
+  email: string;
+  otp_code: string;
+}) {
+  const response = await axiosInstance.post<{ token: string }>(
+    APIEndpoint.VERIFY_RESET_OTP,
+    data,
+    {
+      headers: { 'Content-Type': 'application/json' },
+    }
+  );
 
   return response.data;
 }

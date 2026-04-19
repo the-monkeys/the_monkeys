@@ -8,7 +8,7 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
   const apiOrigin = new URL(API_URL!).origin;
 
   const headers = new Headers(req.headers);
-  if (authToken) {
+  if (authToken && !headers.get('Authorization')) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
 
