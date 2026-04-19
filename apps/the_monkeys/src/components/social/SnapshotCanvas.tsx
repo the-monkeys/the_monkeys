@@ -97,25 +97,25 @@ export const SnapshotCanvas = ({
   // Theme colors
   const colors = isDark
     ? {
-      bg: '#121212',
-      boxBg: '#2C2C2C',
-      boxBorder: '#3F3F3F',
-      title: '#FFFFFF',
-      desc: 'rgba(255,255,255,0.65)',
-      brand: 'rgba(255,255,255,0.35)',
-      accent: '#FF5542',
-      photoBorder: 'rgba(255,255,255,0.1)',
-    }
+        bg: '#121212',
+        boxBg: '#2C2C2C',
+        boxBorder: '#3F3F3F',
+        title: '#FFFFFF',
+        desc: 'rgba(255,255,255,0.65)',
+        brand: 'rgba(255,255,255,0.35)',
+        accent: '#FF5542',
+        photoBorder: 'rgba(255,255,255,0.1)',
+      }
     : {
-      bg: '#FAFAFA',
-      boxBg: '#EEEEEE',
-      boxBorder: '#CCCCCC',
-      title: '#121212',
-      desc: 'rgba(18,18,18,0.6)',
-      brand: 'rgba(18,18,18,0.35)',
-      accent: '#FF5542',
-      photoBorder: 'rgba(0,0,0,0.08)',
-    };
+        bg: '#FAFAFA',
+        boxBg: '#EEEEEE',
+        boxBorder: '#CCCCCC',
+        title: '#121212',
+        desc: 'rgba(18,18,18,0.6)',
+        brand: 'rgba(18,18,18,0.35)',
+        accent: '#FF5542',
+        photoBorder: 'rgba(0,0,0,0.08)',
+      };
 
   // Layout (1080×1350 — Instagram Post, asymmetric editorial)
   const margin = 64;
