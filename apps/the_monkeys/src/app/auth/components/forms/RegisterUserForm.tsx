@@ -16,6 +16,7 @@ import {
   verifyRegistrationOTP,
 } from '@/services/auth/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import {
@@ -39,6 +40,7 @@ type Step = 'register' | 'verify-otp';
 
 export default function RegisterUserForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<Step>('register');
   const [email, setEmail] = useState('');
@@ -114,10 +116,14 @@ export default function RegisterUserForm() {
   const onOTPSubmit = async (values: z.infer<typeof otpVerificationSchema>) => {
     setLoading(true);
     try {
-      await verifyRegistrationOTP({
+      const user = await verifyRegistrationOTP({
         email,
         otp_code: values.otp_code,
       });
+
+      // Update auth cache so useAuth picks up the new session immediately (no hard refresh)
+      queryClient.setQueryData(['auth'], user);
+      queryClient.invalidateQueries({ queryKey: ['auth'] });
 
       toast({
         variant: 'success',
@@ -190,6 +196,9 @@ export default function RegisterUserForm() {
                     onChange={(e) => {
                       const v = e.target.value.replace(/\D/g, '');
                       field.onChange(v);
+                      if (v.length === 6) {
+                        otpForm.handleSubmit(onOTPSubmit)();
+                      }
                     }}
                     onBlur={field.onBlur}
                     ref={field.ref}
