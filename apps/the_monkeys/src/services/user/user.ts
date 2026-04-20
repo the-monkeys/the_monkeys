@@ -32,14 +32,38 @@ export async function updatePassword(values: {
   return resp.data;
 }
 
-export async function updateEmail(values: { username: string; email: string }) {
-  const response = await axiosInstance.put(
-    `/auth/settings/email/${values.username}`,
-    {
-      email: values.email,
-    }
+// OTP-based email change flow
+export async function initiateEmailChange(values: {
+  username: string;
+  newEmail: string;
+}) {
+  const response = await axiosInstance.post(
+    `/auth/settings/email/initiate/${values.username}`,
+    { new_email: values.newEmail }
   );
+  return response.data;
+}
 
+export async function verifyEmailChangeOTP(values: {
+  username: string;
+  newEmail: string;
+  otpCode: string;
+}) {
+  const response = await axiosInstance.post(
+    `/auth/settings/email/verify-otp/${values.username}`,
+    { new_email: values.newEmail, otp_code: values.otpCode }
+  );
+  return response.data;
+}
+
+export async function resendEmailChangeOTP(values: {
+  username: string;
+  newEmail: string;
+}) {
+  const response = await axiosInstance.post(
+    `/auth/settings/email/resend-otp/${values.username}`,
+    { new_email: values.newEmail }
+  );
   return response.data;
 }
 

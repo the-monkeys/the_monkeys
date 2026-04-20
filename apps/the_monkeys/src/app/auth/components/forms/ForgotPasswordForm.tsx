@@ -141,6 +141,13 @@ export default function ForgotPasswordForm() {
                     inputMode='numeric'
                     autoComplete='one-time-code'
                     {...field}
+                    onChange={(e) => {
+                      const v = e.target.value.replace(/\D/g, '');
+                      field.onChange(v);
+                      if (v.length === 6) {
+                        otpForm.handleSubmit(onOTPSubmit)();
+                      }
+                    }}
                     className={cn(
                       'text-center text-lg tracking-widest',
                       !!fieldState.error && 'dark:border-red-500 border-red-600'
