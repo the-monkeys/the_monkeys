@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Suspense } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import PasswordInput from '@/components/input/PasswordInput';
@@ -33,10 +33,7 @@ import { z } from 'zod';
 import { SearchParamsComponent } from '../SearchParams';
 
 export const ResetPasswordForm = () => {
-  const [searchParams, setSearchParams] = useState<{
-    username: string;
-    evpw: string;
-  }>({ username: '', evpw: '' });
+  const params = useSearchParams();
   const navigate = useRouter();
   const [userToken, setUserToken] = useState<string | undefined>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -50,22 +47,40 @@ export const ResetPasswordForm = () => {
     message: '',
   });
 
+  // Legacy email-link flow callback
+  const [legacyParams, setLegacyParams] = useState<{
+    username: string;
+    evpw: string;
+  }>({ username: '', evpw: '' });
+
   const updateSearchParams = useCallback(
-    (params: { username: string; evpw: string }) => {
-      setSearchParams(params);
+    (p: { username: string; evpw: string }) => {
+      setLegacyParams(p);
     },
     []
   );
 
   useEffect(() => {
-    if (searchParams.username && searchParams.evpw) {
+    // New OTP flow: token is passed directly via ?token=
+    const directToken = params.get('token');
+    if (directToken) {
+      setUserToken(directToken);
+      setResetTokenStatus({
+        loading: false,
+        status: true,
+        message: 'OTP verified. You can set a new password.',
+      });
+      return;
+    }
+
+    // Legacy email-link flow: ?user= & ?evpw=
+    if (legacyParams.username && legacyParams.evpw) {
       getResetPasswordToken({
-        user: searchParams.username,
-        evpw: searchParams.evpw,
+        user: legacyParams.username,
+        evpw: legacyParams.evpw,
       })
         .then((res) => {
           setUserToken(res?.response.token);
-
           setResetTokenStatus({
             loading: false,
             status: true,
@@ -78,7 +93,6 @@ export const ResetPasswordForm = () => {
             title: 'Error',
             description: err.message,
           });
-
           setResetTokenStatus({
             loading: false,
             status: false,
@@ -86,7 +100,7 @@ export const ResetPasswordForm = () => {
           });
         });
     }
-  }, [searchParams]);
+  }, [params, legacyParams]);
 
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
@@ -137,7 +151,7 @@ export const ResetPasswordForm = () => {
         <SearchParamsComponent setSearchParams={updateSearchParams} />
       </Suspense>
 
-      {!resetTokenStatus.loading ? (
+      {resetTokenStatus.loading ? (
         <Loader size={32} />
       ) : (
         <Alert

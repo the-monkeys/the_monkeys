@@ -47,11 +47,25 @@ export const registerUserSchema = z
       .email('Invalid email'),
     password: passwordCriteria,
     confirmPassword: z.string(),
+    agreeToTerms: z.literal(true, {
+      errorMap: () => ({
+        message: 'You must agree to the policies and code of conduct',
+      }),
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ['confirmPassword'],
     message: 'Password does not match',
   });
+
+// OTP Verification Schema
+export const otpVerificationSchema = z.object({
+  otp_code: z
+    .string({ required_error: 'Verification code is required' })
+    .trim()
+    .length(6, 'Verification code must be 6 digits')
+    .regex(/^\d+$/, 'Verification code must contain only numbers'),
+});
 
 // Forgot Passowrd Schema For Validation
 export const forgotPasswordSchema = z.object({
