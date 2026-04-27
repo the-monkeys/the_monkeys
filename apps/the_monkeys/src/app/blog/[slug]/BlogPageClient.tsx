@@ -137,12 +137,12 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   return (
     <>
       <div className='px-4'>
-        <Container className='pt-6 max-w-5xl'>
+        <Container className='pt-6 max-w-4xl'>
           <BackButton />
         </Container>
       </div>
       <div className='px-4'>
-        <Container className='pt-4 sm:pt-6 pb-6 max-w-5xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
+        <Container className='pt-4 sm:pt-6 pb-6 max-w-3xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
           <p className='text-sm opacity-90'>
             {moment(date).format('MMM DD, yyyy')}
             {' / '}
@@ -172,7 +172,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
               <TopicLinksContainerCompact topics={tags} />
             </div>
 
-            <AuthorInfoCard userId={authorId} />
+            {/* <AuthorInfoCard userId={authorId} /> */}
 
             <SocialSnapshotCard blog={blog} />
           </div>

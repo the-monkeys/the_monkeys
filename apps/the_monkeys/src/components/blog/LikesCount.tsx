@@ -7,8 +7,8 @@ export const LikesCount = ({ blogId }: { blogId?: string }) => {
 
   return (
     <p className='font-dm_sans text-sm opacity-80'>
-      <span className='mr-[6px]'>·</span>
-      {likes?.count ? likes?.count : '0'} likes
+      {/* <span className='mr-[6px]'>·</span> */}
+      {likes?.count ? likes?.count : '0'}
     </p>
   );
 };

@@ -13,7 +13,10 @@ import { LOGIN_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { recommendedUsers } from '@/constants/social';
 import { recommendedTopics } from '@/constants/topics';
 import useAuth from '@/hooks/auth/useAuth';
+import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import { cn } from '@/lib/utils';
+
+import { TrendingWidget } from './TrendingWidget';
 
 const REGISTER_HREF = '/auth/register';
 
@@ -27,8 +30,10 @@ function RailSection({
   className?: string;
 }) {
   return (
-    <section className={cn('space-y-3', className)}>
-      <h2 className='font-dm_sans font-medium text-lg'>{title}</h2>
+    <section className={cn('space-y-5', className)}>
+      <h2 className='font-newsreader font-bold text-2xl text-stitch-on-surface ml-1'>
+        {title}
+      </h2>
       {children}
     </section>
   );
@@ -70,31 +75,25 @@ function DismissibleAuthCard() {
 
   return (
     <RailSurface>
-      <div className='relative'>
-        <button
-          type='button'
-          onClick={dismiss}
-          className='absolute -right-1 -top-1 rounded-full p-1.5 text-text-light/50 transition-colors hover:bg-foreground-light/40 hover:text-text-light dark:text-text-dark/50 dark:hover:bg-foreground-dark/30 dark:hover:text-text-dark'
-          aria-label='Dismiss sign-in prompt'
-        >
-          <Icon name='RiClose' size={16} />
-        </button>
-        <div className='space-y-2 pr-5'>
-          <p className='font-dm_sans font-medium leading-snug'>Join Monkeys</p>
-          <p className='text-xs leading-relaxed opacity-80'>
+      <div className='relative p-6 bg-white rounded-xl border border-gray-100 shadow-sm'>
+        <div className='space-y-2'>
+          <p className='font-newsreader font-bold text-xl text-stitch-on-surface'>
+            Join Monkeys
+          </p>
+          <p className='text-sm font-inter text-stitch-secondary leading-relaxed'>
             Sign in to write, bookmark, and follow writers you care about.
           </p>
         </div>
-        <div className='mt-4 flex flex-col gap-2'>
+        <div className='mt-6 flex flex-col gap-3'>
           <Link
             href={LOGIN_ROUTE}
-            className='flex h-9 items-center justify-center rounded-full bg-brand-orange px-4 font-dm_sans font-medium text-white dark:text-black hover:opacity-90'
+            className='flex h-10 items-center justify-center rounded-lg bg-stitch-primary px-4 font-inter font-bold text-white hover:opacity-90 transition-opacity shadow-sm'
           >
             Log in
           </Link>
           <Link
             href={REGISTER_HREF}
-            className='flex h-9 items-center justify-center rounded-full border-2 border-brand-orange font-dm_sans font-medium text-brand-orange hover:bg-brand-orange/10'
+            className='flex h-10 items-center justify-center rounded-lg border border-gray-200 bg-white font-inter font-bold text-stitch-on-surface hover:bg-gray-50 transition-colors'
           >
             Create account
           </Link>
@@ -105,34 +104,22 @@ function DismissibleAuthCard() {
 }
 
 export function RightRail() {
-  const { data: session, isLoading } = useAuth();
+  const { data: session, isLoading: isAuthLoading } = useAuth();
+  const { blogs, isLoading: isBlogsLoading } = useGetMetaFeedBlogs({
+    limit: 10,
+  });
 
   return (
     <aside
-      className='hidden w-[350px] shrink-0 xl:block '
+      className='hidden w-[400px] shrink-0 xl:block'
       aria-label='Featured and community'
     >
-      <div className='sticky top-0 h-screen overflow-y-auto px-4 py-7 space-y-6 pb-10'>
-        {!isLoading && !session && <DismissibleAuthCard />}
+      <div className=' top-[60px]  px-8 py-12 space-y-16 overflow-y-auto scrollbar-hide'>
+        <TrendingWidget blogs={blogs?.blogs} isLoading={isBlogsLoading} />
 
-        <RailSection title='Topics on the rise'>
+        <RailSection title='Featured Authors'>
           <RailSurface>
-            <div className='col-span-2 lg:col-span-1 flex flex-col gap-6'>
-              <TopicLinksContainer topics={recommendedTopics} />
-
-              <LinksRedirectArrow
-                target='_blank'
-                link={`${TOPIC_ROUTE}/explore`}
-              >
-                <p className='px-2 text-sm'>Explore more topics</p>
-              </LinksRedirectArrow>
-            </div>
-          </RailSurface>
-        </RailSection>
-
-        <RailSection title='Featured authors'>
-          <RailSurface className='p-3'>
-            <div className='flex flex-col gap-4'>
+            <div className='flex flex-col gap-6'>
               {recommendedUsers.slice(0, 4).map((user, index: number) => (
                 <RecommendedUserCard key={index.toString()} />
               ))}
@@ -140,7 +127,22 @@ export function RightRail() {
           </RailSurface>
         </RailSection>
 
-        {/* <ContributeAndSponsorCard /> */}
+        <RailSection title='Topics on the Rise'>
+          <RailSurface>
+            <div className='flex flex-col gap-6'>
+              <TopicLinksContainer topics={recommendedTopics} />
+
+              <LinksRedirectArrow
+                target='_blank'
+                link={`${TOPIC_ROUTE}/explore`}
+              >
+                <p className='px-1 text-[13px] font-inter font-bold text-stitch-primary hover:underline transition-all uppercase tracking-widest'>
+                  Explore more topics
+                </p>
+              </LinksRedirectArrow>
+            </div>
+          </RailSurface>
+        </RailSection>
       </div>
     </aside>
   );

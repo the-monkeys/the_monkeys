@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DM_Sans, Inter } from 'next/font/google';
+import { DM_Sans, Inter, Newsreader } from 'next/font/google';
 import Script from 'next/script';
 
 import { AppShell } from '@/components/layout/app-shell/AppShell';
@@ -25,6 +25,12 @@ const inter = Inter({
 const dm_sans = DM_Sans({
   subsets: ['latin'],
   variable: '--font-dm_sans',
+  display: 'swap',
+});
+
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  variable: '--font-newsreader',
   display: 'swap',
 });
 
@@ -145,7 +151,7 @@ const RootLayout = async ({
         />
       </head>
       <body
-        className={`${dm_sans.variable} ${inter.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
+        className={`${dm_sans.variable} ${inter.variable} ${newsreader.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
         <Toaster />
         <GrowthbookClientProvider>

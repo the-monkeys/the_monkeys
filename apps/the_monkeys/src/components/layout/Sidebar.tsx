@@ -76,10 +76,10 @@ const libraryItems: NavItem[] = [];
 
 const linkBase = (active: boolean) =>
   cn(
-    'flex items-center rounded-md py-2.5 font-dm_sans text-sm transition-colors',
+    'flex items-center rounded-md py-3 font-inter text-sm transition-all duration-200',
     active
-      ? 'dark:bg-foreground-dark/40 bg-foreground-light/40 font-medium'
-      : 'text-text-light/90 opacity-90 hover:bg-foreground-light/40 hover:opacity-100 dark:text-text-dark/90 dark:hover:bg-foreground-dark/30'
+      ? 'bg-stitch-primary/10 text-stitch-primary font-bold'
+      : 'text-stitch-secondary/80 hover:bg-stitch-secondary-container hover:text-stitch-on-surface'
   );
 
 function NavRows({
@@ -134,9 +134,9 @@ function SidebarInner() {
   const { data: session, isLoading } = useAuth();
 
   return (
-    <div className='flex flex-col h-full min-h-0'>
-      <div className='flex-1 overflow-y-auto overflow-x-hidden pt-4 px-0'>
-        <div className='mt-4 px-0 md:px-3'>
+    <div className='flex flex-col h-full min-h-0 bg-stitch-background'>
+      <div className='flex-1 overflow-y-auto overflow-x-hidden pt-6 px-0'>
+        <div className='mt-2 px-0 md:px-4'>
           <NavRows
             pathname={pathname}
             searchParams={searchParams}
@@ -152,7 +152,9 @@ function SidebarInner() {
           />
         </div>
       </div>
-      <Footer />
+      <div className='p-4 border-t-1 border-stitch-outline/10'>
+        <Footer />
+      </div>
     </div>
   );
 }
@@ -160,7 +162,7 @@ function SidebarInner() {
 export function FeedSidebarDesktop() {
   return (
     <aside
-      className='h-full shrink-0 relative transition-[width] duration-200 ease-out w-[76px] md:w-[238px]'
+      className='h-full shrink-0 relative transition-[width] duration-200 ease-out w-[76px] md:w-[265px]'
       aria-label='Site navigation'
     >
       <div className='h-full overflow-hidden flex flex-col'>

@@ -26,9 +26,9 @@ export const FollowButton = ({
 
   const [loading, setLoading] = useState<boolean>(false);
 
-  if (isLoading) return <Skeleton className='h-9 w-32 rounded-full' />;
+  // if (isLoading) return <Skeleton className='h-9 w-32 rounded-full' />;
 
-  if (isError) return null;
+  // if (isError) return null;
 
   const onUserFollow = async () => {
     setLoading(true);
@@ -110,6 +110,8 @@ export const FollowButton = ({
         </Button>
       ) : (
         <Button
+          variant={'outline'}
+          size={'sm'}
           disabled={loading}
           onClick={onUserFollow}
           className={twMerge(className, '!text-base rounded-full')}

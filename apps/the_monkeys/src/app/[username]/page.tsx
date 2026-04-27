@@ -49,21 +49,21 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
 
   return (
     <>
-      <ProfileSection paramsUser={params.username} user={user} />
-
-      <div className='grid grid-cols-3 gap-8 mt-4 sm:mt-6 lg:mt-10'>
-        <div className='h-fit col-span-3 lg:col-span-1'>
+      <div className='grid grid-cols-3 gap-16 '>
+        {/* <div className='h-fit col-span-3 lg:col-span-1'>
           <WordCloudCard username={params.username} />
-        </div>
+        </div> */}
 
-        <div className='col-span-3 lg:col-span-2 max-w-4xl space-y-6'>
-          <h6 className='font-dm_sans font-medium text-lg'>
+        <div className='col-span-3 lg:col-span-2 max-w-4xl space-y-4 font-extrabold'>
+          <h6 className='font-dm_sans  text-3xl'>
             Latest from{' '}
-            <span className='font-dm_sans text-xl'>{user?.first_name}</span>
+            <span className='font-dm_sans text-3xl'>{user?.first_name}</span>
           </h6>
 
           <Blogs username={params.username} user={data} />
         </div>
+
+        <ProfileSection paramsUser={params.username} user={user} />
       </div>
     </>
   );

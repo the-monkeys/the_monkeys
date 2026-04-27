@@ -21,14 +21,14 @@ const Nav = ({
   isAuthLoading: boolean;
 }) => {
   return (
-    <header className='sticky top-0 left-0 border-b-[0.5px] border-border-light dark:border-border-dark bg-background-light dark:bg-background-dark shadow-sm z-30'>
-      <Container className='w-full max-w-[1500px] px-[10px] py-3 flex items-center justify-between gap-4'>
+    <header className='sticky top-0 left-0 border-b-1 border-stitch-outline/20 bg-stitch-background/80 backdrop-blur-md shadow-sm z-30'>
+      <Container className='w-full  px-4 py-4 flex items-center justify-between gap-4'>
         <div className='flex items-center gap-20 sm:gap-6'>
-          <Link href={HOME_ROUTE} className='group flex items-center gap-[6px]'>
-            <div className='w-9 flex justify-center items-center filter group-hover:brightness-90'>
+          <Link href={HOME_ROUTE} className='group flex items-center gap-2'>
+            <div className='w-10 flex justify-center items-center filter group-hover:scale-105 transition-transform'>
               <Logo />
             </div>
-            <p className='hidden md:block pt-1 font-dm_sans font-medium tracking-tight text-[25px] group-hover:opacity-90'>
+            <p className='hidden md:block pt-1 font-newsreader font-bold tracking-tight text-3xl text-stitch-on-background group-hover:text-stitch-primary transition-colors'>
               Monkeys
             </p>
           </Link>

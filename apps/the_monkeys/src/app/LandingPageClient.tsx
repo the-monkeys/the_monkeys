@@ -3,6 +3,7 @@
 import { Suspense } from 'react';
 
 import AdUnit from '@/components/AdSense/AdUnit';
+import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import {
@@ -31,27 +32,36 @@ const LandingPageClient = () => {
 
   const devTest = useFeatureIsOn('gb-test');
 
-  console.log(devTest);
-
   if (isLoading) {
     return <FeedSkeleton />;
   }
 
   if (isError || !filteredBlogs || filteredBlogs.length === 0) {
     return (
-      <div className='px-4 py-12 flex flex-col items-center justify-center'>
-        <div className='p-4 flex items-center'>
-          <p className='font-dm_sans font-bold text-6xl'>4</p>
-          <Icon name='RiErrorWarning' size={50} className='text-alert-red' />
-          <p className='font-dm_sans font-bold text-6xl'>4</p>
+      <div className='px-4 py-20 flex flex-col items-center justify-center bg-stitch-surface rounded-xl border-1 border-stitch-outline/10'>
+        <div className='p-6 flex items-center gap-2'>
+          <p className='font-newsreader font-bold text-8xl text-stitch-on-surface'>
+            4
+          </p>
+          <div className='bg-stitch-primary/10 p-4 rounded-full'>
+            <Icon
+              name='RiErrorWarning'
+              size={60}
+              className='text-stitch-primary'
+            />
+          </div>
+          <p className='font-newsreader font-bold text-8xl text-stitch-on-surface'>
+            4
+          </p>
         </div>
 
-        <h2 className='py-1 font-dm_sans font-medium text-lg text-center'>
-          Page not found — but at least you found us!
+        <h2 className='mt-6 font-newsreader font-bold text-3xl text-stitch-on-surface text-center'>
+          Something went wrong.
         </h2>
 
-        <p className='text-base opacity-90 text-center'>
-          Try refreshing, or swing by again later.
+        <p className='mt-3 text-lg font-inter text-stitch-secondary text-center max-w-md'>
+          We couldnIt&apos;t find the feed. Please try refreshing or come back
+          later.
         </p>
       </div>
     );
@@ -70,23 +80,23 @@ const LandingPageClient = () => {
       </h1>
 
       {/* Load Trending section first */}
-      <Suspense fallback={<FeedSkeleton />}>
+      {/* <Suspense fallback={<FeedSkeleton />}>
         <TrendingSection blogs={filteredBlogs} />
-      </Suspense>
+      </Suspense> */}
 
       {/* Load Category section in parallel */}
-      <div className='space-y-8'>
+      {/* <div className='space-y-8'>
         {orderedCategories.map(({ title, category }, index) => (
           <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
             <CategorySection title={title} category={category} />
           </Suspense>
         ))}
-      </div>
+      </div> */}
 
       {/* Ad Unit -> Home Page */}
       <AdUnit slot='3779794725' />
 
-      <Container className='mt-8 grid grid-cols-2 gap-8'>
+      {/* <Container className='mt-8 grid grid-cols-2 gap-8'>
         {orderedCompactCategories.map(({ title, category }, index) => (
           <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
             <div className='col-span-2 lg:col-span-1'>
@@ -94,7 +104,23 @@ const LandingPageClient = () => {
             </div>
           </Suspense>
         ))}
-      </Container>
+      </Container> */}
+      <div className='flex flex-col'>
+        {blogs && blogs?.blogs.length > 0 && (
+          <FeedBlogCard
+            blog={blogs.blogs[0]}
+            variant='horizontal'
+            key={blogs.blogs[0]?.blog_id}
+          />
+        )}
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6'>
+          {blogs &&
+            blogs?.blogs.slice(1).map((blog) => {
+              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+            })}
+        </div>
+      </div>
     </div>
   );
 };

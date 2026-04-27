@@ -28,23 +28,30 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
-    <div>
-      <article className='h-full w-full flex flex-col sm:flex-row [@media(min-width:1200px)]:flex-col gap-[10px] sm:gap-5 [@media(min-width:1200px)]:gap-[10px]'>
-        <div className='shrink-0 h-[200px] sm:h-[260px] [@media(min-width:1200px)]:h-[350px] w-full sm:w-1/2 [@media(min-width:1200px)]:w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
+    <div className='h-full'>
+      <article className='h-full w-full flex flex-col sm:flex-row [@media(min-width:1200px)]:flex-col gap-5 sm:gap-6 p-4 sm:p-6 bg-stitch-surface rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.08)] transition-all duration-300'>
+        <div className='shrink-0 h-[200px] sm:h-[260px] [@media(min-width:1200px)]:h-[350px] w-full sm:w-1/2 [@media(min-width:1200px)]:w-full bg-stitch-secondary-container rounded-md overflow-hidden'>
           {isNonValidBannerImage(imageContent) ? (
-            <BlogPlaceholderImage title={titleContent} />
+            <BlogPlaceholderImage
+              title={titleContent}
+              className='hover:scale-105 transition-transform duration-500 ease-out'
+            />
           ) : (
-            <BlogImage title={titleContent} image={imageContent} />
+            <BlogImage
+              title={titleContent}
+              image={imageContent}
+              className='hover:scale-105 transition-transform duration-500 ease-out'
+            />
           )}
         </div>
 
-        <div className='w-full flex flex-col justify-between gap-[10px]'>
+        <div className='w-full flex flex-col justify-between py-1'>
           <div>
             <UserInfoCardShowcase authorID={authorId} date={date} />
 
-            <Link href={blogURL} className='w-full'>
+            <Link href={blogURL} className='w-full block mt-4'>
               <BlogTitle
-                className='pt-2 sm:pt-[10px] font-semibold text-[1.12rem] md:text-[1.45rem] leading-[1.4] sm:leading-[1.34] hover:underline underline-offset-2 line-clamp-2'
+                className='font-newsreader font-semibold text-2xl md:text-3xl leading-tight text-stitch-on-surface hover:text-stitch-primary transition-colors line-clamp-2'
                 title={titleContent || 'Untitled Post'}
               />
             </Link>
@@ -52,30 +59,30 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
             {descriptionContent !== '' && (
               <BlogDescription
                 description={descriptionContent}
-                className='pt-[6px] sm:pt-2 text-[0.9rem] md:text-[1.2rem] line-clamp-2 sm:line-clamp-3 opacity-90'
+                className='mt-3 text-lg font-inter text-stitch-on-surface/80 line-clamp-3 leading-relaxed'
               />
             )}
           </div>
 
-          <div className='pt-3 w-full flex items-center gap-2'>
-            {blog?.tags.length ? (
-              <div className='w-fit flex items-center gap-1'>
+          <div className='mt-6 w-full flex items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              {blog?.tags.length ? (
                 <Link
                   href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
                   target='_blank'
-                  className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
+                  className='px-3 py-1 bg-stitch-primary/10 rounded-full font-inter font-bold text-xs text-stitch-primary uppercase tracking-wider hover:bg-stitch-primary/20 transition-colors'
                 >
                   {blog?.tags[0]}
                 </Link>
-              </div>
-            ) : (
-              <p className='shrink-0 text-sm opacity-90'>Untagged</p>
-            )}
+              ) : (
+                <span className='text-xs text-stitch-secondary italic'>
+                  Untagged
+                </span>
+              )}
+            </div>
 
-            <p className='font-medium text-sm opacity-80'>{' · '}</p>
-
-            <div className='flex items-center gap-[6px]'>
-              <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
+            <div className='hover:text-stitch-primary transition-colors cursor-pointer text-stitch-secondary'>
+              <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={20} />
             </div>
           </div>
         </div>
@@ -97,32 +104,32 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
-    <div className='pb-4 h-full border-b-1 sm:border-b-0 border-border-light/60 dark:border-border-dark/60'>
-      <article className='h-full w-full flex flex-col gap-3'>
-        <div className='shrink-0 aspect-[4/3] h-[200px] sm:h-fit max-h-[300px] w-full bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
+    <div className='h-full'>
+      <article className='h-full w-full flex flex-col gap-4 p-4 sm:p-5 bg-stitch-surface rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.03)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.06)] transition-all duration-300'>
+        <div className='shrink-0 aspect-[4/3] h-[180px] sm:h-fit max-h-[250px] w-full bg-stitch-secondary-container rounded-md overflow-hidden'>
           <Link href={blogURL} className='group'>
             {isNonValidBannerImage(imageContent) ? (
               <BlogPlaceholderImage
                 title={titleContent}
-                className='group-hover:scale-105 transition-transform duration-200'
+                className='group-hover:scale-105 transition-transform duration-500 ease-out'
               />
             ) : (
               <BlogImage
                 title={titleContent}
                 image={imageContent}
-                className='group-hover:scale-105 transition-transform duration-200'
+                className='group-hover:scale-105 transition-transform duration-500 ease-out'
               />
             )}
           </Link>
         </div>
 
-        <div className='h-full w-full flex flex-col justify-between gap-[10px]'>
+        <div className='h-full w-full flex flex-col justify-between py-1'>
           <div>
             <UserInfoCardShowcase authorID={authorId} date={date} />
 
-            <Link href={blogURL} className='w-full'>
+            <Link href={blogURL} className='w-full block mt-3'>
               <BlogTitle
-                className='pt-2 font-semibold text-[1.12rem] sm:text-[1.25rem] leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
+                className='font-newsreader font-semibold text-xl leading-snug text-stitch-on-surface hover:text-stitch-primary transition-colors line-clamp-2'
                 title={titleContent || 'Untitled Post'}
               />
             </Link>
@@ -130,30 +137,30 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
             {descriptionContent !== '' && (
               <BlogDescription
                 description={descriptionContent}
-                className='pt-[6px] text-[0.9rem] sm:text-[1rem] line-clamp-2 opacity-90'
+                className='mt-2 text-base font-inter text-stitch-on-surface/80 line-clamp-2 leading-relaxed'
               />
             )}
           </div>
 
-          <div className='pt-3 w-full flex items-center gap-2'>
-            {blog?.tags.length ? (
-              <div className='w-fit flex items-center gap-1'>
+          <div className='mt-4 w-full flex items-center justify-between'>
+            <div className='flex items-center gap-2'>
+              {blog?.tags.length ? (
                 <Link
                   href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
                   target='_blank'
-                  className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
+                  className='px-3 py-1 bg-stitch-primary/10 rounded-full font-inter font-bold text-xs text-stitch-primary uppercase tracking-wider hover:bg-stitch-primary/20 transition-colors'
                 >
                   {blog?.tags[0]}
                 </Link>
-              </div>
-            ) : (
-              <p className='shrink-0 text-sm opacity-90'>Untagged</p>
-            )}
+              ) : (
+                <span className='text-xs text-stitch-secondary italic'>
+                  Untagged
+                </span>
+              )}
+            </div>
 
-            <p className='font-medium text-sm opacity-80'>{' · '}</p>
-
-            <div className='flex items-center gap-[6px]'>
-              <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
+            <div className='hover:text-stitch-primary transition-colors cursor-pointer text-stitch-secondary'>
+              <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={18} />
             </div>
           </div>
         </div>

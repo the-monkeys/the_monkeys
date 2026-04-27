@@ -6,7 +6,9 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
+import { FollowButton } from '@/components/user/buttons/followButton';
 import { ConnectionsDialog } from '@/components/user/dialogs/ConnectionsDialog';
+import { ShareProfileDialog } from '@/components/user/dialogs/ShareProfileDialog';
 import { UpdateUsernameDialog } from '@/components/user/dialogs/UpdateUsernameDialog';
 import { ShowcaseProfileDialog } from '@/components/user/dialogs/showcaseProfileDialog';
 import {
@@ -56,6 +58,10 @@ export const AuthorProfileCard = ({
             <ShowcaseProfileDialog username={user?.username} />
           </div>
         </ProfileFrame>
+
+        <FollowButton />
+
+        <ShareProfileDialog username={'shivam'} size={20} />
 
         <div className='space-y-[2px]'>
           <div className='flex item-center gap-[2px] md:gap-[6px]'>

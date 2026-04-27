@@ -21,15 +21,36 @@ const config = {
     fontFamily: {
       dm_sans: ['var(--font-dm_sans)'],
       inter: ['var(--font-inter)'],
+      newsreader: ['var(--font-newsreader)'],
     },
     extend: {
       colors: {
         brand: {
           orange: '#FF5542',
         },
+        stitch: {
+          primary: '#b72116',
+          'primary-container': '#ff5542',
+          'on-primary': '#ffffff',
+          'on-primary-container': '#5c0000',
+          secondary: '#5f5e5e',
+          'secondary-container': '#e2dfde',
+          'on-secondary': '#ffffff',
+          'on-secondary-container': '#636262',
+          tertiary: '#5d5f5f',
+          'tertiary-container': '#909191',
+          'on-tertiary': '#ffffff',
+          'on-tertiary-container': '#282a2b',
+          surface: '#fbf9f8',
+          'on-surface': '#1b1c1c',
+          outline: '#8f706b',
+          'outline-variant': '#e4beb8',
+          background: '#fbf9f8',
+          'on-background': '#1b1c1c',
+        },
         background: {
           dark: '#121212',
-          light: '#FAFAFA',
+          light: '#fbf9f8',
         },
         foreground: {
           dark: '#2C2C2C',
@@ -37,11 +58,11 @@ const config = {
         },
         border: {
           dark: '#3F3F3F',
-          light: '#CCCCCC',
+          light: '#8f706b',
         },
         text: {
           dark: '#FFFFFF',
-          light: '#121212',
+          light: '#1b1c1c',
         },
         alert: {
           red: '#DC2626',

@@ -110,7 +110,7 @@ export const LikeButton = ({
     <>
       {likeStatus?.isLiked ? (
         <button
-          className={`group p-1 flex items-center justify-center hover:opacity-80 animate-scale-up ${
+          className={`like-active group p-1 flex items-center justify-center hover:opacity-80 ${
             loading || isDisable
               ? 'cursor-default opacity-80'
               : 'cursor-pointer'
@@ -123,7 +123,7 @@ export const LikeButton = ({
             name='RiHeart3'
             type='Fill'
             size={size}
-            className='text-brand-orange'
+            className='like-icon text-brand-orange'
           />
         </button>
       ) : (
@@ -137,7 +137,7 @@ export const LikeButton = ({
           disabled={loading || isDisable}
           title='Add Like'
         >
-          <Icon name='RiHeart3' size={size} />
+          <Icon name='RiHeart3' size={size} className='like-icon' />
         </button>
       )}
     </>
