@@ -39,7 +39,7 @@ const Nav = ({
               <div className='w-9 h-9 flex justify-center items-center bg-gray-50 rounded-lg group-hover:scale-105 transition-transform'>
                 <Logo />
               </div>
-              <p className='hidden md:block pt-1 font-dm_sans font-medium tracking-tight text-3xl text-stitch-on-background group-hover:text-stitch-primary transition-colors'>
+              <p className='hidden md:block pt-1 font-dm_sans font-medium tracking-tight text-3xl text-text-light dark:text-text-dark group-hover:text-brand-orange transition-colors'>
                 Monkeys
               </p>
             </Link>

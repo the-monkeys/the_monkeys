@@ -78,8 +78,8 @@ const linkBase = (active: boolean) =>
   cn(
     'flex items-center rounded-md py-3 font-inter text-sm transition-all duration-200',
     active
-      ? 'bg-stitch-primary/10 text-stitch-primary font-bold'
-      : 'text-stitch-secondary/80 hover:bg-stitch-secondary-container hover:text-stitch-on-surface'
+      ? 'bg-brand-orange/10 text-brand-orange font-bold'
+      : 'text-gray-500 dark:text-gray-400/80 hover:bg-gray-100 dark:bg-gray-800 hover:text-text-light dark:text-text-dark'
   );
 
 function NavRows({
@@ -134,7 +134,7 @@ function SidebarInner() {
   const { data: session, isLoading } = useAuth();
 
   return (
-    <div className='flex flex-col h-full min-h-0 bg-stitch-background'>
+    <div className='flex flex-col h-full min-h-0 bg-background-light dark:bg-background-dark'>
       <div className='flex-1 overflow-y-auto overflow-x-hidden pt-6 px-0'>
         <div className='mt-2 px-0 md:px-4'>
           <NavRows
@@ -152,7 +152,7 @@ function SidebarInner() {
           />
         </div>
       </div>
-      <div className='p-4 border-t-1 border-stitch-outline/10'>
+      <div className='p-4 border-t-1 border-border-light dark:border-border-dark/10'>
         <Footer />
       </div>
     </div>

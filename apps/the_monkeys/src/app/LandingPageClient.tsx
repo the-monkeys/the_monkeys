@@ -38,28 +38,28 @@ const LandingPageClient = () => {
 
   if (isError || !filteredBlogs || filteredBlogs.length === 0) {
     return (
-      <div className='px-4 py-20 flex flex-col items-center justify-center bg-stitch-surface rounded-xl border-1 border-stitch-outline/10'>
+      <div className='px-4 py-20 flex flex-col items-center justify-center bg-background-light dark:bg-background-dark rounded-xl border-1 border-border-light dark:border-border-dark/10'>
         <div className='p-6 flex items-center gap-2'>
-          <p className='font-newsreader font-bold text-8xl text-stitch-on-surface'>
+          <p className='font-newsreader font-bold text-8xl text-text-light dark:text-text-dark'>
             4
           </p>
-          <div className='bg-stitch-primary/10 p-4 rounded-full'>
+          <div className='bg-brand-orange/10 p-4 rounded-full'>
             <Icon
               name='RiErrorWarning'
               size={60}
-              className='text-stitch-primary'
+              className='text-brand-orange'
             />
           </div>
-          <p className='font-newsreader font-bold text-8xl text-stitch-on-surface'>
+          <p className='font-newsreader font-bold text-8xl text-text-light dark:text-text-dark'>
             4
           </p>
         </div>
 
-        <h2 className='mt-6 font-newsreader font-bold text-3xl text-stitch-on-surface text-center'>
+        <h2 className='mt-6 font-newsreader font-bold text-3xl text-text-light dark:text-text-dark text-center'>
           Something went wrong.
         </h2>
 
-        <p className='mt-3 text-lg font-inter text-stitch-secondary text-center max-w-md'>
+        <p className='mt-3 text-lg font-inter text-gray-500 dark:text-gray-400 text-center max-w-md'>
           We couldnIt&apos;t find the feed. Please try refreshing or come back
           later.
         </p>

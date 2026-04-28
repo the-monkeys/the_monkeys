@@ -64,7 +64,7 @@ export function TrendingWidget({
 
                 <div className='flex-1 space-y-3'>
                   <Link href={url} className='block group/title'>
-                    <h3 className='font-newsreader font-bold text-[18px] leading-[1.25] text-gray-900 group-hover/title:text-stitch-primary transition-colors line-clamp-2'>
+                    <h3 className='font-newsreader font-bold text-[18px] leading-[1.25] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-2'>
                       {title}
                     </h3>
                   </Link>

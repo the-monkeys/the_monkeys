@@ -31,7 +31,7 @@ function RailSection({
 }) {
   return (
     <section className={cn('space-y-5', className)}>
-      <h2 className='font-newsreader font-bold text-2xl text-stitch-on-surface ml-1'>
+      <h2 className='font-newsreader font-bold text-2xl text-text-light dark:text-text-dark ml-1'>
         {title}
       </h2>
       {children}
@@ -77,23 +77,23 @@ function DismissibleAuthCard() {
     <RailSurface>
       <div className='relative p-6 bg-white rounded-xl border border-gray-100 shadow-sm'>
         <div className='space-y-2'>
-          <p className='font-newsreader font-bold text-xl text-stitch-on-surface'>
+          <p className='font-newsreader font-bold text-xl text-text-light dark:text-text-dark'>
             Join Monkeys
           </p>
-          <p className='text-sm font-inter text-stitch-secondary leading-relaxed'>
+          <p className='text-sm font-inter text-gray-500 dark:text-gray-400 leading-relaxed'>
             Sign in to write, bookmark, and follow writers you care about.
           </p>
         </div>
         <div className='mt-6 flex flex-col gap-3'>
           <Link
             href={LOGIN_ROUTE}
-            className='flex h-10 items-center justify-center rounded-lg bg-stitch-primary px-4 font-inter font-bold text-white hover:opacity-90 transition-opacity shadow-sm'
+            className='flex h-10 items-center justify-center rounded-lg bg-brand-orange px-4 font-inter font-bold text-white hover:opacity-90 transition-opacity shadow-sm'
           >
             Log in
           </Link>
           <Link
             href={REGISTER_HREF}
-            className='flex h-10 items-center justify-center rounded-lg border border-gray-200 bg-white font-inter font-bold text-stitch-on-surface hover:bg-gray-50 transition-colors'
+            className='flex h-10 items-center justify-center rounded-lg border border-gray-200 bg-white font-inter font-bold text-text-light dark:text-text-dark hover:bg-gray-50 transition-colors'
           >
             Create account
           </Link>
@@ -136,7 +136,7 @@ export function RightRail() {
                 target='_blank'
                 link={`${TOPIC_ROUTE}/explore`}
               >
-                <p className='px-1 text-[13px] font-inter font-bold text-stitch-primary hover:underline transition-all uppercase tracking-widest'>
+                <p className='px-1 text-[13px] font-inter font-bold text-brand-orange hover:underline transition-all uppercase tracking-widest'>
                   Explore more topics
                 </p>
               </LinksRedirectArrow>

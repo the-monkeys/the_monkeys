@@ -66,7 +66,7 @@ export const FeedBlogCard = ({
               {blog?.tags.length > 0 && (
                 <Link
                   href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-                  className='inline-block font-inter font-bold text-[12px] text-stitch-primary uppercase tracking-[0.2em] hover:opacity-80 transition-opacity'
+                  className='inline-block font-inter font-bold text-[12px] text-brand-orange uppercase tracking-[0.2em] hover:opacity-80 transition-opacity'
                 >
                   {blog?.tags[0]}
                 </Link>
@@ -74,7 +74,7 @@ export const FeedBlogCard = ({
 
               <Link href={blogURL} className='block group/title'>
                 <BlogTitle
-                  className='font-newsreader font-bold text-[32px] md:text-[40px] leading-[1.1] text-gray-900 group-hover/title:text-stitch-primary transition-colors line-clamp-3'
+                  className='font-newsreader font-bold text-[32px] md:text-[40px] leading-[1.1] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-3'
                   title={titleContent || 'Untitled Post'}
                 />
               </Link>
@@ -104,20 +104,20 @@ export const FeedBlogCard = ({
               </div>
 
               <div className='flex items-center gap-4 text-gray-400'>
-                <div className='flex items-center gap-1.5 hover:text-stitch-primary transition-colors cursor-pointer group/action'>
+                <div className='flex items-center gap-1.5 hover:text-brand-orange transition-colors cursor-pointer group/action'>
                   <LikeButton blogId={blogId} size={20} />
                   <span className='text-xs font-semibold'>
                     <LikesCount blogId={blogId} />
                   </span>
                 </div>
-                <div className='hover:text-stitch-primary transition-colors cursor-pointer'>
+                <div className='hover:text-brand-orange transition-colors cursor-pointer'>
                   <BlogShareDialog
                     blogURL={`${LIVE_URL}${blogURL}`}
                     size={20}
                   />
                 </div>
                 {showBookmarkOption && (
-                  <div className='hover:text-stitch-primary transition-colors cursor-pointer'>
+                  <div className='hover:text-brand-orange transition-colors cursor-pointer'>
                     <BookmarkButton blogId={blog?.blog_id} size={20} />
                   </div>
                 )}
@@ -154,7 +154,7 @@ export const FeedBlogCard = ({
             {blog?.tags.length ? (
               <Link
                 href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-                className='font-inter font-medium text-xs text-gray-500 uppercase tracking-widest hover:text-stitch-primary transition-colors'
+                className='font-inter font-medium text-xs text-gray-500 uppercase tracking-widest hover:text-brand-orange transition-colors'
               >
                 {blog?.tags[0]}
               </Link>
@@ -167,7 +167,7 @@ export const FeedBlogCard = ({
 
           <Link href={blogURL} className='group/title'>
             <BlogTitle
-              className='font-newsreader font-bold text-[24px] leading-[1.2] text-gray-900 group-hover/title:text-stitch-primary transition-colors line-clamp-2'
+              className='font-newsreader font-bold text-[24px] leading-[1.2] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
@@ -193,17 +193,17 @@ export const FeedBlogCard = ({
           </div>
 
           <div className='flex items-center gap-4 text-gray-400'>
-            <div className='flex items-center gap-1.5 hover:text-stitch-primary transition-colors cursor-pointer group/action'>
+            <div className='flex items-center gap-1.5 hover:text-brand-orange transition-colors cursor-pointer group/action'>
               <LikeButton blogId={blogId} size={18} />
               <span className='text-xs font-medium'>
                 <LikesCount blogId={blogId} />
               </span>
             </div>
-            <div className='hover:text-stitch-primary transition-colors cursor-pointer'>
+            <div className='hover:text-brand-orange transition-colors cursor-pointer'>
               <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={18} />
             </div>
             {showBookmarkOption && (
-              <div className='hover:text-stitch-primary transition-colors cursor-pointer'>
+              <div className='hover:text-brand-orange transition-colors cursor-pointer'>
                 <BookmarkButton blogId={blog?.blog_id} size={18} />
               </div>
             )}

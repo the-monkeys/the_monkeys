@@ -75,7 +75,7 @@ export const TopicBar = ({
       >
         <button
           onClick={() => scroll('left')}
-          className='flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100 text-gray-600 hover:text-gray-900 hover:scale-105 transition-all outline-none focus:ring-2 focus:ring-stitch-primary'
+          className='flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100 text-gray-600 hover:text-gray-900 hover:scale-105 transition-all outline-none focus:ring-2 focus:ring-brand-orange'
           aria-label='Scroll left'
         >
           <Icon name='RiArrowLeftS' size={18} />
@@ -103,7 +103,7 @@ export const TopicBar = ({
             >
               {topic.name}
               {isActive && (
-                <span className='absolute bottom-[-11px] left-0 right-0 h-[2.5px] bg-stitch-primary rounded-full animate-in fade-in slide-in-from-bottom-1 duration-300' />
+                <span className='absolute bottom-[-11px] left-0 right-0 h-[2.5px] bg-brand-orange rounded-full animate-in fade-in slide-in-from-bottom-1 duration-300' />
               )}
             </Link>
           );
@@ -121,7 +121,7 @@ export const TopicBar = ({
       >
         <button
           onClick={() => scroll('right')}
-          className='flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100 text-gray-600 hover:text-gray-900 hover:scale-105 transition-all outline-none focus:ring-2 focus:ring-stitch-primary'
+          className='flex h-7 w-7 items-center justify-center rounded-full bg-white shadow-sm border border-gray-100 text-gray-600 hover:text-gray-900 hover:scale-105 transition-all outline-none focus:ring-2 focus:ring-brand-orange'
           aria-label='Scroll right'
         >
           <Icon name='RiArrowRightS' size={18} />

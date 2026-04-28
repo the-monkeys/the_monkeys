@@ -15,7 +15,7 @@ function SocialLinks() {
           target='_blank'
           rel='noopener noreferrer'
           title={social.account}
-          className='inline-flex h-8 w-8 items-center justify-center rounded-full text-stitch-secondary transition-all hover:bg-stitch-primary/10 hover:text-stitch-primary'
+          className='inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 dark:text-gray-400 transition-all hover:bg-brand-orange/10 hover:text-brand-orange'
         >
           <Icon name={social.icon} size={18} />
         </a>
@@ -53,13 +53,13 @@ function Branding() {
       <div className='w-5 flex justify-center items-center shrink-0 grayscale hover:grayscale-0 transition-all'>
         <Logo />
       </div>
-      <p className='text-[10px] font-inter font-medium text-stitch-secondary'>
+      <p className='text-[10px] font-inter font-medium text-gray-500 dark:text-gray-400'>
         A product by{' '}
         <a
           href={PARENT_COMPANY_ROUTE}
           target='_blank'
           rel='noopener noreferrer'
-          className='hover:text-stitch-primary transition-colors underline underline-offset-2'
+          className='hover:text-brand-orange transition-colors underline underline-offset-2'
         >
           Buddhicintaka
         </a>
