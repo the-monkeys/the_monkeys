@@ -19,7 +19,7 @@ export function TrendingWidget({
 }: TrendingWidgetProps) {
   if (isLoading) {
     return (
-      <div className='p-6 bg-white rounded-xl border border-gray-100 animate-pulse'>
+      <div className='p-6 bg-white border border-gray-100 animate-pulse'>
         <div className='h-6 w-32 bg-gray-100 rounded mb-8'></div>
         <div className='space-y-8'>
           {[1, 2, 3, 4].map((i) => (
@@ -37,12 +37,12 @@ export function TrendingWidget({
   }
 
   return (
-    <div className='bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden'>
+    <div className='bg-white  border border-gray-100 shadow-sm overflow-hidden'>
       <div className='p-6 pb-5 flex items-center justify-between border-b border-gray-50 bg-white sticky top-0 z-10'>
         <h2 className='font-inter font-extrabold text-[12px] text-gray-900 uppercase tracking-[0.2em]'>
           Trending Now
         </h2>
-        <Icon name='RiArrowRightUp' size={20} className='text-stitch-primary' />
+        <Icon name='RiArrowRightUp' size={20} />
       </div>
 
       <div className='divide-y divide-gray-50'>
@@ -58,7 +58,7 @@ export function TrendingWidget({
               className='group relative p-6 py-7 hover:bg-gray-50/40 transition-colors'
             >
               <div className='flex gap-6 items-start'>
-                <span className='font-inter font-black text-[42px] text-gray-100 group-hover:text-gray-200 transition-colors leading-none shrink-0 opacity-50'>
+                <span className='font-inter font-black text-5xl text-gray-100 group-hover:text-gray-200 transition-colors leading-none shrink-0 '>
                   {String(index + 1).padStart(2, '0')}
                 </span>
 

@@ -60,19 +60,20 @@ export const SearchInput = ({ className }: { className?: string }) => {
   return (
     <div className={twMerge(className)}>
       <form onSubmit={handleEnterKeySubmit}>
-        <div className='mt-[2px] relative px-3 py-[6px] flex items-center gap-[6px] bg-foreground-light/40 dark:bg-foreground-dark/40 rounded-full'>
-          <div className='p-1 flex justify-center'>
-            <Icon
-              name='RiSearch'
-              size={18}
-              className={twMerge(focused ? 'opacity-100' : 'opacity-60')}
-            />
-          </div>
+        <div className='relative px-4 py-2 flex items-center gap-2.5 bg-gray-100/80 hover:bg-gray-100 transition-colors rounded-full border border-transparent focus-within:border-gray-200 focus-within:bg-white focus-within:shadow-sm max-w-[240px]'>
+          <Icon
+            name='RiSearch'
+            size={18}
+            className={twMerge(
+              'text-gray-400 transition-colors',
+              focused && 'text-gray-900'
+            )}
+          />
 
           <input
             value={searchQuery}
-            placeholder='Search'
-            className='w-full text-sm bg-transparent focus:outline-none'
+            placeholder='Search stories...'
+            className='w-full text-[15px] bg-transparent focus:outline-none text-gray-900 placeholder:text-gray-400 font-inter'
             onChange={handleInputChange}
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
