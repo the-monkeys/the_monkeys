@@ -19,15 +19,15 @@ export function TrendingWidget({
 }: TrendingWidgetProps) {
   if (isLoading) {
     return (
-      <div className='p-6 bg-white border border-gray-100 animate-pulse'>
-        <div className='h-6 w-32 bg-gray-100 rounded mb-8'></div>
+      <div className='p-6 bg-white dark:bg-background-dark border border-gray-100 dark:border-border-dark animate-pulse'>
+        <div className='h-6 w-32 bg-gray-100 dark:bg-gray-800 rounded mb-8'></div>
         <div className='space-y-8'>
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className='flex gap-4'>
-              <div className='h-8 w-12 bg-gray-50 rounded'></div>
+              <div className='h-8 w-12 bg-gray-50 dark:bg-gray-800 rounded'></div>
               <div className='flex-1 space-y-2'>
-                <div className='h-4 w-full bg-gray-100 rounded'></div>
-                <div className='h-3 w-2/3 bg-gray-50 rounded'></div>
+                <div className='h-4 w-full bg-gray-100 dark:bg-gray-700 rounded'></div>
+                <div className='h-3 w-2/3 bg-gray-50 dark:bg-gray-800 rounded'></div>
               </div>
             </div>
           ))}
@@ -37,15 +37,15 @@ export function TrendingWidget({
   }
 
   return (
-    <div className='bg-white  border border-gray-100 shadow-sm overflow-hidden'>
-      <div className='p-6 pb-5 flex items-center justify-between border-b border-gray-50 bg-white sticky top-0 z-10'>
-        <h2 className='font-inter font-extrabold text-[12px] text-gray-900 uppercase tracking-[0.2em]'>
+    <div className='bg-white dark:bg-background-dark border border-gray-100 dark:border-border-dark shadow-sm overflow-hidden'>
+      <div className='p-6 pb-5 flex items-center justify-between border-b border-gray-50 dark:border-border-dark bg-white dark:bg-background-dark sticky top-0 z-10'>
+        <h2 className='font-inter font-extrabold text-[12px] text-gray-900 dark:text-gray-100 uppercase tracking-[0.2em]'>
           Trending Now
         </h2>
         <Icon name='RiArrowRightUp' size={20} />
       </div>
 
-      <div className='divide-y divide-gray-50'>
+      <div className='divide-y divide-gray-50 dark:divide-border-dark'>
         {blogs.slice(0, 4).map((blog, index) => {
           const title = purifyHTMLString(blog.title);
           const slug = generateSlug(title);
@@ -55,10 +55,10 @@ export function TrendingWidget({
           return (
             <div
               key={blog.blog_id}
-              className='group relative p-6 py-7 hover:bg-gray-50/40 transition-colors'
+              className='group relative p-6 py-7 hover:bg-gray-50/40 dark:hover:bg-gray-800 transition-colors'
             >
               <div className='flex gap-6 items-start'>
-                <span className='font-inter font-black text-5xl text-gray-100 group-hover:text-gray-200 transition-colors leading-none shrink-0 '>
+                <span className='font-inter font-black text-5xl text-gray-100 dark:text-gray-800 group-hover:text-gray-200 dark:group-hover:text-gray-700 transition-colors leading-none shrink-0 '>
                   {String(index + 1).padStart(2, '0')}
                 </span>
 
@@ -69,9 +69,11 @@ export function TrendingWidget({
                     </h3>
                   </Link>
 
-                  <div className='flex items-center gap-2 font-inter font-bold text-[10px] text-gray-400 uppercase tracking-widest'>
-                    <span className='text-gray-500'>{tag}</span>
-                    <span className='text-gray-300'>•</span>
+                  <div className='flex items-center gap-2 font-inter font-bold text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest'>
+                    <span className='text-gray-500 dark:text-gray-400'>
+                      {tag}
+                    </span>
+                    <span className='text-gray-300 dark:text-gray-600'>•</span>
                     <span>Trending Now</span>
                   </div>
                 </div>
@@ -81,10 +83,10 @@ export function TrendingWidget({
         })}
       </div>
 
-      <div className='p-4 border-t border-gray-50 bg-gray-50/30'>
+      <div className='p-4 border-t border-gray-50 dark:border-border-dark bg-gray-50/30 dark:bg-background-dark'>
         <Link
           href='/feed'
-          className='flex items-center justify-center w-full py-3 border border-gray-200 bg-white rounded font-inter font-bold text-[11px] text-gray-900 uppercase tracking-widest hover:bg-gray-50 transition-colors'
+          className='flex items-center justify-center w-full py-3 border border-gray-200 dark:border-border-dark bg-white dark:bg-background-dark rounded font-inter font-bold text-[11px] text-gray-900 dark:text-gray-100 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
         >
           View All Trending
         </Link>

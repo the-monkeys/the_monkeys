@@ -43,8 +43,8 @@ export const FeedBlogCard = ({
   if (variant === 'horizontal') {
     return (
       <div className='pb-10 w-full'>
-        <article className='flex flex-col md:flex-row bg-white  border-1 border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-500 group overflow-hidden'>
-          <div className='md:w-[40%] aspect-[3/2] md:aspect-auto relative bg-gray-50 overflow-hidden'>
+        <article className='flex flex-col md:flex-row bg-white dark:bg-background-dark border-1 border-gray-100 dark:border-border-dark shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-500 group overflow-hidden'>
+          <div className='md:w-[40%] aspect-[3/2] md:aspect-auto relative bg-gray-50 dark:bg-gray-800 overflow-hidden'>
             <Link href={blogURL} className='block h-full w-full'>
               {isNonValidBannerImage(imageContent) ? (
                 <BlogPlaceholderImage
@@ -82,19 +82,19 @@ export const FeedBlogCard = ({
               {descriptionContent !== '' && (
                 <BlogDescription
                   description={descriptionContent}
-                  className='text-[16px] md:text-[18px] font-inter text-gray-500 line-clamp-3 leading-relaxed mt-2'
+                  className='text-[16px] md:text-[18px] font-inter text-gray-500 dark:text-gray-400 line-clamp-3 leading-relaxed mt-2'
                 />
               )}
             </div>
 
-            <div className='pt-6 border-t border-gray-50 flex flex-wrap justify-between items-center gap-4'>
+            <div className='pt-6 border-t border-gray-50 dark:border-border-dark flex flex-wrap justify-between items-center gap-4'>
               <div className='flex items-center gap-4'>
                 <UserInfoCardShowcase
                   authorID={authorId}
                   date={date}
                   hideDate
                 />
-                <span className='text-[13px] font-inter text-gray-400'>
+                <span className='text-[13px] font-inter text-gray-400 dark:text-gray-500'>
                   {new Date(date).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -103,7 +103,7 @@ export const FeedBlogCard = ({
                 </span>
               </div>
 
-              <div className='flex items-center gap-4 text-gray-400'>
+              <div className='flex items-center gap-4 text-gray-400 dark:text-gray-500'>
                 <div className='flex items-center gap-1.5 hover:text-brand-orange transition-colors cursor-pointer group/action'>
                   <LikeButton blogId={blogId} size={20} />
                   <span className='text-xs font-semibold'>
@@ -131,8 +131,8 @@ export const FeedBlogCard = ({
 
   return (
     <div className='pb-8'>
-      <article className='flex flex-col p-5 bg-white   border-2 border-gray-100 shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300 group'>
-        <div className='aspect-[16/9] w-full bg-gray-50  overflow-hidden relative'>
+      <article className='flex flex-col p-5 bg-white dark:bg-background-dark border-2 border-gray-100 dark:border-border-dark shadow-[0_2px_8px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all duration-300 group'>
+        <div className='aspect-[16/9] w-full bg-gray-50 dark:bg-gray-800 overflow-hidden relative'>
           <Link href={blogURL}>
             {isNonValidBannerImage(imageContent) ? (
               <BlogPlaceholderImage
@@ -159,7 +159,7 @@ export const FeedBlogCard = ({
                 {blog?.tags[0]}
               </Link>
             ) : (
-              <span className='text-xs text-gray-400 uppercase tracking-widest'>
+              <span className='text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest'>
                 Uncategorized
               </span>
             )}
@@ -167,7 +167,7 @@ export const FeedBlogCard = ({
 
           <Link href={blogURL} className='group/title'>
             <BlogTitle
-              className='font-newsreader font-bold text-[24px] leading-[1.2] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-2'
+              className='font-dm_sans font-bold text-[24px] leading-[1.2] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-2'
               title={titleContent || 'Untitled Post'}
             />
           </Link>
@@ -175,15 +175,15 @@ export const FeedBlogCard = ({
           {descriptionContent !== '' && (
             <BlogDescription
               description={descriptionContent}
-              className='text-[15px] font-inter text-gray-600 line-clamp-2 leading-relaxed'
+              className='text-[15px] font-inter text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed'
             />
           )}
         </div>
 
-        <div className='mt-8 pt-4 border-t border-gray-50 flex justify-between items-center'>
+        <div className='mt-8 pt-4 border-t border-gray-50 dark:border-border-dark flex justify-between items-center'>
           <div className='flex items-center gap-4'>
             <UserInfoCardShowcase authorID={authorId} date={date} hideDate />
-            <span className='text-[13px] font-inter text-gray-400'>
+            <span className='text-[13px] font-inter text-gray-400 dark:text-gray-500'>
               {new Date(date).toLocaleDateString('en-US', {
                 month: 'short',
                 day: 'numeric',
@@ -192,7 +192,7 @@ export const FeedBlogCard = ({
             </span>
           </div>
 
-          <div className='flex items-center gap-4 text-gray-400'>
+          <div className='flex items-center gap-4 text-gray-400 dark:text-gray-500'>
             <div className='flex items-center gap-1.5 hover:text-brand-orange transition-colors cursor-pointer group/action'>
               <LikeButton blogId={blogId} size={18} />
               <span className='text-xs font-medium'>

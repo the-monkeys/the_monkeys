@@ -27,7 +27,7 @@ const Nav = ({
   const pathname = usePathname();
 
   return (
-    <header className='sticky top-0 left-0 border-b border-gray-100 bg-white/90 backdrop-blur-md z-40'>
+    <header className='sticky top-0 left-0 border-b border-gray-100 dark:border-border-dark bg-white/90 dark:bg-background-dark/90 backdrop-blur-md z-40'>
       <Container className='w-full px-4 sm:px-6 py-2.5 flex flex-col gap-1'>
         <div className='flex items-center justify-between gap-4 w-full'>
           {/* Left Side: Logo */}
@@ -36,7 +36,7 @@ const Nav = ({
               href={HOME_ROUTE}
               className='group flex items-center gap-2.5 shrink-0'
             >
-              <div className='w-9 h-9 flex justify-center items-center bg-gray-50 rounded-lg group-hover:scale-105 transition-transform'>
+              <div className='w-9 h-9 flex justify-center items-center bg-gray-50 dark:bg-gray-800 rounded-lg group-hover:scale-105 transition-transform'>
                 <Logo />
               </div>
               <p className='hidden md:block pt-1 font-dm_sans font-medium tracking-tight text-3xl text-text-light dark:text-text-dark group-hover:text-brand-orange transition-colors'>
@@ -64,7 +64,7 @@ const Nav = ({
               <ThemeSwitch />
               {session && <WSNotificationDropdown />}
 
-              <div className='h-8 w-[1px] bg-gray-100 mx-1 hidden sm:block' />
+              <div className='h-8 w-[1px] bg-gray-100 dark:bg-gray-800 mx-1 hidden sm:block' />
 
               {session ? (
                 <div className='flex items-center gap-3'>
@@ -80,7 +80,7 @@ const Nav = ({
 
         {/* Mobile Topics Row */}
         <TopicBar
-          className='lg:hidden w-full border-t border-gray-50 pt-1'
+          className='lg:hidden w-full border-t border-gray-50 dark:border-border-dark pt-1'
           pathname={pathname}
         />
       </Container>
