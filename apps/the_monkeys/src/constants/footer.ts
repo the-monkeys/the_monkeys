@@ -49,6 +49,15 @@ export const footerSocialsList: {
 
 export const footerLinksList = [
   {
+    heading: 'Our products',
+    items: [
+      {
+        text: 'Free Range Notify',
+        link: 'https://www.freerangenotify.com/',
+      },
+    ],
+  },
+  {
     heading: 'Company',
     items: [
       // {
