@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
-import Icon from '@/components/icon';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
 import { RecommendedUserCard } from '@/components/user/userInfo';

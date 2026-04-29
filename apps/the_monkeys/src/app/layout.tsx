@@ -164,6 +164,7 @@ const RootLayout = async ({
                   <AppShell>{children}</AppShell>
                 </main>
                 {/* <Separator /> */}
+                <Footer />
               </TooltipProvider>
             </ThemeProviders>
           </QueryClientMount>

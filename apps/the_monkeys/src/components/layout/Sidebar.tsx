@@ -152,9 +152,6 @@ function SidebarInner() {
           />
         </div>
       </div>
-      <div className='p-4 border-t-1 border-border-light dark:border-border-dark/10'>
-        <Footer />
-      </div>
     </div>
   );
 }

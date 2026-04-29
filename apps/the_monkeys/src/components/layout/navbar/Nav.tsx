@@ -27,7 +27,7 @@ const Nav = ({
   const pathname = usePathname();
 
   return (
-    <header className='sticky top-0 left-0 border-b border-gray-100 dark:border-border-dark bg-white/90 dark:bg-background-dark/90 backdrop-blur-md z-40'>
+    <header className='sticky top-0 left-0 border-b border-gray-100 dark:border-border-dark bg-white dark:bg-background-dark backdrop-blur-md z-40'>
       <Container className='w-full px-4 sm:px-6 py-2.5 flex flex-col gap-1'>
         <div className='flex items-center justify-between gap-4 w-full'>
           {/* Left Side: Logo */}

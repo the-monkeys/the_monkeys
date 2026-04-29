@@ -60,12 +60,12 @@ export const SearchInput = ({ className }: { className?: string }) => {
   return (
     <div className={twMerge(className)}>
       <form onSubmit={handleEnterKeySubmit}>
-        <div className='relative px-4 py-2 flex items-center gap-2.5 bg-gray-100/80 hover:bg-gray-100 transition-colors rounded-full border border-transparent focus-within:border-gray-200 focus-within:bg-white focus-within:shadow-sm max-w-[240px]'>
+        <div className='relative px-4 py-2 flex items-center gap-2.5 bg-background-light dark:bg-background-dark transition-colors rounded-full border border-gray-200 dark:border-gray-400 focus-within:border-gray-900 focus-within:bg-white focus-within:shadow-sm max-w-[240px] '>
           <Icon
             name='RiSearch'
             size={18}
             className={twMerge(
-              'text-gray-400 transition-colors',
+              'text-gray-400  transition-colors',
               focused && 'text-gray-900'
             )}
           />
@@ -73,7 +73,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
           <input
             value={searchQuery}
             placeholder='Search stories...'
-            className='w-full text-[15px] bg-transparent focus:outline-none text-gray-900 placeholder:text-gray-400 font-inter'
+            className='w-full text-[15px] bg-transparent  focus:outline-none text-gray-900 placeholder:text-gray-400 font-inter'
             onChange={handleInputChange}
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
