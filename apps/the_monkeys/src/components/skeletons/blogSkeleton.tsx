@@ -2,10 +2,7 @@ import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { twMerge } from 'tailwind-merge';
 
 import Container from '../layout/Container';
-import {
-  UserInfoCardSkeleton,
-  UserRecommendationCardSkeleton,
-} from './userSkeleton';
+import { UserInfoCardSkeleton } from './userSkeleton';
 
 export const EditorBlockSkeleton = () => {
   return (
@@ -156,30 +153,108 @@ export const TopicsContainerSkeleton = () => {
 
 export const FeedSkeleton = () => {
   return (
-    <Container className='px-4 py-8 min-h-screen space-y-14'>
-      <div className='grid grid-cols-2 gap-x-8 gap-y-4'>
-        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-        <TrendingCardSmallSkeleton className='col-span-2 sm:col-span-1' />
-      </div>
+    <div className='min-h-screen'>
+      {/* <Skeleton className='mb-6 h-24 w-full' /> */}
 
-      <div className='grid grid-cols-3 gap-8 lg:gap-10 xl:gap-16'>
-        <div className='col-span-3 lg:col-span-2 space-y-4'>
-          <FeedBlogCardListSkeleton />
+      <section className='pb-4'>
+        <Skeleton className='mb-3 h-4 w-32' />
+
+        <div className='flex gap-4 overflow-hidden pb-2'>
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={index}
+              className='flex shrink-0 flex-col items-center gap-2'
+            >
+              <Skeleton className='h-20 w-20 rounded-full' />
+              <Skeleton className='h-3 w-16 rounded' />
+            </div>
+          ))}
         </div>
+      </section>
 
-        <div className='col-span-3 lg:col-span-1 space-y-10'>
-          <TopicsContainerSkeleton />
+      <div className='flex flex-col'>
+        <FeedBlogCardHorizontalSkeleton />
 
-          <div className='grid grid-cols-2 gap-6'>
-            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
-            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
-            <UserRecommendationCardSkeleton className='col-span-2 sm:col-span-1 md:col-span-2' />
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6'>
+          {Array.from({ length: 8 }).map((_, index) => (
+            <FeedBlogCardGridSkeleton key={index} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const FeedBlogCardHorizontalSkeleton = () => {
+  return (
+    <div className='pb-10 w-full'>
+      <article className='flex flex-col md:flex-row bg-white dark:bg-background-dark border-1 border-gray-100 dark:border-border-dark shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden'>
+        <Skeleton className='md:w-[40%] aspect-[3/2] md:aspect-auto w-full shrink-0' />
+
+        <div className='md:w-[60%] px-6 py-8 md:px-10 flex flex-col justify-between gap-8'>
+          <div className='space-y-4'>
+            <Skeleton className='h-3 w-24' />
+
+            <div className='space-y-2'>
+              <Skeleton className='h-9 w-full' />
+              <Skeleton className='h-9 w-5/6' />
+              <Skeleton className='h-9 w-2/3' />
+            </div>
+
+            <div className='space-y-2'>
+              <Skeleton className='h-4 w-full' />
+              <Skeleton className='h-4 w-11/12' />
+              <Skeleton className='h-4 w-3/4' />
+            </div>
+          </div>
+
+          <FeedBlogCardMetaSkeleton />
+        </div>
+      </article>
+    </div>
+  );
+};
+
+const FeedBlogCardGridSkeleton = () => {
+  return (
+    <div className='pb-8'>
+      <article className='flex flex-col p-5 bg-white dark:bg-background-dark border-2 border-gray-100 dark:border-border-dark shadow-[0_2px_8px_rgba(0,0,0,0.02)]'>
+        <Skeleton className='aspect-[16/9] w-full' />
+
+        <div className='mt-6 flex flex-col gap-3'>
+          <Skeleton className='h-3 w-24' />
+
+          <div className='space-y-2'>
+            <Skeleton className='h-7 w-full' />
+            <Skeleton className='h-7 w-4/5' />
+          </div>
+
+          <div className='space-y-2'>
+            <Skeleton className='h-4 w-full' />
+            <Skeleton className='h-4 w-2/3' />
           </div>
         </div>
+
+        <FeedBlogCardMetaSkeleton />
+      </article>
+    </div>
+  );
+};
+
+const FeedBlogCardMetaSkeleton = () => {
+  return (
+    <div className='mt-8 pt-4 border-t border-gray-50 dark:border-border-dark flex justify-between items-center gap-4'>
+      <div className='flex items-center gap-4 min-w-0'>
+        <Skeleton className='h-8 w-8 rounded-full shrink-0' />
+        <Skeleton className='h-3 w-24' />
+        <Skeleton className='hidden sm:block h-3 w-20' />
       </div>
 
-      <FeedCategorySectionSkeleton />
-    </Container>
+      <div className='flex items-center gap-4 shrink-0'>
+        <Skeleton className='h-5 w-10' />
+        <Skeleton className='h-5 w-5 rounded-full' />
+      </div>
+    </div>
   );
 };
 
