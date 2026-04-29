@@ -65,6 +65,7 @@ export type IconName =
   | 'RiResetRight'
   | 'RiLoginBox'
   | 'RiLogoutBoxR'
+  | 'RiLock'
   | 'RiErrorWarning'
   | 'RiVerifiedBadge'
   | 'RiEye'

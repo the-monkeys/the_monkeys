@@ -17,6 +17,7 @@ import {
   FEED_ROUTE,
   HOME_ROUTE,
   LIBRARY_ROUTE,
+  LOGIN_ROUTE,
   NOTIFICATIONS_ROUTE,
   SETTINGS_ROUTE,
 } from '@/constants/routeConstants';
@@ -56,20 +57,37 @@ type NavItem = {
   href: string;
   label: string;
   icon: IconName;
+  requiresAuth?: boolean;
 };
 
 const discoverItems: NavItem[] = [
   { href: HOME_ROUTE, label: 'Feed', icon: 'RiNewspaper' },
-  { href: FEED_ROUTE, label: 'For You', icon: 'RiBard' },
+  { href: FEED_ROUTE, label: 'For You', icon: 'RiBard', requiresAuth: true },
   { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
-  { href: ACTIVITY_ROUTE, label: 'Activity', icon: 'RiMenu4' },
-  { href: LIBRARY_ROUTE, label: 'Library', icon: 'RiBookShelf' },
+  {
+    href: ACTIVITY_ROUTE,
+    label: 'Activity',
+    icon: 'RiMenu4',
+    requiresAuth: true,
+  },
+  {
+    href: LIBRARY_ROUTE,
+    label: 'Library',
+    icon: 'RiBookShelf',
+    requiresAuth: true,
+  },
   {
     href: NOTIFICATIONS_ROUTE,
     label: 'Notifications',
     icon: 'RiNotification3',
+    requiresAuth: true,
   },
-  { href: SETTINGS_ROUTE, label: 'Settings', icon: 'RiSettings3' },
+  {
+    href: SETTINGS_ROUTE,
+    label: 'Settings',
+    icon: 'RiSettings3',
+    requiresAuth: true,
+  },
 ];
 
 const libraryItems: NavItem[] = [];
@@ -86,10 +104,12 @@ function NavRows({
   pathname,
   searchParams,
   items,
+  locked,
 }: {
   pathname: string;
   searchParams: ReadonlyURLSearchParams;
   items: NavItem[];
+  locked?: boolean;
 }) {
   return (
     <nav className='flex flex-col gap-0.5' aria-label='Navigation'>
@@ -100,22 +120,65 @@ function NavRows({
             key={href}
             href={href}
             title={label}
+            aria-label={label}
+            tabIndex={locked ? -1 : undefined}
+            aria-hidden={locked ? true : undefined}
             className={cn(
               linkBase(active),
-              'px-0 justify-center md:px-3 md:justify-start md:gap-3 text-sm '
+              'relative overflow-hidden px-0 justify-center md:px-3 md:justify-start md:gap-3 text-sm',
+              locked &&
+                'pointer-events-none text-gray-400 dark:text-gray-500 hover:text-gray-500'
             )}
           >
             <Icon
               name={icon}
               size={18}
-              className={cn('shrink-0', active && '')}
+              className={cn('shrink-0', locked && 'opacity-45')}
             />
-            <span className='hidden md:inline'>{label}</span>
+            <span className={cn('hidden md:inline', locked && 'opacity-45')}>
+              {label}
+            </span>
             <span className='sr-only md:hidden'>{label}</span>
           </Link>
         );
       })}
     </nav>
+  );
+}
+
+function LockedNavRows({
+  pathname,
+  searchParams,
+  items,
+}: {
+  pathname: string;
+  searchParams: ReadonlyURLSearchParams;
+  items: NavItem[];
+}) {
+  if (items.length === 0) return null;
+
+  return (
+    <div className='relative mt-0.5 overflow-hidden rounded-md'>
+      <NavRows
+        pathname={pathname}
+        searchParams={searchParams}
+        items={items}
+        locked
+      />
+
+      <Link
+        href={LOGIN_ROUTE}
+        title='Login to unlock'
+        aria-label='Login to unlock'
+        className='absolute inset-0 z-10 flex items-center justify-center bg-background-light/35 px-2 text-[11px] font-semibold text-gray-600 backdrop-blur-[0.5px] transition-colors hover:text-brand-orange dark:bg-background-dark/35 dark:text-gray-300'
+      >
+        <span className='flex items-center justify-center gap-1.5  border border-gray-200 bg-white/95 px-3 py-1.5 shadow-sm dark:border-border-dark dark:bg-gray-900/95'>
+          <Icon name='RiLock' size={14} className='shrink-0' />
+          <span className='hidden md:inline'>Login to unlock</span>
+          <span className='sr-only md:hidden'>Login to unlock</span>
+        </span>
+      </Link>
+    </div>
   );
 }
 
@@ -132,24 +195,35 @@ function SidebarInner() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: session, isLoading } = useAuth();
+  const allItems = [...discoverItems, ...libraryItems];
+  const isLoggedOut = !session && isLoading;
+  const publicItems = allItems.filter((item) => !item.requiresAuth);
+  const lockedItems = allItems.filter((item) => item.requiresAuth);
 
   return (
     <div className='flex flex-col h-full min-h-0 bg-background-light dark:bg-background-dark'>
       <div className='flex-1 overflow-y-auto overflow-x-hidden pt-6 px-0'>
         <div className='mt-2 px-0 md:px-4'>
-          <NavRows
-            pathname={pathname}
-            searchParams={searchParams}
-            items={
-              session && !isLoading
-                ? [...discoverItems, ...libraryItems]
-                : discoverItems.filter(
-                    (item) =>
-                      item.href === HOME_ROUTE ||
-                      item.href === EXPLORE_TOPICS_ROUTE
-                  )
-            }
-          />
+          {!isLoggedOut ? (
+            <>
+              <NavRows
+                pathname={pathname}
+                searchParams={searchParams}
+                items={publicItems}
+              />
+              <LockedNavRows
+                pathname={pathname}
+                searchParams={searchParams}
+                items={lockedItems}
+              />
+            </>
+          ) : (
+            <NavRows
+              pathname={pathname}
+              searchParams={searchParams}
+              items={allItems}
+            />
+          )}
         </div>
       </div>
     </div>
