@@ -116,15 +116,15 @@ export function RightRail() {
       <div className=' top-[60px]  px-8 py-12 space-y-16 overflow-y-auto scrollbar-hide'>
         <TrendingWidget blogs={blogs?.blogs} isLoading={isBlogsLoading} />
 
-        <RailSection title='Featured Authors'>
+        {/* <RailSection title='Featured Authors'>
           <RailSurface>
             <div className='flex flex-col gap-6'>
-              {recommendedUsers.slice(0, 4).map((user, index: number) => (
-                <RecommendedUserCard key={index.toString()} />
+              {recommendedUsers.slice(0, 4).map((user) => (
+                <RecommendedUserCard key={user.userID} />
               ))}
             </div>
           </RailSurface>
-        </RailSection>
+        </RailSection> */}
 
         <RailSection title='Topics on the Rise'>
           <RailSurface>

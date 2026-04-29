@@ -2,6 +2,7 @@
 
 import { Suspense } from 'react';
 
+import { FeaturedAuthorsSection } from '@/app/feed/sections/FeaturedAuthor/FeaturedAuthorsSection';
 import AdUnit from '@/components/AdSense/AdUnit';
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import Icon from '@/components/icon';
@@ -14,6 +15,7 @@ import {
   orderedCategories,
   orderedCompactCategories,
 } from '@/config/categoryConfig';
+import { recommendedUsers } from '@/constants/social';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
@@ -79,32 +81,12 @@ const LandingPageClient = () => {
         Lifestyle, Philosophy, and More
       </h1>
 
-      {/* Load Trending section first */}
-      {/* <Suspense fallback={<FeedSkeleton />}>
-        <TrendingSection blogs={filteredBlogs} />
-      </Suspense> */}
-
-      {/* Load Category section in parallel */}
-      {/* <div className='space-y-8'>
-        {orderedCategories.map(({ title, category }, index) => (
-          <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
-            <CategorySection title={title} category={category} />
-          </Suspense>
-        ))}
-      </div> */}
-
       {/* Ad Unit -> Home Page */}
       <AdUnit slot='3779794725' />
 
-      {/* <Container className='mt-8 grid grid-cols-2 gap-8'>
-        {orderedCompactCategories.map(({ title, category }, index) => (
-          <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
-            <div className='col-span-2 lg:col-span-1'>
-              <CategorySectionCompact title={title} category={category} />
-            </div>
-          </Suspense>
-        ))}
-      </Container> */}
+      {/* Featured Authors Section */}
+      <FeaturedAuthorsSection users={recommendedUsers} />
+
       <div className='flex flex-col'>
         {blogs && blogs?.blogs.length > 0 && (
           <FeedBlogCard

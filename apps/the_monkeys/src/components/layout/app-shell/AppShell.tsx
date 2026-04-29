@@ -10,7 +10,6 @@ import { RightRail } from './RightRail';
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-
   // Check if we're on auth pages
   if (pathname?.startsWith('/auth')) {
     return <>{children}</>;
@@ -44,8 +43,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <FeedSidebarDesktop />
         </div>
         {/* Content row below navbar */}
+
         <div className='flex min-w-0 flex-1'>
           {/* Main content */}
+
           <div className='min-w-0 flex-1 px-4 py-4 lg:py-6 '>{children}</div>
 
           {/* Right Rail - self-sticky, only visible xl+ */}
