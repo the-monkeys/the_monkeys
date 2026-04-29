@@ -27,7 +27,7 @@ const SocialLinkButton = ({ children }: { children: React.ReactNode }) => {
     <Button
       variant='outline'
       size='icon'
-      className='mt-3 !border-1 rounded-full'
+      className='!border-1 rounded-full'
       asChild
     >
       {children}
@@ -50,34 +50,44 @@ export const AuthorProfileCard = ({
     : 'Not available';
 
   return (
-    <div className='flex flex-col gap-[10px]'>
-      <div className='flex items-end gap-3 flex-wrap'>
-        <ProfileFrame className='group relative size-[80px] ring-2 ring-border-light/40 dark:ring-border-dark/40'>
-          <ProfileImage username={user?.username} />
-          <div className='hidden absolute inset-0 w-full h-full group-hover:flex justify-center items-center bg-black/20 backdrop-blur-sm'>
-            <ShowcaseProfileDialog username={user?.username} />
+    <div className='flex min-w-0 flex-col gap-4'>
+      <div className='flex min-w-0 flex-col gap-4'>
+        <div className='flex min-w-0 flex-col items-center gap-3 text-center sm:flex-row sm:items-end sm:text-left'>
+          <ProfileFrame className='group relative size-[88px] shrink-0 ring-2 ring-border-light/40 dark:ring-border-dark/40 sm:size-[80px]'>
+            <ProfileImage username={user?.username} />
+            <div className='hidden absolute inset-0 w-full h-full group-hover:flex justify-center items-center bg-black/20 backdrop-blur-sm'>
+              <ShowcaseProfileDialog username={user?.username} />
+            </div>
+          </ProfileFrame>
+
+          <div className='min-w-0 flex-1 space-y-1'>
+            <div className='flex min-w-0 flex-wrap items-center justify-center gap-x-2 gap-y-1 sm:justify-start'>
+              <p className='max-w-full truncate px-[2px] text-sm opacity-80 sm:text-base'>
+                {user?.username ? `@${user.username}` : '@user'}
+              </p>
+
+              {isAuthenticated && <UpdateUsernameDialog user={user} />}
+            </div>
+
+            <h2 className='max-w-full break-words font-dm_sans text-[1.6rem] font-medium capitalize leading-tight tracking-tight sm:text-[1.8rem]'>
+              {user?.first_name} {user?.last_name ? user.last_name : ''}
+            </h2>
           </div>
-        </ProfileFrame>
+        </div>
 
-        <FollowButton />
+        <div className='flex flex-wrap items-center justify-center gap-2 sm:justify-start'>
+          {!isAuthenticated && (
+            <FollowButton username={user?.username} className='h-9 px-4' />
+          )}
 
-        <ShareProfileDialog username={'shivam'} size={20} />
-
-        <div className='space-y-[2px]'>
-          <div className='flex item-center gap-[2px] md:gap-[6px]'>
-            <p className='px-[2px] text-sm sm:text-base truncate'>{`@${user?.username}`}</p>
-
-            {isAuthenticated && <UpdateUsernameDialog user={user} />}
-          </div>
-
-          <h2 className='w-fit font-dm_sans font-medium text-[1.5rem] sm:text-[1.8rem] tracking-tight capitalize'>
-            {user?.first_name} {user?.last_name ? user?.last_name : ''}
-          </h2>
+          {user?.username && (
+            <ShareProfileDialog username={user.username} size={20} />
+          )}
         </div>
       </div>
 
-      <div className='flex items-center gap-3'>
-        <div className='flex items-center gap-1'>
+      <div className='flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:justify-start'>
+        <div className='flex items-center gap-1 text-sm sm:text-base'>
           <p className='font-medium'>
             {connectionsLoading || connectionsError
               ? '-'
@@ -91,7 +101,7 @@ export const AuthorProfileCard = ({
           )}
         </div>
 
-        <div className='flex items-center gap-1'>
+        <div className='flex items-center gap-1 text-sm sm:text-base'>
           <p className='font-medium'>
             {connectionsLoading || connectionsError
               ? '-'
@@ -106,25 +116,33 @@ export const AuthorProfileCard = ({
         </div>
       </div>
 
-      {user?.bio && <p className='py-1 text-sm break-words'>{user.bio}</p>}
+      {user?.bio && (
+        <p className='max-w-full break-words py-1 text-center text-sm leading-relaxed sm:text-left'>
+          {user.bio}
+        </p>
+      )}
 
-      <div className='flex items-center gap-x-3 gap-y-2 flex-wrap'>
-        <div className='flex items-center gap-[6px]'>
-          <Icon name='RiCalendar' type='Fill' className='opacity-90' />
+      <div className='flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:justify-start'>
+        <div className='flex min-w-0 items-center gap-[6px]'>
+          <Icon name='RiCalendar' type='Fill' className='shrink-0 opacity-90' />
 
           <p className='text-sm'>Joined {joinedDate}</p>
         </div>
 
         {user?.address && (
-          <div className='flex items-center gap-[6px]'>
-            <Icon name='RiMapPinUser' type='Fill' className='opacity-90' />
+          <div className='flex min-w-0 items-center gap-[6px]'>
+            <Icon
+              name='RiMapPinUser'
+              type='Fill'
+              className='shrink-0 opacity-90'
+            />
 
-            <p className='text-sm'>{user.address}</p>
+            <p className='min-w-0 truncate text-sm'>{user.address}</p>
           </div>
         )}
       </div>
 
-      <div className='flex items-center flex-wrap gap-2'>
+      <div className='flex flex-wrap items-center justify-center gap-2 pt-1 sm:justify-start'>
         {user?.twitter && (
           <SocialLinkButton>
             <Link

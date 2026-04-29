@@ -1,14 +1,14 @@
 'use client';
 
+import { BackButton } from '@/components/buttons/backButton';
 import { DefaultProfile } from '@/components/profileImage';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
-import { ProfileSectionSkeleton } from '@/components/skeletons/profileSkeleton';
+import { AuthorProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 
 import { Blogs } from './components/Blogs';
 import { ProfileSection } from './components/profile/ProfileSection';
-import { WordCloudCard } from './components/wordCloud/WordCloud';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
   const { data } = useAuth();
@@ -37,10 +37,14 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
 
   if (isLoading) {
     return (
-      <div className='space-y-12'>
-        <ProfileSectionSkeleton />
+      <div className='grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-16'>
+        <aside className='order-first lg:order-last lg:col-span-1'>
+          <div className='p-4 rounded-md'>
+            <AuthorProfileCardSkeleton />
+          </div>
+        </aside>
 
-        <div className='w-full md:w-2/3'>
+        <div className='order-last w-full lg:order-first lg:col-span-2'>
           <FeedBlogCardListSkeleton />
         </div>
       </div>
@@ -48,24 +52,21 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
   }
 
   return (
-    <>
-      <div className='grid grid-cols-3 gap-16 '>
-        {/* <div className='h-fit col-span-3 lg:col-span-1'>
-          <WordCloudCard username={params.username} />
-        </div> */}
-
-        <div className='col-span-3 lg:col-span-2 max-w-4xl space-y-4 font-extrabold'>
-          <h6 className='font-dm_sans  text-3xl'>
-            Latest from{' '}
-            <span className='font-dm_sans text-3xl'>{user?.first_name}</span>
-          </h6>
-
-          <Blogs username={params.username} user={data} />
-        </div>
-
+    <div className='grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-16'>
+      <aside className='order-first lg:order-last lg:col-span-1'>
         <ProfileSection paramsUser={params.username} user={user} />
-      </div>
-    </>
+      </aside>
+
+      <section className='order-last max-w-4xl space-y-4 font-extrabold lg:order-first lg:col-span-2'>
+        <BackButton />
+        <h6 className='font-dm_sans  text-3xl'>
+          Latest from{' '}
+          <span className='font-dm_sans text-3xl'>{user?.first_name}</span>
+        </h6>
+
+        <Blogs username={params.username} user={data} />
+      </section>
+    </div>
   );
 };
 

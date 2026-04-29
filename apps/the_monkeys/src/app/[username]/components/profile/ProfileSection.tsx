@@ -21,15 +21,15 @@ export const ProfileSection = ({
   return (
     <div className='  gap-4'>
       <div className=' p-4 rounded-md'>
-        {/* <div className='mb-2 flex gap-2 items-center justify-end'>
+        <div className='mb-2 flex gap-2 items-center justify-end'>
           {paramsUser !== session?.username && isSuccess && (
             <FollowButton username={paramsUser} />
           )}
 
           {isAuthenticated && <UpdateDialog data={session} />}
 
-          <ShareProfileDialog username={paramsUser} size={20} />
-        </div> */}
+          {/* <ShareProfileDialog username={paramsUser} size={20} /> */}
+        </div>
 
         <AuthorProfileCard isAuthenticated={isAuthenticated} user={user} />
       </div>
