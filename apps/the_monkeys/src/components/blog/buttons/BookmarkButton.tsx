@@ -11,9 +11,9 @@ import {
   useIsPostBookmarked,
 } from '@/hooks/user/useBookmarkStatus';
 import axiosInstance from '@/services/api/axiosInstance';
+import { isAuthError } from '@/utils/errorUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import axios from 'axios';
 
 export const BookmarkButton = ({
   blogId,
@@ -29,10 +29,6 @@ export const BookmarkButton = ({
 
   const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
-
-  const isAuthError = (err: unknown) =>
-    axios.isAxiosError(err) &&
-    (err.response?.status === 401 || err.response?.status === 403);
 
   if (isLoading) {
     return (

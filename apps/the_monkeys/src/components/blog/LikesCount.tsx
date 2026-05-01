@@ -3,7 +3,7 @@ import { formatCount } from '@/lib/utils';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
 type Props = {
-  blogId: string;
+  blogId?: string;
 };
 
 export const LikesCount = ({ blogId }: Props) => {

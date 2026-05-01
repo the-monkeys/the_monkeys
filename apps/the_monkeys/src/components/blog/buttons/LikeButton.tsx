@@ -10,10 +10,10 @@ import {
   useIsPostLiked,
 } from '@/hooks/user/useLikeStatus';
 import axiosInstance from '@/services/api/axiosInstance';
+import { isAuthError } from '@/utils/errorUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import axios from 'axios';
 
 export const LikeButton = ({
   blogId,
@@ -34,10 +34,6 @@ export const LikeButton = ({
   const searchParams = useSearchParams();
   const search = searchParams.toString();
   const currentPath = `${pathname}${search ? `?${search}` : ''}`;
-
-  const isAuthError = (err: unknown) =>
-    axios.isAxiosError(err) &&
-    (err.response?.status === 401 || err.response?.status === 403);
 
   if (isLoading) {
     return (
