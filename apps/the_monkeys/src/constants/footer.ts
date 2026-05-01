@@ -10,6 +10,14 @@ import {
   MONKEYS_YOUTUBE,
 } from './social';
 
+export const parentCompany: {
+  name: string;
+  website: string;
+} = {
+  name: 'BUDDHICINTAKA PVT. LTD.',
+  website: 'https://buddhicintaka.com/',
+};
+
 export const footerSocialsList: {
   account: string;
   link: string;
@@ -60,10 +68,10 @@ export const footerLinksList = [
   {
     heading: 'Company',
     items: [
-      // {
-      //   text: 'Feed',
-      //   link: '/',
-      // },
+      {
+        text: 'Feed',
+        link: '/',
+      },
       {
         text: 'About Us',
         link: '/about',

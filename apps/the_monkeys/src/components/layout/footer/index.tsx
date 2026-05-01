@@ -2,7 +2,11 @@ import Link from 'next/link';
 
 import Icon, { IconName } from '@/components/icon';
 import Logo from '@/components/logo';
-import { footerLinksList, footerSocialsList } from '@/constants/footer';
+import {
+  footerLinksList,
+  footerSocialsList,
+  parentCompany,
+} from '@/constants/footer';
 import { HOME_ROUTE } from '@/constants/routeConstants';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
@@ -85,7 +89,9 @@ const Footer = () => {
 
             <p className='text-xs'>
               A product of{' '}
-              <span className='font-medium'>BUDDHICINTAKA PVT. LTD.</span>
+              <Link href={parentCompany.website} className='font-medium'>
+                {parentCompany.name}
+              </Link>
             </p>
 
             <div className='py-6 flex flex-wrap gap-2'>

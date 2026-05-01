@@ -103,12 +103,10 @@ export const FeedBlogCard = ({
                 </span>
               </div>
 
-              <div className='flex items-center gap-4 text-gray-400 dark:text-gray-500'>
-                <div className='flex items-center gap-1.5 hover:text-brand-orange transition-colors cursor-pointer group/action'>
+              <div className='flex items-center gap-2 text-gray-400 dark:text-gray-500'>
+                <div className='flex items-center  hover:text-brand-orange transition-colors cursor-pointer group/action'>
                   <LikeButton blogId={blogId} size={20} />
-                  <span className='text-xs font-semibold'>
-                    <LikesCount blogId={blogId} />
-                  </span>
+                  <LikesCount blogId={blog.blog_id} />
                 </div>
                 <div className='hover:text-brand-orange transition-colors cursor-pointer'>
                   <BlogShareDialog
@@ -192,12 +190,10 @@ export const FeedBlogCard = ({
             </span>
           </div>
 
-          <div className='flex items-center gap-4 text-gray-400 dark:text-gray-500'>
-            <div className='flex items-center gap-1.5 hover:text-brand-orange transition-colors cursor-pointer group/action'>
+          <div className='flex items-center gap-2 text-gray-400 dark:text-gray-500'>
+            <div className='flex items-center  hover:text-brand-orange transition-colors cursor-pointer group/action'>
               <LikeButton blogId={blogId} size={18} />
-              <span className='text-xs font-medium'>
-                <LikesCount blogId={blogId} />
-              </span>
+              <LikesCount blogId={blog.blog_id} />
             </div>
             <div className='hover:text-brand-orange transition-colors cursor-pointer'>
               <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={18} />
