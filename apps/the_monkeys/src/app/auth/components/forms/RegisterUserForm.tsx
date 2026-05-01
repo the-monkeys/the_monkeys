@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import PasswordInput from '@/components/input/PasswordInput';
@@ -40,6 +40,7 @@ type Step = 'register' | 'verify-otp';
 
 export default function RegisterUserForm() {
   const router = useRouter();
+  const params = useSearchParams();
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState<Step>('register');
@@ -130,7 +131,7 @@ export default function RegisterUserForm() {
         title: 'Account created successfully',
       });
 
-      router.replace('/feed');
+      router.replace(params.get('callbackURL') || '/feed');
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : 'Invalid verification code';

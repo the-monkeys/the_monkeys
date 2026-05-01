@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import { usePathname, useSearchParams } from 'next/navigation';
+
+import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import Icon from '@/components/icon';
 import {
   LIKES_COUNT_QUERY_KEY,
@@ -8,7 +11,9 @@ import {
 } from '@/hooks/user/useLikeStatus';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
+import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import axios from 'axios';
 
 export const LikeButton = ({
   blogId,
@@ -23,20 +28,48 @@ export const LikeButton = ({
   const { likeStatus, isLoading, isError } = useIsPostLiked(blogId);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.toString();
+  const currentPath = `${pathname}${search ? `?${search}` : ''}`;
+
+  const isAuthError = (err: unknown) =>
+    axios.isAxiosError(err) &&
+    (err.response?.status === 401 || err.response?.status === 403);
 
   if (isLoading) {
     return (
       <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
-        <Icon name='RiHeart3' size={size} />
+        <Skeleton className='w-2 ' />
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className='p-1 flex items-center justify-center text-alert-red opacity-50 cursor-default'>
-        <Icon name='RiHeart3' size={size} />
-      </div>
+      <>
+        <button
+          className='group p-1 flex items-center justify-center hover:text-brand-orange cursor-pointer'
+          onClick={() => setAuthPromptOpen(true)}
+          title='Login to like this post'
+          type='button'
+        >
+          <Icon name='RiHeart3' size={size} />
+        </button>
+
+        <AuthPromptDialog
+          open={authPromptOpen}
+          onOpenChange={setAuthPromptOpen}
+          iconName='RiHeart3'
+          iconType='Fill'
+          iconClassName='text-brand-orange'
+          title='Like a post to share the love.'
+          description='Join Monkeys now to let the author know you like their post.'
+          callbackPath={`${currentPath}`}
+        />
+      </>
     );
   }
 
@@ -55,6 +88,11 @@ export const LikeButton = ({
         });
       }
     } catch (err: unknown) {
+      if (isAuthError(err)) {
+        setAuthPromptOpen(true);
+        return;
+      }
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -88,6 +126,11 @@ export const LikeButton = ({
         });
       }
     } catch (err: unknown) {
+      if (isAuthError(err)) {
+        setAuthPromptOpen(true);
+        return;
+      }
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -108,6 +151,11 @@ export const LikeButton = ({
 
   return (
     <>
+      <AuthPromptDialog
+        open={authPromptOpen}
+        onOpenChange={setAuthPromptOpen}
+      />
+
       {likeStatus?.isLiked ? (
         <button
           className={`like-active group p-1 flex items-center justify-center hover:opacity-80 ${

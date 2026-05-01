@@ -30,7 +30,7 @@ const config = {
         },
         background: {
           dark: '#121212',
-          light: '#fbf9f8',
+          light: '#FAFAFA',
         },
         foreground: {
           dark: '#2C2C2C',
@@ -38,11 +38,11 @@ const config = {
         },
         border: {
           dark: '#3F3F3F',
-          light: '#8f706b',
+          light: '#CCCCCC',
         },
         text: {
           dark: '#FFFFFF',
-          light: '#1b1c1c',
+          light: '#121212',
         },
         alert: {
           red: '#DC2626',

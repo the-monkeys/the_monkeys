@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import Icon from '@/components/icon';
 import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
 import {
@@ -12,6 +13,7 @@ import {
 import axiosInstance from '@/services/api/axiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import axios from 'axios';
 
 export const BookmarkButton = ({
   blogId,
@@ -26,6 +28,11 @@ export const BookmarkButton = ({
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(blogId);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [authPromptOpen, setAuthPromptOpen] = useState(false);
+
+  const isAuthError = (err: unknown) =>
+    axios.isAxiosError(err) &&
+    (err.response?.status === 401 || err.response?.status === 403);
 
   if (isLoading) {
     return (
@@ -37,9 +44,24 @@ export const BookmarkButton = ({
 
   if (isError) {
     return (
-      <div className='p-1 flex items-center justify-center text-alert-red opacity-50 cursor-default'>
-        <Icon name='RiBookmark' size={size} />
-      </div>
+      <>
+        <button
+          className='group p-1 flex items-center justify-center hover:text-brand-orange cursor-pointer'
+          onClick={() => setAuthPromptOpen(true)}
+          title='Login to bookmark this post'
+          type='button'
+        >
+          <Icon name='RiBookmark' size={size} />
+        </button>
+
+        <AuthPromptDialog
+          open={authPromptOpen}
+          onOpenChange={setAuthPromptOpen}
+          iconName='RiBookmark'
+          title='Save posts for later.'
+          description='Join Monkeys to build your reading library and come back to this post anytime.'
+        />
+      </>
     );
   }
 
@@ -64,6 +86,11 @@ export const BookmarkButton = ({
         });
       }
     } catch (err: unknown) {
+      if (isAuthError(err)) {
+        setAuthPromptOpen(true);
+        return;
+      }
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -108,6 +135,11 @@ export const BookmarkButton = ({
         });
       }
     } catch (err: unknown) {
+      if (isAuthError(err)) {
+        setAuthPromptOpen(true);
+        return;
+      }
+
       if (err instanceof Error) {
         toast({
           variant: 'error',
@@ -128,6 +160,14 @@ export const BookmarkButton = ({
 
   return (
     <>
+      <AuthPromptDialog
+        open={authPromptOpen}
+        onOpenChange={setAuthPromptOpen}
+        iconName='RiBookmark'
+        title='Save posts for later.'
+        description='Join Monkeys to build your reading library and come back to this post anytime.'
+      />
+
       {bookmarkStatus?.bookMarked ? (
         <button
           className={`group p-1 flex items-center justify-center opacity-80 hover:opacity-100 ${
