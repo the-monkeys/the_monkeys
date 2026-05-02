@@ -22,9 +22,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname !== '/blog' &&
     !pathname?.startsWith('/blog/components') &&
     !pathname?.startsWith('/blog/utils');
+  const isCreateBlog = pathname?.startsWith('/create');
 
   // Blog reading mode: only show main content
-  if (isBlogReading) {
+  if (isBlogReading || isCreateBlog) {
     return (
       <div className='mx-auto w-full max-w-[1500px]'>
         <Navbar />

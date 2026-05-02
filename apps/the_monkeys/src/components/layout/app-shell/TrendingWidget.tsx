@@ -58,7 +58,7 @@ export function TrendingWidget({
               className='group relative p-6 py-7 hover:bg-gray-50/40 dark:hover:bg-gray-800 transition-colors'
             >
               <div className='flex gap-6 items-start'>
-                <span className='font-inter font-black text-5xl text-gray-100 dark:text-gray-800 group-hover:text-gray-200 dark:group-hover:text-gray-700 transition-colors leading-none shrink-0 '>
+                <span className='font-inter font-black text-5xl text-text-light/20 dark:text-text-dark/20 group-hover:text-gray-200 dark:group-hover:text-gray-700 transition-colors leading-none shrink-0 '>
                   {String(index + 1).padStart(2, '0')}
                 </span>
 

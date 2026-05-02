@@ -69,6 +69,7 @@ const BookmarksInner = () => {
                   blog={blog}
                   key={blog?.blog_id}
                   showBookmarkOption={true}
+                  variant='list'
                 />
               );
             })}

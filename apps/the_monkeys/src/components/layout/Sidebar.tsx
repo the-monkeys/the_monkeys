@@ -10,7 +10,6 @@ import {
 } from 'next/navigation';
 
 import Icon, { IconName } from '@/components/icon';
-import Footer from '@/components/layout/footer';
 import {
   ACTIVITY_ROUTE,
   EXPLORE_TOPICS_ROUTE,
@@ -94,10 +93,10 @@ const libraryItems: NavItem[] = [];
 
 const linkBase = (active: boolean) =>
   cn(
-    'flex items-center rounded-md py-3 font-inter text-sm transition-all duration-200',
+    'flex items-center rounded-md py-3 font-inter text-sm transition-all duration-200 hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40',
     active
-      ? 'bg-brand-orange/10 text-brand-orange font-bold'
-      : 'text-gray-500 dark:text-gray-400/80 hover:bg-gray-100 dark:bg-gray-800 hover:text-text-light dark:text-text-dark'
+      ? 'bg-foreground-light dark:bg-foreground-dark/40 font-medium opacity-90'
+      : '  hover:text-text-light dark:text-text-dark'
   );
 
 function NavRows({
@@ -158,7 +157,7 @@ function LockedNavRows({
   if (items.length === 0) return null;
 
   return (
-    <div className='relative mt-0.5 overflow-hidden rounded-md'>
+    <div className='relative mt-0.5'>
       <NavRows
         pathname={pathname}
         searchParams={searchParams}
@@ -170,11 +169,13 @@ function LockedNavRows({
         href={LOGIN_ROUTE}
         title='Login to unlock'
         aria-label='Login to unlock'
-        className='absolute inset-0 z-10 flex items-center justify-center bg-background-light/35 px-2 text-[11px] font-semibold text-gray-600 backdrop-blur-[0.5px] transition-colors hover:text-brand-orange dark:bg-background-dark/35 dark:text-gray-300'
+        className='absolute inset-0 z-10 flex items-end justify-center rounded-md px-2 pb-2 text-gray-500 transition-colors hover:text-brand-orange dark:text-gray-400'
       >
-        <span className='flex items-center justify-center gap-1.5  border border-gray-200 bg-white/95 px-3 py-1.5 shadow-sm dark:border-border-dark dark:bg-gray-900/95'>
-          <Icon name='RiLock' size={14} className='shrink-0' />
-          <span className='hidden md:inline'>Login to unlock</span>
+        <span className='flex size-8 items-center justify-center rounded-full border border-border-light/70 bg-background-light/95 shadow-sm backdrop-blur dark:border-border-dark/80 dark:bg-background-dark/95 md:h-8 md:w-auto md:gap-1.5 md:px-2.5'>
+          <Icon name='RiLock' size={13} className='shrink-0' />
+          <span className='hidden font-inter text-[11px] font-semibold md:inline'>
+            Login to unlock
+          </span>
           <span className='sr-only md:hidden'>Login to unlock</span>
         </span>
       </Link>
@@ -196,7 +197,6 @@ function SidebarInner() {
   const searchParams = useSearchParams();
   const { data: session, isLoading } = useAuth();
   const allItems = [...discoverItems, ...libraryItems];
-  const isLoggedOut = !session && isLoading;
   const publicItems = allItems.filter((item) => !item.requiresAuth);
   const lockedItems = allItems.filter((item) => item.requiresAuth);
 
@@ -204,7 +204,7 @@ function SidebarInner() {
     <div className='flex flex-col h-full min-h-0 bg-background-light dark:bg-background-dark'>
       <div className='flex-1 overflow-y-auto overflow-x-hidden pt-6 px-0'>
         <div className='mt-2 px-0 md:px-4'>
-          {!isLoggedOut ? (
+          {!session ? (
             <>
               <NavRows
                 pathname={pathname}

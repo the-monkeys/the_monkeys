@@ -9,6 +9,7 @@ import Logo from '@/components/logo';
 import { SearchInput, SearchInputLink } from '@/components/search/SearchInput';
 import ThemeSwitch from '@/components/themeSwitch';
 import { HOME_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import useAuth from '@/hooks/auth/useAuth';
 import { cn } from '@/lib/utils';
 import { IUser } from '@/services/models/user';
 
@@ -17,14 +18,9 @@ import { TopicBar } from './TopicBar';
 import WSNotificationDropdown from './WSNotificationDropdown';
 import ProfileDropdown from './profileDropdown';
 
-const Nav = ({
-  session,
-  isAuthLoading,
-}: {
-  session?: IUser;
-  isAuthLoading: boolean;
-}) => {
+const Nav = () => {
   const pathname = usePathname();
+  const { data: session, isLoading: isAuthLoading } = useAuth();
 
   return (
     <header className='sticky top-0 left-0 border-b border-gray-100 dark:border-border-dark bg-white dark:bg-background-dark backdrop-blur-md z-40'>
@@ -36,7 +32,7 @@ const Nav = ({
               href={HOME_ROUTE}
               className='group flex items-center gap-2.5 shrink-0'
             >
-              <div className='w-9 h-9 flex justify-center items-center bg-gray-50 dark:bg-gray-800 rounded-lg group-hover:scale-105 transition-transform'>
+              <div className='w-9 h-9 flex justify-center items-center  rounded-lg group-hover:scale-105 transition-transform'>
                 <Logo />
               </div>
               <p className='hidden md:block pt-1 font-dm_sans font-medium tracking-tight text-3xl text-text-light dark:text-text-dark group-hover:text-brand-orange transition-colors'>
