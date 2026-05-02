@@ -43,7 +43,7 @@ export const FeedBlogCard = ({
   if (variant === 'horizontal') {
     return (
       <div className='pb-10 w-full'>
-        <article className='flex flex-col md:flex-row   transition-all duration-500 group overflow-hidden'>
+        <article className='flex flex-col md:flex-row transition-all duration-500 group overflow-hidden'>
           <div className='md:w-[40%] aspect-[3/2] md:aspect-auto relative bg-gray-50 dark:bg-gray-800 overflow-hidden'>
             <Link href={blogURL} className='block h-full w-full'>
               {isNonValidBannerImage(imageContent) ? (
@@ -61,7 +61,7 @@ export const FeedBlogCard = ({
             </Link>
           </div>
 
-          <div className='md:w-[60%] px-6 py-8 md:px-10 flex flex-col justify-between gap-8'>
+          <div className='md:w-[60%] py-4 md:py-8 md:px-10 flex flex-col justify-between gap-8'>
             <div className='space-y-4'>
               {blog?.tags.length > 0 && (
                 <Link
@@ -87,7 +87,7 @@ export const FeedBlogCard = ({
               )}
             </div>
 
-            <div className='pt-6  flex flex-wrap justify-between items-center gap-4'>
+            <div className='md:pt-6  flex flex-wrap justify-between items-center gap-4'>
               <div className='flex items-center gap-4'>
                 <UserInfoCardShowcase
                   authorID={authorId}
@@ -218,7 +218,7 @@ export const FeedBlogCard = ({
           </Link>
         </div>
 
-        <div className='mt-6 flex flex-col gap-3'>
+        <div className='md:mt-6 mt-4 flex flex-col gap-3'>
           <div className='flex items-center gap-2'>
             {blog?.tags.length ? (
               <Link
@@ -249,7 +249,7 @@ export const FeedBlogCard = ({
           )}
         </div>
 
-        <div className='mt-8 pt-4  flex justify-between items-center'>
+        <div className='md:mt-8 mt-4 md:pt-4  flex justify-between items-center'>
           <div className='flex items-center gap-4'>
             <UserInfoCardShowcase authorID={authorId} date={date} hideDate />
             <span className='text-[13px] font-inter text-gray-400 dark:text-gray-500'>
