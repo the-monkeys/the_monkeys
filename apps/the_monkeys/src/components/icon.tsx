@@ -84,6 +84,9 @@ export type IconName =
   | 'RiSettings5Line'
   | 'RiBard'
   | 'RiMenu4'
+  | 'RiMenu3'
+  | 'RiCloseLarge'
+  | 'RiMenu'
   | 'RiAdd';
 
 export type IconProps = {
