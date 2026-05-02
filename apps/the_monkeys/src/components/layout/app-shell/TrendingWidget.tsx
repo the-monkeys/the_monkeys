@@ -1,28 +1,32 @@
 'use client';
 
+import { useMemo } from 'react';
+
 import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import Icon from '@/components/icon';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
-import { MetaBlog } from '@/services/blog/blogTypes';
+import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
+import { getRelativeTime } from '@/lib/utils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
-interface TrendingWidgetProps {
-  blogs?: MetaBlog[];
-  isLoading?: boolean;
-}
+const MAX_TRENDING_ITEMS = 4;
+const SKELETON_ITEMS = 4;
 
-export function TrendingWidget({
-  blogs = [],
-  isLoading = false,
-}: TrendingWidgetProps) {
+/**
+ * TrendingWidget - Displays the top trending blog posts
+ * Fetches trending blogs data via useGetTrendingBlogs hook
+ */
+export function TrendingWidget() {
+  const { blogs, isLoading, isError } = useGetTrendingBlogs();
+
   if (isLoading) {
     return (
       <div className='p-6 bg-white dark:bg-background-dark border border-gray-100 dark:border-border-dark animate-pulse'>
         <div className='h-6 w-32 bg-gray-100 dark:bg-gray-800 rounded mb-8'></div>
         <div className='space-y-8'>
-          {[1, 2, 3, 4].map((i) => (
+          {Array.from({ length: SKELETON_ITEMS }).map((_, i) => (
             <div key={i} className='flex gap-4'>
               <div className='h-8 w-12 bg-gray-50 dark:bg-gray-800 rounded'></div>
               <div className='flex-1 space-y-2'>
@@ -32,6 +36,34 @@ export function TrendingWidget({
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (isError || blogs.length === 0) {
+    return (
+      <div className='bg-white dark:bg-background-dark border border-gray-100 dark:border-border-dark shadow-sm overflow-hidden'>
+        <div className='p-6 pb-5 flex items-center justify-between border-b border-gray-50 dark:border-border-dark bg-white dark:bg-background-dark'>
+          <h2 className='font-inter font-extrabold text-[12px] text-gray-900 dark:text-gray-100 uppercase tracking-[0.2em]'>
+            Trending Now
+          </h2>
+          <Icon name='RiArrowRightUp' size={20} />
+        </div>
+        <div className='p-8 text-center'>
+          <p className='font-inter text-sm text-gray-500 dark:text-gray-400'>
+            {isError
+              ? 'Unable to load trending posts'
+              : 'No trending posts available'}
+          </p>
+        </div>
+        {/* <div className='p-4 border-t border-gray-50 dark:border-border-dark bg-gray-50/30 dark:bg-background-dark'>
+          <Link
+            href='/feed'
+            className='flex items-center justify-center w-full py-3 border border-gray-200 dark:border-border-dark bg-white dark:bg-background-dark rounded font-inter font-bold text-[11px] text-gray-900 dark:text-gray-100 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
+          >
+            View All Trending
+          </Link>
+        </div> */}
       </div>
     );
   }
@@ -46,12 +78,12 @@ export function TrendingWidget({
       </div>
 
       <div className='divide-y divide-gray-50 dark:divide-border-dark'>
-        {blogs.slice(0, 4).map((blog, index) => {
+        {blogs.slice(0, MAX_TRENDING_ITEMS).map((blog, index) => {
           const title = purifyHTMLString(blog.title);
           const slug = generateSlug(title);
           const url = `${BLOG_ROUTE}/${slug}-${blog.blog_id}`;
-          const tag = blog.tags?.[0] || 'Monkeys';
-
+          const tag = blog.tags?.[0];
+          const publish_time = getRelativeTime(blog.published_time);
           return (
             <div
               key={blog.blog_id}
@@ -70,11 +102,13 @@ export function TrendingWidget({
                   </Link>
 
                   <div className='flex items-center gap-2 font-inter font-bold text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest'>
-                    <span className='text-gray-500 dark:text-gray-400'>
-                      {tag}
-                    </span>
+                    {tag && (
+                      <span className='text-gray-500 dark:text-gray-400'>
+                        {tag}
+                      </span>
+                    )}
                     <span className='text-gray-300 dark:text-gray-600'>•</span>
-                    <span>Trending Now</span>
+                    <span>{publish_time}</span>
                   </div>
                 </div>
               </div>
@@ -83,14 +117,14 @@ export function TrendingWidget({
         })}
       </div>
 
-      <div className='p-4 border-t border-gray-50 dark:border-border-dark bg-gray-50/30 dark:bg-background-dark'>
+      {/* <div className='p-4 border-t border-gray-50 dark:border-border-dark bg-gray-50/30 dark:bg-background-dark'>
         <Link
           href='/feed'
           className='flex items-center justify-center w-full py-3 border border-gray-200 dark:border-border-dark bg-white dark:bg-background-dark rounded font-inter font-bold text-[11px] text-gray-900 dark:text-gray-100 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
         >
           View All Trending
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
