@@ -43,7 +43,7 @@ export const FeedBlogCard = ({
   if (variant === 'horizontal') {
     return (
       <div className='pb-10 w-full'>
-        <article className='flex flex-col md:flex-row  hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)] transition-all duration-500 group overflow-hidden'>
+        <article className='flex flex-col md:flex-row   transition-all duration-500 group overflow-hidden'>
           <div className='md:w-[40%] aspect-[3/2] md:aspect-auto relative bg-gray-50 dark:bg-gray-800 overflow-hidden'>
             <Link href={blogURL} className='block h-full w-full'>
               {isNonValidBannerImage(imageContent) ? (

@@ -188,7 +188,7 @@ export const FeedSkeleton = () => {
 const FeedBlogCardHorizontalSkeleton = () => {
   return (
     <div className='pb-10 w-full'>
-      <article className='flex flex-col md:flex-row bg-white dark:bg-background-dark border-1 border-gray-100 dark:border-border-dark shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden'>
+      <article className='flex flex-col md:flex-row overflow-hidden'>
         <Skeleton className='md:w-[40%] aspect-[3/2] md:aspect-auto w-full shrink-0' />
 
         <div className='md:w-[60%] px-6 py-8 md:px-10 flex flex-col justify-between gap-8'>
@@ -218,7 +218,7 @@ const FeedBlogCardHorizontalSkeleton = () => {
 const FeedBlogCardGridSkeleton = () => {
   return (
     <div className='pb-8'>
-      <article className='flex flex-col p-5 bg-white dark:bg-background-dark border-2 border-gray-100 dark:border-border-dark shadow-[0_2px_8px_rgba(0,0,0,0.02)]'>
+      <article className='flex flex-col'>
         <Skeleton className='aspect-[16/9] w-full' />
 
         <div className='mt-6 flex flex-col gap-3'>
