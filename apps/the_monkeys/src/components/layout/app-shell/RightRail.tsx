@@ -114,7 +114,7 @@ export function RightRail() {
       aria-label='Featured and community'
     >
       <div className=' top-[60px]  px-8 py-12 space-y-16 overflow-y-auto scrollbar-hide'>
-        <TrendingWidget blogs={blogs?.blogs} isLoading={isBlogsLoading} />
+        <TrendingWidget />
 
         {/* <RailSection title='Featured Authors'>
           <RailSurface>
