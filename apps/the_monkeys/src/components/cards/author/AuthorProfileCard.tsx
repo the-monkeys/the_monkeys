@@ -52,7 +52,7 @@ export const AuthorProfileCard = ({
   return (
     <div className='flex min-w-0 flex-col gap-4'>
       <div className='flex min-w-0 flex-col gap-4'>
-        <div className='flex min-w-0 flex-col items-center gap-3 text-center sm:flex-row sm:items-end sm:text-left'>
+        <div className='flex min-w-0 flex-col  gap-3  sm:text-left'>
           <ProfileFrame className='group relative size-[88px] shrink-0 ring-2 ring-border-light/40 dark:ring-border-dark/40 sm:size-[80px]'>
             <ProfileImage username={user?.username} />
             <div className='hidden absolute inset-0 w-full h-full group-hover:flex justify-center items-center bg-black/20 backdrop-blur-sm'>
@@ -61,7 +61,7 @@ export const AuthorProfileCard = ({
           </ProfileFrame>
 
           <div className='min-w-0 flex-1 space-y-1'>
-            <div className='flex min-w-0 flex-wrap items-center justify-center gap-x-2 gap-y-1 sm:justify-start'>
+            <div className='flex min-w-0 flex-wrap  gap-x-2 gap-y-1 '>
               <p className='max-w-full truncate px-[2px] text-sm opacity-80 sm:text-base'>
                 {user?.username ? `@${user.username}` : '@user'}
               </p>
@@ -75,7 +75,7 @@ export const AuthorProfileCard = ({
           </div>
         </div>
 
-        <div className='flex flex-wrap items-center justify-center gap-2 sm:justify-start'>
+        <div className='flex flex-wrap  gap-2 '>
           {!isAuthenticated && (
             <FollowButton username={user?.username} className='h-9 px-4' />
           )}
@@ -86,7 +86,7 @@ export const AuthorProfileCard = ({
         </div>
       </div>
 
-      <div className='flex flex-wrap items-center justify-center gap-x-4 gap-y-2 sm:justify-start'>
+      <div className='flex flex-wrap  gap-x-4 gap-y-2 '>
         <div className='flex items-center gap-1 text-sm sm:text-base'>
           <p className='font-medium'>
             {connectionsLoading || connectionsError
@@ -117,12 +117,12 @@ export const AuthorProfileCard = ({
       </div>
 
       {user?.bio && (
-        <p className='max-w-full break-words py-1 text-center text-sm leading-relaxed sm:text-left'>
+        <p className='max-w-full break-words py-1  text-sm leading-relaxed sm:text-left'>
           {user.bio}
         </p>
       )}
 
-      <div className='flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:justify-start'>
+      <div className='flex flex-wrap  gap-x-3 gap-y-2 sm:justify-start'>
         <div className='flex min-w-0 items-center gap-[6px]'>
           <Icon name='RiCalendar' type='Fill' className='shrink-0 opacity-90' />
 

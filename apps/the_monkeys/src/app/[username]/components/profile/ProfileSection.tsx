@@ -20,7 +20,7 @@ export const ProfileSection = ({
 
   return (
     <div className='  gap-4'>
-      <div className=' p-4 rounded-md'>
+      <div className=' p-4 '>
         <div className='mb-2 flex gap-2 items-center justify-end'>
           {paramsUser !== session?.username && isSuccess && (
             <FollowButton username={paramsUser} />
