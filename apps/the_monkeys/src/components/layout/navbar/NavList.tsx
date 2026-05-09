@@ -10,7 +10,6 @@ import { cn } from '@/lib/utils';
 
 interface NavLinkProps {
   item: NavItem;
-  /** Render as compact icon-only on small viewports (desktop sidebar behaviour) */
   compact?: boolean;
   locked?: boolean;
   onClick?: () => void;

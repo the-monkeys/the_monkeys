@@ -7,6 +7,9 @@ export const FEED_ROUTE = '/feed';
 export const ABOUT_ROUTE = '/about';
 export const ACTIVITY_ROUTE = '/activity';
 export const LIBRARY_ROUTE = '/library';
+export const DRAFT_ROUTE = '/library?source=drafts';
+export const SCHEDULE_ROUTE = '/library?source=scheudle';
+export const BOOKMARK_ROUTE = '/library?source=bookmarks';
 export const BLOG_ROUTE = '/blog';
 export const EXPLORE_TOPICS_ROUTE = '/topics/explore';
 export const TOPIC_ROUTE = '/topics';
@@ -27,11 +30,12 @@ export const DISCOVER_ITEMS: NavItem[] = [
   { href: FEED_ROUTE, label: 'For You', icon: 'RiBard', requiresAuth: true },
   { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
   {
-    href: ACTIVITY_ROUTE,
-    label: 'Activity',
-    icon: 'RiMenu4',
+    href: BOOKMARK_ROUTE,
+    label: 'Library',
+    icon: 'RiBookShelf',
     requiresAuth: true,
   },
+
   {
     href: SETTINGS_ROUTE,
     label: 'Settings',

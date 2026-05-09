@@ -21,7 +21,6 @@ const pathMatches = (pathname: string, hrefPath: string): boolean => {
  */
 export function useActiveRoute() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   return (href: string): boolean => {
     const [path, query] = href.split('?');

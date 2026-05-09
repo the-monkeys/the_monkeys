@@ -1,27 +1,12 @@
 'use client';
 
-import { Suspense } from 'react';
-
 import { FeaturedAuthorsSection } from '@/app/feed/sections/FeaturedAuthor/FeaturedAuthorsSection';
-import AdUnit from '@/components/AdSense/AdUnit';
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import Icon from '@/components/icon';
-import Container from '@/components/layout/Container';
-import {
-  FeedCategorySectionSkeleton,
-  FeedSkeleton,
-} from '@/components/skeletons/blogSkeleton';
-import {
-  orderedCategories,
-  orderedCompactCategories,
-} from '@/config/categoryConfig';
+import { FeedSkeleton } from '@/components/skeletons/blogSkeleton';
 import { recommendedUsers } from '@/constants/social';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
-
-import CategorySection from './feed/sections/CategorySection';
-import CategorySectionCompact from './feed/sections/CategorySectionCompact';
-import TrendingSection from './feed/sections/TrendingSection';
 
 const LandingPageClient = () => {
   const { blogs, isError, isLoading } = useGetMetaFeedBlogs({
@@ -81,8 +66,10 @@ const LandingPageClient = () => {
         Lifestyle, Philosophy, and More
       </h1>
 
+      {/* commenting ad unit for new UI */}
       {/* Ad Unit -> Home Page */}
-      <AdUnit slot='3779794725' />
+
+      {/* <AdUnit slot='3779794725' /> */}
 
       {/* Featured Authors Section */}
       <FeaturedAuthorsSection users={recommendedUsers} />

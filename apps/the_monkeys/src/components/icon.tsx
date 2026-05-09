@@ -87,7 +87,8 @@ export type IconName =
   | 'RiMenu3'
   | 'RiCloseLarge'
   | 'RiMenu'
-  | 'RiAdd';
+  | 'RiAdd'
+  | 'RiDraft';
 
 export type IconProps = {
   name: IconName;

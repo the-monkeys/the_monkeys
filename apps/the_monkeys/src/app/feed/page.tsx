@@ -12,14 +12,14 @@ import {
   orderedCategories,
   orderedCompactCategories,
 } from '@/config/categoryConfig';
-import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
+import useGetFollowingFeed from '@/hooks/blog/useGetFollowingFeed';
 
 import CategorySection from './sections/CategorySection';
 import CategorySectionCompact from './sections/CategorySectionCompact';
 import TrendingSection from './sections/TrendingSection';
 
 const BlogFeedPage = () => {
-  const { blogs, isError, isLoading } = useGetMetaFeedBlogs({ limit: 30 });
+  const { blogs, isError, isLoading } = useGetFollowingFeed({ limit: 30 });
 
   const filteredBlogs = useMemo(() => {
     return blogs?.blogs?.filter(
