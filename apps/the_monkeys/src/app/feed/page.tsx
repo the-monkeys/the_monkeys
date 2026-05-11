@@ -1,22 +1,11 @@
 'use client';
 
-import { Suspense, useMemo } from 'react';
+import { useMemo } from 'react';
 
+import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import Icon from '@/components/icon';
-import Container from '@/components/layout/Container';
-import {
-  FeedCategorySectionSkeleton,
-  FeedSkeleton,
-} from '@/components/skeletons/blogSkeleton';
-import {
-  orderedCategories,
-  orderedCompactCategories,
-} from '@/config/categoryConfig';
+import { FeedSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetFollowingFeed from '@/hooks/blog/useGetFollowingFeed';
-
-import CategorySection from './sections/CategorySection';
-import CategorySectionCompact from './sections/CategorySectionCompact';
-import TrendingSection from './sections/TrendingSection';
 
 const BlogFeedPage = () => {
   const { blogs, isError, isLoading } = useGetFollowingFeed({ limit: 30 });
@@ -51,6 +40,8 @@ const BlogFeedPage = () => {
     );
   }
 
+  console.log('blog feed', blogs);
+
   return (
     <div className='min-h-screen'>
       <h1 className='text-2xl font-bold hidden'>
@@ -58,27 +49,12 @@ const BlogFeedPage = () => {
         Lifestyle, Philosophy, and More
       </h1>
 
-      <Suspense fallback={<FeedSkeleton />}>
-        <TrendingSection blogs={filteredBlogs} />
-      </Suspense>
-
-      <div className='space-y-8'>
-        {orderedCategories.map(({ title, category }, index) => (
-          <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
-            <CategorySection title={title} category={category} />
-          </Suspense>
-        ))}
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6'>
+        {blogs &&
+          blogs?.blogs.map((blog) => {
+            return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+          })}
       </div>
-
-      <Container className='mt-8 grid grid-cols-2 gap-8'>
-        {orderedCompactCategories.map(({ title, category }, index) => (
-          <Suspense key={index} fallback={<FeedCategorySectionSkeleton />}>
-            <div className='col-span-2 lg:col-span-1'>
-              <CategorySectionCompact title={title} category={category} />
-            </div>
-          </Suspense>
-        ))}
-      </Container>
     </div>
   );
 };
