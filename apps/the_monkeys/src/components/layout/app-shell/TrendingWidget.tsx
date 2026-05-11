@@ -1,7 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
-
 import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
@@ -10,28 +8,26 @@ import { BLOG_ROUTE } from '@/constants/routeConstants';
 import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
 import { getRelativeTime } from '@/lib/utils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
 const MAX_TRENDING_ITEMS = 4;
 const SKELETON_ITEMS = 4;
 
-/**
- * TrendingWidget - Displays the top trending blog posts
- * Fetches trending blogs data via useGetTrendingBlogs hook
- */
+
 export function TrendingWidget() {
   const { blogs, isLoading, isError } = useGetTrendingBlogs();
 
   if (isLoading) {
     return (
-      <div className='p-6 bg-white dark:bg-background-dark border border-gray-100 dark:border-border-dark animate-pulse'>
-        <div className='h-6 w-32 bg-gray-100 dark:bg-gray-800 rounded mb-8'></div>
+      <div className='p-6 bg-white dark:bg-background-dark'>
+        <Skeleton className='h-6 w-32 mb-8' />
         <div className='space-y-8'>
           {Array.from({ length: SKELETON_ITEMS }).map((_, i) => (
             <div key={i} className='flex gap-4'>
-              <div className='h-8 w-12 bg-gray-50 dark:bg-gray-800 rounded'></div>
+              <Skeleton className='h-8 w-12' />
               <div className='flex-1 space-y-2'>
-                <div className='h-4 w-full bg-gray-100 dark:bg-gray-700 rounded'></div>
-                <div className='h-3 w-2/3 bg-gray-50 dark:bg-gray-800 rounded'></div>
+                <Skeleton className='h-4 w-full' />
+                <Skeleton className='h-3 w-2/3' />
               </div>
             </div>
           ))}
@@ -42,8 +38,8 @@ export function TrendingWidget() {
 
   if (isError || blogs.length === 0) {
     return (
-      <div className='bg-white dark:bg-background-dark border border-gray-100 dark:border-border-dark shadow-sm overflow-hidden'>
-        <div className='p-6 pb-5 flex items-center justify-between border-b border-gray-50 dark:border-border-dark bg-white dark:bg-background-dark'>
+      <div className='bg-white dark:bg-background-dark  shadow-sm overflow-hidden'>
+        <div className='p-6 pb-5 flex items-center justify-between  bg-white dark:bg-background-dark'>
           <h2 className='font-inter font-extrabold text-[12px] text-gray-900 dark:text-gray-100 uppercase tracking-[0.2em]'>
             Trending Now
           </h2>
@@ -56,21 +52,13 @@ export function TrendingWidget() {
               : 'No trending posts available'}
           </p>
         </div>
-        {/* <div className='p-4 border-t border-gray-50 dark:border-border-dark bg-gray-50/30 dark:bg-background-dark'>
-          <Link
-            href='/feed'
-            className='flex items-center justify-center w-full py-3 border border-gray-200 dark:border-border-dark bg-white dark:bg-background-dark rounded font-inter font-bold text-[11px] text-gray-900 dark:text-gray-100 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
-          >
-            View All Trending
-          </Link>
-        </div> */}
       </div>
     );
   }
 
   return (
-    <div className='bg-white dark:bg-background-dark border border-gray-100 dark:border-border-dark shadow-sm overflow-hidden'>
-      <div className='p-6 pb-5 flex items-center justify-between border-b border-gray-50 dark:border-border-dark bg-white dark:bg-background-dark sticky top-0 z-10'>
+    <div className='bg-white dark:bg-background-dark  shadow-sm overflow-hidden'>
+      <div className='p-6 pb-5 flex items-center justify-between  bg-white dark:bg-background-dark sticky top-0 z-10'>
         <h2 className='font-inter font-extrabold text-[12px] text-gray-900 dark:text-gray-100 uppercase tracking-[0.2em]'>
           Trending Now
         </h2>
@@ -116,15 +104,6 @@ export function TrendingWidget() {
           );
         })}
       </div>
-
-      {/* <div className='p-4 border-t border-gray-50 dark:border-border-dark bg-gray-50/30 dark:bg-background-dark'>
-        <Link
-          href='/feed'
-          className='flex items-center justify-center w-full py-3 border border-gray-200 dark:border-border-dark bg-white dark:bg-background-dark rounded font-inter font-bold text-[11px] text-gray-900 dark:text-gray-100 uppercase tracking-widest hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors'
-        >
-          View All Trending
-        </Link>
-      </div> */}
     </div>
   );
 }
