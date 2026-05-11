@@ -13,7 +13,6 @@ import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 const MAX_TRENDING_ITEMS = 4;
 const SKELETON_ITEMS = 4;
 
-
 export function TrendingWidget() {
   const { blogs, isLoading, isError } = useGetTrendingBlogs();
 
