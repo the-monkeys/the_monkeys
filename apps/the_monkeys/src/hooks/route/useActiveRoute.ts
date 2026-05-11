@@ -1,17 +1,8 @@
 'use client';
 
-import { usePathname, useSearchParams } from 'next/navigation';
-
-import {
-  ACTIVITY_ROUTE,
-  FEED_ROUTE,
-  HOME_ROUTE,
-} from '@/constants/routeConstants';
+import { usePathname } from 'next/navigation';
 
 const pathMatches = (pathname: string, hrefPath: string): boolean => {
-  if (hrefPath === HOME_ROUTE)
-    return pathname === HOME_ROUTE || pathname === FEED_ROUTE;
-  if (hrefPath === ACTIVITY_ROUTE) return pathname.startsWith(ACTIVITY_ROUTE);
   return pathname === hrefPath || pathname.startsWith(`${hrefPath}/`);
 };
 

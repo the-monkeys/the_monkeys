@@ -75,7 +75,7 @@ const LandingPageClient = () => {
       <FeaturedAuthorsSection users={recommendedUsers} />
 
       <div className='flex flex-col'>
-        {blogs && blogs?.blogs.length > 0 && (
+        {blogs && blogs?.blogs?.length > 0 && (
           <FeedBlogCard
             blog={blogs.blogs[0]}
             variant='horizontal'
