@@ -10,17 +10,17 @@ import useGetFollowingFeed from '@/hooks/blog/useGetFollowingFeed';
 const BlogFeedPage = () => {
   const { blogs, isError, isLoading } = useGetFollowingFeed({ limit: 30 });
 
-  const filteredBlogs = useMemo(() => {
-    return blogs?.blogs?.filter(
-      (blog) => blog?.first_image && blog?.tags?.length
-    );
-  }, [blogs]);
+  // const filteredBlogs = useMemo(() => {
+  //   return blogs?.blogs?.filter(
+  //     (blog) => blog?.first_image && blog?.tags?.length
+  //   );
+  // }, [blogs]);
 
-  if (isLoading) {
-    return <FeedSkeleton />;
-  }
+  // if (isLoading) {
+  //   return <FeedSkeleton />;
+  // }
 
-  if (isError || !filteredBlogs || filteredBlogs.length === 0) {
+  if (isError) {
     return (
       <div className='px-4 py-12 flex flex-col items-center justify-center'>
         <div className='p-4 flex items-center'>
@@ -40,8 +40,6 @@ const BlogFeedPage = () => {
     );
   }
 
-  console.log('blog feed', blogs);
-
   return (
     <div className='min-h-screen'>
       <h1 className='text-2xl font-bold hidden'>
@@ -52,7 +50,9 @@ const BlogFeedPage = () => {
       <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6'>
         {blogs &&
           blogs?.blogs.map((blog) => {
-            return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+            return (
+              <FeedBlogCard variant={'list'} blog={blog} key={blog?.blog_id} />
+            );
           })}
       </div>
     </div>
