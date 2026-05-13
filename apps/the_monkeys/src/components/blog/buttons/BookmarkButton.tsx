@@ -5,11 +5,8 @@ import { useState } from 'react';
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import Icon from '@/components/icon';
 import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
-import {
-  BOOKMARKS_COUNT_QUERY_KEY,
-  BOOKMARK_STATUS_QUERY_KEY,
-  useIsPostBookmarked,
-} from '@/hooks/user/useBookmarkStatus';
+import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { isAuthError } from '@/utils/errorUtils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -19,13 +16,18 @@ export const BookmarkButton = ({
   blogId,
   size = 18,
   isDisable = false,
+  initialIsBookmarked,
 }: {
   blogId?: string;
   size?: number;
   isDisable?: boolean;
+  initialIsBookmarked?: boolean;
 }) => {
   const queryClient = useQueryClient();
-  const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(blogId);
+  const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(
+    blogId,
+    initialIsBookmarked
+  );
 
   const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
@@ -75,10 +77,10 @@ export const BookmarkButton = ({
         });
 
         queryClient.invalidateQueries({
-          queryKey: [BOOKMARK_STATUS_QUERY_KEY, blogId],
+          queryKey: queryKeys.blog.bookmarks.status(blogId),
         });
         queryClient.invalidateQueries({
-          queryKey: [BOOKMARKS_COUNT_QUERY_KEY, blogId],
+          queryKey: queryKeys.blog.bookmarks.count(blogId),
         });
       }
     } catch (err: unknown) {
@@ -121,10 +123,10 @@ export const BookmarkButton = ({
         });
 
         queryClient.invalidateQueries({
-          queryKey: [BOOKMARK_STATUS_QUERY_KEY, blogId],
+          queryKey: queryKeys.blog.bookmarks.status(blogId),
         });
         queryClient.invalidateQueries({
-          queryKey: [BOOKMARKS_COUNT_QUERY_KEY, blogId],
+          queryKey: queryKeys.blog.bookmarks.count(blogId),
         });
         queryClient.invalidateQueries({
           queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],

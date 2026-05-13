@@ -11,7 +11,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
 const MAX_TRENDING_ITEMS = 4;
-const SKELETON_ITEMS = 4;
+const SKELETON_ITEMS = 5;
 
 export function TrendingWidget() {
   const { blogs, isLoading, isError } = useGetTrendingBlogs();
@@ -74,10 +74,10 @@ export function TrendingWidget() {
           return (
             <div
               key={blog.blog_id}
-              className='group relative p-6 py-7 hover:bg-gray-50/40 dark:hover:bg-gray-800 transition-colors'
+              className='group relative p-6 py-7  transition-colors'
             >
               <div className='flex gap-6 items-start'>
-                <span className='font-inter font-black text-5xl text-text-light/20 dark:text-text-dark/20 group-hover:text-gray-200 dark:group-hover:text-gray-700 transition-colors leading-none shrink-0 '>
+                <span className='font-inter font-black text-5xl text-text-light/20 dark:text-text-dark/20 group-hover:text-gray-200 dark:group-hover:text-gray-500 transition-colors leading-none shrink-0 '>
                   {String(index + 1).padStart(2, '0')}
                 </span>
 

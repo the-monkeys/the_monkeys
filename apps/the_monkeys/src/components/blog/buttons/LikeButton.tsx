@@ -4,12 +4,10 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import Icon from '@/components/icon';
-import {
-  LIKES_COUNT_QUERY_KEY,
-  LIKE_STATUS_QUERY_KEY,
-  useIsPostLiked,
-} from '@/hooks/user/useLikeStatus';
+import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
+import { IsLikedResponse, likesCountResponse } from '@/services/blog/blogTypes';
 import { isAuthError } from '@/utils/errorUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
@@ -19,13 +17,18 @@ export const LikeButton = ({
   blogId,
   size = 18,
   isDisable = false,
+  initialIsLiked,
 }: {
   blogId?: string;
   size?: number;
   isDisable?: boolean;
+  initialIsLiked?: boolean;
 }) => {
   const queryClient = useQueryClient();
-  const { likeStatus, isLoading, isError } = useIsPostLiked(blogId);
+  const { likeStatus, isLoading, isError } = useIsPostLiked(
+    blogId,
+    initialIsLiked
+  );
 
   const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
@@ -34,6 +37,34 @@ export const LikeButton = ({
   const searchParams = useSearchParams();
   const search = searchParams.toString();
   const currentPath = `${pathname}${search ? `?${search}` : ''}`;
+
+  const setLikeState = (isLiked: boolean) => {
+    queryClient.setQueryData<IsLikedResponse>(
+      queryKeys.blog.likes.status(blogId),
+      {
+        status: 'success',
+        isLiked,
+      }
+    );
+  };
+
+  const updateLikesCount = (delta: 1 | -1) => {
+    queryClient.setQueryData<likesCountResponse>(
+      queryKeys.blog.likes.count(blogId),
+      (previous) => ({
+        count: Math.max(0, (previous?.count ?? 0) + delta),
+      })
+    );
+  };
+
+  const refetchLikeQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.blog.likes.status(blogId),
+    });
+    queryClient.invalidateQueries({
+      queryKey: queryKeys.blog.likes.count(blogId),
+    });
+  };
 
   if (isLoading) {
     return (
@@ -76,12 +107,9 @@ export const LikeButton = ({
       const response = await axiosInstance.post(`/user/like/${blogId}`);
 
       if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [LIKE_STATUS_QUERY_KEY, blogId],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [LIKES_COUNT_QUERY_KEY, blogId],
-        });
+        setLikeState(true);
+        updateLikesCount(1);
+        refetchLikeQueries();
       }
     } catch (err: unknown) {
       if (isAuthError(err)) {
@@ -114,12 +142,9 @@ export const LikeButton = ({
       const response = await axiosInstance.post(`/user/unlike/${blogId}`);
 
       if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [LIKE_STATUS_QUERY_KEY, blogId],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [LIKES_COUNT_QUERY_KEY, blogId],
-        });
+        setLikeState(false);
+        updateLikesCount(-1);
+        refetchLikeQueries();
       }
     } catch (err: unknown) {
       if (isAuthError(err)) {
@@ -152,7 +177,7 @@ export const LikeButton = ({
         onOpenChange={setAuthPromptOpen}
       />
 
-      {likeStatus?.isLiked ? (
+      {likeStatus ? (
         <button
           className={`like-active group p-1 flex items-center justify-center hover:opacity-80 ${
             loading || isDisable

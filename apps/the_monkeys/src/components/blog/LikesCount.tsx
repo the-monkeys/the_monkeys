@@ -4,12 +4,16 @@ import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
 type Props = {
   blogId?: string;
+  initialCount?: number;
 };
 
-export const LikesCount = ({ blogId }: Props) => {
-  const { likes, likeCountLoading, likeCountError } = useGetLikesCount(blogId);
+export const LikesCount = ({ blogId, initialCount }: Props) => {
+  const { likes, likeCountLoading, likeCountError } = useGetLikesCount(
+    blogId,
+    initialCount
+  );
 
-  const count = likes?.count ?? 0;
+  const count = likes ?? initialCount ?? 0;
 
   if (likeCountLoading) {
     return (

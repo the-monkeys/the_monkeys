@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import {
   IsBookmarkedResponse,
   bookmarksCountResponse,
@@ -5,17 +6,23 @@ import {
 import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
 
-export const BOOKMARK_STATUS_QUERY_KEY = 'is-bookmarked';
-export const BOOKMARKS_COUNT_QUERY_KEY = 'bookmarks-count';
+const STALE_TIME = 60 * 1000;
 
-export const useIsPostBookmarked = (blogId: string | undefined) => {
+export const useIsPostBookmarked = (
+  blogId: string | undefined,
+  initialIsBookmarked?: boolean
+) => {
   const { data, isLoading, error, isError } = useQuery<
     IsBookmarkedResponse,
     Error
   >({
-    queryKey: [BOOKMARK_STATUS_QUERY_KEY, blogId],
+    queryKey: queryKeys.blog.bookmarks.status(blogId),
     queryFn: () => authFetcher(`/user/is-bookmarked/${blogId}`),
-    staleTime: 60 * 1000,
+    initialData:
+      initialIsBookmarked === undefined
+        ? undefined
+        : { status: 'success', bookMarked: initialIsBookmarked },
+    staleTime: STALE_TIME,
     enabled: !!blogId,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
@@ -24,7 +31,8 @@ export const useIsPostBookmarked = (blogId: string | undefined) => {
   return {
     bookmarkStatus: data,
     isLoading,
-    isError: isError || !!error,
+    isError,
+    error,
   };
 };
 
@@ -33,17 +41,18 @@ export const useGetBookmarksCount = (blogId: string | undefined) => {
     bookmarksCountResponse,
     Error
   >({
-    queryKey: [BOOKMARKS_COUNT_QUERY_KEY, blogId],
+    queryKey: queryKeys.blog.bookmarks.count(blogId),
     queryFn: () => authFetcher(`/user/count-bookmarks/${blogId}`),
-    staleTime: 60 * 1000,
+    staleTime: STALE_TIME,
     enabled: !!blogId,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
   return {
-    bookmarks: data,
+    bookmarks: data?.count ?? 0,
     bookmarkCountLoading: isLoading,
-    bookmarkCountError: isError || !!error,
+    bookmarkCountError: isError,
+    error,
   };
 };
