@@ -154,8 +154,6 @@ export const TopicsContainerSkeleton = () => {
 export const FeedSkeleton = () => {
   return (
     <div className='min-h-screen'>
-      {/* <Skeleton className='mb-6 h-24 w-full' /> */}
-
       <section className='pb-4'>
         <Skeleton className='mb-3 h-4 w-32' />
 
