@@ -103,7 +103,10 @@ export interface FollowingFeed {
   IsLikedByMe: boolean;
   LikeCount: number;
   author_list: string[];
-  blog: Block[];
+  blog: {
+    blocks: Block[];
+    time: number;
+  };
   blog_id: string;
   client?: string;
   content_type: string;

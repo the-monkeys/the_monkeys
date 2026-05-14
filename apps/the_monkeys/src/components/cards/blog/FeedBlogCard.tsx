@@ -282,7 +282,7 @@ export const FeedBlogCard = ({
 };
 
 const getBlogPostApiCardContent = (blog: FollowingFeed) => {
-  const blocks: Block[] = blog.blog || [];
+  const blocks: Block[] = blog.blog?.blocks || [];
   const titleBlock = blocks.find((block: Block) => block.type === 'header');
   const descriptionBlock = blocks.find(
     (block: Block) => block.type === 'paragraph'
@@ -294,7 +294,8 @@ const getBlogPostApiCardContent = (blog: FollowingFeed) => {
       titleBlock?.data?.text || descriptionBlock?.data?.text || ''
     ),
     descriptionContent: purifyHTMLString(descriptionBlock?.data?.text || ''),
-    imageContent: imageBlock?.data?.content?.[0] || '',
+    imageContent:
+      imageBlock?.data?.file?.url || imageBlock?.data?.content?.[0] || '',
   };
 };
 
