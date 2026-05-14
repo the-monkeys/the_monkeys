@@ -9,6 +9,7 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { BOOKMARKS_PER_PAGE } from '@/constants/posts';
 import useGetBookmarkedBlogs from '@/hooks/blog/useGetBookmarkedBlogs';
 import { usePagination } from '@/hooks/user/usePagination';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 
 const BookmarksInner = () => {
   const { page, next, prev } = usePagination();
@@ -66,9 +67,9 @@ const BookmarksInner = () => {
             blogs?.blogs.map((blog) => {
               return (
                 <FeedBlogCard
-                  blog={blog}
+                  blog={fromMetaBlog(blog)}
                   key={blog?.blog_id}
-                  showBookmarkOption={true}
+                  showBookmark={true}
                   variant='list'
                 />
               );

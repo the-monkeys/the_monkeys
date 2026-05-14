@@ -2,11 +2,12 @@
 
 import Link from 'next/link';
 
-import { FeedBlogPostListCard } from '@/components/cards/blog/FeedBlogCard';
+import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import Icon from '@/components/icon';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { TOPIC_ROUTE } from '@/constants/routeConstants';
 import useGetFollowingFeed from '@/hooks/blog/useGetFollowingFeed';
+import { fromFollowingFeed } from '@/utils/blogCardAdapters';
 
 const EmptyFeed = () => (
   <section className='flex w-full justify-center px-4'>
@@ -57,7 +58,12 @@ const BlogFeedPage = () => {
 
       <div className='grid grid-cols-1 gap-y-4 gap-x-6'>
         {blogs.map((blog) => (
-          <FeedBlogPostListCard blog={blog} key={blog.blog_id} />
+          <FeedBlogCard
+            blog={fromFollowingFeed(blog)}
+            variant='list'
+            showBookmark
+            key={blog.blog_id}
+          />
         ))}
       </div>
     </div>

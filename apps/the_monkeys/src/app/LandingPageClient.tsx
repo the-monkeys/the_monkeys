@@ -6,6 +6,7 @@ import Icon from '@/components/icon';
 import { FeedSkeleton } from '@/components/skeletons/blogSkeleton';
 import { recommendedUsers } from '@/constants/social';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 import { useFeatureIsOn } from '@growthbook/growthbook-react';
 
 const LandingPageClient = () => {
@@ -77,7 +78,7 @@ const LandingPageClient = () => {
       <div className='flex flex-col'>
         {blogs && blogs?.blogs?.length > 0 && (
           <FeedBlogCard
-            blog={blogs.blogs[0]}
+            blog={fromMetaBlog(blogs.blogs[0])}
             variant='horizontal'
             key={blogs.blogs[0]?.blog_id}
           />
@@ -86,7 +87,9 @@ const LandingPageClient = () => {
         <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6'>
           {blogs &&
             blogs?.blogs.slice(1).map((blog) => {
-              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+              return (
+                <FeedBlogCard blog={fromMetaBlog(blog)} key={blog?.blog_id} />
+              );
             })}
         </div>
       </div>

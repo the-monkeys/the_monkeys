@@ -6,6 +6,7 @@ import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
 import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 
 export const BlogsByTopic = ({ topic }: { topic: string }) => {
   const [blogs, setBlogs] = useState<GetMetaFeedBlogs>({ blogs: [] });
@@ -52,7 +53,13 @@ export const BlogsByTopic = ({ topic }: { topic: string }) => {
   return (
     <div className='flex flex-col gap-2'>
       {blogs.blogs.map((blog) => {
-        return <FeedBlogCard variant='list' blog={blog} key={blog?.blog_id} />;
+        return (
+          <FeedBlogCard
+            variant='list'
+            blog={fromMetaBlog(blog)}
+            key={blog?.blog_id}
+          />
+        );
       })}
     </div>
   );

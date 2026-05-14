@@ -121,3 +121,17 @@ export interface FollowingFeed {
   tags: string[];
   user_agent?: string;
 }
+
+export interface BlogCardData {
+  blogId: string;
+  authorId: string;
+  date: string;
+  slug: string;
+  tags: string[];
+  title: string;
+  description: string;
+  image: string;
+  initialIsLiked?: boolean;
+  initialIsBookmarked?: boolean;
+  initialLikeCount?: number;
+}

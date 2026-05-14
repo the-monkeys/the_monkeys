@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
@@ -16,264 +15,168 @@ import {
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
-import { Block, FollowingFeed, MetaBlog } from '@/services/blog/blogTypes';
+import { BlogCardData } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
-import { purifyHTMLString } from '@/utils/purifyHTML';
 
-export const FeedBlogCard = ({
-  blog,
-  showBookmarkOption = false,
-  variant = 'vertical',
+interface CardProps {
+  blog: BlogCardData;
+  showBookmark?: boolean;
+}
+
+const BlogCardImage = ({
+  title,
+  image,
+  className,
 }: {
-  blog: MetaBlog;
-  showBookmarkOption?: boolean;
-  variant?: 'horizontal' | 'vertical' | 'list';
+  title: string;
+  image: string;
+  className?: string;
+}) =>
+  isNonValidBannerImage(image) ? (
+    <BlogPlaceholderImage title={title} className={className} />
+  ) : (
+    <BlogImage title={title} image={image} className={className} />
+  );
+
+const ArticleTag = ({
+  tag,
+  className,
+  showFallback = false,
+  openInNewTab = false,
+}: {
+  tag?: string;
+  className?: string;
+  showFallback?: boolean;
+  openInNewTab?: boolean;
 }) => {
-  const authorId = blog?.owner_account_id;
-  const blogId = blog?.blog_id;
-  const date = blog?.published_time;
-
-  const titleContent = purifyHTMLString(blog?.title);
-  const descriptionContent = purifyHTMLString(blog?.first_paragraph);
-  const imageContent = blog?.first_image;
-
-  const blogSlug = generateSlug(titleContent);
-  const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
-
-  if (variant === 'horizontal') {
-    return (
-      <div className='pb-10 w-full'>
-        <article className='flex flex-col md:flex-row transition-all duration-500 group overflow-hidden'>
-          <div className='md:w-[40%] aspect-[3/2] md:aspect-auto relative bg-gray-50 dark:bg-gray-800 overflow-hidden'>
-            <Link href={blogURL} className='block h-full w-full'>
-              {isNonValidBannerImage(imageContent) ? (
-                <BlogPlaceholderImage
-                  title={titleContent}
-                  className='group-hover:scale-105 transition-transform duration-1000 ease-out h-full w-full object-cover'
-                />
-              ) : (
-                <BlogImage
-                  title={titleContent}
-                  image={imageContent}
-                  className='group-hover:scale-105 transition-transform duration-1000 ease-out h-full w-full object-cover'
-                />
-              )}
-            </Link>
-          </div>
-
-          <div className='md:w-[60%] py-4 md:py-8 md:px-10 flex flex-col justify-between gap-8'>
-            <div className='space-y-4'>
-              {blog?.tags.length > 0 && (
-                <Link
-                  href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-                  className='inline-block font-inter font-bold text-[12px] text-brand-orange uppercase tracking-[0.2em] hover:opacity-80 transition-opacity'
-                >
-                  {blog?.tags[0]}
-                </Link>
-              )}
-
-              <Link href={blogURL} className='block group/title'>
-                <BlogTitle
-                  className='font-newsreader font-bold text-[32px] md:text-[40px] leading-[1.1] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-3'
-                  title={titleContent || 'Untitled Post'}
-                />
-              </Link>
-
-              {descriptionContent !== '' && (
-                <BlogDescription
-                  description={descriptionContent}
-                  className='text-[16px] md:text-[18px] font-inter text-gray-500 dark:text-gray-400 line-clamp-3 leading-relaxed mt-2'
-                />
-              )}
-            </div>
-
-            <div className='md:pt-6  flex flex-wrap justify-between items-center gap-4'>
-              <div className='flex items-center gap-4'>
-                <UserInfoCardShowcase
-                  authorID={authorId}
-                  date={date}
-                  hideDate
-                />
-                <span className='text-[13px] font-inter text-gray-400 dark:text-gray-500'>
-                  {new Date(date).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric',
-                  })}
-                </span>
-              </div>
-
-              <div className='flex items-center gap-2 text-gray-400 dark:text-gray-500'>
-                <div className='flex items-center  hover:text-brand-orange transition-colors cursor-pointer group/action'>
-                  <LikeButton blogId={blogId} size={20} />
-                  <LikesCount blogId={blog.blog_id} />
-                </div>
-                <div className='hover:text-brand-orange transition-colors cursor-pointer'>
-                  <BlogShareDialog
-                    blogURL={`${LIVE_URL}${blogURL}`}
-                    size={20}
-                  />
-                </div>
-                {showBookmarkOption && (
-                  <div className='hover:text-brand-orange transition-colors cursor-pointer'>
-                    <BookmarkButton blogId={blog?.blog_id} size={20} />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </article>
-      </div>
-    );
+  if (!tag) {
+    return showFallback ? (
+      <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
+    ) : null;
   }
+  return (
+    <Link
+      href={`${TOPIC_ROUTE}/${tag}`}
+      target={openInNewTab ? '_blank' : undefined}
+      className={className}
+    >
+      {tag}
+    </Link>
+  );
+};
 
-  if (variant === 'list') {
-    return (
-      <div className='pb-4 '>
-        <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
-          <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[210px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
-            <Link href={blogURL} className='group'>
-              {isNonValidBannerImage(imageContent) ? (
-                <BlogPlaceholderImage
-                  title={titleContent}
-                  className='group-hover:scale-105 transition-transform duration-200'
-                />
-              ) : (
-                <BlogImage
-                  title={titleContent}
-                  image={imageContent}
-                  className='group-hover:scale-105 transition-transform duration-200'
-                />
-              )}
-            </Link>
-          </div>
-
-          <div className='w-full flex flex-col justify-between gap-[10px]'>
-            <div>
-              <UserInfoCardShowcase authorID={authorId} date={date} />
-
-              <Link href={blogURL} className='w-full'>
-                <BlogTitle
-                  className='pt-2 font-semibold text-[1.12rem] leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
-                  title={titleContent || 'Untitled Post'}
-                />
-              </Link>
-
-              {descriptionContent !== '' && (
-                <BlogDescription
-                  description={descriptionContent}
-                  className='pt-[6px] text-[0.9rem] line-clamp-2 sm:line-clamp-1 opacity-90'
-                />
-              )}
-            </div>
-
-            <div className='pt-3 w-full flex justify-between items-center gap-2'>
-              <div className='flex items-center gap-[6px]'>
-                {blog?.tags.length ? (
-                  <div className='w-fit flex items-center gap-1'>
-                    <Link
-                      href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-                      target='_blank'
-                      className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
-                    >
-                      {blog?.tags[0]}
-                    </Link>
-                  </div>
-                ) : (
-                  <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
-                )}
-
-                <p className='font-medium text-sm opacity-80'>{' · '}</p>
-
-                <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
-              </div>
-
-              {showBookmarkOption && (
-                <BookmarkButton blogId={blog?.blog_id} size={16} />
-              )}
-            </div>
-          </div>
-        </article>
+const ArticleActions = ({
+  blogId,
+  blogURL,
+  size = 18,
+  showBookmark = false,
+  initialIsLiked,
+  initialIsBookmarked,
+  initialLikeCount,
+}: {
+  blogId: string;
+  blogURL: string;
+  size?: number;
+  showBookmark?: boolean;
+  initialIsLiked?: boolean;
+  initialIsBookmarked?: boolean;
+  initialLikeCount?: number;
+}) => (
+  <div className='flex items-center gap-2 text-gray-400 dark:text-gray-500'>
+    <div className='flex items-center hover:text-brand-orange transition-colors cursor-pointer group/action'>
+      <LikeButton blogId={blogId} size={size} initialIsLiked={initialIsLiked} />
+      <LikesCount blogId={blogId} initialCount={initialLikeCount} />
+    </div>
+    <div className='hover:text-brand-orange transition-colors cursor-pointer'>
+      <BlogShareDialog blogURL={blogURL} size={size} />
+    </div>
+    {showBookmark && (
+      <div className='hover:text-brand-orange transition-colors cursor-pointer'>
+        <BookmarkButton
+          blogId={blogId}
+          size={size}
+          initialIsBookmarked={initialIsBookmarked}
+        />
       </div>
-    );
-  }
+    )}
+  </div>
+);
+
+const FormattedDate = ({ date }: { date: string }) => (
+  <span className='text-[13px] font-inter text-gray-400 dark:text-gray-500'>
+    {new Date(date).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })}
+  </span>
+);
+
+// ─── Card variants ────────────────────────────────────────────────────────────
+
+const HorizontalCard = ({ blog, showBookmark = false }: CardProps) => {
+  const {
+    blogId,
+    authorId,
+    date,
+    slug,
+    tags,
+    title,
+    description,
+    image,
+    initialIsLiked,
+    initialIsBookmarked,
+    initialLikeCount,
+  } = blog;
+  const blogURL = `${BLOG_ROUTE}/${slug}-${blogId}`;
 
   return (
-    <div className='pb-8'>
-      <article className='flex flex-col    transition-all duration-300 group'>
-        <div className='aspect-[16/9] w-full bg-gray-50 dark:bg-gray-800 overflow-hidden relative'>
-          <Link href={blogURL}>
-            {isNonValidBannerImage(imageContent) ? (
-              <BlogPlaceholderImage
-                title={titleContent}
-                className='group-hover:scale-105 transition-transform duration-700 ease-out'
-              />
-            ) : (
-              <BlogImage
-                title={titleContent}
-                image={imageContent}
-                className='group-hover:scale-105 transition-transform duration-700 ease-out'
-              />
-            )}
+    <div className='pb-10 w-full'>
+      <article className='flex flex-col md:flex-row transition-all duration-500 group overflow-hidden'>
+        <div className='md:w-[40%] aspect-[3/2] md:aspect-auto relative bg-gray-50 dark:bg-gray-800 overflow-hidden'>
+          <Link href={blogURL} className='block h-full w-full'>
+            <BlogCardImage
+              title={title}
+              image={image}
+              className='group-hover:scale-105 transition-transform duration-1000 ease-out h-full w-full object-cover'
+            />
           </Link>
         </div>
 
-        <div className='md:mt-6 mt-4 flex flex-col gap-3'>
-          <div className='flex items-center gap-2'>
-            {blog?.tags.length ? (
-              <Link
-                href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
-                className='font-inter font-medium text-xs text-gray-500 uppercase tracking-widest hover:text-brand-orange transition-colors'
-              >
-                {blog?.tags[0]}
-              </Link>
-            ) : (
-              <span className='text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest'>
-                Uncategorized
-              </span>
+        <div className='md:w-[60%] py-4 md:py-8 md:px-10 flex flex-col justify-between gap-8'>
+          <div className='space-y-4'>
+            <ArticleTag
+              tag={tags[0]}
+              className='inline-block font-inter font-bold text-[12px] text-brand-orange uppercase tracking-[0.2em] hover:opacity-80 transition-opacity'
+            />
+            <Link href={blogURL} className='block group/title'>
+              <BlogTitle
+                className='font-newsreader font-bold text-[32px] md:text-[40px] leading-[1.1] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-3'
+                title={title || 'Untitled Post'}
+              />
+            </Link>
+            {description && (
+              <BlogDescription
+                description={description}
+                className='text-[16px] md:text-[18px] font-inter text-gray-500 dark:text-gray-400 line-clamp-3 leading-relaxed mt-2'
+              />
             )}
           </div>
 
-          <Link href={blogURL} className='group/title'>
-            <BlogTitle
-              className='font-dm_sans font-bold text-[24px] leading-[1.2] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-2'
-              title={titleContent || 'Untitled Post'}
-            />
-          </Link>
-
-          {descriptionContent !== '' && (
-            <BlogDescription
-              description={descriptionContent}
-              className='text-[15px] font-inter text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed'
-            />
-          )}
-        </div>
-
-        <div className='md:mt-8 mt-4 md:pt-4  flex justify-between items-center'>
-          <div className='flex items-center gap-4'>
-            <UserInfoCardShowcase authorID={authorId} date={date} hideDate />
-            <span className='text-[13px] font-inter text-gray-400 dark:text-gray-500'>
-              {new Date(date).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              })}
-            </span>
-          </div>
-
-          <div className='flex items-center gap-2 text-gray-400 dark:text-gray-500'>
-            <div className='flex items-center  hover:text-brand-orange transition-colors cursor-pointer group/action'>
-              <LikeButton blogId={blogId} size={18} />
-              <LikesCount blogId={blog.blog_id} />
+          <div className='md:pt-6 flex flex-wrap justify-between items-center gap-4'>
+            <div className='flex items-center gap-4'>
+              <UserInfoCardShowcase authorID={authorId} date={date} hideDate />
+              <FormattedDate date={date} />
             </div>
-            <div className='hover:text-brand-orange transition-colors cursor-pointer'>
-              <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={18} />
-            </div>
-            {showBookmarkOption && (
-              <div className='hover:text-brand-orange transition-colors cursor-pointer'>
-                <BookmarkButton blogId={blog?.blog_id} size={18} />
-              </div>
-            )}
+            <ArticleActions
+              blogId={blogId}
+              blogURL={`${LIVE_URL}${blogURL}`}
+              size={20}
+              showBookmark={showBookmark}
+              initialIsLiked={initialIsLiked}
+              initialIsBookmarked={initialIsBookmarked}
+              initialLikeCount={initialLikeCount}
+            />
           </div>
         </div>
       </article>
@@ -281,109 +184,163 @@ export const FeedBlogCard = ({
   );
 };
 
-const getBlogPostApiCardContent = (blog: FollowingFeed) => {
-  const blocks: Block[] = blog.blog?.blocks || [];
-  const titleBlock = blocks.find((block: Block) => block.type === 'header');
-  const descriptionBlock = blocks.find(
-    (block: Block) => block.type === 'paragraph'
-  );
-  const imageBlock = blocks.find((block: Block) => block.type === 'image');
-
-  return {
-    titleContent: purifyHTMLString(
-      titleBlock?.data?.text || descriptionBlock?.data?.text || ''
-    ),
-    descriptionContent: purifyHTMLString(descriptionBlock?.data?.text || ''),
-    imageContent:
-      imageBlock?.data?.file?.url || imageBlock?.data?.content?.[0] || '',
-  };
-};
-
-export const FeedBlogPostListCard = ({ blog }: { blog: FollowingFeed }) => {
-  const authorId = blog.owner_account_id;
-  const blogId = blog.blog_id;
-  const date = blog.published_time;
-  const { titleContent, descriptionContent, imageContent } =
-    getBlogPostApiCardContent(blog);
-  const blogSlug = blog.slug || generateSlug(titleContent);
-  const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
-  const primaryTag = blog.tags?.[0];
+const ListCard = ({ blog, showBookmark = false }: CardProps) => {
+  const {
+    blogId,
+    authorId,
+    date,
+    slug,
+    tags,
+    title,
+    description,
+    image,
+    initialIsLiked,
+    initialIsBookmarked,
+    initialLikeCount,
+  } = blog;
+  const blogURL = `${BLOG_ROUTE}/${slug}-${blogId}`;
 
   return (
-    <div className='pb-4 '>
+    <div className='pb-4'>
       <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
         <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[210px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
           <Link href={blogURL} className='group block h-full w-full'>
-            {isNonValidBannerImage(imageContent) ? (
-              <BlogPlaceholderImage
-                title={titleContent || 'Untitled Post'}
-                className='group-hover:scale-105 transition-transform duration-200'
-              />
-            ) : (
-              <BlogImage
-                title={titleContent || 'Untitled Post'}
-                image={imageContent}
-                className='group-hover:scale-105 transition-transform duration-200'
-              />
-            )}
+            <BlogCardImage
+              title={title || 'Untitled Post'}
+              image={image}
+              className='group-hover:scale-105 transition-transform duration-200'
+            />
           </Link>
         </div>
 
         <div className='w-full flex flex-col justify-between gap-[10px]'>
           <div>
             <UserInfoCardShowcase authorID={authorId} date={date} />
-
             <Link href={blogURL} className='w-full'>
               <BlogTitle
                 className='pt-2 font-semibold text-[1.12rem] leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
-                title={titleContent || 'Untitled Post'}
+                title={title || 'Untitled Post'}
               />
             </Link>
-
-            {descriptionContent !== '' && (
+            {description && (
               <BlogDescription
-                description={descriptionContent}
+                description={description}
                 className='pt-[6px] text-[0.9rem] line-clamp-2 sm:line-clamp-1 opacity-90'
               />
             )}
           </div>
 
-          <div className=' w-full flex justify-between items-center gap-2'>
+          <div className='w-full flex justify-between items-center gap-2'>
             <div className='min-w-0 flex items-center gap-[6px]'>
-              {primaryTag ? (
-                <Link
-                  href={`${TOPIC_ROUTE}/${primaryTag}`}
-                  target='_blank'
-                  className='shrink min-w-0 font-medium text-sm text-brand-orange capitalize hover:underline truncate'
-                >
-                  {primaryTag}
-                </Link>
-              ) : (
-                <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
-              )}
-            </div>
-
-            <div className='shrink-0 flex items-center gap-2 text-gray-500 dark:text-gray-400'>
-              <div className='flex items-center hover:text-brand-orange transition-colors'>
-                <LikeButton
-                  blogId={blogId}
-                  size={16}
-                  initialIsLiked={blog.IsLikedByMe}
-                />
-                <LikesCount blogId={blogId} initialCount={blog.LikeCount} />
-              </div>
-
-              <BlogShareDialog blogURL={`${LIVE_URL}${blogURL}`} size={16} />
-
-              <BookmarkButton
-                blogId={blogId}
-                size={16}
-                initialIsBookmarked={blog.IsBookmarkedByMe}
+              <ArticleTag
+                tag={tags?.[0]}
+                className='shrink min-w-0 font-medium text-sm text-brand-orange capitalize hover:underline truncate'
+                showFallback
+                openInNewTab
               />
             </div>
+            <ArticleActions
+              blogId={blogId}
+              blogURL={`${LIVE_URL}${blogURL}`}
+              size={16}
+              showBookmark={showBookmark}
+              initialIsLiked={initialIsLiked}
+              initialIsBookmarked={initialIsBookmarked}
+              initialLikeCount={initialLikeCount}
+            />
           </div>
         </div>
       </article>
     </div>
   );
+};
+
+const VerticalCard = ({ blog, showBookmark = false }: CardProps) => {
+  const {
+    blogId,
+    authorId,
+    date,
+    slug,
+    tags,
+    title,
+    description,
+    image,
+    initialIsLiked,
+    initialIsBookmarked,
+    initialLikeCount,
+  } = blog;
+  const blogURL = `${BLOG_ROUTE}/${slug}-${blogId}`;
+
+  return (
+    <div className='pb-8'>
+      <article className='flex flex-col transition-all duration-300 group'>
+        <div className='aspect-[16/9] w-full bg-gray-50 dark:bg-gray-800 overflow-hidden relative'>
+          <Link href={blogURL}>
+            <BlogCardImage
+              title={title}
+              image={image}
+              className='group-hover:scale-105 transition-transform duration-700 ease-out'
+            />
+          </Link>
+        </div>
+
+        <div className='md:mt-6 mt-4 flex flex-col gap-3'>
+          <div className='flex items-center gap-2'>
+            <ArticleTag
+              tag={tags[0]}
+              className='font-inter font-medium text-xs text-gray-500 uppercase tracking-widest hover:text-brand-orange transition-colors'
+              showFallback
+            />
+          </div>
+          <Link href={blogURL} className='group/title'>
+            <BlogTitle
+              className='font-dm_sans font-bold text-[24px] leading-[1.2] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-2'
+              title={title || 'Untitled Post'}
+            />
+          </Link>
+          {description && (
+            <BlogDescription
+              description={description}
+              className='text-[15px] font-inter text-gray-600 dark:text-gray-400 line-clamp-2 leading-relaxed'
+            />
+          )}
+        </div>
+
+        <div className='md:mt-8 mt-4 md:pt-4 flex justify-between items-center'>
+          <div className='flex items-center gap-4'>
+            <UserInfoCardShowcase authorID={authorId} date={date} hideDate />
+            <FormattedDate date={date} />
+          </div>
+          <ArticleActions
+            blogId={blogId}
+            blogURL={`${LIVE_URL}${blogURL}`}
+            size={18}
+            showBookmark={showBookmark}
+            initialIsLiked={initialIsLiked}
+            initialIsBookmarked={initialIsBookmarked}
+            initialLikeCount={initialLikeCount}
+          />
+        </div>
+      </article>
+    </div>
+  );
+};
+
+// ─── Variants map — eliminates the if/else chain ──────────────────────────────
+
+const CARD_VARIANTS = {
+  horizontal: HorizontalCard,
+  list: ListCard,
+  vertical: VerticalCard,
+} as const;
+
+// ─── Public export ────────────────────────────────────────────────────────────
+
+export const FeedBlogCard = ({
+  blog,
+  showBookmark = false,
+  variant = 'vertical',
+}: CardProps & { variant?: keyof typeof CARD_VARIANTS }) => {
+  const Card = CARD_VARIANTS[variant];
+  return <Card blog={blog} showBookmark={showBookmark} />;
 };

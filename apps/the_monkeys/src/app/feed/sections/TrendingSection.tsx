@@ -1,5 +1,4 @@
 import { ContributeAndSponsorCard } from '@/components/branding/sponsor/ContributeAndSponsorCard';
-import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import {
   TrendingBlogCardLarge,
   TrendingBlogCardSmall,
