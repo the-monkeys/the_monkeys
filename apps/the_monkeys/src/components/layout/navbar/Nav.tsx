@@ -34,8 +34,8 @@ const Nav = () => {
 
   return (
     <>
-      <header className='sticky top-0 left-0 border-b border-gray-100 dark:border-border-dark bg-white dark:bg-background-dark backdrop-blur-md z-40'>
-        <Container className='w-full px-4 sm:px-6 py-2.5 flex flex-col gap-1'>
+      <header className='sticky top-0 left-0  bg-white dark:bg-background-dark backdrop-blur-md z-40'>
+        <Container className='w-full  py-2.5 flex flex-col gap-1'>
           <div className='flex items-center justify-between gap-4 w-full'>
             {/* Left: Hamburger & Logo */}
             <div className='flex items-center shrink-0 gap-3'>
@@ -92,12 +92,10 @@ const Nav = () => {
               </div>
             </div>
           </div>
+          <div className='border-b border-gray-100 dark:border-border-dark' />
 
           {/* Mobile Topics Row */}
-          <TopicBar
-            className='lg:hidden w-full border-t border-gray-50 dark:border-border-dark pt-1'
-            pathname={pathname}
-          />
+          <TopicBar className='lg:hidden w-full pt-1' pathname={pathname} />
         </Container>
       </header>
 
