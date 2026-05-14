@@ -306,7 +306,7 @@ const VerticalCard = ({ blog, showBookmark = false }: CardProps) => {
           )}
         </div>
 
-        <div className='md:mt-8 mt-4 md:pt-4 flex justify-between items-center'>
+        <div className=' mt-4 md:pt-4 flex justify-between items-center'>
           <div className='flex items-center gap-4'>
             <UserInfoCardShowcase authorID={authorId} date={date} hideDate />
             <FormattedDate date={date} />

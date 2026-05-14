@@ -1,12 +1,20 @@
 'use client';
 
+import { Suspense } from 'react';
+
 import Link from 'next/link';
 
+import {
+  PaginationNextButton,
+  PaginationPrevButton,
+} from '@/components/buttons/paginationButton';
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import Icon from '@/components/icon';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
+import { FOLLOWING_FEED_PER_PAGE } from '@/constants/posts';
 import { TOPIC_ROUTE } from '@/constants/routeConstants';
 import useGetFollowingFeed from '@/hooks/blog/useGetFollowingFeed';
+import { usePagination } from '@/hooks/user/usePagination';
 import { fromFollowingFeed } from '@/utils/blogCardAdapters';
 
 const EmptyFeed = () => (
@@ -42,8 +50,19 @@ const EmptyFeed = () => (
   </section>
 );
 
-const BlogFeedPage = () => {
-  const { blogs, isError, isLoading } = useGetFollowingFeed({ limit: 30 });
+const BlogFeedPageInner = () => {
+  const { page, next, prev } = usePagination();
+  const offset = page * FOLLOWING_FEED_PER_PAGE;
+
+  const { blogs, totalBlogs, isError, isLoading } = useGetFollowingFeed({
+    limit: FOLLOWING_FEED_PER_PAGE,
+    offset,
+  });
+
+  const hasNextPage =
+    totalBlogs != null && totalBlogs > (page + 1) * FOLLOWING_FEED_PER_PAGE;
+  const hasPrevPage = page > 0;
+  const showPagination = (totalBlogs ?? 0) > FOLLOWING_FEED_PER_PAGE;
 
   if (isLoading) return <FeedBlogCardListSkeleton />;
 
@@ -66,7 +85,26 @@ const BlogFeedPage = () => {
           />
         ))}
       </div>
+
+      {showPagination && (
+        <div className='flex justify-center gap-[10px] mt-4'>
+          {hasPrevPage && (
+            <PaginationPrevButton onClick={prev} disable={!hasPrevPage} />
+          )}
+          {hasNextPage && (
+            <PaginationNextButton onClick={next} disable={!hasNextPage} />
+          )}
+        </div>
+      )}
     </div>
+  );
+};
+
+const BlogFeedPage = () => {
+  return (
+    <Suspense fallback={<FeedBlogCardListSkeleton />}>
+      <BlogFeedPageInner />
+    </Suspense>
   );
 };
 
