@@ -4,6 +4,7 @@ import React from 'react';
 
 import Link from 'next/link';
 
+import { UpdateDialog } from '@/app/[username]/components/profile/UpdateDialog';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { FollowButton } from '@/components/user/buttons/followButton';
@@ -17,6 +18,7 @@ import {
   LINKEDIN_URL,
   X_URL,
 } from '@/constants/social';
+import useAuth from '@/hooks/auth/useAuth';
 import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -36,12 +38,16 @@ const SocialLinkButton = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const AuthorProfileCard = ({
-  isAuthenticated,
+  paramsUser,
   user,
 }: {
-  isAuthenticated: boolean;
+  paramsUser: string;
   user?: GetPublicUserProfileApiResponse;
 }) => {
+  const { data: session, isSuccess } = useAuth();
+
+  const isAuthenticated = session?.username === paramsUser && isSuccess;
+
   const { connections, connectionsLoading, connectionsError } =
     useGetConnectionCount(user?.username);
 
@@ -53,12 +59,16 @@ export const AuthorProfileCard = ({
     <div className='flex min-w-0 flex-col gap-4'>
       <div className='flex min-w-0 flex-col gap-4'>
         <div className='flex min-w-0 flex-col  gap-3  sm:text-left'>
-          <ProfileFrame className='group relative size-[88px] shrink-0 ring-2 ring-border-light/40 dark:ring-border-dark/40 sm:size-[80px]'>
-            <ProfileImage username={user?.username} />
-            <div className='hidden absolute inset-0 w-full h-full group-hover:flex justify-center items-center bg-black/20 backdrop-blur-sm'>
-              <ShowcaseProfileDialog username={user?.username} />
-            </div>
-          </ProfileFrame>
+          <div className='flex flex-row items-end gap-4'>
+            <ProfileFrame className='group relative size-[88px] shrink-0 ring-2 ring-border-light/40 dark:ring-border-dark/40 sm:size-[80px]'>
+              <ProfileImage username={user?.username} />
+              <div className='hidden absolute inset-0 w-full h-full group-hover:flex justify-center items-center bg-black/20 backdrop-blur-sm'>
+                <ShowcaseProfileDialog username={user?.username} />
+              </div>
+            </ProfileFrame>
+
+            {isAuthenticated && <UpdateDialog data={session} />}
+          </div>
 
           <div className='min-w-0 flex-1 space-y-1'>
             <div className='flex min-w-0 flex-wrap  gap-x-2 gap-y-1 '>
