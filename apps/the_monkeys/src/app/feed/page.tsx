@@ -8,6 +8,7 @@ import useGetFollowingFeed from '@/hooks/blog/useGetFollowingFeed';
 const BlogFeedPage = () => {
   const { blogs, isError, isLoading } = useGetFollowingFeed({ limit: 30 });
 
+  // Todo: write an better fallback
   if (isError) {
     return (
       <div className='px-4 py-12 flex flex-col items-center justify-center'>

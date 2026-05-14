@@ -4,14 +4,21 @@ import { useQuery } from '@tanstack/react-query';
 
 export const FOLLOWING_FEED_QUERY_KEY = 'following-feed-blogs';
 
+type FollowingFeedType = {
+  blogs: FollowingFeed[];
+};
+
 const useGetFollowingFeed = ({ limit = 50 }: { limit?: number } = {}) => {
-  const { data, error, isLoading, isError } = useQuery<FollowingFeed[], Error>({
+  const { data, error, isLoading, isError } = useQuery<
+    FollowingFeedType,
+    Error
+  >({
     queryKey: [FOLLOWING_FEED_QUERY_KEY, limit],
     queryFn: () => authFetcherV2(`/blog/following-feed?limit=${limit}`),
   });
 
   return {
-    blogs: data,
+    blogs: data?.blogs,
     isError: isError || !!error,
     isLoading,
   };

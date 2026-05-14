@@ -2,7 +2,6 @@ import { queryKeys } from '@/lib/queryKeys';
 import { IsLikedResponse, likesCountResponse } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
-import { BiLogoSass } from 'react-icons/bi';
 
 const STALE_TIME = 60 * 1000;
 
