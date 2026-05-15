@@ -1,0 +1,45 @@
+import Link from 'next/link';
+
+import Icon from '@/components/icon';
+
+/**
+ * Thin brand-orange announcement strip rendered at the top of the feed.
+ * Mirrors the editorial pattern of a leading callout without using
+ * news-vocabulary ("BREAKING"). Defaults read as a research-platform
+ * "SPOTLIGHT" highlight.
+ */
+export interface AnnouncementBannerProps {
+  label?: string;
+  message: string;
+  href?: string;
+  ctaLabel?: string;
+}
+
+export const AnnouncementBanner = ({
+  label = 'Spotlight',
+  message,
+  href = '#',
+  ctaLabel = 'Read',
+}: AnnouncementBannerProps) => {
+  return (
+    <div className='w-full rounded-md bg-brand-orange text-white'>
+      <div className='flex items-stretch gap-0'>
+        <span className='shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 bg-black/15 font-inter font-extrabold text-[11px] uppercase tracking-[0.22em] flex items-center'>
+          {label}
+        </span>
+        <p className='flex-1 px-3 sm:px-4 py-2 sm:py-2.5 font-inter text-[13px] sm:text-sm leading-snug line-clamp-2 sm:line-clamp-1 self-center'>
+          {message}
+        </p>
+        <Link
+          href={href}
+          className='shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 font-inter font-bold text-[12px] sm:text-sm uppercase tracking-[0.12em] inline-flex items-center gap-1 hover:bg-black/10 transition-colors'
+        >
+          {ctaLabel}
+          <Icon name='RiArrowRight' size={14} />
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default AnnouncementBanner;
