@@ -69,12 +69,15 @@ const LandingPageClient = () => {
   const perspectives = filteredBlogs.slice(8, 12); // 4 rows
   const remainder = filteredBlogs.slice(12);
 
-  const announcement = hero
-    ? {
-        message: hero.title,
-        href: `/blog/${hero.blog_id}`,
-      }
-    : null;
+  // Always-on call-to-action: we are investing in tech research and looking
+  // for partners / funders. Click-through goes to the dedicated `/support`
+  // page with the full pitch + email contact.
+  const announcement = {
+    label: 'Support Us',
+    message: 'Fund our open-source & AI research. Partner with us.',
+    href: '/support',
+    ctaLabel: 'Learn More',
+  };
 
   return (
     <div className='min-h-screen'>
@@ -92,10 +95,10 @@ const LandingPageClient = () => {
       {announcement && (
         <div className='mb-4'>
           <AnnouncementBanner
-            label='Spotlight'
+            label={announcement.label}
             message={announcement.message}
             href={announcement.href}
-            ctaLabel='Read'
+            ctaLabel={announcement.ctaLabel}
           />
         </div>
       )}

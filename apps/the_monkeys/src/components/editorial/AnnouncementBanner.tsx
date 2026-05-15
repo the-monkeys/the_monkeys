@@ -27,7 +27,7 @@ export const AnnouncementBanner = ({
         <span className='shrink-0 px-3 sm:px-4 py-2 sm:py-2.5 bg-black/15 font-inter font-extrabold text-[11px] uppercase tracking-[0.22em] flex items-center'>
           {label}
         </span>
-        <p className='flex-1 px-3 sm:px-4 py-2 sm:py-2.5 font-inter text-[13px] sm:text-sm leading-snug line-clamp-2 sm:line-clamp-1 self-center'>
+        <p className='flex-1 min-w-0 px-3 sm:px-4 py-2 sm:py-2.5 font-inter text-[13px] sm:text-sm leading-snug truncate self-center'>
           {message}
         </p>
         <Link
