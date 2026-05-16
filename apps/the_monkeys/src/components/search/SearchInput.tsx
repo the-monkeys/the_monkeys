@@ -50,9 +50,12 @@ export const SearchInput = ({ className }: { className?: string }) => {
   };
 
   useEffect(() => {
+    // Search-v2 (Phase 4): tighter debounce since the server is faster
+    // and the gateway rate limit is 30 req/s. 250ms gives a 5/word
+    // typist roughly 1 request per finished word.
     const handler = setTimeout(() => {
       setDebouncedQuery(searchQuery.trim());
-    }, 300);
+    }, 250);
 
     return () => clearTimeout(handler);
   }, [searchQuery]);
@@ -123,13 +126,17 @@ export const SearchInput = ({ className }: { className?: string }) => {
                   )}
                 </div>
 
-                {/* <Link
-                  href={`/search?query=${debouncedQuery}`}
+                {/* See-all footer links to the full results page.
+                    Triggers on mousedown so the click registers before
+                    the input's blur handler closes the dropdown. */}
+                <Link
+                  href={`/search?query=${encodeURIComponent(debouncedQuery)}`}
                   className='self-center p-1 text-sm hover:underline opacity-90'
+                  onMouseDown={handleClose}
                   onClick={handleClose}
                 >
-                  see all results for &apos;{debouncedQuery}&apos;
-                </Link> */}
+                  See all results for &apos;{debouncedQuery}&apos;
+                </Link>
               </div>
             </div>
           )}
