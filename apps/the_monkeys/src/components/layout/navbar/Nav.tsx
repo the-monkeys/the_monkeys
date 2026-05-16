@@ -35,7 +35,7 @@ const Nav = () => {
   return (
     <>
       <header className='sticky top-0 left-0  bg-white dark:bg-background-dark backdrop-blur-md z-40'>
-        <Container className='w-full  py-2.5 flex flex-col gap-1'>
+        <Container className='w-full  pt-2.5 flex flex-col gap-1'>
           <div className='flex items-center justify-between gap-4 w-full'>
             {/* Left: Hamburger & Logo */}
             <div className='flex items-center shrink-0 gap-3'>

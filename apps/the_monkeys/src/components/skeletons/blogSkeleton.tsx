@@ -265,9 +265,6 @@ const SectionLabelSkeleton = () => (
 export const FeedSkeleton = () => {
   return (
     <div className='min-h-screen'>
-      {/* Announcement banner */}
-      <AnnouncementBannerSkeleton />
-
       {/* Featured authors strip */}
       <FeaturedAuthorsStripSkeleton />
 

@@ -1,6 +1,5 @@
 'use client';
 
-import AnnouncementBanner from '@/components/editorial/AnnouncementBanner';
 import EditorialHero from '@/components/editorial/EditorialHero';
 import FeatureCard from '@/components/editorial/FeatureCard';
 import FeaturedAuthorsStrip from '@/components/editorial/FeaturedAuthorsStrip';
@@ -30,7 +29,7 @@ const LandingPageClient = () => {
 
   if (isError || !filteredBlogs || filteredBlogs.length === 0) {
     return (
-      <div className='px-4 py-20 flex flex-col items-center justify-center bg-background-light dark:bg-background-dark rounded-xl border-1 border-border-light dark:border-border-dark/10'>
+      <div className='px-4 py-20 flex flex-col items-center justify-center bg-background-light dark:bg-background-dark rounded-xl '>
         <div className='p-6 flex items-center gap-2'>
           <p className='font-newsreader font-bold text-8xl text-text-light dark:text-text-dark'>
             4
@@ -72,12 +71,6 @@ const LandingPageClient = () => {
   // Always-on call-to-action: we are investing in tech research and looking
   // for partners / funders. Click-through goes to the dedicated `/support`
   // page with the full pitch + email contact.
-  const announcement = {
-    label: 'Support Us',
-    message: 'Fund our open-source & AI research. Partner with us.',
-    href: '/support',
-    ctaLabel: 'Learn More',
-  };
 
   return (
     <div className='min-h-screen'>
@@ -87,21 +80,9 @@ const LandingPageClient = () => {
         </div>
       )}
 
-      <h1 className='text-2xl font-bold hidden'>
+      <h1 className='text-2xl font-bold hidden sr-only'>
         Monkeys - A Research and Long-form Writing Community
       </h1>
-
-      {/* Spotlight announcement strip — sits above the authors row. */}
-      {announcement && (
-        <div className='mb-4'>
-          <AnnouncementBanner
-            label={announcement.label}
-            message={announcement.message}
-            href={announcement.href}
-            ctaLabel={announcement.ctaLabel}
-          />
-        </div>
-      )}
 
       {/* Featured Authors strip retained; top category navigation untouched. */}
       <FeaturedAuthorsStrip />

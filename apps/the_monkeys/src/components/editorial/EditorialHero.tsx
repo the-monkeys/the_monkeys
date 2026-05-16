@@ -78,14 +78,14 @@ export const EditorialHero = ({
           </span>
           <Link href={blogURL} className='w-full'>
             <BlogTitle
-              className='group-hover:text-brand-orange pt-2 font-semibold md:text-4xl text-2xl leading-[1.4] hover:underline underline-offset-2 line-clamp-2 text-white '
+              className='group-hover:text-brand-orange pt-2 font-semibold md:text-4xl text-2xl leading-[1.4] hover:underline underline-offset-2 md:line-clamp-2 line-clamp-1 text-white '
               title={title || 'Untitled Post'}
             />
           </Link>
           {description !== '' && (
             <BlogDescription
               description={description}
-              className='pt-[6px] text-[0.9rem] line-clamp-2 sm:line-clamp-1 opacity-90 text-white'
+              className='pt-[6px] text-[0.9rem] md:line-clamp-2 line-clamp-1 opacity-90 text-white'
             />
           )}
 
