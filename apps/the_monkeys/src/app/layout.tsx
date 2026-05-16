@@ -2,16 +2,12 @@ import type { Metadata } from 'next';
 import { DM_Sans, Inter, Newsreader } from 'next/font/google';
 import Script from 'next/script';
 
-import { AnnouncementBanner } from '@/components/editorial/AnnouncementBanner';
 import { AppShell } from '@/components/layout/app-shell/AppShell';
 import Footer from '@/components/layout/footer';
-import Navbar from '@/components/layout/navbar';
 import { LIVE_URL } from '@/constants/api';
-import { Separator } from '@the-monkeys/ui/atoms/separator';
 import { TooltipProvider } from '@the-monkeys/ui/atoms/tooltip';
 import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 
-import { ANNOUNCEMENT } from './contact-us/utils/annoucement';
 import './globals.css';
 import GrowthbookClientProvider from './growthbook-provider';
 import { QueryClientMount } from './query-client-mount';
@@ -162,15 +158,6 @@ const RootLayout = async ({
               <TooltipProvider>
                 {/* <Separator /> */}
                 <main>
-                  {/* Spotlight announcement strip — sits above the authors row. */}
-                  {ANNOUNCEMENT && (
-                    <AnnouncementBanner
-                      label={ANNOUNCEMENT.label}
-                      message={ANNOUNCEMENT.message}
-                      href={ANNOUNCEMENT.href}
-                      ctaLabel={ANNOUNCEMENT.ctaLabel}
-                    />
-                  )}
                   <AppShell>{children}</AppShell>
                 </main>
                 {/* <Separator /> */}

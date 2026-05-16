@@ -1,7 +1,3 @@
-'use client';
-
-import { useState } from 'react';
-
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
@@ -25,12 +21,8 @@ export const AnnouncementBanner = ({
   href = '#',
   ctaLabel = 'Read',
 }: AnnouncementBannerProps) => {
-  const [dismissed, setDismissed] = useState(false);
-
-  if (dismissed) return null;
-
   return (
-    <div className='w-full bg-brand-orange text-white'>
+    <div className='mx-auto max-w-[1420px]  bg-brand-orange text-white'>
       <div className='flex items-stretch gap-0'>
         {/* Label */}
         <span className='shrink-0 px-2.5 sm:px-4 py-2 sm:py-2.5 bg-black/15 font-inter font-extrabold text-[10px] sm:text-[11px] uppercase tracking-[0.18em] sm:tracking-[0.22em] flex items-center'>
@@ -50,15 +42,6 @@ export const AnnouncementBanner = ({
           {ctaLabel}
           <Icon name='RiArrowRight' size={14} />
         </Link>
-
-        {/* Dismiss */}
-        <button
-          aria-label='Dismiss announcement'
-          onClick={() => setDismissed(true)}
-          className='shrink-0 px-2 sm:px-3 py-2 sm:py-2.5 inline-flex items-center justify-center text-white/70 hover:text-white hover:bg-black/10 transition-colors'
-        >
-          <Icon name='RiClose' size={16} />
-        </button>
       </div>
     </div>
   );
