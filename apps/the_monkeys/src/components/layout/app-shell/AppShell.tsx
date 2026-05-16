@@ -49,7 +49,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className='flex min-w-0 flex-1'>
           {/* Main content (extra bottom padding on mobile to clear tab bar) */}
 
-          <div className='min-w-0 flex-1 pb-24  lg:pb-6 '>{children}</div>
+          <div className='min-w-0 flex-1 px-4 py-4 lg:py-6 '>{children}</div>
 
           {/* Right Rail - self-sticky, only visible xl+ */}
           {isFeed && <RightRail />}
