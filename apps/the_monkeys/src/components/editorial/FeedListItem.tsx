@@ -45,7 +45,7 @@ export const FeedListItem = ({ blog }: { blog: MetaBlog }) => {
 
         {time ? (
           <p className='mt-2 font-inter text-[12px] text-gray-500 dark:text-gray-400'>
-            {getRelativeTime(time)}
+            {time}
           </p>
         ) : null}
 
