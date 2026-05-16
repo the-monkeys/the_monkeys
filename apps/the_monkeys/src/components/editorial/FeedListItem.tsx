@@ -12,6 +12,8 @@ import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
+import { UserInfoCardShowcase } from '../user/userInfo';
+
 /**
  * Compact research-feed row: category label on top, serif title, relative time,
  * with a small thumbnail on the right. Designed to stack vertically in lists.
@@ -43,11 +45,7 @@ export const FeedListItem = ({ blog }: { blog: MetaBlog }) => {
           />
         </Link>
 
-        {time ? (
-          <p className='mt-2 font-inter text-[12px] text-gray-500 dark:text-gray-400'>
-            {time}
-          </p>
-        ) : null}
+        <UserInfoCardShowcase authorID={blog?.owner_account_id} date={time} />
 
         <div className='mt-2'>
           <BlogActionBar

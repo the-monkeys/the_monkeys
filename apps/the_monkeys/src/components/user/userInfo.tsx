@@ -97,11 +97,9 @@ export const UserInfoCardShowcase = ({
 
       {!isDraft && !hideDate && (
         <>
-          <span className='text-[13px] sm:text-sm'>{' - '}</span>
+          <span className='text-[13px] sm:text-sm gap-x-1'> &middot;</span>
 
-          <p className='shrink-0 text-[13px] sm:text-sm opacity-90'>
-            {moment(date).format('MMM DD, YYYY')}
-          </p>
+          <p className='shrink-0 text-[13px] sm:text-sm opacity-90'>{date}</p>
         </>
       )}
     </div>
