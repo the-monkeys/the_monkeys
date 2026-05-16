@@ -26,7 +26,7 @@ export const MinimalBlogCard = ({
   const display = (label ?? tag ?? 'Research').toUpperCase();
 
   return (
-    <article className='h-full group p-4 sm:p-5 rounded-md border border-border-light dark:border-border-dark/40 hover:border-brand-orange/60 transition-colors bg-background-light dark:bg-background-dark'>
+    <article className='h-full group p-4 sm:p-5 rounded-md  transition-colors bg-background-light dark:bg-background-dark'>
       {tag ? (
         <Link
           href={`${TOPIC_ROUTE}/${tag}`}

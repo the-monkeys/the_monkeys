@@ -38,14 +38,14 @@ export const FeedListItem = ({ blog }: { blog: MetaBlog }) => {
 
         <Link href={url} className='block mt-1.5 group/title'>
           <h3
-            className='font-newsreader font-bold text-lg sm:text-xl leading-[1.25] text-text-light dark:text-text-dark group-hover/title:text-brand-orange transition-colors line-clamp-2'
+            className='font-newsreader font-bold md:text-2xl text-lg leading-[1.25] text-text-light dark:text-text-dark group-hover/title:text-brand-orange transition-colors line-clamp-2'
             dangerouslySetInnerHTML={{ __html: title || 'Untitled' }}
           />
         </Link>
 
         {time ? (
           <p className='mt-2 font-inter text-[12px] text-gray-500 dark:text-gray-400'>
-            {time}
+            {getRelativeTime(time)}
           </p>
         ) : null}
 

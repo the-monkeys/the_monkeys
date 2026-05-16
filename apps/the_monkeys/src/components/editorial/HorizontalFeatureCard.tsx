@@ -25,7 +25,7 @@ export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
   const category = (blog?.tags?.[0] ?? 'Feature').toUpperCase();
 
   return (
-    <article className='w-full overflow-hidden rounded-lg border border-border-light dark:border-border-dark/10 bg-background-light dark:bg-background-dark'>
+    <article className='w-full overflow-hidden rounded-lg  bg-background-light dark:bg-background-dark'>
       <div className='grid grid-cols-1 sm:grid-cols-2'>
         <Link
           href={url}

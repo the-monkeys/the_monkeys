@@ -27,5 +27,9 @@ export const getRelativeTime = (dateString: string) => {
   if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
   if (diff < 2592000) return `${Math.floor(diff / 86400)} days ago`;
 
-  return past.toLocaleDateString();
+  return past.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
 };
