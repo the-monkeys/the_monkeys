@@ -2,6 +2,8 @@
 
 import { usePathname } from 'next/navigation';
 
+import { ANNOUNCEMENT } from '@/app/contact-us/utils/annoucement';
+import AnnouncementBanner from '@/components/editorial/AnnouncementBanner';
 import { MobileBottomTabBar } from '@/components/layout/MobileBottomTabBar';
 import { FeedSidebarDesktop } from '@/components/layout/Sidebar';
 
@@ -38,26 +40,37 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isFeed =
     pathname === '/' || pathname === '/feed' || pathname?.endsWith('/feed');
   return (
-    <Container className='mx-auto flex w-full flex-col'>
-      <Navbar />
-      <div className='flex min-w-0 flex-1 '>
-        <div className='sticky top-[60px] h-[calc(100vh-60px)] shrink-0  overflow-visible '>
-          <FeedSidebarDesktop />
+    <>
+      {/* Spotlight announcement strip — sits above the authors row. */}
+      {ANNOUNCEMENT && (
+        <AnnouncementBanner
+          label={ANNOUNCEMENT.label}
+          message={ANNOUNCEMENT.message}
+          href={ANNOUNCEMENT.href}
+          ctaLabel={ANNOUNCEMENT.ctaLabel}
+        />
+      )}
+      <Container className='mx-auto flex w-full flex-col'>
+        <Navbar />
+        <div className='flex min-w-0 flex-1 '>
+          <div className='sticky top-[60px] h-[calc(100vh-60px)] shrink-0  overflow-visible '>
+            <FeedSidebarDesktop />
+          </div>
+          {/* Content row below navbar */}
+
+          <div className='flex min-w-0 flex-1'>
+            {/* Main content (extra bottom padding on mobile to clear tab bar) */}
+
+            <div className='min-w-0 flex-1 px-4 py-4 lg:py-6 '>{children}</div>
+
+            {/* Right Rail - self-sticky, only visible xl+ */}
+            {isFeed && <RightRail />}
+          </div>
         </div>
-        {/* Content row below navbar */}
 
-        <div className='flex min-w-0 flex-1'>
-          {/* Main content (extra bottom padding on mobile to clear tab bar) */}
-
-          <div className='min-w-0 flex-1 px-4 py-4 lg:py-6 '>{children}</div>
-
-          {/* Right Rail - self-sticky, only visible xl+ */}
-          {isFeed && <RightRail />}
-        </div>
-      </div>
-
-      {/* Mobile bottom tab bar (hidden on lg+) */}
-      <MobileBottomTabBar />
-    </Container>
+        {/* Mobile bottom tab bar (hidden on lg+) */}
+        <MobileBottomTabBar />
+      </Container>
+    </>
   );
 }
