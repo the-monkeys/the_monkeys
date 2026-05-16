@@ -13,6 +13,8 @@ export const LikesCount = ({ blogId, initialCount }: Props) => {
     initialCount
   );
 
+  if (!blogId) return null;
+
   const count = likes ?? initialCount ?? 0;
 
   if (likeCountLoading) {

@@ -67,7 +67,12 @@ export function FeaturedAuthorsSection({
   // Scroll handler
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
-      const scrollAmount = 200;
+      // Scroll roughly one viewport-worth of avatars at a time so the
+      // chevron feels responsive when many users (16+) are present.
+      const scrollAmount = Math.max(
+        240,
+        Math.floor(scrollContainerRef.current.clientWidth * 0.8)
+      );
       const currentScroll = scrollContainerRef.current.scrollLeft;
 
       scrollContainerRef.current.scrollTo({

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import NewsletterCard from '@/components/editorial/NewsletterCard';
 import LinksRedirectArrow from '@/components/links/LinksRedirectArrow';
 import { TopicLinksContainer } from '@/components/topics/topicsContainer';
 import { RecommendedUserCard } from '@/components/user/userInfo';
@@ -142,6 +143,8 @@ export function RightRail() {
             </div>
           </RailSurface>
         </RailSection>
+
+        <NewsletterCard />
       </div>
     </aside>
   );

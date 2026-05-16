@@ -37,6 +37,9 @@ export const LikeButton = ({
   const searchParams = useSearchParams();
   const search = searchParams.toString();
   const currentPath = `${pathname}${search ? `?${search}` : ''}`;
+  const buttonSize = size + 8;
+
+  if (!blogId) return null;
 
   const setLikeState = (isLiked: boolean) => {
     queryClient.setQueryData<IsLikedResponse>(
@@ -68,9 +71,18 @@ export const LikeButton = ({
 
   if (isLoading) {
     return (
-      <div className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'>
-        <Skeleton className='w-2 ' />
-      </div>
+      <button
+        className='p-1 flex items-center justify-center opacity-80 cursor-not-allowed'
+        style={{ width: buttonSize, height: buttonSize }}
+        type='button'
+        disabled
+        aria-label='Loading like status'
+      >
+        <Skeleton
+          className='rounded-full'
+          style={{ width: size, height: size }}
+        />
+      </button>
     );
   }
 

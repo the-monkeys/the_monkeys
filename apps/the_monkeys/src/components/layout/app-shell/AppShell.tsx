@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 
+import { MobileBottomTabBar } from '@/components/layout/MobileBottomTabBar';
 import { FeedSidebarDesktop } from '@/components/layout/Sidebar';
 
 import Container from '../Container';
@@ -46,7 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {/* Content row below navbar */}
 
         <div className='flex min-w-0 flex-1'>
-          {/* Main content */}
+          {/* Main content (extra bottom padding on mobile to clear tab bar) */}
 
           <div className='min-w-0 flex-1 px-4 py-4 lg:py-6 '>{children}</div>
 
@@ -54,6 +55,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {isFeed && <RightRail />}
         </div>
       </div>
+
+      {/* Mobile bottom tab bar (hidden on lg+) */}
+      <MobileBottomTabBar />
     </Container>
   );
 }

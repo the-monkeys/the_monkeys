@@ -14,6 +14,10 @@ export default async function LandingPage() {
     queryFn: () => fetcherV2(`/blog/meta-feed?limit=${limit}`),
   });
 
+  // Always-on call-to-action: we are investing in tech research and looking
+  // for partners / funders. Click-through goes to the dedicated `/support`
+  // page with the full pitch + email contact.
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <LandingPageClient />
