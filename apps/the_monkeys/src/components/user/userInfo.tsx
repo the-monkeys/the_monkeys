@@ -64,10 +64,12 @@ export const UserInfoCardShowcase = ({
   authorID,
   date,
   isDraft = false,
+  hideDate = false,
 }: {
   authorID?: string;
   date?: number | string;
   isDraft?: boolean;
+  hideDate?: boolean;
 }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(authorID);
 
@@ -93,7 +95,7 @@ export const UserInfoCardShowcase = ({
         <Skeleton className='h-3 w-28' />
       )}
 
-      {!isDraft && (
+      {!isDraft && !hideDate && (
         <>
           <span className='text-[13px] sm:text-sm'>{' - '}</span>
 

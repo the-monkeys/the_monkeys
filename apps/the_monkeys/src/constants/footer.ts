@@ -10,6 +10,14 @@ import {
   MONKEYS_YOUTUBE,
 } from './social';
 
+export const parentCompany: {
+  name: string;
+  website: string;
+} = {
+  name: 'BUDDHICINTAKA PVT. LTD.',
+  website: 'https://buddhicintaka.com/',
+};
+
 export const footerSocialsList: {
   account: string;
   link: string;
@@ -49,10 +57,19 @@ export const footerSocialsList: {
 
 export const footerLinksList = [
   {
+    heading: 'Our products',
+    items: [
+      {
+        text: 'Free Range Notify',
+        link: 'https://www.freerangenotify.com/',
+      },
+    ],
+  },
+  {
     heading: 'Company',
     items: [
       {
-        text: 'Monkeys Feed',
+        text: 'Feed',
         link: '/',
       },
       {
@@ -63,10 +80,10 @@ export const footerLinksList = [
         text: 'Contact Us',
         link: '/contact-us',
       },
-      {
-        text: 'Advertise with Us',
-        link: '#',
-      },
+      // {
+      //   text: 'Advertise',
+      //   link: '#',
+      // },
     ],
   },
   {

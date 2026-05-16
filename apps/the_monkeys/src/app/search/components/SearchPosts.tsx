@@ -9,6 +9,7 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { SEARCH_POSTS_PER_PAGE } from '@/constants/posts';
 import { useGetSearchBlog } from '@/hooks/blog/useGetSearchBlog';
 import { usePagination } from '@/hooks/user/usePagination';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 
 const SearchPostsInner = ({ query }: { query: string }) => {
   const { page, next, prev } = usePagination();
@@ -54,7 +55,9 @@ const SearchPostsInner = ({ query }: { query: string }) => {
         <div className='max-w-4xl'>
           <div className='flex flex-col gap-4 pb-4'>
             {blogs.map((blog) => {
-              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+              return (
+                <FeedBlogCard blog={fromMetaBlog(blog)} key={blog?.blog_id} />
+              );
             })}
           </div>
 

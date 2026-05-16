@@ -5,3 +5,4 @@ export const SCHEDULED_BLOGS_PER_PAGE = 5;
 export const TOPIC_WISE_POSTS_PER_PAGE = 10;
 export const SEARCH_POSTS_PER_PAGE = 10;
 export const SEARCH_USERS_PER_PAGE = 12;
+export const FOLLOWING_FEED_PER_PAGE = 10;

@@ -1,39 +1,53 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { IsLikedResponse, likesCountResponse } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
 
-export const LIKE_STATUS_QUERY_KEY = 'like-status';
-export const LIKES_COUNT_QUERY_KEY = 'likes-count';
+const STALE_TIME = 60 * 1000;
 
-export const useIsPostLiked = (blogId: string | undefined) => {
+export const useIsPostLiked = (
+  blogId: string | undefined,
+  initialIsLiked?: boolean
+) => {
   const { data, isLoading, error, isError } = useQuery<IsLikedResponse, Error>({
-    queryKey: [LIKE_STATUS_QUERY_KEY, blogId],
+    queryKey: queryKeys.blog.likes.status(blogId),
     queryFn: () => authFetcher(`/user/is-liked/${blogId}`),
     enabled: !!blogId,
-    staleTime: 60 * 1000,
+    initialData:
+      initialIsLiked === undefined
+        ? undefined
+        : { status: 'success', isLiked: initialIsLiked },
+    staleTime: STALE_TIME,
   });
 
   return {
-    likeStatus: data,
+    likeStatus: data?.isLiked ?? false,
     isLoading,
-    isError: isError || !!error,
+    isError,
+    error,
   };
 };
 
-export const useGetLikesCount = (blogId: string | undefined) => {
+export const useGetLikesCount = (
+  blogId: string | undefined,
+  initialCount?: number
+) => {
   const { data, isLoading, error, isError } = useQuery<
     likesCountResponse,
     Error
   >({
-    queryKey: [LIKES_COUNT_QUERY_KEY, blogId],
+    queryKey: queryKeys.blog.likes.count(blogId),
     queryFn: () => authFetcher(`/user/count-likes/${blogId}`),
     enabled: !!blogId,
-    staleTime: 60 * 1000,
+    initialData:
+      initialCount === undefined ? undefined : { count: initialCount },
+    staleTime: STALE_TIME,
   });
 
   return {
-    likes: data,
+    likes: data?.count ?? 0,
     likeCountLoading: isLoading,
-    likeCountError: isError || !!error,
+    likeCountError: isError,
+    error,
   };
 };

@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
+import { BackButton } from '@/components/buttons/backButton';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
@@ -371,6 +372,7 @@ const CreatePage = () => {
 
   return (
     <div className='relative min-h-screen'>
+      <BackButton />
       <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
         <div
           className={twMerge(

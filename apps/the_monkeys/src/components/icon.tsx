@@ -65,6 +65,7 @@ export type IconName =
   | 'RiResetRight'
   | 'RiLoginBox'
   | 'RiLogoutBoxR'
+  | 'RiLock'
   | 'RiErrorWarning'
   | 'RiVerifiedBadge'
   | 'RiEye'
@@ -72,7 +73,22 @@ export type IconName =
   | 'RiLightbulb'
   | 'RiMessage3'
   | 'RiMessage'
-  | 'RiBug';
+  | 'RiBug'
+  | 'RiMenu2'
+  | 'RiArrowRightS'
+  | 'RiArrowLeftS'
+  | 'RiBookShelf'
+  | 'RiSparkle2'
+  | 'RiTimeline'
+  | 'RiBellLine'
+  | 'RiSettings5Line'
+  | 'RiBard'
+  | 'RiMenu4'
+  | 'RiMenu3'
+  | 'RiCloseLarge'
+  | 'RiMenu'
+  | 'RiAdd'
+  | 'RiDraft';
 
 export type IconProps = {
   name: IconName;

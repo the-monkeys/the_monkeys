@@ -31,6 +31,8 @@ export interface Block {
   id: string;
   type: string;
   data: any;
+  author: string[];
+  time: number;
 }
 
 export interface GetDraftBlogResponse {
@@ -91,7 +93,45 @@ export interface bookmarksCountResponse {
 }
 
 // get user tags
-
 export interface GetUserTagsResponse {
   tags: Record<string, number>;
+}
+
+export interface FollowingFeed {
+  BookmarkCount: number;
+  IsBookmarkedByMe: boolean;
+  IsLikedByMe: boolean;
+  LikeCount: number;
+  author_list: string[];
+  blog: {
+    blocks: Block[];
+    time: number;
+  };
+  blog_id: string;
+  client?: string;
+  content_type: string;
+  ip?: string;
+  is_draft: boolean;
+  owner_account_id: string;
+  platform?: number;
+  published_time: string;
+  referrer?: string;
+  session_id?: string;
+  slug?: string;
+  tags: string[];
+  user_agent?: string;
+}
+
+export interface BlogCardData {
+  blogId: string;
+  authorId: string;
+  date: string;
+  slug: string;
+  tags: string[];
+  title: string;
+  description: string;
+  image: string;
+  initialIsLiked?: boolean;
+  initialIsBookmarked?: boolean;
+  initialLikeCount?: number;
 }

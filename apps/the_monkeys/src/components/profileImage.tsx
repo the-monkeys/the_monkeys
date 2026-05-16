@@ -48,7 +48,7 @@ export const ProfileImage = ({ username }: { username?: string }) => {
         title={`Author: ${username}`}
         width={32}
         height={32}
-        className='w-full h-full object-cover'
+        className='w-full h-full object-cover rounded-full'
         unoptimized
       />
     );
@@ -60,7 +60,7 @@ export const ProfileImage = ({ username }: { username?: string }) => {
       title={`Author: ${username}`}
       width={50}
       height={50}
-      className='w-full h-full object-cover'
+      className='w-full h-full object-cover rounded-full'
       loading='lazy'
       quality={100}
     />

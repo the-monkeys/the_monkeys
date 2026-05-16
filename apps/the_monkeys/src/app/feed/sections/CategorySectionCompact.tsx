@@ -1,6 +1,7 @@
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetCategoryBlogs from '@/hooks/posts/useGetCategoryBlogs';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 
 const CategorySectionCompact = ({
   title,
@@ -36,7 +37,9 @@ const CategorySectionCompact = ({
         <div className='max-w-4xl'>
           <div className='flex flex-col gap-4'>
             {blogs?.blogs.slice(0, 5).map((blog) => {
-              return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+              return (
+                <FeedBlogCard blog={fromMetaBlog(blog)} key={blog?.blog_id} />
+              );
             })}
           </div>
         </div>

@@ -3,6 +3,7 @@ import { TrendingBlogCardSmall } from '@/components/cards/blog/TrendingBlogCard'
 import Container from '@/components/layout/Container';
 import { FeedCategorySectionSkeleton } from '@/components/skeletons/blogSkeleton';
 import useGetCategoryBlogs from '@/hooks/posts/useGetCategoryBlogs';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 
 const CategorySection = ({
   title,
@@ -48,7 +49,9 @@ const CategorySection = ({
           <div className='max-w-4xl'>
             <div className='flex flex-col gap-4'>
               {blogs?.blogs.slice(2, 7).map((blog) => {
-                return <FeedBlogCard blog={blog} key={blog?.blog_id} />;
+                return (
+                  <FeedBlogCard blog={fromMetaBlog(blog)} key={blog?.blog_id} />
+                );
               })}
             </div>
           </div>

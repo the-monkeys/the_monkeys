@@ -21,6 +21,7 @@ const config = {
     fontFamily: {
       dm_sans: ['var(--font-dm_sans)'],
       inter: ['var(--font-inter)'],
+      newsreader: ['var(--font-newsreader)'],
     },
     extend: {
       colors: {
