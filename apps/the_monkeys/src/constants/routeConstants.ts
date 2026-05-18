@@ -11,6 +11,7 @@ export const DRAFT_ROUTE = '/library?source=drafts';
 export const SCHEDULE_ROUTE = '/library?source=scheudle';
 export const BOOKMARK_ROUTE = '/library?source=bookmarks';
 export const BLOG_ROUTE = '/blog';
+export const SNAPSHOT_ROUTE = '/snapshot';
 export const EXPLORE_TOPICS_ROUTE = '/topics/explore';
 export const TOPIC_ROUTE = '/topics';
 export const TOPIC_SITEMAP_ROUTE = '/topics/sitemap.xml';
@@ -27,8 +28,14 @@ export type NavItem = {
 
 export const DISCOVER_ITEMS: NavItem[] = [
   { href: HOME_ROUTE, label: 'Feed', icon: 'RiNewspaper' },
-  { href: FEED_ROUTE, label: 'For You', icon: 'RiBard', requiresAuth: true },
   { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
+  { href: FEED_ROUTE, label: 'For You', icon: 'RiBard', requiresAuth: true },
+  {
+    href: SNAPSHOT_ROUTE,
+    label: 'Snapshot',
+    icon: 'RiCameraLens',
+    requiresAuth: true,
+  },
   {
     href: BOOKMARK_ROUTE,
     label: 'Library',
