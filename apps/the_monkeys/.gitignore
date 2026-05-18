@@ -38,3 +38,8 @@ next-env.d.ts
 
 certificates
 .turbo
+
+# local dev artefacts
+lint_output.txt
+tsc_output.txt
+tsc_results.log

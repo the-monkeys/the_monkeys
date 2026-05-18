@@ -1,8 +1,8 @@
 import Image from 'next/image';
+import Link from 'next/link';
 
 import { Blog } from '@/services/blog/blogTypes';
-
-import { SocialSnapshotDialog } from './SocialSnapshotDialog';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
   return (
@@ -23,7 +23,11 @@ export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
         </div>
 
         <div className='py-2'>
-          <SocialSnapshotDialog blog={blog} />
+          <Button asChild variant='brand'>
+            <Link href={`/snapshot/${encodeURIComponent(blog.blog_id)}`}>
+              Open Studio →
+            </Link>
+          </Button>
         </div>
       </div>
 
