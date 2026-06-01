@@ -40,6 +40,8 @@ function qs(filters: ListFilters = {}): string {
   if (filters.location) p.set('location', filters.location);
   if (filters.tags) p.set('tags', filters.tags);
   if (filters.status) p.set('status', filters.status);
+  if (filters.date) p.set('date', filters.date);
+  if (filters.sort) p.set('sort', filters.sort);
   const s = p.toString();
   return s ? `?${s}` : '';
 }

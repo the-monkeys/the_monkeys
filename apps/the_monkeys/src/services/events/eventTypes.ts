@@ -244,6 +244,8 @@ export type ListFilters = {
   location?: string;
   tags?: string;
   status?: EventStatus | '';
+  date?: 'this-week' | 'this-month' | 'all';
+  sort?: 'soonest' | 'popular' | 'newest';
 };
 
 // One image in an event's gallery. The url is a domain-free storage path the

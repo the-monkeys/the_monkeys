@@ -153,7 +153,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     return () => clearTimeout(t);
   }, [qLive, locationLive]);
 
-  // Filtered grid — reflects search + active category.
+  // Filtered grid — reflects search + active category + date/type/sort.
   const filters: ListFilters = useMemo(
     () => ({
       limit: 12,
@@ -161,8 +161,16 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
       q: q.trim() || undefined,
       location: location.trim() || undefined,
       tags: activeTag || undefined,
+      type:
+        typeFilter === 'all'
+          ? undefined
+          : ((typeFilter === 'in-person'
+              ? 'in_person'
+              : typeFilter) as ListFilters['type']),
+      date: dateFilter === 'all' ? undefined : dateFilter,
+      sort: sortBy === 'soonest' ? undefined : sortBy,
     }),
-    [q, location, activeTag]
+    [q, location, activeTag, typeFilter, dateFilter, sortBy]
   );
 
   const popular = useEventList(filters);
@@ -351,7 +359,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
                 <SelectContent>
                   <SelectItem value='all'>All</SelectItem>
                   <SelectItem value='in-person'>In person</SelectItem>
-                  <SelectItem value='online'>Online</SelectItem>
+                  <SelectItem value='virtual'>Online</SelectItem>
                   <SelectItem value='hybrid'>Hybrid</SelectItem>
                 </SelectContent>
               </Select>
@@ -418,40 +426,6 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
         )}
       </section>
 
-      {/* ---- Popular communities ---- */}
-      <section>
-        <SectionHeader
-          eyebrow='Communities'
-          title={
-            location.trim()
-              ? `Popular communities in ${location.trim()}`
-              : 'Popular communities'
-          }
-          action={
-            <Link
-              href={GROUPS_ROUTE}
-              className='inline-flex items-center gap-1 font-inter text-sm font-medium text-brand-orange'
-            >
-              See all
-              <Icon name='RiArrowRight' size={16} />
-            </Link>
-          }
-        />
-        {communities.isLoading ? (
-          <GridSkeleton count={4} />
-        ) : groups.length === 0 ? (
-          <p className='rounded-xl border border-dashed border-border-light py-12 text-center font-inter text-sm text-gray-500 dark:border-border-dark/40'>
-            No communities yet. Be the first to start one.
-          </p>
-        ) : (
-          <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-            {groups.map((g) => (
-              <GroupGridCard key={g.id || g.slug} group={g} />
-            ))}
-          </div>
-        )}
-      </section>
-
       {/* ---- Bottom Feature Strip ---- */}
       <section className='grid grid-cols-1 gap-6 rounded-2xl border border-border-light bg-gray-50/50 p-6 dark:border-border-dark/40 dark:bg-black/20 sm:grid-cols-2 lg:grid-cols-4 sm:p-8'>
         <div className='flex items-center gap-4'>
@@ -504,6 +478,40 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
             </p>
           </div>
         </div>
+      </section>
+
+      {/* ---- Popular communities ---- */}
+      <section>
+        <SectionHeader
+          eyebrow='Communities'
+          title={
+            location.trim()
+              ? `Popular communities in ${location.trim()}`
+              : 'Popular communities'
+          }
+          action={
+            <Link
+              href={GROUPS_ROUTE}
+              className='inline-flex items-center gap-1 font-inter text-sm font-medium text-brand-orange'
+            >
+              See all
+              <Icon name='RiArrowRight' size={16} />
+            </Link>
+          }
+        />
+        {communities.isLoading ? (
+          <GridSkeleton count={4} />
+        ) : groups.length === 0 ? (
+          <p className='rounded-xl border border-dashed border-border-light py-12 text-center font-inter text-sm text-gray-500 dark:border-border-dark/40'>
+            No communities yet. Be the first to start one.
+          </p>
+        ) : (
+          <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+            {groups.map((g) => (
+              <GroupGridCard key={g.id || g.slug} group={g} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* ---- FAQ accordion (native details/summary) ---- */}
