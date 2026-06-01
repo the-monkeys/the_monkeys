@@ -63,11 +63,12 @@ export function EventStickyBar({
   return (
     <div
       className={cn(
-        'fixed inset-x-0 bottom-0 z-40 border-t border-border-light dark:border-border-dark/60',
+        'fixed inset-x-0 z-40 border-t border-border-light dark:border-border-dark/60',
+        'bottom-[calc(64px+env(safe-area-inset-bottom))] lg:bottom-0',
         'bg-background-light/95 dark:bg-background-dark/95 backdrop-blur',
         '[-webkit-backdrop-filter:blur(8px)] [backdrop-filter:blur(8px)]',
         'transition-transform duration-300 ease-out',
-        'pb-[env(safe-area-inset-bottom)]',
+        'lg:pb-[env(safe-area-inset-bottom)]',
         visible ? 'translate-y-0' : 'translate-y-full'
       )}
       role='region'

@@ -85,7 +85,7 @@ export default function EventDetailClient({ slug }: { slug: string }) {
         {event.cover_image && (
           <div
             className='mb-8 overflow-hidden rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'
-            style={{ aspectRatio: '16 / 9' }}
+            style={{ aspectRatio: '3 / 1' }}
           >
             <img
               src={event.cover_image}

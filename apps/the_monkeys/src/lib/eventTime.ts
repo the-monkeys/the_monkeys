@@ -56,6 +56,28 @@ export function formatEventWhen(
   return `${startLabel} – ${endLabel}`;
 }
 
+/** Compact card line: "Sat, Aug 29 · 7:00 PM" */
+export function formatEventCardWhen(
+  start: ProtoTime,
+  timezone?: string
+): string {
+  const d = parseEventTime(start);
+  if (!d) return '';
+  const tz = timezone || undefined;
+  const date = d.toLocaleString(undefined, {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    timeZone: tz,
+  });
+  const time = d.toLocaleString(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone: tz,
+  });
+  return `${date} · ${time}`;
+}
+
 export function eventTypeLabel(type?: EventType | string): string {
   if (type === 'in_person') return 'In person';
   if (type === 'hybrid') return 'Hybrid';

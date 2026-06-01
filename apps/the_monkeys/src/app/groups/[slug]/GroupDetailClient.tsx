@@ -70,7 +70,7 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
         )}
       </div>
 
-      <div className='relative -mt-10 px-4 sm:px-6'>
+      <div className='relative z-10 -mt-10 px-4 sm:px-6'>
         {/* Logo overlaps the banner; organizers get an inline edit affordance
             beside it (mirrors the profile page's pencil-next-to-avatar). */}
         <div className='flex items-end gap-2'>
@@ -106,7 +106,7 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
           )}
         </div>
 
-        <div className='mt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
+        <div className='mt-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between'>
           <div className='min-w-0'>
             <div className='flex flex-wrap items-center gap-2 font-inter text-xs text-gray-500'>
               <span className='inline-flex items-center gap-1'>
@@ -173,19 +173,12 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
           </div>
         </div>
 
-        <div className='mt-10 space-y-10'>
-          {group.description && (
-            <section>
-              <h2 className='mb-3 font-newsreader text-2xl font-bold'>About</h2>
-              <p className='whitespace-pre-line font-inter text-[15px] leading-relaxed text-gray-700 dark:text-gray-300'>
-                {group.description}
-              </p>
-            </section>
-          )}
-
-          <GroupRules rules={group.rules} />
-
-          <GroupCommunity group={group} />
+        {/* ── Body: Single column for tabs and content ────────────────────── */}
+        <div className='mt-8'>
+          <div className='min-w-0'>
+            {/* Events / About / Members / Join requests / Invites tabs */}
+            <GroupCommunity group={group} />
+          </div>
         </div>
       </div>
     </div>

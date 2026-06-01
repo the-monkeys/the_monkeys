@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import Icon from '@/components/icon';
 import {
@@ -18,13 +18,6 @@ const MAX_PHOTOS = 4;
 // the gallery snappy and give the host immediate feedback.
 const MAX_BYTES = 10 * 1024 * 1024;
 
-/**
- * Event photo gallery rendered as an Instagram-style carousel (max four
- * photos). Hosts and co-hosts see inline add/remove controls; everyone else
- * sees a swipeable, arrow-navigable viewer. Reads are public; the mutations are
- * gated by the event host guard on the gateway, so a non-host who forces the
- * request still gets a 401.
- */
 export function EventGallery({
   slug,
   canManage,
@@ -38,38 +31,51 @@ export function EventGallery({
   const remove = useDeleteEventPhoto(slug);
 
   const fileRef = useRef<HTMLInputElement>(null);
-  const [index, setIndex] = useState(0);
-  const touchStartX = useRef<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   const count = photos.length;
   const atCap = count >= MAX_PHOTOS;
-  const current = Math.min(index, Math.max(count - 1, 0));
 
-  const go = useCallback(
-    (next: number) => {
-      if (count === 0) return;
-      const wrapped = (next + count) % count;
-      setIndex(wrapped);
-    },
-    [count]
-  );
+  // Auto-slide every 15 seconds
+  useEffect(() => {
+    if (isHovered || count < 2) return;
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        // If we reached the end, loop back to start
+        if (scrollLeft + clientWidth >= scrollWidth - 10) {
+          scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+          const itemWidth =
+            (scrollRef.current.firstChild as HTMLElement)?.clientWidth || 0;
+          scrollRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+        }
+      }
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [count, isHovered]);
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0]?.clientX ?? null;
+  const goLeft = () => {
+    if (scrollRef.current) {
+      const itemWidth =
+        (scrollRef.current.firstChild as HTMLElement)?.clientWidth || 0;
+      scrollRef.current.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+    }
   };
 
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = (e.changedTouches[0]?.clientX ?? 0) - touchStartX.current;
-    if (Math.abs(delta) > 40) go(current + (delta < 0 ? 1 : -1));
-    touchStartX.current = null;
+  const goRight = () => {
+    if (scrollRef.current) {
+      const itemWidth =
+        (scrollRef.current.firstChild as HTMLElement)?.clientWidth || 0;
+      scrollRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+    }
   };
 
   const onPick = () => fileRef.current?.click();
 
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    // Reset immediately so re-selecting the same file re-triggers change.
     e.target.value = '';
     if (!file) return;
 
@@ -89,8 +95,15 @@ export function EventGallery({
     try {
       await upload.mutateAsync(file);
       toast({ title: 'Photo added' });
-      // Surface the newest photo, which lands at the end of the list.
-      setIndex(count);
+      // Scroll to the end to show the new photo
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTo({
+            left: scrollRef.current.scrollWidth,
+            behavior: 'smooth',
+          });
+        }
+      }, 100);
     } catch (err) {
       toast({ title: 'Upload failed', description: eventError(err) });
     }
@@ -100,7 +113,6 @@ export function EventGallery({
     try {
       await remove.mutateAsync(photoId);
       toast({ title: 'Photo removed' });
-      setIndex((i) => Math.max(0, Math.min(i, count - 2)));
     } catch (err) {
       toast({ title: 'Could not remove photo', description: eventError(err) });
     }
@@ -141,95 +153,76 @@ export function EventGallery({
       )}
 
       {isLoading ? (
-        <div
-          className='mt-4 w-full max-w-md animate-pulse rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'
-          style={{ aspectRatio: '1 / 1' }}
-        />
-      ) : count > 0 ? (
-        <div className='mt-4'>
-          <div
-            className='relative w-full max-w-md overflow-hidden rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'
-            style={{ aspectRatio: '1 / 1' }}
-            onTouchStart={onTouchStart}
-            onTouchEnd={onTouchEnd}
-          >
+        <div className='mt-4 flex gap-4 overflow-hidden'>
+          {[1, 2, 3].map((i) => (
             <div
-              className='flex h-full w-full transition-transform duration-300 ease-out'
-              style={{ transform: `translateX(-${current * 100}%)` }}
-            >
-              {photos.map((p) => (
-                <img
-                  key={p.id}
-                  src={p.url}
-                  alt=''
-                  loading='lazy'
-                  className='h-full w-full shrink-0 object-cover'
-                  style={{ flex: '0 0 100%' }}
-                />
-              ))}
-            </div>
-
-            {count > 1 && (
-              <span className='absolute right-3 top-3 rounded-full bg-black/60 px-2 py-0.5 font-inter text-xs font-medium text-white'>
-                {current + 1}/{count}
-              </span>
-            )}
-
-            {canManage && (
-              <button
-                type='button'
-                aria-label='Remove photo'
-                onClick={() => onDelete(photos[current]!.id)}
-                disabled={remove.isPending}
-                className='absolute left-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80 disabled:opacity-50'
+              key={i}
+              className='aspect-[3/4] w-full min-w-[280px] flex-shrink-0 animate-pulse rounded-2xl bg-foreground-light/40 sm:min-w-[calc(50%-8px)] md:min-w-[calc(33.333%-10.66px)] dark:bg-foreground-dark/30'
+            />
+          ))}
+        </div>
+      ) : count > 0 ? (
+        <div
+          className='relative mt-4 group'
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          {/* Scrollable Track */}
+          <div
+            ref={scrollRef}
+            className='flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+          >
+            {photos.map((p) => (
+              <div
+                key={p.id}
+                className='relative aspect-[3/4] w-full min-w-[280px] flex-shrink-0 snap-start overflow-hidden rounded-2xl bg-foreground-light/40 sm:min-w-[calc(50%-8px)] md:min-w-[calc(33.333%-10.66px)] dark:bg-foreground-dark/30'
               >
-                <Icon name='RiDeleteBin6' size={18} />
-              </button>
-            )}
+                <img
+                  src={p.url}
+                  alt='Event gallery photo'
+                  loading='lazy'
+                  className='h-full w-full object-cover'
+                />
 
-            {count > 1 && (
-              <>
-                <button
-                  type='button'
-                  aria-label='Previous photo'
-                  onClick={() => go(current - 1)}
-                  className='absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-gray-900 shadow-sm transition-colors hover:bg-white dark:bg-black/60 dark:text-white dark:hover:bg-black/80'
-                >
-                  <Icon name='RiArrowLeftS' size={22} />
-                </button>
-                <button
-                  type='button'
-                  aria-label='Next photo'
-                  onClick={() => go(current + 1)}
-                  className='absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-gray-900 shadow-sm transition-colors hover:bg-white dark:bg-black/60 dark:text-white dark:hover:bg-black/80'
-                >
-                  <Icon name='RiArrowRightS' size={22} />
-                </button>
-              </>
-            )}
+                {canManage && (
+                  <button
+                    type='button'
+                    aria-label='Remove photo'
+                    onClick={() => onDelete(p.id)}
+                    disabled={remove.isPending}
+                    className='absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-black/80 disabled:opacity-50'
+                  >
+                    <Icon name='RiDeleteBin6' size={18} />
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
 
+          {/* Navigation Arrows (Visible if more photos than fit) */}
           {count > 1 && (
-            <div className='mt-3 flex items-center justify-center gap-2'>
-              {photos.map((p, i) => (
-                <button
-                  key={p.id}
-                  type='button'
-                  aria-label={`Go to photo ${i + 1}`}
-                  onClick={() => setIndex(i)}
-                  className={
-                    'h-2 rounded-full transition-all ' +
-                    (i === current
-                      ? 'w-5 bg-brand-orange'
-                      : 'w-2 bg-gray-300 dark:bg-gray-600')
-                  }
-                />
-              ))}
-            </div>
+            <>
+              <button
+                type='button'
+                aria-label='Previous photo'
+                onClick={goLeft}
+                className='absolute left-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-gray-900 opacity-0 shadow-sm transition-all hover:bg-white group-hover:opacity-100 dark:bg-black/60 dark:text-white dark:hover:bg-black/80'
+              >
+                <Icon name='RiArrowLeftS' size={22} />
+              </button>
+              <button
+                type='button'
+                aria-label='Next photo'
+                onClick={goRight}
+                className='absolute right-2 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-gray-900 opacity-0 shadow-sm transition-all hover:bg-white group-hover:opacity-100 dark:bg-black/60 dark:text-white dark:hover:bg-black/80'
+              >
+                <Icon name='RiArrowRightS' size={22} />
+              </button>
+            </>
           )}
         </div>
       ) : (
-        <div className='mt-4 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-light dark:border-border-dark/60 py-12 text-center'>
+        <div className='mt-4 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-light py-12 text-center dark:border-border-dark/60'>
           <div className='mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange'>
             <Icon name='RiCameraLens' size={26} />
           </div>

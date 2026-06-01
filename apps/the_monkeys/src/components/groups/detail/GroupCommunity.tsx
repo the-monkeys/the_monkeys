@@ -5,6 +5,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { EventGridCard } from '@/components/events/EventGridCard';
+import { GroupRules } from '@/components/groups/detail/GroupRules';
 import { GroupAddMember } from '@/components/groups/members/GroupAddMember';
 import { GroupInvites } from '@/components/groups/members/GroupInvites';
 import { GroupJoinRequests } from '@/components/groups/members/GroupJoinRequests';
@@ -16,7 +17,7 @@ import { useGroupEvents } from '@/hooks/events/useEventQueries';
 import { canManageGroup, canViewGroupMembers } from '@/lib/groupPerms';
 import { GroupItem } from '@/services/groups/groupsTypes';
 
-type Tab = 'events' | 'members' | 'requests' | 'invites';
+type Tab = 'events' | 'about' | 'members' | 'requests' | 'invites';
 
 /**
  * Team-page community panel. Leads with the group's event agenda, then the
@@ -43,6 +44,9 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
         <TabButton active={tab === 'events'} onClick={() => setTab('events')}>
           Events
         </TabButton>
+        <TabButton active={tab === 'about'} onClick={() => setTab('about')}>
+          About
+        </TabButton>
         <TabButton active={tab === 'members'} onClick={() => setTab('members')}>
           Members
         </TabButton>
@@ -66,6 +70,8 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
 
       {tab === 'events' ? (
         <GroupEventsPanel group={group} staff={staff} />
+      ) : tab === 'about' ? (
+        <GroupAboutPanel group={group} />
       ) : tab === 'members' ? (
         <>
           {staff && <GroupAddMember group={group} />}
@@ -127,6 +133,31 @@ function GroupEventsPanel({
       {events.map((event) => (
         <EventGridCard key={event.slug} event={event} />
       ))}
+    </div>
+  );
+}
+
+function GroupAboutPanel({ group }: { group: GroupItem }) {
+  return (
+    <div className='space-y-8 py-4'>
+      {group.description && (
+        <section>
+          <h2 className='mb-3 font-newsreader text-2xl font-bold'>About us</h2>
+          <p className='whitespace-pre-line font-inter text-[15px] leading-relaxed text-gray-700 dark:text-gray-300'>
+            {group.description}
+          </p>
+        </section>
+      )}
+
+      {group.rules && group.rules.length > 0 && (
+        <GroupRules rules={group.rules} />
+      )}
+
+      {!group.description && (!group.rules || group.rules.length === 0) && (
+        <p className='font-inter text-sm text-gray-500 py-6'>
+          This group hasn&apos;t added an about section or rules yet.
+        </p>
+      )}
     </div>
   );
 }

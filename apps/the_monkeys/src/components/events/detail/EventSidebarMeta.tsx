@@ -19,7 +19,7 @@ export function EventSidebarMeta({ event }: { event: EventItem }) {
   const locationLabel = eventLocationLabel(event);
   const query = mapQuery(event);
   const directionsHref = query
-    ? `https://www.openstreetmap.org/search?query=${encodeURIComponent(query)}`
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
     : null;
 
   return (

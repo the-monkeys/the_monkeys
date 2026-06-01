@@ -89,42 +89,73 @@ export function EventReactions({
   };
 
   return (
-    <div className='flex flex-wrap gap-2'>
-      {REACTION_TYPES.map((type) => {
-        const on = !!mine[type];
-        const count = counts[type] || 0;
-        return (
-          <button
-            key={type}
-            type='button'
-            aria-pressed={on}
-            aria-label={META[type].label}
-            onClick={() => onToggle(type)}
-            className={`group inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-inter transition-colors ${
-              on
-                ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-                : 'border-border-light text-text-light/70 hover:border-brand-orange hover:text-brand-orange dark:border-border-dark dark:text-text-dark/70'
-            }`}
-          >
-            <span
-              onAnimationEnd={() => setPop((c) => (c === type ? '' : c))}
-              className={`inline-flex transition-transform duration-150 group-active:scale-90 ${
-                on ? 'scale-110' : ''
-              } ${pop === type ? 'animate-scale-up' : ''}`}
-            >
-              <Icon
-                name={META[type].icon}
-                type={on ? 'Fill' : 'Line'}
-                size={16}
-              />
-            </span>
-            <span className='font-medium'>{META[type].label}</span>
-            {count > 0 && (
-              <span className='tabular-nums opacity-80'>{count}</span>
-            )}
-          </button>
-        );
-      })}
+    <div className='flex flex-wrap items-center gap-2'>
+      {/* Primary trigger button + hover popover */}
+      <div className='group relative flex items-center'>
+        <button
+          type='button'
+          onClick={() => onToggle('like')}
+          className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-4 py-1.5 text-sm font-inter transition-colors ${
+            mine['like']
+              ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
+              : 'border-border-light text-gray-600 hover:border-brand-orange hover:text-brand-orange dark:border-border-dark/40 dark:text-gray-400'
+          }`}
+        >
+          <Icon
+            name='RiThumbUp'
+            type={mine['like'] ? 'Fill' : 'Line'}
+            size={16}
+          />
+          <span className='font-medium'>Like</span>
+        </button>
+
+        {/* Hover popover for all reactions */}
+        <div className='invisible absolute bottom-full left-0 mb-2 flex items-center gap-1 rounded-full border border-border-light bg-white px-3 py-2 shadow-xl opacity-0 transition-all duration-200 group-hover:visible group-hover:-translate-y-1 group-hover:opacity-100 group-focus-within:visible group-focus-within:-translate-y-1 group-focus-within:opacity-100 dark:border-border-dark/40 dark:bg-background-dark z-50'>
+          {REACTION_TYPES.map((type) => {
+            const on = !!mine[type];
+            return (
+              <button
+                key={type}
+                type='button'
+                aria-pressed={on}
+                title={META[type].label}
+                onClick={() => onToggle(type)}
+                className={`relative flex h-10 w-10 items-center justify-center rounded-full transition-transform hover:scale-125 hover:bg-gray-50 dark:hover:bg-gray-800 ${
+                  on
+                    ? 'text-brand-orange'
+                    : 'text-gray-500 hover:text-brand-orange'
+                }`}
+              >
+                <Icon
+                  name={META[type].icon}
+                  type={on ? 'Fill' : 'Line'}
+                  size={24}
+                />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Active reaction counts (chips) */}
+      {REACTION_TYPES.filter((t) => counts[t] > 0).map((type) => (
+        <div
+          key={type}
+          title={`${counts[type]} ${META[type].label}`}
+          className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-inter transition-colors ${
+            mine[type]
+              ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
+              : 'border-border-light text-gray-600 dark:border-border-dark/40 dark:text-gray-400'
+          }`}
+        >
+          <Icon
+            name={META[type].icon}
+            type={mine[type] ? 'Fill' : 'Line'}
+            size={14}
+          />
+          <span className='tabular-nums font-medium'>{counts[type]}</span>
+        </div>
+      ))}
     </div>
   );
 }

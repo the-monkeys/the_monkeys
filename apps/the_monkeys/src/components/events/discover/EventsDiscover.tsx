@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { EventGridCard } from '@/components/events/EventGridCard';
 import { GroupGridCard } from '@/components/groups/GroupGridCard';
-import Icon, { IconName } from '@/components/icon';
+import Icon from '@/components/icon';
 import {
   EVENTS_ROUTE,
   GROUPS_ROUTE,
@@ -14,10 +14,16 @@ import {
 } from '@/constants/routeConstants';
 import { useEventList } from '@/hooks/events/useEventQueries';
 import { useGroupList } from '@/hooks/groups/useGroupQueries';
-import { parseEventTime } from '@/lib/eventTime';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@the-monkeys/ui/atoms/select';
 
 // Category pills map to the backend `tags` filter (GET /events binds `tags`).
 const CATEGORIES: { label: string; tag: string }[] = [
@@ -26,44 +32,6 @@ const CATEGORIES: { label: string; tag: string }[] = [
   { label: 'Writing & Storytelling', tag: 'writing' },
   { label: 'Outdoor', tag: 'outdoor' },
   { label: 'Sports & Hobbies', tag: 'sports' },
-];
-
-// Large intent cards — each pre-filters the events grid via the tags filter.
-const INTENTS: {
-  title: string;
-  copy: string;
-  tag: string;
-  icon: IconName;
-  gradient: string;
-}[] = [
-  {
-    title: 'Meet new friends',
-    copy: 'Casual meetups and social hangs',
-    tag: 'social',
-    icon: 'RiShakeHands',
-    gradient: 'from-[#FF7A5A] to-[#E5391F]',
-  },
-  {
-    title: 'Networking & Tech',
-    copy: 'Talks, demos, and AI deep-dives',
-    tag: 'tech',
-    icon: 'RiCodeSSlash',
-    gradient: 'from-[#3A3A4D] to-[#1C1C26]',
-  },
-  {
-    title: 'Writing & Workshops',
-    copy: 'Craft sessions and story circles',
-    tag: 'writing',
-    icon: 'RiPencil',
-    gradient: 'from-[#E0913E] to-[#C4661C]',
-  },
-  {
-    title: 'Sports & Outdoor',
-    copy: 'Runs, hikes, and pick-up games',
-    tag: 'outdoor',
-    icon: 'RiCompass',
-    gradient: 'from-[#2F6B5E] to-[#1E4A40]',
-  },
 ];
 
 const FAQS: { q: string; a: string }[] = [
@@ -93,22 +61,25 @@ function SectionHeader({
   eyebrow,
   title,
   action,
+  subtitle,
 }: {
   eyebrow?: string;
-  title: string;
+  title: React.ReactNode;
+  subtitle?: React.ReactNode;
   action?: React.ReactNode;
 }) {
   return (
-    <div className='mb-5 flex items-end justify-between gap-4'>
-      <div>
+    <div className='mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between'>
+      <div className='shrink-0'>
         {eyebrow && (
           <p className='font-inter text-[11px] font-bold uppercase tracking-[0.2em] text-brand-orange'>
             {eyebrow}
           </p>
         )}
-        <h2 className='mt-1 font-newsreader text-2xl font-bold sm:text-3xl'>
+        <h2 className='mt-1 font-newsreader text-2xl font-bold sm:text-3xl text-text-light dark:text-text-dark'>
           {title}
         </h2>
+        {subtitle && <div className='mt-1'>{subtitle}</div>}
       </div>
       {action}
     </div>
@@ -146,47 +117,6 @@ function EventGrid({ events }: { events: EventItem[] }) {
 }
 
 // -----------------------------------------------------------------------------
-// Client-side date bucketing (backend GET /events exposes no date filters).
-// -----------------------------------------------------------------------------
-
-function startOfDay(d: Date): Date {
-  const x = new Date(d);
-  x.setHours(0, 0, 0, 0);
-  return x;
-}
-
-function isToday(value: EventItem['start_time']): boolean {
-  const d = parseEventTime(value);
-  if (!d) return false;
-  return startOfDay(d).getTime() === startOfDay(new Date()).getTime();
-}
-
-function weekendRange(now: Date): [number, number] {
-  const day = now.getDay(); // 0 Sun … 6 Sat
-  if (day === 0) {
-    const s = startOfDay(now);
-    const e = new Date(s);
-    e.setHours(23, 59, 59, 999);
-    return [s.getTime(), e.getTime()];
-  }
-  const toSat = (6 - day + 7) % 7;
-  const sat = startOfDay(now);
-  sat.setDate(sat.getDate() + toSat);
-  const end = new Date(sat);
-  end.setDate(sat.getDate() + 1);
-  end.setHours(23, 59, 59, 999);
-  return [sat.getTime(), end.getTime()];
-}
-
-function isThisWeekend(value: EventItem['start_time']): boolean {
-  const d = parseEventTime(value);
-  if (!d) return false;
-  const [from, to] = weekendRange(new Date());
-  const t = d.getTime();
-  return t >= from && t <= to;
-}
-
-// -----------------------------------------------------------------------------
 // Main landing
 // -----------------------------------------------------------------------------
 
@@ -196,9 +126,19 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   const [locationLive, setLocationLive] = useState('');
   const [location, setLocation] = useState('');
   const [activeTag, setActiveTag] = useState('');
-  const [feed, setFeed] = useState<'today' | 'weekend'>('today');
+
+  const [dateFilter, setDateFilter] = useState<
+    'this-week' | 'this-month' | 'all'
+  >('this-week');
+  const [typeFilter, setTypeFilter] = useState<
+    'all' | 'in-person' | 'online' | 'hybrid'
+  >('all');
+  const [sortBy, setSortBy] = useState<'soonest' | 'popular' | 'newest'>(
+    'soonest'
+  );
 
   const gridRef = useRef<HTMLDivElement | null>(null);
+  const locationInputRef = useRef<HTMLInputElement | null>(null);
 
   // NOTE: We deliberately do NOT auto-fill the location filter from the browser
   // timezone. Timezone is region-level (e.g. "Asia/Calcutta" for all of India)
@@ -226,23 +166,12 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   );
 
   const popular = useEventList(filters);
-  // Unfiltered upcoming pool for the time-based feeds (stable key, deduped).
-  const feedPool = useEventList({ limit: 30, offset: 0 });
   const communities = useGroupList({
     limit: 8,
     city: location.trim() || undefined,
   });
 
   const popularEvents = popular.data?.events || [];
-  const pool = useMemo(() => feedPool.data?.events || [], [feedPool.data]);
-  const todayEvents = useMemo(
-    () => pool.filter((e) => isToday(e.start_time)),
-    [pool]
-  );
-  const weekendEvents = useMemo(
-    () => pool.filter((e) => isThisWeekend(e.start_time)),
-    [pool]
-  );
   const groups = communities.data?.groups || [];
 
   const applyTag = (tag: string) => {
@@ -253,118 +182,195 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     );
   };
 
-  const feedEvents = feed === 'today' ? todayEvents : weekendEvents;
+  const hasActiveFilters = !!activeTag || !!q.trim() || !!location.trim();
+  const displayLocation = location.trim() || 'Bengaluru';
 
   return (
     <div className='space-y-14 sm:space-y-20'>
-      {/* ---- Hero: search + category pills ---- */}
-      <section className='relative overflow-hidden rounded-2xl bg-[radial-gradient(130%_130%_at_0%_0%,#FF7A5A_0%,#FF5542_44%,#E5391F_100%)] px-6 py-10 text-white sm:px-10 sm:py-14'>
-        {/* Brand-tone light + shadow blooms give the hero crafted depth instead
-            of a flat fill; both are decorative and non-interactive. */}
-        <div
-          aria-hidden
-          className='pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-white/15 blur-3xl'
-        />
-        <div
-          aria-hidden
-          className='pointer-events-none absolute -bottom-28 left-1/3 h-64 w-64 rounded-full bg-black/15 blur-3xl'
-        />
-        <div className='relative'>
+      {/* ---- Hero: search + category chips ---- */}
+      <section className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-orange to-[#E03A1F] px-5 py-10 sm:px-10 sm:py-14 shadow-md'>
+        {/* Create Button positioned in top right of hero */}
+        <div className='absolute right-5 top-5 z-10 sm:right-8 sm:top-8'>
+          <Button
+            asChild
+            className='h-9 sm:h-10 px-5 rounded-full bg-white font-semibold text-text-light shadow-sm hover:bg-gray-100 transition-colors'
+          >
+            <Link href={signedIn ? `${EVENTS_ROUTE}/new` : LOGIN_ROUTE}>
+              Create event
+            </Link>
+          </Button>
+        </div>
+
+        <div className='relative max-w-4xl'>
+          {/* Eyebrow */}
           <p className='font-inter text-[11px] font-bold uppercase tracking-[0.22em] text-white/80'>
             Community
           </p>
-          <h1 className='mt-2 max-w-3xl font-newsreader text-3xl font-bold leading-[1.1] sm:text-5xl'>
+
+          {/* Headline */}
+          <h1 className='mt-3 font-newsreader text-3xl font-bold leading-[1.08] sm:text-5xl lg:text-[3.5rem] text-white'>
             Find your people. Join the next meetup.
           </h1>
+
+          {/* Supporting copy */}
           <p className='mt-3 max-w-xl font-inter text-sm text-white/90 sm:text-base'>
             Talks, workshops, and live sessions happening near you and online.
           </p>
 
-          <div className='mt-6 flex flex-col gap-3 sm:flex-row'>
-            <label className='relative flex-1'>
-              <span className='sr-only'>Search events</span>
-              <span className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'>
+          {/* Search controls */}
+          <div className='mt-7 flex flex-col gap-3 sm:flex-row sm:items-end'>
+            {/* Event/topic search — largest */}
+            <label className='relative flex-1 min-w-0'>
+              <span className='sr-only'>Search events or topics</span>
+              <span className='pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400'>
                 <Icon name='RiSearch' size={18} />
               </span>
               <Input
                 value={qLive}
                 onChange={(e) => setQLive(e.target.value)}
-                placeholder='Search events by name or topic'
-                // Field sits on the coloured hero, so keep it white with dark
-                // text (and caret) in BOTH themes. The atom sets
-                // dark:bg-background-dark, which we must override or the caret
-                // and typed text vanish on the dark background in dark mode.
-                className='h-12 bg-white pl-10 text-text-light caret-text-light placeholder:text-gray-400 dark:bg-white dark:text-text-light'
+                placeholder='Search events or topics'
+                className='h-12 w-full rounded-xl border-border-light bg-white pl-11 text-text-light placeholder:text-gray-400 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 dark:border-border-dark/40 dark:bg-background-dark dark:text-text-dark'
               />
             </label>
-            <label className='relative sm:w-64'>
+
+            {/* Location selector — secondary */}
+            <label className='relative w-full shrink-0 sm:w-52'>
               <span className='sr-only'>Location</span>
-              <span className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400'>
+              <span className='pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400'>
                 <Icon name='RiMapPinUser' size={18} />
               </span>
               <Input
+                ref={locationInputRef}
                 value={locationLive}
                 onChange={(e) => setLocationLive(e.target.value)}
-                placeholder='City or online'
-                className='h-12 bg-white pl-10 text-text-light caret-text-light placeholder:text-gray-400 dark:bg-white dark:text-text-light'
+                placeholder={locationLive ? locationLive : 'City or online'}
+                className='h-12 w-full rounded-xl border-border-light bg-white pl-11 text-text-light placeholder:text-gray-400 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 dark:border-border-dark/40 dark:bg-background-dark dark:text-text-dark'
               />
             </label>
-            <Button
-              asChild
-              className='h-12 bg-white font-semibold text-brand-orange hover:bg-white/90 sm:w-auto'
-            >
-              <Link href={signedIn ? `${EVENTS_ROUTE}/new` : LOGIN_ROUTE}>
-                Create event
-              </Link>
-            </Button>
           </div>
 
-          <div className='-mx-1 mt-5 flex gap-2 overflow-x-auto px-1 pb-1'>
+          {/* Category chips - transparent with white text/border */}
+          <div className='-mx-1 mt-6 flex flex-wrap gap-2'>
             {CATEGORIES.map((c) => (
               <button
                 key={c.tag}
                 type='button'
                 onClick={() => applyTag(c.tag)}
                 aria-pressed={activeTag === c.tag}
-                className={`whitespace-nowrap rounded-full border px-4 py-2 font-inter text-sm transition-colors ${
+                className={`whitespace-nowrap rounded-full border px-4 py-2 font-inter text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
                   activeTag === c.tag
-                    ? 'border-white bg-white text-brand-orange'
-                    : 'border-white/40 text-white hover:bg-white/10'
+                    ? 'border-white bg-white text-brand-orange shadow-sm'
+                    : 'border-white/30 text-white hover:border-white/60 hover:bg-white/10'
                 }`}
               >
                 {c.label}
               </button>
             ))}
+            <button
+              type='button'
+              className='whitespace-nowrap rounded-full border border-white/30 px-4 py-2 font-inter text-sm text-white/80 transition-colors duration-150 hover:border-white/60 hover:text-white'
+            >
+              More
+            </button>
           </div>
         </div>
       </section>
 
-      {/* ---- Popular events grid ---- */}
+      {/* ---- Popular events ---- */}
       <section ref={gridRef} className='scroll-mt-24'>
         <SectionHeader
-          eyebrow={location.trim() ? `Near ${location.trim()}` : 'Near you'}
+          eyebrow="What's around"
           title={
-            activeTag
-              ? `Events tagged “${activeTag}”`
-              : 'Popular events near you'
+            <span className='flex items-center gap-2'>
+              <span>Popular events near</span>
+              <span className='text-brand-orange'>{displayLocation}</span>
+              {!hasActiveFilters && (
+                <button
+                  type='button'
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    setTimeout(() => locationInputRef.current?.focus(), 500);
+                  }}
+                  className='ml-2 inline-flex items-center gap-1 font-inter text-[15px] font-medium text-gray-400 hover:text-brand-orange'
+                >
+                  Change
+                  <Icon name='RiArrowDownS' size={16} />
+                </button>
+              )}
+            </span>
           }
           action={
-            activeTag || q.trim() || location.trim() ? (
-              <button
-                type='button'
-                onClick={() => {
-                  setActiveTag('');
-                  setQ('');
-                  setQLive('');
-                  setLocation('');
-                  setLocationLive('');
-                }}
-                className='inline-flex items-center gap-1 font-inter text-sm font-medium text-brand-orange'
+            <div className='flex flex-wrap items-center gap-2'>
+              {hasActiveFilters && (
+                <button
+                  type='button'
+                  onClick={() => {
+                    setActiveTag('');
+                    setQ('');
+                    setQLive('');
+                    setLocation('');
+                    setLocationLive('');
+                  }}
+                  className='inline-flex items-center gap-1 font-inter text-sm font-medium text-brand-orange'
+                >
+                  Clear
+                  <Icon name='RiClose' size={16} />
+                </button>
+              )}
+              <Select
+                value={dateFilter}
+                onValueChange={(v) => setDateFilter(v as typeof dateFilter)}
               >
-                Clear
-                <Icon name='RiClose' size={16} />
-              </button>
-            ) : undefined
+                <SelectTrigger className='h-9 w-auto rounded-full bg-white border border-border-light px-3.5 font-inter text-sm text-text-light hover:bg-gray-50 dark:border-border-dark/40 dark:bg-background-dark dark:text-text-dark dark:hover:bg-white/5'>
+                  <div className='flex items-center gap-2'>
+                    <Icon
+                      name='RiCalendar'
+                      size={16}
+                      className='text-gray-500'
+                    />
+                    <SelectValue placeholder='This week' />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='this-week'>This week</SelectItem>
+                  <SelectItem value='this-month'>This month</SelectItem>
+                  <SelectItem value='all'>All upcoming</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={typeFilter}
+                onValueChange={(v) => setTypeFilter(v as typeof typeFilter)}
+              >
+                <SelectTrigger className='h-9 w-auto rounded-full bg-white border border-border-light px-3.5 font-inter text-sm text-text-light hover:bg-gray-50 dark:border-border-dark/40 dark:bg-background-dark dark:text-text-dark dark:hover:bg-white/5'>
+                  <div className='flex items-center gap-2'>
+                    <Icon name='RiUser' size={16} className='text-gray-500' />
+                    <SelectValue placeholder='All' />
+                  </div>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='all'>All</SelectItem>
+                  <SelectItem value='in-person'>In person</SelectItem>
+                  <SelectItem value='online'>Online</SelectItem>
+                  <SelectItem value='hybrid'>Hybrid</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select
+                value={sortBy}
+                onValueChange={(v) => setSortBy(v as typeof sortBy)}
+              >
+                <SelectTrigger className='h-9 w-auto rounded-full bg-white border border-border-light px-3.5 font-inter text-sm text-text-light hover:bg-gray-50 dark:border-border-dark/40 dark:bg-background-dark dark:text-text-dark dark:hover:bg-white/5'>
+                  <span className='mr-1 text-gray-500'>Sort:</span>
+                  <SelectValue placeholder='Soonest' />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value='soonest'>Soonest</SelectItem>
+                  <SelectItem value='popular'>Most popular</SelectItem>
+                  <SelectItem value='newest'>Newest</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           }
         />
         {popular.isLoading ? (
@@ -412,74 +418,6 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
         )}
       </section>
 
-      {/* ---- Intent / category cards ---- */}
-      <section>
-        <SectionHeader eyebrow='Browse by vibe' title='What are you into?' />
-        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4'>
-          {INTENTS.map((it) => (
-            <button
-              key={it.tag}
-              type='button'
-              onClick={() => applyTag(it.tag)}
-              className={`group relative flex h-40 flex-col justify-end overflow-hidden rounded-xl bg-gradient-to-br p-5 text-left text-white ${it.gradient}`}
-            >
-              <span className='absolute right-4 top-4 opacity-80 transition-transform duration-300 group-hover:scale-110'>
-                <Icon name={it.icon} size={32} />
-              </span>
-              <span className='font-newsreader text-xl font-bold leading-tight'>
-                {it.title}
-              </span>
-              <span className='mt-1 font-inter text-xs text-white/85'>
-                {it.copy}
-              </span>
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* ---- Time-based feeds (client-side bucketed) ---- */}
-      <section>
-        <SectionHeader
-          eyebrow='On the calendar'
-          title="What's happening soon"
-          action={
-            <div className='flex rounded-full border border-border-light p-1 dark:border-border-dark/40'>
-              {(
-                [
-                  ['today', 'Today'],
-                  ['weekend', 'This weekend'],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
-                  type='button'
-                  onClick={() => setFeed(id)}
-                  aria-pressed={feed === id}
-                  className={`rounded-full px-3 py-1.5 font-inter text-xs font-medium transition-colors sm:text-sm ${
-                    feed === id
-                      ? 'bg-brand-orange text-white'
-                      : 'text-gray-500 hover:text-brand-orange'
-                  }`}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-          }
-        />
-        {feedPool.isLoading ? (
-          <GridSkeleton count={4} />
-        ) : feedEvents.length === 0 ? (
-          <p className='rounded-xl border border-dashed border-border-light py-12 text-center font-inter text-sm text-gray-500 dark:border-border-dark/40'>
-            {feed === 'today'
-              ? 'Nothing scheduled for today yet.'
-              : 'No events this weekend yet — check back soon.'}
-          </p>
-        ) : (
-          <EventGrid events={feedEvents} />
-        )}
-      </section>
-
       {/* ---- Popular communities ---- */}
       <section>
         <SectionHeader
@@ -514,28 +452,57 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
         )}
       </section>
 
-      {/* ---- CTA banner ---- */}
-      <section className='grid grid-cols-1 gap-4 rounded-2xl border border-border-light bg-gray-50 p-6 dark:border-border-dark/40 dark:bg-black/20 sm:grid-cols-2 sm:p-10'>
-        <div>
-          <h2 className='font-newsreader text-2xl font-bold sm:text-3xl'>
-            Organize your own Monkeys chapter
-          </h2>
-          <p className='mt-2 max-w-md font-inter text-sm text-gray-500 dark:text-gray-400'>
-            Rally people around what you love. Create a community group, host
-            events, and grow your local scene.
-          </p>
+      {/* ---- Bottom Feature Strip ---- */}
+      <section className='grid grid-cols-1 gap-6 rounded-2xl border border-border-light bg-gray-50/50 p-6 dark:border-border-dark/40 dark:bg-black/20 sm:grid-cols-2 lg:grid-cols-4 sm:p-8'>
+        <div className='flex items-center gap-4'>
+          <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange'>
+            <Icon name='RiCompass' size={24} />
+          </div>
+          <div>
+            <h3 className='font-inter text-sm font-bold text-text-light dark:text-text-dark'>
+              Discover events
+            </h3>
+            <p className='font-inter text-[13px] text-gray-500'>
+              tailored to you
+            </p>
+          </div>
         </div>
-        <div className='flex flex-wrap items-center gap-3 sm:justify-end'>
-          <Button asChild variant='brand' className='h-11'>
-            <Link href={signedIn ? `${GROUPS_ROUTE}/new` : LOGIN_ROUTE}>
-              Create a community group
-            </Link>
-          </Button>
-          <Button asChild variant='outline' className='h-11'>
-            <Link href={signedIn ? `${EVENTS_ROUTE}/new` : LOGIN_ROUTE}>
-              Host an event
-            </Link>
-          </Button>
+        <div className='flex items-center gap-4'>
+          <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange'>
+            <Icon name='RiGroup' size={24} />
+          </div>
+          <div>
+            <h3 className='font-inter text-sm font-bold text-text-light dark:text-text-dark'>
+              Meet people
+            </h3>
+            <p className='font-inter text-[13px] text-gray-500'>
+              who share your interests
+            </p>
+          </div>
+        </div>
+        <div className='flex items-center gap-4'>
+          <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange'>
+            <Icon name='RiBookShelf' size={24} />
+          </div>
+          <div>
+            <h3 className='font-inter text-sm font-bold text-text-light dark:text-text-dark'>
+              Learn and grow
+            </h3>
+            <p className='font-inter text-[13px] text-gray-500'>together</p>
+          </div>
+        </div>
+        <div className='flex items-center gap-4'>
+          <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange'>
+            <Icon name='RiCalendar' size={24} />
+          </div>
+          <div>
+            <h3 className='font-inter text-sm font-bold text-text-light dark:text-text-dark'>
+              Host events
+            </h3>
+            <p className='font-inter text-[13px] text-gray-500'>
+              and build community
+            </p>
+          </div>
         </div>
       </section>
 

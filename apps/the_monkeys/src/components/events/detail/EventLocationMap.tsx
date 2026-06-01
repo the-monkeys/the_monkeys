@@ -19,12 +19,12 @@ export function EventLocationMap({ event }: { event: EventItem }) {
   const label = eventLocationLabel(event);
   const address = formatVenueAddress(event.venue);
   const embedSrc = query
-    ? `https://www.openstreetmap.org/export/embed.html?bbox=&layer=mapnik&marker=&query=${encodeURIComponent(
+    ? `https://maps.google.com/maps?q=${encodeURIComponent(
         query
-      )}`
+      )}&t=&z=15&ie=UTF8&iwloc=&output=embed`
     : null;
   const directionsHref = query
-    ? `https://www.openstreetmap.org/search?query=${encodeURIComponent(query)}`
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`
     : null;
 
   return (
