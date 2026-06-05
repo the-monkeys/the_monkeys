@@ -1,7 +1,8 @@
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
 import {
   FONT_STACK,
-  LOGO_ASSET_PATH,
+  Logo,
+  Row,
   SERIF_STACK,
   SHELL_BASE,
   clip,
@@ -13,7 +14,7 @@ import {
 const WIDTH = 1080;
 const HEIGHT = 1350;
 
-const Render = ({ input, theme }: SnapshotRenderProps): JSX.Element => {
+const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
   const category = (input.category ?? input.tags?.[0] ?? 'Insights').trim();
   const body = (input.description ?? '').trim();
   const bodySize = body ? scaleFontSize(body.length, 32, 24, 200, 520) : 32;
@@ -31,17 +32,20 @@ const Render = ({ input, theme }: SnapshotRenderProps): JSX.Element => {
         fontFamily: FONT_STACK,
       }}
     >
-      <div
-        style={{
-          display: 'flex',
-          fontSize: 28,
-          fontWeight: 500,
-          color: theme.foreground,
-          letterSpacing: 0.2,
-        }}
-      >
-        {clip(category, 40)}
-      </div>
+      <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
+        <Logo color={theme.foreground} accent={accent} size={30} />
+        <div
+          style={{
+            display: 'flex',
+            color: theme.muted,
+            fontSize: 22,
+            letterSpacing: 0.4,
+            textTransform: 'uppercase',
+          }}
+        >
+          Snapshot
+        </div>
+      </Row>
 
       <div
         style={{
@@ -54,6 +58,22 @@ const Render = ({ input, theme }: SnapshotRenderProps): JSX.Element => {
           paddingBottom: 24,
         }}
       >
+        {category ? (
+          <div
+            style={{
+              display: 'flex',
+              fontSize: 28,
+              fontWeight: 600,
+              color: accent,
+              letterSpacing: 1.5,
+              textTransform: 'uppercase',
+              marginBottom: -8,
+            }}
+          >
+            {clip(category, 40)}
+          </div>
+        ) : null}
+
         <div
           style={{
             display: 'flex',
@@ -91,38 +111,16 @@ const Render = ({ input, theme }: SnapshotRenderProps): JSX.Element => {
         ) : null}
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'flex-end',
-          alignItems: 'flex-end',
-        }}
-      >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={LOGO_ASSET_PATH}
-          alt=''
-          width={200}
-          height={48}
-          style={{
-            width: 200,
-            height: 48,
-            objectFit: 'contain',
-            objectPosition: 'right',
-            display: 'flex',
-          }}
-        />
-      </div>
+      <div style={{ height: 48 }} />
     </div>
   );
 };
 
-export const editorialForbes: SnapshotTemplate = {
+export const editorialSerif: SnapshotTemplate = {
   id: 'editorial-forbes',
-  label: 'Editorial Forbes',
+  label: 'Editorial Serif',
   description:
-    'Forbes-style IG portrait: category label, serif headline, body copy, logo.',
+    'Serif IG portrait: category label, serif headline, body copy, logo.',
   aspect: '1080x1350',
   width: WIDTH,
   height: HEIGHT,
