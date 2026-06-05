@@ -8,6 +8,7 @@ import {
   SHELL_BASE,
   clip,
   getShellBackground,
+  scaleFontSize,
 } from './_shared';
 
 const WIDTH = 1080;
@@ -52,14 +53,14 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
         <div
           style={{
             display: 'flex',
-            fontSize: text.length > 160 ? 48 : text.length > 80 ? 58 : 68,
+            fontSize: scaleFontSize(text.length, 68, 40, 80, 260),
             lineHeight: 1.2,
             fontWeight: 600,
             letterSpacing: -0.8,
             color: theme.foreground,
           }}
         >
-          {clip(text, 260)}
+          {clip(text, 280)}
         </div>
       </Col>
 

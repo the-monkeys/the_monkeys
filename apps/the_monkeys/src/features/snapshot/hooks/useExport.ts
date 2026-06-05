@@ -127,7 +127,13 @@ export const useExport = (
         setError(new Error('Snapshot node not mounted'));
         return null;
       }
-      const { pixelRatio = 2, format = 'png', quality = 0.95, filename } = opts;
+      const {
+        pixelRatio = 2,
+        format = 'png',
+        quality = 0.95,
+        filename,
+        download = true,
+      } = opts;
 
       setIsExporting(true);
       setError(null);
@@ -152,28 +158,30 @@ export const useExport = (
         const ext = format === 'jpeg' ? 'jpg' : 'png';
         const baseName = slugify(filename ?? 'snapshot');
 
-        if (slice && slice.count > 1) {
-          const parts = await sliceBlobHorizontally(
-            blob,
-            width,
-            height,
-            slice.count,
-            slice.sliceWidth,
-            slice.sliceHeight,
-            mimeType,
-            quality
-          );
-          // Chrome throttles bursts of downloads; stagger them slightly.
-          parts.forEach((part, i) => {
-            setTimeout(
-              () => triggerDownload(part, `${baseName}-${i + 1}.${ext}`),
-              i * 250
+        if (download) {
+          if (slice && slice.count > 1) {
+            const parts = await sliceBlobHorizontally(
+              blob,
+              width,
+              height,
+              slice.count,
+              slice.sliceWidth,
+              slice.sliceHeight,
+              mimeType,
+              quality
             );
-          });
-          return blob;
-        }
+            // Chrome throttles bursts of downloads; stagger them slightly.
+            parts.forEach((part, i) => {
+              setTimeout(
+                () => triggerDownload(part, `${baseName}-${i + 1}.${ext}`),
+                i * 250
+              );
+            });
+            return blob;
+          }
 
-        triggerDownload(blob, `${baseName}.${ext}`);
+          triggerDownload(blob, `${baseName}.${ext}`);
+        }
         return blob;
       } catch (err) {
         const e = err instanceof Error ? err : new Error(String(err));

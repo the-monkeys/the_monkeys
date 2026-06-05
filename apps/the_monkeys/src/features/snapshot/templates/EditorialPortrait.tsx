@@ -10,6 +10,8 @@ import {
   Tag,
   clip,
   getShellBackground,
+  headlineFontSize,
+  scaleFontSize,
 } from './_shared';
 
 const WIDTH = 1080;
@@ -44,35 +46,47 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
         </div>
       </Row>
 
-      <Col style={{ gap: 28 }}>
+      <Col style={{ gap: 28, flex: 1, justifyContent: 'center' }}>
         <AccentBar color={accent} width={84} height={8} />
 
         <div
           style={{
             display: 'flex',
-            fontSize:
-              input.title.length > 80 ? 64 : input.title.length > 40 ? 76 : 92,
+            fontSize: headlineFontSize(
+              input.title,
+              [
+                { over: 80, size: 64 },
+                { over: 40, size: 76 },
+              ],
+              92
+            ),
             lineHeight: 1.05,
             fontWeight: 700,
             letterSpacing: -1.5,
             color: theme.foreground,
           }}
         >
-          {clip(input.title, 160)}
+          {clip(input.title, 200)}
         </div>
 
         {input.description ? (
           <div
             style={{
               display: 'flex',
-              fontSize: 30,
+              fontSize: scaleFontSize(
+                input.description.length,
+                30,
+                22,
+                180,
+                520
+              ),
               lineHeight: 1.4,
               color: theme.muted,
               fontWeight: 400,
               letterSpacing: -0.3,
             }}
           >
-            {clip(input.description, 220)}
+            {clip(input.description, 520)}
           </div>
         ) : null}
 

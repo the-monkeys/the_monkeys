@@ -28,6 +28,8 @@ export interface SnapshotInput {
   /** Public canonical URL of the original post (optional, shown as footer). */
   sourceUrl?: string;
   title: string;
+  /** Small category label (e.g. "Money") for editorial-forbes template. */
+  category?: string;
   description?: string;
   /** Short pull-quote, used by quote-style templates. */
   quote?: string;
@@ -114,6 +116,8 @@ export interface SnapshotExportOptions {
   quality?: number;
   /** File name without extension. */
   filename?: string;
+  /** Whether to trigger a browser download. If false, returns the blob without downloading. */
+  download?: boolean;
 }
 
 export interface SnapshotState {

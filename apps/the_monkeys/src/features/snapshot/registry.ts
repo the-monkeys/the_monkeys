@@ -1,3 +1,4 @@
+import { editorialForbes } from './templates/EditorialForbes';
 import { editorialPortrait } from './templates/EditorialPortrait';
 import { instagramCarousel } from './templates/InstagramCarousel';
 import { linkedinShare } from './templates/LinkedInShare';
@@ -9,6 +10,7 @@ import { SnapshotTemplate } from './types';
 
 export const SNAPSHOT_TEMPLATES: SnapshotTemplate[] = [
   editorialPortrait,
+  editorialForbes,
   quoteCard,
   threadCover,
   instagramCarousel,
