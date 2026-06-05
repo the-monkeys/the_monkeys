@@ -7,6 +7,7 @@ import {
   useLayoutEffect,
   useMemo,
   useRef,
+  useState,
 } from 'react';
 
 import { format } from 'date-fns';
@@ -84,42 +85,47 @@ const MediaGrid = ({
   if (!media.length) return null;
   const border = dark ? '#38444D' : '#E0DDD6';
 
+  // X's standard layouts:
+  // 1: auto height
+  // 2: 1x2 grid (side by side)
+  // 3: 1 tall on left, 2 on right
+  // 4: 2x2 grid
+  const count = media.length;
+
   return (
     <div
       style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: 3,
+        display: 'grid',
+        gridTemplateColumns: count === 1 ? '1fr' : '1fr 1fr',
+        gridTemplateRows: count <= 2 ? '1fr' : '1fr 1fr',
+        gap: 2,
         width: '100%',
-        borderRadius: 14,
+        borderRadius: 16,
         overflow: 'hidden',
         border: `1px solid ${border}`,
+        aspectRatio: count === 1 ? 'auto' : '1.75 / 1',
+        backgroundColor: border,
       }}
     >
-      {media.map((m, i) => (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          key={m.media_url_https}
-          src={m.media_url_https}
-          alt=''
-          style={{
-            display: 'flex',
-            width:
-              media.length === 1
-                ? '100%'
-                : media.length === 3 && i === 0
-                  ? '100%'
-                  : 'calc(50% - 2px)',
-            height:
-              media.length === 1
-                ? 340
-                : media.length === 3 && i === 0
-                  ? 200
-                  : 170,
-            objectFit: 'cover',
-          }}
-        />
-      ))}
+      {media.map((m, i) => {
+        const isFirstOfThree = count === 3 && i === 0;
+        return (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            key={m.media_url_https}
+            src={m.media_url_https}
+            alt=''
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              gridRow: isFirstOfThree ? 'span 2' : 'auto',
+              maxHeight: count === 1 ? 560 : 'none',
+              minHeight: count === 1 ? 200 : 'none',
+            }}
+          />
+        );
+      })}
     </div>
   );
 };
@@ -335,6 +341,8 @@ export const TweetScreenshotPreview = forwardRef<
   const tweetId = parseTweetId(tweetUrl);
   const { tweet, isLoading, error } = useTweetSyndication(tweetId);
   const innerRef = useRef<HTMLDivElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const [scale, setScale] = useState(1);
   const { width, height } = TWEET_ASPECT_DIMENSIONS[options.aspect];
 
   const setContainerRef = useCallback(
@@ -355,6 +363,20 @@ export const TweetScreenshotPreview = forwardRef<
   useLayoutEffect(() => {
     measure();
   }, [tweet, options, measure]);
+
+  useLayoutEffect(() => {
+    if (!contentRef.current || !tweet) return;
+    // Allow some buffer for the watermark and padding
+    const availableHeight = height - CANVAS_PADDING * 2 - 100;
+    const availableWidth = width - CANVAS_PADDING * 2;
+    const actualHeight = contentRef.current.offsetHeight;
+    const actualWidth = contentRef.current.offsetWidth;
+
+    const scaleH = actualHeight > availableHeight ? availableHeight / actualHeight : 1;
+    const scaleW = actualWidth > availableWidth ? availableWidth / actualWidth : 1;
+
+    setScale(Math.min(scaleH, scaleW));
+  }, [tweet, options, width, height]);
 
   useEffect(() => {
     if (error) onError?.(error);
@@ -521,9 +543,21 @@ export const TweetScreenshotPreview = forwardRef<
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
+          overflow: 'visible',
         }}
       >
-        <ScreenshotCard tweet={tweet} options={options} canvasWidth={width} />
+        <div
+          ref={contentRef}
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: 'center center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <ScreenshotCard tweet={tweet} options={options} canvasWidth={width} />
+        </div>
       </div>
     </div>
   );
