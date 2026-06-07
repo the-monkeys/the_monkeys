@@ -8,6 +8,7 @@ import {
 import BlogActionBar from '@/components/editorial/BlogActionBar';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
@@ -23,6 +24,7 @@ export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
   const url = `${BLOG_ROUTE}/${slug}-${blog?.blog_id}`;
   const image = blog?.first_image;
   const category = (blog?.tags?.[0] ?? 'Feature').toUpperCase();
+  const time = blog?.published_time ? getRelativeTime(blog.published_time) : '';
 
   return (
     <article className='w-full overflow-hidden rounded-lg  bg-background-light dark:bg-background-dark'>
@@ -76,7 +78,7 @@ export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
           <div className='mt-auto pt-5 flex items-center justify-between gap-3'>
             <UserInfoCardShowcase
               authorID={blog?.owner_account_id}
-              date={blog?.published_time}
+              date={time} //-> Fix
             />
             <BlogActionBar
               blogId={blog?.blog_id}
