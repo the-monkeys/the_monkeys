@@ -18,19 +18,20 @@ RUN pnpm install --frozen-lockfile
 
 # Copy source and build
 COPY . .
-# Declare build-time args so ENV can reference them without error
-ARG NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY
-ARG NEXT_PUBLIC_GROWTHBOOK_API_HOST
-ENV NEXT_TELEMETRY_DISABLED=1
+
+# Set Docker build flag for standalone output
 ENV DOCKER_BUILD=1
-ENV NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=$NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY
-ENV NEXT_PUBLIC_GROWTHBOOK_API_HOST=$NEXT_PUBLIC_GROWTHBOOK_API_HOST
+
+# Build without environment-specific variables
+# Configuration will be provided at runtime
 RUN pnpm build
 
 # Runtime stage
 FROM base AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
 # Create user
 RUN addgroup --system --gid 1001 nodejs

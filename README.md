@@ -49,8 +49,8 @@ If you’d like to contribute technically, we encourage you to explore the archi
 ### Docker Deployment
 ```bash
 # Setup and deploy
-cp .env.production.example .env.production
-docker-compose up -d
+cp .env.local.example .env.local
+docker-compose -f docker-compose.local.yml up
 ```
 
 ### Development
