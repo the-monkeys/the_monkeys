@@ -9,7 +9,7 @@ services:
       - "3000:3000"
 
     env_file:
-      - .env
+      - .env.local
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000"]
@@ -17,3 +17,11 @@ services:
       timeout: 10s
       retries: 3
       start_period: 15s
+
+
+    networks:
+      - monkeys_engine_monkeys
+
+networks:
+  monkeys_engine_monkeys:
+    external: true
