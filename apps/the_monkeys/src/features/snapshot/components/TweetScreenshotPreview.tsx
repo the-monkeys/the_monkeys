@@ -17,6 +17,7 @@ import { useTweetSyndication } from '../hooks/useTweetSyndication';
 import { isLightBackground } from '../lib/canvasContrast';
 import { formatTweetCount } from '../lib/formatTweetCounts';
 import { parseTweetId } from '../lib/parseTweetUrl';
+import { getTweetCanvasBackground } from '../lib/tweetCanvasBackground';
 import { formatTweetDisplayText } from '../lib/tweetDisplayText';
 import {
   collectTweetMedia,
@@ -558,9 +559,8 @@ export const TweetScreenshotPreview = forwardRef<
     };
   }, [tweet, measure, updateScale]);
 
-  const canvasStyle = useMemo(() => {
-    const bg = options.backgroundColor;
-    return {
+  const canvasStyle = useMemo(
+    () => ({
       width,
       height,
       display: 'flex' as const,
@@ -569,13 +569,13 @@ export const TweetScreenshotPreview = forwardRef<
       justifyContent: 'flex-start' as const,
       padding: CANVAS_PADDING,
       boxSizing: 'border-box' as const,
-      background: `linear-gradient(165deg, ${bg} 0%, ${bg} 42%, ${bg}dd 72%, ${bg}99 100%)`,
-      backgroundColor: bg,
+      ...getTweetCanvasBackground(options),
       position: 'relative' as const,
       overflow: 'hidden' as const,
       flexShrink: 0,
-    };
-  }, [width, height, options.backgroundColor]);
+    }),
+    [width, height, options.backgroundColor, options.backgroundImage]
+  );
 
   const placeholder = (message: string, sub?: string) => (
     <div ref={innerRef} className={className} style={canvasStyle}>

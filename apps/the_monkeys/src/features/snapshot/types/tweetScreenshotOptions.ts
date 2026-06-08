@@ -1,8 +1,12 @@
 export type TweetScreenshotAspect = '1080x1080' | '1080x1350' | '1200x675';
 
 export interface TweetScreenshotOptions {
-  /** Canvas gradient base (screenshot background). */
+  /** Preset theme id; cleared when using custom color. */
+  themeId?: string;
+  /** Canvas base colour (also used as gradient fallback). */
   backgroundColor: string;
+  /** CSS `background-image`, e.g. theme linear-gradient. */
+  backgroundImage?: string;
   /** Light cream card vs dark card interior. */
   darkCard: boolean;
   aspect: TweetScreenshotAspect;

@@ -3,11 +3,13 @@
 import { Label } from '@the-monkeys/ui/atoms/label';
 import { Switch } from '@the-monkeys/ui/atoms/switch';
 
+import { getThemeById } from '../themes';
 import {
   TweetScreenshotAspect,
   TweetScreenshotOptions,
 } from '../types/tweetScreenshotOptions';
 import { AccentColorPicker } from './AccentColorPicker';
+import { ThemePicker } from './ThemePicker';
 
 export interface TweetScreenshotOptionsPanelProps {
   options: TweetScreenshotOptions;
@@ -207,11 +209,29 @@ export const TweetScreenshotOptionsPanel = ({
   onChange,
 }: TweetScreenshotOptionsPanelProps) => (
   <div className='flex flex-col gap-3.5'>
-    {/* Background color row */}
+    <div className='flex flex-col gap-2'>
+      <span className='text-xs font-semibold uppercase tracking-wider text-foreground/50 px-1'>
+        Theme
+      </span>
+      <ThemePicker
+        value={options.themeId ?? ''}
+        onChange={(themeId) => {
+          const theme = getThemeById(themeId);
+          onChange({
+            themeId,
+            backgroundColor: theme.background,
+            backgroundImage: theme.backgroundImage,
+          });
+        }}
+      />
+    </div>
+
     <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
       <div className='flex items-center gap-3'>
         <DropletIcon />
-        <span className='text-sm font-medium text-foreground'>Background</span>
+        <span className='text-sm font-medium text-foreground'>
+          Custom color
+        </span>
       </div>
       <div className='flex items-center gap-2'>
         <div className='relative w-7 h-7 rounded-full overflow-hidden border border-black/10 shadow-sm'>
@@ -219,9 +239,15 @@ export const TweetScreenshotOptionsPanel = ({
             id='tweet-bg-color'
             type='color'
             value={options.backgroundColor}
-            onChange={(e) => onChange({ backgroundColor: e.target.value })}
+            onChange={(e) =>
+              onChange({
+                themeId: undefined,
+                backgroundColor: e.target.value,
+                backgroundImage: undefined,
+              })
+            }
             className='absolute -inset-2 w-12 h-12 cursor-pointer border-0 p-0 bg-transparent'
-            aria-label='Background color picker'
+            aria-label='Custom background color'
           />
         </div>
         <span className='font-mono text-xs text-foreground/50'>
