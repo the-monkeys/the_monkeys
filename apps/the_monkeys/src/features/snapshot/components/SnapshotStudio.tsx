@@ -9,6 +9,8 @@ import { useExport } from '../hooks/useExport';
 import { useSnapshotState } from '../hooks/useSnapshotState';
 import { inlineImagesForExport } from '../lib/inlineImagesForExport';
 import { parseTweetId } from '../lib/parseTweetUrl';
+import { punchOverlayVideoHole } from '../lib/punchOverlayVideoHole';
+import { getTweetDownloadVideoVariant } from '../lib/tweetMedia';
 import { getTemplateById } from '../registry';
 import { SnapshotInput } from '../types';
 import {
@@ -16,6 +18,8 @@ import {
   TWEET_ASPECT_DIMENSIONS,
   TweetScreenshotOptions,
 } from '../types/tweetScreenshotOptions';
+import { TweetScreenshotPreviewHandle } from '../types/tweetScreenshotPreview';
+import { TweetSyndication } from '../types/tweetSyndication';
 import { AccentColorPicker } from './AccentColorPicker';
 import { BackgroundPicker } from './BackgroundPicker';
 import { DownloadButton } from './DownloadButton';
@@ -28,6 +32,19 @@ import { TweetScreenshotPreview } from './TweetScreenshotPreview';
 import { TweetUrlPanel } from './TweetUrlPanel';
 
 type PreviewMode = 'template' | 'x';
+
+const downloadTweetVideo = (videoUrl: string, filename: string) => {
+  const params = new URLSearchParams({
+    url: videoUrl,
+    filename,
+  });
+  const a = document.createElement('a');
+  a.href = `/api/snapshot/tweet/video?${params.toString()}`;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+};
 
 export interface SnapshotStudioProps {
   input: SnapshotInput;
@@ -59,6 +76,12 @@ export const SnapshotStudio = ({
     DEFAULT_TWEET_SCREENSHOT_OPTIONS
   );
   const [tweetLoadError, setTweetLoadError] = useState<string | null>(null);
+  const [tweetForDownload, setTweetForDownload] =
+    useState<TweetSyndication | null>(null);
+  const [isDownloadingVideo, setIsDownloadingVideo] = useState(false);
+  const [exportMode, setExportMode] = useState<'image' | 'video-overlay'>(
+    'image'
+  );
 
   const tweetCanvasSize = TWEET_ASPECT_DIMENSIONS[tweetOptions.aspect];
 
@@ -83,7 +106,7 @@ export const SnapshotStudio = ({
 
   const template = getTemplateById(state.templateId);
   const snapshotRef = useRef<HTMLDivElement | null>(null);
-  const tweetRef = useRef<HTMLDivElement | null>(null);
+  const tweetPreviewRef = useRef<TweetScreenshotPreviewHandle | null>(null);
 
   const xStageRef = useRef<HTMLDivElement | null>(null);
   const [xScale, setXScale] = useState(1);
@@ -113,24 +136,128 @@ export const SnapshotStudio = ({
     exportImage: exportTweetScreenshot,
     isExporting: isExportingTweet,
     error: tweetExportError,
-  } = useExport(tweetRef, {
-    width: tweetCanvasSize.width,
-    height: tweetCanvasSize.height,
-  });
+  } = useExport(
+    { current: null },
+    {
+      width: tweetCanvasSize.width,
+      height: tweetCanvasSize.height,
+      getNode: () => tweetPreviewRef.current?.getExportRoot() ?? null,
+    }
+  );
 
   const filename = `${state.input.title || 'snapshot'}-${template.id}`;
   const tweetFilename = tweetId
     ? `x-post-${tweetId}`
     : `${state.input.title || 'snapshot'}-x-post`;
+  const tweetVideoVariant = useMemo(
+    () => getTweetDownloadVideoVariant(tweetForDownload),
+    [tweetForDownload]
+  );
 
-  const activeExporting = previewMode === 'x' ? isExportingTweet : isExporting;
+  const activeExporting =
+    previewMode === 'x' ? isExportingTweet || isDownloadingVideo : isExporting;
   const activeError =
     previewMode === 'x' ? tweetExportError ?? tweetLoadError : error;
 
   const handleExport = async () => {
     if (previewMode === 'x') {
-      if (!tweetId || !tweetRef.current) return null;
-      await inlineImagesForExport(tweetRef.current);
+      if (!tweetId) return null;
+
+      if (tweetVideoVariant) {
+        if (!tweetOptions.enableBrandedVideo) {
+          setIsDownloadingVideo(true);
+          try {
+            downloadTweetVideo(tweetVideoVariant.url, `${tweetFilename}.mp4`);
+            return null;
+          } finally {
+            window.setTimeout(() => setIsDownloadingVideo(false), 500);
+          }
+        }
+
+        setIsDownloadingVideo(true);
+        setTweetLoadError(null);
+        try {
+          const exportRoot = tweetPreviewRef.current?.getExportRoot();
+          if (!exportRoot) throw new Error('Preview not ready');
+
+          setExportMode('video-overlay');
+          await new Promise((r) => setTimeout(r, 120));
+
+          const root = tweetPreviewRef.current?.getExportRoot();
+          if (root) await inlineImagesForExport(root);
+          await document.fonts?.ready;
+
+          const blob = await exportTweetScreenshot({
+            filename: tweetFilename,
+            download: false,
+            transparent: true,
+            // Match canvas resolution — 2x PNGs blow up gateway FFmpeg memory.
+            pixelRatio: 1,
+          });
+          if (!blob) throw new Error('Overlay capture failed');
+
+          const frame = tweetPreviewRef.current?.getMediaFrame();
+          if (!frame) throw new Error('Could not measure video frame');
+
+          const overlayBlob = await punchOverlayVideoHole(
+            blob,
+            frame,
+            tweetCanvasSize.width
+          );
+
+          const reader = new FileReader();
+          const base64Promise = new Promise<string>((resolve) => {
+            reader.onloadend = () => resolve(reader.result as string);
+          });
+          reader.readAsDataURL(overlayBlob);
+          const overlayBase64 = await base64Promise;
+
+          const response = await fetch('/api/snapshot/tweet/video/render', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              tweetId,
+              videoUrl: tweetVideoVariant.url,
+              overlay: overlayBase64,
+              backgroundColor: tweetOptions.backgroundColor,
+              frameX: frame.x,
+              frameY: frame.y,
+              frameW: frame.width,
+              frameH: frame.height,
+              canvasW: tweetCanvasSize.width,
+              canvasH: tweetCanvasSize.height,
+            }),
+          });
+
+          if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error || 'Server render failed');
+          }
+
+          const resultBlob = await response.blob();
+          const url = URL.createObjectURL(resultBlob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${tweetFilename}-branded.mp4`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+
+          return null;
+        } catch (err) {
+          setTweetLoadError(
+            err instanceof Error ? err.message : 'Branded video export failed'
+          );
+          return null;
+        } finally {
+          setExportMode('image');
+          setIsDownloadingVideo(false);
+        }
+      }
+
+      const root = tweetPreviewRef.current?.getExportRoot();
+      if (root) await inlineImagesForExport(root);
       await document.fonts?.ready;
       return exportTweetScreenshot({ filename: tweetFilename, download: true });
     }
@@ -146,8 +273,9 @@ export const SnapshotStudio = ({
     try {
       let blob: Blob | null = null;
       if (previewMode === 'x') {
-        if (!tweetRef.current) return;
-        await inlineImagesForExport(tweetRef.current);
+        const root = tweetPreviewRef.current?.getExportRoot();
+        if (!root) return;
+        await inlineImagesForExport(root);
         await document.fonts?.ready;
         blob = await exportTweetScreenshot({
           filename: tweetFilename,
@@ -275,10 +403,12 @@ export const SnapshotStudio = ({
                     }}
                   >
                     <TweetScreenshotPreview
-                      ref={tweetRef}
+                      ref={tweetPreviewRef}
                       tweetUrl={tweetUrl}
                       options={tweetOptions}
                       onError={setTweetLoadError}
+                      onTweetReady={setTweetForDownload}
+                      exportMode={exportMode}
                     />
 
                     {/* Decorative drag handles to replicate layout design */}
@@ -527,7 +657,7 @@ export const SnapshotStudio = ({
                         d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
                       />
                     </svg>
-                    Rendering…
+                    {isDownloadingVideo ? 'Downloading…' : 'Rendering…'}
                   </>
                 ) : (
                   <>
@@ -545,7 +675,7 @@ export const SnapshotStudio = ({
                       <polyline points='7 10 12 15 17 10' />
                       <line x1='12' y1='15' x2='12' y2='3' />
                     </svg>
-                    Download
+                    {tweetVideoVariant ? 'Download video' : 'Download'}
                   </>
                 )}
               </button>

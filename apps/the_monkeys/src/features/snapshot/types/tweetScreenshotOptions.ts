@@ -14,6 +14,7 @@ export interface TweetScreenshotOptions {
   showResponses: boolean;
   watermarkColor: string;
   watermarkAccentColor: string;
+  enableBrandedVideo: boolean;
 }
 
 export const TWEET_ASPECT_DIMENSIONS: Record<
@@ -37,4 +38,5 @@ export const DEFAULT_TWEET_SCREENSHOT_OPTIONS: TweetScreenshotOptions = {
   showResponses: true,
   watermarkColor: '#FFFFFF',
   watermarkAccentColor: '#FF5542',
+  enableBrandedVideo: true,
 };

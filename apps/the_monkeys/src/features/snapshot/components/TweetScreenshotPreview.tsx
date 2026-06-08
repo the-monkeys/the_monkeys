@@ -4,6 +4,7 @@ import {
   forwardRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -17,11 +18,22 @@ import { isLightBackground } from '../lib/canvasContrast';
 import { formatTweetCount } from '../lib/formatTweetCounts';
 import { parseTweetId } from '../lib/parseTweetUrl';
 import { formatTweetDisplayText } from '../lib/tweetDisplayText';
+import {
+  collectTweetMedia,
+  getBestTweetVideoVariant,
+  getTweetImageAspectRatio,
+  getTweetMediaAspectRatio,
+  isTweetVideoMedia,
+} from '../lib/tweetMedia';
 import { Logo } from '../templates/_shared';
 import {
   TWEET_ASPECT_DIMENSIONS,
   TweetScreenshotOptions,
 } from '../types/tweetScreenshotOptions';
+import {
+  MediaFrameRect,
+  TweetScreenshotPreviewHandle,
+} from '../types/tweetScreenshotPreview';
 import {
   TweetSyndication,
   TweetSyndicationMedia,
@@ -35,24 +47,11 @@ export interface TweetScreenshotPreviewProps {
   tweetUrl: string;
   options: TweetScreenshotOptions;
   onReady?: (size: { width: number; height: number }) => void;
-  onError?: (message: string) => void;
+  onError?: (message: string | null) => void;
+  onTweetReady?: (tweet: TweetSyndication | null) => void;
   className?: string;
+  exportMode?: 'image' | 'video-overlay';
 }
-
-const collectMedia = (tweet: TweetSyndication): TweetSyndicationMedia[] => {
-  const fromDetails = tweet.mediaDetails ?? [];
-  const fromPhotos = tweet.photos ?? [];
-  const fromEntities = tweet.entities?.media ?? [];
-  const seen = new Set<string>();
-  const out: TweetSyndicationMedia[] = [];
-  for (const m of [...fromDetails, ...fromPhotos, ...fromEntities]) {
-    const url = m.media_url_https;
-    if (!url || seen.has(url)) continue;
-    seen.add(url);
-    out.push(m);
-  }
-  return out.slice(0, 4);
-};
 
 const hiResAvatar = (url: string) =>
   url.replace(/_normal|_bigger|_mini/gi, '_400x400');
@@ -78,9 +77,13 @@ const VerifiedBadge = () => (
 const MediaGrid = ({
   media,
   dark,
+  exportMode,
+  onMediaRef,
 }: {
   media: TweetSyndicationMedia[];
   dark: boolean;
+  exportMode?: 'image' | 'video-overlay';
+  onMediaRef?: (el: HTMLElement | null) => void;
 }) => {
   if (!media.length) return null;
   const border = dark ? '#38444D' : '#E0DDD6';
@@ -91,6 +94,20 @@ const MediaGrid = ({
   // 3: 1 tall on left, 2 on right
   // 4: 2x2 grid
   const count = media.length;
+  const firstMedia = media[0];
+  const firstMediaIsVideo = isTweetVideoMedia(firstMedia);
+  const singleMediaRatio =
+    count === 1
+      ? firstMediaIsVideo
+        ? getTweetMediaAspectRatio(firstMedia)
+        : getTweetImageAspectRatio(firstMedia)
+      : null;
+  const singleDisplayRatio =
+    count === 1 && singleMediaRatio
+      ? firstMediaIsVideo
+        ? Math.max(singleMediaRatio, 4 / 3)
+        : singleMediaRatio
+      : null;
 
   return (
     <div
@@ -103,27 +120,107 @@ const MediaGrid = ({
         borderRadius: 16,
         overflow: 'hidden',
         border: `1px solid ${border}`,
-        aspectRatio: count === 1 ? 'auto' : '1.75 / 1',
+        aspectRatio:
+          count === 1 && singleDisplayRatio
+            ? `${singleDisplayRatio} / 1`
+            : count === 1
+              ? 'auto'
+              : '1.75 / 1',
+        maxHeight: count === 1 ? (firstMediaIsVideo ? 640 : 560) : undefined,
+        minHeight: count === 1 ? (firstMediaIsVideo ? 260 : 220) : undefined,
         backgroundColor: border,
       }}
     >
       {media.map((m, i) => {
         const isFirstOfThree = count === 3 && i === 0;
+        const isVideo = isTweetVideoMedia(m);
+        const bestVideo = getBestTweetVideoVariant(m);
+        const isFirst = i === 0;
+
         return (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <div
             key={m.media_url_https}
-            src={m.media_url_https}
-            alt=''
+            ref={isFirst ? onMediaRef : undefined}
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
               gridRow: isFirstOfThree ? 'span 2' : 'auto',
-              maxHeight: count === 1 ? 560 : 'none',
-              minHeight: count === 1 ? 200 : 'none',
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
             }}
-          />
+          >
+            {isVideo && bestVideo && exportMode === 'video-overlay' ? (
+              <div
+                data-snapshot-video-hole='true'
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  background: 'transparent',
+                }}
+              />
+            ) : isVideo && bestVideo ? (
+              <video
+                src={bestVideo.url}
+                poster={m.media_url_https}
+                autoPlay
+                muted
+                loop
+                playsInline
+                crossOrigin='anonymous'
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center center',
+                }}
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={m.media_url_https}
+                alt=''
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  maxHeight: count === 1 ? 560 : 'none',
+                  minHeight: count === 1 ? 200 : 'none',
+                }}
+              />
+            )}
+
+            {m.type === 'video' && exportMode !== 'video-overlay' && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 48,
+                  height: 48,
+                  backgroundColor: 'rgba(29, 155, 240, 0.9)',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'white',
+                  pointerEvents: 'none',
+                  border: '4px solid white',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                }}
+              >
+                <svg
+                  viewBox='0 0 24 24'
+                  width={24}
+                  height={24}
+                  fill='currentColor'
+                >
+                  <path d='M8 5v14l11-7z' />
+                </svg>
+              </div>
+            )}
+          </div>
         );
       })}
     </div>
@@ -134,18 +231,23 @@ const ScreenshotCard = ({
   tweet,
   options,
   canvasWidth,
+  exportMode,
+  onMediaRef,
 }: {
   tweet: TweetSyndication;
   options: TweetScreenshotOptions;
   canvasWidth: number;
+  exportMode?: 'image' | 'video-overlay';
+  onMediaRef?: (el: HTMLElement | null) => void;
 }): JSX.Element => {
   const dark = options.darkCard;
   const cardBg = dark ? '#15202B' : '#FFFFFF';
   const fg = dark ? '#F7F9F9' : '#0F1419';
   const muted = dark ? '#8B98A5' : '#536471';
   const divider = dark ? '#38444D' : '#E0DDD6';
-  const verified = tweet.user.is_blue_verified || tweet.user.verified;
-  const media = collectMedia(tweet);
+  const user = tweet.user;
+  const verified = Boolean(user?.is_blue_verified || user?.verified);
+  const media = collectTweetMedia(tweet);
   const displayText = formatTweetDisplayText(tweet.text, media.length > 0);
   const when = tweet.created_at ? new Date(tweet.created_at) : null;
   const timeLabel =
@@ -209,7 +311,7 @@ const ScreenshotCard = ({
           {options.showProfilePhoto ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={hiResAvatar(tweet.user.profile_image_url_https)}
+              src={hiResAvatar(user?.profile_image_url_https ?? '')}
               alt=''
               width={52}
               height={52}
@@ -242,12 +344,12 @@ const ScreenshotCard = ({
                 }}
               >
                 <span style={{ fontWeight: 700, fontSize: 17 }}>
-                  {tweet.user.name}
+                  {user?.name ?? 'Unknown'}
                 </span>
                 {options.showVerified && verified ? <VerifiedBadge /> : null}
               </div>
               <span style={{ color: muted, fontSize: 14 }}>
-                @{tweet.user.screen_name}
+                @{user?.screen_name ?? 'unknown'}
               </span>
             </div>
           ) : null}
@@ -269,7 +371,12 @@ const ScreenshotCard = ({
         </div>
       ) : null}
 
-      <MediaGrid media={media} dark={dark} />
+      <MediaGrid
+        media={media}
+        dark={dark}
+        exportMode={exportMode}
+        onMediaRef={onMediaRef}
+      />
 
       {options.showDateTime ? (
         <div style={{ fontSize: 14, color: muted, lineHeight: 1.3 }}>
@@ -331,11 +438,21 @@ const ScreenshotCard = ({
   );
 };
 
+// No interface needed if we use a hybrid approach or just expose methods on the element
+
 export const TweetScreenshotPreview = forwardRef<
-  HTMLDivElement,
+  TweetScreenshotPreviewHandle,
   TweetScreenshotPreviewProps
 >(function TweetScreenshotPreview(
-  { tweetUrl, options, onReady, onError, className },
+  {
+    tweetUrl,
+    options,
+    onReady,
+    onError,
+    onTweetReady,
+    className,
+    exportMode = 'image',
+  },
   ref
 ) {
   const tweetId = parseTweetId(tweetUrl);
@@ -345,15 +462,55 @@ export const TweetScreenshotPreview = forwardRef<
   const [scale, setScale] = useState(1);
   const { width, height } = TWEET_ASPECT_DIMENSIONS[options.aspect];
 
-  const setContainerRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      innerRef.current = node;
-      if (typeof ref === 'function') ref(node);
-      else if (ref) {
-        (ref as React.MutableRefObject<HTMLDivElement | null>).current = node;
-      }
-    },
-    [ref]
+  const updateScale = useCallback(() => {
+    if (!contentRef.current || !tweet) {
+      setScale(1);
+      return;
+    }
+
+    const frame = contentRef.current.parentElement;
+    const availableHeight =
+      (frame?.clientHeight || height - CANVAS_PADDING * 2 - 92) - 16;
+    const availableWidth =
+      (frame?.clientWidth || width - CANVAS_PADDING * 2) - 16;
+    const actualHeight = contentRef.current.offsetHeight;
+    const actualWidth = contentRef.current.offsetWidth;
+
+    if (!availableHeight || !availableWidth || !actualHeight || !actualWidth) {
+      return;
+    }
+
+    const scaleH =
+      actualHeight > availableHeight ? availableHeight / actualHeight : 1;
+    const scaleW =
+      actualWidth > availableWidth ? availableWidth / actualWidth : 1;
+
+    setScale(Math.min(scaleH, scaleW));
+  }, [tweet, width, height]);
+
+  const mediaRef = useRef<HTMLElement | null>(null);
+
+  const getMediaFrame = useCallback((): MediaFrameRect | null => {
+    if (!mediaRef.current || !innerRef.current) return null;
+    const rect = mediaRef.current.getBoundingClientRect();
+    const canvasRect = innerRef.current.getBoundingClientRect();
+    if (!canvasRect.width) return null;
+    const ratio = width / canvasRect.width;
+    return {
+      x: (rect.left - canvasRect.left) * ratio,
+      y: (rect.top - canvasRect.top) * ratio,
+      width: rect.width * ratio,
+      height: rect.height * ratio,
+    };
+  }, [width]);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getExportRoot: () => innerRef.current,
+      getMediaFrame,
+    }),
+    [getMediaFrame]
   );
 
   const measure = useCallback(() => {
@@ -365,32 +522,41 @@ export const TweetScreenshotPreview = forwardRef<
   }, [tweet, options, measure]);
 
   useLayoutEffect(() => {
+    updateScale();
+  }, [tweet, options, updateScale]);
+
+  useLayoutEffect(() => {
     if (!contentRef.current || !tweet) return;
-    // Allow some buffer for the watermark and padding
-    const availableHeight = height - CANVAS_PADDING * 2 - 100;
-    const availableWidth = width - CANVAS_PADDING * 2;
-    const actualHeight = contentRef.current.offsetHeight;
-    const actualWidth = contentRef.current.offsetWidth;
-
-    const scaleH = actualHeight > availableHeight ? availableHeight / actualHeight : 1;
-    const scaleW = actualWidth > availableWidth ? availableWidth / actualWidth : 1;
-
-    setScale(Math.min(scaleH, scaleW));
-  }, [tweet, options, width, height]);
+    const frame = contentRef.current.parentElement;
+    const ro = new ResizeObserver(updateScale);
+    ro.observe(contentRef.current);
+    if (frame) ro.observe(frame);
+    return () => ro.disconnect();
+  }, [tweet, updateScale]);
 
   useEffect(() => {
-    if (error) onError?.(error);
+    onError?.(error);
   }, [error, onError]);
 
   useEffect(() => {
+    onTweetReady?.(tweet ?? null);
+  }, [tweet, onTweetReady]);
+
+  useEffect(() => {
     if (!tweet) return;
-    const t = window.setTimeout(measure, 400);
-    const t2 = window.setTimeout(measure, 1200);
+    const t = window.setTimeout(() => {
+      updateScale();
+      measure();
+    }, 400);
+    const t2 = window.setTimeout(() => {
+      updateScale();
+      measure();
+    }, 1200);
     return () => {
       window.clearTimeout(t);
       window.clearTimeout(t2);
     };
-  }, [tweet, measure]);
+  }, [tweet, measure, updateScale]);
 
   const canvasStyle = useMemo(() => {
     const bg = options.backgroundColor;
@@ -412,7 +578,7 @@ export const TweetScreenshotPreview = forwardRef<
   }, [width, height, options.backgroundColor]);
 
   const placeholder = (message: string, sub?: string) => (
-    <div ref={setContainerRef} className={className} style={canvasStyle}>
+    <div ref={innerRef} className={className} style={canvasStyle}>
       {/* Watermark Header */}
       <div
         style={{
@@ -500,7 +666,7 @@ export const TweetScreenshotPreview = forwardRef<
   }
 
   return (
-    <div ref={setContainerRef} className={className} style={canvasStyle}>
+    <div ref={innerRef} className={className} style={canvasStyle}>
       {/* Watermark Header */}
       <div
         style={{
@@ -556,7 +722,13 @@ export const TweetScreenshotPreview = forwardRef<
             alignItems: 'center',
           }}
         >
-          <ScreenshotCard tweet={tweet} options={options} canvasWidth={width} />
+          <ScreenshotCard
+            tweet={tweet}
+            options={options}
+            canvasWidth={width}
+            exportMode={exportMode}
+            onMediaRef={(el) => (mediaRef.current = el)}
+          />
         </div>
       </div>
     </div>

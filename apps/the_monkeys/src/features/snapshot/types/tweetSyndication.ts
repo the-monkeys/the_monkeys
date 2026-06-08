@@ -14,6 +14,16 @@ export interface TweetSyndicationMedia {
   sizes?: {
     large?: { w: number; h: number };
   };
+  video_info?: {
+    aspect_ratio: [number, number];
+    variants: TweetSyndicationVideoVariant[];
+  };
+}
+
+export interface TweetSyndicationVideoVariant {
+  bitrate?: number;
+  content_type: string;
+  url: string;
 }
 
 export interface TweetSyndication {

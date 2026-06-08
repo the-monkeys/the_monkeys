@@ -118,6 +118,8 @@ export interface SnapshotExportOptions {
   filename?: string;
   /** Whether to trigger a browser download. If false, returns the blob without downloading. */
   download?: boolean;
+  /** PNG export with alpha (video overlay compositing). */
+  transparent?: boolean;
 }
 
 export interface SnapshotState {

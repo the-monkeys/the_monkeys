@@ -164,6 +164,23 @@ const HeartIcon = () => (
   </svg>
 );
 
+const VideoIcon = () => (
+  <svg
+    viewBox='0 0 24 24'
+    width={16}
+    height={16}
+    fill='none'
+    stroke='currentColor'
+    strokeWidth={2}
+    strokeLinecap='round'
+    strokeLinejoin='round'
+    className='text-foreground/50'
+  >
+    <path d='M23 7l-7 5 7 5V7z' />
+    <rect x='1' y='5' width='15' height='14' rx='2' ry='2' />
+  </svg>
+);
+
 const TOGGLES: {
   key: keyof Pick<
     TweetScreenshotOptions,
@@ -223,6 +240,21 @@ export const TweetScreenshotOptionsPanel = ({
         checked={options.darkCard}
         onCheckedChange={(checked) => onChange({ darkCard: checked })}
         className='data-[state=checked]:bg-[#1D9BF0]'
+      />
+    </div>
+
+    {/* Branded video row */}
+    <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
+      <div className='flex items-center gap-3'>
+        <VideoIcon />
+        <span className='text-sm font-medium text-foreground'>
+          Branded Video
+        </span>
+      </div>
+      <Switch
+        checked={options.enableBrandedVideo}
+        onCheckedChange={(checked) => onChange({ enableBrandedVideo: checked })}
+        className='data-[state=checked]:bg-brand-orange'
       />
     </div>
 
