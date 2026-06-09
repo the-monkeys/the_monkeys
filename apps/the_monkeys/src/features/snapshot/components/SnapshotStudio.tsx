@@ -453,52 +453,72 @@ export const SnapshotStudio = ({
         )}
       >
         {previewMode === 'template' ? (
-          <>
-            <div className='flex flex-col gap-2'>
-              <h3 className='text-sm font-semibold uppercase tracking-wide text-foreground/60'>
+          <Accordion
+            type='multiple'
+            defaultValue={[
+              'template',
+              'theme',
+              'accent',
+              'background',
+              'content',
+            ]}
+            className='w-full flex flex-col gap-2'
+          >
+            <AccordionItem value='template' className='border-none'>
+              <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
                 Template
-              </h3>
-              <TemplatePicker value={state.templateId} onChange={setTemplate} />
-            </div>
+              </AccordionTrigger>
+              <AccordionContent className='pt-2'>
+                <TemplatePicker value={state.templateId} onChange={setTemplate} />
+              </AccordionContent>
+            </AccordionItem>
 
-            <div className='flex flex-col gap-2'>
-              <h3 className='text-sm font-semibold uppercase tracking-wide text-foreground/60'>
+            <AccordionItem value='theme' className='border-none'>
+              <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
                 Theme
-              </h3>
-              <ThemePicker value={state.themeId} onChange={setTheme} />
-            </div>
+              </AccordionTrigger>
+              <AccordionContent className='pt-2'>
+                <ThemePicker value={state.themeId} onChange={setTheme} />
+              </AccordionContent>
+            </AccordionItem>
 
-            <div className='flex flex-col gap-2'>
-              <h3 className='text-sm font-semibold uppercase tracking-wide text-foreground/60'>
+            <AccordionItem value='accent' className='border-none'>
+              <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
                 Accent
-              </h3>
-              <AccentColorPicker value={state.accent} onChange={setAccent} />
-            </div>
+              </AccordionTrigger>
+              <AccordionContent className='pt-2'>
+                <AccentColorPicker value={state.accent} onChange={setAccent} />
+              </AccordionContent>
+            </AccordionItem>
 
-            <div className='flex flex-col gap-2'>
-              <h3 className='text-sm font-semibold uppercase tracking-wide text-foreground/60'>
+            <AccordionItem value='background' className='border-none'>
+              <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
                 Background
-              </h3>
-              <BackgroundPicker
-                value={state.input.backgroundImageUrl}
-                images={availableImages}
-                overlay={state.input.backgroundOverlay ?? 0.55}
-                onChangeImage={(url) =>
-                  updateInput({ backgroundImageUrl: url })
-                }
-                onChangeOverlay={(overlay) =>
-                  updateInput({ backgroundOverlay: overlay })
-                }
-              />
-            </div>
+              </AccordionTrigger>
+              <AccordionContent className='pt-2'>
+                <BackgroundPicker
+                  value={state.input.backgroundImageUrl}
+                  images={availableImages}
+                  overlay={state.input.backgroundOverlay ?? 0.55}
+                  onChangeImage={(url) =>
+                    updateInput({ backgroundImageUrl: url })
+                  }
+                  onChangeOverlay={(overlay) =>
+                    updateInput({ backgroundOverlay: overlay })
+                  }
+                />
+              </AccordionContent>
+            </AccordionItem>
 
-            <div className='flex flex-col gap-2'>
-              <h3 className='text-sm font-semibold uppercase tracking-wide text-foreground/60'>
+            <AccordionItem value='content' className='border-none'>
+              <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
                 Content
-              </h3>
-              <OptionsPanel input={state.input} onChange={updateInput} />
-            </div>
-          </>
+              </AccordionTrigger>
+              <AccordionContent className='pt-2'>
+                <OptionsPanel input={state.input} onChange={updateInput} />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         ) : (
           <Accordion
             type='multiple'
