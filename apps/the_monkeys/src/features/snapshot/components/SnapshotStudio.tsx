@@ -689,7 +689,7 @@ export const SnapshotStudio = ({
               </button>
 
               {/* Post button */}
-              <button
+              {/* <button
                 type='button'
                 disabled={!tweetId}
                 onClick={() => {
@@ -713,7 +713,7 @@ export const SnapshotStudio = ({
                   <polygon points='22 2 15 22 11 13 2 9 22 2' />
                 </svg>
                 Post
-              </button>
+              </button> */}
             </div>
           ) : (
             <DownloadButton
