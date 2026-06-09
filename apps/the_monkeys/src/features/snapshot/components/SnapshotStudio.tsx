@@ -83,7 +83,7 @@ export const SnapshotStudio = ({
   const [internalPreviewMode, setInternalPreviewMode] =
     useState<PreviewMode>('template');
   const previewMode = propsPreviewMode ?? internalPreviewMode;
-  const setPreviewMode = onPreviewModeChange ?? setInternalPreviewMode;
+  // const setPreviewMode = onPreviewModeChange ?? setInternalPreviewMode;
   const [tweetUrl, setTweetUrl] = useState('');
   const [tweetOptions, setTweetOptions] = useState<TweetScreenshotOptions>(
     DEFAULT_TWEET_SCREENSHOT_OPTIONS
