@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@the-monkeys/ui/atoms/accordion';
 import { Label } from '@the-monkeys/ui/atoms/label';
 import { Switch } from '@the-monkeys/ui/atoms/switch';
 
@@ -208,170 +213,191 @@ export const TweetScreenshotOptionsPanel = ({
   options,
   onChange,
 }: TweetScreenshotOptionsPanelProps) => (
-  <div className='flex flex-col gap-3.5'>
-    <div className='flex flex-col gap-2'>
-      <span className='text-xs font-semibold uppercase tracking-wider text-foreground/50 px-1'>
-        Theme
-      </span>
-      <ThemePicker
-        value={options.themeId ?? ''}
-        onChange={(themeId) => {
-          const theme = getThemeById(themeId);
-          onChange({
-            themeId,
-            backgroundColor: theme.background,
-            backgroundImage: theme.backgroundImage,
-          });
-        }}
-      />
-    </div>
-
-    <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
-      <div className='flex items-center gap-3'>
-        <DropletIcon />
-        <span className='text-sm font-medium text-foreground'>
-          Custom color
-        </span>
-      </div>
-      <div className='flex items-center gap-2'>
-        <div className='relative w-7 h-7 rounded-full overflow-hidden border border-black/10 shadow-sm'>
-          <input
-            id='tweet-bg-color'
-            type='color'
-            value={options.backgroundColor}
-            onChange={(e) =>
+  <>
+    <AccordionItem value='screenshot-style' className='border-none'>
+      <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
+        Screenshot style
+      </AccordionTrigger>
+      <AccordionContent className='flex flex-col gap-3.5 pt-2'>
+        <div className='flex flex-col gap-2'>
+          <span className='text-xs font-semibold uppercase tracking-wider text-foreground/50 px-1'>
+            Theme
+          </span>
+          <ThemePicker
+            value={options.themeId ?? ''}
+            onChange={(themeId) => {
+              const theme = getThemeById(themeId);
               onChange({
-                themeId: undefined,
-                backgroundColor: e.target.value,
-                backgroundImage: undefined,
-              })
-            }
-            className='absolute -inset-2 w-12 h-12 cursor-pointer border-0 p-0 bg-transparent'
-            aria-label='Custom background color'
+                themeId,
+                backgroundColor: theme.background,
+                backgroundImage: theme.backgroundImage,
+              });
+            }}
           />
         </div>
-        <span className='font-mono text-xs text-foreground/50'>
-          {options.backgroundColor}
-        </span>
-      </div>
-    </div>
 
-    {/* Dark card row */}
-    <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
-      <div className='flex items-center gap-3'>
-        <MoonIcon />
-        <span className='text-sm font-medium text-foreground'>Dark Card</span>
-      </div>
-      <Switch
-        checked={options.darkCard}
-        onCheckedChange={(checked) => onChange({ darkCard: checked })}
-        className='data-[state=checked]:bg-[#1D9BF0]'
-      />
-    </div>
-
-    {/* Branded video row */}
-    <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
-      <div className='flex items-center gap-3'>
-        <VideoIcon />
-        <span className='text-sm font-medium text-foreground'>
-          Branded Video
-        </span>
-      </div>
-      <Switch
-        checked={options.enableBrandedVideo}
-        onCheckedChange={(checked) => onChange({ enableBrandedVideo: checked })}
-        className='data-[state=checked]:bg-brand-orange'
-      />
-    </div>
-
-    {/* Aspect ratio row */}
-    <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
-      <div className='flex items-center gap-3'>
-        <AspectRatioIcon />
-        <span className='text-sm font-medium text-foreground'>
-          Aspect Ratio
-        </span>
-      </div>
-      <select
-        id='tweet-aspect'
-        value={options.aspect}
-        onChange={(e) =>
-          onChange({ aspect: e.target.value as TweetScreenshotAspect })
-        }
-        className='rounded-lg border border-border-light/60 dark:border-border-dark/60 bg-background-light px-2.5 py-1 text-sm dark:bg-background-dark text-foreground font-medium shadow-sm focus:outline-none focus:ring-1 focus:ring-brand-orange'
-      >
-        {ASPECTS.map((a) => (
-          <option key={a.id} value={a.id}>
-            {a.label}
-          </option>
-        ))}
-      </select>
-    </div>
-
-    {/* Watermark Section */}
-    <div className='flex flex-col gap-3 rounded-xl border border-border-light/50 dark:border-border-dark/50 p-3 bg-foreground-light/5 dark:bg-foreground-dark/5'>
-      <h4 className='text-xs font-semibold uppercase tracking-wider text-foreground/50 px-1'>
-        Watermark Styling
-      </h4>
-
-      {/* Watermark text/logo color row */}
-      <div className='flex items-center justify-between gap-4 rounded-lg bg-foreground-light/10 dark:bg-foreground-dark/10 p-2.5 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
-        <div className='flex items-center gap-3'>
-          <DropletIcon />
-          <span className='text-sm font-medium text-foreground'>
-            Text & Logo Color
-          </span>
-        </div>
-        <div className='flex items-center gap-2'>
-          <div className='relative w-7 h-7 rounded-full overflow-hidden border border-black/10 shadow-sm'>
-            <input
-              id='tweet-watermark-color'
-              type='color'
-              value={options.watermarkColor || '#FFFFFF'}
-              onChange={(e) => onChange({ watermarkColor: e.target.value })}
-              className='absolute -inset-2 w-12 h-12 cursor-pointer border-0 p-0 bg-transparent'
-              aria-label='Watermark text/logo color picker'
-            />
-          </div>
-          <span className='font-mono text-xs text-foreground/50'>
-            {options.watermarkColor || '#FFFFFF'}
-          </span>
-        </div>
-      </div>
-
-      {/* Watermark accent color row */}
-      <div className='flex flex-col gap-2 rounded-lg bg-foreground-light/10 dark:bg-foreground-dark/10 p-2.5 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
-        <div className='flex items-center gap-3 mb-1'>
-          <DropletIcon />
-          <span className='text-sm font-medium text-foreground'>
-            Accent Dot Color
-          </span>
-        </div>
-        <AccentColorPicker
-          value={options.watermarkAccentColor || '#FF5542'}
-          onChange={(color) => onChange({ watermarkAccentColor: color })}
-        />
-      </div>
-    </div>
-
-    {/* Toggles list */}
-    <div className='flex flex-col gap-2'>
-      {TOGGLES.map(({ key, label, icon: IconComponent }) => (
-        <div
-          key={key}
-          className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'
-        >
+        <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
           <div className='flex items-center gap-3'>
-            <IconComponent />
-            <span className='text-sm font-medium text-foreground'>{label}</span>
+            <DropletIcon />
+            <span className='text-sm font-medium text-foreground'>
+              Custom color
+            </span>
+          </div>
+          <div className='flex items-center gap-2'>
+            <div className='relative w-7 h-7 rounded-full overflow-hidden border border-black/10 shadow-sm'>
+              <input
+                id='tweet-bg-color'
+                type='color'
+                value={options.backgroundColor}
+                onChange={(e) =>
+                  onChange({
+                    themeId: undefined,
+                    backgroundColor: e.target.value,
+                    backgroundImage: undefined,
+                  })
+                }
+                className='absolute -inset-2 w-12 h-12 cursor-pointer border-0 p-0 bg-transparent'
+                aria-label='Custom background color'
+              />
+            </div>
+            <span className='font-mono text-xs text-foreground/50'>
+              {options.backgroundColor}
+            </span>
+          </div>
+        </div>
+
+        {/* Dark card row */}
+        <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
+          <div className='flex items-center gap-3'>
+            <MoonIcon />
+            <span className='text-sm font-medium text-foreground'>
+              Dark Card
+            </span>
           </div>
           <Switch
-            checked={options[key]}
-            onCheckedChange={(checked) => onChange({ [key]: checked })}
+            checked={options.darkCard}
+            onCheckedChange={(checked) => onChange({ darkCard: checked })}
             className='data-[state=checked]:bg-[#1D9BF0]'
           />
         </div>
-      ))}
-    </div>
-  </div>
+
+        {/* Branded video row */}
+        <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
+          <div className='flex items-center gap-3'>
+            <VideoIcon />
+            <span className='text-sm font-medium text-foreground'>
+              Branded Video
+            </span>
+          </div>
+          <Switch
+            checked={options.enableBrandedVideo}
+            onCheckedChange={(checked) =>
+              onChange({ enableBrandedVideo: checked })
+            }
+            className='data-[state=checked]:bg-brand-orange'
+          />
+        </div>
+
+        {/* Aspect ratio row */}
+        <div className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
+          <div className='flex items-center gap-3'>
+            <AspectRatioIcon />
+            <span className='text-sm font-medium text-foreground'>
+              Aspect Ratio
+            </span>
+          </div>
+          <select
+            id='tweet-aspect'
+            value={options.aspect}
+            onChange={(e) =>
+              onChange({ aspect: e.target.value as TweetScreenshotAspect })
+            }
+            className='rounded-lg border border-border-light/60 dark:border-border-dark/60 bg-background-light px-2.5 py-1 text-sm dark:bg-background-dark text-foreground font-medium shadow-sm focus:outline-none focus:ring-1 focus:ring-brand-orange'
+          >
+            {ASPECTS.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+
+    {/* Watermark Section */}
+    <AccordionItem value='watermark-styling' className='border-none'>
+      <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
+        Watermark Styling
+      </AccordionTrigger>
+      <AccordionContent className='flex flex-col gap-3 pt-2'>
+        <div className='flex flex-col gap-3 rounded-xl border border-border-light/50 dark:border-border-dark/50 p-3 bg-foreground-light/5 dark:bg-foreground-dark/5'>
+          {/* Watermark text/logo color row */}
+          <div className='flex items-center justify-between gap-4 rounded-lg bg-foreground-light/10 dark:bg-foreground-dark/10 p-2.5 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
+            <div className='flex items-center gap-3'>
+              <DropletIcon />
+              <span className='text-sm font-medium text-foreground'>
+                Text & Logo Color
+              </span>
+            </div>
+            <div className='flex items-center gap-2'>
+              <div className='relative w-7 h-7 rounded-full overflow-hidden border border-black/10 shadow-sm'>
+                <input
+                  id='tweet-watermark-color'
+                  type='color'
+                  value={options.watermarkColor || '#FFFFFF'}
+                  onChange={(e) => onChange({ watermarkColor: e.target.value })}
+                  className='absolute -inset-2 w-12 h-12 cursor-pointer border-0 p-0 bg-transparent'
+                  aria-label='Watermark text/logo color picker'
+                />
+              </div>
+              <span className='font-mono text-xs text-foreground/50'>
+                {options.watermarkColor || '#FFFFFF'}
+              </span>
+            </div>
+          </div>
+
+          {/* Watermark accent color row */}
+          <div className='flex flex-col gap-2 rounded-lg bg-foreground-light/10 dark:bg-foreground-dark/10 p-2.5 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'>
+            <div className='flex items-center gap-3 mb-1'>
+              <DropletIcon />
+              <span className='text-sm font-medium text-foreground'>
+                Accent Dot Color
+              </span>
+            </div>
+            <AccentColorPicker
+              value={options.watermarkAccentColor || '#FF5542'}
+              onChange={(color) => onChange({ watermarkAccentColor: color })}
+            />
+          </div>
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+
+    {/* Toggles list */}
+    <AccordionItem value='x-post-style' className='border-none'>
+      <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
+        X Post Style
+      </AccordionTrigger>
+      <AccordionContent className='flex flex-col gap-2 pt-2'>
+        {TOGGLES.map(({ key, label, icon: IconComponent }) => (
+          <div
+            key={key}
+            className='flex items-center justify-between gap-4 rounded-xl bg-foreground-light/10 dark:bg-foreground-dark/10 p-3 transition-colors hover:bg-foreground-light/15 dark:hover:bg-foreground-dark/15'
+          >
+            <div className='flex items-center gap-3'>
+              <IconComponent />
+              <span className='text-sm font-medium text-foreground'>
+                {label}
+              </span>
+            </div>
+            <Switch
+              checked={options[key]}
+              onCheckedChange={(checked) => onChange({ [key]: checked })}
+              className='data-[state=checked]:bg-[#1D9BF0]'
+            />
+          </div>
+        ))}
+      </AccordionContent>
+    </AccordionItem>
+  </>
 );

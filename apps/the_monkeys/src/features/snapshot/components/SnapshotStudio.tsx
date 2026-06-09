@@ -3,6 +3,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { cn } from '@/lib/utils';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@the-monkeys/ui/atoms/accordion';
 
 import { useDataUrlImage } from '../hooks/useDataUrlImage';
 import { useExport } from '../hooks/useExport';
@@ -521,29 +527,35 @@ export const SnapshotStudio = ({
             </div>
           </>
         ) : (
-          <>
-            <div className='flex flex-col gap-2'>
-              <h3 className='text-sm font-semibold uppercase tracking-wide text-foreground/60'>
+          <Accordion
+            type='multiple'
+            defaultValue={[
+              'x-post',
+              'screenshot-style',
+              'watermark-styling',
+              'x-post-style',
+            ]}
+            className='w-full flex flex-col gap-2'
+          >
+            <AccordionItem value='x-post' className='border-none'>
+              <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
                 X post
-              </h3>
-              <TweetUrlPanel
-                value={tweetUrl}
-                onChange={setTweetUrl}
-                tweetId={tweetId}
-                error={tweetLoadError}
-              />
-            </div>
+              </AccordionTrigger>
+              <AccordionContent className='pt-2'>
+                <TweetUrlPanel
+                  value={tweetUrl}
+                  onChange={setTweetUrl}
+                  tweetId={tweetId}
+                  error={tweetLoadError}
+                />
+              </AccordionContent>
+            </AccordionItem>
 
-            <div className='flex flex-col gap-2'>
-              <h3 className='text-sm font-semibold uppercase tracking-wide text-foreground/60'>
-                Screenshot style
-              </h3>
-              <TweetScreenshotOptionsPanel
-                options={tweetOptions}
-                onChange={patchTweetOptions}
-              />
-            </div>
-          </>
+            <TweetScreenshotOptionsPanel
+              options={tweetOptions}
+              onChange={patchTweetOptions}
+            />
+          </Accordion>
         )}
 
         <div className='sticky bottom-0 -mx-1 mt-2 flex flex-col gap-2 border-t bg-background-light/95 px-1 py-3 dark:bg-background-dark/95'>
