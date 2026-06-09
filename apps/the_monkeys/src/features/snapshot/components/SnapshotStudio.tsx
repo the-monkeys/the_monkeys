@@ -63,6 +63,8 @@ export interface SnapshotStudioProps {
   initialTemplateId?: string;
   initialThemeId?: string;
   initialAccent?: string;
+  previewMode?: PreviewMode;
+  onPreviewModeChange?: (mode: PreviewMode) => void;
 }
 
 /**
@@ -75,8 +77,13 @@ export const SnapshotStudio = ({
   initialTemplateId,
   initialThemeId,
   initialAccent,
+  previewMode: propsPreviewMode,
+  onPreviewModeChange,
 }: SnapshotStudioProps) => {
-  const [previewMode, setPreviewMode] = useState<PreviewMode>('template');
+  const [internalPreviewMode, setInternalPreviewMode] =
+    useState<PreviewMode>('template');
+  const previewMode = propsPreviewMode ?? internalPreviewMode;
+  const setPreviewMode = onPreviewModeChange ?? setInternalPreviewMode;
   const [tweetUrl, setTweetUrl] = useState('');
   const [tweetOptions, setTweetOptions] = useState<TweetScreenshotOptions>(
     DEFAULT_TWEET_SCREENSHOT_OPTIONS
@@ -329,51 +336,17 @@ export const SnapshotStudio = ({
           previewMode === 'x' ? 'lg:order-2' : ''
         )}
       >
-        <div className='flex flex-wrap items-center justify-between gap-2'>
-          <div>
-            <h2 className='font-newsreader text-2xl'>
-              {previewMode === 'x' ? 'X post screenshot' : template.label}
-            </h2>
-            <p className='text-xs text-foreground/60'>
-              {previewMode === 'x'
-                ? tweetId
-                  ? `${tweetCanvasSize.width}×${tweetCanvasSize.height} · Clean screenshot card`
-                  : 'Paste a public X post URL'
-                : `${template.width}×${template.height} · ${template.aspect}`}
-            </p>
-          </div>
-          <div
-            className='inline-flex rounded-lg border p-0.5 text-xs'
-            role='tablist'
-            aria-label='Preview mode'
-          >
-            <button
-              type='button'
-              role='tab'
-              aria-selected={previewMode === 'template'}
-              className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
-                previewMode === 'template'
-                  ? 'bg-brand-orange text-white'
-                  : 'text-foreground/70 hover:text-foreground'
-              }`}
-              onClick={() => setPreviewMode('template')}
-            >
-              Image template
-            </button>
-            <button
-              type='button'
-              role='tab'
-              aria-selected={previewMode === 'x'}
-              className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
-                previewMode === 'x'
-                  ? 'bg-brand-orange text-white'
-                  : 'text-foreground/70 hover:text-foreground'
-              }`}
-              onClick={() => setPreviewMode('x')}
-            >
-              X screenshot
-            </button>
-          </div>
+        <div>
+          <h2 className='font-newsreader text-2xl'>
+            {previewMode === 'x' ? 'X post screenshot' : template.label}
+          </h2>
+          <p className='text-xs text-foreground/60'>
+            {previewMode === 'x'
+              ? tweetId
+                ? `${tweetCanvasSize.width}×${tweetCanvasSize.height} · Clean screenshot card`
+                : 'Paste a public X post URL'
+              : `${template.width}×${template.height} · ${template.aspect}`}
+          </p>
         </div>
 
         <div className='rounded-2xl border bg-foreground-light/30 p-2 dark:bg-foreground-dark/20 sm:p-4'>

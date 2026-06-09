@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -26,6 +26,7 @@ export default function SnapshotNewPage() {
   }, [session?.first_name, session?.last_name, username]);
 
   const { author } = useSnapshotAuthor(username, displayName);
+  const [previewMode, setPreviewMode] = useState<'template' | 'x'>('template');
 
   const input = useMemo<SnapshotInput>(
     () => ({
@@ -45,24 +46,63 @@ export default function SnapshotNewPage() {
 
   return (
     <div className='mx-auto w-full max-w-6xl px-4 py-6'>
-      <div className='mb-4'>
-        <Link
-          href='/snapshot'
-          className='text-xs text-foreground/60 hover:text-foreground'
+      <div className='mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+        <div className='flex flex-col gap-1'>
+          <Link
+            href='/snapshot'
+            className='text-xs text-foreground/60 hover:text-foreground'
+          >
+            ← Pick a post instead
+          </Link>
+          <h1 className='font-newsreader text-2xl'>
+            Snapshot
+            <span className='text-brand-orange'>.</span>{' '}
+            <span className='text-foreground/60'>blank canvas</span>
+          </h1>
+          <p className='text-xs text-foreground/60'>
+            Type your own title, description and pull-quote. Choose a template,
+            theme, and accent — then download.
+          </p>
+        </div>
+
+        <div
+          className='inline-flex self-start rounded-lg border p-0.5 text-xs sm:self-center shrink-0'
+          role='tablist'
+          aria-label='Preview mode'
         >
-          ← Pick a post instead
-        </Link>
-        <h1 className='font-newsreader text-2xl'>
-          Snapshot
-          <span className='text-brand-orange'>.</span>{' '}
-          <span className='text-foreground/60'>blank canvas</span>
-        </h1>
-        <p className='text-xs text-foreground/60'>
-          Type your own title, description and pull-quote. Choose a template,
-          theme, and accent — then download.
-        </p>
+          <button
+            type='button'
+            role='tab'
+            aria-selected={previewMode === 'template'}
+            className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
+              previewMode === 'template'
+                ? 'bg-brand-orange text-white'
+                : 'text-foreground/70 hover:text-foreground'
+            }`}
+            onClick={() => setPreviewMode('template')}
+          >
+            Image template
+          </button>
+          <button
+            type='button'
+            role='tab'
+            aria-selected={previewMode === 'x'}
+            className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
+              previewMode === 'x'
+                ? 'bg-brand-orange text-white'
+                : 'text-foreground/70 hover:text-foreground'
+            }`}
+            onClick={() => setPreviewMode('x')}
+          >
+            X screenshot
+          </button>
+        </div>
       </div>
-      <SnapshotStudio input={input} />
+      <SnapshotStudio
+        input={input}
+        previewMode={previewMode}
+        onPreviewModeChange={setPreviewMode}
+      />
     </div>
   );
 }
