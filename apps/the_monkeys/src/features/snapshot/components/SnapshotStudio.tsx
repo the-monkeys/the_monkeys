@@ -469,7 +469,10 @@ export const SnapshotStudio = ({
                 Template
               </AccordionTrigger>
               <AccordionContent className='pt-2'>
-                <TemplatePicker value={state.templateId} onChange={setTemplate} />
+                <TemplatePicker
+                  value={state.templateId}
+                  onChange={setTemplate}
+                />
               </AccordionContent>
             </AccordionItem>
 
