@@ -1,5 +1,6 @@
 import { CSSProperties } from 'react';
 
+import { carouselSlide2Body, carouselSlide3Body } from '../lib/carouselSlides';
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
 import {
   AccentBar,
@@ -13,6 +14,7 @@ import {
   Tag,
   clip,
   getShellBackground,
+  scaleFontSize,
 } from './_shared';
 
 const SLIDE_W = 1080;
@@ -21,19 +23,6 @@ const SLIDE_COUNT = 3;
 const WIDTH = SLIDE_W * SLIDE_COUNT;
 const HEIGHT = SLIDE_H;
 const GUTTER = 0; // exported as 3 separate 1080×1350 files; slides must be flush
-
-/**
- * Splits the description into ~equal halves on word boundaries.
- * Used to fill slide 2 with the hook and slide 3 with the continuation.
- */
-const splitForSlides = (text: string | undefined): [string, string] => {
-  const safe = (text ?? '').trim();
-  if (!safe) return ['', ''];
-  const words = safe.split(/\s+/);
-  if (words.length < 18) return [safe, ''];
-  const mid = Math.ceil(words.length / 2);
-  return [words.slice(0, mid).join(' '), words.slice(mid).join(' ')];
-};
 
 interface SlideShellProps {
   children: React.ReactNode;
@@ -67,8 +56,8 @@ const SlideShell = ({
 
 const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
   const background = getShellBackground(theme, input);
-  const [descA, descB] = splitForSlides(input.description);
-  const quote = input.quote ?? descA;
+  const slide2Body = carouselSlide2Body(input.description, input.title);
+  const slide3Body = carouselSlide3Body(input.description, input.title);
 
   const titleSize =
     input.title.length > 80 ? 64 : input.title.length > 40 ? 76 : 92;
@@ -185,7 +174,7 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
         </Row>
       </SlideShell>
 
-      {/* SLIDE 2 — Pull-quote / hook */}
+      {/* SLIDE 2 — Body excerpt (description, not pull-quote) */}
       <SlideShell
         background={background}
         foreground={theme.foreground}
@@ -207,29 +196,18 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
         </Row>
 
         <Col style={{ gap: 28, justifyContent: 'center', flex: 1 }}>
+          <AccentBar color={accent} width={84} height={8} />
           <div
             style={{
               display: 'flex',
-              fontSize: 160,
-              lineHeight: 0.8,
-              fontWeight: 700,
-              color: accent,
-              letterSpacing: -4,
-            }}
-          >
-            “
-          </div>
-          <div
-            style={{
-              display: 'flex',
-              fontSize: quote.length > 220 ? 40 : quote.length > 120 ? 52 : 64,
-              lineHeight: 1.25,
+              fontSize: scaleFontSize(slide2Body.length, 48, 32, 200, 420),
+              lineHeight: 1.35,
               fontWeight: 500,
               color: theme.foreground,
-              letterSpacing: -0.8,
+              letterSpacing: -0.4,
             }}
           >
-            {clip(quote || input.title, 320)}
+            {clip(slide2Body, 420)}
           </div>
         </Col>
 
@@ -295,7 +273,7 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
               fontWeight: 500,
             }}
           >
-            {clip(descB || descA || input.title, 360)}
+            {clip(slide3Body, 420)}
           </div>
         </Col>
 
@@ -358,7 +336,7 @@ export const instagramCarousel: SnapshotTemplate = {
   id: 'instagram-carousel',
   label: 'Instagram Carousel',
   description:
-    "3 separate 1080×1350 slides (cover, pull-quote, CTA) — downloaded as three files ready for Instagram's carousel uploader.",
+    "3 separate 1080×1350 slides (cover, body excerpt, CTA) — downloaded as three files ready for Instagram's carousel uploader.",
   aspect: '3240x1350',
   width: WIDTH,
   height: HEIGHT,

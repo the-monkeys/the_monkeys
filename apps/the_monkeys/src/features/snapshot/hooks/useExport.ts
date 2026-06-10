@@ -94,19 +94,14 @@ const sliceBlobHorizontally = async (
 };
 
 export interface UseExportOpts {
-  /** Native pixel width of the template root. */
   width: number;
-  /** Native pixel height of the template root. */
   height: number;
-  /**
-   * Multi-slide export config. When set, the rendered blob is cut into
-   * `count` equal-width pieces and each is downloaded as its own file.
-   */
   slice?: {
     count: number;
     sliceWidth: number;
     sliceHeight: number;
   };
+  getNode?: () => HTMLDivElement | null;
 }
 
 /**
@@ -115,19 +110,26 @@ export interface UseExportOpts {
  */
 export const useExport = (
   nodeRef: RefObject<HTMLDivElement | null>,
-  { width, height, slice }: UseExportOpts
+  { width, height, slice, getNode }: UseExportOpts
 ) => {
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const exportImage = useCallback(
     async (opts: SnapshotExportOptions = {}) => {
-      const node = nodeRef.current;
+      const node = getNode?.() ?? nodeRef.current;
       if (!node) {
         setError(new Error('Snapshot node not mounted'));
         return null;
       }
-      const { pixelRatio = 2, format = 'png', quality = 0.95, filename } = opts;
+      const {
+        pixelRatio = 2,
+        format = 'png',
+        quality = 0.95,
+        filename,
+        download = true,
+        transparent = false,
+      } = opts;
 
       setIsExporting(true);
       setError(null);
@@ -139,7 +141,8 @@ export const useExport = (
           width,
           height,
           pixelRatio,
-          backgroundColor: undefined,
+          backgroundColor:
+            format === 'jpeg' && !transparent ? '#ffffff' : undefined,
           type: mimeType,
           quality,
           // Skip nodes that are explicitly excluded (e.g. dev overlays).
@@ -152,28 +155,30 @@ export const useExport = (
         const ext = format === 'jpeg' ? 'jpg' : 'png';
         const baseName = slugify(filename ?? 'snapshot');
 
-        if (slice && slice.count > 1) {
-          const parts = await sliceBlobHorizontally(
-            blob,
-            width,
-            height,
-            slice.count,
-            slice.sliceWidth,
-            slice.sliceHeight,
-            mimeType,
-            quality
-          );
-          // Chrome throttles bursts of downloads; stagger them slightly.
-          parts.forEach((part, i) => {
-            setTimeout(
-              () => triggerDownload(part, `${baseName}-${i + 1}.${ext}`),
-              i * 250
+        if (download) {
+          if (slice && slice.count > 1) {
+            const parts = await sliceBlobHorizontally(
+              blob,
+              width,
+              height,
+              slice.count,
+              slice.sliceWidth,
+              slice.sliceHeight,
+              mimeType,
+              quality
             );
-          });
-          return blob;
-        }
+            // Chrome throttles bursts of downloads; stagger them slightly.
+            parts.forEach((part, i) => {
+              setTimeout(
+                () => triggerDownload(part, `${baseName}-${i + 1}.${ext}`),
+                i * 250
+              );
+            });
+            return blob;
+          }
 
-        triggerDownload(blob, `${baseName}.${ext}`);
+          triggerDownload(blob, `${baseName}.${ext}`);
+        }
         return blob;
       } catch (err) {
         const e = err instanceof Error ? err : new Error(String(err));
@@ -183,7 +188,7 @@ export const useExport = (
         setIsExporting(false);
       }
     },
-    [nodeRef, width, height, slice]
+    [nodeRef, width, height, slice, getNode]
   );
 
   return { exportImage, isExporting, error };

@@ -9,6 +9,38 @@ import { SnapshotInput, SnapshotTheme } from '../types';
 export const FONT_STACK =
   '"DM Sans","Inter","Helvetica Neue",Helvetica,Arial,sans-serif';
 
+export const SERIF_STACK = 'Georgia,"Times New Roman",Times,serif';
+
+/**
+ * Shrinks font size as copy length grows so more text fits without clipping.
+ * `softMax` keeps `base`; at `hardMax` returns `min`.
+ */
+export const scaleFontSize = (
+  charCount: number,
+  base: number,
+  min: number,
+  softMax: number,
+  hardMax: number
+): number => {
+  if (charCount <= softMax) return base;
+  if (charCount >= hardMax) return min;
+  const t = (charCount - softMax) / (hardMax - softMax);
+  return Math.round(base - t * (base - min));
+};
+
+/** Headline sizing tuned for portrait editorial layouts. */
+export const headlineFontSize = (
+  title: string,
+  tiers: { over: number; size: number }[],
+  fallback: number
+): number => {
+  const len = title.length;
+  for (const tier of tiers) {
+    if (len > tier.over) return tier.size;
+  }
+  return fallback;
+};
+
 /**
  * Resolves the root background for a template, honouring (in order):
  *   1. `input.backgroundImageUrl` — full-bleed image with darken overlay.

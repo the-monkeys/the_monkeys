@@ -15,6 +15,19 @@ export const OptionsPanel = ({ input, onChange }: OptionsPanelProps) => {
   return (
     <div className='flex flex-col gap-3'>
       <div className='flex flex-col gap-1'>
+        <Label htmlFor='snap-category' className='text-xs'>
+          Category (Forbes template)
+        </Label>
+        <Input
+          id='snap-category'
+          value={input.category ?? ''}
+          maxLength={48}
+          placeholder='e.g. Money, Tech'
+          onChange={(e) => onChange({ category: e.target.value })}
+        />
+      </div>
+
+      <div className='flex flex-col gap-1'>
         <Label htmlFor='snap-title' className='text-xs'>
           Title
         </Label>
@@ -33,8 +46,8 @@ export const OptionsPanel = ({ input, onChange }: OptionsPanelProps) => {
         <TextArea
           id='snap-description'
           value={input.description ?? ''}
-          maxLength={600}
-          rows={3}
+          maxLength={1200}
+          rows={5}
           onChange={(e) => onChange({ description: e.target.value })}
         />
       </div>
