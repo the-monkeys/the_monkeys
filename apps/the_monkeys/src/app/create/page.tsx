@@ -56,8 +56,6 @@ const useWebSocket = (blogId: string, token: string | undefined) => {
       webSocketRef.current.close();
     }
 
-    console.log('next public wss url v2', WSS_URL_V2);
-
     setConnectionStatus('Connecting...');
     const ws = new WebSocket(
       `${WSS_URL_V2}/blog/draft/${blogId}?token=${token}`

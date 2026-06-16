@@ -7,7 +7,6 @@ import Footer from '@/components/layout/footer';
 import { LIVE_URL } from '@/constants/api';
 import { TooltipProvider } from '@the-monkeys/ui/atoms/tooltip';
 import { Toaster } from '@the-monkeys/ui/molecules/toaster';
-import { PublicEnvScript } from 'next-runtime-env';
 
 import './globals.css';
 import GrowthbookClientProvider from './growthbook-provider';
@@ -148,8 +147,6 @@ const RootLayout = async ({
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
-        {/* Populates your environment at runtime rather than build time */}
-        <PublicEnvScript />
       </head>
       <body
         className={`${dm_sans.variable} ${inter.variable} ${newsreader.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}

@@ -29,7 +29,12 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
       // @ts-ignore: Required for Node.js bi-directional streaming
       duplex: 'half',
     });
+
     const responseHeaders = new Headers(response.headers);
+
+    // content compression should be handled by browser itself
+    responseHeaders.delete('content-encoding');
+
     responseHeaders.delete('set-cookie');
     if (typeof response.headers.getSetCookie === 'function') {
       for (const cookie of response.headers.getSetCookie()) {
