@@ -30,6 +30,7 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
       duplex: 'half',
     });
     const responseHeaders = new Headers(response.headers);
+    responseHeaders.delete('content-encoding');
     responseHeaders.delete('set-cookie');
     if (typeof response.headers.getSetCookie === 'function') {
       for (const cookie of response.headers.getSetCookie()) {
