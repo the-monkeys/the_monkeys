@@ -30,16 +30,8 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
       // @ts-ignore: Required for Node.js bi-directional streaming
       duplex: 'half',
     });
-    // console.log("raw headers", response.headers)
 
     const responseHeaders = new Headers(response.headers);
-
-    // console.log("before headers >>>>>", responseHeaders)
-    // responseHeaders.delete('content-encoding');
-    // responseHeaders.delete('set-cookie');
-
-    // console.log("After headers, >>>", responseHeaders)
-
     if (typeof response.headers.getSetCookie === 'function') {
       for (const cookie of response.headers.getSetCookie()) {
         responseHeaders.append('Set-Cookie', cookie);
