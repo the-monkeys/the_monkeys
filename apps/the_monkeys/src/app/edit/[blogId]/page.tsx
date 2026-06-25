@@ -1,19 +1,11 @@
 'use client';
 
-import {
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
-import { PublishBlogDialog } from '@/components/blog/actions/PublishBlogDialog';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
@@ -38,12 +30,26 @@ const Editor = dynamic(() => import('@/components/editor'), {
   ),
 });
 
+const INITIAL_DATA: OutputData = {
+  time: Date.now(),
+  blocks: [
+    {
+      id: 'title',
+      type: 'header',
+      data: {
+        text: 'Untitled Post',
+        level: 1,
+      },
+    },
+  ],
+};
+
 const EditPage = ({ params }: { params: { blogId: string } }) => {
   const queryClient = useQueryClient();
   const blogId = params.blogId;
   const { data: session } = useAuth();
   const router = useRouter();
-  const { blog, isLoading } = useGetDraftBlogDetail(blogId);
+  const { blog, isLoading, isError } = useGetDraftBlogDetail(blogId);
 
   // Refs for latest values
   const dataRef = useRef<OutputData | null>(null);
@@ -123,7 +129,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         slug: blogSlug,
       };
     },
-    []
+    [blogId]
   );
 
   const [editorConfig, setEditorConfig] = useState<EditorConfig | null>(null);
@@ -150,7 +156,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
       ws.onopen = () => {
         if (!isMounted) return;
-        console.log('WebSocket connected 🟢');
+        console.log('WebSocket connected \uD83D\uDFE2');
         setIsConnected(true);
         setConnectionStatus('Connected');
         retryCount = 0;
@@ -167,14 +173,14 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         }
       };
 
-      ws.onmessage = (event) => {
+      ws.onmessage = () => {
         setIsSaving(false);
         // Optional: Handle any incoming messages from server
       };
 
       ws.onclose = (event) => {
         if (!isMounted) return;
-        console.log('WebSocket closed 🔴', event.code, event.reason);
+        console.log('WebSocket closed \uD83D\uDD34', event.code, event.reason);
         setIsConnected(false);
         setIsSaving(false);
         setConnectionStatus('Disconnected');
@@ -194,7 +200,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       };
 
       ws.onerror = (error) => {
-        console.error('WebSocket error ⭕', error);
+        console.error('WebSocket error \u2B55', error);
         ws.close();
       };
 
@@ -226,7 +232,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [token, blogId, formatData]);
+  }, [token, blogId, formatData, isConnected]);
 
   // Auto-save when data changes
   useEffect(() => {
@@ -334,12 +340,18 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Initialize editor data
   useEffect(() => {
-    if (blog && !data) {
-      setData(blog.blog || { time: Date.now(), blocks: [], version: '' });
-      setBlogTopics(blog.tags || []);
+    if (!isLoading) {
+      if (blog && !data) {
+        setData(blog.blog || INITIAL_DATA);
+        setBlogTopics(blog.tags || []);
+      } else if ((isError || !blog) && !data) {
+        // Handle new draft or fetch error by providing blank slate
+        setData(INITIAL_DATA);
+        setBlogTopics([]);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blog]);
+  }, [blog, isLoading, isError]);
 
   // Fetch draft blog data on mount
   useEffect(() => {
