@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
@@ -16,7 +16,7 @@ import useGetDraftBlogDetail, {
 } from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { EditorConfig, OutputData } from '@editorjs/editorjs';
+import { OutputData } from '@editorjs/editorjs';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
@@ -49,7 +49,12 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const blogId = params.blogId;
   const { data: session } = useAuth();
   const router = useRouter();
-  const { blog, isLoading, isError } = useGetDraftBlogDetail(blogId);
+  const searchParams = useSearchParams();
+  const isNew = searchParams.get('isNew') === 'true';
+
+  const { blog, isLoading, isError } = useGetDraftBlogDetail(blogId, {
+    enabled: !isNew,
+  });
 
   // Refs for latest values
   const dataRef = useRef<OutputData | null>(null);
@@ -131,8 +136,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     },
     [blogId]
   );
-
-  const [editorConfig, setEditorConfig] = useState<EditorConfig | null>(null);
 
   // WebSocket management
   useEffect(() => {
@@ -251,21 +254,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     }
   }, [data, blogTopics, isConnected, accountId, formatData]);
 
-  useEffect(() => {
-    const loadEditorConfig = async () => {
-      try {
-        const { getEditorConfig } = await import(
-          '@/config/editor/editorjs.config'
-        );
-        setEditorConfig(getEditorConfig(blogId));
-      } catch (error) {
-        console.error('Failed to load editor config:', error);
-      }
-    };
-
-    loadEditorConfig();
-  }, [blogId]);
-
   // Handle blog publishing
   const handlePublishStep = useCallback(async () => {
     if (!data || data.blocks.length <= 2) {
@@ -337,6 +325,22 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     username,
     queryClient,
   ]);
+
+  // Optimistic initialization for new blogs
+  useEffect(() => {
+    if (isNew && !data) {
+      setData(INITIAL_DATA);
+      setBlogTopics([]);
+
+      // Clean up the URL so that subsequent refreshes perform a regular fetch
+      const newUrl = window.location.pathname;
+      window.history.replaceState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        '',
+        newUrl
+      );
+    }
+  }, [isNew, data]);
 
   // Initialize editor data
   useEffect(() => {
@@ -496,8 +500,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
                 </div>
               }
             >
-              {data && editorConfig && (
-                <Editor data={data} onChange={setData} config={editorConfig} />
+              {data && (
+                <Editor data={data} onChange={setData} blogId={blogId} />
               )}
             </Suspense>
           </div>

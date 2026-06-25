@@ -4,11 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 
 export const DRAFT_BLOG_DETAIL_QUERY_KEY = 'draft-blog-detail';
 
-const useGetDraftBlogDetail = (blogId: string | null) => {
+const useGetDraftBlogDetail = (
+  blogId: string | null,
+  options: { enabled?: boolean } = {}
+) => {
   const { data, error, isLoading, isError } = useQuery<Blog, Error>({
     queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
     queryFn: () => authFetcherV2(`/blog/my-draft/${blogId}`),
-    enabled: !!blogId,
+    enabled: !!blogId && options.enabled !== false,
     refetchOnMount: true,
     refetchOnReconnect: true,
     staleTime: 0,

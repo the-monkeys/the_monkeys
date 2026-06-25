@@ -4,10 +4,11 @@ import Link from 'next/link';
 import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
 import FeaturesGrid from '@/components/branding/featuresGrid';
 import MembersGrid from '@/components/branding/membersGrid';
+import { StartWritingButton } from '@/components/buttons/StartWritingButton';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import { LIVE_URL } from '@/constants/api';
-import { CREATE_ROUTE, HOME_ROUTE } from '@/constants/routeConstants';
+import { HOME_ROUTE } from '@/constants/routeConstants';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 export const metadata: Metadata = {
@@ -100,20 +101,11 @@ const AboutPage = () => {
           </p>
 
           <div className='p-6 flex flex-col sm:flex-row justify-center items-center gap-4'>
-            <Button
+            <StartWritingButton
               variant='brand'
               size='lg'
               className='group rounded-full hover:!bg-background-light dark:hover:!bg-background-dark'
-              asChild
-            >
-              <Link href={CREATE_ROUTE}>
-                <Icon
-                  name='RiPencil'
-                  className='mr-[6px] group-hover:animate-icon-shake opacity-90'
-                />{' '}
-                Start Writing
-              </Link>
-            </Button>
+            />
 
             <Button
               size='lg'

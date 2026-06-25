@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import Icon, { IconName } from '@/components/icon';
 import {
   BOOKMARK_ROUTE,
-  CREATE_ROUTE,
   EXPLORE_TOPICS_ROUTE,
   HOME_ROUTE,
 } from '@/constants/routeConstants';
@@ -35,10 +34,10 @@ const tabs: Tab[] = [
     match: (p) => p.startsWith('/topics'),
   },
   {
-    href: CREATE_ROUTE,
+    href: '#',
     label: 'Create',
     icon: 'RiAdd',
-    match: (p) => p.startsWith('/create'),
+    match: (p) => p.startsWith('/edit'),
     requiresAuth: true,
   },
   {
@@ -65,11 +64,11 @@ export function MobileBottomTabBar() {
   const pathname = usePathname() ?? '';
   const { data: session } = useAuth();
 
-  // Hide on auth, blog reading, and create routes (immersive surfaces)
+  // Hide on auth, blog reading, and editor routes (immersive surfaces)
   if (
     pathname.startsWith('/auth') ||
     (pathname.startsWith('/blog/') && pathname !== '/blog') ||
-    pathname.startsWith('/create')
+    pathname.startsWith('/edit')
   ) {
     return null;
   }
@@ -84,10 +83,20 @@ export function MobileBottomTabBar() {
         {tabs.map((tab) => {
           const active = tab.match(pathname);
           const href = tab.requiresAuth && !session ? '/auth/login' : tab.href;
+          const handleTabClick = (e: React.MouseEvent, tab: Tab) => {
+            if (tab.label === 'Create') {
+              e.preventDefault();
+              const blogId = Math.random().toString(36).substring(7);
+              window.location.href = `/edit/${blogId}?isNew=true`;
+              return;
+            }
+          };
+
           return (
             <li key={tab.label} className='flex'>
               <Link
                 href={href}
+                onClick={(e) => handleTabClick(e, tab)}
                 className={cn(
                   'flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-inter font-semibold uppercase tracking-[0.12em] transition-colors',
                   active

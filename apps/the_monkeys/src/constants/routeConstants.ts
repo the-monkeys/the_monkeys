@@ -1,7 +1,6 @@
 import { IconName } from '@/components/icon';
 
 export const HOME_ROUTE = '/';
-export const CREATE_ROUTE = '/create';
 export const LOGIN_ROUTE = '/auth/login';
 export const FEED_ROUTE = '/feed';
 export const ABOUT_ROUTE = '/about';
