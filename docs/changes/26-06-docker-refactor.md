@@ -4,7 +4,7 @@
 
 This refactor addresses a limitation in how the Next.js application was containerized and configured. Previously, environment variables were embedded during the build process, making Docker images environment-specific and difficult to reuse across different deployments.
 
-The new approach enables runtime configuration, allowing a single Docker image to be deployed to multiple environments without rebuilding.
+The new approach uses [`next-runtime-env`](https://www.npmjs.com/package/next-runtime-env) to enable runtime configuration, allowing a single Docker image to be deployed to multiple environments without rebuilding.
 
 ---
 
@@ -34,9 +34,9 @@ the API URL was permanently embedded in the generated frontend assets. Deploying
 
 ## New Approach
 
-The application now loads configuration at runtime instead of build time.
+The application now uses `next-runtime-env` to load configuration at runtime instead of build time.
 
-A single Docker image is built once and pushed to the container registry. Environment-specific configuration is injected when the container starts.
+A single Docker image is built once and pushed to the container registry. Environment-specific configuration is injected when the container starts. `next-runtime-env` automatically exposes all `NEXT_PUBLIC_*` variables to the browser at runtime via an inline script, without any custom API endpoint or manual fetching.
 
 ### Benefits
 
@@ -45,47 +45,101 @@ A single Docker image is built once and pushed to the container registry. Enviro
 * Environment variables can be changed without rebuilding the image.
 * Faster deployments and simpler CI/CD workflows.
 * Improved portability and consistency across environments.
+* No custom `/api/config` endpoint needed — `next-runtime-env` handles the plumbing.
 
 ### Runtime Configuration Flow
 
 1. Docker image is built and pushed to the registry.
-2. Environment variables are provided when the container starts.
-3. The application exposes runtime configuration through an API endpoint.
-4. The frontend retrieves and caches the configuration.
-5. API clients and other services consume the runtime values.
+2. `NEXT_PUBLIC_*` environment variables are provided when the container starts.
+3. `PublicEnvScript` in `app/layout.tsx` injects the runtime values into the page as an inline script at render time.
+4. Client components access values via the `env()` helper from `next-runtime-env`.
+5. Server components and API routes continue to read directly from `process.env`.
 
 ---
 
 ## Implementation Details
 
-### `/api/config`
+### Installation
 
-Provides runtime configuration to the frontend.
+```bash
+npm install next-runtime-env
+```
 
-Responsibilities:
+### `app/layout.tsx`
 
-* Reads environment variables available to the running container.
-* Returns configuration values required by the client.
-* Serves as the single source of truth for runtime configuration.
+Add `PublicEnvScript` to the `<head>`. This component reads all `NEXT_PUBLIC_*` variables available to the running server process and injects them into the HTML at render time — no build-time baking, no custom endpoints.
 
-### `src/lib/runtime-config.ts`
+```tsx
+// app/layout.tsx
+import { PublicEnvScript } from 'next-runtime-env';
 
-Client-side runtime configuration loader.
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <head>
+        <PublicEnvScript />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}
+```
 
-Responsibilities:
+### Client Components
 
-* Fetches configuration from `/api/config`.
-* Caches configuration to avoid repeated network requests.
-* Provides a consistent API for accessing runtime values.
+Use the `env()` helper anywhere in client code. It reads from the runtime values injected by `PublicEnvScript`, not from the build-time bundle.
+
+```tsx
+// app/some-page.tsx
+'use client';
+import { env } from 'next-runtime-env';
+
+export default function SomePage() {
+  const apiUrl = env('NEXT_PUBLIC_API_URL');
+  return <div>API URL: {apiUrl}</div>;
+}
+```
 
 ### `src/constants/api.ts`
 
-Updated to use runtime configuration instead of build-time environment variables.
+Updated to use `env()` instead of `process.env.NEXT_PUBLIC_*`. This removes the hard build-time dependency on environment values.
 
-Responsibilities:
+```ts
+// src/constants/api.ts
+import { env } from 'next-runtime-env';
 
-* Retrieves API endpoints from the runtime configuration layer.
-* Removes dependency on build-time `NEXT_PUBLIC_*` variables.
+export const API_URL = env('NEXT_PUBLIC_API_URL');
+export const WS_URL  = env('NEXT_PUBLIC_WS_URL');
+```
+
+### Server Components and API Routes
+
+No changes needed. Server-side code continues to access `process.env` directly, as the values are available from the container environment at runtime.
+
+```ts
+// Server component or API route
+const secret = process.env.SECRET_KEY; // works as before
+```
+
+### `.env` Files (Development)
+
+No changes needed. During local development, `next-runtime-env` reads from `.env.local` just like standard Next.js, so the developer experience is unchanged.
+
+```env
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:3001
+```
+
+---
+
+## What Was Removed
+
+The previous custom implementation is no longer needed and should be deleted:
+
+* `app/api/config/route.ts` — the custom runtime config endpoint
+* `src/lib/runtime-config.ts` — the manual fetch-and-cache utility
+
+`next-runtime-env` replaces both with `PublicEnvScript` (server-side injection) and `env()` (client-side access).
 
 ---
 
@@ -93,24 +147,27 @@ Responsibilities:
 
 ### Development
 
-Developers can run the same image with different configuration values by supplying a different `.env` file.
+Developers continue using `.env.local` files. `env()` works exactly like `process.env.NEXT_PUBLIC_*` would have, with no change in DX.
 
 ### Staging
 
-The staging environment can use its own API endpoints and services without requiring a separate image build.
+The staging environment supplies its own `NEXT_PUBLIC_*` values at container start. The same image artifact is used as production — no separate build.
 
 ### Production
 
-Production deployments can use the same image artifact while injecting production-specific configuration at runtime.
+Production deployments inject production-specific variables at runtime. Promoting an image from Staging to Production requires only a config change, not a rebuild.
 
 ---
 
 ## Result
 
-Docker images are now portable, environment-agnostic artifacts that can be promoted across environments without rebuilding, while configuration remains flexible and environment-specific.
+Docker images are now portable, environment-agnostic artifacts that can be promoted across environments without rebuilding. `next-runtime-env` handles runtime injection cleanly, replacing the previous custom `/api/config` + fetch-and-cache pattern with a single `<PublicEnvScript />` component and a one-line `env()` call.
 
+---
 
 ## References
 
-- https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables
-- https://nemanjamitic.com/blog/2025-12-13-nextjs-runtime-environment-variables/
+- [next-runtime-env on npm](https://www.npmjs.com/package/next-runtime-env)
+- [expatfile/next-runtime-env on GitHub](https://github.com/expatfile/next-runtime-env)
+- [Next.js Runtime Environment Variables](https://nextjs.org/docs/app/guides/environment-variables#runtime-environment-variables)
+- [Build Once, Deploy Many](https://www.mikemcgarr.com/blog/build-once-deploy-many.html)

@@ -11,6 +11,7 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
   if (authToken && !headers.get('Authorization')) {
     headers.set('Authorization', `Bearer ${authToken.value}`);
   }
+  headers.set('Accept-Encoding', '*');
 
   const clientUrl = new URL(req.url);
   const upstreamPath = params?.path
@@ -31,11 +32,6 @@ async function proxyRequest(req: Request, params?: { path: string[] }) {
     });
 
     const responseHeaders = new Headers(response.headers);
-
-    // content compression should be handled by browser itself
-    responseHeaders.delete('content-encoding');
-
-    responseHeaders.delete('set-cookie');
     if (typeof response.headers.getSetCookie === 'function') {
       for (const cookie of response.headers.getSetCookie()) {
         responseHeaders.append('Set-Cookie', cookie);
