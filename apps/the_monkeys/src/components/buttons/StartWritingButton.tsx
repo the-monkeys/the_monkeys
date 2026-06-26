@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
+import { CREATE_ROUTE } from '@/constants/routeConstants';
 import { Button, ButtonProps } from '@the-monkeys/ui/atoms/button';
 
 interface StartWritingButtonProps extends ButtonProps {
@@ -19,8 +20,7 @@ export const StartWritingButton = ({
   const router = useRouter();
 
   const handleCreate = () => {
-    const blogId = Math.random().toString(36).substring(7);
-    router.push(`/edit/${blogId}?isNew=true`);
+    router.push(CREATE_ROUTE);
   };
 
   return (
@@ -28,7 +28,7 @@ export const StartWritingButton = ({
       {showIcon && (
         <Icon
           name='RiPencil'
-          className='mr-[6px] group-hover:animate-icon-shake opacity-90'
+          className='mr-1.5 group-hover:animate-icon-shake opacity-90'
         />
       )}
       {label}

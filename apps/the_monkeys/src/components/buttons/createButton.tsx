@@ -2,16 +2,15 @@
 
 import { useRouter } from 'next/navigation';
 
+import { CREATE_ROUTE } from '@/constants/routeConstants';
+
 import Icon from '../icon';
 
 export const CreateButton = () => {
   const router = useRouter();
 
   const handleCreate = () => {
-    // Generate a unique blogId immediately
-    const blogId = Math.random().toString(36).substring(7);
-    // Navigate directly to the edit page with isNew flag to skip redundant fetch
-    window.location.href = `/edit/${blogId}?isNew=true`;
+    router.push(CREATE_ROUTE);
   };
 
   return (

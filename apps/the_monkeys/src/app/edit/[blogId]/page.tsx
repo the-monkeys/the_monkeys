@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
@@ -49,6 +49,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const blogId = params.blogId;
   const { data: session } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
   const isNew = searchParams.get('isNew') === 'true';
 
@@ -79,8 +80,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     if (!isNew) return;
 
     // Clean up the URL so that subsequent refreshes perform a regular fetch
-    router.replace(window.location.pathname);
-  }, [isNew, router]);
+    router.replace(pathname);
+  }, [isNew, router, pathname]);
 
   const accountId = session?.account_id;
   const username = session?.username;

@@ -16,6 +16,7 @@ export const TOPIC_ROUTE = '/topics';
 export const TOPIC_SITEMAP_ROUTE = '/topics/sitemap.xml';
 export const NOTIFICATIONS_ROUTE = '/notifications';
 export const SETTINGS_ROUTE = '/settings';
+export const CREATE_ROUTE = '/create';
 export const PARENT_COMPANY_ROUTE = 'https://buddhicintaka.com/';
 
 export type NavItem = {
