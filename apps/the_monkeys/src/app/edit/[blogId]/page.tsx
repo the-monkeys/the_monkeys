@@ -63,13 +63,24 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const webSocketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [data, setData] = useState<OutputData | null>(null);
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [blogTopics, setBlogTopics] = useState<string[]>([]);
   const [token, setToken] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
+
+  const [data, setData] = useState<OutputData | null>(
+    isNew ? INITIAL_DATA : null
+  );
+
+  useEffect(() => {
+    // route change should happen in a dedicated effect to avoid running between renders
+    if (!isNew) return;
+
+    // Clean up the URL so that subsequent refreshes perform a regular fetch
+    router.replace(window.location.pathname);
+  }, [isNew, router]);
 
   const accountId = session?.account_id;
   const username = session?.username;
@@ -325,22 +336,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     username,
     queryClient,
   ]);
-
-  // Optimistic initialization for new blogs
-  useEffect(() => {
-    if (isNew && !data) {
-      setData(INITIAL_DATA);
-      setBlogTopics([]);
-
-      // Clean up the URL so that subsequent refreshes perform a regular fetch
-      const newUrl = window.location.pathname;
-      window.history.replaceState(
-        { ...window.history.state, as: newUrl, url: newUrl },
-        '',
-        newUrl
-      );
-    }
-  }, [isNew, data]);
 
   // Initialize editor data
   useEffect(() => {
