@@ -80,8 +80,13 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     if (!isNew) return;
 
     // Clean up the URL so that subsequent refreshes perform a regular fetch
-    router.replace(pathname);
-  }, [isNew, router, pathname]);
+    const newUrl = window.location.pathname;
+    window.history.replaceState(
+      { ...window.history.state, as: newUrl, url: newUrl },
+      '',
+      newUrl
+    );
+  }, [isNew]);
 
   const accountId = session?.account_id;
   const username = session?.username;

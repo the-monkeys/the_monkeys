@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import Icon, { IconName } from '@/components/icon';
 import {
@@ -63,7 +63,6 @@ const tabs: Tab[] = [
  */
 export function MobileBottomTabBar() {
   const pathname = usePathname() ?? '';
-  const router = useRouter();
   const { data: session } = useAuth();
 
   // Hide on auth, blog reading, and editor routes (immersive surfaces)

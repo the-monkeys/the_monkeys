@@ -5,7 +5,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
-import { generateBlogUUID } from '@/utils/helper';
 
 /**
  * Backward Compatibility Route: /create
@@ -16,7 +15,7 @@ export default function CreateBlog() {
 
   useEffect(() => {
     // Generate a fresh blog ID
-    const blogId = generateBlogUUID();
+    const blogId = Math.random().toString(36).substring(7);
 
     // Redirect to the new edit route immediately
     router.replace(`/edit/${blogId}?isNew=true`);
