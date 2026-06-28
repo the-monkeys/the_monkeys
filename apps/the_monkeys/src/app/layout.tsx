@@ -4,6 +4,7 @@ import Script from 'next/script';
 
 import { AppShell } from '@/components/layout/app-shell/AppShell';
 import Footer from '@/components/layout/footer';
+import DonationPopup from '@/components/popup/DonationPopup';
 import { LIVE_URL } from '@/constants/api';
 import { TooltipProvider } from '@the-monkeys/ui/atoms/tooltip';
 import { Toaster } from '@the-monkeys/ui/molecules/toaster';
@@ -154,6 +155,7 @@ const RootLayout = async ({
       <body
         className={`${dm_sans.variable} ${inter.variable} ${newsreader.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
+        <DonationPopup />
         <Toaster />
         <GrowthbookClientProvider>
           <QueryClientMount>
