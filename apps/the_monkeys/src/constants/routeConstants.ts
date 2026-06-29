@@ -1,7 +1,6 @@
 import { IconName } from '@/components/icon';
 
 export const HOME_ROUTE = '/';
-export const CREATE_ROUTE = '/create';
 export const LOGIN_ROUTE = '/auth/login';
 export const FEED_ROUTE = '/feed';
 export const ABOUT_ROUTE = '/about';
@@ -17,6 +16,7 @@ export const TOPIC_ROUTE = '/topics';
 export const TOPIC_SITEMAP_ROUTE = '/topics/sitemap.xml';
 export const NOTIFICATIONS_ROUTE = '/notifications';
 export const SETTINGS_ROUTE = '/settings';
+export const CREATE_ROUTE = '/create';
 export const PARENT_COMPANY_ROUTE = 'https://buddhicintaka.com/';
 
 export type NavItem = {

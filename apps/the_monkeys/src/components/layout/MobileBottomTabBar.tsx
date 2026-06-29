@@ -38,7 +38,7 @@ const tabs: Tab[] = [
     href: CREATE_ROUTE,
     label: 'Create',
     icon: 'RiAdd',
-    match: (p) => p.startsWith('/create'),
+    match: (p) => p.startsWith('/edit'),
     requiresAuth: true,
   },
   {
@@ -65,11 +65,11 @@ export function MobileBottomTabBar() {
   const pathname = usePathname() ?? '';
   const { data: session } = useAuth();
 
-  // Hide on auth, blog reading, and create routes (immersive surfaces)
+  // Hide on auth, blog reading, and editor routes (immersive surfaces)
   if (
     pathname.startsWith('/auth') ||
     (pathname.startsWith('/blog/') && pathname !== '/blog') ||
-    pathname.startsWith('/create')
+    pathname.startsWith('/edit')
   ) {
     return null;
   }
@@ -84,6 +84,7 @@ export function MobileBottomTabBar() {
         {tabs.map((tab) => {
           const active = tab.match(pathname);
           const href = tab.requiresAuth && !session ? '/auth/login' : tab.href;
+
           return (
             <li key={tab.label} className='flex'>
               <Link
