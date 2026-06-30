@@ -1,7 +1,7 @@
 'use client';
 
 import { useDailyDonationPopup } from '@/hooks/donationPopup/useDailyDonationPopup';
-import { paymentGatewayRedirectLink } from '@/utils/paymentGatewayInfo';
+import { paymentGatewayRedirectLink } from '@/utils/donationHook';
 import { RiCloseLine } from 'react-icons/ri';
 
 import DonationHeartVisual from './DonationHeartVisual';

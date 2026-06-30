@@ -1,26 +1,37 @@
 import { useEffect, useState } from 'react';
 
-const STORAGE_KEY = 'monkeys_donation_popup_last_seen';
+import { STORAGE_KEY, delayTimer } from '@/utils/donationHook';
 
 export const useDailyDonationPopup = () => {
   const [shouldShowPopup, setShouldShowPopup] = useState(false);
 
-  useEffect(() => {
-    const todayDateString = new Date().toLocaleDateString();
+  const todayDateString = new Date().toLocaleDateString('en-CA');
 
-    const lastSeenDate = localStorage.getItem(STORAGE_KEY);
+  useEffect(() => {
+    let lastSeenDate: string | null = null;
+
+    try {
+      if (typeof window !== 'undefined') {
+        lastSeenDate = localStorage.getItem(STORAGE_KEY);
+      }
+    } catch (error) {
+      console.warn('Donation hook: Unable to read from localStorage', error);
+    }
 
     if (lastSeenDate !== todayDateString) {
-      const timer = setTimeout(() => setShouldShowPopup(true), 10000); // Show popup after 10 seconds of delay
+      const timer = setTimeout(() => setShouldShowPopup(true), delayTimer);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [todayDateString]);
 
   const handleClosePopup = () => {
-    const todayDateString = new Date().toLocaleDateString();
-
-    localStorage.setItem(STORAGE_KEY, todayDateString);
-    setShouldShowPopup(false);
+    try {
+      localStorage.setItem(STORAGE_KEY, todayDateString);
+    } catch (error) {
+      console.warn('Donation hook: Unable to write to localStorage', error);
+    } finally {
+      setShouldShowPopup(false);
+    }
   };
 
   return { shouldShowPopup, handleClosePopup };
