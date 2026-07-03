@@ -2,7 +2,10 @@ import { cookies } from 'next/headers';
 
 import { API_URL } from '@/constants/api';
 
-async function proxyRequest(req: Request, params?: { path: string[] }) {
+async function proxyRequest(
+  req: Request,
+  { params }: { params?: { path: string[] } } = {}
+) {
   const cookieStore = cookies();
   const authToken = cookieStore.get('mat');
   const apiOrigin = new URL(API_URL!).origin;
