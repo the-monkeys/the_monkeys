@@ -8,3 +8,5 @@ node_modules/
 .env.production
 package-lock.json
 .vscode
+.DS_Store
+._*
