@@ -1,10 +1,13 @@
+import { API_URL } from '@/constants/api';
 import { getAllRequestHeaders } from '@/utils/requestHeaders';
 import axios from 'axios';
 
 import { setupRefreshInterceptor } from './interceptors';
 
+const isServer = typeof window === 'undefined';
+
 const axiosInstance = axios.create({
-  baseURL: '/api/v1',
+  baseURL: isServer ? API_URL || 'https://monkeys.support/api/v1' : '/api/v1',
   timeout: 30000,
 });
 
