@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [tsconfigPaths(), react()],
   test: {
     environment: 'jsdom',
+    exclude: [...configDefaults.exclude, '**/._*'],
     coverage: {
       provider: 'istanbul',
       exclude: [...configDefaults.coverage.exclude!, '*.config.*'],

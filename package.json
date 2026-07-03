@@ -20,5 +20,12 @@
 	"packageManager": "pnpm@10.10.0",
 	"dependencies": {
 		"prismjs": "^1.30.0"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"@biomejs/biome",
+			"esbuild",
+			"sharp"
+		]
 	}
 }
