@@ -76,7 +76,7 @@ const TemplateWireframe = ({ id }: { id: string }) => {
       );
     case 'instagram-carousel':
       return (
-        <div className='flex gap-0.5 items-center justify-center select-none'>
+        <div className='flex gap-0.5 items-center justify-center select-none isolate'>
           <div className='relative w-[30px] h-[38px] rounded-l border border-foreground/10 bg-background/40 overflow-hidden flex flex-col justify-between p-0.5 shadow-sm opacity-40 transition-all duration-200'>
             <div className='w-1.5 h-0.5 bg-foreground/10 rounded-full' />
             <div className='w-full h-0.5 bg-foreground/15 rounded-sm' />
@@ -162,7 +162,7 @@ export const TemplatePicker = ({ value, onChange }: TemplatePickerProps) => {
             key={tpl.id}
             type='button'
             onClick={() => onChange(tpl.id)}
-            className={`group flex flex-col h-[164px] items-stretch rounded-xl border bg-background overflow-hidden text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 ${
+            className={`group flex flex-col h-[184px] items-stretch rounded-xl border bg-background overflow-hidden text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 ${
               selected
                 ? 'border-brand-orange ring-1 ring-brand-orange/20 shadow-sm bg-brand-orange/[0.02]'
                 : 'border-border-light/60 dark:border-border-dark/60 hover:border-brand-orange/40 hover:bg-foreground-light/5 dark:hover:bg-foreground-dark/5'
@@ -185,7 +185,7 @@ export const TemplatePicker = ({ value, onChange }: TemplatePickerProps) => {
                   {tpl.description}
                 </span>
               </div>
-              <div className='flex items-center justify-between mt-1 text-[9px] font-medium mb-1'>
+              <div className='flex items-center justify-between mt-1 text-[9px] font-medium'>
                 <span className='font-mono text-foreground/40 bg-foreground-light/40 dark:bg-foreground-dark/50 px-1 py-0 rounded border border-border-light/20 dark:border-border-dark/20 shrink-0'>
                   {tpl.aspect}
                 </span>
