@@ -1,4 +1,4 @@
-import { API, BlockTool, ToolboxConfig } from '@editorjs/editorjs';
+import { API, BlockTool, ToolboxConfig } from '@themonkeys/monkeyseditor';
 
 import './style.css';
 import { ConstructorArgs, ListItemData, ListToolData } from './utils/interface';

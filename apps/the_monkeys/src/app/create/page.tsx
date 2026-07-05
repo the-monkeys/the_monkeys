@@ -13,8 +13,8 @@ import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { EditorConfig, OutputData } from '@themonkeys/monkeyseditor';
 import { twMerge } from 'tailwind-merge';
 
 import { generateSlug } from '../blog/utils/generateSlug';

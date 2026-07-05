@@ -3,13 +3,13 @@ import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import Delimiter from '@editorjs/delimiter';
-import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
 import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
+import { EditorConfig } from '@themonkeys/monkeyseditor';
 
 export const editorConfig: EditorConfig = {
   holder: 'editorjs_editor-container',

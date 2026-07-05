@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@editorjs/delimiter": "1.4.2",
-    "@editorjs/editorjs": "2.29.1",
+    "@themonkeys/monkeyseditor": "^1.0.0",
     "@editorjs/header": "2.8.1",
     "@editorjs/image": "2.9.0",
     "@editorjs/paragraph": "2.11.4",

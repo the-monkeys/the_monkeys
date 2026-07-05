@@ -24,9 +24,9 @@ import useGetDraftBlogDetail, {
 } from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { EditorConfig, OutputData } from '@editorjs/editorjs';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { EditorConfig, OutputData } from '@themonkeys/monkeyseditor';
 import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {

@@ -4,7 +4,6 @@ import FormSearchSelect from '@/components/FormSearchSelect';
 import { Loader } from '@/components/loader';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
-import { OutputData } from '@editorjs/editorjs';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -16,6 +15,7 @@ import {
 } from '@the-monkeys/ui/atoms/dialog';
 import { Label } from '@the-monkeys/ui/atoms/label';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
+import { OutputData } from '@themonkeys/monkeyseditor';
 import { twMerge } from 'tailwind-merge';
 
 import { BlogDescription, BlogImage, BlogTitle } from '../getBlogContent';

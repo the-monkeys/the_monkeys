@@ -3,7 +3,7 @@
 import React, { FC, useEffect, useRef } from 'react';
 
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import EditorJS, { EditorConfig, OutputData } from '@editorjs/editorjs';
+import EditorJS, { EditorConfig, OutputData } from '@themonkeys/monkeyseditor';
 
 export type EditorProps = {
   data: OutputData;
