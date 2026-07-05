@@ -11,6 +11,7 @@ import {
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
@@ -18,7 +19,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
-  const date = blog?.published_time;
+  const date = blog?.published_time ? getRelativeTime(blog.published_time) : '';
 
   const titleContent = purifyHTMLString(blog?.title);
   const descriptionContent = blog?.first_paragraph;
@@ -94,7 +95,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
 export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
-  const date = blog?.published_time;
+  const date = blog?.published_time ? getRelativeTime(blog.published_time) : '';
 
   const titleContent = purifyHTMLString(blog?.title);
   const descriptionContent = purifyHTMLString(blog?.first_paragraph);
