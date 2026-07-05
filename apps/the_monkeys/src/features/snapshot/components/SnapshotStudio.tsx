@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import useAuth from '@/hooks/auth/useAuth';
 import { cn } from '@/lib/utils';
 import {
   Accordion,
@@ -13,9 +14,9 @@ import {
 import { useDataUrlImage } from '../hooks/useDataUrlImage';
 import { useExport } from '../hooks/useExport';
 import { useSnapshotState } from '../hooks/useSnapshotState';
+import { captureWatermarkPng } from '../lib/captureWatermarkPng';
 import { inlineImagesForExport } from '../lib/inlineImagesForExport';
 import { parseTweetId } from '../lib/parseTweetUrl';
-import { punchOverlayVideoHole } from '../lib/punchOverlayVideoHole';
 import { getTweetDownloadVideoVariant } from '../lib/tweetMedia';
 import { getTemplateById } from '../registry';
 import { SnapshotInput } from '../types';
@@ -99,6 +100,8 @@ export const SnapshotStudio = ({
   const tweetCanvasSize = TWEET_ASPECT_DIMENSIONS[tweetOptions.aspect];
 
   const tweetId = useMemo(() => parseTweetId(tweetUrl), [tweetUrl]);
+
+  const { data: session } = useAuth();
 
   const { state, updateInput, setTemplate, setTheme, setAccent } =
     useSnapshotState({
@@ -190,55 +193,27 @@ export const SnapshotStudio = ({
         setIsDownloadingVideo(true);
         setTweetLoadError(null);
         try {
-          const exportRoot = tweetPreviewRef.current?.getExportRoot();
-          if (!exportRoot) throw new Error('Preview not ready');
+          // Resolve author info from the live session (state.input.author is stale).
+          const sessionDisplayName =
+            [session?.first_name?.trim(), session?.last_name?.trim()]
+              .filter(Boolean)
+              .join(' ') ||
+            session?.username ||
+            '';
+          const sessionUsername = session?.username || '';
+          const accentColor = tweetOptions.watermarkAccentColor || '#FF5542';
 
-          setExportMode('video-overlay');
-          await new Promise((r) => setTimeout(r, 120));
-
-          const root = tweetPreviewRef.current?.getExportRoot();
-          if (root) await inlineImagesForExport(root);
-          await document.fonts?.ready;
-
-          const blob = await exportTweetScreenshot({
-            filename: tweetFilename,
-            download: false,
-            transparent: true,
-            // Match canvas resolution — 2x PNGs blow up gateway FFmpeg memory.
-            pixelRatio: 1,
-          });
-          if (!blob) throw new Error('Overlay capture failed');
-
-          const frame = tweetPreviewRef.current?.getMediaFrame();
-          if (!frame) throw new Error('Could not measure video frame');
-
-          const overlayBlob = await punchOverlayVideoHole(
-            blob,
-            frame,
-            tweetCanvasSize.width
-          );
-
-          const reader = new FileReader();
-          const base64Promise = new Promise<string>((resolve) => {
-            reader.onloadend = () => resolve(reader.result as string);
-          });
-          reader.readAsDataURL(overlayBlob);
-          const overlayBase64 = await base64Promise;
-
+          // Badges are now generated server-side from text primitives —
+          // no browser canvas PNG generation, no base64 over the wire.
           const response = await fetch('/api/snapshot/tweet/video/render', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               tweetId,
               videoUrl: tweetVideoVariant.url,
-              overlay: overlayBase64,
-              backgroundColor: tweetOptions.backgroundColor,
-              frameX: frame.x,
-              frameY: frame.y,
-              frameW: frame.width,
-              frameH: frame.height,
-              canvasW: tweetCanvasSize.width,
-              canvasH: tweetCanvasSize.height,
+              authorName: sessionDisplayName,
+              authorHandle: sessionUsername,
+              accentColor,
             }),
           });
 
@@ -264,7 +239,6 @@ export const SnapshotStudio = ({
           );
           return null;
         } finally {
-          setExportMode('image');
           setIsDownloadingVideo(false);
         }
       }

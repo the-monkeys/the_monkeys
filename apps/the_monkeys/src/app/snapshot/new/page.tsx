@@ -1,8 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 import { SnapshotStudio } from '@/features/snapshot/components/SnapshotStudio';
 import { useSnapshotAuthor } from '@/features/snapshot/hooks/useSnapshotAuthor';
@@ -26,7 +27,9 @@ export default function SnapshotNewPage() {
   }, [session?.first_name, session?.last_name, username]);
 
   const { author } = useSnapshotAuthor(username, displayName);
-  const [previewMode, setPreviewMode] = useState<'template' | 'x'>('template');
+  const searchParams = useSearchParams();
+  const previewMode: 'template' | 'x' =
+    searchParams.get('mode') === 'x' ? 'x' : 'template';
 
   const input = useMemo<SnapshotInput>(
     () => ({
@@ -70,8 +73,16 @@ export default function SnapshotNewPage() {
           role='tablist'
           aria-label='Preview mode'
         >
-          <button
-            type='button'
+          <Link
+            href='/snapshot/video'
+            role='tab'
+            className='rounded-md px-3 py-1.5 font-medium transition-colors text-foreground/70 hover:text-foreground'
+          >
+            Brand video
+          </Link>
+          <Link
+            href='?mode=template'
+            scroll={false}
             role='tab'
             aria-selected={previewMode === 'template'}
             className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
@@ -79,12 +90,12 @@ export default function SnapshotNewPage() {
                 ? 'bg-brand-orange text-white'
                 : 'text-foreground/70 hover:text-foreground'
             }`}
-            onClick={() => setPreviewMode('template')}
           >
             Image template
-          </button>
-          <button
-            type='button'
+          </Link>
+          <Link
+            href='?mode=x'
+            scroll={false}
             role='tab'
             aria-selected={previewMode === 'x'}
             className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
@@ -92,17 +103,12 @@ export default function SnapshotNewPage() {
                 ? 'bg-brand-orange text-white'
                 : 'text-foreground/70 hover:text-foreground'
             }`}
-            onClick={() => setPreviewMode('x')}
           >
             X screenshot
-          </button>
+          </Link>
         </div>
       </div>
-      <SnapshotStudio
-        input={input}
-        previewMode={previewMode}
-        onPreviewModeChange={setPreviewMode}
-      />
+      <SnapshotStudio input={input} previewMode={previewMode} />
     </div>
   );
 }

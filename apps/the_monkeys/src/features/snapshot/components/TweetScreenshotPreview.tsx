@@ -559,6 +559,13 @@ export const TweetScreenshotPreview = forwardRef<
     };
   }, [tweet, measure, updateScale]);
 
+  // Hide the canvas background for video tweets — the exported video is
+  // BBC-style (watermark on raw video), so the preview should match.
+  const tweetHasVideo = useMemo(
+    () => !!tweet && collectTweetMedia(tweet).some(isTweetVideoMedia),
+    [tweet]
+  );
+
   const canvasStyle = useMemo(
     () => ({
       width,
@@ -569,12 +576,18 @@ export const TweetScreenshotPreview = forwardRef<
       justifyContent: 'flex-start' as const,
       padding: CANVAS_PADDING,
       boxSizing: 'border-box' as const,
-      ...getTweetCanvasBackground(options),
+      ...(tweetHasVideo ? {} : getTweetCanvasBackground(options)),
       position: 'relative' as const,
       overflow: 'hidden' as const,
       flexShrink: 0,
     }),
-    [width, height, options.backgroundColor, options.backgroundImage]
+    [
+      width,
+      height,
+      options.backgroundColor,
+      options.backgroundImage,
+      tweetHasVideo,
+    ]
   );
 
   const placeholder = (message: string, sub?: string) => (
@@ -667,38 +680,41 @@ export const TweetScreenshotPreview = forwardRef<
 
   return (
     <div ref={innerRef} className={className} style={canvasStyle}>
-      {/* Watermark Header */}
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          paddingBottom: 24,
-          boxSizing: 'border-box',
-        }}
-      >
-        <Logo
-          color={options.watermarkColor || '#FFFFFF'}
-          accent={options.watermarkAccentColor || '#FF5542'}
-          size={30}
-        />
+      {/* Watermark Header — shown for image tweets only; video tweets get the
+          watermark burned directly into the exported video file instead. */}
+      {!tweetHasVideo && (
         <div
           style={{
+            width: '100%',
             display: 'flex',
-            color: options.watermarkColor || '#FFFFFF',
-            opacity: 0.7,
-            fontSize: 22,
-            letterSpacing: 0.4,
-            textTransform: 'uppercase',
-            fontWeight: 500,
-            fontFamily:
-              '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingBottom: 24,
+            boxSizing: 'border-box',
           }}
         >
-          X-Screenshot
+          <Logo
+            color={options.watermarkColor || '#FFFFFF'}
+            accent={options.watermarkAccentColor || '#FF5542'}
+            size={30}
+          />
+          <div
+            style={{
+              display: 'flex',
+              color: options.watermarkColor || '#FFFFFF',
+              opacity: 0.7,
+              fontSize: 22,
+              letterSpacing: 0.4,
+              textTransform: 'uppercase',
+              fontWeight: 500,
+              fontFamily:
+                '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
+            }}
+          >
+            X-Screenshot
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Content */}
       <div

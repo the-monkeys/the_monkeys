@@ -38,9 +38,7 @@ export const setupRefreshInterceptor = (instance: AxiosInstance) => {
         isRefreshing = true;
 
         try {
-          // Use a fixed absolute path for the refresh call to ensure it works
-          // across both /api/v1 and /api/v2 instances.
-          await instance.post('/api/v1/auth/refresh');
+          await instance.post('/auth/refresh');
           isRefreshing = false;
           processQueue(null);
           return instance(originalRequest);
