@@ -70,6 +70,13 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
           </Link>
         </DropdownMenuItem>
 
+        <DropdownMenuItem asChild>
+          <Link href={LIBRARY_ROUTE} className='flex w-full items-center gap-2'>
+            <Icon name='RiBookShelf' size={18} />
+            <p className='font-dm_sans text-sm sm:text-base'>Library</p>
+          </Link>
+        </DropdownMenuItem>
+
         {/* <DropdownMenuItem asChild>
           <Link
             href={`${ACTIVITY_ROUTE}?user=${session?.username}`}
