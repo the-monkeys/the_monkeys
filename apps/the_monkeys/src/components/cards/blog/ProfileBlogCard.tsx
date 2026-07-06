@@ -19,6 +19,7 @@ import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { topicToSlug } from '@/utils/topicUtils';
 
 export const ProfileBlogCard = ({
   blog,
@@ -106,7 +107,7 @@ export const ProfileBlogCard = ({
               {blog?.tags.length ? (
                 <div className='w-fit flex items-center gap-1'>
                   <Link
-                    href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                    href={`${TOPIC_ROUTE}/${topicToSlug(blog?.tags[0])}`}
                     target='_blank'
                     className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
                   >
