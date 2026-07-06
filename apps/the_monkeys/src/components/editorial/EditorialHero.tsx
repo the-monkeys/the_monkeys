@@ -12,6 +12,7 @@ import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { topicToSlug } from '@/utils/topicUtils';
 
 /**
  * Editorial-style hero: full-bleed image as background with category badge
@@ -60,7 +61,7 @@ export const EditorialHero = ({
         {/* Category badge — top-left, sits above the gradient. */}
         {blog?.tags?.[0] ? (
           <Link
-            href={`${TOPIC_ROUTE}/${blog.tags[0]}`}
+            href={`${TOPIC_ROUTE}/${topicToSlug(blog.tags[0])}`}
             className='absolute top-4 left-4 z-20 inline-flex items-center px-3 py-1 bg-brand-orange text-white font-inter font-extrabold text-[11px] uppercase tracking-[0.22em] rounded-sm hover:bg-brand-orange/90 transition-colors'
           >
             {category}

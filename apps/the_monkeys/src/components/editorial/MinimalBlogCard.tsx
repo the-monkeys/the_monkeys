@@ -5,6 +5,7 @@ import BlogActionBar from '@/components/editorial/BlogActionBar';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { topicToSlug } from '@/utils/topicUtils';
 
 /**
  * Bordered, image-less card showing just category label + title.
@@ -29,7 +30,7 @@ export const MinimalBlogCard = ({
     <article className='h-full group p-4 sm:p-5 rounded-md  transition-colors bg-background-light dark:bg-background-dark'>
       {tag ? (
         <Link
-          href={`${TOPIC_ROUTE}/${tag}`}
+          href={`${TOPIC_ROUTE}/${topicToSlug(tag)}`}
           className='inline-block font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.15em] hover:opacity-80 transition-opacity'
         >
           {display}

@@ -15,6 +15,7 @@ import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { topicToSlug } from '@/utils/topicUtils';
 
 export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const authorId = blog?.owner_account_id;
@@ -69,7 +70,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
             <div className='flex items-center gap-2'>
               {blog?.tags.length ? (
                 <Link
-                  href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                  href={`${TOPIC_ROUTE}/${topicToSlug(blog?.tags[0])}`}
                   target='_blank'
                   className='px-3 py-1 bg-brand-orange/10 rounded-full font-inter font-bold text-xs text-brand-orange uppercase tracking-wider hover:bg-brand-orange/20 transition-colors'
                 >
@@ -147,7 +148,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
             <div className='flex items-center gap-2'>
               {blog?.tags.length ? (
                 <Link
-                  href={`${TOPIC_ROUTE}/${blog?.tags[0]}`}
+                  href={`${TOPIC_ROUTE}/${topicToSlug(blog?.tags[0])}`}
                   target='_blank'
                   className='px-3 py-1 bg-brand-orange/10 rounded-full font-inter font-bold text-xs text-brand-orange uppercase tracking-wider hover:bg-brand-orange/20 transition-colors'
                 >

@@ -11,6 +11,7 @@ import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { topicToSlug } from '@/utils/topicUtils';
 
 import { UserInfoCardShowcase } from '../user/userInfo';
 
@@ -31,7 +32,7 @@ export const FeedListItem = ({ blog }: { blog: MetaBlog }) => {
       <div className='flex-1 min-w-0'>
         {tag ? (
           <Link
-            href={`${TOPIC_ROUTE}/${tag}`}
+            href={`${TOPIC_ROUTE}/${topicToSlug(tag)}`}
             className='inline-block font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.15em] hover:opacity-80 transition-opacity'
           >
             {tag}

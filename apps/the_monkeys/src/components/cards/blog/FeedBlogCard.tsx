@@ -18,6 +18,7 @@ import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { getRelativeTime } from '@/lib/utils';
 import { BlogCardData } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
+import { topicToSlug } from '@/utils/topicUtils';
 
 interface CardProps {
   blog: BlogCardData;
@@ -57,7 +58,7 @@ const ArticleTag = ({
   }
   return (
     <Link
-      href={`${TOPIC_ROUTE}/${tag}`}
+      href={`${TOPIC_ROUTE}/${topicToSlug(tag)}`}
       target={openInNewTab ? '_blank' : undefined}
       className={className}
     >

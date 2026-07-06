@@ -12,6 +12,7 @@ import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { topicToSlug } from '@/utils/topicUtils';
 
 /**
  * Side-by-side feature: image on the left, category + title + excerpt on
@@ -50,7 +51,7 @@ export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
         <div className='flex flex-col p-5 sm:p-6'>
           {blog?.tags?.[0] ? (
             <Link
-              href={`${TOPIC_ROUTE}/${blog.tags[0]}`}
+              href={`${TOPIC_ROUTE}/${topicToSlug(blog.tags[0])}`}
               className='inline-block self-start font-inter font-extrabold text-[11px] uppercase tracking-[0.22em] text-brand-orange hover:underline'
             >
               {category}
