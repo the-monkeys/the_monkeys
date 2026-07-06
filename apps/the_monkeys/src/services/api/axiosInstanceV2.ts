@@ -7,9 +7,7 @@ import { setupRefreshInterceptor } from './interceptors';
 const isServer = typeof window === 'undefined';
 
 const axiosInstanceV2 = axios.create({
-  baseURL: isServer
-    ? API_URL_V2 || 'https://monkeys.support/api/v2'
-    : '/api/v2',
+  baseURL: isServer ? API_URL_V2 : '/api/v2',
   timeout: 30000,
 });
 

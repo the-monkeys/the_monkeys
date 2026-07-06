@@ -6,7 +6,7 @@ import axios from 'axios';
 const isServer = typeof window === 'undefined';
 
 const axiosInstanceNoAuth = axios.create({
-  baseURL: isServer ? API_URL || 'https://monkeys.support/api/v1' : '/api/v1',
+  baseURL: isServer ? API_URL : '/api/v1',
   timeout: 30000,
 });
 
