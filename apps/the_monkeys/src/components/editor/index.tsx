@@ -42,6 +42,7 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
   const editorInstance = useRef<EditorJS | null>(null);
   const prevFileUrls = useRef<Set<string>>(extractFileUrls(data?.blocks || []));
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+  const localDataRef = useRef<OutputData | null>(data);
 
   // Pre-calculate the config based on the blogId
   const editorConfig = useMemo(() => getEditorConfig(blogId), [blogId]);
@@ -58,6 +59,7 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
           debounceTimer.current = setTimeout(async () => {
             if (onChange) {
               const savedData = await api.saver.save();
+              localDataRef.current = savedData;
 
               // Detect removed file blocks and delete their files from storage.
               const currentUrls = extractFileUrls(savedData.blocks);
@@ -83,6 +85,24 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
       }
     };
   }, [blogId, editorConfig, onChange]);
+
+  // Sync editor data if updated from outside (e.g. from PublishBlogDrawer)
+  useEffect(() => {
+    if (!editorInstance.current || !data) return;
+
+    const isDifferent =
+      !localDataRef.current ||
+      JSON.stringify(data.blocks) !==
+        JSON.stringify(localDataRef.current.blocks);
+
+    if (isDifferent) {
+      editorInstance.current.isReady.then(() => {
+        if (!editorInstance.current) return;
+        editorInstance.current.render(data);
+        localDataRef.current = data;
+      });
+    }
+  }, [data]);
 
   return (
     <div className='w-full px-4 space-y-6' id='editorjs_editor-container'></div>
