@@ -74,13 +74,13 @@ export const SearchInput = ({ className }: { className?: string }) => {
           />
 
           <input
-            value={searchQuery}
-            placeholder='Search stories...'
-            className='w-full text-[15px] bg-transparent  focus:outline-none text-gray-900 placeholder:text-gray-400 font-inter'
-            onChange={handleInputChange}
-            onFocus={() => setFocused(true)}
-            onBlur={handleBlur}
-          />
+             value={searchQuery}
+              placeholder='Search stories...'
+              className='w-full text-[15px] bg-transparent focus:outline-none text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-inter'
+              onChange={handleInputChange}
+              onFocus={() => setFocused(true)}
+              onBlur={handleBlur}
+            />
 
           {searchQuery.trim() && (
             <button
