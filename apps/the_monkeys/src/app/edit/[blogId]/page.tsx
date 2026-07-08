@@ -486,6 +486,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
                 topics={blogTopics}
                 setTopics={setBlogTopics}
                 data={data}
+                setData={setData}
                 isPublishing={blogPublishLoading}
                 handlePublish={handlePublishStep}
                 handleSchedule={handleScheduleStep}
