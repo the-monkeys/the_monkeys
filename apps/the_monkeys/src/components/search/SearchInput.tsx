@@ -68,8 +68,8 @@ export const SearchInput = ({ className }: { className?: string }) => {
             name='RiSearch'
             size={18}
             className={twMerge(
-              'text-gray-400  transition-colors',
-              focused && 'text-gray-900'
+              "text-gray-400 dark:text-gray-500 transition-colors",
+              focused && "text-gray-900 dark:text-gray-100"
             )}
           />
 
