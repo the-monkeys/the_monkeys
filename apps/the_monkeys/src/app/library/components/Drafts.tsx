@@ -9,7 +9,6 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { PROFILE_DRAFTS_PER_PAGE } from '@/constants/posts';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 import { usePagination } from '@/hooks/user/usePagination';
-import { MetaBlog } from '@/services/blog/blogTypes';
 import { IUser } from '@/services/models/user';
 
 const DraftsInner = ({ user }: { user?: IUser }) => {
