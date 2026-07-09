@@ -68,15 +68,15 @@ export const SearchInput = ({ className }: { className?: string }) => {
             name='RiSearch'
             size={18}
             className={twMerge(
-              'text-gray-400  transition-colors',
-              focused && 'text-gray-900'
+              'text-gray-400·dark:text-gray-500·transition-colors',
+              focused && 'text-gray-900·dark:text-gray-100'
             )}
           />
 
           <input
             value={searchQuery}
             placeholder='Search stories...'
-            className='w-full text-[15px] bg-transparent  focus:outline-none text-gray-900 placeholder:text-gray-400 font-inter'
+            className='w-full text-[15px] bg-transparent focus:outline-none text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-inter'
             onChange={handleInputChange}
             onFocus={() => setFocused(true)}
             onBlur={handleBlur}
