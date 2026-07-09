@@ -9,6 +9,7 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { PROFILE_DRAFTS_PER_PAGE } from '@/constants/posts';
 import useGetAllDraftBlogs from '@/hooks/blog/useGetAllDraftBlogs';
 import { usePagination } from '@/hooks/user/usePagination';
+import { MetaBlog } from '@/services/blog/blogTypes';
 import { IUser } from '@/services/models/user';
 
 const DraftsInner = ({ user }: { user?: IUser }) => {
@@ -29,6 +30,7 @@ const DraftsInner = ({ user }: { user?: IUser }) => {
   const hasPrevPage = page > 0;
   const showPagination =
     blogs?.total_blogs && blogs?.total_blogs > PROFILE_DRAFTS_PER_PAGE;
+  const sortedDrafts = [...(blogs?.blogs ?? [])].reverse();
 
   if (isError)
     return (
@@ -47,18 +49,17 @@ const DraftsInner = ({ user }: { user?: IUser }) => {
         </p>
       ) : (
         <>
-          {blogs?.blogs &&
-            blogs?.blogs.map((blog) => {
-              return (
-                <ProfileBlogCard
-                  blog={blog}
-                  isAuthenticated={!!user}
-                  modificationEnable={true}
-                  isDraft={true}
-                  key={blog?.blog_id}
-                />
-              );
-            })}
+          {sortedDrafts.map((blog) => {
+            return (
+              <ProfileBlogCard
+                blog={blog}
+                isAuthenticated={!!user}
+                modificationEnable={true}
+                isDraft={true}
+                key={blog?.blog_id}
+              />
+            );
+          })}
 
           {showPagination && (
             <div className='flex justify-center gap-[10px] mt-4'>
