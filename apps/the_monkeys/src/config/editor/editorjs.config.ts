@@ -3,7 +3,7 @@ import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import Delimiter from '@editorjs/delimiter';
-import { EditorConfig } from '@editorjs/editorjs';
+import { EditorConfig } from '@themonkeys/monkeys-editor';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
 import List from '@editorjs/list';

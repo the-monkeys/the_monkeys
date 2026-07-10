@@ -4,7 +4,7 @@ import FormSearchSelect from '@/components/FormSearchSelect';
 import { Loader } from '@/components/loader';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
-import { OutputData } from '@editorjs/editorjs';
+import { OutputData } from '@themonkeys/monkeys-editor';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,

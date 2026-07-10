@@ -16,7 +16,7 @@ import useGetDraftBlogDetail, {
 } from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { OutputData } from '@editorjs/editorjs';
+import { OutputData } from '@themonkeys/monkeys-editor';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
