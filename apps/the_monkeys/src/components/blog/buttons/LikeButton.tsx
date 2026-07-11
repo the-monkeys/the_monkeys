@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
+import HeartBurst from '@/components/common/HeartBurst';
 import Icon from '@/components/icon';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
 import { queryKeys } from '@/lib/queryKeys';
@@ -32,6 +33,7 @@ export const LikeButton = ({
 
   const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
+  const [burstKey, setBurstKey] = useState(0);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -119,8 +121,11 @@ export const LikeButton = ({
       const response = await axiosInstance.post(`/user/like/${blogId}`);
 
       if (response.status === 200) {
+        setBurstKey((k) => k + 1);
+
         setLikeState(true);
         updateLikesCount(1);
+
         refetchLikeQueries();
       }
     } catch (err: unknown) {
@@ -189,38 +194,26 @@ export const LikeButton = ({
         onOpenChange={setAuthPromptOpen}
       />
 
-      {likeStatus ? (
-        <button
-          className={`like-active group p-1 flex items-center justify-center hover:opacity-80 ${
-            loading || isDisable
-              ? 'cursor-default opacity-80'
-              : 'cursor-pointer'
-          }`}
-          onClick={onPostDislike}
-          disabled={loading || isDisable}
-          title='Remove Like'
-        >
-          <Icon
-            name='RiHeart3'
-            type='Fill'
-            size={size}
-            className='like-icon text-brand-orange'
-          />
-        </button>
-      ) : (
-        <button
-          className={`group p-1 flex items-center justify-center hover:text-brand-orange ${
-            loading || isDisable
-              ? 'cursor-default opacity-80'
-              : 'cursor-pointer'
-          }`}
-          onClick={onPostLike}
-          disabled={loading || isDisable}
-          title='Add Like'
-        >
-          <Icon name='RiHeart3' size={size} className='like-icon' />
-        </button>
-      )}
+      <button
+        type='button'
+        className={`relative group p-1 flex items-center justify-center ${
+          likeStatus ? 'hover:opacity-80' : 'hover:text-brand-orange'
+        } ${
+          loading || isDisable ? 'cursor-default opacity-80' : 'cursor-pointer'
+        }`}
+        onClick={likeStatus ? onPostDislike : onPostLike}
+        disabled={loading || isDisable}
+        title={likeStatus ? 'Remove Like' : 'Add Like'}
+      >
+        {burstKey > 0 && <HeartBurst key={burstKey} />}
+
+        <Icon
+          name='RiHeart3'
+          type={likeStatus ? 'Fill' : undefined}
+          size={size}
+          className={`like-icon ${likeStatus ? 'text-brand-orange' : ''}`}
+        />
+      </button>
     </>
   );
 };

@@ -833,3 +833,27 @@ li.cdx-list__item {
 .like-count {
   transition: color 180ms ease;
 }
+
+/* like burst animation */
+.heart-burst-particle {
+  position: absolute;
+  opacity: 0;
+  transform-origin: center;
+  animation: heartBurst 280ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes heartBurst {
+  0% {
+    transform: translate(0, 0) scale(0.3) rotate(0deg);
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(var(--x), var(--y)) scale(1) rotate(var(--r));
+    opacity: 0;
+  }
+}
