@@ -52,12 +52,14 @@ class ClientInfo {
         ]).catch(() => 'unknown');
 
         try {
-          const parser = Bowser.getParser(window.navigator.userAgent);
-          this.browser = parser.getBrowserName() || 'unknown';
-          this.os = parser.getOSName() || 'unknown';
+          if (typeof window !== 'undefined') {
+            const parser = Bowser.getParser(window.navigator.userAgent);
+            this.browser = parser.getBrowserName() || 'unknown';
+            this.os = parser.getOSName() || 'unknown';
 
-          const platformType = parser.getPlatformType();
-          this.device = (platformType as DeviceType) || 'unknown';
+            const platformType = parser.getPlatformType();
+            this.device = (platformType as DeviceType) || 'unknown';
+          }
         } catch (browserError) {
           console.warn('Browser detection failed:', browserError);
           this.browser = 'unknown';
@@ -95,7 +97,7 @@ class ClientInfo {
       browser: this.browser,
       os: this.os,
       device: this.device,
-      userAgent: window.navigator.userAgent,
+      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
       isMobile: this.device === 'mobile',
       isTablet: this.device === 'tablet',
       isDesktop: this.device === 'desktop',
@@ -108,7 +110,7 @@ class ClientInfo {
       browser: 'unknown',
       os: 'unknown',
       device: 'unknown',
-      userAgent: window.navigator.userAgent,
+      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
       isMobile: false,
       isTablet: false,
       isDesktop: false,
@@ -148,6 +150,13 @@ class ClientInfo {
   }
 
   getEnvironmentInfo(): EnvironmentInfo {
+    if (typeof window === 'undefined') {
+      return {
+        viewportWidth: '0',
+        viewportHeight: '0',
+        darkMode: '0',
+      };
+    }
     return {
       viewportWidth: window.innerWidth.toString(),
       viewportHeight: window.innerHeight.toString(),
