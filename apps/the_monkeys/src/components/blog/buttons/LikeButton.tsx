@@ -113,110 +113,105 @@ export const LikeButton = ({
   }
 
   const onPostLike = async () => {
-  if (loading) return;
+    if (loading) return;
 
-  setLoading(true);
+    setLoading(true);
 
-  const previousLikeState = likeStatus;
-  const countKey = queryKeys.blog.likes.count(blogId);
-  const previousCount = queryClient.getQueryData<likesCountResponse>(countKey);
+    const previousLikeState = likeStatus;
+    const countKey = queryKeys.blog.likes.count(blogId);
+    const previousCount =
+      queryClient.getQueryData<likesCountResponse>(countKey);
 
-  
-  setLikeState(true);
-  updateLikesCount(1);
+    setLikeState(true);
+    updateLikesCount(1);
 
-  try {
-    await axiosInstance.post(`/user/like/${blogId}`);
+    try {
+      await axiosInstance.post(`/user/like/${blogId}`);
 
-    refetchLikeQueries();
-  } catch (err: unknown) {
-    
-    setLikeState(previousLikeState);
+      refetchLikeQueries();
+    } catch (err: unknown) {
+      setLikeState(previousLikeState);
 
-    if (previousCount === undefined) {
-      queryClient.removeQueries({
-        queryKey: countKey,
-        exact: true,
-      });
-    } else {
-      queryClient.setQueryData(countKey, previousCount);
+      if (previousCount === undefined) {
+        queryClient.removeQueries({
+          queryKey: countKey,
+          exact: true,
+        });
+      } else {
+        queryClient.setQueryData(countKey, previousCount);
+      }
+
+      if (isAuthError(err)) {
+        setAuthPromptOpen(true);
+        return;
+      }
+
+      if (err instanceof Error) {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to like post.',
+        });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occurred.',
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-
-   
-    if (isAuthError(err)) {
-      setAuthPromptOpen(true);
-      return;
-    }
-
-    
-    if (err instanceof Error) {
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description: err.message || 'Failed to like post.',
-      });
-    } else {
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description: 'An unknown error occurred.',
-      });
-    }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
   const onPostDislike = async () => {
-  if (loading) return;
+    if (loading) return;
 
-  setLoading(true);
-  const previousLikeState = likeStatus;
-  const countKey = queryKeys.blog.likes.count(blogId);
-  const previousCount = queryClient.getQueryData<likesCountResponse>(countKey);
-  setLikeState(false);
-  updateLikesCount(-1);
+    setLoading(true);
+    const previousLikeState = likeStatus;
+    const countKey = queryKeys.blog.likes.count(blogId);
+    const previousCount =
+      queryClient.getQueryData<likesCountResponse>(countKey);
+    setLikeState(false);
+    updateLikesCount(-1);
 
-  try {
-    await axiosInstance.post(`/user/unlike/${blogId}`);
+    try {
+      await axiosInstance.post(`/user/unlike/${blogId}`);
 
-    refetchLikeQueries();
-  } catch (err: unknown) {
-    
-    setLikeState(previousLikeState);
+      refetchLikeQueries();
+    } catch (err: unknown) {
+      setLikeState(previousLikeState);
 
-    if (previousCount === undefined) {
-      queryClient.removeQueries({
-        queryKey: countKey,
-        exact: true,
-      });
-    } else {
-      queryClient.setQueryData(countKey, previousCount);
+      if (previousCount === undefined) {
+        queryClient.removeQueries({
+          queryKey: countKey,
+          exact: true,
+        });
+      } else {
+        queryClient.setQueryData(countKey, previousCount);
+      }
+
+      if (isAuthError(err)) {
+        setAuthPromptOpen(true);
+        return;
+      }
+
+      if (err instanceof Error) {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: err.message || 'Failed to remove post reaction.',
+        });
+      } else {
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description: 'An unknown error occurred.',
+        });
+      }
+    } finally {
+      setLoading(false);
     }
-
-    
-    if (isAuthError(err)) {
-      setAuthPromptOpen(true);
-      return;
-    }
-
-  
-    if (err instanceof Error) {
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description: err.message || 'Failed to remove post reaction.',
-      });
-    } else {
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description: 'An unknown error occurred.',
-      });
-    }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <>
