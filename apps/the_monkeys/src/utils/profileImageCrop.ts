@@ -1,13 +1,14 @@
+import type { Crop } from 'react-image-crop';
+
 export interface ProfileImageCropState {
-  offsetX: number;
-  offsetY: number;
-  zoom: number;
+  crop: Crop;
 }
 
 export interface ProfileImageCropOptions {
   file: File;
-  frameSize: number;
-  cropState: ProfileImageCropState;
+  imageDimensions: { width: number; height: number } | null;
+  crop: Crop;
+  displayedSize?: { width: number; height: number };
 }
 
 const MAX_OUTPUT_SIZE = 1024;
@@ -31,48 +32,82 @@ const blobToFile = (blob: Blob, fileName: string) =>
     lastModified: Date.now(),
   });
 
+export const getCropSourceCoordinates = ({
+  imageDimensions,
+  crop,
+  frameSize,
+  displayedSize,
+}: {
+  imageDimensions: { width: number; height: number };
+  crop: Crop;
+  frameSize: number;
+  displayedSize?: { width: number; height: number };
+}) => {
+  const displayWidth = Math.max(
+    1,
+    displayedSize?.width ?? imageDimensions.width
+  );
+  const displayHeight = Math.max(
+    1,
+    displayedSize?.height ?? imageDimensions.height
+  );
+
+  const cropX = crop.unit === '%' ? (crop.x / 100) * displayWidth : crop.x;
+  const cropY = crop.unit === '%' ? (crop.y / 100) * displayHeight : crop.y;
+  const cropWidth =
+    crop.unit === '%' ? (crop.width / 100) * displayWidth : crop.width;
+  const cropHeight =
+    crop.unit === '%' ? (crop.height / 100) * displayHeight : crop.height;
+
+  const sourceX = Math.round(cropX * (imageDimensions.width / displayWidth));
+  const sourceY = Math.round(cropY * (imageDimensions.height / displayHeight));
+  const sourceWidth = Math.max(
+    1,
+    Math.round(cropWidth * (imageDimensions.width / displayWidth))
+  );
+  const sourceHeight = Math.max(
+    1,
+    Math.round(cropHeight * (imageDimensions.height / displayHeight))
+  );
+  const outputSize = Math.min(
+    MAX_OUTPUT_SIZE,
+    Math.round(Math.max(sourceWidth, sourceHeight))
+  );
+
+  return {
+    sourceX: clamp(sourceX, 0, imageDimensions.width - 1),
+    sourceY: clamp(sourceY, 0, imageDimensions.height - 1),
+    sourceWidth: clamp(sourceWidth, 1, imageDimensions.width),
+    sourceHeight: clamp(sourceHeight, 1, imageDimensions.height),
+    outputSize,
+  };
+};
+
 export const cropProfileImage = async ({
   file,
-  frameSize,
-  cropState,
+  imageDimensions,
+  crop,
+  displayedSize,
 }: ProfileImageCropOptions): Promise<File> => {
+  if (!imageDimensions) {
+    throw new Error('Image dimensions are not available.');
+  }
+
   const imageUrl = URL.createObjectURL(file);
 
   try {
     const image = await loadImage(imageUrl);
-    const baseScale = Math.max(
-      frameSize / image.naturalWidth,
-      frameSize / image.naturalHeight
-    );
-    const scale = baseScale * cropState.zoom;
-    const renderedWidth = image.naturalWidth * scale;
-    const renderedHeight = image.naturalHeight * scale;
-
-    const maxOffsetX = Math.max(0, (renderedWidth - frameSize) / 2);
-    const maxOffsetY = Math.max(0, (renderedHeight - frameSize) / 2);
-
-    const offsetX = clamp(cropState.offsetX, -maxOffsetX, maxOffsetX);
-    const offsetY = clamp(cropState.offsetY, -maxOffsetY, maxOffsetY);
-
-    const sourceSize = Math.max(
-      1,
-      Math.min(
-        image.naturalWidth,
-        image.naturalHeight,
-        Math.round(frameSize / scale)
-      )
-    );
-    const sourceX = clamp(
-      (frameSize / 2 - renderedWidth / 2 - offsetX) / scale,
-      0,
-      image.naturalWidth - sourceSize
-    );
-    const sourceY = clamp(
-      (frameSize / 2 - renderedHeight / 2 - offsetY) / scale,
-      0,
-      image.naturalHeight - sourceSize
-    );
-    const outputSize = Math.min(MAX_OUTPUT_SIZE, sourceSize);
+    const frameSize = Math.min(image.naturalWidth, image.naturalHeight);
+    const { sourceX, sourceY, sourceWidth, sourceHeight, outputSize } =
+      getCropSourceCoordinates({
+        imageDimensions: {
+          width: image.naturalWidth,
+          height: image.naturalHeight,
+        },
+        crop,
+        frameSize,
+        displayedSize,
+      });
 
     const canvas = document.createElement('canvas');
     canvas.width = outputSize;
@@ -89,8 +124,8 @@ export const cropProfileImage = async ({
       image,
       sourceX,
       sourceY,
-      sourceSize,
-      sourceSize,
+      sourceWidth,
+      sourceHeight,
       0,
       0,
       outputSize,
