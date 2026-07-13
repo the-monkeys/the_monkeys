@@ -97,7 +97,8 @@ class ClientInfo {
       browser: this.browser,
       os: this.os,
       device: this.device,
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
+      userAgent:
+        typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
       isMobile: this.device === 'mobile',
       isTablet: this.device === 'tablet',
       isDesktop: this.device === 'desktop',
@@ -110,7 +111,8 @@ class ClientInfo {
       browser: 'unknown',
       os: 'unknown',
       device: 'unknown',
-      userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
+      userAgent:
+        typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
       isMobile: false,
       isTablet: false,
       isDesktop: false,
