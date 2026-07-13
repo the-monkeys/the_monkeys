@@ -113,75 +113,71 @@ export const LikeButton = ({
   }
 
   const onPostLike = async () => {
+    if (loading) return;
     setLoading(true);
+    const previousLikeState = likeStatus;
+    setLikeState(true);
+    updateLikesCount(1);
 
     try {
-      const response = await axiosInstance.post(`/user/like/${blogId}`);
+      await axiosInstance.post(`/user/like/${blogId}`);
 
-      if (response.status === 200) {
-        setLikeState(true);
-        updateLikesCount(1);
-        refetchLikeQueries();
-      }
-    } catch (err: unknown) {
+      refetchLikeQueries();
+    } catch (err) {
+      
+      setLikeState(previousLikeState);
+      updateLikesCount(-1);
+
       if (isAuthError(err)) {
         setAuthPromptOpen(true);
         return;
       }
 
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to like post.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description:
+          err instanceof Error
+            ? err.message
+            : 'Failed to like post.',
+      });
     } finally {
       setLoading(false);
     }
   };
 
   const onPostDislike = async () => {
+    if (loading) return;
     setLoading(true);
-
+    const previousLikeState = likeStatus;
+    setLikeState(false);
+    updateLikesCount(-1);
     try {
-      const response = await axiosInstance.post(`/user/unlike/${blogId}`);
+      await axiosInstance.post(`/user/unlike/${blogId}`);
 
-      if (response.status === 200) {
-        setLikeState(false);
-        updateLikesCount(-1);
-        refetchLikeQueries();
-      }
-    } catch (err: unknown) {
+      refetchLikeQueries();
+    } catch (err) {
+      setLikeState(previousLikeState);
+      updateLikesCount(1);
+
       if (isAuthError(err)) {
         setAuthPromptOpen(true);
         return;
       }
 
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to remove post reaction.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description:
+          err instanceof Error
+            ? err.message
+            : 'Failed to remove post reaction.',
+      });
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <>
       <AuthPromptDialog
