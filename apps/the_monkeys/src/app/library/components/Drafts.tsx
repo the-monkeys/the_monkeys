@@ -14,21 +14,45 @@ import { IUser } from '@/services/models/user';
 const DraftsInner = ({ user }: { user?: IUser }) => {
   const { page, next, prev } = usePagination();
 
-  const offset = page * PROFILE_DRAFTS_PER_PAGE;
+  // Query 1: lightweight count query to get total_blogs
+  const {
+    blogs: countData,
+    isLoading: countLoading,
+    isError: countError,
+  } = useGetAllDraftBlogs({ limit: 1, offset: 0 });
 
-  const { blogs, isLoading, isError } = useGetAllDraftBlogs({
-    limit: PROFILE_DRAFTS_PER_PAGE,
-    offset,
+  const totalBlogs = countData?.total_blogs ?? 0;
+
+  // Compute reversed offset so page 0 = newest drafts
+  const reversedOffset = Math.max(
+    0,
+    totalBlogs - (page + 1) * PROFILE_DRAFTS_PER_PAGE
+  );
+  const actualLimit = Math.min(
+    PROFILE_DRAFTS_PER_PAGE,
+    totalBlogs - page * PROFILE_DRAFTS_PER_PAGE
+  );
+
+  // Query 2: fetch actual page data with reversed offset
+  const {
+    blogs,
+    isLoading: dataLoading,
+    isError: dataError,
+  } = useGetAllDraftBlogs({
+    limit: actualLimit > 0 ? actualLimit : PROFILE_DRAFTS_PER_PAGE,
+    offset: reversedOffset,
+    enabled: totalBlogs > 0,
   });
 
-  const hasNextPage =
-    blogs &&
-    blogs?.total_blogs &&
-    blogs?.total_blogs > (page + 1) * PROFILE_DRAFTS_PER_PAGE;
+  const isLoading = countLoading || dataLoading;
+  const isError = countError || dataError;
 
+  // Reverse within page so newest item is first
+  const displayBlogs = blogs?.blogs ? [...blogs.blogs].reverse() : [];
+
+  const hasNextPage = totalBlogs > (page + 1) * PROFILE_DRAFTS_PER_PAGE;
   const hasPrevPage = page > 0;
-  const showPagination =
-    blogs?.total_blogs && blogs?.total_blogs > PROFILE_DRAFTS_PER_PAGE;
+  const showPagination = totalBlogs > PROFILE_DRAFTS_PER_PAGE;
 
   if (isError)
     return (
@@ -41,24 +65,23 @@ const DraftsInner = ({ user }: { user?: IUser }) => {
     <div className='flex flex-col gap-4'>
       {isLoading ? (
         <FeedBlogCardListSkeleton count={PROFILE_DRAFTS_PER_PAGE} />
-      ) : !blogs?.blogs || blogs?.blogs?.length === 0 ? (
+      ) : displayBlogs.length === 0 ? (
         <p className='w-full text-sm opacity-80 text-center'>
           No drafts created yet.
         </p>
       ) : (
         <>
-          {blogs?.blogs &&
-            blogs?.blogs.map((blog) => {
-              return (
-                <ProfileBlogCard
-                  blog={blog}
-                  isAuthenticated={!!user}
-                  modificationEnable={true}
-                  isDraft={true}
-                  key={blog?.blog_id}
-                />
-              );
-            })}
+          {displayBlogs.map((blog) => {
+            return (
+              <ProfileBlogCard
+                blog={blog}
+                isAuthenticated={!!user}
+                modificationEnable={true}
+                isDraft={true}
+                key={blog?.blog_id}
+              />
+            );
+          })}
 
           {showPagination && (
             <div className='flex justify-center gap-[10px] mt-4'>

@@ -7,10 +7,12 @@ export const ALL_DRAFT_BLOGS_QUERY_KEY = 'all-draft-blogs';
 const useGetAllDraftBlogs = ({
   limit = 10,
   offset = 0,
+  enabled = true,
 }: {
   username?: string;
   limit: number;
   offset: number;
+  enabled?: boolean;
 }) => {
   const { data, error, isLoading, isError } = useQuery<GetMetaFeedBlogs, Error>(
     {
@@ -20,6 +22,7 @@ const useGetAllDraftBlogs = ({
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       refetchOnMount: true,
+      enabled,
     }
   );
 
