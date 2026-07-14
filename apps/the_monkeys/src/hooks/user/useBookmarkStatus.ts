@@ -6,12 +6,15 @@ import {
 import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
 
+import useAuth from '../auth/useAuth';
+
 const STALE_TIME = 60 * 1000;
 
 export const useIsPostBookmarked = (
   blogId: string | undefined,
   initialIsBookmarked?: boolean
 ) => {
+  const { data: session } = useAuth();
   const { data, isLoading, error, isError } = useQuery<
     IsBookmarkedResponse,
     Error
@@ -23,7 +26,17 @@ export const useIsPostBookmarked = (
         ? undefined
         : { status: 'success', bookMarked: initialIsBookmarked },
     staleTime: STALE_TIME,
-    enabled: !!blogId,
+    enabled: !!blogId && !!session,
+    retry: (failureCount, error: any) => {
+      const status = error?.response?.status;
+
+      if (status === 401 || status === 403 || status === 404) {
+        return false;
+      }
+
+      return failureCount < 3;
+    },
+
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
@@ -37,6 +50,7 @@ export const useIsPostBookmarked = (
 };
 
 export const useGetBookmarksCount = (blogId: string | undefined) => {
+  const { data: session } = useAuth();
   const { data, isLoading, error, isError } = useQuery<
     bookmarksCountResponse,
     Error
@@ -44,7 +58,16 @@ export const useGetBookmarksCount = (blogId: string | undefined) => {
     queryKey: queryKeys.blog.bookmarks.count(blogId),
     queryFn: () => authFetcher(`/user/count-bookmarks/${blogId}`),
     staleTime: STALE_TIME,
-    enabled: !!blogId,
+    enabled: !!blogId && !!session,
+    retry: (failureCount, error: any) => {
+      const status = error?.response?.status;
+
+      if (status === 401 || status === 403 || status === 404) {
+        return false;
+      }
+
+      return failureCount < 3;
+    },
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

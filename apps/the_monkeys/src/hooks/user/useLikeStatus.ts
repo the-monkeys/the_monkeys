@@ -3,16 +3,28 @@ import { IsLikedResponse, likesCountResponse } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
 
+import useAuth from '../auth/useAuth';
+
 const STALE_TIME = 60 * 1000;
 
 export const useIsPostLiked = (
   blogId: string | undefined,
   initialIsLiked?: boolean
 ) => {
+  const { data: session } = useAuth();
   const { data, isLoading, error, isError } = useQuery<IsLikedResponse, Error>({
     queryKey: queryKeys.blog.likes.status(blogId),
     queryFn: () => authFetcher(`/user/is-liked/${blogId}`),
-    enabled: !!blogId,
+    enabled: !!blogId && !!session,
+    retry: (failureCount, error: any) => {
+      const status = error?.response?.status;
+
+      if (status === 401 || status === 403 || status === 404) {
+        return false;
+      }
+
+      return failureCount < 3;
+    },
     initialData:
       initialIsLiked === undefined
         ? undefined
@@ -32,13 +44,23 @@ export const useGetLikesCount = (
   blogId: string | undefined,
   initialCount?: number
 ) => {
+  const { data: session } = useAuth();
   const { data, isLoading, error, isError } = useQuery<
     likesCountResponse,
     Error
   >({
     queryKey: queryKeys.blog.likes.count(blogId),
     queryFn: () => authFetcher(`/user/count-likes/${blogId}`),
-    enabled: !!blogId,
+    enabled: !!blogId && !!session,
+    retry: (failureCount, error: any) => {
+      const status = error?.response?.status;
+
+      if (status === 401 || status === 403 || status === 404) {
+        return false;
+      }
+
+      return failureCount < 3;
+    },
     initialData:
       initialCount === undefined ? undefined : { count: initialCount },
     staleTime: STALE_TIME,

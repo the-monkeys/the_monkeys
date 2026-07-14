@@ -1,3 +1,5 @@
+'use client';
+
 import axiosInstance from '@/services/api/axiosInstance';
 import { GetAuthUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { useQuery } from '@tanstack/react-query';

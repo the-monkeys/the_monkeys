@@ -133,6 +133,7 @@ export const BlogPlaceholderImage = ({
 }) => {
   return (
     <Image
+      loading='lazy'
       src={placeholderImage.src}
       alt={title}
       height='500'

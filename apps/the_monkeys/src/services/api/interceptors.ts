@@ -20,11 +20,18 @@ export const setupRefreshInterceptor = (instance: AxiosInstance) => {
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
+      const url = originalRequest.url;
+
+      const isAuthEndpoint =
+        url.includes('/auth/login') ||
+        url.includes('/auth/logout') ||
+        url.includes('/auth/validate-session') ||
+        url.includes('/auth/refresh');
 
       if (
         error.response?.status === 401 &&
         !originalRequest._retry &&
-        !originalRequest.url.includes('/auth/refresh')
+        !isAuthEndpoint
       ) {
         if (isRefreshing) {
           return new Promise((resolve, reject) => {
@@ -40,7 +47,7 @@ export const setupRefreshInterceptor = (instance: AxiosInstance) => {
         try {
           // Use a fixed absolute path for the refresh call to ensure it works
           // across both /api/v1 and /api/v2 instances.
-          await instance.post('/api/v1/auth/refresh');
+          await instance.post('/auth/refresh');
           isRefreshing = false;
           processQueue(null);
           return instance(originalRequest);
