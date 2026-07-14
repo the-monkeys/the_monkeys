@@ -19,7 +19,7 @@ export const LikeButton = ({
   isDisable = false,
   initialIsLiked,
 }: {
-  blogId?: string | undefined;
+  blogId?: string;
   size?: number;
   isDisable?: boolean;
   initialIsLiked?: boolean;
