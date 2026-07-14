@@ -112,7 +112,7 @@ export const LikeButton = ({
     );
   }
 
-  const onPostLike = async () => {
+  const toggleLike = async (shouldLike: boolean) => {
     if (loading) return;
 
     setLoading(true);
@@ -122,14 +122,17 @@ export const LikeButton = ({
     const previousCount =
       queryClient.getQueryData<likesCountResponse>(countKey);
 
-    setLikeState(true);
-    updateLikesCount(1);
+    setLikeState(shouldLike);
+    updateLikesCount(shouldLike ? 1 : -1);
 
     try {
-      await axiosInstance.post(`/user/like/${blogId}`);
+      await axiosInstance.post(
+        shouldLike ? `/user/like/${blogId}` : `/user/unlike/${blogId}`
+      );
 
       refetchLikeQueries();
     } catch (err: unknown) {
+      
       setLikeState(previousLikeState);
 
       if (previousCount === undefined) {
@@ -146,68 +149,16 @@ export const LikeButton = ({
         return;
       }
 
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to like post.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-  const onPostDislike = async () => {
-    if (loading) return;
-
-    setLoading(true);
-    const previousLikeState = likeStatus;
-    const countKey = queryKeys.blog.likes.count(blogId);
-    const previousCount =
-      queryClient.getQueryData<likesCountResponse>(countKey);
-    setLikeState(false);
-    updateLikesCount(-1);
-
-    try {
-      await axiosInstance.post(`/user/unlike/${blogId}`);
-
-      refetchLikeQueries();
-    } catch (err: unknown) {
-      setLikeState(previousLikeState);
-
-      if (previousCount === undefined) {
-        queryClient.removeQueries({
-          queryKey: countKey,
-          exact: true,
-        });
-      } else {
-        queryClient.setQueryData(countKey, previousCount);
-      }
-
-      if (isAuthError(err)) {
-        setAuthPromptOpen(true);
-        return;
-      }
-
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to remove post reaction.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description:
+          err instanceof Error
+            ? err.message
+            : shouldLike
+              ? 'Failed to like post.'
+              : 'Failed to remove post reaction.',
+      });
     } finally {
       setLoading(false);
     }
@@ -227,7 +178,7 @@ export const LikeButton = ({
               ? 'cursor-default opacity-80'
               : 'cursor-pointer'
           }`}
-          onClick={onPostDislike}
+          onClick={() => toggleLike(false)}
           disabled={loading || isDisable}
           title='Remove Like'
         >
@@ -245,7 +196,7 @@ export const LikeButton = ({
               ? 'cursor-default opacity-80'
               : 'cursor-pointer'
           }`}
-          onClick={onPostLike}
+          onClick={() => toggleLike(true)}
           disabled={loading || isDisable}
           title='Add Like'
         >
