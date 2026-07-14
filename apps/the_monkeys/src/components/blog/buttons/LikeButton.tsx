@@ -132,9 +132,7 @@ export const LikeButton = ({
 
       refetchLikeQueries();
     } catch (err: unknown) {
-      
       setLikeState(previousLikeState);
-
       if (previousCount === undefined) {
         queryClient.removeQueries({
           queryKey: countKey,
@@ -149,15 +147,17 @@ export const LikeButton = ({
         return;
       }
 
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : shouldLike
+            ? 'Failed to like post.'
+            : 'Failed to remove post reaction.';
+
       toast({
         variant: 'error',
         title: 'Error',
-        description:
-          err instanceof Error
-            ? err.message
-            : shouldLike
-              ? 'Failed to like post.'
-              : 'Failed to remove post reaction.',
+        description: errorMessage,
       });
     } finally {
       setLoading(false);
