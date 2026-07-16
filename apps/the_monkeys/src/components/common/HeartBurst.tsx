@@ -25,7 +25,7 @@ export default function HeartBurst() {
               '--x': `${particle.x}px`,
               '--y': `${particle.y}px`,
               '--r': `${particle.r}deg`,
-              animationDelay: `${8 + index * 10}ms`,
+              animationDuration: `${430 + Math.random() * 80}ms`,
               opacity: 0.7 + Math.random() * 0.3,
             } as CSSProperties
           }

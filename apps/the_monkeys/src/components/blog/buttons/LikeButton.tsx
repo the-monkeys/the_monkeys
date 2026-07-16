@@ -117,25 +117,37 @@ export const LikeButton = ({
   const toggleLike = async (shouldLike: boolean) => {
     if (loading) return;
 
+    const previousLikeState = likeStatus;
+    const countKey = queryKeys.blog.likes.count(blogId);
+    const previousCountData =
+      queryClient.getQueryData<likesCountResponse>(countKey);
+    const previousCount = previousCountData?.count;
+
     setLoading(true);
+    setLikeState(shouldLike);
+    updateLikesCount(shouldLike ? 1 : -1);
 
     try {
-      const response = await axiosInstance.post(`/user/like/${blogId}`);
+      const response = await axiosInstance({
+        url: `/user/like/${blogId}`,
+        method: shouldLike ? 'post' : 'delete',
+      });
 
       if (response.status === 200) {
-        setLikeState(true);
-        updateLikesCount(1);
+        setLikeState(shouldLike);
+        updateLikesCount(shouldLike ? 1 : -1);
         refetchLikeQueries();
       }
     } catch (err: unknown) {
-      setLikeState(previousLikeState);
+      setLikeState(previousLikeState ?? false);
+
       if (previousCount === undefined) {
         queryClient.removeQueries({
           queryKey: countKey,
           exact: true,
         });
       } else {
-        queryClient.setQueryData(countKey, previousCount);
+        queryClient.setQueryData(countKey, previousCountData);
       }
 
       if (isAuthError(err)) {
@@ -160,6 +172,9 @@ export const LikeButton = ({
     }
   };
 
+  const onPostLike = () => toggleLike(true);
+  const onPostDislike = () => toggleLike(false);
+
   return (
     <>
       <AuthPromptDialog
@@ -167,38 +182,26 @@ export const LikeButton = ({
         onOpenChange={setAuthPromptOpen}
       />
 
-      {likeStatus ? (
-        <button
-          className={`like-active group p-1 flex items-center justify-center hover:opacity-80 ${
-            loading || isDisable
-              ? 'cursor-default opacity-80'
-              : 'cursor-pointer'
-          }`}
-          onClick={onPostDislike}
-          disabled={loading || isDisable}
-          title='Remove Like'
-        >
-          <Icon
-            name='RiHeart3'
-            type='Fill'
-            size={size}
-            className='like-icon text-brand-orange'
-          />
-        </button>
-      ) : (
-        <button
-          className={`group p-1 flex items-center justify-center hover:text-brand-orange ${
-            loading || isDisable
-              ? 'cursor-default opacity-80'
-              : 'cursor-pointer'
-          }`}
-          onClick={onPostLike}
-          disabled={loading || isDisable}
-          title='Add Like'
-        >
-          <Icon name='RiHeart3' size={size} className='like-icon' />
-        </button>
-      )}
+      <button
+        type='button'
+        className={`relative group p-1 flex items-center justify-center ${
+          likeStatus ? 'hover:opacity-80' : 'hover:text-brand-orange'
+        } ${
+          loading || isDisable ? 'cursor-default opacity-80' : 'cursor-pointer'
+        }`}
+        onClick={likeStatus ? onPostDislike : onPostLike}
+        disabled={loading || isDisable}
+        title={likeStatus ? 'Remove Like' : 'Add Like'}
+      >
+        {burstKey > 0 && <HeartBurst key={burstKey} />}
+
+        <Icon
+          name='RiHeart3'
+          type={likeStatus ? 'Fill' : undefined}
+          size={size}
+          className={`like-icon ${likeStatus ? 'text-brand-orange' : ''}`}
+        />
+      </button>
     </>
   );
 };

@@ -91,7 +91,7 @@ export function LockedSection({
         href={LOGIN_ROUTE}
         title='Login to unlock'
         aria-label='Login to unlock'
-        className='absolute inset-0 z-10 flex items-center justify-start rounded-md px-2 text-gray-500 transition-colors hover:text-brand-orange dark:hover:text-violet-800 dark:text-gray-400'
+        className='absolute inset-0 z-10 flex items-center justify-center rounded-md px-2 text-gray-500 transition-colors hover:text-brand-orange dark:text-gray-400'
       >
         <span className='flex h-8 items-center justify-center gap-1.5 px-2.5 border border-border-light/70 shadow-sm backdrop-blur dark:border-border-dark/80 dark:bg-background-dark/95 rounded-sm'>
           <Icon name='RiLock' size={13} className='shrink-0' />
