@@ -17,6 +17,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
@@ -30,8 +31,6 @@ import ReactCrop, {
 } from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { twMerge } from 'tailwind-merge';
-
-type CropChoice = 'choose' | 'crop' | 'skip';
 
 const DEFAULT_CROP_STATE: ProfileImageCropState = {
   crop: {
@@ -80,7 +79,6 @@ export const UpdateProfileDialog = () => {
   } | null>(null);
   const [cropState, setCropState] =
     useState<ProfileImageCropState>(DEFAULT_CROP_STATE);
-  const [cropChoice, setCropChoice] = useState<CropChoice>('choose');
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const imageRef = useRef<HTMLImageElement | null>(null);
@@ -94,7 +92,6 @@ export const UpdateProfileDialog = () => {
     setPreviewUrl('');
     setImageDimensions(null);
     setCropState(DEFAULT_CROP_STATE);
-    setCropChoice('choose');
     setUploadError('');
     setLoading(false);
   }, [open]);
@@ -153,7 +150,6 @@ export const UpdateProfileDialog = () => {
 
     setSelectedImage(file);
     setCropState(DEFAULT_CROP_STATE);
-    setCropChoice('choose');
   }, []);
 
   const onProfileUpload = async () => {
@@ -166,20 +162,20 @@ export const UpdateProfileDialog = () => {
     setLoading(true);
 
     try {
-      const fileToUpload =
-        cropChoice === 'crop'
-          ? await cropProfileImage({
-              file: selectedImage,
-              imageDimensions,
-              crop: cropState.crop,
-              displayedSize: imageRef.current
-                ? {
-                    width: imageRef.current.clientWidth,
-                    height: imageRef.current.clientHeight,
-                  }
-                : undefined,
-            })
-          : selectedImage;
+      let displayedSize;
+      if (imageRef.current) {
+        displayedSize = {
+          width: imageRef.current.clientWidth,
+          height: imageRef.current.clientHeight,
+        };
+      }
+
+      const fileToUpload = await cropProfileImage({
+        file: selectedImage,
+        imageDimensions,
+        crop: cropState.crop,
+        displayedSize,
+      });
 
       if (fileToUpload.size > MAX_FILE_SIZE_BYTES) {
         setUploadError('Error: The image must be under 2 MB.');
@@ -208,7 +204,6 @@ export const UpdateProfileDialog = () => {
         });
         setSelectedImage(undefined);
         setCropState(DEFAULT_CROP_STATE);
-        setCropChoice('choose');
         setOpen(false);
       }
     } catch (err: unknown) {
@@ -242,7 +237,6 @@ export const UpdateProfileDialog = () => {
     setPreviewUrl('');
     setImageDimensions(null);
     setCropState(DEFAULT_CROP_STATE);
-    setCropChoice('choose');
     setUploadError('');
   };
 
@@ -258,10 +252,11 @@ export const UpdateProfileDialog = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className='sm:max-w-2xl'>
-        <DialogTitle>Update Profile Photo</DialogTitle>
-
-        <DialogDescription className='hidden'></DialogDescription>
+      <DialogContent className='sm:max-w-2xl px-4 pb-8'>
+        <DialogHeader>
+          <DialogTitle>Update Profile Photo</DialogTitle>
+          <DialogDescription className='hidden'></DialogDescription>
+        </DialogHeader>
 
         {!selectedImage && (
           <div className='space-y-2'>
@@ -283,7 +278,6 @@ export const UpdateProfileDialog = () => {
               <Input
                 {...getInputProps()}
                 accept='image/png, image/jpeg'
-                multiple={false}
                 type='file'
               />
 
@@ -294,7 +288,7 @@ export const UpdateProfileDialog = () => {
               </p>
 
               <p className='text-xs sm:text-sm text-center opacity-80'>
-                You can crop the image before uploading
+                The file should be under 2 MB
               </p>
             </div>
           </div>
@@ -304,11 +298,9 @@ export const UpdateProfileDialog = () => {
           <div className='space-y-4'>
             <div className='flex items-start justify-between gap-4'>
               <div className='space-y-1'>
-                <p className='font-medium'>Choose how to update your photo</p>
+                <p className='font-medium'>Adjust your photo</p>
                 <p className='text-sm opacity-80'>
-                  {cropChoice === 'crop'
-                    ? 'Adjust the crop box to frame your profile photo.'
-                    : 'You can crop the image first, or continue with the original file.'}
+                  Adjust the crop box to frame your profile photo.
                 </p>
               </div>
 
@@ -328,96 +320,55 @@ export const UpdateProfileDialog = () => {
               </p>
             )}
 
-            {cropChoice === 'choose' && (
-              <div className='flex flex-wrap items-center gap-3'>
-                <Button
-                  type='button'
-                  variant='secondary'
-                  onClick={() => setCropChoice('crop')}
-                  disabled={loading}
+            <div className='mx-auto w-full max-w-[360px] overflow-hidden rounded-2xl border border-border-light bg-black/80 shadow-[0_24px_80px_rgba(0,0,0,0.25)] dark:border-border-dark'>
+              {previewUrl && (
+                <ReactCrop
+                  crop={cropState.crop}
+                  onChange={(nextCrop) =>
+                    setCropState((current) => ({
+                      ...current,
+                      crop: nextCrop,
+                    }))
+                  }
+                  onComplete={(nextCrop) =>
+                    setCropState((current) => ({
+                      ...current,
+                      crop: nextCrop,
+                    }))
+                  }
+                  aspect={1}
+                  circularCrop={false}
+                  keepSelection
+                  minHeight={50}
+                  className='w-full'
                 >
-                  Crop image
-                </Button>
+                  <img
+                    ref={imageRef}
+                    src={previewUrl}
+                    alt='Selected profile preview'
+                    draggable={false}
+                    onLoad={(e) => {
+                      const { width, height } = e.currentTarget;
+                      setCropState({
+                        crop: centerAspectCrop(width, height, 1),
+                      });
+                    }}
+                    className='h-auto max-h-[360px] w-full select-none object-contain'
+                  />
+                </ReactCrop>
+              )}
+            </div>
 
-                <Button
-                  type='button'
-                  variant='constructive'
-                  onClick={() => setCropChoice('skip')}
-                  disabled={loading}
-                >
-                  Continue without cropping
-                </Button>
-              </div>
-            )}
-
-            {cropChoice === 'crop' && (
-              <>
-                <div className='mx-auto w-full max-w-[360px] overflow-hidden rounded-2xl border border-border-light bg-black/80 shadow-[0_24px_80px_rgba(0,0,0,0.25)] dark:border-border-dark'>
-                  {previewUrl && (
-                    <ReactCrop
-                      crop={cropState.crop}
-                      onChange={(nextCrop) =>
-                        setCropState((current) => ({
-                          ...current,
-                          crop: nextCrop,
-                        }))
-                      }
-                      onComplete={(nextCrop) =>
-                        setCropState((current) => ({
-                          ...current,
-                          crop: nextCrop,
-                        }))
-                      }
-                      aspect={1}
-                      circularCrop={false}
-                      keepSelection
-                      minHeight={50}
-                      className='w-full'
-                    >
-                      <img
-                        ref={imageRef}
-                        src={previewUrl}
-                        alt='Selected profile preview'
-                        draggable={false}
-                        onLoad={(e) => {
-                          const { width, height } = e.currentTarget;
-                          setCropState({
-                            crop: centerAspectCrop(width, height, 1),
-                          });
-                        }}
-                        className='h-auto max-h-[360px] w-full select-none object-contain'
-                      />
-                    </ReactCrop>
-                  )}
-                </div>
-
-                <div className='flex flex-wrap items-center justify-end gap-2'>
-                  <Button
-                    type='button'
-                    variant='secondary'
-                    onClick={resetCrop}
-                    disabled={loading}
-                  >
-                    Reset crop
-                  </Button>
-
-                  <Button
-                    type='button'
-                    variant='secondary'
-                    onClick={() => setCropChoice('choose')}
-                    disabled={loading}
-                  >
-                    Back
-                  </Button>
-                </div>
-              </>
-            )}
-
-            {cropChoice === 'skip' && (
-              <div className='rounded-lg border border-border-light bg-background-light/60 p-4 text-sm opacity-80 dark:border-border-dark dark:bg-background-dark/60'>
-                The original image will be uploaded as-is.
-              </div>
-            )}
+            <div className='flex flex-wrap items-center justify-end gap-2'>
+              <Button
+                type='button'
+                variant='secondary'
+                onClick={resetCrop}
+                disabled={loading}
+              >
+                Reset crop
+              </Button>
+            </div>
 
             <div className='flex items-center justify-between gap-3'>
               <div className='text-xs sm:text-sm opacity-80'>
@@ -426,17 +377,6 @@ export const UpdateProfileDialog = () => {
               </div>
 
               <div className='flex items-center gap-2'>
-                {cropChoice === 'skip' && (
-                  <Button
-                    type='button'
-                    variant='secondary'
-                    onClick={() => setCropChoice('choose')}
-                    disabled={loading}
-                  >
-                    Choose again
-                  </Button>
-                )}
-
                 <Button
                   type='button'
                   variant='constructive'
@@ -445,9 +385,7 @@ export const UpdateProfileDialog = () => {
                   className='rounded-full px-4'
                 >
                   {loading ? <Loader /> : <Icon name='RiCheck' />}
-                  <span className='ml-2'>
-                    {cropChoice === 'crop' ? 'Crop & Upload' : 'Upload photo'}
-                  </span>
+                  <span className='ml-2'>Apply changes</span>
                 </Button>
               </div>
             </div>
