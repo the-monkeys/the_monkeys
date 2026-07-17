@@ -93,10 +93,10 @@ export const unfollowTopicApi = async (username: string, topic: string) => {
   });
 };
 
-export const followUserApi = async (username: string) => {
+export const followUserApi = (username: string) => {
   return axiosInstance.post(`/user/follow/${username}`);
 };
 
-export const unfollowUserApi = async (username: string) => {
+export const unfollowUserApi = (username: string) => {
   return axiosInstance.post(`/user/unfollow/${username}`);
 };
