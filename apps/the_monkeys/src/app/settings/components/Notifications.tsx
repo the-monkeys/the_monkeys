@@ -5,7 +5,7 @@ import { EmailUpdates } from './notifications/EmailUpdates';
 export const Notifications = () => {
   return (
     <div className='space-y-8'>
-      <Section sectionTitle='Email' upcoming>
+      <Section sectionTitle='Email'>
         <EmailUpdates />
       </Section>
 
