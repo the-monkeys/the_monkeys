@@ -8,9 +8,9 @@ import Topics from './components/Topics';
 export const dynamic = 'force-static';
 
 const ExploreTopicsPage = async () => {
-  const categories = JSON.parse(
-    await fetcher('/user/category')
-  ) as GetAllCategoriesAPIResponse;
+  const categories = (await fetcher(
+    '/user/category'
+  )) as GetAllCategoriesAPIResponse;
 
   return (
     <div className='space-y-8'>
