@@ -241,7 +241,14 @@ export const UpdateProfileDialog = () => {
   };
 
   const resetCrop = () => {
-    setCropState(DEFAULT_CROP_STATE);
+    if (imageRef.current) {
+      const { width, height } = imageRef.current;
+      setCropState({
+        crop: centerAspectCrop(width, height, 1),
+      });
+    } else {
+      setCropState(DEFAULT_CROP_STATE);
+    }
   };
 
   return (
@@ -339,6 +346,7 @@ export const UpdateProfileDialog = () => {
                   aspect={1}
                   circularCrop={false}
                   keepSelection
+                  ruleOfThirds
                   minHeight={50}
                   className='w-full'
                 >
