@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { GetAllCategoriesAPIResponse } from '@/services/category/categoryTypes';
-import fetcher from '@/services/fileFetcher';
+import { fetcher } from '@/services/fetcher';
 
 import Topics from './components/Topics';
 
