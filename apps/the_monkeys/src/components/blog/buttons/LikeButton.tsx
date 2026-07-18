@@ -125,19 +125,16 @@ export const LikeButton = ({
 
     setLoading(true);
     setLikeState(shouldLike);
+    if (shouldLike) {
+      setBurstKey((k) => k + 1);
+    }
     updateLikesCount(shouldLike ? 1 : -1);
 
     try {
-      const response = await axiosInstance({
-        url: `/user/like/${blogId}`,
-        method: shouldLike ? 'post' : 'delete',
-      });
-
-      if (response.status === 200) {
-        setLikeState(shouldLike);
-        updateLikesCount(shouldLike ? 1 : -1);
-        refetchLikeQueries();
-      }
+      await axiosInstance.post(
+        shouldLike ? `/user/like/${blogId}` : `/user/unlike/${blogId}`
+      );
+      refetchLikeQueries();
     } catch (err: unknown) {
       setLikeState(previousLikeState ?? false);
 
@@ -172,9 +169,6 @@ export const LikeButton = ({
     }
   };
 
-  const onPostLike = () => toggleLike(true);
-  const onPostDislike = () => toggleLike(false);
-
   return (
     <>
       <AuthPromptDialog
@@ -189,7 +183,7 @@ export const LikeButton = ({
         } ${
           loading || isDisable ? 'cursor-default opacity-80' : 'cursor-pointer'
         }`}
-        onClick={likeStatus ? onPostDislike : onPostLike}
+        onClick={() => toggleLike(!likeStatus)}
         disabled={loading || isDisable}
         title={likeStatus ? 'Remove Like' : 'Add Like'}
       >
