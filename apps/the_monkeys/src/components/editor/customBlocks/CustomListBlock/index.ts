@@ -1,4 +1,4 @@
-import { API, BlockTool, ToolboxConfig } from '@editorjs/editorjs';
+import { API, BlockTool, HTMLPasteEvent, ToolboxConfig } from '@editorjs/editorjs';
 
 import './style.css';
 import { ConstructorArgs, ListItemData, ListToolData } from './utils/interface';
@@ -90,8 +90,84 @@ export default class CustomList implements BlockTool {
     ];
   }
 
+  static get pasteConfig() {
+    return {
+      tags: ['UL', 'OL', 'LI'],
+    };
+  }
+
   destroy() {
     this.removeEvents();
+  }
+
+  /**
+   * Called by Editor.js when pasted HTML matches pasteConfig.tags (UL/OL)
+   * Rebuilds this block's data + DOM from the pasted element
+   */
+  onPaste(event: HTMLPasteEvent) {
+    const element = event.detail.data as HTMLElement;
+    console.log('PASTED HTML:', element.outerHTML);
+    const style: 'ordered' | 'unordered' =
+      element.tagName === 'OL' ? 'ordered' : 'unordered';
+
+    const items = this.parsePastedList(element);
+
+    this.data = {
+      style,
+      items: items.length > 0 ? items : [{ content: '', items: [] }],
+    };
+
+    this.rebuildWrapper(style);
+  }
+
+  /**
+   * Recursively converts a raw pasted <ul>/<ol> element (from an external
+   * site) into this tool's internal ListItemData[] structure, preserving
+   * nested lists and inline formatting (bold, links, etc.) inside <li> text
+   */
+  private parsePastedList(list: HTMLElement): ListItemData[] {
+    const items: ListItemData[] = [];
+
+    Array.from(list.children).forEach((child) => {
+      if (child.tagName !== 'LI') return;
+
+      const nestedList = child.querySelector(':scope > ul, :scope > ol');
+
+      // Clone so we can safely strip the nested list before reading text/HTML
+      const clone = child.cloneNode(true) as HTMLElement;
+      const nestedInClone = clone.querySelector(':scope > ul, :scope > ol');
+      if (nestedInClone) {
+        nestedInClone.remove();
+      }
+
+      items.push({
+        content: clone.innerHTML.trim(),
+        items: nestedList
+          ? this.parsePastedList(nestedList as HTMLElement)
+          : [],
+      });
+    });
+
+    return items;
+  }
+
+  /**
+   * Swaps the currently rendered wrapper for a freshly built one that
+   * reflects this.data — reused so onPaste doesn't duplicate render() logic
+   */
+  private rebuildWrapper(style: 'ordered' | 'unordered') {
+    const newTag = style === 'ordered' ? 'ol' : 'ul';
+    const newWrapper = document.createElement(newTag);
+    newWrapper.className = 'cdx-list';
+
+    this.data.items.forEach((item) => {
+      newWrapper.appendChild(this.renderItem(item));
+    });
+
+    this.removeEvents();
+    this.wrapper.replaceWith(newWrapper);
+    this.wrapper = newWrapper;
+    this.bindEvents();
   }
 
   save(root: HTMLElement): ListToolData {
