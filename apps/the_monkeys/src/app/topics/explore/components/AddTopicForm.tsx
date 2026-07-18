@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { Loader } from '@/components/loader';
 import { SelectInputStyles } from '@/components/styles/SelectInputStyles';
+import useAuth from '@/hooks/auth/useAuth';
 import axiosInstance from '@/services/api/axiosInstance';
 import { Category } from '@/services/category/categoryTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,15 +35,14 @@ const formSchema = z.object({
 export default function TopicForm({
   onSuccess,
   categoriesData,
-  isCategoriesLoading,
 }: {
-  isCategoriesLoading: boolean;
   onSuccess: () => void;
   categoriesData: {
     [key: string]: Category;
   };
 }) {
   const { theme } = useTheme();
+  const { isSuccess } = useAuth();
 
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -53,13 +53,12 @@ export default function TopicForm({
     },
   });
 
-  const categoryOptions =
-    !isCategoriesLoading && categoriesData?.category
-      ? Object.keys(categoriesData.category).map((key) => ({
-          value: key,
-          label: key,
-        }))
-      : [];
+  const categoryOptions = categoriesData?.category
+    ? Object.keys(categoriesData.category).map((key) => ({
+        value: key,
+        label: key,
+      }))
+    : [];
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -85,6 +84,8 @@ export default function TopicForm({
       setLoading(false);
     }
   }
+
+  if (!isSuccess) return null;
 
   return (
     <Form {...form}>
@@ -119,7 +120,6 @@ export default function TopicForm({
                   isDisabled={loading}
                   onChange={(e: any) => field.onChange(e.value)}
                   options={categoryOptions}
-                  isLoading={isCategoriesLoading}
                   placeholder='Select a category'
                   styles={SelectInputStyles(theme == 'dark' ? true : false)}
                   className='w-full'

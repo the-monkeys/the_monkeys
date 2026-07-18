@@ -15,17 +15,15 @@ import {
 
 import TopicForm from './AddTopicForm';
 
-export const AddTopicForm = ({
+export default function AddTopicForm({
   categories,
-  categoriesLoading,
 }: {
-  categoriesLoading: boolean;
   categories:
     | {
         [key: string]: Category;
       }
     | {};
-}) => {
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const closeDialog = () => {
@@ -50,12 +48,8 @@ export const AddTopicForm = ({
 
         <DialogDescription className='hidden'></DialogDescription>
 
-        <TopicForm
-          onSuccess={closeDialog}
-          categoriesData={categories}
-          isCategoriesLoading={categoriesLoading}
-        />
+        <TopicForm onSuccess={closeDialog} categoriesData={categories} />
       </DialogContent>
     </Dialog>
   );
-};
+}
