@@ -29,7 +29,6 @@ const DraftsInner = ({ user }: { user?: IUser }) => {
   const hasPrevPage = page > 0;
   const showPagination =
     blogs?.total_blogs && blogs?.total_blogs > PROFILE_DRAFTS_PER_PAGE;
-  const sortedDrafts = [...(blogs?.blogs ?? [])].reverse();
 
   if (isError)
     return (
@@ -48,17 +47,18 @@ const DraftsInner = ({ user }: { user?: IUser }) => {
         </p>
       ) : (
         <>
-          {sortedDrafts.map((blog) => {
-            return (
-              <ProfileBlogCard
-                blog={blog}
-                isAuthenticated={!!user}
-                modificationEnable={true}
-                isDraft={true}
-                key={blog?.blog_id}
-              />
-            );
-          })}
+          {blogs?.blogs &&
+            blogs?.blogs.map((blog) => {
+              return (
+                <ProfileBlogCard
+                  blog={blog}
+                  isAuthenticated={!!user}
+                  modificationEnable={true}
+                  isDraft={true}
+                  key={blog?.blog_id}
+                />
+              );
+            })}
 
           {showPagination && (
             <div className='flex justify-center gap-[10px] mt-4'>
