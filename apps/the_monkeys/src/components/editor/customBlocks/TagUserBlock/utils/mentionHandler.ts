@@ -1,5 +1,6 @@
 import { fetcherV2 } from '@/services/fetcher';
 
+/**@ts-ignore */
 import '../style.css';
 import { MentionUser } from './types';
 
@@ -83,11 +84,11 @@ export default class MentionHandler {
 
     if (e.key === 'ArrowDown') {
       this.activeIndex = (this.activeIndex + 1) % (this.users.length || 1);
-      this.renderUsers();
+      this.updateActiveItem();
     } else if (e.key === 'ArrowUp') {
       this.activeIndex =
         (this.activeIndex - 1 + this.users.length) % (this.users.length || 1);
-      this.renderUsers();
+      this.updateActiveItem();
     } else if (e.key === 'Enter') {
       if (this.users.length > 0) {
         this.insertMention(this.users[this.activeIndex]);
@@ -198,6 +199,17 @@ export default class MentionHandler {
       this.dropdown = document.createElement('div');
       this.dropdown.className = 'mention-dropdown';
 
+      this.dropdown.addEventListener(
+        'mousedown',
+        this.handleDropdownInteraction
+      );
+      this.dropdown.addEventListener(
+        'touchstart',
+        this.handleDropdownInteraction,
+        { passive: false }
+      );
+      this.dropdown.addEventListener('mouseover', this.handleDropdownHover);
+
       document.body.appendChild(this.dropdown);
     }
 
@@ -205,6 +217,45 @@ export default class MentionHandler {
     this.dropdown.style.top = `${rect.bottom + window.scrollY + 8}px`;
     this.dropdown.style.left = `${rect.left + window.scrollX}px`;
     this.dropdown.style.zIndex = '9999';
+  }
+
+  private handleDropdownInteraction = (e: Event): void => {
+    const target = e.target as HTMLElement;
+    const item = target.closest('.mention-item') as HTMLElement;
+    if (!item) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const index = parseInt(item.dataset.index || '0', 10);
+    const user = this.users[index];
+    if (user) {
+      this.insertMention(user);
+    }
+  };
+
+  private handleDropdownHover = (e: Event): void => {
+    const target = e.target as HTMLElement;
+    const item = target.closest('.mention-item') as HTMLElement;
+    if (!item) return;
+
+    const index = parseInt(item.dataset.index || '0', 10);
+    if (this.activeIndex !== index) {
+      this.activeIndex = index;
+      this.updateActiveItem();
+    }
+  };
+
+  private updateActiveItem(): void {
+    if (!this.dropdown) return;
+    const items = this.dropdown.querySelectorAll('.mention-item');
+    items.forEach((item, index) => {
+      if (index === this.activeIndex) {
+        item.classList.add('active');
+      } else {
+        item.classList.remove('active');
+      }
+    });
   }
 
   private renderUsers(): void {
@@ -249,16 +300,7 @@ export default class MentionHandler {
       item.appendChild(img);
       item.appendChild(infoContainer);
 
-      item.addEventListener('mousedown', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.insertMention(user);
-      });
-
-      item.addEventListener('mouseenter', () => {
-        this.activeIndex = index;
-        this.renderUsers();
-      });
+      item.dataset.index = index.toString();
 
       fragment.appendChild(item);
     });
@@ -329,6 +371,16 @@ export default class MentionHandler {
 
   private closeDropdown(): void {
     if (this.dropdown) {
+      this.dropdown.removeEventListener(
+        'mousedown',
+        this.handleDropdownInteraction
+      );
+      this.dropdown.removeEventListener(
+        'touchstart',
+        this.handleDropdownInteraction
+      );
+      this.dropdown.removeEventListener('mouseover', this.handleDropdownHover);
+
       this.dropdown.remove();
       this.dropdown = null;
     }
