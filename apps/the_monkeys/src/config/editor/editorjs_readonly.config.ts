@@ -1,7 +1,13 @@
+import ChartBlock from '@/components/editor/customBlocks/ChartBlock';
+import CitationBlock from '@/components/editor/customBlocks/CitationBlock';
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
+import DatasetBlock from '@/components/editor/customBlocks/DatasetBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
+import FormulaBlock from '@/components/editor/customBlocks/FormulaBlock';
+import MethodologyBlock from '@/components/editor/customBlocks/MethodologyBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
+import TrendBlock from '@/components/editor/customBlocks/TrendBlock';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
@@ -45,6 +51,24 @@ export const editorConfig: EditorConfig = {
       // config: {
       //   placholder: '',
       // },
+    },
+    chart: {
+      class: ChartBlock,
+    },
+    trend: {
+      class: TrendBlock,
+    },
+    formula: {
+      class: FormulaBlock,
+    },
+    citation: {
+      class: CitationBlock,
+    },
+    methodology: {
+      class: MethodologyBlock,
+    },
+    dataset: {
+      class: DatasetBlock,
     },
     embed: {
       class: CustomEmbed,
