@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
-import HeartBurst from '@/components/common/HeartBurst';
+import { HeartBurst } from '@/components/blog/effects/HeartBurst';
 import Icon from '@/components/icon';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
 import { queryKeys } from '@/lib/queryKeys';
@@ -185,7 +185,7 @@ export const LikeButton = ({
         }`}
         onClick={() => toggleLike(!likeStatus)}
         disabled={loading || isDisable}
-        title={likeStatus ? 'Remove Like' : 'Add Like'}
+        title={likeStatus ? 'Unlike Post' : 'Like Post'}
       >
         {burstKey > 0 && <HeartBurst key={burstKey} />}
 

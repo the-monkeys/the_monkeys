@@ -16,7 +16,7 @@ const particles = Array.from({ length: 8 }, (_, i) => {
     opacity: 0.7 + Math.random() * 0.3,
   };
 });
-export default function HeartBurst() {
+export const HeartBurst = () => {
   return (
     <span className='pointer-events-none absolute inset-0 z-10 flex items-center justify-center'>
       {particles.map((particle, index) => (
@@ -44,4 +44,4 @@ export default function HeartBurst() {
       ))}
     </span>
   );
-}
+};
