@@ -30,19 +30,270 @@ const Editor = dynamic(() => import('@/components/editor'), {
   ),
 });
 
+/* ------------------------------------------------------------------ */
+/*  DEMO BLOG — Realistic blog using all 6 custom blocks               */
+/*  See apps/the_monkeys/test-data/demo-blog-editorjs-data.md for      */
+/*  a documented version with test instructions per field.             */
+/*  To reset to empty editor, uncomment the block at the bottom.       */
+/* ------------------------------------------------------------------ */
+
 const INITIAL_DATA: OutputData = {
   time: Date.now(),
   blocks: [
+    /* ---- Title ---- */
     {
       id: 'title',
       type: 'header',
+      data: { text: 'Understanding Market Trends in Q1 2024', level: 1 },
+    },
+
+    /* ---- Intro ---- */
+    {
+      id: 'intro',
+      type: 'paragraph',
       data: {
-        text: 'Untitled Post',
-        level: 1,
+        text: 'In the first quarter of 2024, we observed significant shifts in consumer behaviour across our core product lines. This analysis breaks down the key trends, supporting data, and methodological approach behind our findings.',
+      },
+    },
+
+    /* ---- Section: Revenue Trends ---- */
+    {
+      id: 'section-chart',
+      type: 'header',
+      data: { text: 'Revenue Across Product Lines', level: 2 },
+    },
+    {
+      id: 'chart-intro',
+      type: 'paragraph',
+      data: {
+        text: 'The chart below shows monthly revenue for our two flagship products across the first quarter. Product A saw steady growth after a dip in March, while Product B maintained a consistent upward trajectory.',
+      },
+    },
+    {
+      id: 'blk-chart',
+      type: 'chart',
+      data: {
+        type: 'bar',
+        title: 'Monthly Revenue — Products A & B',
+        xLabel: 'Month',
+        yLabel: 'Revenue (USD)',
+        showLegend: true,
+        palette: 'ocean',
+        labels: ['January', 'February', 'March', 'April'],
+        series: [
+          { name: 'Product A', values: [12400, 19100, 16300, 21800] },
+          { name: 'Product B', values: [8300, 11200, 14100, 18500] },
+        ],
+        source: 'manual',
+      },
+    },
+    {
+      id: 'chart-outro',
+      type: 'paragraph',
+      data: {
+        text: 'By April, Product A had grown 75% from its January baseline, while Product B more than doubled. The convergence in April suggests our cross-sell initiative is gaining traction.',
+      },
+    },
+
+    /* ---- Section: Trend Analysis ---- */
+    {
+      id: 'section-trend',
+      type: 'header',
+      data: { text: 'Month-over-Month Growth Trajectory', level: 2 },
+    },
+    {
+      id: 'trend-intro',
+      type: 'paragraph',
+      data: {
+        text: 'Looking at the combined growth rate across both products, the trend shows a clear upward trajectory. The sparkline below visualises the aggregated monthly performance.',
+      },
+    },
+    {
+      id: 'blk-trend',
+      type: 'trend',
+      data: {
+        periodLabels: ['January', 'February', 'March', 'April', 'May (est.)'],
+        values: [100, 118, 108, 132, 148],
+        direction: 'up',
+        percentChange: 48.0,
+        delta: 48,
+        summary:
+          'Combined revenue index trended up by 48% over the observed period, indicating strong and sustained growth momentum across product lines.',
+      },
+    },
+    {
+      id: 'trend-outro',
+      type: 'paragraph',
+      data: {
+        text: 'The slight dip in March (index: 108) corresponds to a seasonal slowdown observed in previous years. However, the April recovery surpassed pre-dip levels, confirming the underlying growth trend remains intact.',
+      },
+    },
+
+    /* ---- Section: Formula ---- */
+    {
+      id: 'section-formula',
+      type: 'header',
+      data: { text: 'Calculating the Growth Rate', level: 2 },
+    },
+    {
+      id: 'formula-intro',
+      type: 'paragraph',
+      data: {
+        text: 'The compound monthly growth rate (CMGR) is calculated using the standard formula below. This gives us a normalised view of month-over-month performance.',
+      },
+    },
+    {
+      id: 'blk-formula',
+      type: 'formula',
+      data: {
+        expression:
+          '\\text{CMGR} = \\left( \\frac{V_f}{V_i} \\right)^{\\frac{1}{n}} - 1',
+        mode: 'display',
+        description:
+          'Compound Monthly Growth Rate: Vf = final value, Vi = initial value, n = number of months',
+      },
+    },
+    {
+      id: 'formula-body',
+      type: 'paragraph',
+      data: {
+        text: 'Applying this formula to our data: CMGR = (21800 / 12400)^(1/3) - 1 ≈ 0.207 or 20.7% monthly growth for Product A. This is well above our target of 15%.',
+      },
+    },
+
+    /* ---- Section: Citation ---- */
+    {
+      id: 'section-citation',
+      type: 'header',
+      data: { text: 'Supporting Research', level: 2 },
+    },
+    {
+      id: 'citation-intro',
+      type: 'paragraph',
+      data: {
+        text: 'Our methodology draws on established frameworks for market analysis. A key reference is the work by Chen et al. on growth forecasting in SaaS markets:',
+      },
+    },
+    {
+      id: 'blk-citation',
+      type: 'citation',
+      data: {
+        title:
+          'Forecasting Growth in Subscription-Based Markets: A Machine Learning Approach',
+        authors: 'Chen, L., Kumar, S., & Patel, R.',
+        year: '2023',
+        source: 'Journal of Marketing Analytics, 15(3), 212–234',
+        identifier: 'DOI: 10.1234/jma.2023.01503',
+        url: 'https://doi.org/10.1234/jma.2023.01503',
+        citationText:
+          'Chen, L., Kumar, S., & Patel, R. (2023). Forecasting Growth in Subscription-Based Markets: A Machine Learning Approach. Journal of Marketing Analytics, 15(3), 212–234. DOI: 10.1234/jma.2023.01503. https://doi.org/10.1234/jma.2023.01503',
+      },
+    },
+    {
+      id: 'citation-outro',
+      type: 'paragraph',
+      data: {
+        text: 'The Chen et al. framework was particularly useful for normalising seasonal variations in our data. Their approach to handling multi-product cohorts directly informed our segmentation strategy.',
+      },
+    },
+
+    /* ---- Section: Methodology ---- */
+    {
+      id: 'section-methodology',
+      type: 'header',
+      data: { text: 'Methodology', level: 2 },
+    },
+    {
+      id: 'methodology-intro',
+      type: 'paragraph',
+      data: {
+        text: 'To ensure reproducibility, we documented our analytical approach in detail. The methodology sections below cover the full pipeline from study design to limitations.',
+      },
+    },
+    {
+      id: 'blk-methodology',
+      type: 'methodology',
+      data: {
+        studyDesign:
+          "Retrospective cohort analysis of monthly transaction data from January to April 2024. The dataset includes all B2B and B2C transactions processed through the company's payment gateway. Products were analysed independently and as a combined portfolio.",
+        dataCollection:
+          "Data was extracted from the company's data warehouse (Snowflake) via SQL queries. The raw extract included 48,732 transaction records. Outliers (>3 standard deviations from the monthly mean) were flagged and reviewed manually; 14 records were excluded due to known data entry errors.",
+        analysisMethod:
+          'Descriptive statistics were computed for each product-month combination. Growth rates were calculated using the compound monthly growth rate (CMGR) formula. A paired t-test was used to compare month-over-month differences. All analysis was performed using Python 3.12 with pandas 2.1 and scipy 1.12.',
+        assumptions:
+          'Assumptions include: (1) transaction data is complete and accurately timestamped, (2) seasonal patterns from prior years apply to Q1 2024, (3) no significant pricing changes occurred during the analysis window, (4) outliers removed are genuinely erroneous and not indicative of real trends.',
+        limitations:
+          'Key limitations: (1) short observation window (4 months) limits trend reliability, (2) retrospective design cannot establish causality, (3) single-company data limits generalisability, (4) manual outlier review introduces subjectivity, (5) May figures are preliminary estimates and subject to revision.',
+      },
+    },
+
+    /* ---- Section: Dataset ---- */
+    {
+      id: 'section-dataset',
+      type: 'header',
+      data: { text: 'Dataset Reference', level: 2 },
+    },
+    {
+      id: 'dataset-intro',
+      type: 'paragraph',
+      data: {
+        text: 'The full dataset used in this analysis is available for review. Below are the key metadata fields for traceability and reproducibility.',
+      },
+    },
+    {
+      id: 'blk-dataset',
+      type: 'dataset',
+      data: {
+        title: 'Q1 2024 Revenue Transactions — Products A & B',
+        source:
+          'Company Data Warehouse (Snowflake) — internal.payments.transactions table',
+        sampleSize:
+          '48,732 transactions (14 excluded after outlier review = 48,718 analysed)',
+        collectionDate:
+          'Extracted 5 May 2024; covers 1 January – 30 April 2024',
+        license:
+          'Proprietary — Internal use only. Anonymised excerpts available on request.',
+        variables:
+          'transaction_id (PK), product_id (FK), amount_usd (float), transaction_date (date), customer_tier (varchar: B2B/B2C), payment_method (varchar), is_refunded (boolean)',
+        notes:
+          'All currency values are in USD. Refunded transactions were included in the raw count but excluded from revenue calculations. The outlier review was conducted by two analysts independently with 100% inter-rater agreement.',
+      },
+    },
+    {
+      id: 'dataset-outro',
+      type: 'paragraph',
+      data: {
+        text: 'If you would like access to the anonymised dataset for verification or further analysis, please contact the data team.',
+      },
+    },
+
+    /* ---- Conclusion ---- */
+    {
+      id: 'section-conclusion',
+      type: 'header',
+      data: { text: 'Conclusion', level: 2 },
+    },
+    {
+      id: 'conclusion',
+      type: 'paragraph',
+      data: {
+        text: 'Q1 2024 demonstrated strong growth across both product lines, with a combined trend increase of 48%. The CMGR analysis confirms this growth is above target. Our methodology and dataset are documented for full transparency. We will continue to monitor these trends in Q2 and provide a consolidated half-year report in July.',
       },
     },
   ],
 };
+
+/* ---- To reset to empty, uncomment this: ---- */
+// const INITIAL_DATA: OutputData = {
+//   time: Date.now(),
+//   blocks: [
+//     {
+//       id: 'title',
+//       type: 'header',
+//       data: { text: 'Untitled Post', level: 1 },
+//     },
+//   ],
+// };
 
 const EditPage = ({ params }: { params: { blogId: string } }) => {
   const queryClient = useQueryClient();
