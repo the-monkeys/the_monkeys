@@ -12,7 +12,7 @@ import Table from '@editorjs/table';
 import { EditorConfig } from '@themonkeys/monkeys-editor';
 
 export const editorConfig: EditorConfig = {
-  holder: 'editorjs_editor-container',
+  holder: 'monkeys-editor-container',
   readOnly: true,
   tools: {
     header: {

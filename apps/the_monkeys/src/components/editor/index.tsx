@@ -105,7 +105,7 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
   }, [data]);
 
   return (
-    <div className='w-full px-4 space-y-6' id='editorjs_editor-container'></div>
+    <div className='w-full px-4 space-y-6' id='monkeys-editor-container'></div>
   );
 });
 

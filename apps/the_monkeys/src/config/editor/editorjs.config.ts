@@ -12,7 +12,7 @@ import Table from '@editorjs/table';
 import { EditorConfig } from '@themonkeys/monkeys-editor';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({
-  holder: 'editorjs_editor-container',
+  holder: 'monkeys-editor-container',
   tools: {
     header: {
       class: Header,
