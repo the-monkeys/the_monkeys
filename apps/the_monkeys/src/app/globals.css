@@ -833,3 +833,41 @@ li.cdx-list__item {
 .like-count {
   transition: color 180ms ease;
 }
+
+/* like burst animation */
+.heart-burst-particle {
+  position: absolute;
+  opacity: 0;
+  transform-origin: center;
+  will-change: transform, opacity;
+  animation: heartBurst 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes heartBurst {
+  /* Spawn */
+  0% {
+    transform: translate(0, 0) scale(0.25) rotate(0deg);
+    opacity: 0;
+  }
+
+  /* Pop */
+  15% {
+    transform: translate(calc(var(--x) * 0.35), calc(var(--y) * 0.35))
+      scale(1.2) rotate(calc(var(--r) * 0.25));
+    opacity: 1;
+  }
+
+  /* Burst */
+  55% {
+    transform: translate(calc(var(--x) * 0.95), calc(var(--y) * 0.95)) scale(1)
+      rotate(calc(var(--r) * 0.8));
+    opacity: 1;
+  }
+
+  /* Float & Fade */
+  100% {
+    transform: translate(calc(var(--x) * 1.2), calc(var(--y) * 1.2 - 8px))
+      scale(0.75) rotate(var(--r));
+    opacity: 0;
+  }
+}
