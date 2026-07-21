@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
-import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
+import { ProfilePhotoUploader } from '@/components/user/dialogs/updateProfileDialog';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { USER_QUERY_KEY } from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -50,6 +51,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
   } = useGetAuthUserProfile(data.username);
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -140,12 +142,31 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
                   {data && <ProfileImage username={data.username} />}
                 </ProfileFrame>
 
-                <div className='space-x-2'>
-                  <DeleteProfileDialog />
+                {!isUploadingPhoto ? (
+                  <div className='space-x-2'>
+                    <DeleteProfileDialog />
 
-                  <UpdateProfileDialog />
-                </div>
+                    <Button
+                      type='button'
+                      variant='secondary'
+                      size='icon'
+                      className='rounded-full'
+                      onClick={() => setIsUploadingPhoto(true)}
+                    >
+                      <Icon name='RiUpload2' />
+                    </Button>
+                  </div>
+                ) : null}
               </div>
+
+              {isUploadingPhoto && (
+                <div className='w-full mt-2'>
+                  <ProfilePhotoUploader
+                    onCancel={() => setIsUploadingPhoto(false)}
+                    onSuccess={() => setIsUploadingPhoto(false)}
+                  />
+                </div>
+              )}
 
               <FormField
                 control={form.control}
