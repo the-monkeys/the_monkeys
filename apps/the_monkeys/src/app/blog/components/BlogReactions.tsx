@@ -22,7 +22,7 @@ export const BlogReactions = ({
     return (
       <div className='p-1 flex justify-center items-center gap-1'>
         <Link
-          href={`${LOGIN_ROUTE}?callbackURL=${globalThis.location}`}
+          href={`${LOGIN_ROUTE}?callbackURL=${globalThis.location.pathname}`}
           className='text-sm font-medium text-brand-orange underline'
         >
           Login
