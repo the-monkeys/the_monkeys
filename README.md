@@ -54,11 +54,18 @@ docker-compose -f docker-compose.local.yml up
 ```
 
 ### Development
+
+Requires [Node.js](https://nodejs.org/) **18.17.0 or later**.
+
 ```bash
 # Install and run
 pnpm run install-deps
 pnpm run dev
 ```
+
+The app runs directly at [http://localhost:3000](http://localhost:3000). See
+[CONTRIBUTING.md](./CONTRIBUTING.md) for full setup details.
+
 ## Guidelines
 
 To keep our community focused and meaningful:
