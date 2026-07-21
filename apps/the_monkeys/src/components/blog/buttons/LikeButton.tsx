@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
+import { HeartBurst } from '@/components/blog/effects/HeartBurst';
 import Icon from '@/components/icon';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
 import { queryKeys } from '@/lib/queryKeys';
@@ -32,6 +33,7 @@ export const LikeButton = ({
 
   const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
+  const [burstKey, setBurstKey] = useState(0);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -115,31 +117,34 @@ export const LikeButton = ({
   const toggleLike = async (shouldLike: boolean) => {
     if (loading) return;
 
-    setLoading(true);
-
     const previousLikeState = likeStatus;
     const countKey = queryKeys.blog.likes.count(blogId);
-    const previousCount =
+    const previousCountData =
       queryClient.getQueryData<likesCountResponse>(countKey);
+    const previousCount = previousCountData?.count;
 
+    setLoading(true);
     setLikeState(shouldLike);
+    if (shouldLike) {
+      setBurstKey((k) => k + 1);
+    }
     updateLikesCount(shouldLike ? 1 : -1);
 
     try {
       await axiosInstance.post(
         shouldLike ? `/user/like/${blogId}` : `/user/unlike/${blogId}`
       );
-
       refetchLikeQueries();
     } catch (err: unknown) {
-      setLikeState(previousLikeState);
+      setLikeState(previousLikeState ?? false);
+
       if (previousCount === undefined) {
         queryClient.removeQueries({
           queryKey: countKey,
           exact: true,
         });
       } else {
-        queryClient.setQueryData(countKey, previousCount);
+        queryClient.setQueryData(countKey, previousCountData);
       }
 
       if (isAuthError(err)) {
@@ -171,38 +176,26 @@ export const LikeButton = ({
         onOpenChange={setAuthPromptOpen}
       />
 
-      {likeStatus ? (
-        <button
-          className={`like-active group p-1 flex items-center justify-center hover:opacity-80 ${
-            loading || isDisable
-              ? 'cursor-default opacity-80'
-              : 'cursor-pointer'
-          }`}
-          onClick={() => toggleLike(false)}
-          disabled={loading || isDisable}
-          title='Remove Like'
-        >
-          <Icon
-            name='RiHeart3'
-            type='Fill'
-            size={size}
-            className='like-icon text-brand-orange'
-          />
-        </button>
-      ) : (
-        <button
-          className={`group p-1 flex items-center justify-center hover:text-brand-orange ${
-            loading || isDisable
-              ? 'cursor-default opacity-80'
-              : 'cursor-pointer'
-          }`}
-          onClick={() => toggleLike(true)}
-          disabled={loading || isDisable}
-          title='Add Like'
-        >
-          <Icon name='RiHeart3' size={size} className='like-icon' />
-        </button>
-      )}
+      <button
+        type='button'
+        className={`relative group p-1 flex items-center justify-center ${
+          likeStatus ? 'hover:opacity-80' : 'hover:text-brand-orange'
+        } ${
+          loading || isDisable ? 'cursor-default opacity-80' : 'cursor-pointer'
+        }`}
+        onClick={() => toggleLike(!likeStatus)}
+        disabled={loading || isDisable}
+        title={likeStatus ? 'Unlike Post' : 'Like Post'}
+      >
+        {burstKey > 0 && <HeartBurst key={burstKey} />}
+
+        <Icon
+          name='RiHeart3'
+          type={likeStatus ? 'Fill' : undefined}
+          size={size}
+          className={`like-icon ${likeStatus ? 'text-brand-orange' : ''}`}
+        />
+      </button>
     </>
   );
 };
