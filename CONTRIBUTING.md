@@ -48,10 +48,6 @@ pnpm install
 
 ### 3. Set up environment variables
 
-The app reads configuration (such as the backend API URL) from a local
-environment file that is **not** committed to Git, so each contributor provides
-their own values.
-
 1. Create a file named `.env.local` inside `apps/the_monkeys`.
 2. Copy the variable names from `apps/the_monkeys/.env.example` into it, then
    fill in the values.
