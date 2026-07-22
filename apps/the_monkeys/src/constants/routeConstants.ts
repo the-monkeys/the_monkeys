@@ -31,8 +31,8 @@ export const DISCOVER_ITEMS: NavItem[] = [
   { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
   { href: FEED_ROUTE, label: 'For You', icon: 'RiBard', requiresAuth: true },
   {
-    href: SNAPSHOT_ROUTE,
-    label: 'Snapshot',
+    href: '/snapshot/new',
+    label: 'Studio',
     icon: 'RiCameraLens',
     requiresAuth: true,
   },
