@@ -1,5 +1,4 @@
 import Icon from '@/components/icon';
-import { Loader } from '@/components/loader';
 import {
   CONNECTION_COUNT_QUERY_KEY,
   IS_FOLLOWING_USER_QUERY_KEY,
@@ -107,7 +106,6 @@ export const FollowButton = ({
       onClick={() => mutate(false)}
       className={twMerge(className, '!text-base rounded-full')}
     >
-      {isPending && <Loader />}
       Unfollow
     </Button>
   ) : (
@@ -118,7 +116,6 @@ export const FollowButton = ({
       onClick={() => mutate(true)}
       className={twMerge(className, '!text-base rounded-full')}
     >
-      {isPending && <Loader />}
       Follow
     </Button>
   );
@@ -147,7 +144,7 @@ export const FollowButtonIcon = ({
       onClick={() => mutate(false)}
       className={twMerge(className, 'rounded-full')}
     >
-      {isPending ? <Loader /> : <Icon name='RiUserUnfollow' size={20} />}
+      <Icon name='RiUserUnfollow' size={20} />
     </Button>
   ) : (
     <Button
@@ -156,7 +153,7 @@ export const FollowButtonIcon = ({
       onClick={() => mutate(true)}
       className={twMerge(className, 'rounded-full')}
     >
-      {isPending ? <Loader /> : <Icon name='RiUserFollow' size={20} />}
+      <Icon name='RiUserFollow' size={20} />
     </Button>
   );
 };
