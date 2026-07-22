@@ -25,7 +25,6 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-
-
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
@@ -38,9 +37,15 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
+      - name: Cache Prettier cache
+        uses: actions/cache@v4
+        with:
+          path: apps/the_monkeys/node_modules/.cache/prettier
+          key: ${{ runner.os }}-prettier-${{ hashFiles('apps/the_monkeys/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-prettier-
       - name: Build
-        env: 
+        env:
           NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY: test
           NEXT_PUBLIC_GROWTHBOOK_API_HOST: test
         run: pnpm run build

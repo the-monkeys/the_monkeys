@@ -17,7 +17,13 @@ jobs:
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-turbo-
-
+      - name: Cache Prettier cache
+        uses: actions/cache@v4
+        with:
+          path: apps/the_monkeys/node_modules/.cache/prettier
+          key: ${{ runner.os }}-prettier-${{ hashFiles('apps/the_monkeys/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-prettier-
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
