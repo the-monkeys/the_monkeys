@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
@@ -17,12 +18,13 @@ export const BlogReactions = ({
   blogId?: string;
 }) => {
   const { isSuccess, isError } = useAuth();
+  const pathname = usePathname();
 
   if (isError || !isSuccess)
     return (
       <div className='p-1 flex justify-center items-center gap-1'>
         <Link
-          href={`${LOGIN_ROUTE}?callbackURL=${globalThis.location.pathname}`}
+          href={`${LOGIN_ROUTE}?callbackURL=${pathname}`}
           className='text-sm font-medium text-brand-orange underline'
         >
           Login
