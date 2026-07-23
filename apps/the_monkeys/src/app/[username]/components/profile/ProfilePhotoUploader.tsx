@@ -126,7 +126,10 @@ export const ProfilePhotoUploader = ({
     }
   };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { 'image/jpeg': ['.jpg', '.jpeg'], 'image/png': ['.png'] },
+  });
 
   const handleCancelToDetails = () => {
     setSelectedImage(undefined);
@@ -164,7 +167,7 @@ export const ProfilePhotoUploader = ({
         <div className='flex justify-start pt-6 mt-auto shrink-0'>
           <Button
             type='button'
-            variant='secondary'
+            variant='destructive'
             onClick={handleCancelToDetails}
           >
             Cancel
@@ -201,7 +204,7 @@ export const ProfilePhotoUploader = ({
         <div className='flex items-center justify-between gap-2 sm:gap-3 pt-6 mt-auto shrink-0 w-full'>
           <Button
             type='button'
-            variant='secondary'
+            variant='destructive'
             onClick={handleCancelToDetails}
             disabled={loading}
             className='px-2 sm:px-4 text-sm'
@@ -225,7 +228,7 @@ export const ProfilePhotoUploader = ({
               disabled={loading || !isAuthenticated}
               className='w-[130px] sm:w-[160px] px-1 sm:px-4 text-sm'
             >
-              {loading ? <Loader /> : null} Apply Changes
+              {loading ? <Loader /> : null} Update Changes
             </Button>
           </div>
         </div>
