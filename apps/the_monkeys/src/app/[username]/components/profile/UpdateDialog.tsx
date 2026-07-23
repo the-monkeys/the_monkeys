@@ -7,7 +7,6 @@ import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
-import { ProfilePhotoUploader } from '@/components/user/dialogs/updateProfileDialog';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { USER_QUERY_KEY } from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -19,6 +18,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
@@ -34,6 +34,8 @@ import {
 } from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { ProfilePhotoUploader, Step } from './ProfilePhotoUploader';
 
 const updateProfileSchema = z.object({
   first_name: z.string().min(1, 'First name is required'),
@@ -51,15 +53,15 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
   } = useGetAuthUserProfile(data.username);
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-  const [isUploadingPhoto, setIsUploadingPhoto] = useState<boolean>(false);
+  const [step, setStep] = useState<Step>('details');
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      first_name: user?.first_name || '',
-      last_name: user?.last_name || '',
-      address: user?.address || '',
-      bio: user?.bio || '',
+      first_name: '',
+      last_name: '',
+      address: '',
+      bio: '',
     },
   });
 
@@ -89,7 +91,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
         description: 'Your profile has been updated successfully',
       });
 
-      setOpen(false);
+      handleOpenChange(false);
 
       queryClient.invalidateQueries({
         queryKey: [USER_QUERY_KEY, data.username],
@@ -115,140 +117,155 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
     }
   }, [user, form]);
 
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+    if (!newOpen) {
+      setStep('details');
+    }
+  };
+
   if (isError) return null;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant='secondary' className='!text-base rounded-full'>
           Update
         </Button>
       </DialogTrigger>
 
-      <DialogContent className='max-h-[60vh] sm:max-h-[80vh] overflow-auto'>
-        <DialogTitle>Update Details</DialogTitle>
+      <DialogContent className='sm:max-w-md w-[calc(100%-2rem)] sm:w-full h-[570px] sm:h-[630px] max-h-[85vh] sm:max-h-[95vh] flex flex-col p-4 sm:p-6 overflow-y-auto sm:overflow-hidden rounded-xl'>
+        <DialogHeader className='flex flex-row items-center relative h-8 shrink-0'>
+          <DialogTitle className='flex-1 text-left'>
+            {step === 'details' && 'Update Details'}
+            {step === 'select-image' && 'Select Photo'}
+            {step === 'confirm-image' && 'Confirm Photo'}
+          </DialogTitle>
+          <DialogDescription className='hidden'></DialogDescription>
+        </DialogHeader>
 
-        <DialogDescription className='hidden'></DialogDescription>
+        <div className='flex-1 flex flex-col mt-4 min-h-0 relative'>
+          {isLoading ? (
+            <UpdateDetailsFormSkeleton />
+          ) : (
+            <>
+              {step === 'details' && (
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className='flex flex-col h-full flex-1 animate-in fade-in duration-300 fill-mode-forwards'
+                  >
+                    <div className='flex-1 space-y-3 sm:space-y-4 pt-2'>
+                      <div className='flex flex-wrap items-end gap-2'>
+                        <p className='w-full text-sm'>Profile Photo</p>
+                        <ProfileFrame className='size-20 sm:size-24'>
+                          <ProfileImage username={data.username} />
+                        </ProfileFrame>
+                        <div className='space-x-2'>
+                          <DeleteProfileDialog />
+                          <Button
+                            type='button'
+                            variant='secondary'
+                            size='icon'
+                            className='rounded-full'
+                            onClick={() => setStep('select-image')}
+                          >
+                            <Icon name='RiUpload2' />
+                          </Button>
+                        </div>
+                      </div>
 
-        {isLoading ? (
-          <UpdateDetailsFormSkeleton />
-        ) : (
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-              <div className='flex flex-wrap items-end gap-2'>
-                <p className='w-full text-sm'>Profile Photo</p>
+                      <FormField
+                        control={form.control}
+                        name='first_name'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className='text-sm'>
+                              First Name
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                className='w-full'
+                                {...field}
+                                placeholder='Enter first name'
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='last_name'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className='text-sm'>Last Name</FormLabel>
+                            <FormControl>
+                              <Input
+                                className='w-full'
+                                {...field}
+                                placeholder='Enter last name'
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='address'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className='text-sm'>Location</FormLabel>
+                            <FormControl>
+                              <Input
+                                className='w-full'
+                                {...field}
+                                placeholder='Enter location'
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name='bio'
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className='text-sm'>Bio</FormLabel>
+                            <FormControl>
+                              <Input
+                                className='w-full'
+                                {...field}
+                                placeholder='Enter bio'
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                <ProfileFrame className='size-24'>
-                  {data && <ProfileImage username={data.username} />}
-                </ProfileFrame>
-
-                {!isUploadingPhoto ? (
-                  <div className='space-x-2'>
-                    <DeleteProfileDialog />
-
-                    <Button
-                      type='button'
-                      variant='secondary'
-                      size='icon'
-                      className='rounded-full'
-                      onClick={() => setIsUploadingPhoto(true)}
-                    >
-                      <Icon name='RiUpload2' />
-                    </Button>
-                  </div>
-                ) : null}
-              </div>
-
-              {isUploadingPhoto && (
-                <div className='w-full mt-2'>
-                  <ProfilePhotoUploader
-                    onCancel={() => setIsUploadingPhoto(false)}
-                    onSuccess={() => setIsUploadingPhoto(false)}
-                  />
-                </div>
+                    <div className='flex justify-end pt-4 mt-auto shrink-0'>
+                      <Button disabled={loading} type='submit'>
+                        {loading && <Loader />} Update
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
               )}
 
-              <FormField
-                control={form.control}
-                name='first_name'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-sm'>First Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='w-full'
-                        {...field}
-                        placeholder='Enter first name'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='last_name'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-sm'>Last Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='w-full'
-                        {...field}
-                        placeholder='Enter last name'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='address'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-sm'>Location</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='w-full'
-                        {...field}
-                        placeholder='Enter location'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='bio'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-sm'>Bio</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='w-full'
-                        {...field}
-                        placeholder='Enter bio'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className='pt-4'>
-                <Button
-                  disabled={loading}
-                  type='submit'
-                  className='float-right'
-                >
-                  {loading && <Loader />} Update
-                </Button>
-              </div>
-            </form>
-          </Form>
-        )}
+              {(step === 'select-image' || step === 'confirm-image') && (
+                <ProfilePhotoUploader
+                  step={step}
+                  setStep={setStep}
+                  onSuccess={() => handleOpenChange(false)}
+                />
+              )}
+            </>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
