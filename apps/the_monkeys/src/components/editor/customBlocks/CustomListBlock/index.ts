@@ -1,4 +1,9 @@
-import { API, BlockTool, HTMLPasteEvent, ToolboxConfig } from '@editorjs/editorjs';
+import {
+  API,
+  BlockTool,
+  HTMLPasteEvent,
+  ToolboxConfig,
+} from '@editorjs/editorjs';
 
 import './style.css';
 import { ConstructorArgs, ListItemData, ListToolData } from './utils/interface';
@@ -238,20 +243,45 @@ export default class CustomList implements BlockTool {
         break;
     }
   };
-
+  //------------------------------------------------------
   private onClick = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     const listItem = target.closest('.cdx-list__item') as HTMLElement;
+    if (!listItem) return;
 
-    if (listItem) {
-      const content = listItem.querySelector(
-        '.cdx-list__item-content'
-      ) as HTMLElement;
-      if (content && target !== content && !content.contains(target)) {
-        this.focusItem(listItem);
+    const content = listItem.querySelector(
+      '.cdx-list__item-content'
+    ) as HTMLElement;
+    if (!content) return;
+
+    if (target === content || content.contains(target)) return;
+
+    this.placeCaretFromPoint(content, event.clientX, event.clientY);
+  };
+
+  private placeCaretFromPoint(content: HTMLElement, x: number, y: number) {
+    let range: Range | null = null;
+
+    if (document.caretRangeFromPoint) {
+      range = document.caretRangeFromPoint(x, y);
+    } else if ((document as any).caretPositionFromPoint) {
+      const pos = (document as any).caretPositionFromPoint(x, y);
+      if (pos) {
+        range = document.createRange();
+        range.setStart(pos.offsetNode, pos.offset);
+        range.collapse(true);
       }
     }
-  };
+
+    if (range && content.contains(range.startContainer)) {
+      const sel = window.getSelection();
+      sel?.removeAllRanges();
+      sel?.addRange(range);
+      content.focus();
+    } else {
+      this.focusItem(content.closest('.cdx-list__item') as HTMLElement, true);
+    }
+  }
 
   private onFocusIn = (event: FocusEvent) => {
     const target = event.target as HTMLElement;
