@@ -61,7 +61,6 @@ const useFollowMutation = (username?: string) => {
       return { previousFollowStatus, previousCount };
     },
 
-    // Roll back to the exact pre-mutation snapshot on failure.
     onError: (err: unknown, _nextIsFollowing, context) => {
       queryClient.setQueryData(followingKey, context?.previousFollowStatus);
       queryClient.setQueryData(countKey, context?.previousCount);
