@@ -117,7 +117,7 @@ export const BlogImage = ({
       alt={title}
       height='500'
       width='800'
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      className={twMerge('h-full w-full object-contain', className)}
       quality={100}
       priority
     />
@@ -137,7 +137,7 @@ export const BlogPlaceholderImage = ({
       alt={title}
       height='500'
       width='800'
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      className={twMerge('h-full w-full object-cover object-center', className)}
       quality={100}
     />
   );
