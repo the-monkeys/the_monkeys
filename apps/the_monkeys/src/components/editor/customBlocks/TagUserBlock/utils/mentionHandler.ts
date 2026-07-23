@@ -1,6 +1,5 @@
 import { fetcherV2 } from '@/services/fetcher';
 
-/**@ts-ignore */
 import '../style.css';
 import { MentionUser } from './types';
 
@@ -29,12 +28,37 @@ export default class MentionHandler {
 
     document.addEventListener('input', this.handleInput);
     document.addEventListener('keydown', this.handleKeyDown, { capture: true });
-    document.addEventListener('click', (e: MouseEvent) => {
-      if (this.dropdown && !this.dropdown.contains(e.target as Node)) {
-        this.closeDropdown();
-      }
+    document.addEventListener('click', this.handleDocumentClick);
+
+    window.addEventListener('resize', this.updateDropdownPosition);
+    window.addEventListener('scroll', this.updateDropdownPosition, {
+      capture: true,
+      passive: true,
     });
   }
+
+  detach(): void {
+    if (!this.attached) return;
+    this.attached = false;
+
+    document.removeEventListener('input', this.handleInput);
+    document.removeEventListener('keydown', this.handleKeyDown, {
+      capture: true,
+    });
+    document.removeEventListener('click', this.handleDocumentClick);
+    window.removeEventListener('resize', this.updateDropdownPosition);
+    window.removeEventListener('scroll', this.updateDropdownPosition, {
+      capture: true,
+    });
+
+    this.closeDropdown();
+  }
+
+  private handleDocumentClick = (e: MouseEvent): void => {
+    if (this.dropdown && !this.dropdown.contains(e.target as Node)) {
+      this.closeDropdown();
+    }
+  };
 
   private isInsideAnyEditor(target: EventTarget | null): boolean {
     if (!target || !(target as HTMLElement).closest) return false;
@@ -98,7 +122,6 @@ export default class MentionHandler {
     }
   };
 
-  /** Triggered by the InlineTool's surround() when the toolbar "@" button is clicked. */
   triggerFromRange(range: Range): void {
     const atNode = document.createTextNode('@');
     range.deleteContents();
@@ -150,7 +173,7 @@ export default class MentionHandler {
         );
         const rawUsers = data?.users || [];
 
-        // Validate all user's profile images at once and set a default if not found
+        /** Validate all user's profile images at once */
         const fetchedUsers: MentionUser[] = await Promise.all(
           rawUsers.map(async (user: MentionUser) => {
             const targetUrl = `/api/v2/storage/profiles/${user?.username}/profile`;
@@ -214,10 +237,19 @@ export default class MentionHandler {
     }
 
     this.dropdown.style.position = 'absolute';
+    this.dropdown.style.zIndex = '9999';
+
+    this.updateDropdownPosition();
+  }
+
+  private updateDropdownPosition = (): void => {
+    if (!this.dropdown || !this.activeRange) return;
+
+    const rect = this.activeRange.getBoundingClientRect();
+
     this.dropdown.style.top = `${rect.bottom + window.scrollY + 8}px`;
     this.dropdown.style.left = `${rect.left + window.scrollX}px`;
-    this.dropdown.style.zIndex = '9999';
-  }
+  };
 
   private handleDropdownInteraction = (e: Event): void => {
     const target = e.target as HTMLElement;
@@ -345,7 +377,7 @@ export default class MentionHandler {
       this.activeRange.deleteContents();
       this.activeRange.insertNode(mentionNode);
 
-      const spaceNode = document.createTextNode('\u00A0');
+      const spaceNode = document.createTextNode(' ');
       mentionNode.parentNode?.insertBefore(spaceNode, mentionNode.nextSibling);
 
       this.activeRange.setStartAfter(spaceNode);
@@ -370,6 +402,11 @@ export default class MentionHandler {
   }
 
   private closeDropdown(): void {
+    if (this.debounceTimer) {
+      window.clearTimeout(this.debounceTimer);
+      this.debounceTimer = null;
+    }
+
     if (this.dropdown) {
       this.dropdown.removeEventListener(
         'mousedown',
