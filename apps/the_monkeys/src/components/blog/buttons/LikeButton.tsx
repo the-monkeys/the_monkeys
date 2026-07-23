@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import { HeartBurst } from '@/components/blog/effects/HeartBurst';
 import Icon from '@/components/icon';
+import useAuth from '@/hooks/auth/useAuth';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
 import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -26,10 +27,6 @@ export const LikeButton = ({
   initialIsLiked?: boolean;
 }) => {
   const queryClient = useQueryClient();
-  const { likeStatus, isLoading, isError } = useIsPostLiked(
-    blogId,
-    initialIsLiked
-  );
 
   const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
@@ -37,6 +34,14 @@ export const LikeButton = ({
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { isSuccess: isAuthenticated } = useAuth();
+
+  const { likeStatus, isLoading, isError } = useIsPostLiked(
+    blogId,
+    isAuthenticated,
+    initialIsLiked
+  );
+
   const search = searchParams.toString();
   const currentPath = `${pathname}${search ? `?${search}` : ''}`;
   const buttonSize = size + 8;
@@ -88,7 +93,7 @@ export const LikeButton = ({
     );
   }
 
-  if (isError) {
+  if (isError || !isAuthenticated) {
     return (
       <>
         <button
