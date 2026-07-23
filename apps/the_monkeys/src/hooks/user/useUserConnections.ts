@@ -4,7 +4,9 @@ import {
   FollowDataResponse,
   IsFollowedResponse,
 } from '@/services/profile/userApiTypes';
-import { useQuery } from '@tanstack/react-query';
+import { followUserApi, unfollowUserApi } from '@/services/user/user';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const CONNECTION_COUNT_QUERY_KEY = 'connection-count';
 export const FOLLOWERS_QUERY_KEY = 'followers';
@@ -79,4 +81,49 @@ export const useIsFollowingUser = (username: string | undefined) => {
     isError: isError || !!error,
     isLoading,
   };
+};
+
+const handleFollowError = (err: unknown, action: 'follow' | 'unfollow') => {
+  const message =
+    err instanceof Error ? err.message : 'An unknown error occurred.';
+
+  toast({
+    variant: 'error',
+    title: 'Error',
+    description: message || `Failed to ${action} user.`,
+  });
+};
+
+export const useFollowUser = (username?: string) => {
+  const queryClient = useQueryClient();
+
+  const invalidateConnectionQueries = () =>
+    Promise.all([
+      queryClient.invalidateQueries({
+        queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+      }),
+      queryClient.invalidateQueries({
+        queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
+      }),
+    ]);
+
+  const followMutation = useMutation({
+    mutationFn: () => {
+      if (!username) return Promise.reject(new Error('Username is required'));
+      return followUserApi(username);
+    },
+    onSuccess: invalidateConnectionQueries,
+    onError: (err) => handleFollowError(err, 'follow'),
+  });
+
+  const unfollowMutation = useMutation({
+    mutationFn: () => {
+      if (!username) return Promise.reject(new Error('Username is required'));
+      return unfollowUserApi(username);
+    },
+    onSuccess: invalidateConnectionQueries,
+    onError: (err) => handleFollowError(err, 'unfollow'),
+  });
+
+  return { followMutation, unfollowMutation };
 };
