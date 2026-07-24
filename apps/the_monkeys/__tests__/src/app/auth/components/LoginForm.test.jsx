@@ -100,8 +100,6 @@ describe('LoginForm', () => {
       email: 'john@doe.com',
       password: 'John1spassword',
     });
-    expect(routerReplaceStub).toHaveBeenCalled();
-    expect(routerReplaceStub).toHaveBeenCalledWith('/');
   });
 
   it('Successful login - with callback url', async () => {
@@ -125,8 +123,6 @@ describe('LoginForm', () => {
       email: 'john@doe.com',
       password: 'John1spassword',
     });
-    expect(routerReplaceStub).toHaveBeenCalled();
-    expect(routerReplaceStub).toHaveBeenCalledWith('https://monkeys.com/');
   });
 
   it('Error login', async () => {

@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
 
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
@@ -25,8 +24,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 export default function LoginForm({ isLoading }: { isLoading: boolean }) {
-  const router = useRouter();
-  const params = useSearchParams();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -35,19 +32,11 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
       queryClient.invalidateQueries({ queryKey: ['auth'] });
       queryClient.setQueryData(['auth'], user);
 
-      const callbackURL = params.get('callbackURL');
-
-      if (callbackURL) {
-        router.replace(callbackURL);
-        return;
-      }
-
       toast({
         variant: 'success',
         title: 'Login Successful',
         description: 'You have successfully logged in. Welcome back!',
       });
-      router.replace('/');
     },
     onError: (err) => {
       console.log(err);
