@@ -136,10 +136,21 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
 
       <DialogContent className='sm:max-w-md w-[calc(100%-2rem)] sm:w-full h-[570px] sm:h-[630px] max-h-[85vh] sm:max-h-[95vh] flex flex-col p-4 sm:p-6 overflow-y-auto sm:overflow-hidden rounded-xl'>
         <DialogHeader className='flex flex-row items-center relative h-8 shrink-0'>
-          <DialogTitle className='flex-1 text-left'>
-            {step === 'details' && 'Update Details'}
-            {step === 'select-image' && 'Select Photo'}
-            {step === 'confirm-image' && 'Confirm Photo'}
+          {step !== 'details' && (
+            <Button
+              type='button'
+              variant='ghost'
+              size='icon'
+              className='rounded-full shrink-0 h-8 w-8 p-0'
+              onClick={() =>
+                setStep(step === 'confirm-image' ? 'select-image' : 'details')
+              }
+            >
+              <Icon name='RiArrowLeft' />
+            </Button>
+          )}
+          <DialogTitle className='flex-1 text-left py-0 leading-tight'>
+            {{ details: 'Update Details', 'select-image': 'Select Photo', 'confirm-image': 'Confirm Photo' }[step]}
           </DialogTitle>
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>

@@ -28,7 +28,7 @@ export const ProfilePhotoUploader = ({
   onCancel,
   onSuccess,
 }: {
-  onCancel?: () => void;
+  onCancel: () => void;
   onSuccess?: () => void;
 }) => {
   const queryClient = useQueryClient();
@@ -152,7 +152,7 @@ export const ProfilePhotoUploader = ({
 
   const handleCancel = () => {
     removeImage();
-    onCancel?.();
+    onCancel();
   };
 
   return (
@@ -188,13 +188,11 @@ export const ProfilePhotoUploader = ({
               The file should be under 2 MB
             </p>
           </div>
-          {onCancel && (
-            <div className='flex justify-end pt-2'>
-              <Button type='button' variant='secondary' onClick={handleCancel}>
-                Cancel
-              </Button>
-            </div>
-          )}
+          <div className='flex justify-end pt-2'>
+            <Button type='button' variant='secondary' onClick={handleCancel}>
+              Cancel
+            </Button>
+          </div>
         </div>
       )}
 
@@ -240,17 +238,15 @@ export const ProfilePhotoUploader = ({
             </div>
 
             <div className='flex items-center gap-2'>
-              {onCancel && (
-                <Button
-                  type='button'
-                  variant='secondary'
-                  onClick={handleCancel}
-                  disabled={loading}
-                  className='rounded-full px-4'
-                >
-                  Cancel
-                </Button>
-              )}
+              <Button
+                type='button'
+                variant='secondary'
+                onClick={handleCancel}
+                disabled={loading}
+                className='rounded-full px-4'
+              >
+                Cancel
+              </Button>
               <Button
                 type='button'
                 variant='constructive'
