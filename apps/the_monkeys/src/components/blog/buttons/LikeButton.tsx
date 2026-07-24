@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
+import { HeartBurst } from '@/components/blog/effects/HeartBurst';
 import Icon from '@/components/icon';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
 import { queryKeys } from '@/lib/queryKeys';
@@ -32,6 +33,7 @@ export const LikeButton = ({
 
   const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
+  const [burstKey, setBurstKey] = useState(0);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -112,71 +114,56 @@ export const LikeButton = ({
     );
   }
 
-  const onPostLike = async () => {
+  const toggleLike = async (shouldLike: boolean) => {
+    if (loading) return;
+
+    const previousLikeState = likeStatus;
+    const countKey = queryKeys.blog.likes.count(blogId);
+    const previousCountData =
+      queryClient.getQueryData<likesCountResponse>(countKey);
+    const previousCount = previousCountData?.count;
+
     setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(`/user/like/${blogId}`);
-
-      if (response.status === 200) {
-        setLikeState(true);
-        updateLikesCount(1);
-        refetchLikeQueries();
-      }
-    } catch (err: unknown) {
-      if (isAuthError(err)) {
-        setAuthPromptOpen(true);
-        return;
-      }
-
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to like post.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
+    setLikeState(shouldLike);
+    if (shouldLike) {
+      setBurstKey((k) => k + 1);
     }
-  };
-
-  const onPostDislike = async () => {
-    setLoading(true);
+    updateLikesCount(shouldLike ? 1 : -1);
 
     try {
-      const response = await axiosInstance.post(`/user/unlike/${blogId}`);
-
-      if (response.status === 200) {
-        setLikeState(false);
-        updateLikesCount(-1);
-        refetchLikeQueries();
-      }
+      await axiosInstance.post(
+        shouldLike ? `/user/like/${blogId}` : `/user/unlike/${blogId}`
+      );
+      refetchLikeQueries();
     } catch (err: unknown) {
+      setLikeState(previousLikeState ?? false);
+
+      if (previousCount === undefined) {
+        queryClient.removeQueries({
+          queryKey: countKey,
+          exact: true,
+        });
+      } else {
+        queryClient.setQueryData(countKey, previousCountData);
+      }
+
       if (isAuthError(err)) {
         setAuthPromptOpen(true);
         return;
       }
 
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to remove post reaction.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : shouldLike
+            ? 'Failed to like post.'
+            : 'Failed to remove post reaction.';
+
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description: errorMessage,
+      });
     } finally {
       setLoading(false);
     }
@@ -189,38 +176,26 @@ export const LikeButton = ({
         onOpenChange={setAuthPromptOpen}
       />
 
-      {likeStatus ? (
-        <button
-          className={`like-active group p-1 flex items-center justify-center hover:opacity-80 ${
-            loading || isDisable
-              ? 'cursor-default opacity-80'
-              : 'cursor-pointer'
-          }`}
-          onClick={onPostDislike}
-          disabled={loading || isDisable}
-          title='Remove Like'
-        >
-          <Icon
-            name='RiHeart3'
-            type='Fill'
-            size={size}
-            className='like-icon text-brand-orange'
-          />
-        </button>
-      ) : (
-        <button
-          className={`group p-1 flex items-center justify-center hover:text-brand-orange ${
-            loading || isDisable
-              ? 'cursor-default opacity-80'
-              : 'cursor-pointer'
-          }`}
-          onClick={onPostLike}
-          disabled={loading || isDisable}
-          title='Add Like'
-        >
-          <Icon name='RiHeart3' size={size} className='like-icon' />
-        </button>
-      )}
+      <button
+        type='button'
+        className={`relative group p-1 flex items-center justify-center ${
+          likeStatus ? 'hover:opacity-80' : 'hover:text-brand-orange'
+        } ${
+          loading || isDisable ? 'cursor-default opacity-80' : 'cursor-pointer'
+        }`}
+        onClick={() => toggleLike(!likeStatus)}
+        disabled={loading || isDisable}
+        title={likeStatus ? 'Unlike Post' : 'Like Post'}
+      >
+        {burstKey > 0 && <HeartBurst key={burstKey} />}
+
+        <Icon
+          name='RiHeart3'
+          type={likeStatus ? 'Fill' : undefined}
+          size={size}
+          className={`like-icon ${likeStatus ? 'text-brand-orange' : ''}`}
+        />
+      </button>
     </>
   );
 };
