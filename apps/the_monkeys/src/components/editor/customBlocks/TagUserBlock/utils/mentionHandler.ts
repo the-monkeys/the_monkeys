@@ -1,5 +1,6 @@
 import { fetcherV2 } from '@/services/fetcher';
 
+/** @ts-ignore */
 import '../style.css';
 import { MentionUser } from './types';
 
@@ -347,10 +348,10 @@ export default class MentionHandler {
     if (!selection) return;
 
     const mentionNode = document.createElement('a');
-    mentionNode.href = `/${user.username}`;
+    mentionNode.href = `/${user?.username}`;
     mentionNode.className = 'mention-tag';
-    mentionNode.dataset.username = user.username;
-    mentionNode.dataset.id = user.id;
+    mentionNode.dataset.username = user?.username || '';
+    mentionNode.dataset.id = user?.account_id || '';
     mentionNode.contentEditable = 'false';
 
     const avatarSpan = document.createElement('span');
