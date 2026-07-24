@@ -55,6 +55,7 @@ h2,
 .ce-toolbar__actions {
   @apply top-2;
 }
+
 @media (max-width: 1112px) {
   .ce-toolbar__actions {
     @apply top-12;
@@ -428,6 +429,11 @@ li.cdx-list__item {
   border: 1px solid rgba(43, 43, 43, 0.25);
 }
 
+
+.ce-popover__container {
+  background-color: inherit !important;
+}
+
 .ce-popover-item__title {
   font-family: var(--font-dm_sans);
   font-size: 14px !important;
@@ -534,36 +540,309 @@ li.cdx-list__item {
 .ce-inline-toolbar--showed {
   background-color: #fafafa;
   border: 1px solid rgba(43, 43, 43, 0.25);
+  border-radius: 8px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  padding: 2px 4px !important;
+  overflow: visible !important;
 }
 
-.ce-inline-toolbar__buttons button:hover {
+.ce-inline-toolbar__toggler-and-button-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.ce-inline-toolbar__buttons {
+  display: flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+  background: transparent !important;
+}
+
+.ce-inline-toolbar__dropdown {
+  display: flex !important;
+  align-items: center !important;
   background-color: transparent !important;
-}
-
-.ce-inline-toolbar__buttons button:hover svg {
-  color: #ff5542;
+  background: transparent !important;
+  border: none !important;
+  border-right: 1px solid rgba(201, 201, 204, 0.48) !important;
+  margin: 0 6px 0 0 !important;
+  padding: 4px 8px !important;
+  border-radius: 0 !important;
+  color: #1e1e1e !important;
 }
 
 .ce-inline-toolbar__dropdown:hover {
   background-color: transparent !important;
+  background: transparent !important;
 }
 
-.ce-inline-toolbar__dropdown:hover .ce-inline-toolbar__dropdown-content {
-  color: #ff5542;
+.ce-inline-toolbar__dropdown:hover .ce-inline-toolbar__dropdown-content,
+.ce-inline-toolbar__dropdown:hover svg {
+  color: #ff5542 !important;
 }
 
+.ce-inline-tool,
+.ce-inline-toolbar__buttons button,
+.ce-inline-toolbar button {
+  background-color: transparent !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 6px !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: #1e1e1e !important;
+  cursor: pointer !important;
+}
+
+.ce-inline-tool:hover,
+.ce-inline-toolbar__buttons button:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.ce-inline-tool:hover svg,
+.ce-inline-toolbar__buttons button:hover svg {
+  color: #ff5542 !important;
+}
+
+.ce-inline-tool--active,
+.ce-inline-toolbar__buttons button.ce-inline-tool--active,
+.ce-inline-tool--active svg,
+.ce-inline-toolbar__buttons button.ce-inline-tool--active svg {
+  background-color: transparent !important;
+  color: #ff5542 !important;
+  fill: #ff5542 !important;
+}
+
+/* Dark Mode Inline Toolbar */
 .dark .ce-inline-toolbar,
 .dark .ce-inline-toolbar--showed {
-  background-color: #121212;
-  border: 1px solid rgba(242, 242, 243, 0.25);
+  background-color: #121212 !important;
+  border: 1px solid rgba(242, 242, 243, 0.25) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Override ce-popover-item__icon background for inline toolbar only.
+   The icon box background is correct for the block toolbar popup but
+   should NOT appear in the inline formatting toolbar. */
+.ce-popover--inline .ce-popover-item__icon,
+.ce-popover--inline .ce-popover-item__icon--tool {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.dark .ce-popover--inline .ce-popover-item__icon,
+.dark .ce-popover--inline .ce-popover-item__icon--tool {
+  background-color: transparent !important;
+}
+
+/* Inline toolbar item styling */
+.ce-popover--inline .ce-popover-item {
+  background-color: transparent !important;
+  border-radius: 4px !important;
+  padding: 4px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.ce-popover--inline .ce-popover-item:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+.dark .ce-popover--inline .ce-popover-item:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.ce-popover--inline .ce-popover-item--active {
+  background-color: rgba(56, 138, 229, 0.1) !important;
+  color: #388AE5 !important;
+}
+
+.dark .ce-popover--inline .ce-popover-item--active {
+  background-color: rgba(56, 138, 229, 0.1) !important;
+  color: #388AE5 !important;
+}
+
+.ce-popover--inline .ce-popover-item--active svg,
+.dark .ce-popover--inline .ce-popover-item--active svg {
+  color: #388AE5 !important;
+  fill: currentColor !important;
+}
+
+.ce-popover--inline .ce-popover-item svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.dark .ce-popover--inline .ce-popover-item svg {
+  color: #ededed !important;
+}
+
+
+
+.dark .ce-inline-toolbar__dropdown {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #ededed !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.dark .ce-inline-toolbar__dropdown-content,
+.dark .ce-inline-toolbar__dropdown-arrow,
+.dark .ce-inline-toolbar__dropdown svg {
+  color: #ededed !important;
+  fill: currentColor !important;
 }
 
 .dark .ce-inline-toolbar__dropdown:hover {
   background-color: transparent !important;
+  background: transparent !important;
 }
 
-.dark .ce-inline-toolbar__dropdown:hover .ce-inline-toolbar__dropdown-content {
-  color: #ff5542;
+.dark .ce-inline-toolbar__dropdown:hover .ce-inline-toolbar__dropdown-content,
+.dark .ce-inline-toolbar__dropdown:hover svg {
+  color: #ff5542 !important;
+  fill: #ff5542 !important;
+}
+
+.dark .ce-inline-tool,
+.dark .ce-inline-toolbar__buttons button {
+  background-color: transparent !important;
+  background: transparent !important;
+  color: #ededed !important;
+}
+
+.dark .ce-inline-tool svg,
+.dark .ce-inline-toolbar__buttons button svg {
+  color: #ededed !important;
+  fill: currentColor !important;
+}
+
+.dark .ce-inline-tool:hover,
+.dark .ce-inline-toolbar__buttons button:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.dark .ce-inline-tool:hover svg,
+.dark .ce-inline-tool:hover svg {
+  color: #ff5542 !important;
+  fill: #ff5542 !important;
+}
+
+.dark .ce-inline-toolbar__buttons button:hover svg {
+  color: #ff5542 !important;
+  fill: #ff5542 !important;
+}
+
+.dark .ce-inline-tool--active {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.dark .ce-inline-toolbar__buttons button.ce-inline-tool--active {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+}
+
+.dark .ce-inline-tool--active svg,
+.dark .ce-inline-toolbar__buttons button.ce-inline-tool--active svg {
+  color: #000000 !important;
+  fill: #000000 !important;
+}
+
+/* =====================================================
+   Link input popover - nested inline popover fix
+   The link input renders as ce-popover--nested inside
+   ce-popover--inline. We override it to look seamless.
+   ===================================================== */
+
+/* Keep nested popover as a separate floating box (matching prod) */
+.ce-popover--inline .ce-popover--nested-level-1 .ce-popover__container {
+  /* Use default offset, don't overlap */
+  --offset: 5px !important;
+}
+
+/* Make nested popover container a distinct floating box */
+.ce-popover--inline .ce-popover--nested .ce-popover__container {
+  background-color: #fafafa !important;
+  border: 1px solid rgba(43, 43, 43, 0.25) !important;
+  border-radius: 8px !important;
+  padding: 8px !important;
+  left: 0 !important;
+  width: var(--width) !important;
+  min-width: var(--width) !important;
+  box-shadow: 0 3px 15px -3px rgba(13, 20, 33, 0.13) !important;
+}
+
+.dark .ce-popover--inline .ce-popover--nested .ce-popover__container {
+  background-color: #121212 !important;
+  border: 1px solid rgba(242, 242, 243, 0.25) !important;
+}
+
+/* Link tool input styling - white background with black text in prod */
+.ce-inline-tool-input,
+.ce-inline-tool-input--showed {
+  display: block !important;
+  width: 100% !important;
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid rgba(43, 43, 43, 0.25) !important;
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  font-size: 14px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+.ce-inline-tool-input::placeholder {
+  color: #707684 !important;
+}
+
+.dark .ce-inline-tool-input,
+.dark .ce-inline-tool-input--showed {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-radius: 6px !important;
+  caret-color: #000000 !important;
+}
+
+.dark .ce-inline-tool-input::placeholder {
+  color: #888888 !important;
+}
+
+/* Codex Tooltip styling */
+.ct {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+  font-size: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  z-index: 9999 !important;
+}
+
+.ct__content {
+  color: #ffffff !important;
+}
+
+.ct::before,
+.ct::after {
+  border-top-color: #1e1e1e !important;
 }
 
 /* conversion toolbar */
@@ -660,7 +939,7 @@ li.cdx-list__item {
   color: #121212;
 }
 
-#editorjs_editor-container {
+#monkeys-editor-container {
   padding: 0;
 }
 
@@ -737,8 +1016,10 @@ li.cdx-list__item {
 }
 
 .scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .rdp-vhidden {
@@ -806,12 +1087,15 @@ li.cdx-list__item {
   0% {
     transform: scale(0.85);
   }
+
   40% {
     transform: scale(1.25);
   }
+
   65% {
     transform: scale(0.95);
   }
+
   100% {
     transform: scale(1);
   }
@@ -832,42 +1116,4 @@ li.cdx-list__item {
 .like-icon,
 .like-count {
   transition: color 180ms ease;
-}
-
-/* like burst animation */
-.heart-burst-particle {
-  position: absolute;
-  opacity: 0;
-  transform-origin: center;
-  will-change: transform, opacity;
-  animation: heartBurst 480ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-@keyframes heartBurst {
-  /* Spawn */
-  0% {
-    transform: translate(0, 0) scale(0.25) rotate(0deg);
-    opacity: 0;
-  }
-
-  /* Pop */
-  15% {
-    transform: translate(calc(var(--x) * 0.35), calc(var(--y) * 0.35))
-      scale(1.2) rotate(calc(var(--r) * 0.25));
-    opacity: 1;
-  }
-
-  /* Burst */
-  55% {
-    transform: translate(calc(var(--x) * 0.95), calc(var(--y) * 0.95)) scale(1)
-      rotate(calc(var(--r) * 0.8));
-    opacity: 1;
-  }
-
-  /* Float & Fade */
-  100% {
-    transform: translate(calc(var(--x) * 1.2), calc(var(--y) * 1.2 - 8px))
-      scale(0.75) rotate(var(--r));
-    opacity: 0;
-  }
 }

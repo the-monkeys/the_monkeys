@@ -3,7 +3,7 @@ import {
   BlockTool,
   BlockToolData,
   ToolboxConfig,
-} from '@editorjs/editorjs';
+} from '@themonkeys/monkeys-editor';
 
 import './styles/titleBlock.css';
 

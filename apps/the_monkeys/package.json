@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@editorjs/delimiter": "1.4.2",
-    "@editorjs/editorjs": "2.29.1",
     "@editorjs/header": "2.8.1",
     "@editorjs/image": "2.9.0",
     "@editorjs/paragraph": "2.11.4",
@@ -27,6 +26,7 @@
     "@remixicon/react": "^4.1.1",
     "@tanstack/react-query": "^5.66.3",
     "@the-monkeys/ui": "workspace:*",
+    "@themonkeys/monkeys-editor": "1.0.0",
     "axios": "^1.6.8",
     "bowser": "^2.11.0",
     "class-variance-authority": "^0.7.0",

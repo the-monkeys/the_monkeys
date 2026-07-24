@@ -6,7 +6,6 @@ import { Loader } from '@/components/loader';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import { useScheduleState } from '@/hooks/blog/schedule/useScheduleState';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
-import { OutputData } from '@editorjs/editorjs';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Drawer,
@@ -22,6 +21,7 @@ import { Label } from '@the-monkeys/ui/atoms/label';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { Switch } from '@the-monkeys/ui/atoms/switch';
 import { TextArea } from '@the-monkeys/ui/atoms/text-area';
+import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 import ScheduleDateTimePicker from '../ScheduleDateTimePicker';

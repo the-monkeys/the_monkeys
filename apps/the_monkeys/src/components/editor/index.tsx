@@ -4,7 +4,7 @@ import React, { FC, useEffect, useMemo, useRef } from 'react';
 
 import { getEditorConfig } from '@/config/editor/editorjs.config';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import EditorJS, { OutputData } from '@editorjs/editorjs';
+import EditorJS, { OutputData } from '@themonkeys/monkeys-editor';
 
 export type EditorProps = {
   blogId: string;
@@ -105,7 +105,7 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
   }, [data]);
 
   return (
-    <div className='w-full px-4 space-y-6' id='editorjs_editor-container'></div>
+    <div className='w-full px-4 space-y-6' id='monkeys-editor-container'></div>
   );
 });
 
