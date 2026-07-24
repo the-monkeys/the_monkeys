@@ -1,12 +1,12 @@
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
+import MentionUserTool from '@/components/editor/customBlocks/TagUserBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import Delimiter from '@editorjs/delimiter';
 import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
-import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
@@ -31,6 +31,12 @@ export const editorConfig: EditorConfig = {
       class: CustomList,
       config: {
         defaultStyle: 'unordered',
+      },
+    },
+    mention: {
+      class: MentionUserTool,
+      config: {
+        holderId: 'editorjs',
       },
     },
     image: {
