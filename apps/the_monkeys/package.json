@@ -9,10 +9,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ."
+    "format": "prettier --cache --write ."
   },
   "dependencies": {
-    "@editorjs/delimiter": "1.4.2",
+    "@editorjs/delimiter": "1.4.2", 
     "@editorjs/editorjs": "2.29.1",
     "@editorjs/header": "2.8.1",
     "@editorjs/image": "2.9.0",
