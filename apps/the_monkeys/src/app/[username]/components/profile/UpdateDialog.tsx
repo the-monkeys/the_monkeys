@@ -150,7 +150,13 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
             </Button>
           )}
           <DialogTitle className='flex-1 text-left py-0 leading-tight'>
-            {{ details: 'Update Details', 'select-image': 'Select Photo', 'confirm-image': 'Confirm Photo' }[step]}
+            {
+              {
+                details: 'Update Details',
+                'select-image': 'Select Photo',
+                'confirm-image': 'Confirm Photo',
+              }[step]
+            }
           </DialogTitle>
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>

@@ -220,7 +220,9 @@ export const ProfilePhotoUploader = ({
             <Button
               type='button'
               variant='constructive'
-              onClick={() => selectedImage && uploadMutation.mutate(selectedImage)}
+              onClick={() =>
+                selectedImage && uploadMutation.mutate(selectedImage)
+              }
               disabled={uploadMutation.isPending || !isAuthenticated}
               className='w-[130px] sm:w-[160px] px-1 sm:px-4 text-sm'
             >
@@ -234,4 +236,3 @@ export const ProfilePhotoUploader = ({
 
   return null;
 };
-
