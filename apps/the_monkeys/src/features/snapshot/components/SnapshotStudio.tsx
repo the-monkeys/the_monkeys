@@ -322,12 +322,8 @@ export const SnapshotStudio = ({
   );
 
   return (
-    <div
-      className='grid w-full grid-cols-1 gap-6 lg:grid-cols-[1fr_minmax(320px,420px)]'
-    >
-      <section
-        className='flex min-w-0 flex-col gap-3'
-      >
+    <div className='grid w-full grid-cols-1 gap-6 lg:grid-cols-[1fr_minmax(320px,420px)]'>
+      <section className='flex min-w-0 flex-col gap-3'>
         <div>
           <h2 className='font-newsreader text-2xl'>
             {previewMode === 'x' ? 'X post screenshot' : template.label}
@@ -438,9 +434,7 @@ export const SnapshotStudio = ({
         ) : null}
       </section>
 
-      <aside
-        className='flex flex-col gap-5'
-      >
+      <aside className='flex flex-col gap-5'>
         {previewMode === 'template' ? (
           <Accordion
             type='multiple'
