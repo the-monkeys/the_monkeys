@@ -1,9 +1,7 @@
 'use client';
 
-import { useEffect } from 'react';
-
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { API_URL } from '@/constants/api';
@@ -18,12 +16,17 @@ import {
 import LoginForm from '../components/forms/LoginForm';
 
 export default function LoginPage() {
-  const { isSuccess, isLoading, isFetching } = useAuth();
+  const { isSuccess, isLoading, isFetching, isFetched } = useAuth();
+  const params = useSearchParams();
+
+  const callbackURL = params.get('callbackURL');
+
   const router = useRouter();
 
-  useEffect(() => {
-    if (isSuccess) router.replace('/');
-  }, [isSuccess, router]);
+  if (isSuccess) {
+    router.replace(callbackURL ?? '/');
+    return;
+  }
 
   return (
     <>
@@ -33,7 +36,7 @@ export default function LoginPage() {
       </FormHeader>
 
       <div className='flex flex-col gap-2'>
-        <LoginForm isLoading={isLoading || isFetching} />
+        <LoginForm isLoading={isLoading || isFetching || !isFetched} />
 
         <Button className='w-full flex items-center gap-2' asChild>
           <Link href={API_URL + '/auth/google/login'} className='font-dm_sans'>
