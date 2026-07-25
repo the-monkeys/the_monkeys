@@ -42,7 +42,7 @@ export default function TopicForm({
     [key: string]: Category;
   };
 }) {
-  const { theme, resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   const [loading, setLoading] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -121,9 +121,7 @@ export default function TopicForm({
                   options={categoryOptions}
                   isLoading={isCategoriesLoading}
                   placeholder='Select a category'
-                  styles={SelectInputStyles(
-                    theme === 'dark' || resolvedTheme === 'dark'
-                  )}
+                  styles={SelectInputStyles(resolvedTheme === 'dark')}
                   className='w-full'
                   classNamePrefix='react-select'
                 />

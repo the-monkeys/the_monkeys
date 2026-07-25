@@ -24,7 +24,7 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
   placeholder,
   isMulti = true,
 }) => {
-  const { theme, resolvedTheme } = useTheme();
+  const { resolvedTheme } = useTheme();
 
   const handleChange = (selectedOptions: any) => {
     onChange(selectedOptions);
@@ -39,7 +39,7 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
       options={options}
       placeholder={placeholder}
       classNamePrefix='react-select'
-      styles={SelectInputStyles(theme === 'dark' || resolvedTheme === 'dark')}
+      styles={SelectInputStyles(resolvedTheme === 'dark')}
     />
   );
 };
