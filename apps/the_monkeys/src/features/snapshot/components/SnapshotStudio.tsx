@@ -323,18 +323,10 @@ export const SnapshotStudio = ({
 
   return (
     <div
-      className={cn(
-        'grid w-full grid-cols-1 gap-6',
-        previewMode === 'x'
-          ? 'lg:grid-cols-[minmax(320px,400px)_1fr]'
-          : 'lg:grid-cols-[1fr_minmax(320px,420px)]'
-      )}
+      className='grid w-full grid-cols-1 gap-6 lg:grid-cols-[1fr_minmax(320px,420px)]'
     >
       <section
-        className={cn(
-          'flex min-w-0 flex-col gap-3',
-          previewMode === 'x' ? 'lg:order-2' : ''
-        )}
+        className='flex min-w-0 flex-col gap-3'
       >
         <div>
           <h2 className='font-newsreader text-2xl'>
@@ -349,7 +341,7 @@ export const SnapshotStudio = ({
           </p>
         </div>
 
-        <div className='rounded-2xl border bg-foreground-light/30 p-2 dark:bg-foreground-dark/20 sm:p-4'>
+        <div className='lg:sticky lg:top-[72px] rounded-2xl border bg-foreground-light/30 p-2 dark:bg-foreground-dark/20 sm:p-4'>
           {previewMode === 'template' ? (
             <SnapshotPreview
               ref={snapshotRef}
@@ -447,10 +439,7 @@ export const SnapshotStudio = ({
       </section>
 
       <aside
-        className={cn(
-          'flex flex-col gap-5',
-          previewMode === 'x' ? 'lg:order-1' : ''
-        )}
+        className='flex flex-col gap-5'
       >
         {previewMode === 'template' ? (
           <Accordion
