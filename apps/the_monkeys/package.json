@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "format": "prettier --write ."
+    "format": "prettier --cache --write ."
   },
   "dependencies": {
     "@editorjs/delimiter": "1.4.2",
