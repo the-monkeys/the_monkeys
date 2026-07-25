@@ -3,7 +3,6 @@
 import React from 'react';
 
 import { useTheme } from 'next-themes';
-import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
 import { SelectInputStyles } from './styles/SelectInputStyles';
@@ -25,7 +24,7 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
   placeholder,
   isMulti = true,
 }) => {
-  const { theme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
 
   const handleChange = (selectedOptions: any) => {
     onChange(selectedOptions);
@@ -40,7 +39,7 @@ const FormSearchSelect: React.FC<FormSearchSelectProps> = ({
       options={options}
       placeholder={placeholder}
       classNamePrefix='react-select'
-      styles={SelectInputStyles(theme == 'dark' ? true : false)}
+      styles={SelectInputStyles(theme === 'dark' || resolvedTheme === 'dark')}
     />
   );
 };
