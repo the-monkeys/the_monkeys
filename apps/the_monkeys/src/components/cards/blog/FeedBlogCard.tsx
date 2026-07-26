@@ -85,12 +85,8 @@ const ArticleActions = ({
   initialLikeCount?: number;
 }) => (
   <div className='flex items-center gap-2 text-gray-400 dark:text-gray-500'>
-    <div className='flex items-center hover:text-brand-orange transition-colors cursor-pointer group/action'>
-      <LikeButton blogId={blogId} size={size} initialIsLiked={initialIsLiked} />
-      <LikesCount blogId={blogId} initialCount={initialLikeCount} />
-    </div>
     <div className='hover:text-brand-orange transition-colors cursor-pointer'>
-      <BlogShareDialog blogURL={blogURL} size={size} />
+      <LikeButton blogId={blogId} size={size} initialIsLiked={initialIsLiked} />
     </div>
     {showBookmark && (
       <div className='hover:text-brand-orange transition-colors cursor-pointer'>
@@ -101,6 +97,10 @@ const ArticleActions = ({
         />
       </div>
     )}
+    <LikesCount blogId={blogId} initialCount={initialLikeCount} />
+    <div className='hover:text-brand-orange transition-colors cursor-pointer'>
+      <BlogShareDialog blogURL={blogURL} size={size} />
+    </div>
   </div>
 );
 

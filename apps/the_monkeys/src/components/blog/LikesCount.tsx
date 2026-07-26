@@ -1,3 +1,4 @@
+import useAuth from '@/hooks/auth/useAuth';
 import { useGetLikesCount } from '@/hooks/user/useLikeStatus';
 import { formatCount } from '@/lib/utils';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
@@ -8,6 +9,7 @@ type Props = {
 };
 
 export const LikesCount = ({ blogId, initialCount }: Props) => {
+  const { isSuccess: isAuthenticated } = useAuth();
   const { likes, likeCountLoading, likeCountError } = useGetLikesCount(
     blogId,
     initialCount
@@ -16,6 +18,9 @@ export const LikesCount = ({ blogId, initialCount }: Props) => {
   if (!blogId) return null;
 
   const count = likes ?? initialCount ?? 0;
+
+  // Logged out: a 0 (or the unavailable fallback, which also renders 0) is noise.
+  if (!isAuthenticated && (likeCountError || count === 0)) return null;
 
   if (likeCountLoading) {
     return (
