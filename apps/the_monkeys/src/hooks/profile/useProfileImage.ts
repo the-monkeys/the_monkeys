@@ -83,7 +83,7 @@ const useProfileImage = (username: string | undefined) => {
     queryFn: () => fetcher(`/storage/profiles/${username}/profile`),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
-    retry: false, // Don't retry on 404 (deleted profile pic)
+    retry: false,
   });
 
   useEffect(() => {
@@ -95,7 +95,7 @@ const useProfileImage = (username: string | undefined) => {
     const objectUrl = URL.createObjectURL(data);
     setImageUrl(objectUrl);
 
-    return () => URL.revokeObjectURL(objectUrl); // Cleanup on unmount
+    return () => URL.revokeObjectURL(objectUrl);
   }, [data]);
 
   return {
