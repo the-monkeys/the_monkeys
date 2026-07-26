@@ -5,13 +5,21 @@ import net from 'node:net';
 export const runtime = 'nodejs';
 
 const PRIVATE_RANGES = [
-  /^127\./, /^10\./, /^192\.168\./, /^169\.254\./,
+  /^127\./,
+  /^10\./,
+  /^192\.168\./,
+  /^169\.254\./,
   /^172\.(1[6-9]|2\d|3[0-1])\./,
 ];
 
 function isPrivateIp(ip: string): boolean {
   if (net.isIP(ip) === 6) {
-    return ip === '::1' || ip.startsWith('fc') || ip.startsWith('fd') || ip.startsWith('fe80');
+    return (
+      ip === '::1' ||
+      ip.startsWith('fc') ||
+      ip.startsWith('fd') ||
+      ip.startsWith('fe80')
+    );
   }
   return PRIVATE_RANGES.some((re) => re.test(ip));
 }
@@ -56,5 +64,8 @@ export async function GET(req: NextRequest) {
     return new Response('Image too large', { status: 413 });
   }
 
-  return new Response(imageBuffer, { status: 200, headers: { 'Content-Type': contentType } });
+  return new Response(imageBuffer, {
+    status: 200,
+    headers: { 'Content-Type': contentType },
+  });
 }
