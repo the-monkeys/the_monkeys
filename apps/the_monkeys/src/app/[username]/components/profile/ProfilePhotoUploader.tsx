@@ -2,19 +2,20 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import Image from 'next/image';
+
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
-import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
-import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  PROFILE_IMAGE_ACCEPT,
+  useUploadProfileImage,
+  validateProfileImage,
+} from '@/hooks/profile/useProfileImage';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
-import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useDropzone } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
-
-const MAX_FILE_SIZE_BYTES = 2 * 1024 * 1024;
 
 export type Step = 'details' | 'select-image' | 'confirm-image';
 
@@ -25,52 +26,13 @@ export const ProfilePhotoUploader = ({
 }: {
   step: Step;
   setStep: (step: Step) => void;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }) => {
-  const queryClient = useQueryClient();
   const { data, isSuccess: isAuthenticated } = useAuth();
 
   const [uploadError, setUploadError] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<File>();
   const [previewUrl, setPreviewUrl] = useState<string>('');
-  const changeInputRef = useRef<HTMLInputElement>(null);
-
-  const uploadMutation = useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('profile_pic', file);
-
-      return axiosInstanceV2.post(
-        `/storage/profiles/${data?.username}/profile`,
-        formData,
-        { headers: { 'Content-Type': 'multipart/form-data' } }
-      );
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [PROFILE_IMAGE_QUERY_KEY, data?.username],
-      });
-
-      toast({
-        variant: 'success',
-        title: 'Success',
-        description: 'Your profile photo has been updated successfully.',
-      });
-      setSelectedImage(undefined);
-      setUploadError('');
-      onSuccess?.();
-    },
-    onError: (err: unknown) => {
-      const message =
-        err instanceof Error ? err.message : 'An unknown error occurred.';
-      setUploadError(`Error: ${message}`);
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description: message,
-      });
-    },
-  });
 
   useEffect(() => {
     if (!selectedImage) {
@@ -83,7 +45,17 @@ export const ProfilePhotoUploader = ({
 
     return () => URL.revokeObjectURL(objectUrl);
   }, [selectedImage]);
+  const changeInputRef = useRef<HTMLInputElement>(null);
 
+  const uploadMutation = useUploadProfileImage({
+    username: data?.username,
+    onSuccess: () => {
+      setSelectedImage(undefined);
+      setUploadError('');
+      onSuccess();
+    },
+    onError: setUploadError,
+  });
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       setUploadError('');
@@ -95,13 +67,9 @@ export const ProfilePhotoUploader = ({
 
       const [file] = acceptedFiles;
 
-      if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
-        setUploadError('Only JPG or PNG files are supported.');
-        return;
-      }
-
-      if (file.size > MAX_FILE_SIZE_BYTES) {
-        setUploadError('Image must be under 2 MB.');
+      const validationError = validateProfileImage(file);
+      if (validationError) {
+        setUploadError(validationError);
         return;
       }
 
@@ -113,13 +81,20 @@ export const ProfilePhotoUploader = ({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: { 'image/jpeg': ['.jpg', '.jpeg'], 'image/png': ['.png'] },
+    accept: PROFILE_IMAGE_ACCEPT,
   });
 
-  const handleCancelToDetails = () => {
+  const handleCancel = () => {
     setSelectedImage(undefined);
     setUploadError('');
     setStep('details');
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) onDrop([file]);
+
+    e.target.value = '';
   };
 
   if (step === 'select-image') {
@@ -127,7 +102,7 @@ export const ProfilePhotoUploader = ({
       <div className='flex flex-col h-full animate-in fade-in duration-300 fill-mode-forwards'>
         <div className='flex-1 space-y-4 flex flex-col justify-center'>
           <p className='text-sm opacity-80 text-center w-full pb-4'>
-            Upload a JPG or PNG photo — max 2MB
+            Upload a JPG or PNG photo — max 5MB
           </p>
           {uploadError && (
             <p className='font-medium text-sm text-alert-red'>{uploadError}</p>
@@ -145,16 +120,12 @@ export const ProfilePhotoUploader = ({
               Drag image here or click to browse
             </p>
             <p className='text-xs sm:text-sm text-center opacity-80'>
-              JPG or PNG, max 2MB
+              JPG or PNG, max 5MB
             </p>
           </div>
         </div>
         <div className='flex justify-start pt-6 mt-auto shrink-0'>
-          <Button
-            type='button'
-            variant='destructive'
-            onClick={handleCancelToDetails}
-          >
+          <Button type='button' variant='destructive' onClick={handleCancel}>
             Cancel
           </Button>
         </div>
@@ -176,11 +147,13 @@ export const ProfilePhotoUploader = ({
           )}
           <div className='w-48 h-48 sm:w-64 sm:h-64 overflow-hidden rounded-full border border-border-light bg-neutral-100 dark:bg-neutral-800 dark:border-border-dark flex items-center justify-center shrink-0 shadow-lg'>
             {previewUrl && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
+              <Image
                 src={previewUrl}
                 alt='Selected profile preview'
                 draggable={false}
+                width={256}
+                height={256}
+                unoptimized
                 className='h-full w-full object-cover select-none bg-white dark:bg-black'
               />
             )}
@@ -190,7 +163,7 @@ export const ProfilePhotoUploader = ({
           <Button
             type='button'
             variant='destructive'
-            onClick={handleCancelToDetails}
+            onClick={handleCancel}
             disabled={uploadMutation.isPending}
             className='px-2 sm:px-4 text-sm'
           >
@@ -202,11 +175,7 @@ export const ProfilePhotoUploader = ({
               type='file'
               accept='image/jpeg,image/png'
               className='hidden'
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) onDrop([file]);
-                e.target.value = '';
-              }}
+              onChange={handleFileChange}
             />
             <Button
               type='button'
@@ -220,10 +189,13 @@ export const ProfilePhotoUploader = ({
             <Button
               type='button'
               variant='constructive'
-              onClick={() =>
-                selectedImage && uploadMutation.mutate(selectedImage)
+              onClick={() => uploadMutation.mutate(selectedImage!)}
+              disabled={
+                !selectedImage ||
+                !data?.username ||
+                uploadMutation.isPending ||
+                !isAuthenticated
               }
-              disabled={uploadMutation.isPending || !isAuthenticated}
               className='w-[130px] sm:w-[160px] px-1 sm:px-4 text-sm'
             >
               {uploadMutation.isPending ? <Loader /> : null} Update Changes

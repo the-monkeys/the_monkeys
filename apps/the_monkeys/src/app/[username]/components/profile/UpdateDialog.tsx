@@ -37,6 +37,12 @@ import { z } from 'zod';
 
 import { ProfilePhotoUploader, Step } from './ProfilePhotoUploader';
 
+const STEP_TITLES: Record<Step, string> = {
+  details: 'Update Details',
+  'select-image': 'Select Photo',
+  'confirm-image': 'Confirm Photo',
+};
+
 const updateProfileSchema = z.object({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().optional(),
@@ -150,13 +156,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
             </Button>
           )}
           <DialogTitle className='flex-1 text-left py-0 leading-tight'>
-            {
-              {
-                details: 'Update Details',
-                'select-image': 'Select Photo',
-                'confirm-image': 'Confirm Photo',
-              }[step]
-            }
+            {STEP_TITLES[step]}
           </DialogTitle>
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
