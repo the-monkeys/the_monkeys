@@ -5,7 +5,9 @@ import { useState } from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
-import useProfileImage, { PROFILE_IMAGE_QUERY_KEY,} from '@/hooks/profile/useProfileImage';
+import useProfileImage, {
+  PROFILE_IMAGE_QUERY_KEY,
+} from '@/hooks/profile/useProfileImage';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
