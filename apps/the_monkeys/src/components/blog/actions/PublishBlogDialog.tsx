@@ -15,7 +15,7 @@ import {
 } from '@the-monkeys/ui/atoms/dialog';
 import { Label } from '@the-monkeys/ui/atoms/label';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
-import { OutputData } from 'monkeys-editor';
+import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 import { BlogDescription, BlogImage, BlogTitle } from '../getBlogContent';

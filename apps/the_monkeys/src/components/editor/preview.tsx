@@ -2,7 +2,7 @@ import React, { FC, useEffect, useRef } from 'react';
 
 import { editorConfig } from '@/config/editor/monkeys_editor_readonly.config';
 import { Block } from '@/services/blog/blogTypes';
-import MonkeysEditor from 'monkeys-editor';
+import MonkeysEditor from '@themonkeys/monkeys-editor';
 
 export type EditorProps = {
   data?: { time: number; blocks: Block[] };

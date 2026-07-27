@@ -21,7 +21,7 @@ import { Label } from '@the-monkeys/ui/atoms/label';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { Switch } from '@the-monkeys/ui/atoms/switch';
 import { TextArea } from '@the-monkeys/ui/atoms/text-area';
-import { OutputData } from 'monkeys-editor';
+import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 import ScheduleDateTimePicker from '../ScheduleDateTimePicker';

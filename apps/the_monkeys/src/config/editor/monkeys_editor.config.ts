@@ -9,7 +9,7 @@ import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
-import { EditorConfig } from 'monkeys-editor';
+import { EditorConfig } from '@themonkeys/monkeys-editor';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'monkeys_editor_editor-container',
