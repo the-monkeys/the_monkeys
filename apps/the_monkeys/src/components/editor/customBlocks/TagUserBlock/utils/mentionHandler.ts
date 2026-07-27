@@ -1,6 +1,5 @@
 import { fetcherV2 } from '@/services/fetcher';
 
-/** @ts-ignore */
 import '../style.css';
 import { MentionUser } from './types';
 
@@ -97,29 +96,37 @@ export default class MentionHandler {
   };
 
   private handleKeyDown = (e: KeyboardEvent): void => {
-    if (!this.dropdown) return;
-    if (!this.isInsideAnyEditor(e.target)) return;
+    if (!this.dropdown || !this.isInsideAnyEditor(e.target)) return;
 
-    if (['ArrowDown', 'ArrowUp', 'Enter', 'Escape'].includes(e.key)) {
-      e.preventDefault();
-      e.stopPropagation();
-    } else {
-      return;
-    }
+    const allowedKeys = ['ArrowDown', 'ArrowUp', 'Enter', 'Escape'];
+    if (!allowedKeys.includes(e.key)) return;
+
+    e.preventDefault();
+    e.stopPropagation();
 
     if (e.key === 'ArrowDown') {
       this.activeIndex = (this.activeIndex + 1) % (this.users.length || 1);
       this.updateActiveItem();
-    } else if (e.key === 'ArrowUp') {
+      return;
+    }
+
+    if (e.key === 'ArrowUp') {
       this.activeIndex =
         (this.activeIndex - 1 + this.users.length) % (this.users.length || 1);
       this.updateActiveItem();
-    } else if (e.key === 'Enter') {
+      return;
+    }
+
+    if (e.key === 'Enter') {
       if (this.users.length > 0) {
         this.insertMention(this.users[this.activeIndex]);
       }
-    } else if (e.key === 'Escape') {
+      return;
+    }
+
+    if (e.key === 'Escape') {
       this.closeDropdown();
+      return;
     }
   };
 
@@ -147,6 +154,28 @@ export default class MentionHandler {
     }
   }
 
+  private async fetchUsersList(query: string): Promise<MentionUser[]> {
+    const data = await fetcherV2(
+      `user/search?search_term=${encodeURIComponent(query)}&limit=5&offset=0`
+    );
+    const rawUsers = data?.users || [];
+
+    return await Promise.all(
+      rawUsers.map(async (user: MentionUser) => {
+        const finalAvatarUrl = await this.getVerifiedAvatarUrl(user?.username);
+
+        return {
+          ...user,
+          full_name: [user.first_name, user.last_name]
+            .filter(Boolean)
+            .join(' ')
+            .trim(),
+          avatar_url: finalAvatarUrl,
+        };
+      })
+    );
+  }
+
   private fetchUsersDebounced(query: string): void {
     if (this.debounceTimer) window.clearTimeout(this.debounceTimer);
 
@@ -169,39 +198,7 @@ export default class MentionHandler {
 
     this.debounceTimer = window.setTimeout(async () => {
       try {
-        const data = await fetcherV2(
-          `user/search?search_term=${encodeURIComponent(query)}&limit=5&offset=0`
-        );
-        const rawUsers = data?.users || [];
-
-        /** Validate all user's profile images at once */
-        const fetchedUsers: MentionUser[] = await Promise.all(
-          rawUsers.map(async (user: MentionUser) => {
-            const targetUrl = `/api/v2/storage/profiles/${user?.username}/profile`;
-            let finalAvatarUrl = '/default-profile.svg';
-
-            try {
-              const res = await fetch(targetUrl, { method: 'HEAD' });
-              if (res.ok) {
-                finalAvatarUrl = targetUrl;
-              }
-            } catch (error) {
-              console.warn(
-                `Failed to fetch avatar for ${user?.username}`,
-                error
-              );
-            }
-
-            return {
-              ...user,
-              full_name: [user.first_name, user.last_name]
-                .filter(Boolean)
-                .join(' ')
-                .trim(),
-              avatar_url: finalAvatarUrl,
-            };
-          })
-        );
+        const fetchedUsers = await this.fetchUsersList(query);
 
         this.queryCache.set(query, fetchedUsers);
         this.users = fetchedUsers;
@@ -218,10 +215,37 @@ export default class MentionHandler {
     }, 300);
   }
 
+  private async getVerifiedAvatarUrl(username: string): Promise<string> {
+    const defaultAvatar = '/default-profile.svg';
+
+    if (!username) return defaultAvatar;
+
+    try {
+      const response = await fetch(
+        `/api/v2/storage/profiles/${username}/profile/meta`
+      );
+
+      if (!response.ok) {
+        return defaultAvatar;
+      }
+
+      const data = await response.json();
+
+      if (data && data?.url) {
+        return data?.url;
+      }
+
+      return defaultAvatar;
+    } catch (error) {
+      console.error(`Failed to fetch avatar for ${username}`, error);
+      return defaultAvatar;
+    }
+  }
+
   private showDropdown(rect: DOMRect): void {
     if (!this.dropdown) {
       this.dropdown = document.createElement('div');
-      this.dropdown.className = 'mention-dropdown';
+      this.dropdown.classList.add('mention-dropdown');
 
       this.dropdown.addEventListener(
         'mousedown',
@@ -283,11 +307,7 @@ export default class MentionHandler {
     if (!this.dropdown) return;
     const items = this.dropdown.querySelectorAll('.mention-item');
     items.forEach((item, index) => {
-      if (index === this.activeIndex) {
-        item.classList.add('active');
-      } else {
-        item.classList.remove('active');
-      }
+      item.classList.toggle('active', index === this.activeIndex);
     });
   }
 
@@ -299,7 +319,7 @@ export default class MentionHandler {
 
     if (this.users.length === 0) {
       const status = document.createElement('div');
-      status.className = 'mention-status';
+      status.classList.add('mention-status');
       status.textContent = 'No users found';
       dropdown.appendChild(status);
       return;
@@ -309,22 +329,23 @@ export default class MentionHandler {
 
     this.users.forEach((user, index) => {
       const item = document.createElement('div');
-      item.className = `mention-item ${index === this.activeIndex ? 'active' : ''}`;
+      item.classList.add('mention-item');
+      item.classList.toggle('active', index === this.activeIndex);
 
       const img = document.createElement('img');
-      img.src = user?.avatar_url || '';
-      img.className = 'mention-avatar';
-      img.alt = user?.username;
+      img.src = user?.avatar_url || '/default-profile.svg';
+      img.classList.add('mention-avatar');
+      img.alt = user?.username || '';
 
       const infoContainer = document.createElement('div');
-      infoContainer.className = 'mention-user-info';
+      infoContainer.classList.add('mention-user-info');
 
       const nameSpan = document.createElement('span');
-      nameSpan.className = 'mention-name';
+      nameSpan.classList.add('mention-name');
       nameSpan.textContent = user?.full_name || '';
 
       const usernameSpan = document.createElement('span');
-      usernameSpan.className = 'mention-username';
+      usernameSpan.classList.add('mention-username');
       usernameSpan.textContent = `@${user?.username}`;
 
       infoContainer.appendChild(nameSpan);
@@ -349,21 +370,21 @@ export default class MentionHandler {
 
     const mentionNode = document.createElement('a');
     mentionNode.href = `/${user?.username}`;
-    mentionNode.className = 'mention-tag';
+    mentionNode.classList.add('mention-tag');
     mentionNode.dataset.username = user?.username || '';
     mentionNode.dataset.id = user?.account_id || '';
     mentionNode.contentEditable = 'false';
 
     const avatarSpan = document.createElement('span');
-    avatarSpan.className = 'mention-card-avatar';
+    avatarSpan.classList.add('mention-card-avatar');
 
     const avatarImg = document.createElement('img');
-    avatarImg.src = user?.avatar_url || '';
-    avatarImg.alt = user?.username;
+    avatarImg.src = user?.avatar_url || '/default-profile.svg';
+    avatarImg.alt = user?.username || '';
     avatarSpan.appendChild(avatarImg);
 
     const nameSpan = document.createElement('span');
-    nameSpan.className = 'mention-card-fullname';
+    nameSpan.classList.add('mention-card-fullname');
     nameSpan.textContent = user?.full_name || '';
 
     mentionNode.appendChild(avatarSpan);
@@ -396,7 +417,11 @@ export default class MentionHandler {
     this.dropdown.textContent = '';
 
     const statusDiv = document.createElement('div');
-    statusDiv.className = isError ? 'mention-status error' : 'mention-status';
+    statusDiv.classList.add('mention-status');
+    if (isError) {
+      statusDiv.classList.add('error');
+    }
+
     statusDiv.textContent = message;
 
     this.dropdown.appendChild(statusDiv);
