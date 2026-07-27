@@ -16,9 +16,9 @@ import useGetDraftBlogDetail, {
 } from '@/hooks/blog/useGetDraftBlogDetail';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { OutputData } from '@editorjs/editorjs';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { OutputData } from 'monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -137,7 +137,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       return {
         owner_account_id: accountId,
         author_list: [accountId],
-        content_type: 'editorjs',
+        content_type: 'monkeys_editor',
         blog: {
           time: data?.time || Date.now(),
           blocks:

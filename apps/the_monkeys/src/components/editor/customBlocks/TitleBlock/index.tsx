@@ -1,9 +1,4 @@
-import {
-  API,
-  BlockTool,
-  BlockToolData,
-  ToolboxConfig,
-} from '@editorjs/editorjs';
+import { API, BlockTool, BlockToolData, ToolboxConfig } from 'monkeys-editor';
 
 import './styles/titleBlock.css';
 
