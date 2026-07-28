@@ -1,5 +1,15 @@
 import type { Metadata } from 'next';
-import { DM_Sans, Inter, Newsreader } from 'next/font/google';
+import {
+  DM_Sans,
+  Inter,
+  JetBrains_Mono,
+  Montserrat,
+  Newsreader,
+  Playfair_Display,
+  Poppins,
+  Raleway,
+  Roboto_Slab,
+} from 'next/font/google';
 import Script from 'next/script';
 
 import { AppShell } from '@/components/layout/app-shell/AppShell';
@@ -31,6 +41,45 @@ const dm_sans = DM_Sans({
 const newsreader = Newsreader({
   subsets: ['latin'],
   variable: '--font-newsreader',
+  display: 'swap',
+});
+
+// Business Card studio fonts — loaded so the card "Font Family" control renders
+// the real typefaces instead of falling back to system Arial/Georgia.
+const poppins = Poppins({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  variable: '--font-poppins',
+  display: 'swap',
+});
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+});
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  variable: '--font-montserrat',
+  display: 'swap',
+});
+
+const raleway = Raleway({
+  subsets: ['latin'],
+  variable: '--font-raleway',
+  display: 'swap',
+});
+
+const robotoSlab = Roboto_Slab({
+  subsets: ['latin'],
+  variable: '--font-roboto-slab',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
   display: 'swap',
 });
 
@@ -153,7 +202,7 @@ const RootLayout = async ({
         <PublicEnvScript />
       </head>
       <body
-        className={`${dm_sans.variable} ${inter.variable} ${newsreader.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
+        className={`${dm_sans.variable} ${inter.variable} ${newsreader.variable} ${poppins.variable} ${playfair.variable} ${montserrat.variable} ${raleway.variable} ${robotoSlab.variable} ${jetbrainsMono.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
         <DonationPopup />
         <Toaster />
