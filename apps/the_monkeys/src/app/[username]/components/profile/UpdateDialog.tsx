@@ -49,15 +49,11 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
     isLoading,
     isError,
   } = useGetAuthUserProfile(data.username);
-  const {
-    imageUrl,
-    isLoading: imageLoading,
-    isError: imageError,
-  } = useProfileImage(data.username);
+  const { imageUrl } = useProfileImage(data.username);
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
-  const hasProfileImage = !imageLoading && !imageError && imageUrl !== '';
+  const hasProfileImage = imageUrl !== '';
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),

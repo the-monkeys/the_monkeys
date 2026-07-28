@@ -36,10 +36,10 @@ import { parseDateTime } from './profile/parseDate';
 
 export const Profile = ({ data }: { data?: IUser }) => {
   const { data: user } = useGetAuthUserProfile(data?.username);
-  const { imageUrl, isLoading, isError } = useProfileImage(data?.username);
+  const { imageUrl } = useProfileImage(data?.username);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const hasProfileImage = !isLoading && !isError && imageUrl !== '';
+  const hasProfileImage = imageUrl !== '';
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
