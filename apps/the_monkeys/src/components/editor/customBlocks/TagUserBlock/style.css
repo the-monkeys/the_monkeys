@@ -28,6 +28,16 @@
   --mention-tag-hover: rgba(59, 130, 246, 0.25);
 }
 
+.ce-inline-tool--tag-user {
+  margin: 0 0 4px 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.ce-inline-tool--tag-user:hover {
+  color: var(--mention-tag-text);
+}
+
 .mention-dropdown {
   position: absolute;
   z-index: 9999;

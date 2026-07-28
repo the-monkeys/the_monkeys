@@ -15,7 +15,11 @@ export default class MentionUserTool implements InlineTool {
   }
 
   static get title(): string {
-    return 'Mention';
+    return 'Tag User';
+  }
+
+  static get shortcut(): string {
+    return 'CMD+M';
   }
 
   static get sanitize() {
@@ -43,10 +47,10 @@ export default class MentionUserTool implements InlineTool {
     button.type = 'button';
     button.innerText = '@';
     button.classList.add(
-      'mention-tool-button',
-      this.api.styles.inlineToolButton
+      this.api.styles.inlineToolButton,
+      'ce-inline-tool--tag-user'
     );
-    button.setAttribute('aria-label', 'Mention user');
+    button.setAttribute('aria-label', 'Tag user');
     return button;
   }
 

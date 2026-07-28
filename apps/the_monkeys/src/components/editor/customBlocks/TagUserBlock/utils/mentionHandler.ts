@@ -134,7 +134,7 @@ export default class MentionHandler {
     const atNode = document.createTextNode('@');
     range.deleteContents();
     range.insertNode(atNode);
-    range.setStartAfter(atNode);
+    range.setStart(atNode, 1);
     range.collapse(true);
 
     const selection = window.getSelection();
