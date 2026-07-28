@@ -5,9 +5,7 @@ import { useState } from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
-import useProfileImage, {
-  PROFILE_IMAGE_QUERY_KEY,
-} from '@/hooks/profile/useProfileImage';
+import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -23,7 +21,6 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 export const DeleteProfileDialog = () => {
   const queryClient = useQueryClient();
   const { data } = useAuth();
-  const { imageUrl, isLoading, isError } = useProfileImage(data?.username);
   const [open, setOpen] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -72,7 +69,6 @@ export const DeleteProfileDialog = () => {
     }
   };
 
-  if (isLoading || isError || imageUrl === '') return null;
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
