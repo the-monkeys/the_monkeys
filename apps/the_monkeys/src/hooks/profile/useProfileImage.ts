@@ -21,7 +21,7 @@ export const validateProfileImage = (file: File) => {
 };
 
 type UploadProfileImageOptions = {
-  username?: string;
+  username: string;
   onSuccess: () => void;
   onError: (message: string) => void;
 };
@@ -35,10 +35,6 @@ export const useUploadProfileImage = ({
 
   return useMutation({
     mutationFn: async (file: File) => {
-      if (!username) {
-        throw new Error('Unable to upload a profile photo without a username.');
-      }
-
       const formData = new FormData();
       formData.append('profile_pic', file);
 

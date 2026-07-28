@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
+import useAuth from '@/hooks/auth/useAuth';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -17,6 +18,7 @@ import { ProfilePhotoUploader } from './ProfilePhotoUploader';
 
 export const UpdateProfileDialog = () => {
   const [open, setOpen] = useState<boolean>(false);
+  const { data } = useAuth();
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -32,10 +34,13 @@ export const UpdateProfileDialog = () => {
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
-        <ProfilePhotoUploader
-          onCancel={() => setOpen(false)}
-          onSuccess={() => setOpen(false)}
-        />
+        {data?.username && (
+          <ProfilePhotoUploader
+            username={data.username}
+            onCancel={() => setOpen(false)}
+            onSuccess={() => setOpen(false)}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

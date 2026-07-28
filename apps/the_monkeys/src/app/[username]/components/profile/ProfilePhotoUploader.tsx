@@ -19,36 +19,36 @@ import { twMerge } from 'tailwind-merge';
 
 export type Step = 'details' | 'select-image' | 'confirm-image';
 
+type SelectedImage = {
+  file: File;
+  previewUrl: string;
+};
+
 export const ProfilePhotoUploader = ({
+  username,
   step,
   setStep,
   onSuccess,
 }: {
+  username: string;
   step: Step;
   setStep: (step: Step) => void;
   onSuccess: () => void;
 }) => {
-  const { data, isSuccess: isAuthenticated } = useAuth();
+  const { isSuccess: isAuthenticated } = useAuth();
 
   const [uploadError, setUploadError] = useState<string>('');
-  const [selectedImage, setSelectedImage] = useState<File>();
-  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [selectedImage, setSelectedImage] = useState<SelectedImage>();
 
   useEffect(() => {
-    if (!selectedImage) {
-      setPreviewUrl('');
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedImage);
-    setPreviewUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
+    return () => {
+      if (selectedImage) URL.revokeObjectURL(selectedImage.previewUrl);
+    };
   }, [selectedImage]);
   const changeInputRef = useRef<HTMLInputElement>(null);
 
   const uploadMutation = useUploadProfileImage({
-    username: data?.username,
+    username,
     onSuccess: () => {
       setSelectedImage(undefined);
       setUploadError('');
@@ -56,6 +56,9 @@ export const ProfilePhotoUploader = ({
     },
     onError: setUploadError,
   });
+  const handleUpload = () => {
+    if (selectedImage) uploadMutation.mutate(selectedImage.file);
+  };
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       setUploadError('');
@@ -73,7 +76,7 @@ export const ProfilePhotoUploader = ({
         return;
       }
 
-      setSelectedImage(file);
+      setSelectedImage({ file, previewUrl: URL.createObjectURL(file) });
       setStep('confirm-image');
     },
     [setStep]
@@ -146,9 +149,9 @@ export const ProfilePhotoUploader = ({
             </p>
           )}
           <div className='w-48 h-48 sm:w-64 sm:h-64 overflow-hidden rounded-full border border-border-light bg-neutral-100 dark:bg-neutral-800 dark:border-border-dark flex items-center justify-center shrink-0 shadow-lg'>
-            {previewUrl && (
+            {selectedImage && (
               <Image
-                src={previewUrl}
+                src={selectedImage.previewUrl}
                 alt='Selected profile preview'
                 draggable={false}
                 width={256}
@@ -189,12 +192,9 @@ export const ProfilePhotoUploader = ({
             <Button
               type='button'
               variant='constructive'
-              onClick={() => uploadMutation.mutate(selectedImage!)}
+              onClick={handleUpload}
               disabled={
-                !selectedImage ||
-                !data?.username ||
-                uploadMutation.isPending ||
-                !isAuthenticated
+                !selectedImage || uploadMutation.isPending || !isAuthenticated
               }
               className='w-[130px] sm:w-[160px] px-1 sm:px-4 text-sm'
             >

@@ -6,7 +6,6 @@ import Image from 'next/image';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import useAuth from '@/hooks/auth/useAuth';
 import {
   PROFILE_IMAGE_ACCEPT,
   useUploadProfileImage,
@@ -18,13 +17,14 @@ import { useDropzone } from 'react-dropzone';
 import { twMerge } from 'tailwind-merge';
 
 export const ProfilePhotoUploader = ({
+  username,
   onCancel,
   onSuccess,
 }: {
+  username: string;
   onCancel: () => void;
   onSuccess: () => void;
 }) => {
-  const { data, isSuccess: isAuthenticated } = useAuth();
   const [uploadError, setUploadError] = useState('');
   const [selectedImage, setSelectedImage] = useState<File>();
   const [previewUrl, setPreviewUrl] = useState('');
@@ -42,7 +42,7 @@ export const ProfilePhotoUploader = ({
   }, [selectedImage]);
 
   const uploadMutation = useUploadProfileImage({
-    username: data?.username,
+    username,
     onSuccess: () => {
       setSelectedImage(undefined);
       setUploadError('');
@@ -50,6 +50,10 @@ export const ProfilePhotoUploader = ({
     },
     onError: setUploadError,
   });
+  const isUploadDisabled = !selectedImage || uploadMutation.isPending;
+  const handleUpload = () => {
+    if (selectedImage) uploadMutation.mutate(selectedImage);
+  };
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setUploadError('');
@@ -177,13 +181,8 @@ export const ProfilePhotoUploader = ({
               <Button
                 type='button'
                 variant='constructive'
-                onClick={() => uploadMutation.mutate(selectedImage!)}
-                disabled={
-                  !selectedImage ||
-                  !data?.username ||
-                  uploadMutation.isPending ||
-                  !isAuthenticated
-                }
+                onClick={handleUpload}
+                disabled={isUploadDisabled}
                 className='rounded-full px-4'
               >
                 {uploadMutation.isPending ? (

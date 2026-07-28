@@ -275,6 +275,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
 
               {(step === 'select-image' || step === 'confirm-image') && (
                 <ProfilePhotoUploader
+                  username={data.username}
                   step={step}
                   setStep={setStep}
                   onSuccess={() => handleOpenChange(false)}
