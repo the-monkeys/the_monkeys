@@ -49,8 +49,8 @@
 .mention-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
   cursor: pointer;
   border-left: 3px solid transparent;
   transition: background-color 0.15s ease;
@@ -62,15 +62,15 @@
 }
 
 .mention-avatar {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   object-fit: cover;
 }
 
 .mention-card-avatar img {
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 50%;
   object-fit: cover;
   display: block;
@@ -100,7 +100,7 @@
 }
 
 .mention-status {
-  padding: 12px;
+  padding: 0.75rem;
   font-size: 14px;
   color: var(--mention-text-secondary);
   text-align: center;
@@ -113,11 +113,8 @@
 .mention-tag {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 2px 4px;
-  margin: 0 2px;
-  font-weight: 600;
-  border-radius: 30px;
+  gap: 0.25rem;
+  padding: 0 2px 2px 2px;
   text-decoration: none !important;
   line-height: normal;
   vertical-align: middle;

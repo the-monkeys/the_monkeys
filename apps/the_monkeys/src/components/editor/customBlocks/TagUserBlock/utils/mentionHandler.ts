@@ -368,27 +368,31 @@ export default class MentionHandler {
     const selection = window.getSelection();
     if (!selection) return;
 
+    const username = user?.username || '';
+    const accountId = user?.account_id || '';
+    const avatarUrl = user?.avatar_url || '/default-profile.svg';
+    const fullName = user?.full_name || '';
+
     const mentionNode = document.createElement('a');
-    mentionNode.href = `/${user?.username}`;
+    mentionNode.href = `/${username}`;
     mentionNode.classList.add('mention-tag');
-    mentionNode.dataset.username = user?.username || '';
-    mentionNode.dataset.id = user?.account_id || '';
+    mentionNode.dataset.username = username;
+    mentionNode.dataset.id = accountId;
     mentionNode.contentEditable = 'false';
 
     const avatarSpan = document.createElement('span');
     avatarSpan.classList.add('mention-card-avatar');
 
     const avatarImg = document.createElement('img');
-    avatarImg.src = user?.avatar_url || '/default-profile.svg';
-    avatarImg.alt = user?.username || '';
-    avatarSpan.appendChild(avatarImg);
+    avatarImg.src = avatarUrl;
+    avatarImg.alt = username;
+    avatarSpan.append(avatarImg);
 
     const nameSpan = document.createElement('span');
     nameSpan.classList.add('mention-card-fullname');
-    nameSpan.textContent = user?.full_name || '';
+    nameSpan.textContent = fullName;
 
-    mentionNode.appendChild(avatarSpan);
-    mentionNode.appendChild(nameSpan);
+    mentionNode.append(avatarSpan, nameSpan);
 
     const textNode = this.activeRange.startContainer;
     const textContent = textNode.textContent || '';
@@ -399,11 +403,12 @@ export default class MentionHandler {
       this.activeRange.deleteContents();
       this.activeRange.insertNode(mentionNode);
 
-      const spaceNode = document.createTextNode(' ');
+      const spaceNode = document.createTextNode('\u00A0');
       mentionNode.parentNode?.insertBefore(spaceNode, mentionNode.nextSibling);
 
-      this.activeRange.setStartAfter(spaceNode);
+      this.activeRange.setStart(spaceNode, 1);
       this.activeRange.collapse(true);
+
       selection.removeAllRanges();
       selection.addRange(this.activeRange);
     }
