@@ -1,4 +1,4 @@
-import { API, InlineTool } from '@editorjs/editorjs';
+import { API, InlineTool } from '@themonkeys/monkeys-editor';
 
 import MentionHandler from './utils/mentionHandler';
 

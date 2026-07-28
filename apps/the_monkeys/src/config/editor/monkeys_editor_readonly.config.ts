@@ -35,9 +35,6 @@ export const editorConfig: EditorConfig = {
     },
     mention: {
       class: MentionUserTool,
-      config: {
-        holderId: 'editorjs',
-      },
     },
     image: {
       class: Image,

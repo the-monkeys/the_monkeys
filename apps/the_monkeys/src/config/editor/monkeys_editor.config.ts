@@ -44,9 +44,6 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     },
     mention: {
       class: MentionUserTool,
-      config: {
-        holderId: 'editorjs',
-      },
     },
     delimiter: Delimiter,
     quote: {
