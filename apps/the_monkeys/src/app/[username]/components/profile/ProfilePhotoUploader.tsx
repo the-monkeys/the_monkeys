@@ -19,11 +19,6 @@ import { twMerge } from 'tailwind-merge';
 
 export type Step = 'details' | 'select-image' | 'confirm-image';
 
-type SelectedImage = {
-  file: File;
-  previewUrl: string;
-};
-
 export const ProfilePhotoUploader = ({
   username,
   step,
@@ -38,12 +33,16 @@ export const ProfilePhotoUploader = ({
   const { isSuccess: isAuthenticated } = useAuth();
 
   const [uploadError, setUploadError] = useState<string>('');
-  const [selectedImage, setSelectedImage] = useState<SelectedImage>();
+  const [selectedImage, setSelectedImage] = useState<File>();
+  const [previewUrl, setPreviewUrl] = useState('');
 
   useEffect(() => {
-    return () => {
-      if (selectedImage) URL.revokeObjectURL(selectedImage.previewUrl);
-    };
+    if (!selectedImage) return setPreviewUrl('');
+
+    const objectUrl = URL.createObjectURL(selectedImage);
+    setPreviewUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
   }, [selectedImage]);
   const changeInputRef = useRef<HTMLInputElement>(null);
 
@@ -57,7 +56,7 @@ export const ProfilePhotoUploader = ({
     onError: setUploadError,
   });
   const handleUpload = () => {
-    if (selectedImage) uploadMutation.mutate(selectedImage.file);
+    if (selectedImage) uploadMutation.mutate(selectedImage);
   };
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -76,7 +75,7 @@ export const ProfilePhotoUploader = ({
         return;
       }
 
-      setSelectedImage({ file, previewUrl: URL.createObjectURL(file) });
+      setSelectedImage(file);
       setStep('confirm-image');
     },
     [setStep]
@@ -149,9 +148,9 @@ export const ProfilePhotoUploader = ({
             </p>
           )}
           <div className='w-48 h-48 sm:w-64 sm:h-64 overflow-hidden rounded-full border border-border-light bg-neutral-100 dark:bg-neutral-800 dark:border-border-dark flex items-center justify-center shrink-0 shadow-lg'>
-            {selectedImage && (
+            {previewUrl && (
               <Image
-                src={selectedImage.previewUrl}
+                src={previewUrl}
                 alt='Selected profile preview'
                 draggable={false}
                 width={256}
