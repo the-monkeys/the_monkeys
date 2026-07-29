@@ -38,7 +38,6 @@ export const Profile = ({ data }: { data?: IUser }) => {
   const { data: user } = useGetAuthUserProfile(data?.username);
   const { imageUrl } = useProfileImage(data?.username);
   const [loading, setLoading] = useState<boolean>(false);
-
   const hasProfileImage = imageUrl !== '';
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
