@@ -21,6 +21,7 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 export const DeleteProfileDialog = () => {
   const queryClient = useQueryClient();
   const { data } = useAuth();
+
   const [open, setOpen] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
 
