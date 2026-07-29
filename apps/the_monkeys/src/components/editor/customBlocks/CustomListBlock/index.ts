@@ -1,4 +1,9 @@
-import { API, BlockTool, ToolboxConfig } from '@themonkeys/monkeys-editor';
+import {
+  API,
+  BlockTool,
+  HTMLPasteEvent,
+  ToolboxConfig,
+} from '@themonkeys/monkeys-editor';
 
 import './style.css';
 import { ConstructorArgs, ListItemData, ListToolData } from './utils/interface';
@@ -11,6 +16,7 @@ export default class CustomList implements BlockTool {
   private maxLevel: number = 3;
   private backspaceTimeout: number | null = null;
   private lastFocusedItem: HTMLElement | null = null;
+  private focusToken: number = 0;
 
   private static readonly ICONS = {
     UNORDERED:
@@ -90,14 +96,115 @@ export default class CustomList implements BlockTool {
     ];
   }
 
+  static get pasteConfig() {
+    return {
+      tags: ['UL', 'OL', 'LI'],
+    };
+  }
+
+  /** Method to convert list to paragraph or any other format and vice-versa */
+  static get conversionConfig() {
+    return {
+      export: (data: ListToolData) => {
+        return data.items
+          .map((item) => (typeof item === 'string' ? item : item.content))
+          .join('\n');
+      },
+      import: (string: string) => {
+        return {
+          style: 'unordered',
+          items: [{ content: string, items: [] }],
+        };
+      },
+    };
+  }
+
   destroy() {
     this.removeEvents();
   }
 
+  onPaste(event: HTMLPasteEvent) {
+    const element = event.detail.data as HTMLElement;
+    console.log('PASTED HTML:', element.outerHTML);
+
+    let style: 'ordered' | 'unordered' = 'unordered';
+    if (element.tagName === 'OL') {
+      style = 'ordered';
+    }
+
+    const items = this.parsePastedList(element);
+
+    this.data = {
+      style,
+      items: items.length > 0 ? items : [{ content: '', items: [] }],
+    };
+
+    this.rebuildWrapper(style);
+  }
+
+  private parsePastedList(list: HTMLElement): ListItemData[] {
+    const items: ListItemData[] = [];
+
+    if (list.tagName === 'LI') {
+      const nestedList = list.querySelector(':scope > ul, :scope > ol');
+      const clone = list.cloneNode(true) as HTMLElement;
+      const nestedInClone = clone.querySelector(':scope > ul, :scope > ol');
+      if (nestedInClone) {
+        nestedInClone.remove();
+      }
+
+      items.push({
+        content: clone.innerHTML.trim(),
+        items: nestedList
+          ? this.parsePastedList(nestedList as HTMLElement)
+          : [],
+      });
+      return items;
+    }
+
+    Array.from(list.children).forEach((child) => {
+      if (child.tagName !== 'LI') return;
+
+      const nestedList = child.querySelector(':scope > ul, :scope > ol');
+
+      const clone = child.cloneNode(true) as HTMLElement;
+      const nestedInClone = clone.querySelector(':scope > ul, :scope > ol');
+      if (nestedInClone) {
+        nestedInClone.remove();
+      }
+
+      items.push({
+        content: clone.innerHTML.trim(),
+        items: nestedList
+          ? this.parsePastedList(nestedList as HTMLElement)
+          : [],
+      });
+    });
+
+    return items;
+  }
+
+  private rebuildWrapper(style: 'ordered' | 'unordered') {
+    const newTag = style === 'ordered' ? 'ol' : 'ul';
+    const newWrapper = document.createElement(newTag);
+    newWrapper.className = 'cdx-list';
+
+    this.data.items.forEach((item) => {
+      newWrapper.appendChild(this.renderItem(item));
+    });
+
+    this.removeEvents();
+    this.wrapper.replaceWith(newWrapper);
+    this.wrapper = newWrapper;
+    this.bindEvents();
+  }
+
   save(root: HTMLElement): ListToolData {
+    const target = this.wrapper || root;
+
     return {
-      style: root.tagName === 'OL' ? 'ordered' : 'unordered',
-      items: this.retrieveItems(Array.from(root.children)),
+      style: target.tagName === 'OL' ? 'ordered' : 'unordered',
+      items: this.retrieveItems(Array.from(target.children)),
     };
   }
 
@@ -166,14 +273,14 @@ export default class CustomList implements BlockTool {
   private onClick = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     const listItem = target.closest('.cdx-list__item') as HTMLElement;
+    if (!listItem) return;
 
-    if (listItem) {
-      const content = listItem.querySelector(
-        '.cdx-list__item-content'
-      ) as HTMLElement;
-      if (content && target !== content && !content.contains(target)) {
-        this.focusItem(listItem);
-      }
+    const content = listItem.querySelector(
+      '.cdx-list__item-content'
+    ) as HTMLElement;
+
+    if (content && target !== content && !content.contains(target)) {
+      this.focusItem(listItem, true);
     }
   };
 
@@ -274,6 +381,20 @@ export default class CustomList implements BlockTool {
     return this.wrapper;
   }
 
+  /** Method to focus and correctly apply the caret position */
+  focus(isSetToEnd?: boolean) {
+    if (!this.wrapper) return;
+
+    const items = Array.from(this.wrapper.querySelectorAll('.cdx-list__item'));
+    if (items.length === 0) return;
+
+    const targetItem = (
+      isSetToEnd ? items[items.length - 1] : items[0]
+    ) as HTMLElement;
+
+    this.focusItem(targetItem, isSetToEnd);
+  }
+
   private createListItem(contentHTML: string = ''): HTMLLIElement {
     const li = document.createElement('li');
     li.className = 'cdx-list__item';
@@ -281,7 +402,8 @@ export default class CustomList implements BlockTool {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'cdx-list__item-content';
     contentDiv.contentEditable = String(!this.readOnly);
-    contentDiv.innerHTML = contentHTML;
+    contentDiv.innerHTML =
+      contentHTML && contentHTML.trim() !== '' ? contentHTML : '<br>';
 
     li.appendChild(contentDiv);
     return li;
@@ -415,6 +537,9 @@ export default class CustomList implements BlockTool {
 
       // Append current text to previous item
       if (currentHTML !== '' && currentHTML !== '<br>') {
+        if (previousContent.innerHTML.trim() === '<br>') {
+          previousContent.innerHTML = '';
+        }
         previousContent.innerHTML += currentHTML;
       }
 
@@ -525,7 +650,16 @@ export default class CustomList implements BlockTool {
     const content = item.querySelector(
       '.cdx-list__item-content'
     ) as HTMLElement;
-    if (content) {
+    if (!content) return;
+
+    // Invalidate any previously scheduled deferred focus so a rapid sequence
+    // of calls (e.g. holding Enter) can't have a stale one win and yank the
+    // caret back to the wrong item.
+    const token = ++this.focusToken;
+
+    const applyCaret = () => {
+      if (token !== this.focusToken) return;
+
       content.focus();
 
       if (
@@ -534,13 +668,28 @@ export default class CustomList implements BlockTool {
       ) {
         const range = document.createRange();
         range.selectNodeContents(content);
+
         range.collapse(!atEnd);
 
         const sel = window.getSelection();
         sel?.removeAllRanges();
         sel?.addRange(range);
       }
-    }
+    };
+
+    // Apply immediately (covers the common case)...
+    applyCaret();
+
+    // ...and again after the browser has actually painted. Chrome can leave
+    // focus/selection logically correct but the caret visually un-rendered
+    // when both are set in the same tick as inserting/mutating the DOM node
+    // - it only repaints the caret on the next real interaction (like a
+    // keystroke). Waiting two animation frames guarantees a paint has
+    // happened, so re-applying here makes the caret show up immediately
+    // instead of only after the user types.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(applyCaret);
+    });
   }
 
   /**
@@ -556,9 +705,13 @@ export default class CustomList implements BlockTool {
       const contentEl = item.querySelector(':scope > .cdx-list__item-content');
       const sublist = item.querySelector(':scope > .cdx-list__sublist');
 
+      let content = contentEl ? contentEl.innerHTML : '';
+      if (content.trim() === '<br>') {
+        content = '';
+      }
+
       data.push({
-        content: contentEl ? contentEl.innerHTML : '',
-        // Recursion: Pass the sublist's children back to this same method
+        content,
         items: sublist ? this.retrieveItems(Array.from(sublist.children)) : [],
       });
     });
