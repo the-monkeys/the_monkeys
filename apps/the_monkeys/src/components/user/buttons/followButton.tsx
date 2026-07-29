@@ -5,17 +5,15 @@ import {
   useIsFollowingUser,
 } from '@/hooks/user/useUserConnections';
 import axiosInstance from '@/services/api/axiosInstance';
-import { IsFollowedResponse } from '@/services/profile/userApiTypes';
+import {
+  ConnectionCountResponse,
+  IsFollowedResponse,
+} from '@/services/profile/userApiTypes';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
-
-type ConnectionCountResponse = {
-  status?: string;
-  count: number;
-};
 
 const followUnfollowUser = (username: string, nextIsFollowing: boolean) => {
   return axiosInstance.post(
@@ -44,10 +42,10 @@ const useFollowMutation = (username?: string) => {
         isFollowing: nextIsFollowing,
       });
 
-      if (previousCount && typeof previousCount.count === 'number') {
+      if (previousCount && typeof previousCount.followers === 'number') {
         queryClient.setQueryData<ConnectionCountResponse>(countKey, {
           ...previousCount,
-          count: previousCount.count + (nextIsFollowing ? 1 : -1),
+          followers: previousCount.followers + (nextIsFollowing ? 1 : -1),
         });
       }
 
