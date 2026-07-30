@@ -5,6 +5,7 @@ import {
   ToolboxConfig,
 } from '@themonkeys/monkeys-editor';
 
+/** @ts-ignore */
 import './style.css';
 import { ConstructorArgs, ListItemData, ListToolData } from './utils/interface';
 
@@ -16,7 +17,6 @@ export default class CustomList implements BlockTool {
   private maxLevel: number = 3;
   private backspaceTimeout: number | null = null;
   private lastFocusedItem: HTMLElement | null = null;
-  private focusToken: number = 0;
 
   private static readonly ICONS = {
     UNORDERED:
@@ -402,8 +402,7 @@ export default class CustomList implements BlockTool {
     const contentDiv = document.createElement('div');
     contentDiv.className = 'cdx-list__item-content';
     contentDiv.contentEditable = String(!this.readOnly);
-    contentDiv.innerHTML =
-      contentHTML && contentHTML.trim() !== '' ? contentHTML : '<br>';
+    contentDiv.innerHTML = contentHTML;
 
     li.appendChild(contentDiv);
     return li;
@@ -646,50 +645,63 @@ export default class CustomList implements BlockTool {
     }
   }
 
+  /**
+   * Places the caret inside a contentEditable element, always anchoring the
+   * Range to an actual Text node (creating an empty one if necessary)
+   * instead of to the parent element node.
+   */
+  private setCaret(element: HTMLElement, atStart: boolean): void {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const createAndFocusTextNode = (parent: Node, prepend: boolean = false) => {
+      const textNode = document.createTextNode('');
+      if (prepend) {
+        parent.insertBefore(textNode, parent.firstChild);
+      } else {
+        parent.appendChild(textNode);
+      }
+      range.setStart(textNode, 0);
+      range.setEnd(textNode, 0);
+    };
+
+    const childNodes = element.childNodes;
+    let nodeToFocus: ChildNode | null = atStart
+      ? childNodes[0] ?? null
+      : childNodes[childNodes.length - 1] ?? null;
+
+    if (nodeToFocus) {
+      while (nodeToFocus && nodeToFocus.nodeType !== Node.TEXT_NODE) {
+        nodeToFocus = (
+          atStart ? nodeToFocus.firstChild : nodeToFocus.lastChild
+        ) as ChildNode | null;
+      }
+
+      if (nodeToFocus && nodeToFocus.nodeType === Node.TEXT_NODE) {
+        const length = nodeToFocus.textContent?.length ?? 0;
+        const position = atStart ? 0 : length;
+        range.setStart(nodeToFocus, position);
+        range.setEnd(nodeToFocus, position);
+      } else {
+        createAndFocusTextNode(element, atStart);
+      }
+    } else {
+      createAndFocusTextNode(element);
+    }
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
   private focusItem(item: HTMLElement, atEnd: boolean = false) {
     const content = item.querySelector(
       '.cdx-list__item-content'
     ) as HTMLElement;
     if (!content) return;
 
-    // Invalidate any previously scheduled deferred focus so a rapid sequence
-    // of calls (e.g. holding Enter) can't have a stale one win and yank the
-    // caret back to the wrong item.
-    const token = ++this.focusToken;
-
-    const applyCaret = () => {
-      if (token !== this.focusToken) return;
-
-      content.focus();
-
-      if (
-        typeof window.getSelection !== 'undefined' &&
-        typeof document.createRange !== 'undefined'
-      ) {
-        const range = document.createRange();
-        range.selectNodeContents(content);
-
-        range.collapse(!atEnd);
-
-        const sel = window.getSelection();
-        sel?.removeAllRanges();
-        sel?.addRange(range);
-      }
-    };
-
-    // Apply immediately (covers the common case)...
-    applyCaret();
-
-    // ...and again after the browser has actually painted. Chrome can leave
-    // focus/selection logically correct but the caret visually un-rendered
-    // when both are set in the same tick as inserting/mutating the DOM node
-    // - it only repaints the caret on the next real interaction (like a
-    // keystroke). Waiting two animation frames guarantees a paint has
-    // happened, so re-applying here makes the caret show up immediately
-    // instead of only after the user types.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(applyCaret);
-    });
+    content.focus();
+    this.setCaret(content, !atEnd);
   }
 
   /**
