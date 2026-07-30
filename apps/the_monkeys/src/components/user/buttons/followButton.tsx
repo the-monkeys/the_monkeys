@@ -23,17 +23,25 @@ const unfollowUser = (username: string) => {
   return axiosInstance.post(`/user/unfollow/${username}`);
 };
 
-const useFollowMutation = (username?: string) => {
+type FollowMutationVariables = {
+  username: string;
+  nextIsFollowing: boolean;
+};
+
+const useFollowMutation = () => {
   const queryClient = useQueryClient();
 
-  const followingKey = [IS_FOLLOWING_USER_QUERY_KEY, username];
-  const countKey = [CONNECTION_COUNT_QUERY_KEY, username];
-
   return useMutation({
-    mutationFn: (nextIsFollowing: boolean) =>
-      nextIsFollowing ? followUser(username!) : unfollowUser(username!),
+    mutationFn: ({ username, nextIsFollowing }: FollowMutationVariables) =>
+      nextIsFollowing ? followUser(username) : unfollowUser(username),
 
-    onMutate: async (nextIsFollowing: boolean) => {
+    onMutate: async ({
+      username,
+      nextIsFollowing,
+    }: FollowMutationVariables) => {
+      const followingKey = [IS_FOLLOWING_USER_QUERY_KEY, username];
+      const countKey = [CONNECTION_COUNT_QUERY_KEY, username];
+
       const previousFollowStatus =
         queryClient.getQueryData<IsFollowedResponse>(followingKey);
       const previousCount =
@@ -54,15 +62,18 @@ const useFollowMutation = (username?: string) => {
       queryClient.cancelQueries({ queryKey: followingKey });
       queryClient.cancelQueries({ queryKey: countKey });
 
-      return { previousFollowStatus, previousCount };
+      return { previousFollowStatus, previousCount, followingKey, countKey };
     },
 
-    onError: (err: unknown, _nextIsFollowing, context) => {
+    onError: (err: unknown, _variables, context) => {
       if (context?.previousFollowStatus) {
-        queryClient.setQueryData(followingKey, context.previousFollowStatus);
+        queryClient.setQueryData(
+          context.followingKey,
+          context.previousFollowStatus
+        );
       }
       if (context?.previousCount) {
-        queryClient.setQueryData(countKey, context.previousCount);
+        queryClient.setQueryData(context.countKey, context.previousCount);
       }
 
       toast({
@@ -73,13 +84,15 @@ const useFollowMutation = (username?: string) => {
       });
     },
 
-    onSettled: () => {
+    onSettled: (_data, _error, _variables, context) => {
+      if (!context) return;
+
       queryClient.invalidateQueries({
-        queryKey: followingKey,
+        queryKey: context.followingKey,
         refetchType: 'active',
       });
       queryClient.invalidateQueries({
-        queryKey: countKey,
+        queryKey: context.countKey,
         refetchType: 'active',
       });
     },
@@ -94,12 +107,19 @@ export const FollowButton = ({
   className?: string;
 }) => {
   const { followStatus } = useIsFollowingUser(username);
-  const { mutate, isPending } = useFollowMutation(username);
+  const { mutate, isPending } = useFollowMutation();
 
   const isFollowing = !!followStatus?.isFollowing;
 
-  const handleFollow = () => mutate(true);
-  const handleUnfollow = () => mutate(false);
+  const handleFollow = () => {
+    if (!username) return;
+    mutate({ username, nextIsFollowing: true });
+  };
+
+  const handleUnfollow = () => {
+    if (!username) return;
+    mutate({ username, nextIsFollowing: false });
+  };
 
   return (
     <>
@@ -135,7 +155,7 @@ export const FollowButtonIcon = ({
   className?: string;
 }) => {
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
-  const { mutate, isPending } = useFollowMutation(username);
+  const { mutate, isPending } = useFollowMutation();
 
   if (isLoading) return <Skeleton className='size-9 rounded-full' />;
 
@@ -143,8 +163,15 @@ export const FollowButtonIcon = ({
 
   const isFollowing = !!followStatus?.isFollowing;
 
-  const handleFollow = () => mutate(true);
-  const handleUnfollow = () => mutate(false);
+  const handleFollow = () => {
+    if (!username) return;
+    mutate({ username, nextIsFollowing: true });
+  };
+
+  const handleUnfollow = () => {
+    if (!username) return;
+    mutate({ username, nextIsFollowing: false });
+  };
 
   return (
     <>
