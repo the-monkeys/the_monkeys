@@ -15,10 +15,12 @@ import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
 
-const followUnfollowUser = (username: string, nextIsFollowing: boolean) => {
-  return axiosInstance.post(
-    `/user/${nextIsFollowing ? 'follow' : 'unfollow'}/${username}`
-  );
+const followUser = (username: string) => {
+  return axiosInstance.post(`/user/follow/${username}`);
+};
+
+const unfollowUser = (username: string) => {
+  return axiosInstance.post(`/user/unfollow/${username}`);
 };
 
 const useFollowMutation = (username?: string) => {
@@ -29,7 +31,7 @@ const useFollowMutation = (username?: string) => {
 
   return useMutation({
     mutationFn: (nextIsFollowing: boolean) =>
-      followUnfollowUser(username!, nextIsFollowing),
+      nextIsFollowing ? followUser(username!) : unfollowUser(username!),
 
     onMutate: async (nextIsFollowing: boolean) => {
       const previousFollowStatus =
@@ -42,7 +44,7 @@ const useFollowMutation = (username?: string) => {
         isFollowing: nextIsFollowing,
       });
 
-      if (previousCount && typeof previousCount.followers === 'number') {
+      if (previousCount) {
         queryClient.setQueryData<ConnectionCountResponse>(countKey, {
           ...previousCount,
           followers: previousCount.followers + (nextIsFollowing ? 1 : -1),
