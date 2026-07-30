@@ -18,57 +18,79 @@ import {
 } from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
-export const DeleteProfileDialog = () => {
+export const DeleteProfilePhotoConfirmation = ({
+  username,
+  onSuccess,
+}: {
+  username: string;
+  onSuccess: () => void;
+}) => {
   const queryClient = useQueryClient();
-  const { data } = useAuth();
-
-  const [open, setOpen] = useState<boolean>();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
   const onProfileDelete = async () => {
     setLoading(true);
-
     try {
       const response = await axiosInstanceV2.delete(
-        `/storage/profiles/${data?.username}/profile`
+        `/storage/profiles/${username}/profile`
       );
 
       if (response.status === 200) {
-        // Remove cached profile image so the UI drops the old blob immediately.
-        queryClient.setQueryData(
-          [PROFILE_IMAGE_QUERY_KEY, data?.username],
-          null
-        );
+        queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
         queryClient.invalidateQueries({
-          queryKey: [PROFILE_IMAGE_QUERY_KEY, data?.username],
+          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
         });
-
         toast({
           variant: 'success',
           title: 'Success',
           description: 'Your profile photo has been deleted successfully',
         });
-
-        setOpen(false);
+        onSuccess();
       }
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to delete profile photo.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
+      const isMissingProfileImage =
+        typeof err === 'object' &&
+        err !== null &&
+        'response' in err &&
+        (err as { response?: { status?: number } }).response?.status === 404;
+
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description: isMissingProfileImage
+          ? 'No profile photo found.'
+          : err instanceof Error
+            ? err.message || 'Failed to delete profile photo.'
+            : 'An unknown error occurred.',
+      });
     } finally {
       setLoading(false);
     }
   };
+
+  return (
+    <div className='space-y-4'>
+      <p>
+        Are you sure you want to delete your profile photo? It will be replaced
+        with the default profile.
+      </p>
+      <div className='mt-4 flex justify-end'>
+        <Button
+          type='button'
+          variant='destructive'
+          onClick={onProfileDelete}
+          disabled={loading}
+        >
+          {loading && <Loader />} Yes, Delete
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export const DeleteProfileDialog = () => {
+  const { data } = useAuth();
+  const [open, setOpen] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -77,31 +99,17 @@ export const DeleteProfileDialog = () => {
           <Icon name='RiDeleteBin6' />
         </Button>
       </DialogTrigger>
-
       <DialogContent>
         <DialogTitle className='text-alert-red'>
           Delete Profile Photo
         </DialogTitle>
-
-        <DialogDescription className='hidden'></DialogDescription>
-
-        <p>
-          Are you sure you want to delete your profile photo? It will be
-          replaced with the default profile.
-        </p>
-
-        <div>
-          <Button
-            type='button'
-            variant='destructive'
-            className='w-fit float-right'
-            onClick={onProfileDelete}
-            disabled={loading}
-          >
-            {loading && <Loader />}
-            Yes, Delete
-          </Button>
-        </div>
+        <DialogDescription className='hidden' />
+        {data?.username && (
+          <DeleteProfilePhotoConfirmation
+            username={data.username}
+            onSuccess={() => setOpen(false)}
+          />
+        )}
       </DialogContent>
     </Dialog>
   );

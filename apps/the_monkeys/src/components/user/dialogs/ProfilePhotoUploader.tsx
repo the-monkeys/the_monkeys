@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import Image from 'next/image';
 
@@ -27,19 +27,19 @@ export const ProfilePhotoUploader = ({
 }) => {
   const [uploadError, setUploadError] = useState('');
   const [selectedImage, setSelectedImage] = useState<File>();
-  const [previewUrl, setPreviewUrl] = useState('');
+
+  const previewUrl = useMemo(
+    () => (selectedImage ? URL.createObjectURL(selectedImage) : ''),
+    [selectedImage]
+  );
 
   useEffect(() => {
-    if (!selectedImage) {
-      setPreviewUrl('');
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedImage);
-    setPreviewUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedImage]);
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   const uploadMutation = useUploadProfileImage({
     username,

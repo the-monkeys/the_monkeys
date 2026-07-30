@@ -1,9 +1,12 @@
+import { API_URL } from '@/constants/api';
 import clientInfo from '@/utils/clientInfo';
 import { getAllRequestHeaders } from '@/utils/requestHeaders';
 import axios from 'axios';
 
+const isServer = typeof window === 'undefined';
+
 const axiosInstanceNoAuth = axios.create({
-  baseURL: '/api/v1',
+  baseURL: isServer ? API_URL : '/api/v1',
   timeout: 30000,
 });
 
