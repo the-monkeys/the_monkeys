@@ -5,7 +5,6 @@ import {
   ToolboxConfig,
 } from '@themonkeys/monkeys-editor';
 
-/** @ts-ignore */
 import './style.css';
 import { ConstructorArgs, ListItemData, ListToolData } from './utils/interface';
 
@@ -125,7 +124,6 @@ export default class CustomList implements BlockTool {
 
   onPaste(event: HTMLPasteEvent) {
     const element = event.detail.data as HTMLElement;
-    console.log('PASTED HTML:', element.outerHTML);
 
     let style: 'ordered' | 'unordered' = 'unordered';
     if (element.tagName === 'OL') {
@@ -645,11 +643,6 @@ export default class CustomList implements BlockTool {
     }
   }
 
-  /**
-   * Places the caret inside a contentEditable element, always anchoring the
-   * Range to an actual Text node (creating an empty one if necessary)
-   * instead of to the parent element node.
-   */
   private setCaret(element: HTMLElement, atStart: boolean): void {
     const range = document.createRange();
     const selection = window.getSelection();
