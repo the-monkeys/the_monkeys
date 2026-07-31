@@ -39,20 +39,18 @@ export const Username = ({ data }: { data: IUser }) => {
         description: 'Username updated successfully.',
       });
     },
-    onError: (err) => {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to send verification request.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
+
+    onError: (err: any) => {
+      const errorMessage =
+        err?.response?.data?.message ||
+        err?.message ||
+        'Failed to update username.';
+
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description: errorMessage,
+      });
     },
   });
 
