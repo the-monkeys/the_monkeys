@@ -40,10 +40,7 @@ export const useUploadProfileImage = ({
 
       return axiosInstanceV2.post(
         `/storage/profiles/${username}/profile`,
-        formData,
-        {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        }
+        formData
       );
     },
     onSuccess: () => {

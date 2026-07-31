@@ -23,17 +23,6 @@ export const updateProfileSchema = z.object({
 
 type Values = z.infer<typeof updateProfileSchema>;
 
-const fields: Array<{
-  name: keyof Values;
-  label: string;
-  placeholder: string;
-}> = [
-  { name: 'first_name', label: 'First Name', placeholder: 'Enter first name' },
-  { name: 'last_name', label: 'Last Name', placeholder: 'Enter last name' },
-  { name: 'address', label: 'Location', placeholder: 'Enter location' },
-  { name: 'bio', label: 'Bio', placeholder: 'Enter bio' },
-];
-
 export const UpdateDetailsStep = ({
   username,
   form,
@@ -84,26 +73,61 @@ export const UpdateDetailsStep = ({
           </div>
         </div>
 
-        {fields.map(({ name, label, placeholder }) => (
-          <FormField
-            key={name}
-            control={form.control}
-            name={name}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className='text-sm'>{label}</FormLabel>
-                <FormControl>
-                  <Input
-                    className='w-full'
-                    {...field}
-                    placeholder={placeholder}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+        <FormField
+          control={form.control}
+          name='first_name'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-sm'>First Name</FormLabel>
+              <FormControl>
+                <Input className='w-full' {...field} placeholder='Enter first name' />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='last_name'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-sm'>Last Name</FormLabel>
+              <FormControl>
+                <Input className='w-full' {...field} placeholder='Enter last name' />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='address'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-sm'>Location</FormLabel>
+              <FormControl>
+                <Input className='w-full' {...field} placeholder='Enter location' />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='bio'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-sm'>Bio</FormLabel>
+              <FormControl>
+                <Input className='w-full' {...field} placeholder='Enter bio' />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
 
       <div className='flex justify-end pt-4 mt-auto shrink-0'>

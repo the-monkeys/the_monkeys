@@ -6,6 +6,7 @@ import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
 import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
+import axios from 'axios';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -49,19 +50,19 @@ export const DeleteProfilePhotoConfirmation = ({
       }
     } catch (err: unknown) {
       const isMissingProfileImage =
-        typeof err === 'object' &&
-        err !== null &&
-        'response' in err &&
-        (err as { response?: { status?: number } }).response?.status === 404;
+        axios.isAxiosError(err) && err.response?.status === 404;
+
+      let description = 'An unknown error occurred.';
+      if (isMissingProfileImage) {
+        description = 'No profile photo found.';
+      } else if (err instanceof Error) {
+        description = err.message || 'Failed to delete profile photo.';
+      }
 
       toast({
         variant: 'error',
         title: 'Error',
-        description: isMissingProfileImage
-          ? 'No profile photo found.'
-          : err instanceof Error
-            ? err.message || 'Failed to delete profile photo.'
-            : 'An unknown error occurred.',
+        description,
       });
     } finally {
       setLoading(false);

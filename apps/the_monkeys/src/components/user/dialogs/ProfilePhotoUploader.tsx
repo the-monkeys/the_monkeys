@@ -165,7 +165,7 @@ export const ProfilePhotoUploader = ({
 
           <div className='flex items-center justify-between gap-3 pt-2'>
             <div className='text-xs sm:text-sm opacity-80'>
-              {selectedImage.name} • {(selectedImage.size / 1024).toFixed(1)} KB
+              {selectedImage.name} - {(selectedImage.size / 1024).toFixed(1)} KB
             </div>
 
             <div className='flex items-center gap-2'>
