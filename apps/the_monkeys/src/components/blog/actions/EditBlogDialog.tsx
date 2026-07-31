@@ -117,25 +117,6 @@ export const EditBlogButton = ({
   const renderTriggerContent = () => {
     if (children) return children;
 
-    if (
-      variant === 'button' ||
-      variant === 'outline' ||
-      variant === 'ghost' ||
-      variant === 'secondary'
-    ) {
-      return (
-        <Button
-          type='button'
-          variant={variant === 'button' ? 'default' : variant}
-          className={cn('flex items-center gap-2', className)}
-          title={isDraft ? 'Edit Draft' : 'Convert & Edit'}
-        >
-          <Icon name='RiPencil' size={iconSize} />
-          {label || (isDraft ? 'Edit Draft' : 'Edit Post')}
-        </Button>
-      );
-    }
-
     return (
       <button
         type='button'

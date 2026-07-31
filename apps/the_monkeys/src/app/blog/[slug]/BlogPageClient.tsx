@@ -144,7 +144,12 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
         <Container className='pt-6 max-w-4xl flex items-center justify-between'>
           <BackButton />
           {isOwner && (
-            <EditBlogButton blogId={urlBlogId} variant='outline' label='Edit' />
+            <EditBlogButton
+              blogId={urlBlogId}
+              label='Edit'
+              className='border-none text-sm font-medium hover:bg-foreground-light dark:hover:bg-foreground-dark hover:cursor-pointer rounded-[4px] px-2 py-1'
+              iconSize={14}
+            />
           )}
         </Container>
       </div>
