@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { DeleteBlogDialog } from '@/components/blog/actions/DeleteBlogDialog';
-import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
+import { EditBlogButton } from '@/components/blog/actions/EditBlogDialog';
 import {
   BlogDescription,
   BlogImage,
@@ -131,18 +131,8 @@ export const ProfileBlogCard = ({
             </div>
 
             <div className='flex items-center gap-2'>
-              {showModificationOptions && !isDraft && (
-                <EditBlogDialog blogId={blogId} />
-              )}
-
-              {showModificationOptions && isDraft && (
-                <button
-                  onClick={() => handleEdit(blogId)}
-                  className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
-                  title='Edit Draft'
-                >
-                  <Icon name='RiEdit2' size={18} />
-                </button>
+              {showModificationOptions && (
+                <EditBlogButton blogId={blogId} isDraft={isDraft} />
               )}
 
               {showModificationOptions && (

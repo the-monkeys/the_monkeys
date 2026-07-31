@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import AdUnit from '@/components/AdSense/AdUnit';
+import { EditBlogButton } from '@/components/blog/actions/EditBlogDialog';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { BackButton } from '@/components/buttons/backButton';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
@@ -18,6 +19,7 @@ import {
 import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
@@ -38,11 +40,13 @@ interface BlogPageClientProps {
 
 const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const router = useRouter();
+  const { data: session } = useAuth();
   const { blog, isError, isLoading } =
     useGetPublishedBlogDetailByBlogId(urlBlogId);
   const authorId = blog?.owner_account_id;
 
   const { user } = useGetProfileInfoById(authorId);
+  const isOwner = !!session?.account_id && authorId === session?.account_id;
 
   useEffect(() => {
     const startTime = Date.now();
@@ -137,8 +141,11 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   return (
     <>
       <div className='px-4'>
-        <Container className='pt-6 max-w-4xl'>
+        <Container className='pt-6 max-w-4xl flex items-center justify-between'>
           <BackButton />
+          {isOwner && (
+            <EditBlogButton blogId={urlBlogId} variant='outline' label='Edit' />
+          )}
         </Container>
       </div>
       <div className='px-4'>
