@@ -80,7 +80,11 @@ export const UpdateDetailsStep = ({
             <FormItem>
               <FormLabel className='text-sm'>First Name</FormLabel>
               <FormControl>
-                <Input className='w-full' {...field} placeholder='Enter first name' />
+                <Input
+                  className='w-full'
+                  {...field}
+                  placeholder='Enter first name'
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -94,7 +98,11 @@ export const UpdateDetailsStep = ({
             <FormItem>
               <FormLabel className='text-sm'>Last Name</FormLabel>
               <FormControl>
-                <Input className='w-full' {...field} placeholder='Enter last name' />
+                <Input
+                  className='w-full'
+                  {...field}
+                  placeholder='Enter last name'
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,7 +116,11 @@ export const UpdateDetailsStep = ({
             <FormItem>
               <FormLabel className='text-sm'>Location</FormLabel>
               <FormControl>
-                <Input className='w-full' {...field} placeholder='Enter location' />
+                <Input
+                  className='w-full'
+                  {...field}
+                  placeholder='Enter location'
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

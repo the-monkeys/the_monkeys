@@ -6,7 +6,6 @@ import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
 import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
-import axios from 'axios';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -18,6 +17,7 @@ import {
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import axios from 'axios';
 
 export const DeleteProfilePhotoConfirmation = ({
   username,

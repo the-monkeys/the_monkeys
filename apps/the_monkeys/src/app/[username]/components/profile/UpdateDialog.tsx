@@ -45,7 +45,9 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
   const resetStepTimeout = useRef<ReturnType<typeof setTimeout>>();
 
   const handleSelectImage = () => setStep('select-image');
-  const handleDeleteImage = imageUrl ? () => setStep('delete-image') : undefined;
+  const handleDeleteImage = imageUrl
+    ? () => setStep('delete-image')
+    : undefined;
   const form = useForm<Values>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: { first_name: '', last_name: '', address: '', bio: '' },
