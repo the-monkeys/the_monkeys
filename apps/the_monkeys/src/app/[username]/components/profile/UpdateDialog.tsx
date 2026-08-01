@@ -2,13 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-import { cn } from '@/lib/utils';
-
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfilePhotoConfirmation } from '@/components/user/dialogs/deleteProfileDialog';
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import { cn } from '@/lib/utils';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -131,12 +130,12 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
             'h-[570px] sm:h-[630px] max-h-[85vh] sm:max-h-[95vh] sm:overflow-hidden'
         )}
       >
-        <UpdateDialogHeader
-          step={step}
-          onBack={handleBack}
-        />
+        <UpdateDialogHeader step={step} onBack={handleBack} />
         <div
-          className={cn('mt-4', !isDeleteStep && 'flex-1 flex flex-col min-h-0 relative')}
+          className={cn(
+            'mt-4',
+            !isDeleteStep && 'flex-1 flex flex-col min-h-0 relative'
+          )}
         >
           {isLoading ? (
             <UpdateDetailsFormSkeleton />
