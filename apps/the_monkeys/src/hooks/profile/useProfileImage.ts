@@ -16,7 +16,10 @@ export const PROFILE_IMAGE_ACCEPT = {
 };
 
 export const profileImageSchema = z
-  .instanceof(File)
+  .custom<File>(
+    (val) => typeof File !== 'undefined' && val instanceof File,
+    'Must be a file'
+  )
   .refine(
     (f) => f.size <= MAX_PROFILE_IMAGE_SIZE_BYTES,
     'Image must be under 5 MB.'
