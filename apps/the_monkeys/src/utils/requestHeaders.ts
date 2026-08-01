@@ -5,6 +5,8 @@ export async function getAllRequestHeaders() {
   const info = await clientInfo.getInfoSafe();
   const env = clientInfo.getEnvironmentInfo();
 
+  const isBrowser = typeof window !== 'undefined';
+
   return {
     // IP & device info
     'X-Real-IP': info.ip,
@@ -20,11 +22,18 @@ export async function getAllRequestHeaders() {
 
     // timezone & language
     'X-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
-    'X-Languages': navigator.languages?.join(',') || navigator.language,
     'X-Timezone-Offset': String(new Date().getTimezoneOffset()),
-    'X-Screen-Resolution': `${window.screen.width}x${window.screen.height}`,
-    'X-Color-Depth': `${window.screen.colorDepth}`,
-    'X-Is-Secure-Context': String(window.isSecureContext),
+
+    'X-Languages': isBrowser
+      ? navigator.languages?.join(',') || navigator.language
+      : 'unknown',
+    'X-Screen-Resolution': isBrowser
+      ? `${window.screen.width}x${window.screen.height}`
+      : 'unknown',
+    'X-Color-Depth': isBrowser ? String(window.screen.colorDepth) : 'unknown',
+    'X-Is-Secure-Context': isBrowser
+      ? String(window.isSecureContext)
+      : 'unknown',
 
     // Session tracking
     'X-Session-ID': sessionManager.getSessionId(),

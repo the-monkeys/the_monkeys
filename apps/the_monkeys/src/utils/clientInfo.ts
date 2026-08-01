@@ -52,12 +52,17 @@ class ClientInfo {
         ]).catch(() => 'unknown');
 
         try {
-          const parser = Bowser.getParser(window.navigator.userAgent);
-          this.browser = parser.getBrowserName() || 'unknown';
-          this.os = parser.getOSName() || 'unknown';
+          const userAgent =
+            typeof window !== 'undefined' ? window.navigator.userAgent : '';
 
-          const platformType = parser.getPlatformType();
-          this.device = (platformType as DeviceType) || 'unknown';
+          if (userAgent) {
+            const parser = Bowser.getParser(userAgent);
+            this.browser = parser.getBrowserName() || 'unknown';
+            this.os = parser.getOSName() || 'unknown';
+
+            const platformType = parser.getPlatformType();
+            this.device = (platformType as DeviceType) || 'unknown';
+          }
         } catch (browserError) {
           console.warn('Browser detection failed:', browserError);
           this.browser = 'unknown';
@@ -95,7 +100,8 @@ class ClientInfo {
       browser: this.browser,
       os: this.os,
       device: this.device,
-      userAgent: window.navigator.userAgent,
+      userAgent:
+        typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
       isMobile: this.device === 'mobile',
       isTablet: this.device === 'tablet',
       isDesktop: this.device === 'desktop',
@@ -108,7 +114,8 @@ class ClientInfo {
       browser: 'unknown',
       os: 'unknown',
       device: 'unknown',
-      userAgent: window.navigator.userAgent,
+      userAgent:
+        typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
       isMobile: false,
       isTablet: false,
       isDesktop: false,
@@ -149,11 +156,19 @@ class ClientInfo {
 
   getEnvironmentInfo(): EnvironmentInfo {
     return {
-      viewportWidth: window.innerWidth.toString(),
-      viewportHeight: window.innerHeight.toString(),
-      darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? '1'
-        : '0',
+      viewportWidth:
+        typeof window !== 'undefined'
+          ? window.innerWidth.toString()
+          : 'unknown',
+      viewportHeight:
+        typeof window !== 'undefined'
+          ? window.innerHeight.toString()
+          : 'unknown',
+      darkMode:
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? '1'
+          : '0',
     };
   }
 
