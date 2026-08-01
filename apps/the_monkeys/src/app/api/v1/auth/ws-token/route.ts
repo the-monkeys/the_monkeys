@@ -12,7 +12,8 @@ export async function GET(req: Request) {
   try {
     const { payload } = await jwtVerify<UserJWT>(
       mat.value,
-      Buffer.from(process.env.AUTH_SECRET!)
+      Buffer.from(process.env.AUTH_SECRET!),
+      { algorithms: ['HS256'] }
     );
 
     const jwt = new SignJWT(payload);
