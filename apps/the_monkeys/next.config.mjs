@@ -8,8 +8,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['monkeys.support', 'dev.themonkeys.site'],
-    qualities: [80, 100],
     remotePatterns: [
       {
         protocol: 'https',
@@ -20,6 +18,10 @@ const nextConfig = {
         hostname: 'dev.monkeys.support',
       },
       {
+        protocol: 'https',
+        hostname: 'dev.themonkeys.site',
+      },
+      {
         protocol: 'http',
         hostname: '127.0.0.1',
         port: '8081',
@@ -27,9 +29,6 @@ const nextConfig = {
     ],
   },
   transpilePackages: ['public-ip'],
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
 };
 
 const withMDX = createMDX({});
