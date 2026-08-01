@@ -8,8 +8,8 @@ import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import {
   PROFILE_IMAGE_ACCEPT,
+  profileImageSchema,
   useUploadProfileImage,
-  validateProfileImage,
 } from '@/hooks/profile/useProfileImage';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -64,9 +64,9 @@ export const ProfilePhotoUploader = ({
     }
 
     const [file] = acceptedFiles;
-    const validationError = validateProfileImage(file);
-    if (validationError) {
-      setUploadError(validationError);
+    const result = profileImageSchema.safeParse(file);
+    if (!result.success) {
+      setUploadError(result.error.issues[0].message);
       return;
     }
 

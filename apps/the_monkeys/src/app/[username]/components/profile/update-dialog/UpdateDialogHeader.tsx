@@ -6,6 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@the-monkeys/ui/atoms/dialog';
+import { Separator } from '@the-monkeys/ui/atoms/separator';
 
 import { UpdateDialogStep } from './types';
 
@@ -35,9 +36,7 @@ export const UpdateDialogHeader = ({
         >
           <Icon name='RiArrowLeft' />
         </Button>
-        <span aria-hidden className='mr-2 text-muted-foreground'>
-          |
-        </span>
+        <Separator orientation='vertical' className='h-5 mr-2' />
       </>
     )}
     <DialogTitle className='flex-1 text-left py-0 leading-tight'>

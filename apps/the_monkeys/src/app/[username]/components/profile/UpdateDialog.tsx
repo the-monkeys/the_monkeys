@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { cn } from '@/lib/utils';
+
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfilePhotoConfirmation } from '@/components/user/dialogs/deleteProfileDialog';
 import useProfileImage from '@/hooks/profile/useProfileImage';
@@ -45,9 +47,9 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
   const resetStepTimeout = useRef<ReturnType<typeof setTimeout>>();
 
   const handleSelectImage = () => setStep('select-image');
-  const handleDeleteImage = imageUrl
-    ? () => setStep('delete-image')
-    : undefined;
+  const handleDeleteImage = () => setStep('delete-image');
+  const handleBack = () =>
+    setStep(step === 'confirm-image' ? 'select-image' : 'details');
   const form = useForm<Values>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: { first_name: '', last_name: '', address: '', bio: '' },
@@ -123,22 +125,18 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
         </Button>
       </DialogTrigger>
       <DialogContent
-        className={`sm:max-w-md w-[calc(100%-2rem)] sm:w-full flex flex-col p-4 sm:p-6 overflow-y-auto rounded-xl [&>button]:hidden ${
-          isDeleteStep
-            ? ''
-            : 'h-[570px] sm:h-[630px] max-h-[85vh] sm:max-h-[95vh] sm:overflow-hidden'
-        }`}
+        className={cn(
+          'sm:max-w-md w-[calc(100%-2rem)] sm:w-full flex flex-col p-4 sm:p-6 overflow-y-auto rounded-xl [&>button]:hidden',
+          !isDeleteStep &&
+            'h-[570px] sm:h-[630px] max-h-[85vh] sm:max-h-[95vh] sm:overflow-hidden'
+        )}
       >
         <UpdateDialogHeader
           step={step}
-          onBack={() =>
-            setStep(step === 'confirm-image' ? 'select-image' : 'details')
-          }
+          onBack={handleBack}
         />
         <div
-          className={
-            isDeleteStep ? 'mt-4' : 'flex-1 flex flex-col mt-4 min-h-0 relative'
-          }
+          className={cn('mt-4', !isDeleteStep && 'flex-1 flex flex-col min-h-0 relative')}
         >
           {isLoading ? (
             <UpdateDetailsFormSkeleton />
@@ -149,7 +147,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
               loading={loading}
               onSubmit={onSubmit}
               onSelectImage={handleSelectImage}
-              onDeleteImage={handleDeleteImage}
+              onDeleteImage={imageUrl ? handleDeleteImage : undefined}
             />
           ) : step === 'delete-image' ? (
             <DeleteProfilePhotoConfirmation

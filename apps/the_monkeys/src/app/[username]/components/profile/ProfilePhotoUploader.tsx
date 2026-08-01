@@ -1,12 +1,12 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import useAuth from '@/hooks/auth/useAuth';
 import {
   PROFILE_IMAGE_ACCEPT,
+  profileImageSchema,
   useUploadProfileImage,
-  validateProfileImage,
 } from '@/hooks/profile/useProfileImage';
 import { useDropzone } from 'react-dropzone';
 
@@ -31,18 +31,6 @@ export const ProfilePhotoUploader = ({
   const [uploadError, setUploadError] = useState<string>('');
   const [selectedImage, setSelectedImage] = useState<File>();
 
-  const previewUrl = useMemo(
-    () => (selectedImage ? URL.createObjectURL(selectedImage) : ''),
-    [selectedImage]
-  );
-
-  useEffect(() => {
-    return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
-  }, [previewUrl]);
   const changeInputRef = useRef<HTMLInputElement>(null);
 
   const uploadMutation = useUploadProfileImage({
@@ -52,7 +40,7 @@ export const ProfilePhotoUploader = ({
       setUploadError('');
       onSuccess();
     },
-    onError: setUploadError,
+    onError: () => {},
   });
   const handleUpload = () => {
     if (selectedImage) uploadMutation.mutate(selectedImage);
@@ -61,16 +49,21 @@ export const ProfilePhotoUploader = ({
     (acceptedFiles: File[]) => {
       setUploadError('');
 
-      if (acceptedFiles.length !== 1) {
+      if (acceptedFiles.length === 0) {
+        setUploadError('Only JPEG and PNG images are allowed.');
+        return;
+      }
+
+      if (acceptedFiles.length > 1) {
         setUploadError('Please upload a single file at a time.');
         return;
       }
 
       const [file] = acceptedFiles;
 
-      const validationError = validateProfileImage(file);
-      if (validationError) {
-        setUploadError(validationError);
+      const result = profileImageSchema.safeParse(file);
+      if (!result.success) {
+        setUploadError(result.error.issues[0].message);
         return;
       }
 
@@ -112,7 +105,7 @@ export const ProfilePhotoUploader = ({
   if (step === 'confirm-image')
     return (
       <PhotoConfirmStep
-        previewUrl={previewUrl}
+        file={selectedImage}
         error={uploadError}
         isPending={uploadMutation.isPending}
         canUpload={!!selectedImage && isAuthenticated}

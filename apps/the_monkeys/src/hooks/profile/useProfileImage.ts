@@ -6,6 +6,7 @@ import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import fetcher from '@/services/fileFetcher';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { z } from 'zod';
 
 export const PROFILE_IMAGE_QUERY_KEY = 'profile-image';
 export const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
@@ -14,11 +15,16 @@ export const PROFILE_IMAGE_ACCEPT = {
   'image/png': ['.png'],
 };
 
-export const validateProfileImage = (file: File) => {
-  if (file.size > MAX_PROFILE_IMAGE_SIZE_BYTES) {
-    return 'Image must be under 5 MB.';
-  }
-};
+export const profileImageSchema = z
+  .instanceof(File)
+  .refine(
+    (f) => f.size <= MAX_PROFILE_IMAGE_SIZE_BYTES,
+    'Image must be under 5 MB.'
+  )
+  .refine(
+    (f) => ['image/jpeg', 'image/png'].includes(f.type),
+    'Only JPEG and PNG images are allowed.'
+  );
 
 type UploadProfileImageOptions = {
   username: string;
