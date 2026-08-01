@@ -5,7 +5,7 @@ import type {
   BlockToolConstructable,
   SanitizerConfig,
   ToolboxConfig,
-} from '@editorjs/editorjs';
+} from '@themonkeys/monkeys-editor';
 import { type Root, createRoot } from 'react-dom/client';
 
 import type { BlockConstructorArgs } from './types';

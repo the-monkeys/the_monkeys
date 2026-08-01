@@ -7,6 +7,7 @@ import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
+import useProfileImage from '@/hooks/profile/useProfileImage';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { USER_QUERY_KEY } from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -48,8 +49,10 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
     isLoading,
     isError,
   } = useGetAuthUserProfile(data.username);
+  const { imageUrl } = useProfileImage(data.username);
   const [loading, setLoading] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+  const hasProfileImage = imageUrl !== '';
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -141,7 +144,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
                 </ProfileFrame>
 
                 <div className='space-x-2'>
-                  <DeleteProfileDialog />
+                  {hasProfileImage && <DeleteProfileDialog />}
 
                   <UpdateProfileDialog />
                 </div>

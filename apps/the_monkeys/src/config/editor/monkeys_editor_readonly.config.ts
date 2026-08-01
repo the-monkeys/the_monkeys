@@ -6,19 +6,19 @@ import DatasetBlock from '@/components/editor/customBlocks/DatasetBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import FormulaBlock from '@/components/editor/customBlocks/FormulaBlock';
 import MethodologyBlock from '@/components/editor/customBlocks/MethodologyBlock';
+import MentionUserTool from '@/components/editor/customBlocks/TagUserBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import TrendBlock from '@/components/editor/customBlocks/TrendBlock';
 import Delimiter from '@editorjs/delimiter';
-import { EditorConfig } from '@editorjs/editorjs';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
-import List from '@editorjs/list';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
+import { EditorConfig } from '@themonkeys/monkeys-editor';
 
 export const editorConfig: EditorConfig = {
-  holder: 'editorjs_editor-container',
+  holder: 'monkeys_editor_editor-container',
   readOnly: true,
   tools: {
     header: {
@@ -38,6 +38,9 @@ export const editorConfig: EditorConfig = {
       config: {
         defaultStyle: 'unordered',
       },
+    },
+    mention: {
+      class: MentionUserTool,
     },
     image: {
       class: Image,

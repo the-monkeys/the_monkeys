@@ -1,4 +1,4 @@
-import type { ToolboxConfig } from '@editorjs/editorjs';
+import type { ToolboxConfig } from '@themonkeys/monkeys-editor';
 
 /* ------------------------------------------------------------------ */
 /*  Data Types (shared between editor + read-only)                     */
