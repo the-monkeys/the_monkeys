@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
 import axios from 'axios';
+import { error } from 'node:console';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -42,19 +43,19 @@ export const Username = ({ data }: { data: IUser }) => {
     },
 
     onError: (err: unknown) => {
-      let errorMessage = 'Failed to update username.';
-
       if (axios.isAxiosError(err)) {
-        errorMessage = err.response?.data?.message || errorMessage;
-      } else if (err instanceof Error) {
-        errorMessage = err.message;
+        const errorMessage =
+          err.response?.data?.message || 'Failed to update username.';
+        toast({ variant: 'error', title: 'Error', description: errorMessage });
+        return;
       }
 
       toast({
         variant: 'error',
         title: 'Error',
-        description: errorMessage,
+        description: "'Failed to update username.",
       });
+      console.log(err);
     },
   });
 
