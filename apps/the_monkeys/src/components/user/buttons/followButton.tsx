@@ -1,4 +1,5 @@
 import Icon from '@/components/icon';
+import { Loader } from '@/components/loader';
 import {
   useFollowUser,
   useIsFollowingUser,
@@ -11,7 +12,7 @@ export const FollowButton = ({
   username,
   className,
 }: {
-  username: string;
+  username?: string;
   className?: string;
 }) => {
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
@@ -21,7 +22,18 @@ export const FollowButton = ({
 
   if (isLoading) return <Skeleton className='h-9 w-32 rounded-full' />;
 
-  if (isError) return null;
+  if (isError) {
+    return (
+      <Button
+        variant='outline'
+        size='sm'
+        disabled
+        className={twMerge(className, '!text-base rounded-full')}
+      >
+        Follow
+      </Button>
+    );
+  }
 
   if (followStatus?.isFollowing) {
     return (
@@ -57,7 +69,7 @@ export const FollowButtonIcon = ({
   username,
   className,
 }: {
-  username: string;
+  username?: string;
   className?: string;
 }) => {
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
@@ -67,7 +79,16 @@ export const FollowButtonIcon = ({
 
   if (isLoading) return <Skeleton className='size-9 rounded-full' />;
 
-  if (isError) return null;
+  if (isError) {
+    return (
+      <Button
+        variant='secondary'
+        size='icon'
+        disabled
+        className={twMerge(className, 'rounded-full')}
+      />
+    );
+  }
 
   if (followStatus?.isFollowing) {
     return (
@@ -78,7 +99,6 @@ export const FollowButtonIcon = ({
         onClick={() => unfollowMutation.mutate()}
         className={twMerge(className, 'rounded-full')}
         data-testid='unfollow-icon-button'
-        aria-label='Unfollow user'
       >
         {isPending ? <Loader /> : <Icon name='RiUserUnfollow' size={18} />}
       </Button>
@@ -92,7 +112,6 @@ export const FollowButtonIcon = ({
       onClick={() => followMutation.mutate()}
       className={twMerge(className, 'rounded-full')}
       data-testid='follow-icon-button'
-      aria-label='Follow user'
     >
       {isPending ? <Loader /> : <Icon name='RiUserFollow' size={18} />}
     </Button>
