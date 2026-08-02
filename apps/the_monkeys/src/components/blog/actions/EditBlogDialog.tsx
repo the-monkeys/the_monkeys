@@ -143,7 +143,9 @@ export const EditBlogButton = ({
       );
     }
     return (
-      <span onClick={() => handleEdit(blogId)}>{renderTriggerContent()}</span>
+      <button onClick={() => handleEdit(blogId)}>
+        {renderTriggerContent()}
+      </button>
     );
   }
 
