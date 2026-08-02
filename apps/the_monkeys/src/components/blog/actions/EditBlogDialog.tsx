@@ -109,7 +109,7 @@ export const EditBlogDialog = ({
       <DialogTrigger asChild>
         {label ? (
           <Button
-            className='p-1 flex items-center text-sm justify-center cursor-pointers'
+            className='p-1 flex items-center text-sm justify-center cursor-pointers gap-1'
             title='Convert to Draft'
             variant={buttonVariant}
           >

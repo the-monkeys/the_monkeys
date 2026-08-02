@@ -150,7 +150,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
           {isOwner && (
             <EditBlogDialog
               blogId={urlBlogId}
-              buttonVariant={'default'}
+              buttonVariant={'ghost'}
               label='Edit'
             />
           )}
