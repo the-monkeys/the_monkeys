@@ -12,6 +12,8 @@ const VISITOR_ID_KEY = 'tm_visitor_id';
 const SESSION_ID_KEY = 'tm_session_id';
 const LAST_ACTIVITY_KEY = 'tm_last_activity';
 
+const isBrowser = typeof window !== 'undefined';
+
 /**
  * Generates a unique ID using timestamp + random string
  * Format: timestamp-randomString (e.g., 1702468497123-a1b2c3d4e5f6)
@@ -29,6 +31,10 @@ function generateUniqueId(): string {
  * This ID persists across browser sessions and is stored in localStorage
  */
 function getVisitorId(): string {
+  if (!isBrowser) {
+    return `vis_temp_${generateUniqueId()}`;
+  }
+
   try {
     let visitorId = localStorage.getItem(VISITOR_ID_KEY);
 
@@ -52,6 +58,10 @@ function getVisitorId(): string {
  * Checks if the current session has expired based on last activity time
  */
 function isSessionExpired(): boolean {
+  if (!isBrowser) {
+    return true;
+  }
+
   try {
     const lastActivity = sessionStorage.getItem(LAST_ACTIVITY_KEY);
 
@@ -70,6 +80,8 @@ function isSessionExpired(): boolean {
  * Updates the last activity timestamp to keep the session alive
  */
 function updateLastActivity(): void {
+  if (!isBrowser) return;
+
   try {
     sessionStorage.setItem(LAST_ACTIVITY_KEY, String(Date.now()));
   } catch (error) {
@@ -82,6 +94,10 @@ function updateLastActivity(): void {
  * Sessions expire after 30 minutes of inactivity or when the browser tab is closed
  */
 function getSessionId(): string {
+  if (!isBrowser) {
+    return `ses_temp_${generateUniqueId()}`;
+  }
+
   try {
     let sessionId = sessionStorage.getItem(SESSION_ID_KEY);
 
@@ -111,6 +127,8 @@ function getSessionId(): string {
  * Manually end the current session (useful for logout scenarios)
  */
 function endSession(): void {
+  if (!isBrowser) return;
+
   try {
     sessionStorage.removeItem(SESSION_ID_KEY);
     sessionStorage.removeItem(LAST_ACTIVITY_KEY);
@@ -123,6 +141,16 @@ function endSession(): void {
  * Get session metadata for debugging/analytics
  */
 function getSessionMetadata() {
+  if (!isBrowser) {
+    return {
+      visitorId: getVisitorId(),
+      sessionId: getSessionId(),
+      sessionAge: 0,
+      isExpired: true,
+      timeoutDuration: SESSION_TIMEOUT,
+    };
+  }
+
   try {
     const lastActivity = sessionStorage.getItem(LAST_ACTIVITY_KEY);
     const sessionAge = lastActivity
