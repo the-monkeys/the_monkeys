@@ -26,7 +26,6 @@ export interface EditBlogButtonProps {
   blogId: string;
   isDraft?: boolean;
   children?: React.ReactNode;
-  variant?: 'icon' | 'button' | 'outline' | 'ghost' | 'secondary';
   className?: string;
   label?: string;
   iconSize?: number;
