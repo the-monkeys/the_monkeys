@@ -33,10 +33,6 @@ const fetchBlogData = async (id: string): Promise<Blog | null> => {
     });
 
     if (!res.ok) {
-      if (res.status === 404) {
-        return null;
-      }
-
       console.error(`Blog fetch failed for ID ${id} with status ${res.status}`);
       return null;
     }
