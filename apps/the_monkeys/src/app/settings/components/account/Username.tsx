@@ -43,6 +43,8 @@ export const Username = ({ data }: { data: IUser }) => {
     },
 
     onError: (err: unknown) => {
+      console.error(err);
+
       if (axios.isAxiosError(err)) {
         const errorMessage =
           err.response?.data?.message || 'Failed to update username.';
@@ -55,7 +57,6 @@ export const Username = ({ data }: { data: IUser }) => {
         title: 'Error',
         description: "'Failed to update username.",
       });
-      console.log(err);
     },
   });
 
