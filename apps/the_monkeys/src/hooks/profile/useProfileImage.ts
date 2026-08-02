@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 
-import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import fetcher from '@/services/fileFetcher';
+import { uploadProfileImage } from '@/services/user/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { z } from 'zod';
@@ -21,11 +21,11 @@ export const profileImageSchema = z
     'Must be a file'
   )
   .refine(
-    (f) => f.size <= MAX_PROFILE_IMAGE_SIZE_BYTES,
+    (file) => file.size <= MAX_PROFILE_IMAGE_SIZE_BYTES,
     'Image must be under 5 MB.'
   )
   .refine(
-    (f) => ['image/jpeg', 'image/png'].includes(f.type),
+    (file) => ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
     'Only JPEG and PNG images are allowed.'
   );
 
@@ -43,15 +43,7 @@ export const useUploadProfileImage = ({
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('profile_pic', file);
-
-      return axiosInstanceV2.post(
-        `/storage/profiles/${username}/profile`,
-        formData
-      );
-    },
+    mutationFn: (file: File) => uploadProfileImage(username, file),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
