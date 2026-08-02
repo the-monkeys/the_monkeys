@@ -21,7 +21,16 @@ import {
 } from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
-export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
+type ButtonVariant = React.ComponentProps<typeof Button>['variant'];
+export const EditBlogDialog = ({
+  blogId,
+  buttonVariant,
+  label,
+}: {
+  blogId: string;
+  buttonVariant?: ButtonVariant;
+  label?: string;
+}) => {
   const queryClient = useQueryClient();
   const { data: session } = useAuth();
   const [isLoading, setIsLoading] = React.useState<{
@@ -98,12 +107,23 @@ export const EditBlogDialog = ({ blogId }: { blogId: string }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button
-          className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
-          title='Convert to Draft'
-        >
-          <Icon name='RiPencil' size={18} />
-        </button>
+        {label ? (
+          <Button
+            className='p-1 flex items-center text-sm justify-center cursor-pointers gap-1'
+            title='Convert to Draft'
+            variant={buttonVariant}
+          >
+            <Icon name='RiPencil' size={18} />
+            <span>{label}</span>
+          </Button>
+        ) : (
+          <button
+            className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
+            title='Convert to Draft'
+          >
+            <Icon name='RiPencil' size={18} />
+          </button>
+        )}
       </DialogTrigger>
 
       <DialogContent>

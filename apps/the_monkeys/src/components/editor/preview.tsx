@@ -1,19 +1,19 @@
 import React, { FC, useEffect, useRef } from 'react';
 
-import { editorConfig } from '@/config/editor/editorjs_readonly.config';
+import { editorConfig } from '@/config/editor/monkeys_editor_readonly.config';
 import { Block } from '@/services/blog/blogTypes';
-import EditorJS from '@editorjs/editorjs';
+import MonkeysEditor from '@themonkeys/monkeys-editor';
 
 export type EditorProps = {
   data?: { time: number; blocks: Block[] };
 };
 
 const Editor: FC<EditorProps> = ({ data }) => {
-  const editorInstance = useRef<EditorJS | null>(null);
+  const editorInstance = useRef<MonkeysEditor | null>(null);
 
   useEffect(() => {
     if (!editorInstance.current) {
-      editorInstance.current = new EditorJS({
+      editorInstance.current = new MonkeysEditor({
         ...editorConfig,
         data: data,
       });
@@ -31,7 +31,7 @@ const Editor: FC<EditorProps> = ({ data }) => {
   return (
     <div
       className='mx-auto px-4 -mt-[30px] break-words'
-      id='editorjs_editor-container'
+      id='monkeys_editor_editor-container'
     ></div>
   );
 };
