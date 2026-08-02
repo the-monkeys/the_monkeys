@@ -90,11 +90,11 @@ const handleFollowError = (err: unknown, action: 'follow' | 'unfollow') => {
   toast({
     variant: 'error',
     title: 'Error',
-    description: message || `Failed to ${action} user.`,
+    description: message,
   });
 };
 
-export const useFollowUser = (username?: string) => {
+export const useFollowUser = (username: string) => {
   const queryClient = useQueryClient();
 
   const invalidateConnectionQueries = () =>
@@ -103,24 +103,18 @@ export const useFollowUser = (username?: string) => {
         queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
       }),
       queryClient.invalidateQueries({
-        queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
+        queryKey: [CONNECTION_COUNT_QUERY_KEY],
       }),
     ]);
 
   const followMutation = useMutation({
-    mutationFn: () => {
-      if (!username) return Promise.reject(new Error('Username is required'));
-      return followUserApi(username);
-    },
+    mutationFn: () => followUserApi(username),
     onSuccess: invalidateConnectionQueries,
     onError: (err) => handleFollowError(err, 'follow'),
   });
 
   const unfollowMutation = useMutation({
-    mutationFn: () => {
-      if (!username) return Promise.reject(new Error('Username is required'));
-      return unfollowUserApi(username);
-    },
+    mutationFn: () => unfollowUserApi(username),
     onSuccess: invalidateConnectionQueries,
     onError: (err) => handleFollowError(err, 'unfollow'),
   });

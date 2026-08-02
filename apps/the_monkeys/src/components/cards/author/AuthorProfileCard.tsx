@@ -86,8 +86,8 @@ export const AuthorProfileCard = ({
         </div>
 
         <div className='flex flex-wrap  gap-2 '>
-          {!isAuthenticated && (
-            <FollowButton username={user?.username} className='h-9 px-4' />
+          {!isAuthenticated && user?.username && (
+            <FollowButton username={user.username} className='h-9 px-4' />
           )}
 
           {user?.username && (

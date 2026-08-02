@@ -34,9 +34,9 @@ export const AuthorInfoCard = ({
     >
       <div className='mb-[20px] px-4 py-3 w-full bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-3'>
         <div className='flex items-center justify-end gap-[6px]'>
-          {userData?.username !== session?.username && isSuccess && (
-            <FollowButton username={userData?.username} />
-          )}
+          {userData?.username &&
+            userData.username !== session?.username &&
+            isSuccess && <FollowButton username={userData.username} />}
 
           <Button
             variant='secondary'
