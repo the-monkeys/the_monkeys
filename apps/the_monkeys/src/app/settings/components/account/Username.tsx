@@ -40,11 +40,11 @@ export const Username = ({ data }: { data: IUser }) => {
       });
     },
 
-    onError: (err: any) => {
+    onError: (err: unknown) => {
       const errorMessage =
-        err?.response?.data?.message ||
-        err?.message ||
-        'Failed to update username.';
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ||
+        (err instanceof Error ? err.message : 'Failed to update username.');
 
       toast({
         variant: 'error',

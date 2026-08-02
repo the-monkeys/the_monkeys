@@ -100,12 +100,14 @@ export default function RegisterUserForm() {
         title: 'Verification code sent',
         description: 'Check your email for the 6-digit code',
       });
-    } catch (err: any) {
+    } catch (err: unknown) {
       const message =
-        err?.response?.data?.message ||
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message ||
         (err instanceof Error
           ? err.message
           : 'Failed to send verification code');
+
       toast({
         variant: 'error',
         title: 'Registration failed',
