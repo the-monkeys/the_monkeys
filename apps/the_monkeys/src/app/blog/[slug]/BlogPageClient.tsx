@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 import AdUnit from '@/components/AdSense/AdUnit';
-import { EditBlogButton } from '@/components/blog/actions/EditBlogDialog';
+import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { BackButton } from '@/components/buttons/backButton';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
@@ -23,7 +23,9 @@ import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import moment from 'moment';
+import { RiPencilFill } from 'react-icons/ri';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
@@ -46,7 +48,8 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const authorId = blog?.owner_account_id;
 
   const { user } = useGetProfileInfoById(authorId);
-  const isOwner = !!session?.account_id && authorId === session?.account_id;
+  const isOwner =
+    !!session?.account_id && String(authorId) === String(session?.account_id);
 
   useEffect(() => {
     const startTime = Date.now();
@@ -143,12 +146,12 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
       <div className='px-4'>
         <Container className='pt-6 max-w-4xl flex items-center justify-between'>
           <BackButton />
+
           {isOwner && (
-            <EditBlogButton
+            <EditBlogDialog
               blogId={urlBlogId}
+              buttonVariant={'default'}
               label='Edit'
-              className='border-none text-sm font-medium hover:bg-foreground-light dark:hover:bg-foreground-dark hover:cursor-pointer rounded-[4px] px-2 py-1'
-              iconSize={14}
             />
           )}
         </Container>

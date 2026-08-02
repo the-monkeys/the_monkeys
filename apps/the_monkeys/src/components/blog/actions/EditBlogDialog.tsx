@@ -9,7 +9,6 @@ import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
 import { ALL_DRAFT_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetAllDraftBlogs';
 import { BLOGS_BY_USERNAME_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogByUsername';
-import { cn } from '@/lib/utils';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -22,24 +21,16 @@ import {
 } from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
-export interface EditBlogButtonProps {
-  blogId: string;
-  isDraft?: boolean;
-  children?: React.ReactNode;
-  className?: string;
-  label?: string;
-  iconSize?: number;
-}
-
-export const EditBlogButton = ({
+type ButtonVariant = React.ComponentProps<typeof Button>['variant'];
+export const EditBlogDialog = ({
   blogId,
-  isDraft = false,
-  children,
-  variant = 'icon',
-  className,
+  buttonVariant,
   label,
-  iconSize = 18,
-}: EditBlogButtonProps) => {
+}: {
+  blogId: string;
+  buttonVariant?: ButtonVariant;
+  label?: string;
+}) => {
   const queryClient = useQueryClient();
   const { data: session } = useAuth();
   const [isLoading, setIsLoading] = React.useState<{
@@ -113,46 +104,27 @@ export const EditBlogButton = ({
     }
   }
 
-  const renderTriggerContent = () => {
-    if (children) return children;
-
-    return (
-      <button
-        type='button'
-        className={cn(
-          'p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100',
-          className
-        )}
-        title={isDraft ? 'Edit Draft' : 'Convert to Draft'}
-        aria-label={label || 'Edit blog'}
-      >
-        <Icon name='RiPencil' size={iconSize} />
-        {label && <span className='ml-1.5 text-sm'>{label}</span>}
-      </button>
-    );
-  };
-
-  if (isDraft) {
-    if (children) {
-      return (
-        <button
-          onClick={() => handleEdit(blogId)}
-          className={cn('cursor-pointer', className)}
-        >
-          {children}
-        </button>
-      );
-    }
-    return (
-      <button onClick={() => handleEdit(blogId)}>
-        {renderTriggerContent()}
-      </button>
-    );
-  }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>{renderTriggerContent()}</DialogTrigger>
+      <DialogTrigger asChild>
+        {label ? (
+          <Button
+            className='p-1 flex items-center text-sm justify-center cursor-pointers'
+            title='Convert to Draft'
+            variant={buttonVariant}
+          >
+            <Icon name='RiPencil' size={18} />
+            <span>{label}</span>
+          </Button>
+        ) : (
+          <button
+            className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
+            title='Convert to Draft'
+          >
+            <Icon name='RiPencil' size={18} />
+          </button>
+        )}
+      </DialogTrigger>
 
       <DialogContent>
         <DialogTitle>Move to Draft?</DialogTitle>
@@ -192,5 +164,3 @@ export const EditBlogButton = ({
     </Dialog>
   );
 };
-
-export const EditBlogDialog = EditBlogButton;
