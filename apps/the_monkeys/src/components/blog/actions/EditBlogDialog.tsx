@@ -134,12 +134,12 @@ export const EditBlogButton = ({
   if (isDraft) {
     if (children) {
       return (
-        <span
+        <button
           onClick={() => handleEdit(blogId)}
           className={cn('cursor-pointer', className)}
         >
           {children}
-        </span>
+        </button>
       );
     }
     return (
