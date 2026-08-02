@@ -124,6 +124,7 @@ export const EditBlogButton = ({
           className
         )}
         title={isDraft ? 'Edit Draft' : 'Convert to Draft'}
+        aria-label={label || 'Edit blog'}
       >
         <Icon name='RiPencil' size={iconSize} />
         {label && <span className='ml-1.5 text-sm'>{label}</span>}
