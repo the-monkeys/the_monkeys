@@ -13,7 +13,7 @@ import BlogPageClient from './BlogPageClient';
 import { generateBlogSchema } from './utils';
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 const getBlogIdFromSlug = (slug: string) => {
@@ -21,7 +21,7 @@ const getBlogIdFromSlug = (slug: string) => {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const fullSlug = params.slug;
+  const { slug: fullSlug } = await params;
   const blogId = getBlogIdFromSlug(fullSlug);
 
   try {
@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPage({ params }: Props) {
   const queryClient = getQueryClient();
-  const fullSlug = params.slug;
+  const { slug: fullSlug } = await params;
   const blogId = getBlogIdFromSlug(fullSlug);
 
   if (!blogId) return null;

@@ -6,7 +6,7 @@ import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
 type Props = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 const MAX_DESCRIPTION_LENGTH = 157;
@@ -33,6 +33,10 @@ const fetchBlogData = async (id: string): Promise<Blog | null> => {
     });
 
     if (!res.ok) {
+      if (res.status === 404) {
+        return null;
+      }
+
       console.error(`Blog fetch failed for ID ${id} with status ${res.status}`);
       return null;
     }
@@ -45,7 +49,9 @@ const fetchBlogData = async (id: string): Promise<Blog | null> => {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = params.slug.split('-').pop() || '';
+  const { slug } = await params;
+
+  const id = slug.split('-').pop() || '';
   const blog = await fetchBlogData(id);
 
   const defaultTitle = 'Published Post | Monkeys';
@@ -71,7 +77,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? new URL(imageBlock.data.file.url, baseUrl).toString()
     : `${baseUrl}/default-blog-image.jpg`;
 
-  const canonicalUrl = `${baseUrl}/blog/${params.slug}`;
+  const canonicalUrl = `${baseUrl}/blog/${slug}`;
 
   const purifiedTitle = purifyHTMLString(metaTitle);
   const purifiedDescription = purifyHTMLString(metaDescription);
