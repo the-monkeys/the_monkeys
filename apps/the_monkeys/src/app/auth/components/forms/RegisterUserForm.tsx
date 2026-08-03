@@ -104,7 +104,7 @@ export default function RegisterUserForm() {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const errorMessage =
-          err.response?.data?.message || 'Something went Wrong.';
+          err.response?.data?.message || 'Something went wrong.';
         toast({ variant: 'error', title: 'Error', description: errorMessage });
         return;
       }
@@ -113,7 +113,7 @@ export default function RegisterUserForm() {
       toast({
         variant: 'error',
         title: 'Registration failed',
-        description: 'Something went Wrong.',
+        description: 'Something went wrong.',
       });
     } finally {
       setLoading(false);

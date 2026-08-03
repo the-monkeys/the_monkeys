@@ -15,7 +15,6 @@ import {
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
 import axios from 'axios';
-import { error } from 'node:console';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
