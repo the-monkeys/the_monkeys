@@ -3,7 +3,6 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
@@ -11,7 +10,6 @@ import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
-import { LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetDraftBlogDetail, {
   DRAFT_BLOG_DETAIL_QUERY_KEY,
@@ -49,7 +47,7 @@ const INITIAL_DATA: OutputData = {
 const EditPage = ({ params }: { params: { blogId: string } }) => {
   const queryClient = useQueryClient();
   const blogId = params.blogId;
-  const { data: session, isLoading: isAuthLoading } = useAuth();
+  const { data: session } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -258,7 +256,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Auto-save when data changes
   useEffect(() => {
-    if (!data || !isConnected || !accountId) return;
+    if (!data || !isConnected) return;
 
     const formattedData = formatData(data, accountId, blogTopics);
 
@@ -456,23 +454,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       queryClient,
     ]
   );
-
-  if (!isAuthLoading && !session) {
-    return (
-      <div className='py-2 flex justify-center items-center gap-1'>
-        <Link
-          href={LOGIN_ROUTE}
-          className='font-medium text-sm text-brand-orange underline'
-        >
-          Login
-        </Link>
-
-        <p className='text-sm opacity-90 text-center'>
-          to continue editing this post.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <>
