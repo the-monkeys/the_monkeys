@@ -73,8 +73,8 @@
     "@types/mdx": "^2.0.13",
     "@types/node": "^20",
     "@types/qrcode": "^1.5.6",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "@types/sockjs-client": "^1.5.4",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-istanbul": "^2.1.8",
@@ -87,7 +87,7 @@
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5",
+    "typescript": "^6.0.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^2.1.8"
   }

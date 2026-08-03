@@ -9,12 +9,9 @@ import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 import { getQueryClient } from '@/utils/get-query-client';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
+import { Props } from '../utils/types';
 import BlogPageClient from './BlogPageClient';
 import { generateBlogSchema } from './utils';
-
-interface Props {
-  params: Promise<{ slug: string }>;
-}
 
 const getBlogIdFromSlug = (slug: string) => {
   return typeof slug === 'string' ? slug.split('-').pop() : '';

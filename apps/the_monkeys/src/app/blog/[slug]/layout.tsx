@@ -5,9 +5,7 @@ import { baseUrl } from '@/constants/baseUrl';
 import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+import { Props } from '../utils/types';
 
 const MAX_DESCRIPTION_LENGTH = 157;
 

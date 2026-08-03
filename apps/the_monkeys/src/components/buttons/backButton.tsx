@@ -1,3 +1,5 @@
+'use client';
+
 import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';

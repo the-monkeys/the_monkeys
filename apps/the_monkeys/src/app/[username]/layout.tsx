@@ -5,10 +5,7 @@ import { API_URL, LIVE_URL } from '@/constants/api';
 import { baseUrl } from '@/constants/baseUrl';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 
-interface ProfileLayoutProps {
-  children: React.ReactNode;
-  params: { username: string };
-}
+import { ProfileLayoutProps } from './utils/types';
 
 const fetchUserData = async (
   username: string
@@ -44,7 +41,7 @@ const truncateDescription = (text: string, maxLength: number): string => {
 export async function generateMetadata({
   params,
 }: ProfileLayoutProps): Promise<Metadata> {
-  const username = params.username;
+  const { username } = await params;
 
   try {
     const userData = await fetchUserData(username);
@@ -134,13 +131,15 @@ export async function generateMetadata({
   }
 }
 
-const ProfilePageLayout = ({ children, params }: ProfileLayoutProps) => {
+const ProfilePageLayout = async ({ children, params }: ProfileLayoutProps) => {
+  const { username } = await params;
+
   const schemaPerson = {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    name: params.username,
-    alternateName: `@${params.username}`,
-    url: `${baseUrl}/${params.username}`,
+    name: username,
+    alternateName: `@${username}`,
+    url: `${baseUrl}/${username}`,
     worksFor: {
       '@type': 'Organization',
       name: 'Monkeys',
@@ -151,11 +150,9 @@ const ProfilePageLayout = ({ children, params }: ProfileLayoutProps) => {
     <Container className='px-4 py-6 min-h-[800px] space-y-10'>
       <article itemScope itemType='https://schema.org/Person'>
         {/* H1 for SEO */}
-        <h1 className='text-2xl hidden font-bold'>
-          Profile of @{params.username}
-        </h1>
+        <h1 className='text-2xl hidden font-bold'>Profile of @{username}</h1>
 
-        <meta itemProp='name' content={`@${params.username}`} />
+        <meta itemProp='name' content={`@${username}`} />
         {children}
       </article>
 

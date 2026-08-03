@@ -31,9 +31,9 @@
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.0",
 		"embla-carousel-react": "^8.3.0",
-		"react": "^18",
+		"react": "^19.0.4",
 		"react-day-picker": "^8.10.1",
-		"react-dom": "^18",
+		"react-dom": "^19.0.4",
 		"react-hook-form": "^7.51.4",
 		"tailwind-merge": "^2.2.2",
 		"vaul": "^1.1.2"
@@ -41,7 +41,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
 		"@the-monkeys/config": "workspace:*",
-		"@types/react": "^18",
-		"@types/react-dom": "^18"
+		"@types/react": "^19.2.18",
+		"@types/react-dom": "^19.2.4"
 	}
 }
