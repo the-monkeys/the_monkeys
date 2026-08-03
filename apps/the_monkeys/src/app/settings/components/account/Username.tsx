@@ -43,14 +43,13 @@ export const Username = ({ data }: { data: IUser }) => {
     },
 
     onError: (err: unknown) => {
-      console.error(err);
-
       if (axios.isAxiosError(err)) {
         const errorMessage =
           err.response?.data?.message || 'Failed to update username.';
         toast({ variant: 'error', title: 'Error', description: errorMessage });
         return;
       }
+      console.error(err);
 
       toast({
         variant: 'error',
