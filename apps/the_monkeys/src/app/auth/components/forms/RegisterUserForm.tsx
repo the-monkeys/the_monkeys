@@ -102,18 +102,18 @@ export default function RegisterUserForm() {
         description: 'Check your email for the 6-digit code',
       });
     } catch (err: unknown) {
-      let message = 'Failed to send verification code';
-
       if (axios.isAxiosError(err)) {
-        message = err.response?.data?.message || message;
-      } else if (err instanceof Error) {
-        message = err.message;
+        const errorMessage =
+          err.response?.data?.message || 'Failed to send verification code';
+        toast({ variant: 'error', title: 'Error', description: errorMessage });
+        return;
       }
+      console.error(err);
 
       toast({
         variant: 'error',
         title: 'Registration failed',
-        description: message,
+        description: 'Failed to send verification code',
       });
     } finally {
       setLoading(false);
