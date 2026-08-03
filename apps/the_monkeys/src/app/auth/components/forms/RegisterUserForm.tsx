@@ -104,7 +104,7 @@ export default function RegisterUserForm() {
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         const errorMessage =
-          err.response?.data?.message || 'Failed to send verification code';
+          err.response?.data?.message || 'Something went Wrong, Please retry.';
         toast({ variant: 'error', title: 'Error', description: errorMessage });
         return;
       }
@@ -113,7 +113,7 @@ export default function RegisterUserForm() {
       toast({
         variant: 'error',
         title: 'Registration failed',
-        description: 'Failed to send verification code',
+        description: 'Something went Wrong, Please retry.',
       });
     } finally {
       setLoading(false);
