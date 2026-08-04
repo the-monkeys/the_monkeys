@@ -43,7 +43,7 @@ export const UpdateDetailsStep = ({
       onSubmit={form.handleSubmit(onSubmit)}
       className='flex flex-col h-full flex-1 animate-in fade-in duration-300 fill-mode-forwards'
     >
-      <div className='flex-1 space-y-3 sm:space-y-4 pt-2'>
+      <div className='min-h-0 flex-1 space-y-3 overflow-y-auto pt-2 pr-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:space-y-4 sm:overflow-visible sm:pr-0'>
         <div className='flex flex-wrap items-end gap-2'>
           <p className='w-full text-sm'>Profile Photo</p>
           <ProfileFrame className='size-20 sm:size-24'>
@@ -142,7 +142,7 @@ export const UpdateDetailsStep = ({
         />
       </div>
 
-      <div className='flex justify-end pt-4 mt-auto shrink-0'>
+      <div className='mt-auto flex shrink-0 justify-end bg-background-light pt-4 pb-[env(safe-area-inset-bottom)] dark:bg-background-dark'>
         <Button disabled={loading} type='submit'>
           {loading && <Loader />} Update
         </Button>

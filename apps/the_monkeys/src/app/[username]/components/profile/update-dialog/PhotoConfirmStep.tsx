@@ -95,7 +95,9 @@ export const PhotoConfirmStep = ({
             disabled={!canUpload || isPending}
             className='w-[130px] sm:w-[160px] px-1 sm:px-4 text-sm'
           >
-            {isPending && <Loader />} Update Changes
+            {isPending && <Loader />}
+            <span className='sm:hidden'>Update</span>
+            <span className='hidden sm:inline'>Update Changes</span>
           </Button>
         </div>
       </div>

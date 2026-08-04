@@ -834,6 +834,10 @@ li.cdx-list__item {
   transition: color 180ms ease;
 }
 
+body:has(.profile-update-drawer[data-state='open']) .tsqd-parent-container {
+  display: none;
+}
+
 /* like burst animation */
 .heart-burst-particle {
   position: absolute;

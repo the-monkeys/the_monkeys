@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfilePhotoConfirmation } from '@/components/user/dialogs/deleteProfileDialog';
@@ -18,6 +18,11 @@ import {
   DialogContent,
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger,
+} from '@the-monkeys/ui/atoms/drawer';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -42,13 +47,19 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
   const { imageUrl } = useProfileImage(data.username);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [step, setStep] = useState<UpdateDialogStep>('details');
   const resetStepTimeout = useRef<ReturnType<typeof setTimeout>>();
 
   const handleSelectImage = () => setStep('select-image');
   const handleDeleteImage = () => setStep('delete-image');
-  const handleBack = () =>
-    setStep(step === 'confirm-image' ? 'select-image' : 'details');
+  const handleBack = () => {
+    if (step === 'confirm-image') {
+      setStep('select-image');
+      return;
+    }
+    setStep('details');
+  };
   const form = useForm<Values>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: { first_name: '', last_name: '', address: '', bio: '' },
@@ -64,6 +75,15 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
       bio: user.bio || '',
     });
   }, [user, form]);
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia('(max-width: 639px)');
+    const updateIsMobile = () => setIsMobile(mobileQuery.matches);
+
+    updateIsMobile();
+    mobileQuery.addEventListener('change', updateIsMobile);
+    return () => mobileQuery.removeEventListener('change', updateIsMobile);
+  }, []);
 
   useEffect(
     () => () => {
@@ -114,15 +134,86 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
 
   if (isError) return null;
 
+  const isDetailsStep = step === 'details';
   const isDeleteStep = step === 'delete-image';
+  let deleteImageHandler;
+  if (imageUrl) deleteImageHandler = handleDeleteImage;
+
+  let stepContent: ReactNode;
+  if (isLoading) {
+    stepContent = <UpdateDetailsFormSkeleton />;
+  } else if (step === 'details') {
+    stepContent = (
+      <UpdateDetailsStep
+        username={data.username}
+        form={form}
+        loading={loading}
+        onSubmit={onSubmit}
+        onSelectImage={handleSelectImage}
+        onDeleteImage={deleteImageHandler}
+      />
+    );
+  } else if (isDeleteStep) {
+    stepContent = (
+      <DeleteProfilePhotoConfirmation
+        username={data.username}
+        onSuccess={() => setStep('details')}
+      />
+    );
+  } else {
+    stepContent = (
+      <ProfilePhotoUploader
+        username={data.username}
+        step={step}
+        setStep={setStep}
+        onSuccess={() => handleOpenChange(false)}
+      />
+    );
+  }
+
+  const trigger = (
+    <Button variant='secondary' className='!text-base rounded-full'>
+      Update
+    </Button>
+  );
+  const content = (
+    <>
+      <UpdateDialogHeader
+        step={step}
+        onBack={handleBack}
+        onClose={() => handleOpenChange(false)}
+        drawer={isMobile}
+      />
+      <div
+        className={cn(
+          'mt-4',
+          !isDeleteStep && 'flex-1 flex flex-col min-h-0 relative',
+          isMobile && isDetailsStep && 'overflow-hidden',
+          isMobile &&
+            !isDetailsStep &&
+            'overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+        )}
+      >
+        {stepContent}
+      </div>
+    </>
+  );
+
+  if (isMobile)
+    return (
+      <Drawer open={open} onOpenChange={handleOpenChange}>
+        <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+        <DrawerContent className='profile-update-drawer h-[590px] overflow-hidden data-[vaul-drawer-direction=bottom]:max-h-[95dvh]'>
+          <div className='mt-3 flex min-h-0 flex-1 flex-col px-4 pb-4'>
+            {content}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button variant='secondary' className='!text-base rounded-full'>
-          Update
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent
         className={cn(
           'sm:max-w-md w-[calc(100%-2rem)] sm:w-full flex flex-col p-4 sm:p-6 overflow-y-auto rounded-xl [&>button]:hidden',
@@ -130,38 +221,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
             'h-[570px] sm:h-[630px] max-h-[85vh] sm:max-h-[95vh] sm:overflow-hidden'
         )}
       >
-        <UpdateDialogHeader step={step} onBack={handleBack} />
-        <div
-          className={cn(
-            'mt-4',
-            !isDeleteStep && 'flex-1 flex flex-col min-h-0 relative'
-          )}
-        >
-          {isLoading ? (
-            <UpdateDetailsFormSkeleton />
-          ) : step === 'details' ? (
-            <UpdateDetailsStep
-              username={data.username}
-              form={form}
-              loading={loading}
-              onSubmit={onSubmit}
-              onSelectImage={handleSelectImage}
-              onDeleteImage={imageUrl ? handleDeleteImage : undefined}
-            />
-          ) : step === 'delete-image' ? (
-            <DeleteProfilePhotoConfirmation
-              username={data.username}
-              onSuccess={() => setStep('details')}
-            />
-          ) : (
-            <ProfilePhotoUploader
-              username={data.username}
-              step={step}
-              setStep={setStep}
-              onSuccess={() => handleOpenChange(false)}
-            />
-          )}
-        </div>
+        {content}
       </DialogContent>
     </Dialog>
   );
