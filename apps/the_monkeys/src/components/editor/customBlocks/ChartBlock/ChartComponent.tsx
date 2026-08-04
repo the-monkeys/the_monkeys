@@ -8,6 +8,10 @@ import React, {
   useState,
 } from 'react';
 
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Label } from '@the-monkeys/ui/atoms/label';
+import { Switch } from '@the-monkeys/ui/atoms/switch';
+
 import {
   Badge,
   BlockWrapper,
@@ -147,28 +151,24 @@ export default function ChartComponent({
           <FormField label='Chart Type'>
             <StyledSelect
               value={internal.type}
-              onChange={(e) => update({ type: e.target.value as ChartType })}
-            >
-              {CHART_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
-              ))}
-            </StyledSelect>
+              onValueChange={(value) => update({ type: value as ChartType })}
+              options={CHART_TYPES.map((t) => ({
+                value: t.value,
+                label: t.label,
+              }))}
+            />
           </FormField>
 
           {/* Palette */}
           <FormField label='Palette'>
             <StyledSelect
               value={internal.palette}
-              onChange={(e) => update({ palette: e.target.value })}
-            >
-              {PALETTE_NAMES.map((p) => (
-                <option key={p} value={p}>
-                  {p.charAt(0).toUpperCase() + p.slice(1)}
-                </option>
-              ))}
-            </StyledSelect>
+              onValueChange={(value) => update({ palette: value })}
+              options={PALETTE_NAMES.map((p) => ({
+                value: p,
+                label: p.charAt(0).toUpperCase() + p.slice(1),
+              }))}
+            />
           </FormField>
 
           {/* Title */}
@@ -182,15 +182,16 @@ export default function ChartComponent({
 
           {/* Legend Toggle */}
           <FormField label='Show Legend'>
-            <label className='flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300'>
-              <input
-                type='checkbox'
+            <div className='flex items-center gap-2'>
+              <Switch
+                id='chart-show-legend'
                 checked={internal.showLegend}
-                onChange={(e) => update({ showLegend: e.target.checked })}
-                className='rounded border-slate-300 text-blue-500 focus:ring-blue-400 dark:border-slate-600'
+                onCheckedChange={(checked) => update({ showLegend: checked })}
               />
-              {internal.showLegend ? 'Visible' : 'Hidden'}
-            </label>
+              <Label htmlFor='chart-show-legend' className='text-sm'>
+                {internal.showLegend ? 'Visible' : 'Hidden'}
+              </Label>
+            </div>
           </FormField>
 
           {/* X Label */}
@@ -255,13 +256,15 @@ export default function ChartComponent({
               onChange={(e) => setCsvText(e.target.value)}
               placeholder={'Month,Revenue,Users\nJan,100,50\nFeb,200,80'}
             />
-            <button
+            <Button
               type='button'
+              variant='outline'
+              size='sm'
+              className='mt-1 w-fit text-xs'
               onClick={() => parseCSV(csvText)}
-              className='mt-1 w-fit rounded-lg border border-slate-300/50 px-3 py-1.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-600/50 dark:text-slate-300 dark:hover:bg-slate-800'
             >
               Parse CSV
-            </button>
+            </Button>
           </FormField>
         </div>
       )}

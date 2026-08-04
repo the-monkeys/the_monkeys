@@ -3,6 +3,17 @@
 import React, { type ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
+import { Badge as UiBadge } from '@the-monkeys/ui/atoms/badge';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import { Label } from '@the-monkeys/ui/atoms/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@the-monkeys/ui/atoms/select';
+import { TextArea } from '@the-monkeys/ui/atoms/text-area';
 
 /* ------------------------------------------------------------------ */
 /*  BlockWrapper — consistent container for all custom blocks          */
@@ -56,9 +67,9 @@ interface SectionLabelProps {
 
 export function SectionLabel({ children }: SectionLabelProps) {
   return (
-    <span className='block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400'>
+    <Label className='block text-xs font-semibold uppercase tracking-wider'>
       {children}
-    </span>
+    </Label>
   );
 }
 
@@ -74,10 +85,10 @@ interface FormFieldProps {
 
 export function FormField({ label, children, className = '' }: FormFieldProps) {
   return (
-    <label className={cn('flex flex-col gap-1.5', className)}>
+    <div className={cn('flex flex-col gap-1.5', className)}>
       <SectionLabel>{label}</SectionLabel>
       {children}
-    </label>
+    </div>
   );
 }
 
@@ -92,19 +103,7 @@ interface StyledTextareaProps
 
 export const StyledInput = React.forwardRef<HTMLInputElement, StyledInputProps>(
   ({ className = '', ...props }, ref) => (
-    <input
-      ref={ref}
-      className={cn(
-        'w-full rounded-lg border border-slate-300/50 bg-white px-3 py-2',
-        'text-sm text-slate-800 placeholder-slate-400',
-        'transition-colors',
-        'focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20',
-        'dark:border-slate-600/50 dark:bg-slate-900/60 dark:text-slate-100',
-        'dark:placeholder-slate-500 dark:focus:border-blue-500 dark:focus:ring-blue-500/20',
-        className
-      )}
-      {...props}
-    />
+    <Input ref={ref} className={cn('text-sm', className)} {...props} />
   )
 );
 StyledInput.displayName = 'StyledInput';
@@ -113,50 +112,50 @@ export const StyledTextarea = React.forwardRef<
   HTMLTextAreaElement,
   StyledTextareaProps
 >(({ className = '', ...props }, ref) => (
-  <textarea
-    ref={ref}
-    className={cn(
-      'w-full rounded-lg border border-slate-300/50 bg-white px-3 py-2',
-      'text-sm text-slate-800 placeholder-slate-400',
-      'transition-colors resize-y min-h-[60px]',
-      'focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20',
-      'dark:border-slate-600/50 dark:bg-slate-900/60 dark:text-slate-100',
-      'dark:placeholder-slate-500 dark:focus:border-blue-500 dark:focus:ring-blue-500/20',
-      className
-    )}
-    {...props}
-  />
+  <TextArea ref={ref} className={cn('text-sm', className)} {...props} />
 ));
 StyledTextarea.displayName = 'StyledTextarea';
 
 /* ------------------------------------------------------------------ */
-/*  StyledSelect                                                       */
+/*  StyledSelect — thin adapter over the Select atom for call sites    */
+/*  that only need a flat list of value/label options.                 */
 /* ------------------------------------------------------------------ */
 
-interface StyledSelectProps
-  extends React.SelectHTMLAttributes<HTMLSelectElement> {}
+interface StyledSelectOption {
+  value: string;
+  label: string;
+}
 
-export const StyledSelect = React.forwardRef<
-  HTMLSelectElement,
-  StyledSelectProps
->(({ className = '', children, ...props }, ref) => (
-  <select
-    ref={ref}
-    className={cn(
-      'w-full rounded-lg border border-slate-300/50 bg-white px-3 py-2',
-      'text-sm text-slate-800',
-      'transition-colors',
-      'focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/20',
-      'dark:border-slate-600/50 dark:bg-slate-900/60 dark:text-slate-100',
-      'dark:focus:border-blue-500 dark:focus:ring-blue-500/20',
-      className
-    )}
-    {...props}
-  >
-    {children}
-  </select>
-));
-StyledSelect.displayName = 'StyledSelect';
+interface StyledSelectProps {
+  value: string;
+  onValueChange: (value: string) => void;
+  options: StyledSelectOption[];
+  placeholder?: string;
+  className?: string;
+}
+
+export function StyledSelect({
+  value,
+  onValueChange,
+  options,
+  placeholder,
+  className = '',
+}: StyledSelectProps) {
+  return (
+    <Select value={value} onValueChange={onValueChange}>
+      <SelectTrigger className={cn('h-10 text-sm', className)}>
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((option) => (
+          <SelectItem key={option.value} value={option.value}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /*  Badge — inline label for tags/stats                                */
@@ -167,29 +166,35 @@ interface BadgeProps {
   variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
 }
 
-const BADGE_VARIANTS: Record<string, string> = {
-  default:
-    'border-slate-300/50 bg-slate-100/60 text-slate-700 dark:border-slate-600/50 dark:bg-slate-800/60 dark:text-slate-300',
+const BADGE_VARIANT_CLASSES: Record<string, string> = {
+  default: '',
   success:
     'border-emerald-300/50 bg-emerald-50/60 text-emerald-700 dark:border-emerald-700/40 dark:bg-emerald-950/30 dark:text-emerald-300',
   warning:
     'border-amber-300/50 bg-amber-50/60 text-amber-700 dark:border-amber-700/40 dark:bg-amber-950/30 dark:text-amber-300',
-  danger:
-    'border-red-300/50 bg-red-50/60 text-red-700 dark:border-red-700/40 dark:bg-red-950/30 dark:text-red-300',
+  danger: '',
   info: 'border-blue-300/50 bg-blue-50/60 text-blue-700 dark:border-blue-700/40 dark:bg-blue-950/30 dark:text-blue-300',
+};
+
+const BADGE_UI_VARIANT: Record<
+  string,
+  'default' | 'secondary' | 'outline' | 'destructive' | 'brand'
+> = {
+  default: 'secondary',
+  success: 'outline',
+  warning: 'outline',
+  danger: 'destructive',
+  info: 'outline',
 };
 
 export function Badge({ children, variant = 'default' }: BadgeProps) {
   return (
-    <span
-      className={cn(
-        'inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5',
-        'text-xs font-medium',
-        BADGE_VARIANTS[variant] || BADGE_VARIANTS.default
-      )}
+    <UiBadge
+      variant={BADGE_UI_VARIANT[variant] || 'secondary'}
+      className={cn('text-xs font-medium', BADGE_VARIANT_CLASSES[variant])}
     >
       {children}
-    </span>
+    </UiBadge>
   );
 }
 

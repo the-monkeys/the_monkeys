@@ -38,10 +38,7 @@ function normalizeData(data?: Partial<ChartBlockData>): ChartBlockData {
     title: raw.title ?? DEFAULT_DATA.title,
     xLabel: raw.xLabel ?? DEFAULT_DATA.xLabel,
     yLabel: raw.yLabel ?? DEFAULT_DATA.yLabel,
-    showLegend:
-      !!raw.showLegend
-        ? raw.showLegend
-        : DEFAULT_DATA.showLegend,
+    showLegend: !!raw.showLegend ? raw.showLegend : DEFAULT_DATA.showLegend,
     palette:
       raw.palette && PALETTES[raw.palette] ? raw.palette : DEFAULT_DATA.palette,
     labels:

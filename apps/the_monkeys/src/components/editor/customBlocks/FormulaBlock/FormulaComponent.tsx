@@ -67,13 +67,14 @@ export default function FormulaComponent({
           <FormField label='Mode'>
             <StyledSelect
               value={internal.mode}
-              onChange={(e) =>
-                update({ mode: e.target.value as 'inline' | 'display' })
+              onValueChange={(value) =>
+                update({ mode: value as 'inline' | 'display' })
               }
-            >
-              <option value='display'>Display</option>
-              <option value='inline'>Inline</option>
-            </StyledSelect>
+              options={[
+                { value: 'display', label: 'Display' },
+                { value: 'inline', label: 'Inline' },
+              ]}
+            />
           </FormField>
           <FormField label='Description (optional)'>
             <StyledInput
