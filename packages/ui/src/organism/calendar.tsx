@@ -27,36 +27,42 @@ function Calendar({
 		<DayPicker
 			showOutsideDays={showOutsideDays}
 			className={cn(
-				"px-4 py-2 bg-background-light dark:bg-background-dark border border-foreground-light dark:border-foreground-dark rounded-md shadow-md",
+				"relative p-4 bg-background-light dark:bg-background-dark border border-foreground-light dark:border-foreground-dark rounded-xl shadow-md",
 				className,
 			)}
 			classNames={{
-				months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-				month: "space-y-4",
-				month_caption: "flex justify-center pt-1 relative items-center",
-				caption_label: "text-sm font-medium",
-				dropdowns: "flex justify-center gap-1",
-				nav: "space-x-1 flex items-center",
+				months: "flex flex-col sm:flex-row gap-4",
+				month: "w-full space-y-3",
+				nav: "absolute inset-x-0 top-0 flex items-center justify-between pointer-events-none",
+
 				button_previous: cn(
 					buttonVariants({ variant: "outline" }),
-					"size-8 bg-transparent p-0 opacity-50 hover:opacity-100 absolute left-1",
+					"pointer-events-auto size-8 bg-transparent p-0 opacity-70 hover:opacity-100 absolute left-6 top-4",
 				),
 				button_next: cn(
 					buttonVariants({ variant: "outline" }),
-					"size-8 bg-transparent p-0 opacity-50 hover:opacity-100 absolute right-1",
+					"pointer-events-auto size-8 bg-transparent p-0 opacity-70 hover:opacity-100 absolute right-6 top-4",
 				),
-				month_grid: "w-full border-collapse space-y-1",
-				weekdays: "flex space-x-1",
+
+				month_caption: "flex h-8 items-center justify-center mx-10",
+				caption_label: "text-sm font-medium",
+				dropdowns: "flex items-center justify-center gap-1",
+
+				month_grid: "w-full border-collapse mt-2",
+				weekdays: "grid grid-cols-7",
 				weekday:
-					"font-dm_sans text-text-light/80 dark:text-text-dark/80 rounded-md w-9 font-normal text-sm",
-				week: "flex w-full mt-2 space-x-1",
-				day: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
-				day_button: cn(buttonVariants({ variant: "ghost" }), "h-9 w-9 p-0"),
+					"font-dm_sans text-text-light/60 dark:text-text-dark/60 font-normal text-sm text-center py-2",
+				week: "grid grid-cols-7 mt-1",
+				day: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-md last:[&:has([aria-selected])]:rounded-md focus-within:relative focus-within:z-20",
+				day_button: cn(
+					buttonVariants({ variant: "ghost" }),
+					"h-10 w-10 mx-auto rounded-md p-0 font-normal",
+				),
 				selected:
 					"bg-foreground-light dark:bg-foreground-dark hover:bg-primary",
 				today: "bg-accent text-accent-foreground",
-				outside: "opacity-50",
-				disabled: "opacity-50",
+				outside: "opacity-40",
+				disabled: "opacity-40",
 				range_middle:
 					"aria-selected:bg-accent aria-selected:text-accent-foreground",
 				hidden: "invisible",
