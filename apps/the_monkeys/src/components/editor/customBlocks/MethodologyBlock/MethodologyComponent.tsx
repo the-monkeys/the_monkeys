@@ -79,6 +79,13 @@ export default function MethodologyComponent({
     [onChange]
   );
 
+  const updateSection = useCallback(
+    (key: keyof MethodologyBlockData, value: string) => {
+      update({ [key]: value });
+    },
+    [update]
+  );
+
   const hasContent = SECTIONS.some((s) => !!internal[s.key]);
 
   return (
@@ -94,11 +101,7 @@ export default function MethodologyComponent({
               <StyledTextarea
                 rows={3}
                 value={internal[section.key]}
-                onChange={(e) =>
-                  update({
-                    [section.key]: e.target.value,
-                  } as Partial<MethodologyBlockData>)
-                }
+                onChange={(e) => updateSection(section.key, e.target.value)}
                 placeholder={section.placeholder}
               />
             </FormField>
