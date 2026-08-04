@@ -247,9 +247,9 @@ export const Profile = ({ data }: { data?: IUser }) => {
                               field.onChange(formattedDate);
                             }
                           }}
-                          captionLayout='dropdown-buttons'
-                          fromYear={1960}
-                          toYear={new Date().getFullYear()}
+                          captionLayout='dropdown'
+                          startMonth={new Date(1960, 0)}
+                          endMonth={new Date(new Date().getFullYear(), 11)}
                         />
                       </PopoverContent>
                     </Popover>
