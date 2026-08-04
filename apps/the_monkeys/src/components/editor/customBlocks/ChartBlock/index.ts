@@ -39,7 +39,7 @@ function normalizeData(data?: Partial<ChartBlockData>): ChartBlockData {
     xLabel: raw.xLabel ?? DEFAULT_DATA.xLabel,
     yLabel: raw.yLabel ?? DEFAULT_DATA.yLabel,
     showLegend:
-      typeof raw.showLegend === 'boolean'
+      !!raw.showLegend
         ? raw.showLegend
         : DEFAULT_DATA.showLegend,
     palette:
