@@ -13,7 +13,7 @@ export type EmbedConstructorArgs = {
   readOnly?: boolean;
   data?: EmbedData;
   config?: EmbedToolConfig;
-  block: BlockAPI;
+  block?: BlockAPI;
 };
 
 export type EmbedToolConfig = {

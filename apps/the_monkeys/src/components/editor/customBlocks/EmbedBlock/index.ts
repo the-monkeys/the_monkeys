@@ -22,8 +22,8 @@ import type {
 export default class CustomEmbed implements BlockTool {
   private data: EmbedData;
   private api: API;
-  private config: EmbedToolConfig;
-  private block: BlockAPI;
+  private config: EmbedToolConfig | any;
+  private block: BlockAPI | any;
   private wrapper: HTMLElement;
   private readOnly: boolean;
   private backspaceTimeout: number | null = null;
