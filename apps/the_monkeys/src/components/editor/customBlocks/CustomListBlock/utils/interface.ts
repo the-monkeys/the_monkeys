@@ -1,4 +1,4 @@
-import { API } from '@editorjs/editorjs';
+import { API } from '@themonkeys/monkeys-editor';
 
 export interface ConstructorArgs {
   api: API;

@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { Loader } from '@/components/loader';
-import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
-import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
-import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
+import { DeleteProfilePhotoConfirmation } from '@/components/user/dialogs/deleteProfileDialog';
+import useProfileImage from '@/hooks/profile/useProfileImage';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import { cn } from '@/lib/utils';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,29 +16,21 @@ import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogTitle,
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
-import { Input } from '@the-monkeys/ui/atoms/input';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@the-monkeys/ui/molecules/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-const updateProfileSchema = z.object({
-  first_name: z.string().min(1, 'First name is required'),
-  last_name: z.string().optional(),
-  address: z.string().optional(),
-  bio: z.string().optional(),
-});
+import { ProfilePhotoUploader } from './ProfilePhotoUploader';
+import {
+  UpdateDetailsStep,
+  updateProfileSchema,
+} from './update-dialog/UpdateDetailsStep';
+import { UpdateDialogHeader } from './update-dialog/UpdateDialogHeader';
+import { UpdateDialogStep } from './update-dialog/types';
+
+type Values = z.infer<typeof updateProfileSchema>;
 
 export const UpdateDialog = ({ data }: { data: IUser }) => {
   const queryClient = useQueryClient();
@@ -48,186 +39,129 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
     isLoading,
     isError,
   } = useGetAuthUserProfile(data.username);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [open, setOpen] = useState<boolean>(false);
+  const { imageUrl } = useProfileImage(data.username);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [step, setStep] = useState<UpdateDialogStep>('details');
+  const resetStepTimeout = useRef<ReturnType<typeof setTimeout>>();
 
-  const form = useForm<z.infer<typeof updateProfileSchema>>({
+  const handleSelectImage = () => setStep('select-image');
+  const handleDeleteImage = () => setStep('delete-image');
+  const handleBack = () =>
+    setStep(step === 'confirm-image' ? 'select-image' : 'details');
+  const form = useForm<Values>({
     resolver: zodResolver(updateProfileSchema),
-    defaultValues: {
-      first_name: user?.first_name || '',
-      last_name: user?.last_name || '',
-      address: user?.address || '',
-      bio: user?.bio || '',
-    },
+    defaultValues: { first_name: '', last_name: '', address: '', bio: '' },
   });
 
-  const onSubmit = async (
-    updatedvalues: z.infer<typeof updateProfileSchema>
-  ) => {
-    const values = {
-      ...updatedvalues,
-      contact_number: user?.contact_number,
-      date_of_birth: user?.date_of_birth,
-      twitter: user?.twitter,
-      linkedin: user?.linkedin,
-      instagram: user?.instagram,
-      github: user?.github,
-    };
+  useEffect(() => {
+    if (!user) return;
 
+    form.reset({
+      first_name: user.first_name || '',
+      last_name: user.last_name || '',
+      address: user.address || '',
+      bio: user.bio || '',
+    });
+  }, [user, form]);
+
+  useEffect(
+    () => () => {
+      clearTimeout(resetStepTimeout.current);
+    },
+    []
+  );
+
+  const handleOpenChange = (newOpen: boolean) => {
+    clearTimeout(resetStepTimeout.current);
+    setOpen(newOpen);
+    if (newOpen) {
+      setStep('details');
+      return;
+    }
+    resetStepTimeout.current = setTimeout(() => setStep('details'), 200);
+  };
+
+  const onSubmit = async (updatedValues: Values) => {
     setLoading(true);
-
     try {
       await axiosInstance.put(`/user/${data.username}`, {
-        values,
+        values: {
+          ...updatedValues,
+          contact_number: user?.contact_number,
+          date_of_birth: user?.date_of_birth,
+          twitter: user?.twitter,
+          linkedin: user?.linkedin,
+          instagram: user?.instagram,
+          github: user?.github,
+        },
       });
-
       toast({
         variant: 'success',
         title: 'Success',
         description: 'Your profile has been updated successfully',
       });
-
-      setOpen(false);
-
+      handleOpenChange(false);
       queryClient.invalidateQueries({
         queryKey: [USER_QUERY_KEY, data.username],
       });
-    } catch (err) {
-      toast({
-        variant: 'error',
-        title: 'Error',
-      });
+    } catch {
+      toast({ variant: 'error', title: 'Error' });
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    if (user) {
-      form.reset({
-        first_name: user.first_name || '',
-        last_name: user.last_name || '',
-        address: user.address || '',
-        bio: user.bio || '',
-      });
-    }
-  }, [user, form]);
-
   if (isError) return null;
 
+  const isDeleteStep = step === 'delete-image';
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant='secondary' className='!text-base rounded-full'>
           Update
         </Button>
       </DialogTrigger>
-
-      <DialogContent className='max-h-[60vh] sm:max-h-[80vh] overflow-auto'>
-        <DialogTitle>Update Details</DialogTitle>
-
-        <DialogDescription className='hidden'></DialogDescription>
-
-        {isLoading ? (
-          <UpdateDetailsFormSkeleton />
-        ) : (
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
-              <div className='flex flex-wrap items-end gap-2'>
-                <p className='w-full text-sm'>Profile Photo</p>
-
-                <ProfileFrame className='size-24'>
-                  {data && <ProfileImage username={data.username} />}
-                </ProfileFrame>
-
-                <div className='space-x-2'>
-                  <DeleteProfileDialog />
-
-                  <UpdateProfileDialog />
-                </div>
-              </div>
-
-              <FormField
-                control={form.control}
-                name='first_name'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-sm'>First Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='w-full'
-                        {...field}
-                        placeholder='Enter first name'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='last_name'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-sm'>Last Name</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='w-full'
-                        {...field}
-                        placeholder='Enter last name'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='address'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-sm'>Location</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='w-full'
-                        {...field}
-                        placeholder='Enter location'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='bio'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-sm'>Bio</FormLabel>
-                    <FormControl>
-                      <Input
-                        className='w-full'
-                        {...field}
-                        placeholder='Enter bio'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className='pt-4'>
-                <Button
-                  disabled={loading}
-                  type='submit'
-                  className='float-right'
-                >
-                  {loading && <Loader />} Update
-                </Button>
-              </div>
-            </form>
-          </Form>
+      <DialogContent
+        className={cn(
+          'sm:max-w-md w-[calc(100%-2rem)] sm:w-full flex flex-col p-4 sm:p-6 overflow-y-auto rounded-xl [&>button]:hidden',
+          !isDeleteStep &&
+            'h-[570px] sm:h-[630px] max-h-[85vh] sm:max-h-[95vh] sm:overflow-hidden'
         )}
+      >
+        <UpdateDialogHeader step={step} onBack={handleBack} />
+        <div
+          className={cn(
+            'mt-4',
+            !isDeleteStep && 'flex-1 flex flex-col min-h-0 relative'
+          )}
+        >
+          {isLoading ? (
+            <UpdateDetailsFormSkeleton />
+          ) : step === 'details' ? (
+            <UpdateDetailsStep
+              username={data.username}
+              form={form}
+              loading={loading}
+              onSubmit={onSubmit}
+              onSelectImage={handleSelectImage}
+              onDeleteImage={imageUrl ? handleDeleteImage : undefined}
+            />
+          ) : step === 'delete-image' ? (
+            <DeleteProfilePhotoConfirmation
+              username={data.username}
+              onSuccess={() => setStep('details')}
+            />
+          ) : (
+            <ProfilePhotoUploader
+              username={data.username}
+              step={step}
+              setStep={setStep}
+              onSuccess={() => handleOpenChange(false)}
+            />
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

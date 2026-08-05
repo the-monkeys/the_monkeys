@@ -4,6 +4,7 @@ import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
+import useProfileImage from '@/hooks/profile/useProfileImage';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -35,7 +36,9 @@ import { parseDateTime } from './profile/parseDate';
 
 export const Profile = ({ data }: { data?: IUser }) => {
   const { data: user } = useGetAuthUserProfile(data?.username);
+  const { imageUrl } = useProfileImage(data?.username);
   const [loading, setLoading] = useState<boolean>(false);
+  const hasProfileImage = imageUrl !== '';
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -110,7 +113,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
               </ProfileFrame>
 
               <div className='space-x-2'>
-                <DeleteProfileDialog />
+                {hasProfileImage && <DeleteProfileDialog />}
 
                 <UpdateProfileDialog />
               </div>
@@ -244,9 +247,9 @@ export const Profile = ({ data }: { data?: IUser }) => {
                               field.onChange(formattedDate);
                             }
                           }}
-                          captionLayout='dropdown-buttons'
-                          fromYear={1960}
-                          toYear={new Date().getFullYear()}
+                          captionLayout='dropdown'
+                          startMonth={new Date(1960, 0)}
+                          endMonth={new Date(new Date().getFullYear(), 11)}
                         />
                       </PopoverContent>
                     </Popover>
