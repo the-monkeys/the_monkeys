@@ -29,6 +29,7 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
     sessionManager.endSession();
 
     queryClient.resetQueries({ queryKey: ['auth'] });
+    router.replace('/');
   };
 
   return (
