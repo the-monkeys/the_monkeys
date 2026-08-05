@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { API_URL } from '@/constants/api';
@@ -20,11 +20,14 @@ import LoginForm from '../components/forms/LoginForm';
 export default function LoginPage() {
   const { isSuccess, isLoading, isFetching } = useAuth();
   const router = useRouter();
+  const params = useSearchParams();
+  const callbackURL = params.get('callbackURL');
 
   useEffect(() => {
-    if (isSuccess) router.replace('/');
-  }, [isSuccess, router]);
-
+    if (isSuccess && !callbackURL) {
+      router.replace('/');
+    }
+  }, [isSuccess, callbackURL, router]);
   return (
     <>
       <FormHeader>
@@ -46,7 +49,11 @@ export default function LoginPage() {
           <span>New to Monkeys? </span>
 
           <Link
-            href='/auth/register'
+            href={
+              callbackURL
+                ? `/auth/register?callbackURL=${encodeURIComponent(callbackURL)}`
+                : '/auth/register'
+            }
             className='font-medium hover:underline text-brand-orange'
           >
             Join Monkeys
