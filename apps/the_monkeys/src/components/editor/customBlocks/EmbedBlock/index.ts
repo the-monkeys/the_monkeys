@@ -1,3 +1,10 @@
+import {
+  API,
+  BlockAPI,
+  BlockTool,
+  ToolboxConfig,
+} from '@themonkeys/monkeys-editor';
+
 import './style.css';
 import {
   renderFacebookEmbed,
@@ -6,36 +13,29 @@ import {
   renderUnsupportedEmbed,
   renderYouTubeEmbed,
 } from './utils/embed-function';
+import type {
+  EmbedConstructorArgs,
+  EmbedData,
+  EmbedToolConfig,
+} from './utils/types';
 
-type EmbedData = {
-  url: string;
-  service: string;
-  ogTitle?: string;
-  ogImage?: string;
-  ogDescription?: string;
-};
+export default class CustomEmbed implements BlockTool {
+  private data: EmbedData;
+  private api: API;
+  private config: EmbedToolConfig;
+  private block: BlockAPI;
+  private wrapper: HTMLElement;
+  private readOnly: boolean;
+  private backspaceTimeout: number | null = null;
+  private inputEl: HTMLInputElement | null = null;
+  private formEl: HTMLFormElement | null = null;
 
-export default class CustomEmbed {
-  data: EmbedData;
-  api: any;
-  config?: any;
-  block?: any;
-  wrapper: HTMLElement;
-  readonly?: boolean;
+  private static readonly EMBED_ICON = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 7 3 12 7 17" /><line x1="13" y1="7" x2="11" y2="17" /><polyline points="17 7 21 12 17 17" /></svg>`;
 
-  constructor({
-    data,
-    config,
-    api,
-    block,
-  }: {
-    data?: EmbedData;
-    config?: any;
-    api: any;
-    block?: any;
-  }) {
+  constructor({ data, config, api, readOnly, block }: EmbedConstructorArgs) {
     this.api = api;
-    this.config = config;
+    this.readOnly = !!readOnly;
+    this.config = config ?? {};
     this.block = block;
     this.data = data || { url: '', service: '' };
     this.wrapper = document.createElement('div');
@@ -44,42 +44,32 @@ export default class CustomEmbed {
   static get isReadOnlySupported() {
     return true;
   }
-  static get toolbox() {
+
+  static get toolbox(): ToolboxConfig {
     return {
       title: 'Embed',
-      icon: `<svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  stroke-width="1.5"
-  stroke-linecap="round"
-  stroke-linejoin="round"
->
-  <!-- Left angle bracket -->
-  <polyline points="7 7 3 12 7 17" />
-  <!-- Backward slash -->
-  <line x1="13" y1="7" x2="11" y2="17" />
-  <!-- Right angle bracket -->
-  <polyline points="17 7 21 12 17 17" />
-</svg>
-`,
+      icon: CustomEmbed.EMBED_ICON,
     };
   }
 
   render() {
-    if (this.readonly) {
-      if (this.data.url) {
-        this.showPreview();
-      }
+    this.removeInputListeners();
+    this.wrapper.innerHTML = '';
+
+    if (this.data.url) {
+      this.showPreview();
+      return this.wrapper;
     }
-    const container = document.createElement('form');
-    container.className = 'embed-input-container';
+
+    if (this.readOnly) {
+      return this.wrapper;
+    }
+
+    const form = document.createElement('form');
+    form.className = 'embed-input-container';
     const input = document.createElement('input');
 
-    container.appendChild(input);
+    form.appendChild(input);
     input.placeholder = 'Paste URL (Twitter, YouTube, Instagram, Facebook)';
     input.value = this.data.url || '';
     input.className = 'embed-input';
@@ -88,22 +78,38 @@ export default class CustomEmbed {
     input.autocapitalize = 'off';
     input.spellcheck = false;
 
-    input.addEventListener('paste', (e: ClipboardEvent) => {
-      const pastedUrl = e.clipboardData?.getData('text');
-      if (pastedUrl) {
-        const { service } = this.detectService(pastedUrl);
-        this.data = { url: pastedUrl, service };
-        this.showPreview();
-      }
-    });
+    input.addEventListener('paste', this.handleInputPaste);
+    input.addEventListener('keydown', this.onKeyDown);
+    form.addEventListener('submit', this.handleSubmit);
 
-    this.wrapper.appendChild(container);
+    this.inputEl = input;
+    this.formEl = form;
 
-    if (this.data.url) {
-      this.showPreview();
-    }
+    this.wrapper.appendChild(form);
 
     return this.wrapper;
+  }
+
+  destroy() {
+    this.removeInputListeners();
+
+    if (this.backspaceTimeout) {
+      clearTimeout(this.backspaceTimeout);
+      this.backspaceTimeout = null;
+    }
+  }
+
+  private removeInputListeners() {
+    if (this.inputEl) {
+      this.inputEl.removeEventListener('paste', this.handleInputPaste);
+      this.inputEl.removeEventListener('keydown', this.onKeyDown);
+      this.inputEl = null;
+    }
+
+    if (this.formEl) {
+      this.formEl.removeEventListener('submit', this.handleSubmit);
+      this.formEl = null;
+    }
   }
 
   save() {
@@ -135,7 +141,33 @@ export default class CustomEmbed {
     return { service: 'unknown' };
   }
 
+  private embedUrl(url: string) {
+    const trimmed = url.trim();
+    if (!trimmed) return;
+
+    const { service } = this.detectService(trimmed);
+    this.data = { url: trimmed, service };
+    this.showPreview();
+    this.insertParagraphAfter();
+  }
+
+  private handleInputPaste = (e: ClipboardEvent) => {
+    const pastedUrl = e.clipboardData?.getData('text');
+    if (pastedUrl) {
+      e.preventDefault();
+      this.embedUrl(pastedUrl);
+    }
+  };
+
+  private handleSubmit = (e: SubmitEvent) => {
+    e.preventDefault();
+    if (this.inputEl) {
+      this.embedUrl(this.inputEl.value);
+    }
+  };
+
   async showPreview() {
+    this.removeInputListeners();
     this.wrapper.innerHTML = '';
 
     const { url, service } = this.data;
@@ -161,5 +193,79 @@ export default class CustomEmbed {
       default:
         renderUnsupportedEmbed(this.wrapper, url);
     }
+  }
+
+  private onKeyDown = (event: KeyboardEvent) => {
+    if (this.readOnly) return;
+
+    switch (event.key) {
+      case 'Backspace':
+        this.handleBackspace(event);
+        break;
+    }
+  };
+
+  /**
+   * If the block is empty, pressing Backspace converts this block into a paragraph block.
+   */
+  private handleBackspace(event: KeyboardEvent) {
+    const input = event.target as HTMLInputElement;
+
+    const isEmpty = !this.data.url && input.value.trim() === '';
+    if (!isEmpty) return;
+
+    if (input.selectionStart !== 0 || input.selectionEnd !== 0) return;
+
+    event.preventDefault();
+    this.convertToParagraph();
+  }
+
+  /**
+   * After a URL is embedded, paragraph block is created below it.
+   */
+  private insertParagraphAfter() {
+    const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
+    const nextIndex = currentBlockIndex + 1;
+    const blocksCount = this.api.blocks.getBlocksCount();
+
+    const nextBlock =
+      nextIndex < blocksCount
+        ? this.api.blocks.getBlockByIndex(nextIndex)
+        : null;
+
+    if (!nextBlock || nextBlock.name !== 'paragraph') {
+      this.api.blocks.insert('paragraph', { text: '' }, {}, nextIndex, false);
+    }
+
+    if (this.backspaceTimeout) {
+      clearTimeout(this.backspaceTimeout);
+    }
+
+    this.backspaceTimeout = window.setTimeout(() => {
+      this.api.caret.setToBlock(nextIndex);
+      this.backspaceTimeout = null;
+    }, 200);
+  }
+
+  private convertToParagraph() {
+    const currentBlockIndex = this.api.blocks.getCurrentBlockIndex();
+
+    if (this.backspaceTimeout) {
+      clearTimeout(this.backspaceTimeout);
+    }
+
+    this.api.blocks.insert(
+      'paragraph',
+      { text: '' },
+      {},
+      currentBlockIndex,
+      false
+    );
+    this.api.blocks.delete(currentBlockIndex + 1);
+
+    this.backspaceTimeout = window.setTimeout(() => {
+      this.api.caret.setToBlock(currentBlockIndex);
+      this.backspaceTimeout = null;
+    }, 10);
   }
 }
