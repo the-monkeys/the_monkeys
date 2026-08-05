@@ -1,3 +1,7 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - apps/*
+  - packages/*
+ignoredBuiltDependencies:
+  - '@biomejs/biome'
+  - esbuild
+  - sharp
