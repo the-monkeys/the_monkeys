@@ -7,12 +7,13 @@ const STALE_TIME = 60 * 1000;
 
 export const useIsPostLiked = (
   blogId: string | undefined,
+  isAuthenticated: boolean,
   initialIsLiked?: boolean
 ) => {
   const { data, isLoading, error, isError } = useQuery<IsLikedResponse, Error>({
     queryKey: queryKeys.blog.likes.status(blogId),
     queryFn: () => authFetcher(`/user/is-liked/${blogId}`),
-    enabled: !!blogId,
+    enabled: !!blogId && isAuthenticated,
     initialData:
       initialIsLiked === undefined
         ? undefined
