@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -17,16 +19,15 @@ import LoginForm from '../components/forms/LoginForm';
 
 export default function LoginPage() {
   const { isSuccess, isLoading, isFetching, isFetched } = useAuth();
+  const router = useRouter();
   const params = useSearchParams();
-
   const callbackURL = params.get('callbackURL');
 
-  const router = useRouter();
-
-  if (isSuccess) {
-    router.replace(callbackURL ?? '/');
-    return;
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      router.replace(callbackURL ?? '/');
+    }
+  }, [isSuccess, callbackURL, router]);
 
   return (
     <>
@@ -49,7 +50,11 @@ export default function LoginPage() {
           <span>New to Monkeys? </span>
 
           <Link
-            href='/auth/register'
+            href={
+              callbackURL
+                ? `/auth/register?callbackURL=${encodeURIComponent(callbackURL)}`
+                : '/auth/register'
+            }
             className='font-medium hover:underline text-brand-orange'
           >
             Join Monkeys

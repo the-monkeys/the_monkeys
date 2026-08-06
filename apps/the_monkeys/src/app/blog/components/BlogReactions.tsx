@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
@@ -19,12 +19,19 @@ export const BlogReactions = ({
 }) => {
   const { isSuccess, isError } = useAuth();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const search = searchParams.toString();
+
+  const callbackURL = encodeURIComponent(
+    `${pathname}${search ? `?${search}` : ''}`
+  );
 
   if (isError || !isSuccess)
     return (
       <div className='p-1 flex justify-center items-center gap-1'>
         <Link
-          href={`${LOGIN_ROUTE}?callbackURL=${pathname}`}
+          href={`${LOGIN_ROUTE}?callbackURL=${callbackURL}`}
           className='text-sm font-medium text-brand-orange underline'
         >
           Login
