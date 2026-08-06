@@ -13,7 +13,22 @@ import {
   renderUnsupportedEmbed,
   renderYouTubeEmbed,
 } from './utils/embed-function';
-import type { EmbedConstructorArgs, EmbedData } from './utils/types';
+
+type EmbedData = {
+  url: string;
+  service: string;
+  ogTitle?: string;
+  ogImage?: string;
+  ogDescription?: string;
+};
+
+type EmbedConstructorArgs = {
+  api: API;
+  readOnly?: boolean;
+  data?: EmbedData;
+  config?: any;
+  block?: BlockAPI;
+};
 
 export default class CustomEmbed implements BlockTool {
   private data: EmbedData;
