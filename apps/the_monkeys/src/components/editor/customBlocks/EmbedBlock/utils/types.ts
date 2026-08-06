@@ -12,10 +12,6 @@ export type EmbedConstructorArgs = {
   api: API;
   readOnly?: boolean;
   data?: EmbedData;
-  config?: EmbedToolConfig;
+  config?: any;
   block?: BlockAPI;
-};
-
-export type EmbedToolConfig = {
-  [key: string]: unknown;
 };

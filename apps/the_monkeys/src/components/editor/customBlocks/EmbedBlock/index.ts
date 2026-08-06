@@ -13,16 +13,12 @@ import {
   renderUnsupportedEmbed,
   renderYouTubeEmbed,
 } from './utils/embed-function';
-import type {
-  EmbedConstructorArgs,
-  EmbedData,
-  EmbedToolConfig,
-} from './utils/types';
+import type { EmbedConstructorArgs, EmbedData } from './utils/types';
 
 export default class CustomEmbed implements BlockTool {
   private data: EmbedData;
   private api: API;
-  private config: EmbedToolConfig | any;
+  private config: any;
   private block: BlockAPI | any;
   private wrapper: HTMLElement;
   private readOnly: boolean;
@@ -49,6 +45,16 @@ export default class CustomEmbed implements BlockTool {
     return {
       title: 'Embed',
       icon: CustomEmbed.EMBED_ICON,
+    };
+  }
+
+  static get sanitize() {
+    return {
+      url: false,
+      service: false,
+      ogTitle: false,
+      ogImage: false,
+      ogDescription: false,
     };
   }
 
