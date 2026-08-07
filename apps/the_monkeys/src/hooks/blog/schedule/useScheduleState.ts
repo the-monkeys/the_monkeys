@@ -34,6 +34,15 @@ export const useScheduleState = () => {
       return;
     }
 
+    if (dateTime <= new Date()) {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid Schedule',
+        description: 'Please choose a date and time in the future.',
+      });
+      return;
+    }
+
     onSubmit(dateTime.toISOString(), selectedTimezone);
   };
 
