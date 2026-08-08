@@ -24,7 +24,6 @@ export const UpdateDialogHeader = () => {
   const steps = useUpdateProfileSteps((state) => state.steps);
   const currentStep = useUpdateProfileSteps((state) => state.currentStep);
   const handleBack = useUpdateProfileSteps((state) => state.handleBack);
-  console.log(steps[currentStep]);
 
   return (
     <DialogHeader className='flex flex-row items-center relative h-8 shrink-0'>
