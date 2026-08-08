@@ -1,7 +1,13 @@
+import ChartBlock from '@/components/editor/customBlocks/ChartBlock';
+import CitationBlock from '@/components/editor/customBlocks/CitationBlock';
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
+import DatasetBlock from '@/components/editor/customBlocks/DatasetBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
+import FormulaBlock from '@/components/editor/customBlocks/FormulaBlock';
+import MethodologyBlock from '@/components/editor/customBlocks/MethodologyBlock';
 import MentionUserTool from '@/components/editor/customBlocks/TagUserBlock';
+import TrendBlock from '@/components/editor/customBlocks/TrendBlock';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import Delimiter from '@editorjs/delimiter';
 import Header from '@editorjs/header';
@@ -38,6 +44,24 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     },
     code: {
       class: CustomCodeTool,
+    },
+    chart: {
+      class: ChartBlock,
+    },
+    trend: {
+      class: TrendBlock,
+    },
+    formula: {
+      class: FormulaBlock,
+    },
+    citation: {
+      class: CitationBlock,
+    },
+    methodology: {
+      class: MethodologyBlock,
+    },
+    dataset: {
+      class: DatasetBlock,
     },
     embed: {
       class: CustomEmbed,

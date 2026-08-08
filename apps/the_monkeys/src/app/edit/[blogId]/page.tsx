@@ -36,10 +36,7 @@ const INITIAL_DATA: OutputData = {
     {
       id: 'title',
       type: 'header',
-      data: {
-        text: 'Untitled Post',
-        level: 1,
-      },
+      data: { text: 'Untitled Post', level: 1 },
     },
   ],
 };
@@ -443,16 +440,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         setBlogPublishLoading(false);
       }
     },
-    [
-      data,
-      accountId,
-      blogId,
-      blogTopics,
-      formatData,
-      router,
-      username,
-      queryClient,
-    ]
+    [data, accountId, blogId, blogTopics, formatData, router, queryClient]
   );
 
   return (
