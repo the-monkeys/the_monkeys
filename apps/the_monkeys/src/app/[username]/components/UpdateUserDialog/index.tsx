@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 
 import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfilePhotoConfirmation } from '@/components/user/dialogs/deleteProfileDialog';
-import useProfileImage from '@/hooks/profile/useProfileImage';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import { updateProfileSchema } from '@/lib/schema/settings';
 import { cn } from '@/lib/utils';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
@@ -22,33 +22,28 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { ProfilePhotoUploader } from './ProfilePhotoUploader';
-import {
-  UpdateDetailsStep,
-  updateProfileSchema,
-} from './update-dialog/UpdateDetailsStep';
-import { UpdateDialogHeader } from './update-dialog/UpdateDialogHeader';
-import { UpdateDialogStep } from './update-dialog/types';
+import { useUpdateProfileSteps } from '../../store/update-user-profile-steps';
+import { ProfilePhotoUploader } from '../profile/ProfilePhotoUploader';
+import { UpdateDetailsStep } from '../profile/update-dialog/UpdateDetailsStep';
+import { UpdateDialogHeader } from './UpdateDialogHeader';
 
 type Values = z.infer<typeof updateProfileSchema>;
 
-export const UpdateDialog = ({ data }: { data: IUser }) => {
+export default function UpdateUserDialog({ data }: { data: IUser }) {
   const queryClient = useQueryClient();
   const {
     data: user,
     isLoading,
     isError,
   } = useGetAuthUserProfile(data.username);
-  const { imageUrl } = useProfileImage(data.username);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState<UpdateDialogStep>('details');
   const resetStepTimeout = useRef<ReturnType<typeof setTimeout>>();
 
-  const handleSelectImage = () => setStep('select-image');
-  const handleDeleteImage = () => setStep('delete-image');
-  const handleBack = () =>
-    setStep(step === 'confirm-image' ? 'select-image' : 'details');
+  const steps = useUpdateProfileSteps((state) => state.steps);
+  const currentStep = useUpdateProfileSteps((state) => state.currentStep);
+  const resetStep = useUpdateProfileSteps((state) => state.resetStep);
+
   const form = useForm<Values>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: { first_name: '', last_name: '', address: '', bio: '' },
@@ -76,10 +71,10 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
     clearTimeout(resetStepTimeout.current);
     setOpen(newOpen);
     if (newOpen) {
-      setStep('details');
+      resetStep();
       return;
     }
-    resetStepTimeout.current = setTimeout(() => setStep('details'), 200);
+    resetStepTimeout.current = setTimeout(() => resetStep(), 200);
   };
 
   const onSubmit = async (updatedValues: Values) => {
@@ -114,7 +109,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
 
   if (isError) return null;
 
-  const isDeleteStep = step === 'delete-image';
+  const isDeleteStep = steps[currentStep] === 'delete-image';
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -123,6 +118,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
           Update
         </Button>
       </DialogTrigger>
+
       <DialogContent
         className={cn(
           'sm:max-w-md w-[calc(100%-2rem)] sm:w-full flex flex-col p-4 sm:p-6 overflow-y-auto rounded-xl [&>button]:hidden',
@@ -130,7 +126,8 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
             'h-[570px] sm:h-[630px] max-h-[85vh] sm:max-h-[95vh] sm:overflow-hidden'
         )}
       >
-        <UpdateDialogHeader step={step} onBack={handleBack} />
+        <UpdateDialogHeader />
+
         <div
           className={cn(
             'mt-4',
@@ -139,25 +136,18 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
         >
           {isLoading ? (
             <UpdateDetailsFormSkeleton />
-          ) : step === 'details' ? (
+          ) : currentStep === 0 ? (
             <UpdateDetailsStep
               username={data.username}
               form={form}
               loading={loading}
               onSubmit={onSubmit}
-              onSelectImage={handleSelectImage}
-              onDeleteImage={imageUrl ? handleDeleteImage : undefined}
             />
-          ) : step === 'delete-image' ? (
-            <DeleteProfilePhotoConfirmation
-              username={data.username}
-              onSuccess={() => setStep('details')}
-            />
+          ) : isDeleteStep ? (
+            <DeleteProfilePhotoConfirmation username={data.username} />
           ) : (
             <ProfilePhotoUploader
               username={data.username}
-              step={step}
-              setStep={setStep}
               onSuccess={() => handleOpenChange(false)}
             />
           )}
@@ -165,4 +155,4 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
       </DialogContent>
     </Dialog>
   );
-};
+}

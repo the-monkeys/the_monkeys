@@ -4,7 +4,7 @@ import React from 'react';
 
 import Link from 'next/link';
 
-import { UpdateDialog } from '@/app/[username]/components/profile/UpdateDialog';
+import UpdateUserDialog from '@/app/[username]/components/UpdateUserDialog';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { FollowButton } from '@/components/user/buttons/followButton';
@@ -67,7 +67,7 @@ export const AuthorProfileCard = ({
               </div>
             </ProfileFrame>
 
-            {isAuthenticated && <UpdateDialog data={session} />}
+            {isAuthenticated && <UpdateUserDialog data={session} />}
           </div>
 
           <div className='min-w-0 flex-1 space-y-1'>
