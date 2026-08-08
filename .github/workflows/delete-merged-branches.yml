@@ -6,7 +6,7 @@ on:
 
 jobs:
   delete-branch:
-    if: github.event.pull_request.merged == true # Ensures action runs only when merged
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.repo.full_name == github.event.pull_request.base.repo.full_name
     runs-on: ubuntu-latest
 
     steps:
