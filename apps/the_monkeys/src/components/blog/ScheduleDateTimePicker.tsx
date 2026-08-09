@@ -47,7 +47,8 @@ const ScheduleDateTimePicker = ({
     selectedTimezone
   );
   const isValid = combinedDateTime ? !isNaN(combinedDateTime.getTime()) : false;
-  const isPast = combinedDateTime && isValid ? combinedDateTime <= new Date() : false;
+  const isPast =
+    combinedDateTime && isValid ? combinedDateTime <= new Date() : false;
 
   return (
     <div className='space-y-4 animate-in fade-in slide-in-from-top-2 duration-200'>
@@ -121,9 +122,12 @@ const ScheduleDateTimePicker = ({
           ) : (
             <div className='p-3 text-xs rounded-md bg-muted/60 border border-border/60 space-y-1 text-muted-foreground'>
               <p className='font-medium text-foreground flex items-center gap-1.5'>
-                <span>📅</span> Will be published {formatDistanceToNow(combinedDateTime, { addSuffix: true })}
+                <span>📅</span> Will be published{' '}
+                {formatDistanceToNow(combinedDateTime, { addSuffix: true })}
               </p>
-              <p>Target ({selectedTimezone}): {format(combinedDateTime, 'PPpp')}</p>
+              <p>
+                Target ({selectedTimezone}): {format(combinedDateTime, 'PPpp')}
+              </p>
               <p>Universal (UTC): {combinedDateTime.toUTCString()}</p>
             </div>
           )}
@@ -134,5 +138,4 @@ const ScheduleDateTimePicker = ({
 };
 
 export default ScheduleDateTimePicker;
-
 
