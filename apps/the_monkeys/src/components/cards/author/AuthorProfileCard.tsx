@@ -5,7 +5,6 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import UpdateUser from '@/app/[username]/components/UpdateUser';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { FollowButton } from '@/components/user/buttons/followButton';
@@ -32,6 +31,10 @@ const ConnectionsDialog = dynamic(
 
 const UpdateUsernameDialog = dynamic(
   () => import('@/components/user/dialogs/UpdateUsernameDialog')
+);
+
+const UpdateUser = dynamic(
+  () => import('@/app/[username]/components/UpdateUser')
 );
 
 const SocialLinkButton = ({ children }: { children: React.ReactNode }) => {
