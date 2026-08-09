@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
@@ -17,7 +18,7 @@ import useGetDraftBlogDetail, {
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
-import { Switch } from '@the-monkeys/ui/atoms/switch';
+import { Tabs, TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
@@ -492,30 +493,46 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>
             </div>
 
-            <div className='flex items-center gap-2'>
-              <div className='flex'>
-                <Switch
-                  id='preview-mode'
-                  type='button'
-                  title={isPreviewMode ? 'Back to Edit' : 'Preview Blog'}
-                  className='rounded-full'
-                  onClick={() => setIsPreviewMode((prev) => !prev)}
-                />
-                <label className='hidden' htmlFor='preview-mode'>
-                  Preview
-                </label>
-              </div>
+            <Tabs
+              value={isPreviewMode ? 'preview' : 'edit'}
+              onValueChange={(val) => setIsPreviewMode(val === 'preview')}
+            >
+              <TabsList className='flex items-center gap-1 font-mono text-foreground/40'>
+                <TabsTrigger value='edit'>
+                  <p className='flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground transition-colors'>
+                    <Icon
+                      name='RiPencil'
+                      size={16}
+                      className='group-data-[state=active]:text-brand-orange'
+                    />
+                    Editor
+                  </p>
+                  <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+                </TabsTrigger>
 
-              <PublishBlogDrawer
-                topics={blogTopics}
-                setTopics={setBlogTopics}
-                data={data}
-                setData={setData}
-                isPublishing={blogPublishLoading}
-                handlePublish={handlePublishStep}
-                handleSchedule={handleScheduleStep}
-              />
-            </div>
+                <TabsTrigger value='preview'>
+                  <p className='flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground transition-colors'>
+                    <Icon
+                      name='RiEye'
+                      size={16}
+                      className='group-data-[state=active]:text-brand-orange'
+                    />
+                    Preview
+                  </p>
+                  <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <PublishBlogDrawer
+              topics={blogTopics}
+              setTopics={setBlogTopics}
+              data={data}
+              setData={setData}
+              isPublishing={blogPublishLoading}
+              handlePublish={handlePublishStep}
+              handleSchedule={handleScheduleStep}
+            />
           </div>
 
           <div className='py-3'>
