@@ -2,6 +2,7 @@
 
 import React, { FC, useEffect, useMemo, useRef } from 'react';
 
+import { useCrossBlockSelection } from '@/components/editor/Selection';
 import { getEditorConfig } from '@/config/editor/monkeys_editor.config';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import MonkeysEditor, { OutputData } from '@themonkeys/monkeys-editor';
@@ -46,6 +47,8 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
 
   // Pre-calculate the config based on the blogId
   const editorConfig = useMemo(() => getEditorConfig(blogId), [blogId]);
+
+  useCrossBlockSelection(editorInstance, 'monkeys_editor_editor-container');
 
   useEffect(() => {
     if (!editorInstance.current) {

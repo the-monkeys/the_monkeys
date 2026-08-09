@@ -58,6 +58,12 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       config: {
         captionPlaceholder: '',
         uploader: {
+          async uploadByUrl(url: string) {
+            return {
+              success: 1,
+              file: { url },
+            };
+          },
           async uploadByFile(file: File) {
             const formData = new FormData();
             formData.append('file', file);
