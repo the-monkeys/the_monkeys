@@ -116,7 +116,8 @@ const ScheduleDateTimePicker = ({
           {isPast ? (
             <div className='p-3 text-xs rounded-md bg-alert-red/10 border border-alert-red/20 text-alert-red space-y-1'>
               <p className='font-medium'>
-                ⚠️ Selected time is in the past for this timezone. Please choose a future time.
+                ⚠️ Selected time is in the past for this timezone. Please choose
+                a future time.
               </p>
             </div>
           ) : (
@@ -138,4 +139,3 @@ const ScheduleDateTimePicker = ({
 };
 
 export default ScheduleDateTimePicker;
-
