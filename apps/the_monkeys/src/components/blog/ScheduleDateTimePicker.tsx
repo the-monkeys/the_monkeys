@@ -1,3 +1,4 @@
+import { getZonedDate } from '@/hooks/blog/schedule/useScheduleState';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import { Label } from '@the-monkeys/ui/atoms/label';
@@ -7,7 +8,7 @@ import {
   PopoverTrigger,
 } from '@the-monkeys/ui/atoms/popover';
 import { Calendar } from '@the-monkeys/ui/organism/calendar';
-import { format } from 'date-fns';
+import { format, formatDistanceToNow } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
 
 import FormSearchSelect from '../FormSearchSelect';
@@ -39,6 +40,14 @@ const ScheduleDateTimePicker = ({
       onTimezoneChange(selected.value);
     }
   };
+
+  const combinedDateTime = getZonedDate(
+    scheduleDate,
+    scheduleTime,
+    selectedTimezone
+  );
+  const isValid = combinedDateTime ? !isNaN(combinedDateTime.getTime()) : false;
+  const isPast = combinedDateTime && isValid ? combinedDateTime <= new Date() : false;
 
   return (
     <div className='space-y-4 animate-in fade-in slide-in-from-top-2 duration-200'>
@@ -99,8 +108,31 @@ const ScheduleDateTimePicker = ({
           placeholder='Select Timezone'
         />
       </div>
+
+      {/* Schedule Live Preview Feedback */}
+      {combinedDateTime && isValid && (
+        <>
+          {isPast ? (
+            <div className='p-3 text-xs rounded-md bg-alert-red/10 border border-alert-red/20 text-alert-red space-y-1'>
+              <p className='font-medium'>
+                ⚠️ Selected time is in the past for this timezone. Please choose a future time.
+              </p>
+            </div>
+          ) : (
+            <div className='p-3 text-xs rounded-md bg-muted/60 border border-border/60 space-y-1 text-muted-foreground'>
+              <p className='font-medium text-foreground flex items-center gap-1.5'>
+                <span>📅</span> Will be published {formatDistanceToNow(combinedDateTime, { addSuffix: true })}
+              </p>
+              <p>Target ({selectedTimezone}): {format(combinedDateTime, 'PPpp')}</p>
+              <p>Universal (UTC): {combinedDateTime.toUTCString()}</p>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 };
 
 export default ScheduleDateTimePicker;
+
+
