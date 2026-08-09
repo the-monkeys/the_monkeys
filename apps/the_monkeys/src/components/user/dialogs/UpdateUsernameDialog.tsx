@@ -29,11 +29,11 @@ import {
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export const UpdateUsernameDialog = ({
+export default function UpdateUsernameDialog({
   user,
 }: {
   user?: GetPublicUserProfileApiResponse;
-}) => {
+}) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -127,4 +127,4 @@ export const UpdateUsernameDialog = ({
       </DialogContent>
     </Dialog>
   );
-};
+}

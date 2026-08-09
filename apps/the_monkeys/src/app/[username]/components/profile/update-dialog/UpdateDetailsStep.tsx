@@ -1,10 +1,17 @@
+import { useState } from 'react';
+
 import { useUpdateProfileSteps } from '@/app/[username]/store/update-user-profile-steps';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import useProfileImage from '@/hooks/profile/useProfileImage';
+import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
+import { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import axiosInstance from '@/services/api/axiosInstance';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
+import { toast } from '@the-monkeys/ui/hooks/use-toast.js';
 import {
   Form,
   FormControl,
@@ -13,8 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
-import { UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
+
+import useUserForm from '../../useUserForm';
 
 export const updateProfileSchema = z.object({
   first_name: z.string().min(1, 'First name is required'),
@@ -27,15 +35,18 @@ type Values = z.infer<typeof updateProfileSchema>;
 
 export const UpdateDetailsStep = ({
   username,
-  form,
-  loading,
-  onSubmit,
+  onSubmitSuccess,
 }: {
   username: string;
-  form: UseFormReturn<Values>;
-  loading: boolean;
-  onSubmit: (values: Values) => void;
+  onSubmitSuccess?: () => void;
 }) => {
+  const [loading, setLoading] = useState(false);
+
+  const { data } = useGetAuthUserProfile(username);
+  const form = useUserForm({ user: data });
+
+  const queryClient = useQueryClient();
+
   const handleJumpToStep = useUpdateProfileSteps(
     (state) => state.handleJumpToStep
   );
@@ -43,6 +54,37 @@ export const UpdateDetailsStep = ({
   const handleSelectImage = () => handleJumpToStep('select-image');
 
   const { imageUrl } = useProfileImage(username);
+
+  const onSubmit = async (updatedValues: Values) => {
+    setLoading(true);
+    try {
+      await axiosInstance.put(`/user/${username}`, {
+        values: {
+          ...updatedValues,
+          contact_number: data?.contact_number,
+          date_of_birth: data?.date_of_birth,
+          twitter: data?.twitter,
+          linkedin: data?.linkedin,
+          instagram: data?.instagram,
+          github: data?.github,
+        },
+      });
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your profile has been updated successfully',
+      });
+
+      onSubmitSuccess?.();
+      queryClient.invalidateQueries({
+        queryKey: [USER_QUERY_KEY, username],
+      });
+    } catch {
+      toast({ variant: 'error', title: 'Error' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Form {...form}>
