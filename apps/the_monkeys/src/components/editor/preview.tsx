@@ -1,11 +1,10 @@
 import React, { FC, useEffect, useRef } from 'react';
 
 import { editorConfig } from '@/config/editor/monkeys_editor_readonly.config';
-import { Block } from '@/services/blog/blogTypes';
-import MonkeysEditor from '@themonkeys/monkeys-editor';
+import MonkeysEditor, { OutputData } from '@themonkeys/monkeys-editor';
 
 export type EditorProps = {
-  data?: { time: number; blocks: Block[] };
+  data?: OutputData;
 };
 
 const Editor: FC<EditorProps> = ({ data }) => {

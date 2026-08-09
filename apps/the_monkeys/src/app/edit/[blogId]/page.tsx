@@ -17,11 +17,21 @@ import useGetDraftBlogDetail, {
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
+import { Switch } from '@the-monkeys/ui/atoms/switch';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {
+  ssr: false,
+  loading: () => (
+    <div className='w-full'>
+      <EditorBlockSkeleton />
+    </div>
+  ),
+});
+
+const PreviewEditor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
   loading: () => (
     <div className='w-full'>
@@ -65,6 +75,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [blogTopics, setBlogTopics] = useState<string[]>([]);
   const [token, setToken] = useState<string | null>(null);
@@ -482,6 +493,19 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             </div>
 
             <div className='flex items-center gap-2'>
+              <div className='flex'>
+                <Switch
+                  id='preview-mode'
+                  type='button'
+                  title={isPreviewMode ? 'Back to Edit' : 'Preview Blog'}
+                  className='rounded-full'
+                  onClick={() => setIsPreviewMode((prev) => !prev)}
+                />
+                <label className='hidden' htmlFor='preview-mode'>
+                  Preview
+                </label>
+              </div>
+
               <PublishBlogDrawer
                 topics={blogTopics}
                 setTopics={setBlogTopics}
@@ -502,8 +526,12 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
                 </div>
               }
             >
-              {data && (
-                <Editor data={data} onChange={setData} blogId={blogId} />
+              {data && isPreviewMode ? (
+                <PreviewEditor data={data} />
+              ) : (
+                data && (
+                  <Editor data={data} onChange={setData} blogId={blogId} />
+                )
               )}
             </Suspense>
           </div>
