@@ -13,7 +13,7 @@ import {
   useUpdateProfileSteps,
 } from '../../store/update-user-profile-steps';
 
-const titles: Record<UpdateProfileSteps, string> = {
+export const updateProfileStepTitles: Record<UpdateProfileSteps, string> = {
   details: 'Update Details',
   'select-image': 'Select Photo',
   'confirm-image': 'Confirm Photo',
@@ -43,7 +43,7 @@ export const UpdateDialogHeader = () => {
       )}
 
       <DialogTitle className='flex-1 text-left py-0 leading-tight'>
-        {titles[steps[currentStep]]}
+        {updateProfileStepTitles[steps[currentStep]]}
       </DialogTitle>
       <DialogClose asChild>
         <Button

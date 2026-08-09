@@ -5,6 +5,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
+import UpdateUser from '@/app/[username]/components/UpdateUser';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { FollowButton } from '@/components/user/buttons/followButton';
@@ -27,10 +28,6 @@ const ShareProfileDialog = dynamic(
 
 const ConnectionsDialog = dynamic(
   () => import('@/components/user/dialogs/ConnectionsDialog')
-);
-
-const UpdateUserDialog = dynamic(
-  () => import('@/app/[username]/components/UpdateUserDialog')
 );
 
 const UpdateUsernameDialog = dynamic(
@@ -80,7 +77,7 @@ export const AuthorProfileCard = ({
               </div>
             </ProfileFrame>
 
-            {isAuthenticated && <UpdateUserDialog data={session} />}
+            {isAuthenticated && <UpdateUser data={session} />}
           </div>
 
           <div className='min-w-0 flex-1 space-y-1'>
