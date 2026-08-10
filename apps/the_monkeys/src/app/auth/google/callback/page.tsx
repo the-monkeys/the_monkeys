@@ -15,6 +15,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from '@the-monkeys/ui/atoms/alert';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 import {
@@ -63,9 +64,14 @@ export default function GoogleCallback() {
       </FormHeader>
 
       {mutation.isIdle || mutation.isPending ? (
-        <div className='p-6 flex items-center justify-center'>
-          <Loader size={32} />
-        </div>
+        <Button
+          variant='brand'
+          className='w-full flex items-center justify-center gap-2'
+          disabled
+        >
+          <Loader />
+          Signing you in with Google
+        </Button>
       ) : (
         <Alert variant={mutation.isSuccess ? 'constructive' : 'destructive'}>
           <Icon name='RiErrorWarning' />

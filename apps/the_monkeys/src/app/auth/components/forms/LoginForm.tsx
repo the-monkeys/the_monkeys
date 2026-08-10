@@ -120,10 +120,17 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
         <div className='pt-6 flex'>
           <Button
             variant='brand'
-            className='flex-1'
+            className='flex-1 flex items-center justify-center gap-2'
             disabled={mutation.isPending || isLoading}
           >
-            {mutation.isPending && <Loader />} Login
+            {mutation.isPending ? (
+              <>
+                <Loader />
+                Signing you in
+              </>
+            ) : (
+              'Login'
+            )}
           </Button>
         </div>
       </form>
