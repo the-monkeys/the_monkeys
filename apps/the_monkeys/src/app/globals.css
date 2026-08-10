@@ -136,18 +136,12 @@ h3.ce-header {
   background-color: transparent !important;
 }
 
+/* Reset default Editor.js block selection background for marquee overlay */
 .ce-block--selected,
 .ce-block--selected .ce-block__content {
   background: transparent !important;
   background-color: transparent !important;
   transition: none !important;
-}
-
-.ce-block--selected .ce-block__content [contenteditable] {
-  user-select: text !important;
-  -webkit-user-select: text !important;
-  -moz-user-select: text !important;
-  -ms-user-select: text !important;
 }
 
 /* list tool */
@@ -663,12 +657,10 @@ li.cdx-list__item {
 /* selection styles */
 .light ::selection {
   background-color: #2563eb !important;
-  color: #ffffff !important;
 }
 
 .dark ::selection {
   background-color: #2563eb !important;
-  color: #ffffff !important;
 }
 
 #monkeys_editor_editor-container {
@@ -860,6 +852,7 @@ li.cdx-list__item {
 }
 
 @keyframes heartBurst {
+
   /* Spawn */
   0% {
     transform: translate(0, 0) scale(0.25) rotate(0deg);
@@ -868,22 +861,19 @@ li.cdx-list__item {
 
   /* Pop */
   15% {
-    transform: translate(calc(var(--x) * 0.35), calc(var(--y) * 0.35))
-      scale(1.2) rotate(calc(var(--r) * 0.25));
+    transform: translate(calc(var(--x) * 0.35), calc(var(--y) * 0.35)) scale(1.2) rotate(calc(var(--r) * 0.25));
     opacity: 1;
   }
 
   /* Burst */
   55% {
-    transform: translate(calc(var(--x) * 0.95), calc(var(--y) * 0.95)) scale(1)
-      rotate(calc(var(--r) * 0.8));
+    transform: translate(calc(var(--x) * 0.95), calc(var(--y) * 0.95)) scale(1) rotate(calc(var(--r) * 0.8));
     opacity: 1;
   }
 
   /* Float & Fade */
   100% {
-    transform: translate(calc(var(--x) * 1.2), calc(var(--y) * 1.2 - 8px))
-      scale(0.75) rotate(var(--r));
+    transform: translate(calc(var(--x) * 1.2), calc(var(--y) * 1.2 - 8px)) scale(0.75) rotate(var(--r));
     opacity: 0;
   }
 }
