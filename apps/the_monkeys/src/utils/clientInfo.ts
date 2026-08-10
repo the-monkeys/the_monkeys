@@ -29,52 +29,86 @@ class ClientInfo {
   private isInitializing: boolean = false;
   private initializationPromise: Promise<ClientInfoData> | null = null;
 
+  /**
+   * Check if running in browser environment
+   */
+  private isBrowser(): boolean {
+    return typeof window !== 'undefined';
+  }
+
+  /**
+   * Get user agent safely
+   */
+  private getUserAgent(): string {
+    if (!this.isBrowser() || typeof navigator === 'undefined') {
+      return 'unknown';
+    }
+
+    return navigator.userAgent || 'unknown';
+  }
+
   async initialize(): Promise<ClientInfoData> {
     // If already initialized, return immediately
     if (this.isInitialized) {
       return this.getInfo();
     }
 
-    // If initialization is in progress, return the promise
+    // If initialization is in progress, return the existing promise
     if (this.initializationPromise) {
       return this.initializationPromise;
     }
 
+    // Don't run browser-specific initialization during SSR
+    if (!this.isBrowser()) {
+      this.isInitialized = true;
+      return this.getInfo();
+    }
+
     this.isInitializing = true;
+
     this.initializationPromise = (async (): Promise<ClientInfoData> => {
       try {
         // Get public IP address with timeout
         this.ip = await Promise.race([
           publicIpv4(),
-          new Promise<string>((resolve) =>
-            setTimeout(() => resolve('unknown'), 5000)
-          ),
+          new Promise<string>((resolve) => {
+            setTimeout(() => resolve('unknown'), 5000);
+          }),
         ]).catch(() => 'unknown');
 
+        // Browser detection
         try {
-          const parser = Bowser.getParser(window.navigator.userAgent);
-          this.browser = parser.getBrowserName() || 'unknown';
-          this.os = parser.getOSName() || 'unknown';
+          const userAgent = this.getUserAgent();
 
-          const platformType = parser.getPlatformType();
+          const parser =
+            userAgent !== 'unknown' ? Bowser.getParser(userAgent) : null;
+
+          this.browser = parser?.getBrowserName() || 'unknown';
+          this.os = parser?.getOSName() || 'unknown';
+
+          const platformType = parser?.getPlatformType();
+
           this.device = (platformType as DeviceType) || 'unknown';
         } catch (browserError) {
           console.warn('Browser detection failed:', browserError);
+
           this.browser = 'unknown';
           this.os = 'unknown';
           this.device = 'unknown';
         }
 
         this.isInitialized = true;
+
         return this.getInfo();
       } catch (error) {
         console.error('Failed to initialize client info:', error);
-        // Set fallback values
+
         this.ip = 'unknown';
         this.browser = 'unknown';
         this.os = 'unknown';
         this.device = 'unknown';
         this.isInitialized = true;
+
         return this.getInfo();
       } finally {
         this.isInitializing = false;
@@ -86,16 +120,12 @@ class ClientInfo {
   }
 
   getInfo(): ClientInfoData {
-    if (!this.isInitialized) {
-      return this.getFallbackInfo();
-    }
-
     return {
       ip: this.ip,
       browser: this.browser,
       os: this.os,
       device: this.device,
-      userAgent: window.navigator.userAgent,
+      userAgent: this.getUserAgent(),
       isMobile: this.device === 'mobile',
       isTablet: this.device === 'tablet',
       isDesktop: this.device === 'desktop',
@@ -108,7 +138,7 @@ class ClientInfo {
       browser: 'unknown',
       os: 'unknown',
       device: 'unknown',
-      userAgent: window.navigator.userAgent,
+      userAgent: this.getUserAgent(),
       isMobile: false,
       isTablet: false,
       isDesktop: false,
@@ -148,6 +178,15 @@ class ClientInfo {
   }
 
   getEnvironmentInfo(): EnvironmentInfo {
+    // SSR-safe fallback
+    if (!this.isBrowser()) {
+      return {
+        viewportWidth: '0',
+        viewportHeight: '0',
+        darkMode: '0',
+      };
+    }
+
     return {
       viewportWidth: window.innerWidth.toString(),
       viewportHeight: window.innerHeight.toString(),
@@ -170,6 +209,7 @@ class ClientInfo {
 
 const clientInfo = new ClientInfo();
 
+// Only initialize automatically in browser
 if (typeof window !== 'undefined') {
   clientInfo.initialize().catch((error) => {
     console.warn('Background client info initialization failed:', error);

@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import AdUnit from '@/components/AdSense/AdUnit';
+// import AdUnit from '@/components/AdSense/AdUnit';
 import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { BackButton } from '@/components/buttons/backButton';
@@ -172,7 +172,8 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
           <UserInfoCardBlogPage id={authorId} />
         </Container>
       </div>
-      <AdUnit slot='4598536509' />
+      {/* removing ads unit bcz currently we have issue in google ads account */}
+      {/* <AdUnit slot='4598536509' /> */}
       <div className='p-4'>
         <Container className='max-w-3xl'>
           <div className='px-1 pb-4 overflow-hidden'>
