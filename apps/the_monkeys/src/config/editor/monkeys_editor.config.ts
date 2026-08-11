@@ -8,6 +8,7 @@ import FormulaBlock from '@/components/editor/customBlocks/FormulaBlock';
 import MethodologyBlock from '@/components/editor/customBlocks/MethodologyBlock';
 import MentionUserTool from '@/components/editor/customBlocks/TagUserBlock';
 import TrendBlock from '@/components/editor/customBlocks/TrendBlock';
+import { uploadImage } from '@/components/editor/utils/uploadFile';
 import Delimiter from '@editorjs/delimiter';
 import Header from '@editorjs/header';
 import Image from '@editorjs/image';
@@ -15,8 +16,6 @@ import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Table from '@editorjs/table';
 import { EditorConfig } from '@themonkeys/monkeys-editor';
-
-import { uploadImage } from '@/components/editor/utils/uploadFile';
 
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'monkeys_editor_editor-container',
