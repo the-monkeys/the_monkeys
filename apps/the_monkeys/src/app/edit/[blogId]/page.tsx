@@ -15,6 +15,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import useGetDraftBlogDetail, {
   DRAFT_BLOG_DETAIL_QUERY_KEY,
 } from '@/hooks/blog/useGetDraftBlogDetail';
+import { useIsImageUploading } from '@/lib/store/useFileUpload';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
@@ -67,6 +68,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const { blog, isLoading, isError } = useGetDraftBlogDetail(blogId, {
     enabled: !isNew,
   });
+  const isImageUploading = useIsImageUploading();
 
   // Refs for latest values
   const dataRef = useRef<OutputData | null>(null);
@@ -505,13 +507,24 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
                       size={16}
                       className='group-data-[state=active]:text-brand-orange'
                     />
-                    Editor
+                    Edit
                   </p>
                   <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
                 </TabsTrigger>
 
-                <TabsTrigger value='preview'>
-                  <p className='flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground transition-colors'>
+                <TabsTrigger
+                  value='preview'
+                  disabled={isImageUploading}
+                  className={isImageUploading ? 'cursor-not-allowed' : ''}
+                >
+                  <p
+                    className={twMerge(
+                      'flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base transition-colors',
+                      isImageUploading
+                        ? 'opacity-20'
+                        : 'opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground'
+                    )}
+                  >
                     <Icon
                       name='RiEye'
                       size={16}
