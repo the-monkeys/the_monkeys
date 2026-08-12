@@ -11,7 +11,9 @@ export async function GET(_req: Request) {
   const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET!);
 
   try {
-    const { payload } = await jwtVerify(mat.value, secret);
+    const { payload } = await jwtVerify(mat.value, secret, {
+      algorithms: ['H256'],
+    });
 
     const jwt = new SignJWT(payload);
 
