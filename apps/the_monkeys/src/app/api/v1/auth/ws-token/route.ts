@@ -1,18 +1,26 @@
 import { cookies } from 'next/headers';
 
-import { SignJWT, decodeJwt } from 'jose';
+import { SignJWT, jwtVerify } from 'jose';
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
   const mat = await cookies().get('mat');
   if (!mat?.value) {
     return Response.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const value = decodeJwt(mat.value);
-  const jwt = new SignJWT(value);
+  const secret = new TextEncoder().encode(process.env.NEXTAUTH_SECRET!);
 
-  jwt.setProtectedHeader({ alg: 'HS256' });
-  const token = await jwt.sign(Buffer.from(process.env.NEXTAUTH_SECRET!));
+  try {
+    const { payload } = await jwtVerify(mat.value, secret);
 
-  return Response.json({ status: 'success', token });
+    const jwt = new SignJWT(payload);
+
+    const token = await jwt.sign(secret);
+
+    return Response.json({ status: 'success', token });
+  } catch (err) {
+    console.log(err);
+
+    return Response.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 }
