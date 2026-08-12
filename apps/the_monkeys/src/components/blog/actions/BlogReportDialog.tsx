@@ -18,7 +18,7 @@ import {
 } from '@the-monkeys/ui/atoms/dialog';
 import { Label } from '@the-monkeys/ui/atoms/label';
 import { RadioGroup, RadioGroupItem } from '@the-monkeys/ui/atoms/radio-group';
-import { Textarea } from '@the-monkeys/ui/atoms/text-area';
+import { TextArea } from '@the-monkeys/ui/atoms/text-area';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 interface BlogReportDialogProps {
@@ -155,7 +155,7 @@ export const BlogReportDialog: FC<BlogReportDialogProps> = ({
               <Label className='text-sm opacity-80'>
                 Additional Info {`(optional)`}
               </Label>
-              <Textarea
+              <TextArea
                 value={reporterNotes}
                 onChange={(e) => setReporterNotes(e.target.value)}
                 rows={3}
