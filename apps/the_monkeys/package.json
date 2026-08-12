@@ -19,7 +19,7 @@
     "@editorjs/quote": "2.7.2",
     "@editorjs/table": "^2.4.5",
     "@growthbook/growthbook-react": "^1.6.2",
-    "@hookform/resolvers": "^3.3.4",
+    "@hookform/resolvers": "^5.7.1",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "^15.0.3",
