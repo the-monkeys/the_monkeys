@@ -7,6 +7,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
+import BlogPreview from '@/components/editor/BlogPreview';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
@@ -25,15 +26,6 @@ import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {
-  ssr: false,
-  loading: () => (
-    <div className='w-full'>
-      <EditorBlockSkeleton />
-    </div>
-  ),
-});
-
-const PreviewEditor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
   loading: () => (
     <div className='w-full'>
@@ -545,7 +537,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               }
             >
               {data && isPreviewMode ? (
-                <PreviewEditor data={data} />
+                <BlogPreview urlBlogId={blogId} data={data} />
               ) : (
                 data && (
                   <Editor data={data} onChange={setData} blogId={blogId} />
