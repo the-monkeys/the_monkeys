@@ -12,10 +12,10 @@ export async function GET(_req: Request) {
 
   try {
     const { payload } = await jwtVerify(mat.value, secret, {
-      algorithms: ['H256'],
+      algorithms: ['HS256'],
     });
 
-    const jwt = new SignJWT(payload);
+    const jwt = new SignJWT(payload).setProtectedHeader({ alg: 'HS256' });
 
     const token = await jwt.sign(secret);
 
