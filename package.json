@@ -4,7 +4,7 @@
 	"scripts": {
 		"build": "turbo run lint build",
 		"dev": "turbo run dev",
-		"install-deps": "npm install -D pnpm && pnpm install",
+		"install-deps": "pnpm install",
 		"lint": "turbo run lint",
 		"test": "turbo run test",
 		"prepare": "husky",
