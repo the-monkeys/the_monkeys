@@ -1,18 +1,103 @@
-import { useState } from 'react';
-
 import Icon from '@/components/icon';
-import { Loader } from '@/components/loader';
 import {
   CONNECTION_COUNT_QUERY_KEY,
   IS_FOLLOWING_USER_QUERY_KEY,
   useIsFollowingUser,
 } from '@/hooks/user/useUserConnections';
 import axiosInstance from '@/services/api/axiosInstance';
-import { useQueryClient } from '@tanstack/react-query';
+import {
+  ConnectionCountResponse,
+  IsFollowedResponse,
+} from '@/services/profile/userApiTypes';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
+
+const followUser = (username: string) => {
+  return axiosInstance.post(`/user/follow/${username}`);
+};
+
+const unfollowUser = (username: string) => {
+  return axiosInstance.post(`/user/unfollow/${username}`);
+};
+
+type FollowMutationVariables = {
+  username: string;
+  nextIsFollowing: boolean;
+};
+
+const useFollowMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ username, nextIsFollowing }: FollowMutationVariables) =>
+      nextIsFollowing ? followUser(username) : unfollowUser(username),
+
+    onMutate: async ({
+      username,
+      nextIsFollowing,
+    }: FollowMutationVariables) => {
+      const followingKey = [IS_FOLLOWING_USER_QUERY_KEY, username];
+      const countKey = [CONNECTION_COUNT_QUERY_KEY, username];
+
+      const previousFollowStatus =
+        queryClient.getQueryData<IsFollowedResponse>(followingKey);
+      const previousCount =
+        queryClient.getQueryData<ConnectionCountResponse>(countKey);
+
+      queryClient.setQueryData<IsFollowedResponse>(followingKey, {
+        status: previousFollowStatus?.status ?? 'ok',
+        isFollowing: nextIsFollowing,
+      });
+
+      if (previousCount) {
+        queryClient.setQueryData<ConnectionCountResponse>(countKey, {
+          ...previousCount,
+          followers: previousCount.followers + (nextIsFollowing ? 1 : -1),
+        });
+      }
+
+      queryClient.cancelQueries({ queryKey: followingKey });
+      queryClient.cancelQueries({ queryKey: countKey });
+
+      return { previousFollowStatus, previousCount, followingKey, countKey };
+    },
+
+    onError: (err: unknown, _variables, context) => {
+      if (context?.previousFollowStatus) {
+        queryClient.setQueryData(
+          context.followingKey,
+          context.previousFollowStatus
+        );
+      }
+      if (context?.previousCount) {
+        queryClient.setQueryData(context.countKey, context.previousCount);
+      }
+
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description:
+          err instanceof Error ? err.message : 'Something went wrong.',
+      });
+    },
+
+    onSettled: (_data, _error, _variables, context) => {
+      if (!context) return;
+
+      queryClient.invalidateQueries({
+        queryKey: context.followingKey,
+        refetchType: 'active',
+      });
+      queryClient.invalidateQueries({
+        queryKey: context.countKey,
+        refetchType: 'active',
+      });
+    },
+  });
+};
 
 export const FollowButton = ({
   username,
@@ -21,102 +106,40 @@ export const FollowButton = ({
   username?: string;
   className?: string;
 }) => {
-  const queryClient = useQueryClient();
-  const { followStatus, isLoading, isError } = useIsFollowingUser(username);
+  const { followStatus } = useIsFollowingUser(username);
+  const { mutate, isPending } = useFollowMutation();
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const isFollowing = !!followStatus?.isFollowing;
 
-  // if (isLoading) return <Skeleton className='h-9 w-32 rounded-full' />;
-
-  // if (isError) return null;
-
-  const onUserFollow = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(`/user/follow/${username}`);
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to follow user.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
+  const handleFollow = () => {
+    if (!username) return;
+    mutate({ username, nextIsFollowing: true });
   };
 
-  const onUserUnfollow = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(`/user/unfollow/${username}`);
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to unfollow user.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
+  const handleUnfollow = () => {
+    if (!username) return;
+    mutate({ username, nextIsFollowing: false });
   };
 
   return (
     <>
-      {followStatus?.isFollowing ? (
+      {isFollowing ? (
         <Button
           variant='secondary'
-          disabled={loading}
-          onClick={onUserUnfollow}
+          disabled={isPending}
+          onClick={handleUnfollow}
           className={twMerge(className, '!text-base rounded-full')}
         >
-          {loading && <Loader />}
           Unfollow
         </Button>
       ) : (
         <Button
           variant={'outline'}
           size={'sm'}
-          disabled={loading}
-          onClick={onUserFollow}
+          disabled={isPending}
+          onClick={handleFollow}
           className={twMerge(className, '!text-base rounded-full')}
         >
-          {loading && <Loader />}
           Follow
         </Button>
       )}
@@ -131,101 +154,45 @@ export const FollowButtonIcon = ({
   username?: string;
   className?: string;
 }) => {
-  const queryClient = useQueryClient();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
-
-  const [loading, setLoading] = useState<boolean>(false);
+  const { mutate, isPending } = useFollowMutation();
 
   if (isLoading) return <Skeleton className='size-9 rounded-full' />;
 
   if (isError) return null;
 
-  const onUserFollow = async () => {
-    setLoading(true);
+  const isFollowing = !!followStatus?.isFollowing;
 
-    try {
-      const response = await axiosInstance.post(`/user/follow/${username}`);
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to follow user.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
+  const handleFollow = () => {
+    if (!username) return;
+    mutate({ username, nextIsFollowing: true });
   };
 
-  const onUserUnfollow = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(`/user/unfollow/${username}`);
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to unfollow user.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
+  const handleUnfollow = () => {
+    if (!username) return;
+    mutate({ username, nextIsFollowing: false });
   };
 
   return (
     <>
-      {followStatus?.isFollowing ? (
+      {isFollowing ? (
         <Button
           variant='secondary'
           size='icon'
-          disabled={loading}
-          onClick={onUserUnfollow}
+          disabled={isPending}
+          onClick={handleUnfollow}
           className={twMerge(className, 'rounded-full')}
         >
-          {loading ? <Loader /> : <Icon name='RiUserUnfollow' size={18} />}
+          <Icon name='RiUserUnfollow' size={18} />
         </Button>
       ) : (
         <Button
           size='icon'
-          disabled={loading}
-          onClick={onUserFollow}
+          disabled={isPending}
+          onClick={handleFollow}
           className={twMerge(className, 'rounded-full')}
         >
-          {loading ? <Loader /> : <Icon name='RiUserFollow' size={18} />}
+          <Icon name='RiUserFollow' size={18} />
         </Button>
       )}
     </>

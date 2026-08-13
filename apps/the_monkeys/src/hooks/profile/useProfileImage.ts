@@ -3,9 +3,71 @@
 import { useEffect, useState } from 'react';
 
 import fetcher from '@/services/fileFetcher';
-import { useQuery } from '@tanstack/react-query';
+import { uploadProfileImage } from '@/services/user/user';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { z } from 'zod';
 
 export const PROFILE_IMAGE_QUERY_KEY = 'profile-image';
+export const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+export const PROFILE_IMAGE_ACCEPT = {
+  'image/jpeg': ['.jpg', '.jpeg'],
+  'image/png': ['.png'],
+};
+
+export const profileImageSchema = z
+  .custom<File>(
+    (val) => typeof File !== 'undefined' && val instanceof File,
+    'Must be a file'
+  )
+  .refine(
+    (file) => file.size <= MAX_PROFILE_IMAGE_SIZE_BYTES,
+    'Image must be under 5 MB.'
+  )
+  .refine(
+    (file) => ['image/jpeg', 'image/png', 'image/jpg'].includes(file.type),
+    'Only JPEG and PNG images are allowed.'
+  );
+
+type UploadProfileImageOptions = {
+  username: string;
+  onSuccess: () => void;
+  onError: (message: string) => void;
+};
+
+export const useUploadProfileImage = ({
+  username,
+  onSuccess,
+  onError,
+}: UploadProfileImageOptions) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (file: File) => uploadProfileImage(username, file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+      });
+
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your profile photo has been updated successfully.',
+      });
+      onSuccess();
+    },
+    onError: (err: unknown) => {
+      const message =
+        err instanceof Error ? err.message : 'An unknown error occurred.';
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description: message,
+      });
+      onError(message);
+    },
+  });
+};
 
 const useProfileImage = (username: string | undefined) => {
   const [imageUrl, setImageUrl] = useState<string>('');
@@ -15,11 +77,10 @@ const useProfileImage = (username: string | undefined) => {
     queryFn: () => fetcher(`/storage/profiles/${username}/profile`),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
-    retry: false, // Don't retry on 404 (deleted profile pic)
+    retry: false,
   });
 
   useEffect(() => {
-    // Profile was deleted or fetch failed — clear the displayed image.
     if (!data) {
       setImageUrl('');
       return;
@@ -28,7 +89,7 @@ const useProfileImage = (username: string | undefined) => {
     const objectUrl = URL.createObjectURL(data);
     setImageUrl(objectUrl);
 
-    return () => URL.revokeObjectURL(objectUrl); // Cleanup on unmount
+    return () => URL.revokeObjectURL(objectUrl);
   }, [data]);
 
   return {

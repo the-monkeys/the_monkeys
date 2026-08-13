@@ -5,7 +5,8 @@ import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
-import AdUnit from '@/components/AdSense/AdUnit';
+// import AdUnit from '@/components/AdSense/AdUnit';
+import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
 import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { BackButton } from '@/components/buttons/backButton';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
@@ -18,10 +19,13 @@ import {
 import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { Button } from '@the-monkeys/ui/atoms/button';
 import moment from 'moment';
+import { RiPencilFill } from 'react-icons/ri';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
@@ -38,11 +42,14 @@ interface BlogPageClientProps {
 
 const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const router = useRouter();
+  const { data: session } = useAuth();
   const { blog, isError, isLoading } =
     useGetPublishedBlogDetailByBlogId(urlBlogId);
   const authorId = blog?.owner_account_id;
 
   const { user } = useGetProfileInfoById(authorId);
+  const isOwner =
+    !!session?.account_id && String(authorId) === String(session?.account_id);
 
   useEffect(() => {
     const startTime = Date.now();
@@ -137,8 +144,16 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   return (
     <>
       <div className='px-4'>
-        <Container className='pt-6 max-w-4xl'>
+        <Container className='pt-6 max-w-4xl flex items-center justify-between'>
           <BackButton />
+
+          {isOwner && (
+            <EditBlogDialog
+              blogId={urlBlogId}
+              buttonVariant={'ghost'}
+              label='Edit'
+            />
+          )}
         </Container>
       </div>
       <div className='px-4'>
@@ -157,7 +172,8 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
           <UserInfoCardBlogPage id={authorId} />
         </Container>
       </div>
-      <AdUnit slot='4598536509' />
+      {/* removing ads unit bcz currently we have issue in google ads account */}
+      {/* <AdUnit slot='4598536509' /> */}
       <div className='p-4'>
         <Container className='max-w-3xl'>
           <div className='px-1 pb-4 overflow-hidden'>

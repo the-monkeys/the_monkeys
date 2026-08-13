@@ -33,6 +33,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -101,12 +102,18 @@ export default function RegisterUserForm() {
         description: 'Check your email for the 6-digit code',
       });
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to send verification code';
+      if (axios.isAxiosError(err)) {
+        const errorMessage =
+          err.response?.data?.message || 'Something went wrong.';
+        toast({ variant: 'error', title: 'Error', description: errorMessage });
+        return;
+      }
+      console.error(err);
+
       toast({
         variant: 'error',
         title: 'Registration failed',
-        description: message,
+        description: 'Something went wrong.',
       });
     } finally {
       setLoading(false);

@@ -14,6 +14,7 @@ import {
   FormItem,
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -39,20 +40,21 @@ export const Username = ({ data }: { data: IUser }) => {
         description: 'Username updated successfully.',
       });
     },
-    onError: (err) => {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to send verification request.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
+
+    onError: (err: unknown) => {
+      if (axios.isAxiosError(err)) {
+        const errorMessage =
+          err.response?.data?.message || 'Failed to update username.';
+        toast({ variant: 'error', title: 'Error', description: errorMessage });
+        return;
       }
+      console.error(err);
+
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description: "'Failed to update username.",
+      });
     },
   });
 
