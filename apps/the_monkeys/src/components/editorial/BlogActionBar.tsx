@@ -5,7 +5,6 @@ import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
 import { LIVE_URL } from '@/constants/api';
-import useAuth from '@/hooks/auth/useAuth';
 import { cn } from '@/lib/utils';
 
 /**
@@ -39,8 +38,6 @@ export const BlogActionBar = ({
   className,
   initialLikeCount,
 }: BlogActionBarProps) => {
-  const { isSuccess: isAuthenticated } = useAuth();
-
   if (!blogId) return null;
 
   const shareURL = blogURL.startsWith('http')
@@ -71,7 +68,7 @@ export const BlogActionBar = ({
         <BlogShareDialog blogURL={shareURL} size={size} />
       </div>
 
-      {showBookmark && isAuthenticated && (
+      {showBookmark && (
         <div className='hover:text-brand-orange transition-colors cursor-pointer'>
           <BookmarkButton blogId={blogId} size={size} />
         </div>

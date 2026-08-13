@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* KaTeX formula rendering */
+@import 'katex/dist/katex.min.css';
+
 :root {
   --blog-h1-text-size: 36px;
   --blog-h2-text-size: 28px;

@@ -24,7 +24,7 @@ ENV DOCKER_BUILD=1
 
 # Build without environment-specific variables
 # Configuration will be provided at runtime
-RUN pnpm build
+RUN pnpm --filter the_monkeys build
 
 # Runtime stage
 FROM base AS runner
