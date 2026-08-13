@@ -852,7 +852,6 @@ li.cdx-list__item {
 }
 
 @keyframes heartBurst {
-
   /* Spawn */
   0% {
     transform: translate(0, 0) scale(0.25) rotate(0deg);
@@ -861,19 +860,22 @@ li.cdx-list__item {
 
   /* Pop */
   15% {
-    transform: translate(calc(var(--x) * 0.35), calc(var(--y) * 0.35)) scale(1.2) rotate(calc(var(--r) * 0.25));
+    transform: translate(calc(var(--x) * 0.35), calc(var(--y) * 0.35))
+      scale(1.2) rotate(calc(var(--r) * 0.25));
     opacity: 1;
   }
 
   /* Burst */
   55% {
-    transform: translate(calc(var(--x) * 0.95), calc(var(--y) * 0.95)) scale(1) rotate(calc(var(--r) * 0.8));
+    transform: translate(calc(var(--x) * 0.95), calc(var(--y) * 0.95)) scale(1)
+      rotate(calc(var(--r) * 0.8));
     opacity: 1;
   }
 
   /* Float & Fade */
   100% {
-    transform: translate(calc(var(--x) * 1.2), calc(var(--y) * 1.2 - 8px)) scale(0.75) rotate(var(--r));
+    transform: translate(calc(var(--x) * 1.2), calc(var(--y) * 1.2 - 8px))
+      scale(0.75) rotate(var(--r));
     opacity: 0;
   }
 }

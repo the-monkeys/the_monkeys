@@ -1,4 +1,5 @@
 import { MutableRefObject, useEffect } from 'react';
+
 import MonkeysEditor from '@themonkeys/monkeys-editor';
 
 type Point = { node: Node; offset: number; block: HTMLElement };
@@ -14,7 +15,11 @@ export function handleBackspaceDelete(
   event: KeyboardEvent,
   editorRef: MutableRefObject<MonkeysEditor | null>,
   container: HTMLElement,
-  state: { hasMarqueeSelection: boolean; start: Point | null; end: Point | null },
+  state: {
+    hasMarqueeSelection: boolean;
+    start: Point | null;
+    end: Point | null;
+  },
   clearOverlay: () => void,
   createRange?: (start: Point, end: Point) => Range
 ) {
@@ -30,25 +35,46 @@ export function handleBackspaceDelete(
       .reverse();
 
     if (!indexes.length) return;
-    indexes.forEach((i) => { try { blocks.delete(i); } catch {} });
+    indexes.forEach((i) => {
+      try {
+        blocks.delete(i);
+      } catch {}
+    });
 
     if (blocks.getBlocksCount() === 0) blocks.insert('paragraph');
     state.hasMarqueeSelection = false;
-    container.querySelectorAll('.ce-block--selected').forEach((el) => el.classList.remove('ce-block--selected'));
+    container
+      .querySelectorAll('.ce-block--selected')
+      .forEach((el) => el.classList.remove('ce-block--selected'));
     clearOverlay();
     return;
   }
 
-  if (state.start && state.end && state.start.block !== state.end.block && createRange) {
+  if (
+    state.start &&
+    state.end &&
+    state.start.block !== state.end.block &&
+    createRange
+  ) {
     stopEvent(event);
     const range = createRange(state.start, state.end);
-    const allBlocks = Array.from(container.querySelectorAll('.ce-block')) as HTMLElement[];
-    const startIdx = allBlocks.indexOf(range.startContainer.parentElement?.closest('.ce-block') as HTMLElement);
-    const endIdx = allBlocks.indexOf(range.endContainer.parentElement?.closest('.ce-block') as HTMLElement);
+    const allBlocks = Array.from(
+      container.querySelectorAll('.ce-block')
+    ) as HTMLElement[];
+    const startIdx = allBlocks.indexOf(
+      range.startContainer.parentElement?.closest('.ce-block') as HTMLElement
+    );
+    const endIdx = allBlocks.indexOf(
+      range.endContainer.parentElement?.closest('.ce-block') as HTMLElement
+    );
 
     if (startIdx !== -1 && endIdx !== -1 && startIdx < endIdx) {
-      const startEl = (allBlocks[startIdx].querySelector('[contenteditable="true"]') || allBlocks[startIdx]) as HTMLElement;
-      const endEl = (allBlocks[endIdx].querySelector('[contenteditable="true"]') || allBlocks[endIdx]) as HTMLElement;
+      const startEl = (allBlocks[startIdx].querySelector(
+        '[contenteditable="true"]'
+      ) || allBlocks[startIdx]) as HTMLElement;
+      const endEl = (allBlocks[endIdx].querySelector(
+        '[contenteditable="true"]'
+      ) || allBlocks[endIdx]) as HTMLElement;
 
       const prefixRange = document.createRange();
       prefixRange.setStart(startEl, 0);
@@ -65,7 +91,9 @@ export function handleBackspaceDelete(
       startEl.innerHTML = div.innerHTML;
 
       for (let i = endIdx; i > startIdx; i--) {
-        try { blocks.delete(i); } catch {}
+        try {
+          blocks.delete(i);
+        } catch {}
       }
 
       const walker = document.createTreeWalker(startEl, NodeFilter.SHOW_TEXT);
@@ -115,12 +143,15 @@ export function useCrossBlockSelection(
     if (!overlay) {
       overlay = document.createElement('div');
       overlay.id = 'ce-cross-selection-overlay';
-      overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;';
+      overlay.style.cssText =
+        'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;';
       container.style.position = 'relative';
       container.appendChild(overlay);
     }
 
-    const clearOverlay = () => { if (overlay) overlay.innerHTML = ''; };
+    const clearOverlay = () => {
+      if (overlay) overlay.innerHTML = '';
+    };
 
     const appendOrFocusNextBlock = (blockIndex: number) => {
       if (!editorRef.current) return;
@@ -128,7 +159,13 @@ export function useCrossBlockSelection(
       if (blockIndex + 1 < total) {
         editorRef.current.caret.setToBlock(blockIndex + 1, 'start');
       } else {
-        editorRef.current.blocks.insert('paragraph', {}, {}, blockIndex + 1, true);
+        editorRef.current.blocks.insert(
+          'paragraph',
+          {},
+          {},
+          blockIndex + 1,
+          true
+        );
       }
     };
 
@@ -147,7 +184,10 @@ export function useCrossBlockSelection(
       }
       if (!r) return null;
 
-      const containerNode = r.startContainer instanceof HTMLElement ? r.startContainer : r.startContainer.parentElement;
+      const containerNode =
+        r.startContainer instanceof HTMLElement
+          ? r.startContainer
+          : r.startContainer.parentElement;
       const block = containerNode?.closest('.ce-block') as HTMLElement | null;
       if (!block) return null;
 
@@ -159,7 +199,8 @@ export function useCrossBlockSelection(
         const textNodes: Text[] = [];
         const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
         let textNode: Text | null;
-        while ((textNode = walker.nextNode() as Text | null)) textNodes.push(textNode);
+        while ((textNode = walker.nextNode() as Text | null))
+          textNodes.push(textNode);
 
         if (textNodes.length > 0) {
           if (targetOffset >= el.childNodes.length) {
@@ -168,7 +209,10 @@ export function useCrossBlockSelection(
             targetOffset = lastText.textContent?.length || 0;
           } else {
             const childAtOffset = el.childNodes[targetOffset];
-            targetNode = childAtOffset && childAtOffset.nodeType === Node.TEXT_NODE ? childAtOffset : textNodes[0];
+            targetNode =
+              childAtOffset && childAtOffset.nodeType === Node.TEXT_NODE
+                ? childAtOffset
+                : textNodes[0];
             targetOffset = 0;
           }
         }
@@ -181,7 +225,10 @@ export function useCrossBlockSelection(
     const createRange = (start: Point, end: Point): Range => {
       const range = document.createRange();
       const isReversed =
-        Boolean(start.node.compareDocumentPosition(end.node) & Node.DOCUMENT_POSITION_PRECEDING) ||
+        Boolean(
+          start.node.compareDocumentPosition(end.node) &
+            Node.DOCUMENT_POSITION_PRECEDING
+        ) ||
         (start.node === end.node && start.offset > end.offset);
 
       const [s, e] = isReversed ? [end, start] : [start, end];
@@ -221,10 +268,14 @@ export function useCrossBlockSelection(
       mouseDownTarget = e.target as HTMLElement | null;
       mouseDownPos = { x: e.clientX, y: e.clientY };
 
-      const point = mouseDownTarget?.closest('[contenteditable="true"]') ? resolvePoint(e.clientX, e.clientY) : null;
+      const point = mouseDownTarget?.closest('[contenteditable="true"]')
+        ? resolvePoint(e.clientX, e.clientY)
+        : null;
 
       if (point) {
-        container.querySelectorAll('.ce-block--selected').forEach((el) => el.classList.remove('ce-block--selected'));
+        container
+          .querySelectorAll('.ce-block--selected')
+          .forEach((el) => el.classList.remove('ce-block--selected'));
         state.selecting = true;
         state.start = state.end = point;
       } else {
@@ -236,8 +287,18 @@ export function useCrossBlockSelection(
     // Mouse move handler: update selection overlay or marquee box
     const onMouseMove = (e: MouseEvent) => {
       if (state.isMarquee) {
-        renderMarquee(state.marqueeStart.x, state.marqueeStart.y, e.clientX, e.clientY);
-        highlightTouchedBlocks(state.marqueeStart.x, state.marqueeStart.y, e.clientX, e.clientY);
+        renderMarquee(
+          state.marqueeStart.x,
+          state.marqueeStart.y,
+          e.clientX,
+          e.clientY
+        );
+        highlightTouchedBlocks(
+          state.marqueeStart.x,
+          state.marqueeStart.y,
+          e.clientX,
+          e.clientY
+        );
         return;
       }
 
@@ -246,21 +307,29 @@ export function useCrossBlockSelection(
       const point = resolvePoint(e.clientX, e.clientY);
       if (point) {
         state.end = point;
-        if (state.start.block !== point.block) renderOverlay(createRange(state.start, point));
+        if (state.start.block !== point.block)
+          renderOverlay(createRange(state.start, point));
         else clearOverlay();
       }
     };
 
     // Mouse up handler: end selection and handle clicks below table or redactor
     const onMouseUp = (e: MouseEvent) => {
-      const isDrag = Math.hypot(e.clientX - mouseDownPos.x, e.clientY - mouseDownPos.y) > 5;
+      const isDrag =
+        Math.hypot(e.clientX - mouseDownPos.x, e.clientY - mouseDownPos.y) > 5;
 
       if (!isDrag && mouseDownTarget) {
-        const tableWrap = mouseDownTarget.closest('.tc-wrap') || mouseDownTarget.closest('.ce-block')?.querySelector('.tc-table');
-        const isBelowRedactor = mouseDownTarget.classList.contains('codex-editor__redactor') || mouseDownTarget.id === containerId;
+        const tableWrap =
+          mouseDownTarget.closest('.tc-wrap') ||
+          mouseDownTarget.closest('.ce-block')?.querySelector('.tc-table');
+        const isBelowRedactor =
+          mouseDownTarget.classList.contains('codex-editor__redactor') ||
+          mouseDownTarget.id === containerId;
 
         if (tableWrap || isBelowRedactor) {
-          const allBlocks = Array.from(container.querySelectorAll('.ce-block')) as HTMLElement[];
+          const allBlocks = Array.from(
+            container.querySelectorAll('.ce-block')
+          ) as HTMLElement[];
           const targetBlockIdx = tableWrap
             ? allBlocks.indexOf(tableWrap.closest('.ce-block') as HTMLElement)
             : isBelowRedactor
@@ -291,15 +360,29 @@ export function useCrossBlockSelection(
     };
 
     // Select blocks touching the marquee boundary
-    const highlightTouchedBlocks = (x1: number, y1: number, x2: number, y2: number) => {
-      const mL = Math.min(x1, x2), mR = Math.max(x1, x2);
-      const mT = Math.min(y1, y2), mB = Math.max(y1, y2);
+    const highlightTouchedBlocks = (
+      x1: number,
+      y1: number,
+      x2: number,
+      y2: number
+    ) => {
+      const mL = Math.min(x1, x2),
+        mR = Math.max(x1, x2);
+      const mT = Math.min(y1, y2),
+        mB = Math.max(y1, y2);
       let touchedCount = 0;
 
       container.querySelectorAll('.ce-block').forEach((block) => {
-        const contentEl = block.querySelector('.ce-block__content') as HTMLElement;
+        const contentEl = block.querySelector(
+          '.ce-block__content'
+        ) as HTMLElement;
         const r = (contentEl || block).getBoundingClientRect();
-        const isTouched = !(r.right < mL || r.left > mR || r.bottom < mT || r.top > mB);
+        const isTouched = !(
+          r.right < mL ||
+          r.left > mR ||
+          r.bottom < mT ||
+          r.top > mB
+        );
         block.classList.toggle('ce-block--selected', isTouched);
         if (isTouched) touchedCount++;
       });
@@ -307,15 +390,22 @@ export function useCrossBlockSelection(
     };
 
     // Format selected content into plain text and HTML for clipboard
-    const getClipboardData = (range: Range): { text: string; html: string } | null => {
+    const getClipboardData = (
+      range: Range
+    ): { text: string; html: string } | null => {
       try {
         const div = document.createElement('div');
         div.appendChild(range.cloneContents());
 
         const items = Array.from(div.querySelectorAll('li, .cdx-list__item'));
         if (items.length && !div.querySelector('ul, ol')) {
-          const parentList = range.commonAncestorContainer.parentElement?.closest('.cdx-list, ul, ol');
-          const isOrdered = parentList?.tagName === 'OL' || parentList?.classList.contains('cdx-list--ordered');
+          const parentList =
+            range.commonAncestorContainer.parentElement?.closest(
+              '.cdx-list, ul, ol'
+            );
+          const isOrdered =
+            parentList?.tagName === 'OL' ||
+            parentList?.classList.contains('cdx-list--ordered');
           const tag = isOrdered ? 'ol' : 'ul';
           div.innerHTML = `<${tag}>${items.map((i) => `<li>${i.innerHTML || i.textContent || ''}</li>`).join('')}</${tag}>`;
         }
@@ -326,14 +416,28 @@ export function useCrossBlockSelection(
           el.replaceWith(p);
         });
 
-        const blockTags = new Set(['P', 'DIV', 'LI', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6']);
+        const blockTags = new Set([
+          'P',
+          'DIV',
+          'LI',
+          'H1',
+          'H2',
+          'H3',
+          'H4',
+          'H5',
+          'H6',
+        ]);
         const getTextWithBreaks = (element: HTMLElement): string =>
           Array.from(element.childNodes)
             .map((node) => {
-              if (node.nodeType === Node.TEXT_NODE) return node.textContent || '';
+              if (node.nodeType === Node.TEXT_NODE)
+                return node.textContent || '';
               if (node.nodeType !== Node.ELEMENT_NODE) return '';
               const el = node as HTMLElement;
-              return el.tagName === 'BR' ? '\n' : getTextWithBreaks(el) + (blockTags.has(el.tagName) ? '\n' : '');
+              return el.tagName === 'BR'
+                ? '\n'
+                : getTextWithBreaks(el) +
+                    (blockTags.has(el.tagName) ? '\n' : '');
             })
             .join('');
 
@@ -350,7 +454,9 @@ export function useCrossBlockSelection(
       let data: { text: string; html: string } | null = null;
 
       if (state.hasMarqueeSelection) {
-        const selected = Array.from(container.querySelectorAll('.ce-block--selected')) as HTMLElement[];
+        const selected = Array.from(
+          container.querySelectorAll('.ce-block--selected')
+        ) as HTMLElement[];
         if (selected.length > 0) {
           const textParts: string[] = [];
           const htmlParts: string[] = [];
@@ -362,38 +468,63 @@ export function useCrossBlockSelection(
             const hdr = block.querySelector('h1, h2, h3, h4, h5, h6');
 
             if (tbl) {
-              const rows = Array.from(tbl.querySelectorAll('.tc-row, tr'), (r) =>
-                Array.from(r.querySelectorAll('.tc-cell, td, th'), (c) => (c.textContent || '').trim()).filter(Boolean)
+              const rows = Array.from(
+                tbl.querySelectorAll('.tc-row, tr'),
+                (r) =>
+                  Array.from(r.querySelectorAll('.tc-cell, td, th'), (c) =>
+                    (c.textContent || '').trim()
+                  ).filter(Boolean)
               ).filter((r) => r.length);
               if (rows.length) {
                 textParts.push(rows.map((r) => r.join('\t')).join('\n'));
-                htmlParts.push(`<table border="1">${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`);
+                htmlParts.push(
+                  `<table border="1">${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</table>`
+                );
                 return;
               }
             }
 
             if (img) {
-              const alt = (block.querySelector('.cdx-input, figcaption, [contenteditable]')?.textContent || '').trim();
+              const alt = (
+                block.querySelector('.cdx-input, figcaption, [contenteditable]')
+                  ?.textContent || ''
+              ).trim();
               textParts.push(img.src);
               htmlParts.push(`<img src="${img.src}" alt="${alt}" />`);
               return;
             }
 
             if (list) {
-              const isOrdered = list.tagName === 'OL' || list.classList.contains('cdx-list--ordered');
-              const items = Array.from(list.querySelectorAll('li, .cdx-list__item'), (i) => ({
-                t: (i.textContent || '').trim(),
-                h: (i.innerHTML || i.textContent || '').trim(),
-              })).filter((i) => i.t);
+              const isOrdered =
+                list.tagName === 'OL' ||
+                list.classList.contains('cdx-list--ordered');
+              const items = Array.from(
+                list.querySelectorAll('li, .cdx-list__item'),
+                (i) => ({
+                  t: (i.textContent || '').trim(),
+                  h: (i.innerHTML || i.textContent || '').trim(),
+                })
+              ).filter((i) => i.t);
               if (items.length) {
                 const tag = isOrdered ? 'ol' : 'ul';
-                textParts.push(items.map((i, idx) => `${isOrdered ? `${idx + 1}. ` : '• '}${i.t}`).join('\n'));
-                htmlParts.push(`<${tag}>${items.map((i) => `<li>${i.h}</li>`).join('')}</${tag}>`);
+                textParts.push(
+                  items
+                    .map(
+                      (i, idx) => `${isOrdered ? `${idx + 1}. ` : '• '}${i.t}`
+                    )
+                    .join('\n')
+                );
+                htmlParts.push(
+                  `<${tag}>${items.map((i) => `<li>${i.h}</li>`).join('')}</${tag}>`
+                );
                 return;
               }
             }
 
-            const el = hdr || block.querySelector('[contenteditable], .ce-block__content') || block;
+            const el =
+              hdr ||
+              block.querySelector('[contenteditable], .ce-block__content') ||
+              block;
             const tag = hdr ? hdr.tagName.toLowerCase() : 'p';
             const txt = (el.textContent || '').trim();
             const html = (el.innerHTML || txt).trim();
@@ -408,9 +539,12 @@ export function useCrossBlockSelection(
         }
       } else {
         const sel = window.getSelection();
-        const range = state.start && state.end
-          ? createRange(state.start, state.end)
-          : sel && !sel.isCollapsed ? sel.getRangeAt(0) : null;
+        const range =
+          state.start && state.end
+            ? createRange(state.start, state.end)
+            : sel && !sel.isCollapsed
+              ? sel.getRangeAt(0)
+              : null;
         if (range) data = getClipboardData(range);
       }
 
@@ -447,9 +581,13 @@ export function useCrossBlockSelection(
               }
 
               if (isAtEnd) {
-                const blockEl = table.closest('.ce-block') as HTMLElement | null;
+                const blockEl = table.closest(
+                  '.ce-block'
+                ) as HTMLElement | null;
                 if (blockEl) {
-                  const allBlocks = Array.from(container.querySelectorAll('.ce-block')) as HTMLElement[];
+                  const allBlocks = Array.from(
+                    container.querySelectorAll('.ce-block')
+                  ) as HTMLElement[];
                   const tableIdx = allBlocks.indexOf(blockEl);
                   if (tableIdx !== -1) appendOrFocusNextBlock(tableIdx);
                 }
@@ -459,7 +597,14 @@ export function useCrossBlockSelection(
         }
       }
 
-      handleBackspaceDelete(e, editorRef, container, state, clearOverlay, createRange);
+      handleBackspaceDelete(
+        e,
+        editorRef,
+        container,
+        state,
+        clearOverlay,
+        createRange
+      );
     };
 
     const listeners: [EventTarget, string, EventListener, boolean?][] = [
@@ -470,9 +615,13 @@ export function useCrossBlockSelection(
       [document, 'copy', handleCopy as EventListener, true],
     ];
 
-    listeners.forEach(([t, type, l, capture]) => t.addEventListener(type, l, capture ? { capture: true } : undefined));
+    listeners.forEach(([t, type, l, capture]) =>
+      t.addEventListener(type, l, capture ? { capture: true } : undefined)
+    );
     return () => {
-      listeners.forEach(([t, type, l, capture]) => t.removeEventListener(type, l, capture ? { capture: true } : undefined));
+      listeners.forEach(([t, type, l, capture]) =>
+        t.removeEventListener(type, l, capture ? { capture: true } : undefined)
+      );
       clearOverlay();
     };
   }, [containerId, editorRef]);
