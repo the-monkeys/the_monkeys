@@ -100,3 +100,9 @@ export const followUserApi = (username: string) => {
 export const unfollowUserApi = (username: string) => {
   return axiosInstance.post(`/user/unfollow/${username}`);
 };
+
+export const getFollowStatusApi = (username: string) => {
+  return axiosInstance
+    .get(`/user/is-followed/${username}`)
+    .then((res) => res.data);
+};

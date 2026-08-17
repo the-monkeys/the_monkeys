@@ -2,7 +2,6 @@ import {
   FollowButton,
   FollowButtonIcon,
 } from '@/components/user/buttons/followButton';
-import * as Fetcher from '@/services/fetcher';
 import * as UserAPI from '@/services/user/user';
 import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -13,10 +12,6 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 
-vi.mock('@the-monkeys/ui/hooks/use-toast', () => ({
-  toast: vi.fn(),
-}));
-
 describe('FollowButton', () => {
   afterEach(() => {
     cleanup();
@@ -24,7 +19,7 @@ describe('FollowButton', () => {
   });
 
   it('renders Follow button when not following', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: false,
     });
 
@@ -36,7 +31,7 @@ describe('FollowButton', () => {
   });
 
   it('renders Unfollow button when already following', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: true,
     });
 
@@ -48,7 +43,7 @@ describe('FollowButton', () => {
   });
 
   it('calls follow API when Follow is clicked', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: false,
     });
     const followSpy = vi
@@ -66,7 +61,7 @@ describe('FollowButton', () => {
   });
 
   it('calls unfollow API when Unfollow is clicked', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: true,
     });
     const unfollowSpy = vi
@@ -83,22 +78,23 @@ describe('FollowButton', () => {
     });
   });
 
-  it('returns null when there is an error fetching follow status', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockRejectedValue(
+  it('renders retry button after follow-status fetch fails', async () => {
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockRejectedValue(
       new Error('Network error')
     );
 
-    const { container } = renderWithProviders(
-      <FollowButton username='testuser' />
-    );
+    renderWithProviders(<FollowButton username='testuser' />);
 
-    await waitFor(() => {
-      expect(container.querySelector('button')).toBeNull();
-    });
+    const retryButton = await screen.findByTestId('follow-button');
+    expect(retryButton.textContent).toContain('Retry');
+
+    expect(document.querySelector('.animate-opacity-pulse')).toBeNull();
   });
 
   it('shows skeleton while loading', () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockReturnValue(new Promise(() => {}));
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockReturnValue(
+      new Promise(() => {})
+    );
 
     const { container } = renderWithProviders(
       <FollowButton username='testuser' />
@@ -109,7 +105,7 @@ describe('FollowButton', () => {
   });
 
   it('disables Follow button when follow mutation is pending', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: false,
     });
     vi.spyOn(UserAPI, 'followUserApi').mockReturnValue(new Promise(() => {}));
@@ -128,7 +124,7 @@ describe('FollowButton', () => {
   });
 
   it('disables Unfollow button when unfollow mutation is pending', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: true,
     });
     vi.spyOn(UserAPI, 'unfollowUserApi').mockReturnValue(new Promise(() => {}));
@@ -145,6 +141,28 @@ describe('FollowButton', () => {
       expect(container.querySelector('.animate-loader-rotate')).not.toBeNull();
     });
   });
+
+  it('calls onFollowSuccess callback after successful follow', async () => {
+    const onFollowSuccess = vi.fn();
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
+      isFollowing: false,
+    });
+    const followSpy = vi
+      .spyOn(UserAPI, 'followUserApi')
+      .mockResolvedValue({} as never);
+
+    renderWithProviders(
+      <FollowButton username='testuser' onFollowSuccess={onFollowSuccess} />
+    );
+    const followButton = await screen.findByTestId('follow-button');
+
+    fireEvent.click(followButton);
+
+    await waitFor(() => {
+      expect(followSpy).toHaveBeenCalledWith('testuser');
+      expect(onFollowSuccess).toHaveBeenCalled();
+    });
+  });
 });
 
 describe('FollowButtonIcon', () => {
@@ -154,7 +172,7 @@ describe('FollowButtonIcon', () => {
   });
 
   it('renders follow icon button when not following', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: false,
     });
 
@@ -165,7 +183,7 @@ describe('FollowButtonIcon', () => {
   });
 
   it('renders unfollow icon button when already following', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: true,
     });
 
@@ -178,7 +196,7 @@ describe('FollowButtonIcon', () => {
   });
 
   it('calls follow API when icon button is clicked', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: false,
     });
     const followSpy = vi
@@ -196,7 +214,7 @@ describe('FollowButtonIcon', () => {
   });
 
   it('calls unfollow API when unfollow icon button is clicked', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: true,
     });
     const unfollowSpy = vi
@@ -215,22 +233,24 @@ describe('FollowButtonIcon', () => {
     });
   });
 
-  it('returns null when there is an error fetching follow status', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockRejectedValue(
+  it('renders retry button after follow-status fetch fails', async () => {
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockRejectedValue(
       new Error('Network error')
     );
 
-    const { container } = renderWithProviders(
-      <FollowButtonIcon username='testuser' />
-    );
+    renderWithProviders(<FollowButtonIcon username='testuser' />);
 
-    await waitFor(() => {
-      expect(container.querySelector('button')).toBeNull();
-    });
+    
+    const retryButton = await screen.findByTestId('retry-follow-icon-button');
+    expect(retryButton.getAttribute('aria-label')).toBe('Retry follow status');
+   
+    expect(document.querySelector('.animate-opacity-pulse')).toBeNull();
   });
 
   it('shows skeleton while loading', () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockReturnValue(new Promise(() => {}));
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockReturnValue(
+      new Promise(() => {})
+    );
 
     const { container } = renderWithProviders(
       <FollowButtonIcon username='testuser' />
@@ -241,7 +261,7 @@ describe('FollowButtonIcon', () => {
   });
 
   it('disables follow icon button when follow mutation is pending', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: false,
     });
     vi.spyOn(UserAPI, 'followUserApi').mockReturnValue(new Promise(() => {}));
@@ -260,7 +280,7 @@ describe('FollowButtonIcon', () => {
   });
 
   it('disables unfollow icon button when unfollow mutation is pending', async () => {
-    vi.spyOn(Fetcher, 'authFetcher').mockResolvedValue({
+    vi.spyOn(UserAPI, 'getFollowStatusApi').mockResolvedValue({
       isFollowing: true,
     });
     vi.spyOn(UserAPI, 'unfollowUserApi').mockReturnValue(new Promise(() => {}));
