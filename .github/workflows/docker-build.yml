@@ -26,8 +26,9 @@ jobs:
       
       - uses: docker/build-push-action@v5
         with:
-          push: true
-          platforms: linux/amd64,linux/arm64
+          context: .
+          push: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+          platforms: linux/amd64
           tags: ghcr.io/${{ github.repository }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -35,3 +36,4 @@ jobs:
             DOCKER_BUILD=1
             NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY=test
             NEXT_PUBLIC_GROWTHBOOK_API_HOST=test
+              
