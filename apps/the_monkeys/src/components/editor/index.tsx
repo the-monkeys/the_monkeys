@@ -2,9 +2,9 @@
 
 import React, { FC, useEffect, useMemo, useRef } from 'react';
 
-import { getEditorConfig } from '@/config/editor/editorjs.config';
+import { getEditorConfig } from '@/config/editor/monkeys_editor.config';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import EditorJS, { OutputData } from '@editorjs/editorjs';
+import MonkeysEditor, { OutputData } from '@themonkeys/monkeys-editor';
 
 export type EditorProps = {
   blogId: string;
@@ -12,7 +12,7 @@ export type EditorProps = {
   onChange: (data: OutputData) => void;
 };
 
-// Extract all file URLs from EditorJS blocks that have data.file.url
+// Extract all file URLs from MonkeysEditor blocks that have data.file.url
 function extractFileUrls(blocks: OutputData['blocks']): Set<string> {
   const urls = new Set<string>();
   for (const block of blocks) {
@@ -39,7 +39,7 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
   data,
   onChange,
 }) {
-  const editorInstance = useRef<EditorJS | null>(null);
+  const editorInstance = useRef<MonkeysEditor | null>(null);
   const prevFileUrls = useRef<Set<string>>(extractFileUrls(data?.blocks || []));
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const localDataRef = useRef<OutputData | null>(data);
@@ -49,7 +49,7 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
 
   useEffect(() => {
     if (!editorInstance.current) {
-      editorInstance.current = new EditorJS({
+      editorInstance.current = new MonkeysEditor({
         ...editorConfig,
         data: data,
         onChange: (api) => {
@@ -105,7 +105,10 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
   }, [data]);
 
   return (
-    <div className='w-full px-4 space-y-6' id='editorjs_editor-container'></div>
+    <div
+      className='w-full px-4 space-y-6'
+      id='monkeys_editor_editor-container'
+    ></div>
   );
 });
 
