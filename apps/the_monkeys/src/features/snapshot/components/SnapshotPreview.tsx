@@ -16,14 +16,9 @@ export interface SnapshotPreviewProps {
   /** Background "stage" colour around the canvas. */
   stageBackground?: string;
   className?: string;
+  previewHeight?: number;
 }
 
-/**
- * Renders the selected template at its native px size inside a fixed-size
- * wrapper, then scales the wrapper with CSS `transform` so the visible preview
- * fits the available area without affecting the export pipeline (which still
- * reads the native dimensions via a ref).
- */
 export const SnapshotPreview = forwardRef<HTMLDivElement, SnapshotPreviewProps>(
   function SnapshotPreview(
     {
@@ -34,6 +29,7 @@ export const SnapshotPreview = forwardRef<HTMLDivElement, SnapshotPreviewProps>(
       maxPreviewWidth,
       stageBackground = 'transparent',
       className,
+      previewHeight,
     },
     ref
   ) {
@@ -44,20 +40,33 @@ export const SnapshotPreview = forwardRef<HTMLDivElement, SnapshotPreviewProps>(
 
     useEffect(() => {
       if (!stageRef.current) return;
+
       const el = stageRef.current;
+
       const update = () => {
-        const available = maxPreviewWidth ?? el.clientWidth;
-        if (!available) return;
-        const next = Math.min(1, available / template.width);
+        const availableWidth = maxPreviewWidth ?? el.clientWidth;
+
+        if (!availableWidth) return;
+
+        let next = Math.min(1, availableWidth / template.width);
+
+        if (previewHeight) {
+          next = Math.min(next, previewHeight / template.height);
+        }
+
         setScale(next);
       };
+
       update();
+
       const ro = new ResizeObserver(update);
       ro.observe(el);
+
       return () => ro.disconnect();
-    }, [template.width, maxPreviewWidth]);
+    }, [template.width, maxPreviewWidth, previewHeight]);
 
     const Render = template.Render;
+
     const scaledWidth = template.width * scale;
     const scaledHeight = template.height * scale;
 
@@ -76,15 +85,9 @@ export const SnapshotPreview = forwardRef<HTMLDivElement, SnapshotPreviewProps>(
             overflow: 'hidden',
             marginLeft: 'auto',
             marginRight: 'auto',
+            backgroundColor: stageBackground,
           }}
         >
-          {/*
-           * The CSS scale lives on this wrapper, NOT on the ref'd
-           * element below. If we put `transform` on the export root,
-           * html-to-image would serialize the transform into its
-           * SVG output and produce a tiny image in the top-left of
-           * a native-sized canvas.
-           */}
           <div
             style={{
               width: template.width,
