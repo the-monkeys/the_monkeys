@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { useUpdateProfileSteps } from '@/app/[username]/store/update-user-profile-steps';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
@@ -21,13 +22,13 @@ import axios from 'axios';
 
 export const DeleteProfilePhotoConfirmation = ({
   username,
-  onSuccess,
 }: {
   username: string;
-  onSuccess: () => void;
 }) => {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
+
+  const resetStep = useUpdateProfileSteps((state) => state.resetStep);
 
   const onProfileDelete = async () => {
     setLoading(true);
@@ -46,7 +47,8 @@ export const DeleteProfilePhotoConfirmation = ({
           title: 'Success',
           description: 'Your profile photo has been deleted successfully',
         });
-        onSuccess();
+
+        resetStep();
       }
     } catch (err: unknown) {
       const isMissingProfileImage =
@@ -106,10 +108,7 @@ export const DeleteProfileDialog = () => {
         </DialogTitle>
         <DialogDescription className='hidden' />
         {data?.username && (
-          <DeleteProfilePhotoConfirmation
-            username={data.username}
-            onSuccess={() => setOpen(false)}
-          />
+          <DeleteProfilePhotoConfirmation username={data.username} />
         )}
       </DialogContent>
     </Dialog>
