@@ -574,7 +574,7 @@ export const TweetScreenshotPreview = forwardRef<
       overflow: 'hidden' as const,
       flexShrink: 0,
     }),
-    [width, height, options.backgroundColor, options.backgroundImage]
+    [width, height, options]
   );
 
   const placeholder = (message: string, sub?: string) => (
