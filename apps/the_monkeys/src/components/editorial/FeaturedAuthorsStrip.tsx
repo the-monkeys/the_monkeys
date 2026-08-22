@@ -11,11 +11,6 @@ import useActiveUsers from '@/hooks/user/useActiveUsers';
  * pictures). Anything from the active-users API is appended after, with
  * the most recently active appearing first.
  */
-const PINNED_AUTHORS: ReadonlyArray<{ username: string; firstName: string }> = [
-  { username: 'k_young', firstName: 'Karen' },
-  { username: 'innovation_hub', firstName: 'Innovation' },
-  { username: 'euro_centric', firstName: 'Euro' },
-];
 
 interface FeaturedAuthorsStripProps {
   title?: string;
@@ -36,14 +31,14 @@ interface FeaturedAuthorsStripProps {
 export const FeaturedAuthorsStrip = ({
   title = 'Featured authors:',
 }: FeaturedAuthorsStripProps) => {
-  const { details } = useActiveUsers('24h');
+  const { details,isLoading } = useActiveUsers('24h');
 
   // Reverse so the most recently active user (Dave, per current data)
   // appears first after the pinned leaders.
   const recent = [...details].reverse();
 
   // De-dupe by username (case-insensitive) — pinned wins over API.
-  const seen = new Set(PINNED_AUTHORS.map((u) => u.username.toLowerCase()));
+  const seen = new Set<string>();
   const apiUsers: Array<{ username: string; firstName?: string }> = [];
   for (const u of recent) {
     const uname = u.username?.trim();
@@ -60,7 +55,7 @@ export const FeaturedAuthorsStrip = ({
     });
   }
 
-  const allAuthors = [...PINNED_AUTHORS, ...apiUsers];
+  const allAuthors = apiUsers;
 
   // Scroll plumbing — chevrons appear only when content overflows.
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -95,6 +90,25 @@ export const FeaturedAuthorsStrip = ({
       behavior: 'smooth',
     });
   };
+  
+  // Loading State-Display a pulsing skeleton loader while active users are being fetched from the API.
+  if (isLoading) {
+  return (
+    <section className='pb-4'>
+      <h4 className='font-dm_sans text-sm font-medium text-gray-400 mb-3'>
+        {title}
+      </h4>
+      <div className='flex gap-4 overflow-x-auto pb-2'>
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className='h-16 w-16 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700'
+          />
+        ))}
+      </div>
+    </section>
+   );
+  }
 
   return (
     <section className='pb-4'>
