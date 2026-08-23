@@ -2,15 +2,12 @@
 
 import React from 'react';
 
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
-import { UpdateDialog } from '@/app/[username]/components/profile/UpdateDialog';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { FollowButton } from '@/components/user/buttons/followButton';
-import { ConnectionsDialog } from '@/components/user/dialogs/ConnectionsDialog';
-import { ShareProfileDialog } from '@/components/user/dialogs/ShareProfileDialog';
-import { UpdateUsernameDialog } from '@/components/user/dialogs/UpdateUsernameDialog';
 import { ShowcaseProfileDialog } from '@/components/user/dialogs/showcaseProfileDialog';
 import {
   GITHUB_URL,
@@ -23,6 +20,22 @@ import { useGetConnectionCount } from '@/hooks/user/useUserConnections';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import moment from 'moment';
+
+const ShareProfileDialog = dynamic(
+  () => import('@/components/user/dialogs/ShareProfileDialog')
+);
+
+const ConnectionsDialog = dynamic(
+  () => import('@/components/user/dialogs/ConnectionsDialog')
+);
+
+const UpdateUsernameDialog = dynamic(
+  () => import('@/components/user/dialogs/UpdateUsernameDialog')
+);
+
+const UpdateUser = dynamic(
+  () => import('@/app/[username]/components/UpdateUser')
+);
 
 const SocialLinkButton = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -67,7 +80,7 @@ export const AuthorProfileCard = ({
               </div>
             </ProfileFrame>
 
-            {isAuthenticated && <UpdateDialog data={session} />}
+            {isAuthenticated && <UpdateUser data={session} />}
           </div>
 
           <div className='min-w-0 flex-1 space-y-1'>
