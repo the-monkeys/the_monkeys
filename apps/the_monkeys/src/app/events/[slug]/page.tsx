@@ -76,7 +76,7 @@ export default async function EventDetailPage({
 
 // Schema.org Event JSON-LD so search engines can surface the event with its
 // title, time, place, image and host in rich results.
-function buildEventJsonLd(event: EventResp['event']) {
+function buildEventJsonLd(event: NonNullable<EventResp['event']>) {
   const base = LIVE_URL || 'https://monkeys.com.co';
   const attendanceMode =
     event.event_type === 'virtual'
@@ -93,7 +93,7 @@ function buildEventJsonLd(event: EventResp['event']) {
     endDate: event.end_time,
     eventAttendanceMode: attendanceMode,
     eventStatus:
-      event.status === 'canceled'
+      event.status === 'cancelled'
         ? 'https://schema.org/EventCancelled'
         : 'https://schema.org/EventScheduled',
     url: `${base}/events/${event.slug}`,
