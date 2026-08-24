@@ -245,3 +245,26 @@ export type ListFilters = {
   tags?: string;
   status?: EventStatus | '';
 };
+
+// One image in an event's gallery. The url is a domain-free storage path the
+// browser resolves against its own origin; id is the object base name used to
+// address the photo for deletion.
+export type EventPhoto = {
+  id: string;
+  url: string;
+  size?: number;
+  etag?: string;
+};
+
+export type ListEventPhotosResp = {
+  photos: EventPhoto[];
+};
+
+export type UploadEventPhotoResp = EventPhoto & {
+  bucket?: string;
+  object?: string;
+  contentType?: string;
+  blurhash?: string;
+  width?: number;
+  height?: number;
+};

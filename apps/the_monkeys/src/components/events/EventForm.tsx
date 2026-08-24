@@ -1,9 +1,20 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
+import Icon from '@/components/icon';
+import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import useAuth from '@/hooks/auth/useAuth';
+import { useUploadEventCover } from '@/hooks/events/useEventQueries';
 import { useUserGroups } from '@/hooks/groups/useGroupQueries';
+import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
 import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
 import {
   EventBody,
@@ -40,6 +51,15 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
+// localNowInput returns the current instant formatted for a datetime-local
+// input (YYYY-MM-DDTHH:mm) in the viewer's own timezone, so it can be used as a
+// `min` to block selecting a past moment.
+function localNowInput(): string {
+  const d = new Date();
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 16);
+}
+
 export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const { data: session } = useAuth();
   const myGroups = useUserGroups(
@@ -64,6 +84,19 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [visibility, setVisibility] = useState<EventVisibility>(
     (event?.visibility as EventVisibility) || 'public'
   );
+  // Cover image and co-hosts are controlled so the upload picker and the
+  // username search can drive them; both fall back to the event's saved values.
+  const [coverImage, setCoverImage] = useState(event?.cover_image || '');
+  const [cohosts, setCohosts] = useState<string[]>(
+    event?.co_host_usernames || []
+  );
+  // Track the chosen start so the end picker can forbid an earlier moment.
+  const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
+  const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
+  const [dateError, setDateError] = useState('');
+  // Recomputed once on mount; a stale minute is harmless and the browser plus
+  // the submit guard both re-validate against the real clock.
+  const minStart = useMemo(() => localNowInput(), []);
 
   const hasGroup = !!(event ? event.group_slug : groupSlug);
 
@@ -71,15 +104,11 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     () => ({
       title: event?.title || '',
       description: event?.description || '',
-      start: toLocalInput(event?.start_time),
-      end: toLocalInput(event?.end_time),
       timezone: event?.timezone || defaultTimezone(),
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
-      cover_image: event?.cover_image || '',
       tags: event?.tags?.join(', ') || '',
-      cohosts: event?.co_host_usernames?.join(', ') || '',
       tierName: 'General',
       tierPrice: '0',
       tierCapacity: '',
@@ -94,6 +123,22 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     const end = fromLocalInput(String(form.get('end') || ''));
     if (!start || !end) return;
 
+    // Block past starts and inverted ranges at the boundary. The browser's
+    // `min` handles the common case, but a crafted value or a stale tab could
+    // still submit one, and the backend also rejects it.
+    const startMs = new Date(start).getTime();
+    const endMs = new Date(end).getTime();
+    const nowMs = Date.now();
+    if (startMs < nowMs - 60_000) {
+      setDateError('Start time cannot be in the past.');
+      return;
+    }
+    if (endMs < startMs) {
+      setDateError('End time must be after the start time.');
+      return;
+    }
+    setDateError('');
+
     const body: EventBody = {
       title: String(form.get('title') || '').trim(),
       description: String(form.get('description') || '').trim(),
@@ -104,7 +149,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       location: String(form.get('location') || '').trim(),
       meeting_link: String(form.get('meeting_link') || '').trim(),
       capacity: Number(form.get('capacity') || 0) || 0,
-      cover_image: String(form.get('cover_image') || '').trim(),
+      cover_image: coverImage.trim(),
       tags: splitList(String(form.get('tags') || '')),
     };
 
@@ -116,7 +161,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
 
     if (!event) {
       if (groupSlug) body.group_slug = groupSlug;
-      body.co_host_usernames = splitList(String(form.get('cohosts') || ''));
+      body.co_host_usernames = cohosts;
       if (includeTier) {
         body.ticket_tiers = [
           {
@@ -162,7 +207,16 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             name='start'
             type='datetime-local'
             required
-            defaultValue={initial.start}
+            min={minStart}
+            value={startVal}
+            onChange={(e) => {
+              setStartVal(e.target.value);
+              // Keep end at or after start so the range stays valid.
+              if (endVal && e.target.value && endVal < e.target.value) {
+                setEndVal(e.target.value);
+              }
+              if (dateError) setDateError('');
+            }}
           />
         </Field>
         <Field label='Ends'>
@@ -170,10 +224,20 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             name='end'
             type='datetime-local'
             required
-            defaultValue={initial.end}
+            min={startVal || minStart}
+            value={endVal}
+            onChange={(e) => {
+              setEndVal(e.target.value);
+              if (dateError) setDateError('');
+            }}
           />
         </Field>
       </div>
+      {dateError && (
+        <p className='-mt-3 font-inter text-sm text-brand-orange'>
+          {dateError}
+        </p>
+      )}
 
       <Field label='Timezone'>
         <Input name='timezone' defaultValue={initial.timezone} />
@@ -219,23 +283,20 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         </Field>
       )}
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-        <Field label='Max people (0 = no limit)'>
-          <Input
-            name='capacity'
-            type='number'
-            min={0}
-            defaultValue={initial.capacity}
-          />
-        </Field>
-        <Field label='Cover image URL'>
-          <Input
-            name='cover_image'
-            type='url'
-            defaultValue={initial.cover_image}
-          />
-        </Field>
-      </div>
+      <Field label='Max people (0 = no limit)'>
+        <Input
+          name='capacity'
+          type='number'
+          min={0}
+          defaultValue={initial.capacity}
+        />
+      </Field>
+
+      <EventCoverField
+        slug={event?.slug}
+        value={coverImage}
+        onChange={setCoverImage}
+      />
 
       <Field label='Tags (comma separated)'>
         <Input
@@ -286,8 +347,12 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       </Field>
 
       {!event && (
-        <Field label='Co-hosts (usernames, comma separated)'>
-          <Input name='cohosts' defaultValue={initial.cohosts} />
+        <Field label='Co-hosts'>
+          <CohostPicker
+            value={cohosts}
+            onChange={setCohosts}
+            exclude={session?.username}
+          />
         </Field>
       )}
 
@@ -351,6 +416,218 @@ function Field({
     <div className='space-y-1.5'>
       <Label className='font-inter text-sm'>{label}</Label>
       {children}
+    </div>
+  );
+}
+
+// EventCoverField uploads a cover to storage once the event exists (and so has
+// a slug) and writes the returned path back into the controlled value. Before
+// the event exists, a URL may be pasted; the hint nudges the host to save the
+// draft first, mirroring the group logo/cover flow.
+function EventCoverField({
+  slug,
+  value,
+  onChange,
+}: {
+  slug?: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState('');
+  const upload = useUploadEventCover(slug || '');
+
+  const onPick = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Please choose an image file.');
+      return;
+    }
+    setError('');
+    upload.mutate(file, {
+      onSuccess: (res) => res.url && onChange(res.url),
+      onError: () => setError('Upload failed. Try a smaller image.'),
+    });
+  };
+
+  return (
+    <div className='space-y-1.5'>
+      <Label className='font-inter text-sm'>Cover image</Label>
+
+      <div className='flex items-center gap-3'>
+        {value ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={value}
+            alt='Cover preview'
+            className='h-16 w-28 rounded-lg border border-border-light object-cover dark:border-border-dark'
+          />
+        ) : (
+          <div className='flex h-16 w-28 items-center justify-center rounded-lg border border-dashed border-border-light text-xs text-gray-400 dark:border-border-dark'>
+            None
+          </div>
+        )}
+
+        <div className='flex flex-col gap-1'>
+          <input
+            ref={inputRef}
+            type='file'
+            accept='image/*'
+            className='hidden'
+            onChange={onPick}
+          />
+          <Button
+            type='button'
+            variant='secondary'
+            disabled={!slug || upload.isPending}
+            onClick={() => inputRef.current?.click()}
+            className='min-h-[44px] gap-2'
+          >
+            <Icon name='RiUpload2' size={18} />
+            {upload.isPending ? 'Uploading…' : 'Upload'}
+          </Button>
+          {!slug && (
+            <span className='text-xs text-gray-400'>
+              Save the event first to upload.
+            </span>
+          )}
+        </div>
+      </div>
+
+      <Input
+        type='text'
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder='…or paste an image URL'
+      />
+      {error && <p className='text-xs text-brand-orange'>{error}</p>}
+    </div>
+  );
+}
+
+// CohostPicker adds co-hosts by @username, autocompleting against the people
+// search endpoint (active users only) — the same pattern the groups surface
+// uses to enroll members. Selected users show as removable chips; the parent
+// receives the plain username list.
+function CohostPicker({
+  value,
+  onChange,
+  exclude,
+}: {
+  value: string[];
+  onChange: (v: string[]) => void;
+  exclude?: string;
+}) {
+  const [term, setTerm] = useState('');
+  const [debounced, setDebounced] = useState('');
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebounced(term.trim()), 250);
+    return () => clearTimeout(id);
+  }, [term]);
+
+  const { users, isLoading } = useSearchPeopleV2({
+    query: debounced,
+    limit: 6,
+    enabled: open && debounced.length > 0,
+  });
+
+  const results = useMemo(
+    () =>
+      (users ?? []).filter(
+        (u) => u.username !== exclude && !value.includes(u.username)
+      ),
+    [users, exclude, value]
+  );
+
+  const add = (username: string) => {
+    if (!value.includes(username)) onChange([...value, username]);
+    setTerm('');
+    setDebounced('');
+    setOpen(false);
+  };
+
+  const remove = (username: string) =>
+    onChange(value.filter((u) => u !== username));
+
+  return (
+    <div className='space-y-2'>
+      {value.length > 0 && (
+        <div className='flex flex-wrap gap-2'>
+          {value.map((u) => (
+            <span
+              key={u}
+              className='inline-flex items-center gap-1 rounded-full bg-foreground-light/60 py-1 pl-3 pr-1 font-inter text-sm dark:bg-foreground-dark/40'
+            >
+              @{u}
+              <button
+                type='button'
+                aria-label={`Remove @${u}`}
+                onClick={() => remove(u)}
+                className='flex h-6 w-6 items-center justify-center rounded-full hover:bg-black/10 dark:hover:bg-white/10'
+              >
+                <Icon name='RiClose' size={14} />
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className='relative'>
+        <Input
+          value={term}
+          onChange={(e) => {
+            setTerm(e.target.value);
+            setOpen(true);
+          }}
+          onFocus={() => setOpen(true)}
+          placeholder='Search people by @username…'
+          aria-label='Search people to add as co-hosts'
+        />
+
+        {open && debounced.length > 0 && (
+          <div className='absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-border-light bg-white shadow-lg dark:border-border-dark dark:bg-primary-monkeyBlack'>
+            {isLoading ? (
+              <p className='px-3 py-2 font-inter text-sm text-gray-500'>
+                Searching…
+              </p>
+            ) : results.length === 0 ? (
+              <p className='px-3 py-2 font-inter text-sm text-gray-500'>
+                No matches
+              </p>
+            ) : (
+              <ul className='max-h-64 overflow-y-auto'>
+                {results.map((u) => (
+                  <li key={u.account_id}>
+                    <button
+                      type='button'
+                      onClick={() => add(u.username)}
+                      className='flex min-h-[44px] w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800'
+                    >
+                      <ProfileFrame className='h-8 w-8'>
+                        <ProfileImage username={u.username} />
+                      </ProfileFrame>
+                      <span className='min-w-0'>
+                        <span className='block truncate font-dm_sans text-sm font-medium'>
+                          @{u.username}
+                        </span>
+                        {(u.first_name || u.last_name) && (
+                          <span className='block truncate font-inter text-xs text-gray-500'>
+                            {`${u.first_name} ${u.last_name}`.trim()}
+                          </span>
+                        )}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

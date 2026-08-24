@@ -1,5 +1,6 @@
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
+import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
 import { authFetcher, fetcher } from '@/services/fetcher';
 import axios, { AxiosError } from 'axios';
 
@@ -9,12 +10,14 @@ import {
   EventBody,
   EventComment,
   EventResp,
+  ListEventPhotosResp,
   ListEventsResp,
   ListFilters,
   RsvpResp,
   ShareMeta,
   TicketTier,
   TicketTierInput,
+  UploadEventPhotoResp,
 } from './eventTypes';
 
 const root = '/events';
@@ -274,4 +277,51 @@ export const downloadCalendar = async (slug: string) => {
   a.download = `${slug}.ics`;
   a.click();
   URL.revokeObjectURL(url);
+};
+
+// -----------------------------------------------------------------------------
+// Event gallery. Reads are public and served by the storage service under
+// /api/v2/storage; the write routes live on the /api/v1/events surface so they
+// reuse the event host permission guard. The server caps the gallery at four
+// photos, so callers should treat a 409 as "gallery full".
+// -----------------------------------------------------------------------------
+
+export const listEventPhotos = (slug: string) =>
+  axiosInstanceNoAuthV2
+    .get<ListEventPhotosResp>(
+      `/storage/events/${encodeURIComponent(slug)}/photos`
+    )
+    .then((r) => r.data.photos ?? []);
+
+export const uploadEventPhoto = (slug: string, file: File) => {
+  const form = new FormData();
+  form.append('image', file);
+  return axiosInstance
+    .post<UploadEventPhotoResp>(
+      `${root}/${encodeURIComponent(slug)}/photos`,
+      form
+    )
+    .then((r) => r.data);
+};
+
+export const deleteEventPhoto = (slug: string, photoId: string) =>
+  axiosInstance
+    .delete(
+      `${root}/${encodeURIComponent(slug)}/photos/${encodeURIComponent(photoId)}`
+    )
+    .then((r) => r.data);
+
+// Uploads an event cover image, mirroring the group logo/cover flow: the
+// storage service stores it under events/{slug}/cover and returns a domain-free
+// path the caller persists on the event via updateEvent. Only works once the
+// event exists (has a slug), which the gateway host guard also requires.
+export const uploadEventCover = (slug: string, file: File) => {
+  const form = new FormData();
+  form.append('image', file);
+  return axiosInstance
+    .post<UploadEventPhotoResp>(
+      `${root}/${encodeURIComponent(slug)}/images/cover`,
+      form
+    )
+    .then((r) => r.data);
 };

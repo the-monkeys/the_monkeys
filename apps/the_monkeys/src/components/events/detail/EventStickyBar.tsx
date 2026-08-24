@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
+import Link from 'next/link';
+
 import Icon from '@/components/icon';
+import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { eventPriceLabel, formatEventWhen, spotsLeft } from '@/lib/eventTime';
 import { cn } from '@/lib/utils';
 import { EventItem, RsvpStatus } from '@/services/events/eventTypes';
@@ -11,6 +14,7 @@ import { Button } from '@the-monkeys/ui/atoms/button';
 type Props = {
   event: EventItem;
   viewerStatus?: RsvpStatus;
+  host?: boolean;
   onShare?: () => void;
   onAttend?: () => void;
 };
@@ -23,6 +27,7 @@ type Props = {
 export function EventStickyBar({
   event,
   viewerStatus,
+  host,
   onShare,
   onAttend,
 }: Props) {
@@ -98,18 +103,24 @@ export function EventStickyBar({
           >
             <Icon name='RiShareForward' size={20} />
           </button>
-          <Button
-            variant={going ? 'outline' : 'brand'}
-            className='h-11 min-w-[112px] px-5'
-            disabled={closed}
-            onClick={handleAttend}
-          >
-            {closed
-              ? eventStatusText(event.status)
-              : going
-                ? 'You’re in'
-                : 'Attend'}
-          </Button>
+          {host ? (
+            <Button asChild variant='brand' className='h-11 min-w-[112px] px-5'>
+              <Link href={`${EVENTS_ROUTE}/${event.slug}/manage`}>Manage</Link>
+            </Button>
+          ) : (
+            <Button
+              variant={going ? 'outline' : 'brand'}
+              className='h-11 min-w-[112px] px-5'
+              disabled={closed}
+              onClick={handleAttend}
+            >
+              {closed
+                ? eventStatusText(event.status)
+                : going
+                  ? 'You’re in'
+                  : 'Attend'}
+            </Button>
+          )}
         </div>
       </div>
     </div>

@@ -51,10 +51,78 @@ export async function generateMetadata({
   };
 }
 
-export default function EventDetailPage({
+export default async function EventDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  return <EventDetailClient slug={params.slug} />;
+  const data = await loadEvent(params.slug);
+  const jsonLd = data?.event ? buildEventJsonLd(data.event) : null;
+
+  return (
+    <>
+      {jsonLd && (
+        <script
+          type='application/ld+json'
+          // Server-rendered from our own API; the payload is JSON-serialized
+          // (not raw user HTML), so this is safe structured metadata for crawlers.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <EventDetailClient slug={params.slug} />
+    </>
+  );
+}
+
+// Schema.org Event JSON-LD so search engines can surface the event with its
+// title, time, place, image and host in rich results.
+function buildEventJsonLd(event: EventResp['event']) {
+  const base = LIVE_URL || 'https://monkeys.com.co';
+  const attendanceMode =
+    event.event_type === 'virtual'
+      ? 'https://schema.org/OnlineEventAttendanceMode'
+      : event.event_type === 'hybrid'
+        ? 'https://schema.org/MixedEventAttendanceMode'
+        : 'https://schema.org/OfflineEventAttendanceMode';
+
+  const jsonLd: Record<string, unknown> = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    startDate: event.start_time,
+    endDate: event.end_time,
+    eventAttendanceMode: attendanceMode,
+    eventStatus:
+      event.status === 'canceled'
+        ? 'https://schema.org/EventCancelled'
+        : 'https://schema.org/EventScheduled',
+    url: `${base}/events/${event.slug}`,
+  };
+
+  if (event.description) jsonLd.description = event.description.slice(0, 500);
+  if (event.cover_image) jsonLd.image = [event.cover_image];
+  if (event.tags?.length) jsonLd.keywords = event.tags.join(', ');
+
+  if (event.event_type !== 'virtual' && event.location) {
+    jsonLd.location = {
+      '@type': 'Place',
+      name: event.location,
+      address: event.location,
+    };
+  } else if (event.event_type === 'virtual' && event.meeting_link) {
+    jsonLd.location = {
+      '@type': 'VirtualLocation',
+      url: event.meeting_link,
+    };
+  }
+
+  if (event.organizer_username) {
+    jsonLd.organizer = {
+      '@type': 'Person',
+      name: `@${event.organizer_username}`,
+      url: `${base}/${event.organizer_username}`,
+    };
+  }
+
+  return jsonLd;
 }

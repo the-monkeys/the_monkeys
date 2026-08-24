@@ -46,6 +46,7 @@ export const queryKeys = {
       [...eventRoot, 'comments', slug, offset] as const,
     attendees: (slug: QueryId) => [...eventRoot, 'attendees', slug] as const,
     coupons: (slug: QueryId) => [...eventRoot, 'coupons', slug] as const,
+    photos: (slug: QueryId) => [...eventRoot, 'photos', slug] as const,
   },
   groups: {
     all: groupRoot,

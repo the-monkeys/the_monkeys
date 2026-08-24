@@ -1,16 +1,20 @@
 import { queryKeys } from '@/lib/queryKeys';
 import { ListFilters } from '@/services/events/eventTypes';
 import {
+  deleteEventPhoto,
   getEvent,
   listAttendees,
   listAttendingEvents,
   listComments,
   listCoupons,
+  listEventPhotos,
   listEvents,
   listGroupEvents,
   listUserEvents,
+  uploadEventCover,
+  uploadEventPhoto,
 } from '@/services/events/eventsApi';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useEventList(filters: ListFilters, enabled = true) {
   return useQuery({
@@ -81,5 +85,48 @@ export function useEventCoupons(slug: string | undefined, enabled = true) {
     queryKey: queryKeys.events.coupons(slug),
     queryFn: () => listCoupons(slug!),
     enabled: enabled && !!slug,
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Gallery. Reads are public; the mutations are gated by the event host guard on
+// the gateway. Both invalidate the photos list so the carousel reflects the new
+// state immediately.
+// -----------------------------------------------------------------------------
+
+export function useEventPhotos(slug: string | undefined, enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.events.photos(slug),
+    queryFn: () => listEventPhotos(slug!),
+    enabled: enabled && !!slug,
+  });
+}
+
+export function useUploadEventPhoto(slug: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (file: File) => uploadEventPhoto(slug, file),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: queryKeys.events.photos(slug) }),
+  });
+}
+
+export function useDeleteEventPhoto(slug: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (photoId: string) => deleteEventPhoto(slug, photoId),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: queryKeys.events.photos(slug) }),
+  });
+}
+
+// Uploads a cover image for an existing event and refreshes the detail view so
+// the new cover is reflected without a manual reload.
+export function useUploadEventCover(slug: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (file: File) => uploadEventCover(slug, file),
+    onSuccess: () =>
+      qc.invalidateQueries({ queryKey: queryKeys.events.detail(slug) }),
   });
 }

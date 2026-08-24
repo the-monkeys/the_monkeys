@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { BackButton } from '@/components/buttons/backButton';
 import { EventForm } from '@/components/events/EventForm';
 import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
@@ -38,6 +39,9 @@ export default function NewEventPage() {
 
   return (
     <div className='mx-auto max-w-2xl'>
+      <div className='mb-4'>
+        <BackButton />
+      </div>
       <h1 className='font-newsreader font-bold text-3xl md:text-4xl mb-6'>
         Create event
       </h1>

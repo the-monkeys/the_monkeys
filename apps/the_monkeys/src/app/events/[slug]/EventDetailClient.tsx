@@ -13,6 +13,7 @@ import { EventAttendees } from '@/components/events/detail/EventAttendees';
 import { EventFaq } from '@/components/events/detail/EventFaq';
 import { EventGallery } from '@/components/events/detail/EventGallery';
 import { EventHost } from '@/components/events/detail/EventHost';
+import { EventHostPanel } from '@/components/events/detail/EventHostPanel';
 import { EventLocationMap } from '@/components/events/detail/EventLocationMap';
 import { EventRelated } from '@/components/events/detail/EventRelated';
 import { EventSeriesNote } from '@/components/events/detail/EventSeriesNote';
@@ -79,22 +80,24 @@ export default function EventDetailClient({ slug }: { slug: string }) {
     <>
       {/* Extra bottom padding leaves room for the fixed registration bar. */}
       <div className='mx-auto max-w-5xl pb-28'>
+        {/* Cover as a full-width hero at the top of the page, above the grid,
+            so it reads as the event's banner rather than an inline figure. */}
+        {event.cover_image && (
+          <div
+            className='mb-8 overflow-hidden rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'
+            style={{ aspectRatio: '16 / 9' }}
+          >
+            <img
+              src={event.cover_image}
+              alt={event.title}
+              className='h-full w-full object-cover'
+              loading='eager'
+            />
+          </div>
+        )}
+
         <div className='grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12'>
           <article className='min-w-0'>
-            {event.cover_image && (
-              <div
-                className='mb-6 overflow-hidden rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'
-                style={{ aspectRatio: '16 / 9' }}
-              >
-                <img
-                  src={event.cover_image}
-                  alt=''
-                  className='h-full w-full object-cover'
-                  loading='eager'
-                />
-              </div>
-            )}
-
             <p className='font-inter text-[11px] font-bold uppercase tracking-[0.18em] text-brand-orange'>
               {eventTypeLabel(event.event_type)}
               {event.status !== 'published'
@@ -177,18 +180,22 @@ export default function EventDetailClient({ slug }: { slug: string }) {
                   is shown inline. The sticky bar scrolls to whichever anchor
                   is currently visible. */}
               <div data-rsvp-anchor className='scroll-mt-24 lg:hidden'>
-                <RsvpPanel
-                  event={event}
-                  viewerStatus={data?.viewer_rsvp_status}
-                  session={session}
-                />
+                {host ? (
+                  <EventHostPanel event={event} />
+                ) : (
+                  <RsvpPanel
+                    event={event}
+                    viewerStatus={data?.viewer_rsvp_status}
+                    session={session}
+                  />
+                )}
               </div>
 
               <EventReactions event={event} session={session} />
 
               <EventAttendees event={event} canManage={host} />
 
-              <EventGallery />
+              <EventGallery slug={event.slug} canManage={host} />
 
               <EventRelated event={event} />
 
@@ -199,11 +206,15 @@ export default function EventDetailClient({ slug }: { slug: string }) {
           <aside className='hidden lg:block'>
             <div className='sticky top-24 space-y-6'>
               <div data-rsvp-anchor className='scroll-mt-24'>
-                <RsvpPanel
-                  event={event}
-                  viewerStatus={data?.viewer_rsvp_status}
-                  session={session}
-                />
+                {host ? (
+                  <EventHostPanel event={event} />
+                ) : (
+                  <RsvpPanel
+                    event={event}
+                    viewerStatus={data?.viewer_rsvp_status}
+                    session={session}
+                  />
+                )}
               </div>
               <EventSidebarMeta event={event} />
             </div>
@@ -214,6 +225,7 @@ export default function EventDetailClient({ slug }: { slug: string }) {
       <EventStickyBar
         event={event}
         viewerStatus={data?.viewer_rsvp_status}
+        host={host}
         onShare={onShare}
       />
     </>

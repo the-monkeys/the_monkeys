@@ -43,6 +43,14 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
+// Local now as a `datetime-local` value (YYYY-MM-DDTHH:mm) for the `min` guard
+// that forbids scheduling an event in the past.
+function localNowInput(): string {
+  const d = new Date();
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60_000).toISOString().slice(0, 16);
+}
+
 /**
  * Focused form for creating an event inside a group. It maps 1:1 to the
  * group-event API body (no tiers/co-hosts, plus a group-event visibility),
@@ -60,13 +68,17 @@ export function GroupEventForm({
   const [visibility, setVisibility] = useState<GroupEventVisibility>(
     (event?.visibility as GroupEventVisibility) || 'public'
   );
+  // Controlled so the end picker can forbid a moment before the start and so
+  // both fields reject past times.
+  const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
+  const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
+  const [dateError, setDateError] = useState('');
+  const minStart = useMemo(() => localNowInput(), []);
 
   const initial = useMemo(
     () => ({
       title: event?.title || '',
       description: event?.description || '',
-      start: toLocalInput(event?.start_time),
-      end: toLocalInput(event?.end_time),
       timezone: event?.timezone || defaultTimezone(),
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
@@ -80,9 +92,22 @@ export function GroupEventForm({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    const start = fromLocalInput(String(form.get('start') || ''));
-    const end = fromLocalInput(String(form.get('end') || ''));
+    const start = fromLocalInput(startVal);
+    const end = fromLocalInput(endVal);
     if (!start || !end) return;
+
+    // Guard against past or inverted ranges; the browser `min` is advisory only.
+    const startMs = new Date(start).getTime();
+    const endMs = new Date(end).getTime();
+    if (startMs < Date.now() - 60_000) {
+      setDateError('Start time cannot be in the past.');
+      return;
+    }
+    if (endMs < startMs) {
+      setDateError('End time must be after the start time.');
+      return;
+    }
+    setDateError('');
 
     const body: GroupEventBody = {
       title: String(form.get('title') || '').trim(),
@@ -131,7 +156,14 @@ export function GroupEventForm({
             name='start'
             type='datetime-local'
             required
-            defaultValue={initial.start}
+            min={minStart}
+            value={startVal}
+            onChange={(e) => {
+              const v = e.target.value;
+              setStartVal(v);
+              if (endVal && endVal < v) setEndVal(v);
+              setDateError('');
+            }}
           />
         </Field>
         <Field label='Ends'>
@@ -139,10 +171,20 @@ export function GroupEventForm({
             name='end'
             type='datetime-local'
             required
-            defaultValue={initial.end}
+            min={startVal || minStart}
+            value={endVal}
+            onChange={(e) => {
+              setEndVal(e.target.value);
+              setDateError('');
+            }}
           />
         </Field>
       </div>
+      {dateError && (
+        <p className='-mt-3 font-inter text-sm text-brand-orange'>
+          {dateError}
+        </p>
+      )}
 
       <Field label='Timezone'>
         <Input name='timezone' defaultValue={initial.timezone} />
