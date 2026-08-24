@@ -17,6 +17,8 @@ export const TOPIC_SITEMAP_ROUTE = '/topics/sitemap.xml';
 export const NOTIFICATIONS_ROUTE = '/notifications';
 export const SETTINGS_ROUTE = '/settings';
 export const CREATE_ROUTE = '/create';
+export const EVENTS_ROUTE = '/events';
+export const GROUPS_ROUTE = '/groups';
 export const PARENT_COMPANY_ROUTE = 'https://buddhicintaka.com/';
 
 export type NavItem = {
@@ -28,6 +30,7 @@ export type NavItem = {
 
 export const DISCOVER_ITEMS: NavItem[] = [
   { href: HOME_ROUTE, label: 'Feed', icon: 'RiNewspaper' },
+  { href: EVENTS_ROUTE, label: 'Community', icon: 'RiGroup' },
   { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
   { href: FEED_ROUTE, label: 'For You', icon: 'RiBard', requiresAuth: true },
   {

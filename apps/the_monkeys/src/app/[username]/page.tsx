@@ -8,6 +8,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 
 import { Blogs } from './components/Blogs';
+import { ProfileEvents } from './components/ProfileEvents';
 import { ProfileSection } from './components/profile/ProfileSection';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
@@ -65,6 +66,7 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
         </h6>
 
         <Blogs username={params.username} user={data} />
+        <ProfileEvents username={params.username} />
       </section>
     </div>
   );

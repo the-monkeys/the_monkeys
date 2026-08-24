@@ -1,0 +1,47 @@
+'use client';
+
+import { useState } from 'react';
+
+import { useRouter } from 'next/navigation';
+
+import { EventForm } from '@/components/events/EventForm';
+import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
+import useAuth from '@/hooks/auth/useAuth';
+import { EventBody } from '@/services/events/eventTypes';
+import { createEvent, eventError } from '@/services/events/eventsApi';
+import { useToast } from '@the-monkeys/ui/hooks/use-toast';
+
+export default function NewEventPage() {
+  const { data: session, isLoading } = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
+  const [saving, setSaving] = useState(false);
+
+  if (!isLoading && !session) {
+    router.replace(LOGIN_ROUTE);
+    return null;
+  }
+
+  const onSubmit = async (body: EventBody) => {
+    setSaving(true);
+    try {
+      const res = await createEvent(body);
+      const slug = res.event?.slug;
+      toast({ title: 'Draft saved' });
+      router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
+    } catch (err) {
+      toast({ title: 'Could not create event', description: eventError(err) });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className='mx-auto max-w-2xl'>
+      <h1 className='font-newsreader font-bold text-3xl md:text-4xl mb-6'>
+        Create event
+      </h1>
+      <EventForm submitLabel='Save draft' saving={saving} onSubmit={onSubmit} />
+    </div>
+  );
+}
