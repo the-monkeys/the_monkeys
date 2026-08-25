@@ -31,7 +31,7 @@ type Props = {
   event?: EventItem;
   saving?: boolean;
   submitLabel: string;
-  onSubmit: (body: EventBody) => void;
+  onSubmit: (body: EventBody, coverFile?: File) => void;
 };
 
 const TYPES: { value: EventType; label: string }[] = [
@@ -87,6 +87,11 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   // Cover image and co-hosts are controlled so the upload picker and the
   // username search can drive them; both fall back to the event's saved values.
   const [coverImage, setCoverImage] = useState(event?.cover_image || '');
+  // Before the event exists there is no slug to upload against, so we hold the
+  // chosen file locally (with an object-URL preview) and upload it right after
+  // creation. In edit mode uploads happen immediately, so these stay unset.
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState('');
   const [cohosts, setCohosts] = useState<string[]>(
     event?.co_host_usernames || []
   );
@@ -97,6 +102,36 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   // Recomputed once on mount; a stale minute is harmless and the browser plus
   // the submit guard both re-validate against the real clock.
   const minStart = useMemo(() => localNowInput(), []);
+
+  // Release the object URL when the pending file changes or the form unmounts.
+  useEffect(
+    () => () => {
+      if (coverPreview) URL.revokeObjectURL(coverPreview);
+    },
+    [coverPreview]
+  );
+
+  // Pick a local cover before the event exists: preview it and defer the upload.
+  const handleCoverFile = (file: File) => {
+    setCoverImage('');
+    setCoverFile(file);
+    setCoverPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+  };
+
+  // Typing a URL supersedes any locally-picked file.
+  const handleCoverUrl = (v: string) => {
+    setCoverImage(v);
+    if (v && coverFile) {
+      setCoverFile(null);
+      setCoverPreview((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return '';
+      });
+    }
+  };
 
   const hasGroup = !!(event ? event.group_slug : groupSlug);
 
@@ -175,7 +210,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       }
     }
 
-    onSubmit(body);
+    onSubmit(body, coverFile ?? undefined);
   };
 
   const showPlace = eventType !== 'virtual';
@@ -295,7 +330,9 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       <EventCoverField
         slug={event?.slug}
         value={coverImage}
-        onChange={setCoverImage}
+        onChange={handleCoverUrl}
+        onFileSelected={handleCoverFile}
+        pendingPreview={coverPreview}
       />
 
       <Field label='Tags (comma separated)'>
@@ -422,16 +459,20 @@ function Field({
 
 // EventCoverField uploads a cover to storage once the event exists (and so has
 // a slug) and writes the returned path back into the controlled value. Before
-// the event exists, a URL may be pasted; the hint nudges the host to save the
-// draft first, mirroring the group logo/cover flow.
+// the event exists it captures the file locally (previewed via pendingPreview)
+// and defers the upload to the parent, which runs it right after creation.
 function EventCoverField({
   slug,
   value,
   onChange,
+  onFileSelected,
+  pendingPreview,
 }: {
   slug?: string;
   value: string;
   onChange: (v: string) => void;
+  onFileSelected?: (file: File) => void;
+  pendingPreview?: string;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
@@ -446,21 +487,29 @@ function EventCoverField({
       return;
     }
     setError('');
-    upload.mutate(file, {
-      onSuccess: (res) => res.url && onChange(res.url),
-      onError: () => setError('Upload failed. Try a smaller image.'),
-    });
+    if (slug) {
+      // Event already exists: upload now and persist the returned path.
+      upload.mutate(file, {
+        onSuccess: (res) => res.url && onChange(res.url),
+        onError: () => setError('Upload failed. Try a smaller image.'),
+      });
+      return;
+    }
+    // No slug yet: hand the file up so it uploads after the event is created.
+    onFileSelected?.(file);
   };
+
+  const previewSrc = pendingPreview || value;
 
   return (
     <div className='space-y-1.5'>
       <Label className='font-inter text-sm'>Cover image</Label>
 
       <div className='flex items-center gap-3'>
-        {value ? (
+        {previewSrc ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={value}
+            src={previewSrc}
             alt='Cover preview'
             className='h-16 w-28 rounded-lg border border-border-light object-cover dark:border-border-dark'
           />
@@ -481,7 +530,7 @@ function EventCoverField({
           <Button
             type='button'
             variant='secondary'
-            disabled={!slug || upload.isPending}
+            disabled={upload.isPending}
             onClick={() => inputRef.current?.click()}
             className='min-h-[44px] gap-2'
           >
@@ -490,7 +539,7 @@ function EventCoverField({
           </Button>
           {!slug && (
             <span className='text-xs text-gray-400'>
-              Save the event first to upload.
+              Uploads when you save the event.
             </span>
           )}
         </div>

@@ -9,7 +9,12 @@ import { EventForm } from '@/components/events/EventForm';
 import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { EventBody } from '@/services/events/eventTypes';
-import { createEvent, eventError } from '@/services/events/eventsApi';
+import {
+  createEvent,
+  eventError,
+  updateEvent,
+  uploadEventCover,
+} from '@/services/events/eventsApi';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 
 export default function NewEventPage() {
@@ -23,11 +28,25 @@ export default function NewEventPage() {
     return null;
   }
 
-  const onSubmit = async (body: EventBody) => {
+  const onSubmit = async (body: EventBody, coverFile?: File) => {
     setSaving(true);
     try {
       const res = await createEvent(body);
       const slug = res.event?.slug;
+      // A cover picked before the event existed is uploaded now and persisted
+      // on the event. Failure here must not lose the draft, so it is non-fatal.
+      if (slug && coverFile) {
+        try {
+          const up = await uploadEventCover(slug, coverFile);
+          if (up?.url)
+            await updateEvent(slug, { ...body, cover_image: up.url });
+        } catch {
+          toast({
+            title: 'Event saved, but the cover upload failed',
+            description: 'You can add it from the edit page.',
+          });
+        }
+      }
       toast({ title: 'Draft saved' });
       router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
     } catch (err) {
