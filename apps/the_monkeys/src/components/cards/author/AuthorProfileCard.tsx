@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { UpdateDialog } from '@/app/[username]/components/profile/UpdateDialog';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
+import { VerifiedBadge } from '@/components/user/VerifiedBadge';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import { ConnectionsDialog } from '@/components/user/dialogs/ConnectionsDialog';
 import { ShareProfileDialog } from '@/components/user/dialogs/ShareProfileDialog';
@@ -74,6 +75,7 @@ export const AuthorProfileCard = ({
             <div className='flex min-w-0 flex-wrap  gap-x-2 gap-y-1 '>
               <p className='max-w-full truncate px-[2px] text-sm opacity-80 sm:text-base'>
                 {user?.username ? `@${user.username}` : '@user'}
+                <VerifiedBadge isVerified={user?.is_verified === true} />
               </p>
 
               {isAuthenticated && <UpdateUsernameDialog user={user} />}

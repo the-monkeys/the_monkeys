@@ -3,6 +3,9 @@ import createMDX from '@next/mdx';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  // Isolates production/CI builds from the dev server's cache when
+  // NEXT_DIST_DIR is set (e.g. NEXT_DIST_DIR=.next-prod npx next build).
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   output: process.env.DOCKER_BUILD ? 'standalone' : undefined,
   eslint: {
     ignoreDuringBuilds: true,
