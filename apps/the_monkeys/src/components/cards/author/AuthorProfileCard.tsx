@@ -71,19 +71,25 @@ export const AuthorProfileCard = ({
             {isAuthenticated && <UpdateDialog data={session} />}
           </div>
 
-          <div className='min-w-0 flex-1 space-y-1'>
-            <div className='flex min-w-0 flex-wrap  gap-x-2 gap-y-1 '>
-              <p className='max-w-full truncate px-[2px] text-sm opacity-80 sm:text-base'>
-                {user?.username ? `@${user.username}` : '@user'}
-                <VerifiedBadge isVerified={user?.is_verified === true} />
-              </p>
+          <div className='min-w-0 flex-1 space-y-1 mt-1'>
+            <h2 className='flex items-center gap-1.5 max-w-full break-words font-dm_sans text-[1.6rem] font-bold capitalize leading-tight tracking-tight sm:text-[1.8rem]'>
+              <span>
+                {user?.first_name} {user?.last_name ? user.last_name : ''}
+              </span>
+              <VerifiedBadge
+                isVerified={user?.is_verified === true}
+                showText={false}
+                size={24}
+                className='mt-[2px]'
+              />
+            </h2>
 
+            <div className='flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1 '>
+              <p className='max-w-full truncate px-[2px] text-sm opacity-60 sm:text-base'>
+                {user?.username ? `@${user.username}` : '@user'}
+              </p>
               {isAuthenticated && <UpdateUsernameDialog user={user} />}
             </div>
-
-            <h2 className='max-w-full break-words font-dm_sans text-[1.6rem] font-medium capitalize leading-tight tracking-tight sm:text-[1.8rem]'>
-              {user?.first_name} {user?.last_name ? user.last_name : ''}
-            </h2>
           </div>
         </div>
 

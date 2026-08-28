@@ -10,11 +10,26 @@ import { twMerge } from 'tailwind-merge';
 export const VerifiedBadge = ({
   isVerified,
   className,
+  showText = true,
+  size = 20,
 }: {
   isVerified?: boolean;
   className?: string;
+  showText?: boolean;
+  size?: number;
 }) => {
   if (isVerified !== true) return null;
+
+  if (!showText) {
+    return (
+      <RiVerifiedBadgeFill
+        size={size}
+        className={twMerge('text-brand-orange shrink-0', className)}
+        aria-hidden
+        title='Verified account'
+      />
+    );
+  }
 
   return (
     <Badge
