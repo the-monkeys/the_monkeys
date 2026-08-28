@@ -29,9 +29,12 @@ export async function generateMetadata({
     return { title: 'Event not found' };
   }
 
+  const base = LIVE_URL || 'https://monkeys.com.co';
   const title = event.title;
   const description = (event.description || '').slice(0, 160);
-  const url = `${LIVE_URL || 'https://monkeys.com.co'}/events/${event.slug}`;
+  const url = `${base}/events/${event.slug}`;
+  const imageUrl =
+    event.cover_image || `${base}/social-snapshot-placeholder.png`;
 
   return {
     title,
@@ -40,13 +43,22 @@ export async function generateMetadata({
       title,
       description,
       url,
+      siteName: 'Monkeys',
       type: 'website',
-      images: event.cover_image ? [{ url: event.cover_image }] : undefined,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
-      card: event.cover_image ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title,
       description,
+      images: [imageUrl],
     },
   };
 }
@@ -100,7 +112,9 @@ function buildEventJsonLd(event: NonNullable<EventResp['event']>) {
   };
 
   if (event.description) jsonLd.description = event.description.slice(0, 500);
-  if (event.cover_image) jsonLd.image = [event.cover_image];
+  jsonLd.image = [
+    event.cover_image || `${base}/social-snapshot-placeholder.png`,
+  ];
   if (event.tags?.length) jsonLd.keywords = event.tags.join(', ');
 
   if (event.event_type !== 'virtual' && event.location) {
