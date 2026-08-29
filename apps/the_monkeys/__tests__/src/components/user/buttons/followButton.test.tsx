@@ -240,10 +240,9 @@ describe('FollowButtonIcon', () => {
 
     renderWithProviders(<FollowButtonIcon username='testuser' />);
 
-    
     const retryButton = await screen.findByTestId('retry-follow-icon-button');
     expect(retryButton.getAttribute('aria-label')).toBe('Retry follow status');
-   
+
     expect(document.querySelector('.animate-opacity-pulse')).toBeNull();
   });
 

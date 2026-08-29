@@ -25,6 +25,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname !== '/blog' &&
     !pathname?.startsWith('/blog/components') &&
     !pathname?.startsWith('/blog/utils');
+  // Only the long-form blog editor runs full-width (immersive writing). Event
+  // create/edit/manage keep the standard shell with the left navigation so the
+  // experience stays consistent with the rest of the app.
   const isEditorPage = pathname?.startsWith('/edit');
 
   // Blog reading or editing mode: only show main content

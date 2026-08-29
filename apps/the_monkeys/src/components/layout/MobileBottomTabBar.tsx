@@ -69,7 +69,9 @@ export function MobileBottomTabBar() {
   if (
     pathname.startsWith('/auth') ||
     (pathname.startsWith('/blog/') && pathname !== '/blog') ||
-    pathname.startsWith('/edit')
+    pathname.startsWith('/edit') ||
+    pathname === '/events/new' ||
+    /^\/events\/[^/]+\/(edit|manage)$/.test(pathname)
   ) {
     return null;
   }
