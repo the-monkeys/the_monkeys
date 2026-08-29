@@ -59,7 +59,7 @@ export async function generateMetadata({
       };
     }
 
-    const profileImageUrl = `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`;
+    const profileImageUrl = `${LIVE_URL}/social-snapshot-placeholder.png`;
     const fullName = `${userData.first_name} ${userData.last_name ?? ''}`;
     const description =
       userData.bio ||
@@ -87,6 +87,7 @@ export async function generateMetadata({
         title: `${fullName} (@${username})`,
         description: truncateDescription(description, 160),
         url: profileUrl,
+        siteName: 'Monkeys',
         type: 'profile',
         images: [
           {

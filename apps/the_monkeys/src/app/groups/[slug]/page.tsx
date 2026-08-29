@@ -29,10 +29,14 @@ export async function generateMetadata({
     return { title: 'Group not found' };
   }
 
+  const base = LIVE_URL || 'https://monkeys.com.co';
   const title = group.name;
   const description = (group.description || '').slice(0, 160);
-  const url = `${LIVE_URL || 'https://monkeys.com.co'}/groups/${group.slug}`;
-  const image = group.cover_image || group.logo_image;
+  const url = `${base}/groups/${group.slug}`;
+  const imageUrl =
+    group.cover_image ||
+    group.logo_image ||
+    `${base}/social-snapshot-placeholder.png`;
 
   return {
     title,
@@ -41,13 +45,22 @@ export async function generateMetadata({
       title,
       description,
       url,
+      siteName: 'Monkeys',
       type: 'website',
-      images: image ? [{ url: image }] : undefined,
+      images: [
+        {
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     twitter: {
-      card: image ? 'summary_large_image' : 'summary',
+      card: 'summary_large_image',
       title,
       description,
+      images: [imageUrl],
     },
   };
 }
