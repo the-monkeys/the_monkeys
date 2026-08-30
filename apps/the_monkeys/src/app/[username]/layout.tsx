@@ -59,7 +59,36 @@ export async function generateMetadata({
       };
     }
 
-    const profileImageUrl = `${LIVE_URL}/social-snapshot-placeholder.png`;
+    let profileImageUrl = `${LIVE_URL}/social-snapshot-placeholder.png`;
+
+    // Check if user has a profile image
+    if (API_URL) {
+      try {
+        const imgRes = await fetch(
+          `${API_URL}/storage/profiles/${username}/profile`,
+          {
+            method: 'HEAD',
+            next: { revalidate: 3600 },
+          }
+        );
+        if (imgRes.ok) {
+          profileImageUrl = `${LIVE_URL}/api/v1/storage/profiles/${username}/profile`;
+        } else {
+          const imgResV2 = await fetch(
+            `${API_URL.replace('v1', 'v2')}/storage/profiles/${username}/profile`,
+            {
+              method: 'HEAD',
+              next: { revalidate: 3600 },
+            }
+          );
+          if (imgResV2.ok) {
+            profileImageUrl = `${LIVE_URL}/api/v2/storage/profiles/${username}/profile`;
+          }
+        }
+      } catch (e) {
+        // Ignore errors, we'll just use the fallback placeholder
+      }
+    }
     const fullName = `${userData.first_name} ${userData.last_name ?? ''}`;
     const description =
       userData.bio ||
