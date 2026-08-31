@@ -139,8 +139,12 @@ h3.ce-header {
   background-color: transparent !important;
 }
 
+/* Reset default Editor.js block selection background for marquee overlay */
+.ce-block--selected,
 .ce-block--selected .ce-block__content {
   background: transparent !important;
+  background-color: transparent !important;
+  transition: none !important;
 }
 
 /* list tool */
@@ -655,13 +659,11 @@ li.cdx-list__item {
 
 /* selection styles */
 .light ::selection {
-  background-color: #121212;
-  color: #ededed;
+  background-color: #2563eb !important;
 }
 
 .dark ::selection {
-  background-color: #ededed;
-  color: #121212;
+  background-color: #2563eb !important;
 }
 
 #monkeys_editor_editor-container {
