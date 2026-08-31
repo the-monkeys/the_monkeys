@@ -2,7 +2,10 @@ import { z } from 'zod';
 
 // New Password Criteria
 const passwordCriteria = z
-  .string({ required_error: 'Password is required' })
+  .string({
+    error: (issue) =>
+      issue.input === undefined ? 'Password is required' : undefined,
+  })
   .trim()
   .min(6, 'Password must be at least 6 characters long')
   .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
@@ -10,7 +13,10 @@ const passwordCriteria = z
   .regex(/[A-Z]/, 'Password must contain at least one uppercase letter');
 
 const emailCriteria = z
-  .string({ required_error: 'Email is required' })
+  .string({
+    error: (issue) =>
+      issue.input === undefined ? 'Email is required' : undefined,
+  })
   .trim()
   .min(1, 'Email is required')
   .email('Invalid email');
@@ -19,7 +25,10 @@ const emailCriteria = z
 export const loginSchema = z.object({
   email: emailCriteria,
   password: z
-    .string({ required_error: 'Password is required' })
+    .string({
+      error: (issue) =>
+        issue.input === undefined ? 'Password is required' : undefined,
+    })
     .trim()
     .min(1, 'Password is required'),
 });
@@ -27,7 +36,10 @@ export const loginSchema = z.object({
 // Sign Up Schema For Validation
 export const signupSchema = z.object({
   first_name: z
-    .string({ required_error: 'First Name is required' })
+    .string({
+      error: (issue) =>
+        issue.input === undefined ? 'First Name is required' : undefined,
+    })
     .trim()
     .min(1, 'First Name is required'),
   last_name: z.string().trim().optional(),
@@ -38,19 +50,23 @@ export const signupSchema = z.object({
 export const registerUserSchema = z
   .object({
     first_name: z
-      .string({ required_error: 'First Name is required' })
+      .string({
+        error: (issue) =>
+          issue.input === undefined ? 'First Name is required' : undefined,
+      })
       .min(1, 'First Name is required'),
     last_name: z.string().optional(),
     email: z
-      .string({ required_error: 'Email is required' })
+      .string({
+        error: (issue) =>
+          issue.input === undefined ? 'Email is required' : undefined,
+      })
       .min(1, 'Email is required')
       .email('Invalid email'),
     password: passwordCriteria,
     confirmPassword: z.string(),
     agreeToTerms: z.literal(true, {
-      errorMap: () => ({
-        message: 'You must agree to the policies and code of conduct',
-      }),
+      error: () => 'You must agree to the policies and code of conduct',
     }),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -61,7 +77,10 @@ export const registerUserSchema = z
 // OTP Verification Schema
 export const otpVerificationSchema = z.object({
   otp_code: z
-    .string({ required_error: 'Verification code is required' })
+    .string({
+      error: (issue) =>
+        issue.input === undefined ? 'Verification code is required' : undefined,
+    })
     .trim()
     .length(6, 'Verification code must be 6 digits')
     .regex(/^\d+$/, 'Verification code must contain only numbers'),
@@ -86,7 +105,12 @@ export const resetPasswordSchema = z
 export const updatePasswordSchema = z
   .object({
     currentPassword: z
-      .string({ required_error: 'Current Password is required' })
+      .string({
+        error: (issue) =>
+          issue.input === undefined
+            ? 'Current Password is required'
+            : undefined,
+      })
       .trim()
       .min(1, 'Current Password is required'),
     password: passwordCriteria,
@@ -122,7 +146,10 @@ export const registrationSchema = z.object({
     ),
   email: emailCriteria,
   password: z
-    .string({ required_error: 'Password is required' })
+    .string({
+      error: (issue) =>
+        issue.input === undefined ? 'Password is required' : undefined,
+    })
     .trim()
     .min(1, 'Password is required')
     .min(8, 'Password must be more than 8 characters')
