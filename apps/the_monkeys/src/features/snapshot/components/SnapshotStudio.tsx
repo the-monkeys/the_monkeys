@@ -95,7 +95,6 @@ export const SnapshotStudio = ({
   const [exportMode, setExportMode] = useState<'image' | 'video-overlay'>(
     'image'
   );
-
   const tweetCanvasSize = TWEET_ASPECT_DIMENSIONS[tweetOptions.aspect];
 
   const tweetId = useMemo(() => parseTweetId(tweetUrl), [tweetUrl]);
@@ -138,6 +137,24 @@ export const SnapshotStudio = ({
     ro.observe(el);
     return () => ro.disconnect();
   }, [previewMode, tweetCanvasSize.width]);
+
+  const [previewHeight, setPreviewHeight] = useState<number | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    const updatePreviewHeight = () => {
+      setPreviewHeight(Math.max(400, window.innerHeight - 180));
+    };
+
+    updatePreviewHeight();
+
+    window.addEventListener('resize', updatePreviewHeight);
+
+    return () => {
+      window.removeEventListener('resize', updatePreviewHeight);
+    };
+  }, []);
 
   const { exportImage, isExporting, error } = useExport(snapshotRef, {
     width: template.width,
@@ -325,116 +342,117 @@ export const SnapshotStudio = ({
     <div
       className={cn(
         'grid w-full grid-cols-1 gap-6',
-        previewMode === 'x'
-          ? 'lg:grid-cols-[minmax(320px,400px)_1fr]'
-          : 'lg:grid-cols-[1fr_minmax(320px,420px)]'
+        'lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]'
       )}
     >
-      <section
-        className={cn(
-          'flex min-w-0 flex-col gap-3',
-          previewMode === 'x' ? 'lg:order-2' : ''
-        )}
-      >
-        <div>
-          <h2 className='font-newsreader text-2xl'>
-            {previewMode === 'x' ? 'X post screenshot' : template.label}
-          </h2>
-          <p className='text-xs text-foreground/60'>
-            {previewMode === 'x'
-              ? tweetId
-                ? `${tweetCanvasSize.width}×${tweetCanvasSize.height} · Clean screenshot card`
-                : 'Paste a public X post URL'
-              : `${template.width}×${template.height} · ${template.aspect}`}
-          </p>
-        </div>
+      <section className='flex min-w-0 flex-col gap-3'>
+        <div className='min-w-0 lg:sticky lg:top-24'>
+          <div>
+            <h2 className='font-newsreader text-2xl'>
+              {previewMode === 'x' ? 'X post screenshot' : template.label}
+            </h2>
 
-        <div className='rounded-2xl border bg-foreground-light/30 p-2 dark:bg-foreground-dark/20 sm:p-4'>
-          {previewMode === 'template' ? (
-            <SnapshotPreview
-              ref={snapshotRef}
-              input={renderedInput}
-              templateId={state.templateId}
-              themeId={state.themeId}
-              accent={state.accent}
-            />
-          ) : (
-            <div className='flex flex-col items-center w-full'>
-              <div
-                ref={xStageRef}
-                className='flex justify-center p-2 w-full overflow-hidden'
-              >
+            <p className='text-xs text-foreground/60'>
+              {previewMode === 'x'
+                ? tweetId
+                  ? `${tweetCanvasSize.width}×${tweetCanvasSize.height} · Clean screenshot card`
+                  : 'Paste a public X post URL'
+                : `${template.width}×${template.height} · ${template.aspect}`}
+            </p>
+          </div>
+
+          <div className='mt-3 min-w-0 max-w-full overflow-hidden'>
+            {previewMode === 'template' ? (
+              <SnapshotPreview
+                ref={snapshotRef}
+                input={renderedInput}
+                templateId={state.templateId}
+                themeId={state.themeId}
+                accent={state.accent}
+                previewHeight={previewHeight}
+              />
+            ) : (
+              <div className='flex flex-col items-center w-full'>
                 <div
-                  style={{
-                    width: tweetCanvasSize.width * xScale,
-                    height: tweetCanvasSize.height * xScale,
-                    overflow: 'hidden',
-                    position: 'relative',
-                  }}
+                  ref={xStageRef}
+                  className='flex justify-center p-2 w-full overflow-hidden'
                 >
                   <div
-                    className='relative'
                     style={{
-                      width: tweetCanvasSize.width,
-                      height: tweetCanvasSize.height,
-                      transform: `scale(${xScale})`,
-                      transformOrigin: 'top left',
+                      width: tweetCanvasSize.width * xScale,
+                      height: tweetCanvasSize.height * xScale,
+                      overflow: 'hidden',
+                      position: 'relative',
                     }}
                   >
-                    <TweetScreenshotPreview
-                      ref={tweetPreviewRef}
-                      tweetUrl={tweetUrl}
-                      options={tweetOptions}
-                      onError={setTweetLoadError}
-                      onTweetReady={setTweetForDownload}
-                      exportMode={exportMode}
-                    />
+                    <div
+                      className='relative'
+                      style={{
+                        width: tweetCanvasSize.width,
+                        height: tweetCanvasSize.height,
+                        transform: `scale(${xScale})`,
+                        transformOrigin: 'top left',
+                      }}
+                    >
+                      <TweetScreenshotPreview
+                        ref={tweetPreviewRef}
+                        tweetUrl={tweetUrl}
+                        options={tweetOptions}
+                        onError={setTweetLoadError}
+                        onTweetReady={setTweetForDownload}
+                        exportMode={exportMode}
+                      />
 
-                    {/* Decorative drag handles to replicate layout design */}
-                    <div
-                      className='absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-7 bg-white rounded-full border border-black/10 shadow-lg z-10'
-                      style={{ pointerEvents: 'none' }}
-                    />
-                    <div
-                      className='absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-2.5 h-7 bg-white rounded-full border border-black/10 shadow-lg z-10'
-                      style={{ pointerEvents: 'none' }}
-                    />
-                    <div
-                      className='absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-2.5 bg-white rounded-full border border-black/10 shadow-lg z-10'
-                      style={{ pointerEvents: 'none' }}
-                    />
+                      {/* Decorative drag handles to replicate layout design */}
+                      <div
+                        className='absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-7 bg-white rounded-full border border-black/10 shadow-lg z-10'
+                        style={{ pointerEvents: 'none' }}
+                      />
+
+                      <div
+                        className='absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-2.5 h-7 bg-white rounded-full border border-black/10 shadow-lg z-10'
+                        style={{ pointerEvents: 'none' }}
+                      />
+
+                      <div
+                        className='absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-2.5 bg-white rounded-full border border-black/10 shadow-lg z-10'
+                        style={{ pointerEvents: 'none' }}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Stage description footer */}
-              <div className='mt-6 text-center text-xs text-foreground/50 flex flex-col gap-1.5'>
-                <p>
-                  But if you like this tool, you can always{' '}
-                  <a
-                    href='https://github.com/sponsors/the-monkeys'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='text-brand-orange hover:underline font-medium'
-                  >
-                    fund us on github.com.co
-                  </a>
-                </p>
-                <p>
-                  Issues?{' '}
-                  <a
-                    href='mailto:support@monkeys.com.co'
-                    className='text-brand-orange hover:underline font-medium'
-                  >
-                    Contact us
-                  </a>
-                </p>
-                <p className='text-[10px] text-foreground/40 mt-1'>
-                  Works instantly on mobile or desktop and every browser
-                </p>
+                {/* Stage description footer */}
+                <div className='mt-6 text-center text-xs text-foreground/50 flex flex-col gap-1.5'>
+                  <p>
+                    But if you like this tool, you can always{' '}
+                    <a
+                      href='https://github.com/sponsors/the-monkeys'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='text-brand-orange hover:underline font-medium'
+                    >
+                      fund us on github.com.co
+                    </a>
+                  </p>
+
+                  <p>
+                    Issues?{' '}
+                    <a
+                      href='mailto:support@monkeys.com.co'
+                      className='text-brand-orange hover:underline font-medium'
+                    >
+                      Contact us
+                    </a>
+                  </p>
+
+                  <p className='text-[10px] text-foreground/40 mt-1'>
+                    Works instantly on mobile or desktop and every browser
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
 
         {activeError ? (
@@ -446,12 +464,7 @@ export const SnapshotStudio = ({
         ) : null}
       </section>
 
-      <aside
-        className={cn(
-          'flex flex-col gap-5',
-          previewMode === 'x' ? 'lg:order-1' : ''
-        )}
-      >
+      <aside className={cn('flex flex-col gap-5')}>
         {previewMode === 'template' ? (
           <Accordion
             type='multiple'
