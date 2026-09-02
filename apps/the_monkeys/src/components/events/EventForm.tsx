@@ -15,12 +15,13 @@ import useAuth from '@/hooks/auth/useAuth';
 import { useUploadEventCover } from '@/hooks/events/useEventQueries';
 import { useUserGroups } from '@/hooks/groups/useGroupQueries';
 import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
-import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
+import { defaultTimezone, fromLocalInput, isEventEnded, toLocalInput } from '@/lib/eventTime';
 import {
   EventBody,
   EventItem,
   EventType,
   EventVisibility,
+  RecurrenceFreq,
 } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -99,6 +100,15 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
   const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
   const [dateError, setDateError] = useState('');
+  const [repeatFreq, setRepeatFreq] = useState<RecurrenceFreq | 'off'>('off');
+  const [repeatInterval, setRepeatInterval] = useState(1);
+  const [repeatDays, setRepeatDays] = useState<string[]>([]);
+  const [repeatEnd, setRepeatEnd] = useState<'never' | 'until' | 'count'>(
+    'never'
+  );
+  const [repeatUntil, setRepeatUntil] = useState('');
+  const [repeatCount, setRepeatCount] = useState(12);
+  const ended = isEventEnded(event);
   // Recomputed once on mount; a stale minute is harmless and the browser plus
   // the submit guard both re-validate against the real clock.
   const minStart = useMemo(() => localNowInput(), []);
@@ -154,17 +164,18 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    const start = fromLocalInput(String(form.get('start') || ''));
-    const end = fromLocalInput(String(form.get('end') || ''));
+    const start = fromLocalInput(startVal);
+    const end = fromLocalInput(endVal);
     if (!start || !end) return;
 
     // Block past starts and inverted ranges at the boundary. The browser's
     // `min` handles the common case, but a crafted value or a stale tab could
-    // still submit one, and the backend also rejects it.
+    // still submit one, and the backend also rejects it. Ended events keep
+    // their original window, so skip the past-start check there.
     const startMs = new Date(start).getTime();
     const endMs = new Date(end).getTime();
     const nowMs = Date.now();
-    if (startMs < nowMs - 60_000) {
+    if (!ended && startMs < nowMs - 60_000) {
       setDateError('Start time cannot be in the past.');
       return;
     }
@@ -208,6 +219,23 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           },
         ];
       }
+      if (repeatFreq !== 'off') {
+        body.recurrence = {
+          freq: repeatFreq,
+          interval: Math.max(1, repeatInterval || 1),
+          by_day:
+            repeatFreq === 'weekly'
+              ? repeatDays.length
+                ? repeatDays
+                : [weekdayFromLocal(startVal)]
+              : undefined,
+          count: repeatEnd === 'count' ? Math.max(1, repeatCount) : undefined,
+          until:
+            repeatEnd === 'until' && repeatUntil
+              ? new Date(`${repeatUntil}T23:59:59`).toISOString()
+              : undefined,
+        };
+      }
     }
 
     onSubmit(body, coverFile ?? undefined);
@@ -216,8 +244,24 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const showPlace = eventType !== 'virtual';
   const showLink = eventType !== 'in_person';
 
+  const WEEKDAYS = [
+    { id: 'MO', label: 'Mon' },
+    { id: 'TU', label: 'Tue' },
+    { id: 'WE', label: 'Wed' },
+    { id: 'TH', label: 'Thu' },
+    { id: 'FR', label: 'Fri' },
+    { id: 'SA', label: 'Sat' },
+    { id: 'SU', label: 'Sun' },
+  ] as const;
+
   return (
     <form onSubmit={handleSubmit} className='space-y-5'>
+      {ended && (
+        <p className='rounded-md border border-border-light bg-foreground-light/40 px-3 py-2 font-inter text-sm text-gray-600 dark:border-border-dark/60 dark:bg-foreground-dark/30 dark:text-gray-400'>
+          This meetup has ended. You can still update the writeup, cover, and
+          tags.
+        </p>
+      )}
       <Field label='Title'>
         <Input
           name='title'
@@ -242,11 +286,12 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             name='start'
             type='datetime-local'
             required
-            min={minStart}
+            min={ended ? undefined : minStart}
+            readOnly={ended}
             value={startVal}
             onChange={(e) => {
+              if (ended) return;
               setStartVal(e.target.value);
-              // Keep end at or after start so the range stays valid.
               if (endVal && e.target.value && endVal < e.target.value) {
                 setEndVal(e.target.value);
               }
@@ -259,9 +304,11 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             name='end'
             type='datetime-local'
             required
-            min={startVal || minStart}
+            min={ended ? undefined : startVal || minStart}
+            readOnly={ended}
             value={endVal}
             onChange={(e) => {
+              if (ended) return;
               setEndVal(e.target.value);
               if (dateError) setDateError('');
             }}
@@ -275,8 +322,117 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       )}
 
       <Field label='Timezone'>
-        <Input name='timezone' defaultValue={initial.timezone} />
+        <Input
+          name='timezone'
+          defaultValue={initial.timezone}
+          readOnly={ended}
+        />
       </Field>
+
+      {!event && (
+        <div className='rounded-lg border border-border-light p-4 space-y-3 dark:border-border-dark/60'>
+          <Field label='Repeat'>
+            <select
+              value={repeatFreq}
+              onChange={(e) =>
+                setRepeatFreq(e.target.value as RecurrenceFreq | 'off')
+              }
+              className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+            >
+              <option value='off'>Off — one-off event</option>
+              <option value='daily'>Daily</option>
+              <option value='weekly'>Weekly</option>
+              <option value='monthly'>Monthly</option>
+              <option value='yearly'>Yearly</option>
+            </select>
+          </Field>
+          {repeatFreq !== 'off' && (
+            <>
+              <Field label='Every'>
+                <div className='flex items-center gap-2'>
+                  <Input
+                    type='number'
+                    min={1}
+                    max={52}
+                    value={repeatInterval}
+                    onChange={(e) =>
+                      setRepeatInterval(Math.max(1, Number(e.target.value) || 1))
+                    }
+                    className='w-24'
+                  />
+                  <span className='font-inter text-sm text-gray-500'>
+                    {repeatFreq === 'daily'
+                      ? 'day(s)'
+                      : repeatFreq === 'weekly'
+                        ? 'week(s)'
+                        : repeatFreq === 'monthly'
+                          ? 'month(s)'
+                          : 'year(s)'}
+                  </span>
+                </div>
+              </Field>
+              {repeatFreq === 'weekly' && (
+                <div className='flex flex-wrap gap-2'>
+                  {WEEKDAYS.map((d) => {
+                    const on = repeatDays.includes(d.id);
+                    return (
+                      <button
+                        key={d.id}
+                        type='button'
+                        onClick={() =>
+                          setRepeatDays((prev) =>
+                            on
+                              ? prev.filter((x) => x !== d.id)
+                              : [...prev, d.id]
+                          )
+                        }
+                        className={`rounded-full px-3 py-1.5 text-sm font-inter border-2 ${
+                          on
+                            ? 'border-brand-orange bg-brand-orange text-white'
+                            : 'border-border-light dark:border-border-dark'
+                        }`}
+                      >
+                        {d.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+              <Field label='Ends'>
+                <select
+                  value={repeatEnd}
+                  onChange={(e) =>
+                    setRepeatEnd(e.target.value as typeof repeatEnd)
+                  }
+                  className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+                >
+                  <option value='never'>Never (next 12 dates)</option>
+                  <option value='until'>On a date</option>
+                  <option value='count'>After a number of events</option>
+                </select>
+              </Field>
+              {repeatEnd === 'until' && (
+                <Input
+                  type='date'
+                  value={repeatUntil}
+                  onChange={(e) => setRepeatUntil(e.target.value)}
+                />
+              )}
+              {repeatEnd === 'count' && (
+                <Input
+                  type='number'
+                  min={1}
+                  max={52}
+                  value={repeatCount}
+                  onChange={(e) =>
+                    setRepeatCount(Math.max(1, Number(e.target.value) || 1))
+                  }
+                />
+              )}
+            </>
+          )}
+        </div>
+      )}
 
       <fieldset>
         <legend className='mb-2 font-inter text-sm font-medium'>Type</legend>
@@ -285,12 +441,14 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             <button
               key={t.value}
               type='button'
-              onClick={() => setEventType(t.value)}
+              onClick={() => {
+                if (!ended) setEventType(t.value);
+              }}
               className={`rounded-full px-3 py-1.5 text-sm font-inter border-2 transition-colors ${
                 eventType === t.value
                   ? 'border-brand-orange bg-brand-orange text-white'
                   : 'border-border-light dark:border-border-dark'
-              }`}
+              } ${ended ? 'opacity-60' : ''}`}
             >
               {t.label}
             </button>
@@ -304,6 +462,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             name='location'
             defaultValue={initial.location}
             placeholder='City or venue'
+            readOnly={ended}
           />
         </Field>
       )}
@@ -314,6 +473,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             type='url'
             defaultValue={initial.meeting_link}
             placeholder='https://'
+            readOnly={ended}
           />
         </Field>
       )}
@@ -324,6 +484,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           type='number'
           min={0}
           defaultValue={initial.capacity}
+          readOnly={ended}
         />
       </Field>
 
@@ -371,6 +532,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       <Field label='Visibility'>
         <select
           value={visibility}
+          disabled={ended}
           onChange={(e) => setVisibility(e.target.value as EventVisibility)}
           className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
         >
@@ -440,6 +602,12 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       </Button>
     </form>
   );
+}
+
+function weekdayFromLocal(value: string): string {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return 'MO';
+  return ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'][d.getDay()];
 }
 
 function Field({

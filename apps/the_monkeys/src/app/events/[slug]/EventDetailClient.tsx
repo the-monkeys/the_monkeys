@@ -27,6 +27,7 @@ import {
   eventStatusLabel,
   eventTypeLabel,
   formatEventWhen,
+  isEventEnded,
   isHost,
 } from '@/lib/eventTime';
 import { getShareMeta } from '@/services/events/eventsApi';
@@ -195,7 +196,11 @@ export default function EventDetailClient({ slug }: { slug: string }) {
 
               <EventAttendees event={event} canManage={host} />
 
-              <EventGallery slug={event.slug} canManage={host} />
+              <EventGallery
+                slug={event.slug}
+                canManage={host}
+                ended={isEventEnded(event)}
+              />
 
               <EventRelated event={event} />
 

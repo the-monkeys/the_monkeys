@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import { LOGIN_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
-import { formatPrice } from '@/lib/eventTime';
+import { formatPrice, isEventEnded } from '@/lib/eventTime';
 import { openRazorpay } from '@/lib/razorpayCheckout';
 import {
   EventItem,
@@ -45,7 +45,7 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
   const [busy, setBusy] = useState(false);
 
   const selected = tiers.find((t) => t.id === tierId) || tiers[0];
-  const closed = event.status === 'cancelled' || event.status === 'completed';
+  const closed = isEventEnded(event);
   const going =
     viewerStatus === 'confirmed' ||
     viewerStatus === 'waitlisted' ||
@@ -123,7 +123,9 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
     return (
       <aside className='rounded-lg border border-border-light dark:border-border-dark/60 p-5'>
         <p className='font-inter text-sm text-gray-500'>
-          This event is {event.status}.
+          {event.status === 'cancelled'
+            ? 'This event is cancelled.'
+            : 'This meetup has ended.'}
         </p>
       </aside>
     );

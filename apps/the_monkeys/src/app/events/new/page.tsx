@@ -11,6 +11,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import { EventBody } from '@/services/events/eventTypes';
 import {
   createEvent,
+  createSeries,
   eventError,
   updateEvent,
   uploadEventCover,
@@ -31,7 +32,9 @@ export default function NewEventPage() {
   const onSubmit = async (body: EventBody, coverFile?: File) => {
     setSaving(true);
     try {
-      const res = await createEvent(body);
+      const res = body.recurrence
+        ? await createSeries(body)
+        : await createEvent(body);
       const slug = res.event?.slug;
       // A cover picked before the event existed is uploaded now and persisted
       // on the event. Failure here must not lose the draft, so it is non-fatal.
@@ -47,7 +50,7 @@ export default function NewEventPage() {
           });
         }
       }
-      toast({ title: 'Draft saved' });
+      toast({ title: body.recurrence ? 'Series created' : 'Draft saved' });
       router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
     } catch (err) {
       toast({ title: 'Could not create event', description: eventError(err) });

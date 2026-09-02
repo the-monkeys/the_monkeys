@@ -7,6 +7,7 @@ import {
   eventTypeLabel,
   formatEventCardWhen,
   formatPrice,
+  isEventEnded,
   lowestTierPrice,
 } from '@/lib/eventTime';
 import { EventItem } from '@/services/events/eventTypes';
@@ -47,6 +48,7 @@ export function EventGridCard({ event }: { event: EventItem }) {
     event.ticket_tiers?.[0]?.currency
   );
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
+  const ended = isEventEnded(event);
 
   return (
     <article className='group flex h-full flex-col overflow-hidden rounded-xl border border-border-light bg-background-light shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-border-dark/40 dark:bg-background-dark'>
@@ -73,7 +75,7 @@ export function EventGridCard({ event }: { event: EventItem }) {
 
       <div className='flex flex-1 flex-col p-4'>
         <p className='font-inter text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange'>
-          {category}
+          {ended ? 'Ended' : category}
         </p>
         <Link href={href} className='mt-1 block'>
           <h3 className='font-newsreader text-lg font-bold leading-[1.3] text-text-light line-clamp-2 transition-colors group-hover:text-brand-orange dark:text-text-dark'>

@@ -165,6 +165,17 @@ export type EventBody = {
   // group_slug is honoured only on create; visibility applies to both.
   group_slug?: string;
   visibility?: EventVisibility;
+  recurrence?: Recurrence;
+};
+
+export type RecurrenceFreq = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+export type Recurrence = {
+  freq: RecurrenceFreq;
+  interval?: number;
+  by_day?: string[];
+  count?: number;
+  until?: string;
 };
 
 export type EventVisibility =
@@ -244,8 +255,11 @@ export type ListFilters = {
   location?: string;
   tags?: string;
   status?: EventStatus | '';
-  date?: 'this-week' | 'this-month' | 'all';
-  sort?: 'soonest' | 'popular' | 'newest';
+  date?: 'upcoming' | 'past' | 'this-week' | 'this-month' | 'all';
+  sort?: 'soonest' | 'popular' | 'newest' | 'nearest';
+  user_lat?: number;
+  user_lng?: number;
+  radius?: number;
 };
 
 // One image in an event's gallery. The url is a domain-free storage path the

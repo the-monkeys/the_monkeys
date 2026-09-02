@@ -42,6 +42,9 @@ function qs(filters: ListFilters = {}): string {
   if (filters.status) p.set('status', filters.status);
   if (filters.date) p.set('date', filters.date);
   if (filters.sort) p.set('sort', filters.sort);
+  if (filters.user_lat) p.set('user_lat', String(filters.user_lat));
+  if (filters.user_lng) p.set('user_lng', String(filters.user_lng));
+  if (filters.radius) p.set('radius', String(filters.radius));
   const s = p.toString();
   return s ? `?${s}` : '';
 }
@@ -81,6 +84,17 @@ export const getEvent = (slug: string) =>
 
 export const createEvent = (body: EventBody) =>
   axiosInstance.post<EventResp>(root, body).then((r) => r.data);
+
+export const createSeries = (body: EventBody) =>
+  axiosInstance.post<EventResp>(`${root}/series`, body).then((r) => r.data);
+
+export const cloneEvent = (
+  slug: string,
+  body: { start_time: string; end_time: string }
+) =>
+  axiosInstance
+    .post<EventResp>(`${root}/${encodeURIComponent(slug)}/clone`, body)
+    .then((r) => r.data);
 
 export const updateEvent = (slug: string, body: EventBody) =>
   axiosInstance

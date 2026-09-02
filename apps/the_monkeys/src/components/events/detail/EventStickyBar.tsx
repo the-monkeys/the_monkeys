@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
-import { eventPriceLabel, formatEventWhen, spotsLeft } from '@/lib/eventTime';
+import { eventPriceLabel, formatEventWhen, isEventEnded, spotsLeft } from '@/lib/eventTime';
 import { cn } from '@/lib/utils';
 import { EventItem, RsvpStatus } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -33,7 +33,7 @@ export function EventStickyBar({
 }: Props) {
   const [visible, setVisible] = useState(false);
   const left = spotsLeft(event);
-  const closed = event.status === 'cancelled' || event.status === 'completed';
+  const closed = isEventEnded(event);
   const going =
     viewerStatus === 'confirmed' ||
     viewerStatus === 'waitlisted' ||
@@ -116,7 +116,9 @@ export function EventStickyBar({
               onClick={handleAttend}
             >
               {closed
-                ? eventStatusText(event.status)
+                ? event.status === 'cancelled'
+                  ? 'Cancelled'
+                  : 'Ended'
                 : going
                   ? 'You’re in'
                   : 'Attend'}
@@ -128,11 +130,6 @@ export function EventStickyBar({
   );
 }
 
-function eventStatusText(status: EventItem['status']): string {
-  if (status === 'cancelled') return 'Cancelled';
-  if (status === 'completed') return 'Ended';
-  return 'Closed';
-}
 /**
  * Both layouts (mobile inline + desktop rail) render an RSVP anchor, but only
  * one is visible at a time. Pick the on-screen one (offsetParent is null when
