@@ -15,7 +15,12 @@ import useAuth from '@/hooks/auth/useAuth';
 import { useUploadEventCover } from '@/hooks/events/useEventQueries';
 import { useUserGroups } from '@/hooks/groups/useGroupQueries';
 import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
-import { defaultTimezone, fromLocalInput, isEventEnded, toLocalInput } from '@/lib/eventTime';
+import {
+  defaultTimezone,
+  fromLocalInput,
+  isEventEnded,
+  toLocalInput,
+} from '@/lib/eventTime';
 import {
   EventBody,
   EventItem,
@@ -356,7 +361,9 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                     max={52}
                     value={repeatInterval}
                     onChange={(e) =>
-                      setRepeatInterval(Math.max(1, Number(e.target.value) || 1))
+                      setRepeatInterval(
+                        Math.max(1, Number(e.target.value) || 1)
+                      )
                     }
                     className='w-24'
                   />

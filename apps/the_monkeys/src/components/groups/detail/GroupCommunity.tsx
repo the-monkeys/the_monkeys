@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import { EventGridCard } from '@/components/events/EventGridCard';
 import { TextTabs } from '@/components/TextTabs';
+import { EventGridCard } from '@/components/events/EventGridCard';
 import { GroupRules } from '@/components/groups/detail/GroupRules';
 import { GroupAddMember } from '@/components/groups/members/GroupAddMember';
 import { GroupInvites } from '@/components/groups/members/GroupInvites';
@@ -42,19 +42,17 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
         value={tab}
         onChange={setTab}
         items={
-          (
-            [
-              { id: 'events', label: 'Events' },
-              { id: 'about', label: 'About' },
-              { id: 'members', label: 'Members' },
-              ...(staff
-                ? [
-                    { id: 'requests', label: 'Join requests' },
-                    { id: 'invites', label: 'Invites' },
-                  ]
-                : []),
-            ] as { id: Tab; label: string }[]
-          )
+          [
+            { id: 'events', label: 'Events' },
+            { id: 'about', label: 'About' },
+            { id: 'members', label: 'Members' },
+            ...(staff
+              ? [
+                  { id: 'requests', label: 'Join requests' },
+                  { id: 'invites', label: 'Invites' },
+                ]
+              : []),
+          ] as { id: Tab; label: string }[]
         }
       />
 

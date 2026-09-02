@@ -119,7 +119,10 @@ export function EventActions({
       toast({ title: 'Draft created' });
       router.push(slug ? `${EVENTS_ROUTE}/${slug}/edit` : EVENTS_ROUTE);
     } catch (err) {
-      toast({ title: 'Could not schedule again', description: eventError(err) });
+      toast({
+        title: 'Could not schedule again',
+        description: eventError(err),
+      });
     } finally {
       setCloneBusy(false);
     }

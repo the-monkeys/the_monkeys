@@ -2,9 +2,9 @@
 
 import { useState } from 'react';
 
+import { TextTabs } from '@/components/TextTabs';
 import { EventGridCard } from '@/components/events/EventGridCard';
 import { Loader } from '@/components/loader';
-import { TextTabs } from '@/components/TextTabs';
 import { useUserEvents } from '@/hooks/events/useEventQueries';
 
 export function ProfileEvents({ username }: { username: string }) {

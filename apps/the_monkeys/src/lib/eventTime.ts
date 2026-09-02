@@ -90,7 +90,9 @@ export function eventStatusLabel(status?: string): string {
   return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
-export function isEventEnded(event?: Pick<EventItem, 'status' | 'end_time'>): boolean {
+export function isEventEnded(
+  event?: Pick<EventItem, 'status' | 'end_time'>
+): boolean {
   if (!event) return false;
   if (event.status === 'completed' || event.status === 'cancelled') return true;
   const end = parseEventTime(event.end_time);

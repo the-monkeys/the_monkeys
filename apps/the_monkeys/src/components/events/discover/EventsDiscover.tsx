@@ -125,10 +125,10 @@ function EventGrid({ events }: { events: EventItem[] }) {
 export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   const [qLive, setQLive] = useState('');
   const [q, setQ] = useState('');
-  
+
   const [locationLive, setLocationLive] = useState('');
   const [location, setLocation] = useState('');
-  
+
   // Track whether the user has manually typed a location (disables auto-radius)
   const [manualOverride, setManualOverride] = useState(false);
   const ipLocation = useIPLocation();
@@ -153,7 +153,8 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     [ipLocation.country]
   );
   const [radiusIndex, setRadiusIndex] = useState(0);
-  const currentRadius = radiusSteps[Math.min(radiusIndex, radiusSteps.length - 1)];
+  const currentRadius =
+    radiusSteps[Math.min(radiusIndex, radiusSteps.length - 1)];
 
   // Initialize location label from IP when it loads
   useEffect(() => {
@@ -183,7 +184,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
       limit: 12,
       offset: 0,
       q: q.trim() || undefined,
-      location: manualOverride ? (location.trim() || undefined) : undefined,
+      location: manualOverride ? location.trim() || undefined : undefined,
       tags: activeTag || undefined,
       type:
         typeFilter === 'all'
@@ -199,7 +200,19 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
       user_lng: !manualOverride && hasCoords ? ipLocation.longitude : undefined,
       radius: !manualOverride && hasCoords ? currentRadius : undefined,
     }),
-    [q, location, activeTag, typeFilter, dateFilter, sortBy, manualOverride, hasCoords, ipLocation.latitude, ipLocation.longitude, currentRadius]
+    [
+      q,
+      location,
+      activeTag,
+      typeFilter,
+      dateFilter,
+      sortBy,
+      manualOverride,
+      hasCoords,
+      ipLocation.latitude,
+      ipLocation.longitude,
+      currentRadius,
+    ]
   );
 
   const popular = useEventList(filters);
@@ -208,7 +221,11 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     ...(manualOverride
       ? { city: location.trim() || undefined }
       : hasCoords && !atCountryMax
-        ? { user_lat: ipLocation.latitude, user_lng: ipLocation.longitude, radius: currentRadius }
+        ? {
+            user_lat: ipLocation.latitude,
+            user_lng: ipLocation.longitude,
+            radius: currentRadius,
+          }
         : ipLocation.countryName
           ? { country: ipLocation.countryName }
           : { city: location.trim() || undefined }),
@@ -216,7 +233,9 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
 
   const popularEvents = popular.data?.events || [];
   const groups = communities.data?.groups || [];
-  const nearbyInPerson = popularEvents.filter((e) => e.event_type === 'in_person');
+  const nearbyInPerson = popularEvents.filter(
+    (e) => e.event_type === 'in_person'
+  );
 
   useEffect(() => {
     setRadiusIndex(0);
@@ -234,7 +253,14 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     ) {
       setRadiusIndex((prev) => prev + 1);
     }
-  }, [popular.isSuccess, nearbyInPerson.length, manualOverride, hasCoords, radiusIndex, radiusSteps.length]);
+  }, [
+    popular.isSuccess,
+    nearbyInPerson.length,
+    manualOverride,
+    hasCoords,
+    radiusIndex,
+    radiusSteps.length,
+  ]);
 
   const applyTag = (tag: string) => {
     setActiveTag((prev) => (prev === tag ? '' : tag));

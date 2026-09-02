@@ -93,7 +93,12 @@ export function CommunityGroups({
 
   // Initialize city label from IP
   useEffect(() => {
-    if (!ipLocation.isLoading && !manualOverride && ipLocation.city && view === 'all') {
+    if (
+      !ipLocation.isLoading &&
+      !manualOverride &&
+      ipLocation.city &&
+      view === 'all'
+    ) {
       setCityLive(ipLocation.city);
       setCity(ipLocation.city);
     }
@@ -167,7 +172,15 @@ export function CommunityGroups({
     ) {
       setRadiusIndex((prev) => prev + 1);
     }
-  }, [all.isSuccess, groups.length, manualOverride, hasCoords, radiusIndex, view, radiusSteps.length]);
+  }, [
+    all.isSuccess,
+    groups.length,
+    manualOverride,
+    hasCoords,
+    radiusIndex,
+    view,
+    radiusSteps.length,
+  ]);
 
   return (
     <div className='space-y-6'>

@@ -13,13 +13,15 @@ export interface IPLocationData {
 }
 
 export const useIPLocation = (): IPLocationData => {
-  const [data, setData] = useState<Omit<IPLocationData, 'isLoading' | 'error'>>({
-    city: '',
-    country: '',
-    countryName: '',
-    latitude: 0,
-    longitude: 0,
-  });
+  const [data, setData] = useState<Omit<IPLocationData, 'isLoading' | 'error'>>(
+    {
+      city: '',
+      country: '',
+      countryName: '',
+      latitude: 0,
+      longitude: 0,
+    }
+  );
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -42,7 +44,7 @@ export const useIPLocation = (): IPLocationData => {
         const res = await fetch('https://ipapi.co/json/');
         if (!res.ok) throw new Error('Failed to fetch location');
         const json = await res.json();
-        
+
         const locData = {
           city: json.city || '',
           country: json.country || '',
@@ -50,7 +52,7 @@ export const useIPLocation = (): IPLocationData => {
           latitude: json.latitude || 0,
           longitude: json.longitude || 0,
         };
-        
+
         setData(locData);
         sessionStorage.setItem('user_ip_location', JSON.stringify(locData));
       } catch (err) {

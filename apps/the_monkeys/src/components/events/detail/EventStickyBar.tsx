@@ -6,7 +6,12 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
-import { eventPriceLabel, formatEventWhen, isEventEnded, spotsLeft } from '@/lib/eventTime';
+import {
+  eventPriceLabel,
+  formatEventWhen,
+  isEventEnded,
+  spotsLeft,
+} from '@/lib/eventTime';
 import { cn } from '@/lib/utils';
 import { EventItem, RsvpStatus } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
