@@ -344,7 +344,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
               }
               className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
             >
-              <option value='off'>Off — one-off event</option>
+              <option value='off'>One-time</option>
               <option value='daily'>Daily</option>
               <option value='weekly'>Weekly</option>
               <option value='monthly'>Monthly</option>
@@ -519,7 +519,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                 onChange={(e) => setGroupSlug(e.target.value)}
                 className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
               >
-                <option value=''>No community — standalone event</option>
+                <option value=''>Standalone event</option>
                 {organizerGroups.map((g) => (
                   <option key={g.slug} value={g.slug}>
                     {g.name}
@@ -543,12 +543,10 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           onChange={(e) => setVisibility(e.target.value as EventVisibility)}
           className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
         >
-          <option value='public'>Public — anyone can find it</option>
-          <option value='unlisted'>Unlisted — only people with the link</option>
-          <option value='private'>Private — invite only</option>
-          {hasGroup && (
-            <option value='group_members'>Members only — group members</option>
-          )}
+          <option value='public'>Public</option>
+          <option value='unlisted'>Unlisted</option>
+          <option value='private'>Private</option>
+          {hasGroup && <option value='group_members'>Members only</option>}
         </select>
       </Field>
 
