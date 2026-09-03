@@ -8,6 +8,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 
 import { Blogs } from './components/Blogs';
+import { ProfileEvents } from './components/ProfileEvents';
 import { ProfileSection } from './components/profile/ProfileSection';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
@@ -52,19 +53,19 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
   }
 
   return (
-    <div className='grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-16'>
+    <div className='grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-16'>
       <aside className='order-first lg:order-last lg:col-span-1'>
         <ProfileSection paramsUser={params.username} user={user} />
       </aside>
 
-      <section className='order-last max-w-4xl space-y-4 font-extrabold lg:order-first lg:col-span-2'>
+      <section className='order-last max-w-4xl space-y-6 lg:order-first lg:col-span-2'>
         <BackButton />
-        <h6 className='font-dm_sans  text-3xl'>
-          Latest from{' '}
-          <span className='font-dm_sans text-3xl'>{user?.first_name}</span>
+        <h6 className='font-dm_sans text-2xl font-bold tracking-tight sm:text-3xl'>
+          Latest from {user?.first_name}
         </h6>
 
         <Blogs username={params.username} user={data} />
+        <ProfileEvents username={params.username} />
       </section>
     </div>
   );

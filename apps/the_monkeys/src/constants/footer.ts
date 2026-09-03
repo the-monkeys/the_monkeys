@@ -73,6 +73,10 @@ export const footerLinksList = [
         link: '/',
       },
       {
+        text: 'Events',
+        link: '/events',
+      },
+      {
         text: 'About Us',
         link: '/about',
       },

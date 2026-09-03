@@ -42,6 +42,7 @@ const newsreader = Newsreader({
   subsets: ['latin'],
   variable: '--font-newsreader',
   display: 'swap',
+  adjustFontFallback: false,
 });
 
 // Business Card studio fonts — loaded so the card "Font Family" control renders

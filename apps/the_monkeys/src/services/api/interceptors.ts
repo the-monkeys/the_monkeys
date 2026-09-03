@@ -38,9 +38,14 @@ export const setupRefreshInterceptor = (instance: AxiosInstance) => {
         isRefreshing = true;
 
         try {
-          // Use a fixed absolute path for the refresh call to ensure it works
-          // across both /api/v1 and /api/v2 instances.
-          await instance.post('/api/v1/auth/refresh');
+          // The refresh endpoint is always /api/v1/auth/refresh. Set baseURL
+          // explicitly for this one call so it is NOT double-prefixed: the
+          // instance baseURL is already '/api/v1', and passing a leading-slash
+          // path here would resolve to '/api/v1/api/v1/auth/refresh' (404),
+          // silently breaking transparent re-auth on every 401 and surfacing a
+          // spurious failure to the caller (e.g. a create that actually needs
+          // a token refresh would appear to fail even when it could succeed).
+          await instance.post('/auth/refresh', null, { baseURL: '/api/v1' });
           isRefreshing = false;
           processQueue(null);
           return instance(originalRequest);

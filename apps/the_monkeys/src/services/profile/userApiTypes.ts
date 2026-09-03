@@ -18,6 +18,8 @@ export interface ConnectionCountResponse {
 
 export interface GetPublicUserProfileApiResponse {
   username: string;
+  /** Blue-check state; absent/undefined on stale data means "unknown", never "verified". */
+  is_verified?: boolean;
   first_name: string;
   last_name?: string;
   bio: string;
