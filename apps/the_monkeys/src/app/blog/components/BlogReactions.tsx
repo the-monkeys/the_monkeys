@@ -76,7 +76,7 @@ export const BlogReactionsContainer = ({
       >
         {blogId && <BlogReportDialog size={24} blogId={blogId} />}
       </div>
-      <div classname='shrink-0' >
+      <div className='shrink-0' >
         <BlogShareDialog
           blogURL={url}
           size={20}
