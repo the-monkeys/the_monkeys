@@ -67,7 +67,6 @@ export const BlogReactionsContainer = ({
       <div className='flex-1 px-[14px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
         <BlogReactions blogId={blogId} />
       </div>
-      
       <div
         className={twMerge(
           'shrink-0 px-[10px] py-[6px] bg-alert-red/60 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-alert-red',
@@ -76,7 +75,7 @@ export const BlogReactionsContainer = ({
       >
         {blogId && <BlogReportDialog size={24} blogId={blogId} />}
       </div>
-      <div className='shrink-0' >
+      <div className='shrink-0'>
         <BlogShareDialog
           blogURL={url}
           size={20}
