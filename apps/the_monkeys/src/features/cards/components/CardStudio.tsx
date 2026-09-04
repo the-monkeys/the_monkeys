@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { copyBlobToClipboard } from '@/components/CopyImageButton';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import {
@@ -162,6 +163,31 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
 
   const hasName = state.input.contact.firstName || state.input.contact.lastName;
 
+  const [copied, setCopied] = useState(false);
+  const [isCopying, setIsCopying] = useState(false);
+
+  const handleCopy = async () => {
+    if (!hasName) return;
+    setIsCopying(true);
+    try {
+      const blob = await exportImage({
+        format: 'png',
+        pixelRatio: 3,
+        filename,
+        download: false,
+      });
+      if (blob) {
+        await copyBlobToClipboard(blob);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch (err) {
+      console.error('Failed to copy to clipboard', err);
+    } finally {
+      setIsCopying(false);
+    }
+  };
+
   return (
     <div className='flex flex-col gap-6 lg:flex-row lg:gap-8'>
       {/* Preview column */}
@@ -181,6 +207,9 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
         <ExportMenu
           isExporting={isExporting}
           onExport={exportImage}
+          onCopy={handleCopy}
+          copying={isCopying}
+          copied={copied}
           onDownloadVCard={handleVCard}
           filename={filename}
           disabled={!hasName}

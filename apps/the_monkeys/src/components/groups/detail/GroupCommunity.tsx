@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
+import { TextTabs } from '@/components/TextTabs';
 import { EventGridCard } from '@/components/events/EventGridCard';
 import { GroupRules } from '@/components/groups/detail/GroupRules';
 import { GroupAddMember } from '@/components/groups/members/GroupAddMember';
@@ -36,37 +37,24 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
 
   return (
     <section>
-      <div
-        role='tablist'
+      <TextTabs
         aria-label='Group community'
-        className='mb-4 flex items-center gap-1 border-b border-border-light dark:border-border-dark'
-      >
-        <TabButton active={tab === 'events'} onClick={() => setTab('events')}>
-          Events
-        </TabButton>
-        <TabButton active={tab === 'about'} onClick={() => setTab('about')}>
-          About
-        </TabButton>
-        <TabButton active={tab === 'members'} onClick={() => setTab('members')}>
-          Members
-        </TabButton>
-        {staff && (
-          <TabButton
-            active={tab === 'requests'}
-            onClick={() => setTab('requests')}
-          >
-            Join requests
-          </TabButton>
-        )}
-        {staff && (
-          <TabButton
-            active={tab === 'invites'}
-            onClick={() => setTab('invites')}
-          >
-            Invites
-          </TabButton>
-        )}
-      </div>
+        value={tab}
+        onChange={setTab}
+        items={
+          [
+            { id: 'events', label: 'Events' },
+            { id: 'about', label: 'About' },
+            { id: 'members', label: 'Members' },
+            ...(staff
+              ? [
+                  { id: 'requests', label: 'Join requests' },
+                  { id: 'invites', label: 'Invites' },
+                ]
+              : []),
+          ] as { id: Tab; label: string }[]
+        }
+      />
 
       {tab === 'events' ? (
         <GroupEventsPanel group={group} staff={staff} />
@@ -99,40 +87,51 @@ function GroupEventsPanel({
   group: GroupItem;
   staff: boolean;
 }) {
-  const { data, isLoading } = useGroupEvents(group.slug);
+  const [when, setWhen] = useState<'upcoming' | 'past'>('upcoming');
+  const { data, isLoading } = useGroupEvents(group.slug, {
+    date: when,
+    limit: 24,
+  });
   const events = data?.events ?? [];
 
-  if (isLoading) {
-    return (
-      <div className='flex justify-center py-10'>
-        <Loader size={28} />
-      </div>
-    );
-  }
-
-  if (events.length === 0) {
-    return (
-      <div className='rounded-lg border border-dashed border-border-light py-10 text-center dark:border-border-dark'>
-        <p className='font-inter text-sm text-gray-500'>
-          No events scheduled yet.
-        </p>
-        {staff && (
-          <Link
-            href={`${GROUPS_ROUTE}/${group.slug}/events/new`}
-            className='mt-2 inline-block font-dm_sans text-sm font-medium text-brand-orange hover:underline'
-          >
-            Create the first event
-          </Link>
-        )}
-      </div>
-    );
-  }
-
   return (
-    <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-      {events.map((event) => (
-        <EventGridCard key={event.slug} event={event} />
-      ))}
+    <div>
+      <TextTabs
+        aria-label='Group events'
+        value={when}
+        onChange={setWhen}
+        items={[
+          { id: 'upcoming', label: 'Upcoming' },
+          { id: 'past', label: 'Past' },
+        ]}
+      />
+      {isLoading ? (
+        <div className='flex justify-center py-10'>
+          <Loader size={28} />
+        </div>
+      ) : events.length === 0 ? (
+        <div className='rounded-lg border border-dashed border-border-light py-10 text-center dark:border-border-dark'>
+          <p className='font-inter text-sm text-gray-500'>
+            {when === 'past'
+              ? 'No past events yet.'
+              : 'No events scheduled yet.'}
+          </p>
+          {staff && when === 'upcoming' && (
+            <Link
+              href={`${GROUPS_ROUTE}/${group.slug}/events/new`}
+              className='mt-2 inline-block font-dm_sans text-sm font-medium text-brand-orange hover:underline'
+            >
+              Create the first event
+            </Link>
+          )}
+        </div>
+      ) : (
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+          {events.map((event) => (
+            <EventGridCard key={event.slug} event={event} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -159,31 +158,5 @@ function GroupAboutPanel({ group }: { group: GroupItem }) {
         </p>
       )}
     </div>
-  );
-}
-
-function TabButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type='button'
-      role='tab'
-      aria-selected={active}
-      onClick={onClick}
-      className={`-mb-px min-h-[44px] border-b-2 px-3 font-inter text-sm transition-colors ${
-        active
-          ? 'border-brand-orange text-brand-orange'
-          : 'border-transparent text-gray-500 hover:text-text-light dark:hover:text-text-dark'
-      }`}
-    >
-      {children}
-    </button>
   );
 }

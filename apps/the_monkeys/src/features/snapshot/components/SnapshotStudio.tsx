@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { cn } from '@/lib/utils';
+import {
+  CopyImageButton,
+  copyBlobToClipboard,
+} from '@/components/CopyImageButton';
 import {
   Accordion,
   AccordionContent,
@@ -299,11 +302,7 @@ export const SnapshotStudio = ({
       }
 
       if (blob) {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            [blob.type]: blob,
-          }),
-        ]);
+        await copyBlobToClipboard(blob);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       }
@@ -322,34 +321,9 @@ export const SnapshotStudio = ({
   );
 
   return (
-    <div
-      className={cn(
-        'grid w-full grid-cols-1 gap-6',
-        previewMode === 'x'
-          ? 'lg:grid-cols-[minmax(320px,400px)_1fr]'
-          : 'lg:grid-cols-[1fr_minmax(320px,420px)]'
-      )}
-    >
-      <section
-        className={cn(
-          'flex min-w-0 flex-col gap-3',
-          previewMode === 'x' ? 'lg:order-2' : ''
-        )}
-      >
-        <div>
-          <h2 className='font-newsreader text-2xl'>
-            {previewMode === 'x' ? 'X post screenshot' : template.label}
-          </h2>
-          <p className='text-xs text-foreground/60'>
-            {previewMode === 'x'
-              ? tweetId
-                ? `${tweetCanvasSize.width}×${tweetCanvasSize.height} · Clean screenshot card`
-                : 'Paste a public X post URL'
-              : `${template.width}×${template.height} · ${template.aspect}`}
-          </p>
-        </div>
-
-        <div className='rounded-2xl border bg-foreground-light/30 p-2 dark:bg-foreground-dark/20 sm:p-4'>
+    <div className='grid w-full grid-cols-1 gap-6 md:grid-cols-[1fr_minmax(300px,400px)] md:items-start'>
+      <section className='flex min-w-0 flex-col gap-3 md:sticky md:top-20 md:self-start'>
+        <div className='mx-auto w-full max-w-[560px] rounded-2xl border bg-foreground-light/30 p-2 dark:bg-foreground-dark/20 sm:p-4'>
           {previewMode === 'template' ? (
             <SnapshotPreview
               ref={snapshotRef}
@@ -446,14 +420,10 @@ export const SnapshotStudio = ({
         ) : null}
       </section>
 
-      <aside
-        className={cn(
-          'flex flex-col gap-5',
-          previewMode === 'x' ? 'lg:order-1' : ''
-        )}
-      >
+      <aside className='flex flex-col gap-5'>
         {previewMode === 'template' ? (
           <Accordion
+            key='snapshot-template-options'
             type='multiple'
             defaultValue={[
               'template',
@@ -524,6 +494,7 @@ export const SnapshotStudio = ({
           </Accordion>
         ) : (
           <Accordion
+            key='snapshot-x-options'
             type='multiple'
             defaultValue={[
               'x-post',
@@ -580,62 +551,12 @@ export const SnapshotStudio = ({
               </a>
 
               {/* Copy to clipboard button */}
-              <button
-                type='button'
+              <CopyImageButton
                 onClick={handleCopy}
                 disabled={isCopying || activeExporting || !tweetId}
-                className='flex items-center justify-center h-10 w-12 rounded-lg border border-border-light/60 dark:border-border-dark/60 bg-background-light dark:bg-background-dark text-foreground hover:bg-foreground-light/5 dark:hover:bg-foreground-dark/5 transition-colors focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed'
-                title='Copy to Clipboard'
-              >
-                {copied ? (
-                  <svg
-                    viewBox='0 0 24 24'
-                    width={18}
-                    height={18}
-                    fill='none'
-                    stroke='#10B981'
-                    strokeWidth={2.5}
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  >
-                    <polyline points='20 6 9 17 4 12' />
-                  </svg>
-                ) : isCopying ? (
-                  <svg
-                    className='animate-spin h-5 w-5 text-foreground/50'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                  >
-                    <circle
-                      className='opacity-25'
-                      cx='12'
-                      cy='12'
-                      r='10'
-                      stroke='currentColor'
-                      strokeWidth='4'
-                    />
-                    <path
-                      className='opacity-75'
-                      fill='currentColor'
-                      d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    viewBox='0 0 24 24'
-                    width={18}
-                    height={18}
-                    fill='none'
-                    stroke='currentColor'
-                    strokeWidth={2}
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                  >
-                    <rect x='9' y='9' width='13' height='13' rx='2' ry='2' />
-                    <path d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1' />
-                  </svg>
-                )}
-              </button>
+                copied={copied}
+                copying={isCopying}
+              />
 
               {/* Download button */}
               <button
@@ -716,12 +637,20 @@ export const SnapshotStudio = ({
               </button> */}
             </div>
           ) : (
-            <DownloadButton
-              isExporting={activeExporting}
-              onExport={handleExport}
-              filename={filename}
-              disabled={false}
-            />
+            <div className='flex items-center gap-2 w-full'>
+              <CopyImageButton
+                onClick={handleCopy}
+                disabled={isCopying || activeExporting}
+                copied={copied}
+                copying={isCopying}
+              />
+              <DownloadButton
+                isExporting={activeExporting}
+                onExport={handleExport}
+                filename={filename}
+                disabled={false}
+              />
+            </div>
           )}
         </div>
       </aside>

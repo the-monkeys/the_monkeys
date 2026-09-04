@@ -193,6 +193,10 @@ export type GroupListFilters = {
   region?: string;
   city?: string;
   q?: string;
+  user_lat?: number;
+  user_lng?: number;
+  radius?: number;
+  public_only?: boolean;
 };
 
 export type MemberListParams = {

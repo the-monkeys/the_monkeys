@@ -94,12 +94,14 @@ export type EventItem = {
   // Advanced RSVP window & guests.
   rsvp_opens_at?: ProtoTime;
   rsvp_closes_at?: ProtoTime;
+  rsvp_close_hours_before?: number;
   allow_guests?: boolean;
   max_guests_per_rsvp?: number;
   // Recurring series.
   series_id?: number;
   series_occurrence_at?: ProtoTime;
   recurrence_text?: string;
+  upcoming_dates?: ProtoTime[];
   // Registration questions.
   questions?: EventQuestion[];
   // Organizer-authored FAQ (optional; rendered only when present).
@@ -165,6 +167,20 @@ export type EventBody = {
   // group_slug is honoured only on create; visibility applies to both.
   group_slug?: string;
   visibility?: EventVisibility;
+  recurrence?: Recurrence;
+  rsvp_closes_at?: string;
+  rsvp_close_hours_before?: number;
+};
+
+export type RecurrenceFreq = 'daily' | 'weekly' | 'monthly' | 'yearly';
+
+export type Recurrence = {
+  freq: RecurrenceFreq;
+  interval?: number;
+  by_day?: string[];
+  count?: number;
+  until?: string;
+  rsvp_close_hours_before?: number;
 };
 
 export type EventVisibility =
@@ -244,8 +260,11 @@ export type ListFilters = {
   location?: string;
   tags?: string;
   status?: EventStatus | '';
-  date?: 'this-week' | 'this-month' | 'all';
-  sort?: 'soonest' | 'popular' | 'newest';
+  date?: 'upcoming' | 'past' | 'this-week' | 'this-month' | 'all';
+  sort?: 'soonest' | 'popular' | 'newest' | 'nearest';
+  user_lat?: number;
+  user_lng?: number;
+  radius?: number;
 };
 
 // One image in an event's gallery. The url is a domain-free storage path the

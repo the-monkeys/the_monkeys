@@ -14,13 +14,19 @@ import {
   uploadEventCover,
   uploadEventPhoto,
 } from '@/services/events/eventsApi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 export function useEventList(filters: ListFilters, enabled = true) {
   return useQuery({
     queryKey: queryKeys.events.list(filters),
     queryFn: () => listEvents(filters),
     enabled,
+    placeholderData: keepPreviousData,
   });
 }
 

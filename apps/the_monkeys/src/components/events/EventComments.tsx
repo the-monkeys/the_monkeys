@@ -4,9 +4,10 @@ import { FormEvent, useState } from 'react';
 
 import Link from 'next/link';
 
-import { LOGIN_ROUTE } from '@/constants/routeConstants';
+import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useEventComments } from '@/hooks/events/useEventQueries';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
+import { loginHref } from '@/lib/authRedirect';
 import { parseEventTime } from '@/lib/eventTime';
 import { getRelativeTime } from '@/lib/utils';
 import { EventItem } from '@/services/events/eventTypes';
@@ -87,7 +88,7 @@ export function EventComments({
       ) : (
         <p className='font-inter text-sm text-gray-500'>
           <Link
-            href={LOGIN_ROUTE}
+            href={loginHref(`${EVENTS_ROUTE}/${event.slug}`)}
             className='text-brand-orange hover:underline'
           >
             Log in

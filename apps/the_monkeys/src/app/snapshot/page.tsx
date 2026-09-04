@@ -86,7 +86,7 @@ export default function SnapshotPickerPage() {
             Start from scratch
           </span>
           <span className='text-xs text-foreground/60'>
-            Type your own headline, description and quote — no post required.
+            Type your own headline, description and quote. No post required.
           </span>
         </Link>
 

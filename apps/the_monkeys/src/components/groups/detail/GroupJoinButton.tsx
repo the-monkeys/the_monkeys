@@ -3,9 +3,10 @@
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
-import { LOGIN_ROUTE } from '@/constants/routeConstants';
+import { GROUPS_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useJoinGroup, useLeaveGroup } from '@/hooks/groups/useGroupQueries';
+import { loginHref } from '@/lib/authRedirect';
 import { cn } from '@/lib/utils';
 import { groupError } from '@/services/groups/groupsApi';
 import { GroupItem } from '@/services/groups/groupsTypes';
@@ -37,7 +38,9 @@ export function GroupJoinButton({
   if (!session) {
     return (
       <Button asChild variant='brand' className={className}>
-        <Link href={LOGIN_ROUTE}>{joinLabel}</Link>
+        <Link href={loginHref(`${GROUPS_ROUTE}/${group.slug}`)}>
+          {joinLabel}
+        </Link>
       </Button>
     );
   }

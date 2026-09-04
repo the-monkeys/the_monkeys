@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -14,6 +14,9 @@ import {
 } from '@/constants/routeConstants';
 import { useEventList } from '@/hooks/events/useEventQueries';
 import { useGroupList } from '@/hooks/groups/useGroupQueries';
+import { useIPLocation } from '@/hooks/useIPLocation';
+import { uniqueSeriesEvents } from '@/lib/eventTime';
+import { geoRadiusSteps } from '@/lib/geoSearch';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -106,15 +109,15 @@ function GridSkeleton({ count = 4 }: { count?: number }) {
   );
 }
 
-function EventGrid({ events }: { events: EventItem[] }) {
+const EventGrid = memo(function EventGrid({ events }: { events: EventItem[] }) {
   return (
     <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-      {events.map((event) => (
+      {uniqueSeriesEvents(events).map((event) => (
         <EventGridCard key={event.id || event.slug} event={event} />
       ))}
     </div>
   );
-}
+});
 
 // -----------------------------------------------------------------------------
 // Main landing
@@ -123,13 +126,18 @@ function EventGrid({ events }: { events: EventItem[] }) {
 export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   const [qLive, setQLive] = useState('');
   const [q, setQ] = useState('');
+
   const [locationLive, setLocationLive] = useState('');
   const [location, setLocation] = useState('');
-  const [activeTag, setActiveTag] = useState('');
 
+  // Track whether the user has manually typed a location (disables auto-radius)
+  const [manualOverride, setManualOverride] = useState(false);
+  const ipLocation = useIPLocation();
+
+  const [activeTag, setActiveTag] = useState('');
   const [dateFilter, setDateFilter] = useState<
-    'this-week' | 'this-month' | 'all'
-  >('this-week');
+    'upcoming' | 'this-week' | 'this-month'
+  >('upcoming');
   const [typeFilter, setTypeFilter] = useState<
     'all' | 'in-person' | 'online' | 'hybrid'
   >('all');
@@ -140,47 +148,130 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   const gridRef = useRef<HTMLDivElement | null>(null);
   const locationInputRef = useRef<HTMLInputElement | null>(null);
 
-  // NOTE: We deliberately do NOT auto-fill the location filter from the browser
-  // timezone. Timezone is region-level (e.g. "Asia/Calcutta" for all of India)
-  // and applying it as a hard filter hid every online/virtual event and every
-  // group outside that city — i.e. the whole platform looked empty. Location is
-  // now an explicit, opt-in refinement the user types in.
+  // City first, then country. Never worldwide for in-person events.
+  const radiusSteps = useMemo(
+    () => geoRadiusSteps(ipLocation.country),
+    [ipLocation.country]
+  );
+  const [radiusIndex, setRadiusIndex] = useState(0);
+  const currentRadius =
+    radiusSteps[Math.min(radiusIndex, radiusSteps.length - 1)];
+
+  // Initialize location label from IP when it loads
+  useEffect(() => {
+    if (!ipLocation.isLoading && !manualOverride && ipLocation.city) {
+      setLocationLive(ipLocation.city);
+      setLocation(ipLocation.city);
+    }
+  }, [ipLocation.isLoading, ipLocation.city, manualOverride]);
+
+  // Handle manual user input
   useEffect(() => {
     const t = setTimeout(() => {
       setQ(qLive);
-      setLocation(locationLive);
+      if (locationLive !== location) {
+        setLocation(locationLive);
+        setManualOverride(true); // User typed something, disable auto-radius
+      }
     }, 300);
     return () => clearTimeout(t);
-  }, [qLive, locationLive]);
+  }, [qLive, locationLive, location]);
 
-  // Filtered grid — reflects search + active category + date/type/sort.
+  // Build filters using lat/lng + radius instead of string matching
+  const hasCoords = ipLocation.latitude !== 0 && ipLocation.longitude !== 0;
+  const atCountryMax = radiusIndex >= radiusSteps.length - 1;
   const filters: ListFilters = useMemo(
     () => ({
       limit: 12,
       offset: 0,
       q: q.trim() || undefined,
-      location: location.trim() || undefined,
+      location: manualOverride ? location.trim() || undefined : undefined,
       tags: activeTag || undefined,
       type:
         typeFilter === 'all'
           ? undefined
           : ((typeFilter === 'in-person'
               ? 'in_person'
-              : typeFilter) as ListFilters['type']),
-      date: dateFilter === 'all' ? undefined : dateFilter,
+              : typeFilter === 'online'
+                ? 'virtual'
+                : typeFilter) as ListFilters['type']),
+      date: dateFilter,
       sort: sortBy === 'soonest' ? undefined : sortBy,
+      user_lat: !manualOverride && hasCoords ? ipLocation.latitude : undefined,
+      user_lng: !manualOverride && hasCoords ? ipLocation.longitude : undefined,
+      radius:
+        !manualOverride && hasCoords && currentRadius > 0
+          ? currentRadius
+          : undefined,
     }),
-    [q, location, activeTag, typeFilter, dateFilter, sortBy]
+    [
+      q,
+      location,
+      activeTag,
+      typeFilter,
+      dateFilter,
+      sortBy,
+      manualOverride,
+      hasCoords,
+      ipLocation.latitude,
+      ipLocation.longitude,
+      currentRadius,
+    ]
   );
 
   const popular = useEventList(filters);
   const communities = useGroupList({
     limit: 8,
-    city: location.trim() || undefined,
+    ...(manualOverride
+      ? { city: location.trim() || undefined }
+      : hasCoords && !atCountryMax
+        ? {
+            user_lat: ipLocation.latitude,
+            user_lng: ipLocation.longitude,
+            radius: currentRadius,
+          }
+        : ipLocation.countryName
+          ? { country: ipLocation.countryName }
+          : { city: location.trim() || undefined }),
   });
 
   const popularEvents = popular.data?.events || [];
   const groups = communities.data?.groups || [];
+  const nearbyInPerson = popularEvents.filter(
+    (e) => e.event_type === 'in_person'
+  );
+  const lookingForInPerson = typeFilter === 'all' || typeFilter === 'in-person';
+
+  useEffect(() => {
+    setRadiusIndex(0);
+  }, [q, activeTag, typeFilter, dateFilter, manualOverride]);
+
+  // Widen from city toward country while no in-person events are in range.
+  // Virtual/hybrid are already included globally and must not freeze the radius.
+  useEffect(() => {
+    if (
+      lookingForInPerson &&
+      popular.isSuccess &&
+      !popular.isFetching &&
+      nearbyInPerson.length === 0 &&
+      !manualOverride &&
+      hasCoords &&
+      currentRadius > 0 &&
+      radiusIndex < radiusSteps.length - 1
+    ) {
+      setRadiusIndex((prev) => prev + 1);
+    }
+  }, [
+    lookingForInPerson,
+    popular.isSuccess,
+    popular.isFetching,
+    nearbyInPerson.length,
+    manualOverride,
+    hasCoords,
+    currentRadius,
+    radiusIndex,
+    radiusSteps.length,
+  ]);
 
   const applyTag = (tag: string) => {
     setActiveTag((prev) => (prev === tag ? '' : tag));
@@ -191,7 +282,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   };
 
   const hasActiveFilters = !!activeTag || !!q.trim() || !!location.trim();
-  const displayLocation = location.trim() || 'Bengaluru';
+  const displayLocation = location.trim() || 'you';
 
   return (
     <div className='space-y-14 sm:space-y-20'>
@@ -336,13 +427,13 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
                       size={16}
                       className='text-gray-500'
                     />
-                    <SelectValue placeholder='This week' />
+                    <SelectValue placeholder='Upcoming' />
                   </div>
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value='upcoming'>Upcoming</SelectItem>
                   <SelectItem value='this-week'>This week</SelectItem>
                   <SelectItem value='this-month'>This month</SelectItem>
-                  <SelectItem value='all'>All upcoming</SelectItem>
                 </SelectContent>
               </Select>
 

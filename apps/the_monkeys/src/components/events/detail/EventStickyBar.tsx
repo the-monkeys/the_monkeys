@@ -6,7 +6,13 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
-import { eventPriceLabel, formatEventWhen, spotsLeft } from '@/lib/eventTime';
+import {
+  eventPriceLabel,
+  formatEventWhen,
+  isEventEnded,
+  isRsvpClosed,
+  spotsLeft,
+} from '@/lib/eventTime';
 import { cn } from '@/lib/utils';
 import { EventItem, RsvpStatus } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -33,7 +39,8 @@ export function EventStickyBar({
 }: Props) {
   const [visible, setVisible] = useState(false);
   const left = spotsLeft(event);
-  const closed = event.status === 'cancelled' || event.status === 'completed';
+  const closed = isEventEnded(event);
+  const rsvpClosed = isRsvpClosed(event);
   const going =
     viewerStatus === 'confirmed' ||
     viewerStatus === 'waitlisted' ||
@@ -112,14 +119,18 @@ export function EventStickyBar({
             <Button
               variant={going ? 'outline' : 'brand'}
               className='h-11 min-w-[112px] px-5'
-              disabled={closed}
+              disabled={closed || (rsvpClosed && !going)}
               onClick={handleAttend}
             >
               {closed
-                ? eventStatusText(event.status)
-                : going
-                  ? 'You’re in'
-                  : 'Attend'}
+                ? event.status === 'cancelled'
+                  ? 'Cancelled'
+                  : 'Ended'
+                : rsvpClosed && !going
+                  ? 'Closed'
+                  : going
+                    ? 'You’re in'
+                    : 'Attend'}
             </Button>
           )}
         </div>
@@ -128,11 +139,6 @@ export function EventStickyBar({
   );
 }
 
-function eventStatusText(status: EventItem['status']): string {
-  if (status === 'cancelled') return 'Cancelled';
-  if (status === 'completed') return 'Ended';
-  return 'Closed';
-}
 /**
  * Both layouts (mobile inline + desktop rail) render an RSVP anchor, but only
  * one is visible at a time. Pick the on-screen one (offsetParent is null when

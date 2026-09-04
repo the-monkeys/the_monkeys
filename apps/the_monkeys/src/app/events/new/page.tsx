@@ -11,6 +11,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import { EventBody } from '@/services/events/eventTypes';
 import {
   createEvent,
+  createSeries,
   eventError,
   updateEvent,
   uploadEventCover,
@@ -31,10 +32,12 @@ export default function NewEventPage() {
   const onSubmit = async (body: EventBody, coverFile?: File) => {
     setSaving(true);
     try {
-      const res = await createEvent(body);
+      const res = body.recurrence
+        ? await createSeries(body)
+        : await createEvent(body);
       const slug = res.event?.slug;
-      // A cover picked before the event existed is uploaded now and persisted
-      // on the event. Failure here must not lose the draft, so it is non-fatal.
+      // One v2 upload. For a series the backend maps that URL onto every
+      // occurrence — do not upload once per date.
       if (slug && coverFile) {
         try {
           const up = await uploadEventCover(slug, coverFile);
@@ -47,8 +50,8 @@ export default function NewEventPage() {
           });
         }
       }
-      toast({ title: 'Draft saved' });
-      router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
+      toast({ title: body.recurrence ? 'Series created' : 'Draft saved' });
+      router.push(slug ? `${EVENTS_ROUTE}/${slug}` : EVENTS_ROUTE);
     } catch (err) {
       toast({ title: 'Could not create event', description: eventError(err) });
     } finally {
@@ -59,7 +62,7 @@ export default function NewEventPage() {
   return (
     <div className='mx-auto max-w-2xl'>
       <div className='mb-4'>
-        <BackButton />
+        <BackButton href={EVENTS_ROUTE} />
       </div>
       <h1 className='font-newsreader font-bold text-3xl md:text-4xl mb-6'>
         Create event
