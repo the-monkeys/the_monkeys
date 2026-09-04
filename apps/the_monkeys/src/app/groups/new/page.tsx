@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
+import { BackButton } from '@/components/buttons/backButton';
 import { GroupForm } from '@/components/groups/GroupForm';
 import { GROUPS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
@@ -63,15 +64,21 @@ export default function NewGroupPage() {
   };
 
   return (
-    <div className='mx-auto max-w-2xl'>
-      <h1 className='mb-6 font-newsreader text-3xl font-bold md:text-4xl'>
+    <main className='mx-auto w-full max-w-2xl px-4 py-6 sm:px-6 lg:py-10'>
+      <div className='mb-4'>
+        <BackButton href={GROUPS_ROUTE} />
+      </div>
+      <h1 className='font-newsreader text-3xl font-bold md:text-4xl'>
         Start a group
       </h1>
+      <p className='mb-6 mt-2 font-inter text-sm text-text-light/70 dark:text-text-dark/70'>
+        Begin with what members need to know. You can customize the rest later.
+      </p>
       <GroupForm
         submitLabel='Create draft'
         saving={create.isPending}
         onSubmit={onSubmit}
       />
-    </div>
+    </main>
   );
 }

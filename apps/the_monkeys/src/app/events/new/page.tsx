@@ -60,14 +60,17 @@ export default function NewEventPage() {
   };
 
   return (
-    <div className='mx-auto max-w-2xl'>
+    <main className='mx-auto w-full max-w-2xl px-4 py-6 sm:px-6 lg:py-10'>
       <div className='mb-4'>
         <BackButton href={EVENTS_ROUTE} />
       </div>
-      <h1 className='font-newsreader font-bold text-3xl md:text-4xl mb-6'>
+      <h1 className='font-newsreader text-3xl font-bold md:text-4xl'>
         Create event
       </h1>
+      <p className='mb-6 mt-2 font-inter text-sm text-text-light/70 dark:text-text-dark/70'>
+        Share the essentials now. You can add the details when you are ready.
+      </p>
       <EventForm submitLabel='Save draft' saving={saving} onSubmit={onSubmit} />
-    </div>
+    </main>
   );
 }

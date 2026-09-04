@@ -93,7 +93,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [eventType, setEventType] = useState<EventType>(
     event?.event_type || 'virtual'
   );
-  const [includeTier, setIncludeTier] = useState(!event);
+  const [includeTier, setIncludeTier] = useState(false);
   // Group linkage is chosen at creation time; visibility is editable anytime.
   const [groupSlug, setGroupSlug] = useState(event?.group_slug || '');
   const [visibility, setVisibility] = useState<EventVisibility>(
@@ -175,7 +175,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       capacity: event?.capacity ? String(event.capacity) : '',
       tags: event?.tags?.join(', ') || '',
       tierName: 'General',
-      tierPrice: '0',
+      // tierPrice: '0',
       tierCapacity: '',
     }),
     [event]
@@ -246,7 +246,8 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         body.ticket_tiers = [
           {
             name: String(form.get('tierName') || 'General').trim() || 'General',
-            price: Number(form.get('tierPrice') || 0) || 0,
+            // price: Number(form.get('tierPrice') || 0) || 0,
+            price: 0,
             capacity: Number(form.get('tierCapacity') || 0) || 0,
             currency: 'INR',
             sort_order: 0,
@@ -321,6 +322,14 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         />
       </Field>
 
+      <EventCoverField
+        slug={event?.slug}
+        value={coverImage}
+        onChange={handleCoverUrl}
+        onFileSelected={handleCoverFile}
+        pendingPreview={coverPreview}
+      />
+
       <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
         <Field label='Starts'>
           <Input
@@ -361,150 +370,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           {dateError}
         </p>
       )}
-
-      <Field label='Timezone'>
-        <Input
-          name='timezone'
-          defaultValue={initial.timezone}
-          readOnly={ended}
-        />
-      </Field>
-
-      {!event && (
-        <div className='rounded-lg border border-border-light p-4 space-y-3 dark:border-border-dark/60'>
-          <Field label='Repeat'>
-            <select
-              value={repeatFreq}
-              onChange={(e) =>
-                setRepeatFreq(e.target.value as RecurrenceFreq | 'off')
-              }
-              className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
-            >
-              <option value='off'>One-time</option>
-              <option value='daily'>Daily</option>
-              <option value='weekly'>Weekly</option>
-              <option value='monthly'>Monthly</option>
-              <option value='yearly'>Yearly</option>
-            </select>
-          </Field>
-          {repeatFreq !== 'off' && (
-            <>
-              <Field label='Every'>
-                <div className='flex items-center gap-2'>
-                  <Input
-                    type='number'
-                    min={1}
-                    max={52}
-                    value={repeatInterval}
-                    onChange={(e) =>
-                      setRepeatInterval(
-                        Math.max(1, Number(e.target.value) || 1)
-                      )
-                    }
-                    className='w-24'
-                  />
-                  <span className='font-inter text-sm text-gray-500'>
-                    {repeatFreq === 'daily'
-                      ? 'day(s)'
-                      : repeatFreq === 'weekly'
-                        ? 'week(s)'
-                        : repeatFreq === 'monthly'
-                          ? 'month(s)'
-                          : 'year(s)'}
-                  </span>
-                </div>
-              </Field>
-              {repeatFreq === 'weekly' && (
-                <div className='flex flex-wrap gap-2'>
-                  {WEEKDAYS.map((d) => {
-                    const on = repeatDays.includes(d.id);
-                    return (
-                      <button
-                        key={d.id}
-                        type='button'
-                        onClick={() =>
-                          setRepeatDays((prev) =>
-                            on
-                              ? prev.filter((x) => x !== d.id)
-                              : [...prev, d.id]
-                          )
-                        }
-                        className={`rounded-full px-3 py-1.5 text-sm font-inter border-2 ${
-                          on
-                            ? 'border-brand-orange bg-brand-orange text-white'
-                            : 'border-border-light dark:border-border-dark'
-                        }`}
-                      >
-                        {d.label}
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-              <Field label='Ends'>
-                <select
-                  value={repeatEnd}
-                  onChange={(e) =>
-                    setRepeatEnd(e.target.value as typeof repeatEnd)
-                  }
-                  className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
-                >
-                  <option value='never'>Never (next 12 dates)</option>
-                  <option value='until'>On a date</option>
-                  <option value='count'>After a number of events</option>
-                </select>
-              </Field>
-              {repeatEnd === 'until' && (
-                <Input
-                  type='date'
-                  value={repeatUntil}
-                  onChange={(e) => setRepeatUntil(e.target.value)}
-                />
-              )}
-              {repeatEnd === 'count' && (
-                <Input
-                  type='number'
-                  min={1}
-                  max={52}
-                  value={repeatCount}
-                  onChange={(e) =>
-                    setRepeatCount(Math.max(1, Number(e.target.value) || 1))
-                  }
-                />
-              )}
-            </>
-          )}
-        </div>
-      )}
-
-      {!ended && (!!event?.series_id || repeatFreq !== 'off') ? (
-        <Field label='Close RSVP'>
-          <select
-            value={rsvpCloseHours}
-            onChange={(e) => setRsvpCloseHours(Number(e.target.value) || 0)}
-            className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
-          >
-            {RSVP_CLOSE_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
-        </Field>
-      ) : !ended ? (
-        <Field label='Last day to RSVP'>
-          <Input
-            type='datetime-local'
-            min={minStart}
-            max={startVal || undefined}
-            value={rsvpClosesVal}
-            onChange={(e) => {
-              setRsvpClosesVal(e.target.value);
-              if (dateError) setDateError('');
-            }}
-          />
-        </Field>
-      ) : null}
 
       <fieldset>
         <legend className='mb-2 font-inter text-sm font-medium'>Type</legend>
@@ -550,117 +415,260 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         </Field>
       )}
 
-      <Field label='Max people (0 = no limit)'>
-        <Input
-          name='capacity'
-          type='number'
-          min={0}
-          defaultValue={initial.capacity}
-          readOnly={ended}
-        />
-      </Field>
+      <details className='rounded-lg border border-border-light p-4 dark:border-border-dark/60'>
+        <summary className='cursor-pointer font-inter text-sm font-medium marker:hidden [&::-webkit-details-marker]:hidden'>
+          More event options
+        </summary>
+        <div className='mt-4 space-y-5'>
+          <Field label='Timezone'>
+            <Input
+              name='timezone'
+              defaultValue={initial.timezone}
+              readOnly={ended}
+            />
+          </Field>
 
-      <EventCoverField
-        slug={event?.slug}
-        value={coverImage}
-        onChange={handleCoverUrl}
-        onFileSelected={handleCoverFile}
-        pendingPreview={coverPreview}
-      />
+          {!event && (
+            <div className='rounded-lg border border-border-light p-4 space-y-3 dark:border-border-dark/60'>
+              <Field label='Repeat'>
+                <select
+                  value={repeatFreq}
+                  onChange={(e) =>
+                    setRepeatFreq(e.target.value as RecurrenceFreq | 'off')
+                  }
+                  className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+                >
+                  <option value='off'>One-time</option>
+                  <option value='daily'>Daily</option>
+                  <option value='weekly'>Weekly</option>
+                  <option value='monthly'>Monthly</option>
+                  <option value='yearly'>Yearly</option>
+                </select>
+              </Field>
+              {repeatFreq !== 'off' && (
+                <>
+                  <Field label='Every'>
+                    <div className='flex items-center gap-2'>
+                      <Input
+                        type='number'
+                        min={1}
+                        max={52}
+                        value={repeatInterval}
+                        onChange={(e) =>
+                          setRepeatInterval(
+                            Math.max(1, Number(e.target.value) || 1)
+                          )
+                        }
+                        className='w-24'
+                      />
+                      <span className='font-inter text-sm text-gray-500'>
+                        {repeatFreq === 'daily'
+                          ? 'day(s)'
+                          : repeatFreq === 'weekly'
+                            ? 'week(s)'
+                            : repeatFreq === 'monthly'
+                              ? 'month(s)'
+                              : 'year(s)'}
+                      </span>
+                    </div>
+                  </Field>
+                  {repeatFreq === 'weekly' && (
+                    <div className='flex flex-wrap gap-2'>
+                      {WEEKDAYS.map((d) => {
+                        const on = repeatDays.includes(d.id);
+                        return (
+                          <button
+                            key={d.id}
+                            type='button'
+                            onClick={() =>
+                              setRepeatDays((prev) =>
+                                on
+                                  ? prev.filter((x) => x !== d.id)
+                                  : [...prev, d.id]
+                              )
+                            }
+                            className={`rounded-full px-3 py-1.5 text-sm font-inter border-2 ${
+                              on
+                                ? 'border-brand-orange bg-brand-orange text-white'
+                                : 'border-border-light dark:border-border-dark'
+                            }`}
+                          >
+                            {d.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <Field label='Ends'>
+                    <select
+                      value={repeatEnd}
+                      onChange={(e) =>
+                        setRepeatEnd(e.target.value as typeof repeatEnd)
+                      }
+                      className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+                    >
+                      <option value='never'>Never (next 12 dates)</option>
+                      <option value='until'>On a date</option>
+                      <option value='count'>After a number of events</option>
+                    </select>
+                  </Field>
+                  {repeatEnd === 'until' && (
+                    <Input
+                      type='date'
+                      value={repeatUntil}
+                      onChange={(e) => setRepeatUntil(e.target.value)}
+                    />
+                  )}
+                  {repeatEnd === 'count' && (
+                    <Input
+                      type='number'
+                      min={1}
+                      max={52}
+                      value={repeatCount}
+                      onChange={(e) =>
+                        setRepeatCount(Math.max(1, Number(e.target.value) || 1))
+                      }
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          )}
 
-      <Field label='Tags (comma separated)'>
-        <Input
-          name='tags'
-          defaultValue={initial.tags}
-          placeholder='tech, meetup'
-        />
-      </Field>
-
-      {!event
-        ? organizerGroups.length > 0 && (
-            <Field label='Host under a community (optional)'>
+          {!ended && (!!event?.series_id || repeatFreq !== 'off') ? (
+            <Field label='Close RSVP'>
               <select
-                value={groupSlug}
-                onChange={(e) => setGroupSlug(e.target.value)}
-                className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
+                value={rsvpCloseHours}
+                onChange={(e) => setRsvpCloseHours(Number(e.target.value) || 0)}
+                className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
               >
-                <option value=''>Standalone event</option>
-                {organizerGroups.map((g) => (
-                  <option key={g.slug} value={g.slug}>
-                    {g.name}
+                {RSVP_CLOSE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
                   </option>
                 ))}
               </select>
             </Field>
-          )
-        : event.group_slug && (
-            <Field label='Community'>
-              <p className='font-inter text-sm text-text-light/70 dark:text-text-dark/70'>
-                Hosted under {event.group_name || event.group_slug}
-              </p>
+          ) : !ended ? (
+            <Field label='Last day to RSVP'>
+              <Input
+                type='datetime-local'
+                min={minStart}
+                max={startVal || undefined}
+                value={rsvpClosesVal}
+                onChange={(e) => {
+                  setRsvpClosesVal(e.target.value);
+                  if (dateError) setDateError('');
+                }}
+              />
+            </Field>
+          ) : null}
+
+          <Field label='Max people (0 = no limit)'>
+            <Input
+              name='capacity'
+              type='number'
+              min={0}
+              defaultValue={initial.capacity}
+              readOnly={ended}
+            />
+          </Field>
+
+          <Field label='Tags (comma separated)'>
+            <Input
+              name='tags'
+              defaultValue={initial.tags}
+              placeholder='tech, meetup'
+            />
+          </Field>
+
+          {!event
+            ? organizerGroups.length > 0 && (
+                <Field label='Host under a community (optional)'>
+                  <select
+                    value={groupSlug}
+                    onChange={(e) => setGroupSlug(e.target.value)}
+                    className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
+                  >
+                    <option value=''>Standalone event</option>
+                    {organizerGroups.map((g) => (
+                      <option key={g.slug} value={g.slug}>
+                        {g.name}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              )
+            : event.group_slug && (
+                <Field label='Community'>
+                  <p className='font-inter text-sm text-text-light/70 dark:text-text-dark/70'>
+                    Hosted under {event.group_name || event.group_slug}
+                  </p>
+                </Field>
+              )}
+
+          <Field label='Visibility'>
+            <select
+              value={visibility}
+              disabled={ended}
+              onChange={(e) => setVisibility(e.target.value as EventVisibility)}
+              className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
+            >
+              <option value='public'>Public</option>
+              <option value='unlisted'>Unlisted</option>
+              <option value='private'>Private</option>
+              {hasGroup && <option value='group_members'>Members only</option>}
+            </select>
+          </Field>
+
+          {!event && (
+            <Field label='Co-hosts'>
+              <CohostPicker
+                value={cohosts}
+                onChange={setCohosts}
+                exclude={session?.username}
+              />
             </Field>
           )}
 
-      <Field label='Visibility'>
-        <select
-          value={visibility}
-          disabled={ended}
-          onChange={(e) => setVisibility(e.target.value as EventVisibility)}
-          className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
-        >
-          <option value='public'>Public</option>
-          <option value='unlisted'>Unlisted</option>
-          <option value='private'>Private</option>
-          {hasGroup && <option value='group_members'>Members only</option>}
-        </select>
-      </Field>
-
-      {!event && (
-        <Field label='Co-hosts'>
-          <CohostPicker
-            value={cohosts}
-            onChange={setCohosts}
-            exclude={session?.username}
-          />
-        </Field>
-      )}
-
-      {!event && (
-        <div className='rounded-lg border border-border-light dark:border-border-dark/60 p-4 space-y-3'>
-          <label className='flex items-center gap-2 font-inter text-sm'>
-            <input
-              type='checkbox'
-              checked={includeTier}
-              onChange={(e) => setIncludeTier(e.target.checked)}
-            />
-            Add a ticket
-          </label>
-          {includeTier && (
-            <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
-              <Input
-                name='tierName'
-                defaultValue={initial.tierName}
-                placeholder='Name'
-              />
-              <Input
+          {!event && (
+            <div className='rounded-lg border border-border-light dark:border-border-dark/60 p-4 space-y-3'>
+              <label className='flex items-center gap-2 font-inter text-sm'>
+                <input
+                  type='checkbox'
+                  checked={includeTier}
+                  onChange={(e) => setIncludeTier(e.target.checked)}
+                />
+                Add a ticket
+              </label>
+              {includeTier && (
+                <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
+                  <Input
+                    name='tierName'
+                    defaultValue={initial.tierName}
+                    placeholder='Name'
+                  />
+                  {/* <Input
                 name='tierPrice'
                 type='number'
                 min={0}
                 step='1'
                 defaultValue={initial.tierPrice}
                 placeholder='Price (0 = free)'
-              />
-              <Input
-                name='tierCapacity'
-                type='number'
-                min={0}
-                defaultValue={initial.tierCapacity}
-                placeholder='Seats (0 = no limit)'
-              />
+              /> */}
+                  <Input
+                    name='tierCapacity'
+                    type='number'
+                    min={0}
+                    defaultValue={initial.tierCapacity}
+                    placeholder='Seats (0 = no limit)'
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
+      </details>
 
       <Button
         type='submit'
