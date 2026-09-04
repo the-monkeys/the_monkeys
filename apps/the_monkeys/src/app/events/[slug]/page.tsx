@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 
 import { JsonLd } from '@/components/seo/JsonLd';
-import { API_URL } from '@/constants/api';
 import {
   breadcrumb,
   indexRobots,
@@ -10,22 +9,9 @@ import {
   truncateMeta,
 } from '@/lib/seo';
 import { eventJsonLd } from '@/lib/seoSchema';
-import { EventResp } from '@/services/events/eventTypes';
 
 import EventDetailClient from './EventDetailClient';
-
-async function loadEvent(slug: string): Promise<EventResp | null> {
-  if (!API_URL) return null;
-  try {
-    const res = await fetch(`${API_URL}/events/${encodeURIComponent(slug)}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
+import { loadEventForMetadata } from './eventMetadata';
 
 function isIndexable(status?: string) {
   return status === 'published' || status === 'live' || status === 'completed';
@@ -36,10 +22,14 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const data = await loadEvent(params.slug);
+  const data = await loadEventForMetadata(params.slug);
   const event = data?.event;
-  if (!event || !isIndexable(event.status)) {
+  if (!event) {
     return { title: 'Event not found', robots: noIndexRobots };
+  }
+
+  if (!isIndexable(event.status)) {
+    return { title: event.title, robots: noIndexRobots };
   }
 
   return {
@@ -62,7 +52,7 @@ export default async function EventDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const data = await loadEvent(params.slug);
+  const data = await loadEventForMetadata(params.slug);
   const event = data?.event;
 
   return (
