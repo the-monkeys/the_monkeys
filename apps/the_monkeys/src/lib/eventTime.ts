@@ -11,6 +11,10 @@ export function parseEventTime(value: ProtoTime): Date | null {
   return new Date(seconds * 1000 + Math.floor((value.nanos ?? 0) / 1e6));
 }
 
+export function toIsoTime(value: ProtoTime): string | undefined {
+  return parseEventTime(value)?.toISOString();
+}
+
 export function toIso(date: Date): string {
   return date.toISOString();
 }

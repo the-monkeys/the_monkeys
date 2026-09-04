@@ -37,10 +37,11 @@ export const DISCOVER_ITEMS: NavItem[] = [
   },
   { href: EVENTS_ROUTE, label: 'Events', icon: 'RiGroup' },
   {
+    // Studio (Image template + X screenshot) is open to everyone; only the
+    // Business Card tab inside it is gated (see CardsAuthGuard).
     href: '/snapshot/new',
     label: 'Studio',
     icon: 'RiCameraLens',
-    requiresAuth: true,
   },
   {
     href: BOOKMARK_ROUTE,
