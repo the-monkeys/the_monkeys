@@ -39,12 +39,67 @@ it('opens from the keyboard and moves focus through menu items with arrow keys',
   const groupItem = screen.getByRole('menuitem', { name: 'Create Group' });
 
   expect(document.activeElement).toBe(postItem);
+  expect(postItem.tabIndex).toBe(0);
+  expect(eventItem.tabIndex).toBe(-1);
+  expect(groupItem.tabIndex).toBe(-1);
   await user.keyboard('{ArrowDown}');
   expect(document.activeElement).toBe(eventItem);
+  expect(postItem.tabIndex).toBe(-1);
+  expect(eventItem.tabIndex).toBe(0);
   await user.keyboard('{ArrowDown}');
   expect(document.activeElement).toBe(groupItem);
+  expect(eventItem.tabIndex).toBe(-1);
+  expect(groupItem.tabIndex).toBe(0);
   await user.keyboard('{ArrowUp}');
   expect(document.activeElement).toBe(eventItem);
+  expect(eventItem.tabIndex).toBe(0);
+  expect(groupItem.tabIndex).toBe(-1);
+});
+
+it('supports wrapped arrow navigation plus Home and End', async () => {
+  const user = userEvent.setup();
+
+  renderWithProviders(<CreateButton />);
+  await user.click(screen.getByRole('button', { name: 'Create' }));
+
+  const postItem = screen.getByRole('menuitem', { name: 'Create Post' });
+  const eventItem = screen.getByRole('menuitem', { name: 'Create Event' });
+  const groupItem = screen.getByRole('menuitem', { name: 'Create Group' });
+
+  await user.keyboard('{ArrowUp}');
+  expect(document.activeElement).toBe(groupItem);
+  expect(groupItem.tabIndex).toBe(0);
+  await user.keyboard('{Home}');
+  expect(document.activeElement).toBe(postItem);
+  expect(postItem.tabIndex).toBe(0);
+  await user.keyboard('{End}');
+  expect(document.activeElement).toBe(groupItem);
+  expect(groupItem.tabIndex).toBe(0);
+  await user.keyboard('{ArrowDown}');
+  expect(document.activeElement).toBe(postItem);
+  expect(eventItem.tabIndex).toBe(-1);
+});
+
+it('closes on Tab and allows focus to move beyond the popup', async () => {
+  const user = userEvent.setup();
+
+  renderWithProviders(
+    <>
+      <CreateButton />
+      <button type='button'>After Create menu</button>
+    </>
+  );
+  await user.click(screen.getByRole('button', { name: 'Create' }));
+
+  expect(document.activeElement).toBe(
+    screen.getByRole('menuitem', { name: 'Create Post' })
+  );
+  await user.tab();
+
+  expect(screen.queryByRole('menu')).toBeNull();
+  expect(document.activeElement).toBe(
+    screen.getByRole('button', { name: 'After Create menu' })
+  );
 });
 
 it('closes on Escape and restores focus to the Create trigger', async () => {

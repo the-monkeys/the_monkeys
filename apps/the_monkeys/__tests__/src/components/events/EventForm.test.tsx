@@ -30,6 +30,7 @@ it('does not render a paid ticket price field and submits a free optional tier',
   });
   await user.click(screen.getByText('More event options'));
   await user.click(screen.getByLabelText('Add a ticket'));
+  expect(screen.queryByPlaceholderText('Price (0 = free)')).toBeNull();
   await user.click(screen.getByRole('button', { name: 'Save draft' }));
 
   expect(onSubmit).toHaveBeenCalledWith(

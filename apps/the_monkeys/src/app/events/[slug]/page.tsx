@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 
-import { JsonLd } from '@/components/seo/JsonLd';
 import {
   breadcrumb,
   indexRobots,
@@ -15,6 +14,10 @@ import { loadEventForMetadata } from './eventMetadata';
 
 function isIndexable(status?: string) {
   return status === 'published' || status === 'live' || status === 'completed';
+}
+
+function serializeJsonLd(value: unknown): string {
+  return JSON.stringify(value).replace(/</g, '\\u003c');
 }
 
 export async function generateMetadata({
@@ -59,13 +62,21 @@ export default async function EventDetailPage({
     <>
       {event && isIndexable(event.status) && (
         <>
-          <JsonLd data={eventJsonLd(event)} />
-          <JsonLd
-            data={breadcrumb([
-              { name: 'Home', path: '/' },
-              { name: 'Events', path: '/events' },
-              { name: event.title, path: `/events/${event.slug}` },
-            ])}
+          <script
+            type='application/ld+json'
+            dangerouslySetInnerHTML={{ __html: serializeJsonLd(eventJsonLd(event)) }}
+          />
+          <script
+            type='application/ld+json'
+            dangerouslySetInnerHTML={{
+              __html: serializeJsonLd(
+                breadcrumb([
+                  { name: 'Home', path: '/' },
+                  { name: 'Events', path: '/events' },
+                  { name: event.title, path: `/events/${event.slug}` },
+                ])
+              ),
+            }}
           />
         </>
       )}

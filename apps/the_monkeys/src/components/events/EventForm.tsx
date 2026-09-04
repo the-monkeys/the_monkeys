@@ -175,6 +175,8 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       capacity: event?.capacity ? String(event.capacity) : '',
       tags: event?.tags?.join(', ') || '',
       tierName: 'General',
+      // Paid ticket pricing is temporarily disabled; keep the previous
+      // form default here so the control can be restored with its state.
       // tierPrice: '0',
       tierCapacity: '',
     }),
@@ -246,6 +248,8 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         body.ticket_tiers = [
           {
             name: String(form.get('tierName') || 'General').trim() || 'General',
+            // Paid ticket pricing is temporarily disabled. Keep the former
+            // form read nearby, but submit every new ticket tier as free.
             // price: Number(form.get('tierPrice') || 0) || 0,
             price: 0,
             capacity: Number(form.get('tierCapacity') || 0) || 0,
@@ -648,6 +652,8 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                     defaultValue={initial.tierName}
                     placeholder='Name'
                   />
+                  {/* Paid ticket pricing is temporarily disabled. Keep this
+                  control in source so it can be restored with the payload. */}
                   {/* <Input
                 name='tierPrice'
                 type='number'

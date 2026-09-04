@@ -1,3 +1,6 @@
+import { loadEventForMetadata } from '@/app/events/[slug]/eventMetadata';
+import EventDetailPage, { generateMetadata } from '@/app/events/[slug]/page';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { mockedCookies } = vi.hoisted(() => ({
@@ -13,8 +16,9 @@ vi.mock('@/constants/api', () => ({
   LIVE_URL: 'https://monkeys.example.test',
 }));
 
-import { loadEventForMetadata } from '@/app/events/[slug]/eventMetadata';
-import { generateMetadata } from '@/app/events/[slug]/page';
+vi.mock('@/app/events/[slug]/EventDetailClient', () => ({
+  default: () => null,
+}));
 
 describe('loadEventForMetadata', () => {
   beforeEach(() => {
@@ -40,6 +44,20 @@ describe('loadEventForMetadata', () => {
         cache: 'no-store',
         headers: { Authorization: 'Bearer token' },
       })
+    );
+  });
+
+  it('omits the Authorization header when the mat cookie is absent', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({ event: { title: 'Public event' } }),
+    } as unknown as Response);
+
+    await loadEventForMetadata('public-event');
+
+    expect(fetch).toHaveBeenCalledWith(
+      'https://api.example.test/events/public-event',
+      { cache: 'no-store' }
     );
   });
 
@@ -71,5 +89,40 @@ describe('loadEventForMetadata', () => {
     });
 
     expect(metadata.title).toBe('Organizer draft');
+  });
+
+  it('keeps the Event not found metadata fallback for a non-OK lookup', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false } as Response);
+
+    const metadata = await generateMetadata({
+      params: { slug: 'private-event' },
+    });
+
+    expect(metadata.title).toBe('Event not found');
+  });
+
+  it('escapes user-controlled closing script tags in event JSON-LD', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        event: {
+          id: 1,
+          title: 'Unsafe event',
+          slug: 'unsafe-event',
+          description: '</script><script>alert(1)</script>',
+          event_type: 'in_person',
+          status: 'published',
+        },
+      }),
+    } as unknown as Response);
+
+    const markup = renderToStaticMarkup(
+      await EventDetailPage({ params: { slug: 'unsafe-event' } })
+    );
+
+    expect(markup).not.toContain('</script><script>alert(1)</script>');
+    expect(markup).toContain(
+      '\\u003c/script>\\u003cscript>alert(1)\\u003c/script>'
+    );
   });
 });
