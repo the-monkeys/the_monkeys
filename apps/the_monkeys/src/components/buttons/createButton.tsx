@@ -15,6 +15,17 @@ import Icon from '../icon';
 export const CreateButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuItemRefs = useRef<Array<HTMLAnchorElement | null>>([]);
+
+  const closeMenuAndRestoreFocus = () => {
+    setIsOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const focusMenuItem = (index: number) => {
+    menuItemRefs.current[index]?.focus();
+  };
 
   useEffect(() => {
     const closeMenu = (event: MouseEvent) => {
@@ -22,24 +33,57 @@ export const CreateButton = () => {
         setIsOpen(false);
       }
     };
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsOpen(false);
-      }
-    };
-
     document.addEventListener('mousedown', closeMenu);
-    document.addEventListener('keydown', closeOnEscape);
 
     return () => {
       document.removeEventListener('mousedown', closeMenu);
-      document.removeEventListener('keydown', closeOnEscape);
     };
   }, []);
 
+  useEffect(() => {
+    if (isOpen) {
+      focusMenuItem(0);
+    }
+  }, [isOpen]);
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Escape' && isOpen) {
+      event.preventDefault();
+      closeMenuAndRestoreFocus();
+      return;
+    }
+
+    if (
+      !isOpen ||
+      !['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)
+    ) {
+      return;
+    }
+
+    const currentIndex = menuItemRefs.current.findIndex(
+      (menuItem) => menuItem === event.target
+    );
+    const lastIndex = menuItemRefs.current.length - 1;
+    let nextIndex = currentIndex;
+
+    if (event.key === 'ArrowDown') {
+      nextIndex = currentIndex === lastIndex ? 0 : currentIndex + 1;
+    } else if (event.key === 'ArrowUp') {
+      nextIndex = currentIndex <= 0 ? lastIndex : currentIndex - 1;
+    } else if (event.key === 'Home') {
+      nextIndex = 0;
+    } else if (event.key === 'End') {
+      nextIndex = lastIndex;
+    }
+
+    event.preventDefault();
+    focusMenuItem(nextIndex);
+  };
+
   return (
-    <div ref={menuRef} className='relative'>
+    <div ref={menuRef} onKeyDown={handleKeyDown} className='relative'>
       <button
+        ref={triggerRef}
         type='button'
         aria-haspopup='menu'
         aria-expanded={isOpen}
@@ -59,6 +103,10 @@ export const CreateButton = () => {
           className='absolute right-0 z-50 mt-2 w-52 overflow-hidden rounded-xl border border-brand-orange/20 bg-white py-1 shadow-lg dark:bg-black'
         >
           <Link
+            ref={(element) => {
+              menuItemRefs.current[0] = element;
+            }}
+            role='menuitem'
             href={CREATE_ROUTE}
             prefetch
             onClick={() => setIsOpen(false)}
@@ -72,6 +120,10 @@ export const CreateButton = () => {
             className='my-1 border-t border-brand-orange/15'
           />
           <Link
+            ref={(element) => {
+              menuItemRefs.current[1] = element;
+            }}
+            role='menuitem'
             href={CREATE_EVENT_ROUTE}
             prefetch
             onClick={() => setIsOpen(false)}
@@ -81,6 +133,10 @@ export const CreateButton = () => {
             Create Event
           </Link>
           <Link
+            ref={(element) => {
+              menuItemRefs.current[2] = element;
+            }}
+            role='menuitem'
             href={CREATE_GROUP_ROUTE}
             prefetch
             onClick={() => setIsOpen(false)}
