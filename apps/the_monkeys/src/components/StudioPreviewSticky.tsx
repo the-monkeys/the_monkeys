@@ -32,8 +32,8 @@ export function StudioPreviewSticky({
         className
       )}
     >
-      <div className='flex items-center gap-2'>
-        <div className='min-w-0 flex-1'>{children}</div>
+      <div className='flex items-stretch gap-2'>
+        <div className='min-h-0 min-w-0 flex-1'>{children}</div>
         {actions ? (
           <div
             className={cn(
@@ -49,4 +49,9 @@ export function StudioPreviewSticky({
   );
 }
 
-export const studioPreviewFitClass = 'aspect-[1080/1350] w-full';
+/**
+ * 4:5 well. On a phone, height is capped so the sticky preview
+ * cannot swallow the form; width follows the aspect ratio.
+ */
+export const studioPreviewFitClass =
+  'aspect-[1080/1350] w-full max-w-[560px] max-md:h-[min(42svh,360px)] max-md:w-auto max-md:max-w-full';

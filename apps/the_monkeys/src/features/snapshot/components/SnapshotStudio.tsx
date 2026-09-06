@@ -365,14 +365,14 @@ export const SnapshotStudio = ({
         >
           <div
             className={cn(
-              'mx-auto w-full max-w-[560px] overflow-hidden rounded-2xl border bg-background-light p-2 dark:bg-background-dark sm:p-4',
+              'mx-auto flex overflow-hidden rounded-2xl border bg-background-light p-2 dark:bg-background-dark sm:p-4',
               studioPreviewFitClass
             )}
           >
             {previewMode === 'template' ? (
               <SnapshotPreview
                 ref={snapshotRef}
-                className='flex h-full items-center justify-center'
+                className='flex h-full min-h-0 w-full items-center justify-center overflow-hidden'
                 input={renderedInput}
                 templateId={state.templateId}
                 themeId={state.themeId}

@@ -226,7 +226,7 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
             customization={state.customization}
             qrDataUrl={qrDataUrl}
             className={cn(
-              'flex items-center justify-center overflow-hidden rounded-xl border border-foreground/10 bg-background-light p-4 dark:bg-background-dark',
+              'flex items-center justify-center overflow-hidden rounded-2xl border border-foreground/10 bg-background-light p-2 dark:bg-background-dark sm:p-4',
               studioPreviewFitClass
             )}
           />

@@ -49,13 +49,14 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
         const byWidth = availableW / template.width;
         const byHeight =
           el.clientHeight > 0 ? el.clientHeight / template.height : byWidth;
-        setScale(Math.min(1, byWidth, byHeight));
+        const next = Math.min(1, byWidth, byHeight);
+        setScale((prev) => (Math.abs(prev - next) < 0.001 ? prev : next));
       };
       update();
       const ro = new ResizeObserver(update);
       ro.observe(el);
       return () => ro.disconnect();
-    }, [template.width, maxPreviewWidth]);
+    }, [template.width, template.height, maxPreviewWidth]);
 
     const Render = template.Render;
     const scaledW = template.width * scale;
