@@ -167,34 +167,35 @@ export function GroupForm({ group, saving, submitLabel, onSubmit }: Props) {
         />
       </Field>
 
+      <fieldset>
+        <legend className='mb-2 font-inter text-sm font-medium'>
+          Visibility
+        </legend>
+        <div className='grid grid-cols-1 gap-2 sm:grid-cols-3'>
+          {VISIBILITIES.map((v) => (
+            <button
+              key={v.value}
+              type='button'
+              aria-pressed={visibility === v.value}
+              onClick={() => setVisibility(v.value)}
+              className={`rounded-lg border-2 px-3 py-2 text-left font-inter transition-colors ${
+                visibility === v.value
+                  ? 'border-brand-orange bg-brand-orange/5'
+                  : 'border-border-light dark:border-border-dark'
+              }`}
+            >
+              <span className='block text-sm font-semibold'>{v.label}</span>
+              <span className='block text-xs text-gray-500'>{v.hint}</span>
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
       <details className='rounded-lg border border-border-light p-4 dark:border-border-dark/60'>
         <summary className='cursor-pointer font-inter text-sm font-medium marker:hidden [&::-webkit-details-marker]:hidden'>
           More group options
         </summary>
         <div className='mt-4 space-y-5'>
-          <fieldset>
-            <legend className='mb-2 font-inter text-sm font-medium'>
-              Visibility
-            </legend>
-            <div className='grid grid-cols-1 gap-2 sm:grid-cols-3'>
-              {VISIBILITIES.map((v) => (
-                <button
-                  key={v.value}
-                  type='button'
-                  onClick={() => setVisibility(v.value)}
-                  className={`rounded-lg border-2 px-3 py-2 text-left font-inter transition-colors ${
-                    visibility === v.value
-                      ? 'border-brand-orange bg-brand-orange/5'
-                      : 'border-border-light dark:border-border-dark'
-                  }`}
-                >
-                  <span className='block text-sm font-semibold'>{v.label}</span>
-                  <span className='block text-xs text-gray-500'>{v.hint}</span>
-                </button>
-              ))}
-            </div>
-          </fieldset>
-
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
             <Field label='City'>
               <Input name='city' defaultValue={initial.city} />

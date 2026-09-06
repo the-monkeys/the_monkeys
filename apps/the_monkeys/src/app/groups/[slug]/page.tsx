@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 
 import { JsonLd } from '@/components/seo/JsonLd';
-import { API_URL } from '@/constants/api';
 import {
   breadcrumb,
   indexRobots,
@@ -13,19 +12,7 @@ import { groupJsonLd } from '@/lib/seoSchema';
 import { GroupResp } from '@/services/groups/groupsTypes';
 
 import GroupDetailClient from './GroupDetailClient';
-
-async function loadGroup(slug: string): Promise<GroupResp | null> {
-  if (!API_URL) return null;
-  try {
-    const res = await fetch(`${API_URL}/groups/${encodeURIComponent(slug)}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
-}
+import { loadGroupForMetadata } from './groupMetadata';
 
 function isIndexable(group: NonNullable<GroupResp['group']>) {
   const published = !group.status || group.status === 'published';
@@ -37,10 +24,14 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const data = await loadGroup(params.slug);
+  const data = await loadGroupForMetadata(params.slug);
   const group = data?.group;
-  if (!group || !isIndexable(group)) {
+  if (!group) {
     return { title: 'Group not found', robots: noIndexRobots };
+  }
+
+  if (!isIndexable(group)) {
+    return { title: group.name, robots: noIndexRobots };
   }
 
   return {
@@ -63,7 +54,7 @@ export default async function GroupDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const data = await loadGroup(params.slug);
+  const data = await loadGroupForMetadata(params.slug);
   const group = data?.group;
 
   return (
