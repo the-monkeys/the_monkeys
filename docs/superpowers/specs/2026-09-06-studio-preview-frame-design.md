@@ -87,7 +87,7 @@ On a ~390px phone (full column, `p-2`):
 
 Keep `display: contents` on the mobile preview `<section>` so sticky and form share a parent.
 
-`StudioPreviewSticky`: `w-full`, sticky under `--app-header-h`. Actions `absolute` overlay on `md:hidden`. Never `flex` + `min-w-0 flex-1` beside icons.
+`StudioPreviewSticky`: `w-full`, sticky under `--app-header-h`. Mobile export icons sit **beside** the well (`w-10 shrink-0`), not on the canvas. The well is `w-[calc(100%-3rem)]` so Safari never gets `flex-1` + `min-w-0`. Never overlay icons on the image.
 
 ### Scale math (all three previews)
 

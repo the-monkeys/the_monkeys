@@ -6,8 +6,9 @@ import { cn } from '@/lib/utils';
 
 /**
  * Keeps the studio canvas visible while the options panel scrolls.
- * Actions overlay the preview on mobile so they cannot collapse its width
- * (iOS Safari flex + min-width:0 was shrinking the canvas to a 1px sliver).
+ * Mobile export icons sit beside the well, not on the image. The well uses
+ * calc(100% - 3rem) instead of flex-1 + min-w-0 so iOS Safari cannot collapse
+ * the canvas to 0px.
  */
 export function StudioPreviewSticky({
   children,
@@ -31,15 +32,10 @@ export function StudioPreviewSticky({
         className
       )}
     >
-      <div className='relative w-full'>
-        {children}
+      <div className='flex w-full items-center gap-2'>
+        <div className='w-[calc(100%-3rem)] md:w-full'>{children}</div>
         {actions ? (
-          <div
-            className={cn(
-              'absolute right-1 top-1/2 z-10 -translate-y-1/2 md:hidden',
-              actionsClassName
-            )}
-          >
+          <div className={cn('w-10 shrink-0 md:hidden', actionsClassName)}>
             {actions}
           </div>
         ) : null}
