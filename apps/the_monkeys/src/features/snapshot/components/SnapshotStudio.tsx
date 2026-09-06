@@ -6,6 +6,12 @@ import {
   CopyImageButton,
   copyBlobToClipboard,
 } from '@/components/CopyImageButton';
+import { StudioMobileExportIcons } from '@/components/StudioMobileExportIcons';
+import {
+  StudioPreviewSticky,
+  studioPreviewFitClass,
+} from '@/components/StudioPreviewSticky';
+import { cn } from '@/lib/utils';
 import {
   Accordion,
   AccordionContent,
@@ -21,7 +27,7 @@ import { parseTweetId } from '../lib/parseTweetUrl';
 import { punchOverlayVideoHole } from '../lib/punchOverlayVideoHole';
 import { getTweetDownloadVideoVariant } from '../lib/tweetMedia';
 import { getTemplateById } from '../registry';
-import { SnapshotInput } from '../types';
+import { SnapshotExportOptions, SnapshotInput } from '../types';
 import {
   DEFAULT_TWEET_SCREENSHOT_OPTIONS,
   TWEET_ASPECT_DIMENSIONS,
@@ -133,14 +139,18 @@ export const SnapshotStudio = ({
     const update = () => {
       const available = el.clientWidth;
       if (!available) return;
-      const next = Math.min(1, (available - 16) / tweetCanvasSize.width);
+      const next = Math.min(
+        1,
+        available / tweetCanvasSize.width,
+        el.clientHeight > 0 ? el.clientHeight / tweetCanvasSize.height : 1
+      );
       setXScale(next);
     };
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
-  }, [previewMode, tweetCanvasSize.width]);
+  }, [previewMode, tweetCanvasSize.width, tweetCanvasSize.height]);
 
   const { exportImage, isExporting, error } = useExport(snapshotRef, {
     width: template.width,
@@ -175,7 +185,7 @@ export const SnapshotStudio = ({
   const activeError =
     previewMode === 'x' ? tweetExportError ?? tweetLoadError : error;
 
-  const handleExport = async () => {
+  const handleExport = async (opts?: SnapshotExportOptions) => {
     if (previewMode === 'x') {
       if (!tweetId) return null;
 
@@ -277,7 +287,7 @@ export const SnapshotStudio = ({
       await document.fonts?.ready;
       return exportTweetScreenshot({ filename: tweetFilename, download: true });
     }
-    return exportImage({ filename });
+    return exportImage({ filename, ...opts });
   };
 
   const [copied, setCopied] = useState(false);
@@ -321,22 +331,57 @@ export const SnapshotStudio = ({
   );
 
   return (
-    <div className='grid w-full grid-cols-1 gap-6 md:grid-cols-[1fr_minmax(300px,400px)] md:items-start'>
-      <section className='flex min-w-0 flex-col gap-3 md:sticky md:top-20 md:self-start'>
-        <div className='mx-auto w-full max-w-[560px] rounded-2xl border bg-foreground-light/30 p-2 dark:bg-foreground-dark/20 sm:p-4'>
-          {previewMode === 'template' ? (
-            <SnapshotPreview
-              ref={snapshotRef}
-              input={renderedInput}
-              templateId={state.templateId}
-              themeId={state.themeId}
-              accent={state.accent}
-            />
-          ) : (
-            <div className='flex flex-col items-center w-full'>
+    <div className='flex w-full flex-col gap-6 md:grid md:grid-cols-[1fr_minmax(300px,400px)] md:items-start'>
+      <section className='contents md:sticky md:top-20 md:flex md:min-w-0 md:flex-col md:gap-3 md:self-start'>
+        <StudioPreviewSticky
+          actions={
+            previewMode === 'x' ? (
+              <StudioMobileExportIcons
+                onCopy={handleCopy}
+                onDownload={() => handleExport()}
+                downloadLabel={
+                  tweetVideoVariant ? 'Download video' : 'Download'
+                }
+                copied={copied}
+                copying={isCopying}
+                exporting={activeExporting}
+                disabled={!tweetId}
+              />
+            ) : (
+              <StudioMobileExportIcons
+                onCopy={handleCopy}
+                onPng={() =>
+                  handleExport({ format: 'png', pixelRatio: 2, filename })
+                }
+                onJpeg={() =>
+                  handleExport({ format: 'jpeg', pixelRatio: 2, filename })
+                }
+                copied={copied}
+                copying={isCopying}
+                exporting={activeExporting}
+              />
+            )
+          }
+        >
+          <div
+            className={cn(
+              'mx-auto w-full max-w-[560px] overflow-hidden rounded-2xl border bg-background-light p-2 dark:bg-background-dark sm:p-4',
+              studioPreviewFitClass
+            )}
+          >
+            {previewMode === 'template' ? (
+              <SnapshotPreview
+                ref={snapshotRef}
+                className='flex h-full items-center justify-center'
+                input={renderedInput}
+                templateId={state.templateId}
+                themeId={state.themeId}
+                accent={state.accent}
+              />
+            ) : (
               <div
                 ref={xStageRef}
-                className='flex justify-center p-2 w-full overflow-hidden'
+                className='flex h-full w-full items-center justify-center overflow-hidden'
               >
                 <div
                   style={{
@@ -347,7 +392,6 @@ export const SnapshotStudio = ({
                   }}
                 >
                   <div
-                    className='relative'
                     style={{
                       width: tweetCanvasSize.width,
                       height: tweetCanvasSize.height,
@@ -363,53 +407,39 @@ export const SnapshotStudio = ({
                       onTweetReady={setTweetForDownload}
                       exportMode={exportMode}
                     />
-
-                    {/* Decorative drag handles to replicate layout design */}
-                    <div
-                      className='absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-7 bg-white rounded-full border border-black/10 shadow-lg z-10'
-                      style={{ pointerEvents: 'none' }}
-                    />
-                    <div
-                      className='absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 w-2.5 h-7 bg-white rounded-full border border-black/10 shadow-lg z-10'
-                      style={{ pointerEvents: 'none' }}
-                    />
-                    <div
-                      className='absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-7 h-2.5 bg-white rounded-full border border-black/10 shadow-lg z-10'
-                      style={{ pointerEvents: 'none' }}
-                    />
                   </div>
                 </div>
               </div>
-
-              {/* Stage description footer */}
-              <div className='mt-6 text-center text-xs text-foreground/50 flex flex-col gap-1.5'>
-                <p>
-                  But if you like this tool, you can always{' '}
-                  <a
-                    href='https://github.com/sponsors/the-monkeys'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    className='text-brand-orange hover:underline font-medium'
-                  >
-                    fund us on github.com.co
-                  </a>
-                </p>
-                <p>
-                  Issues?{' '}
-                  <a
-                    href='mailto:support@monkeys.com.co'
-                    className='text-brand-orange hover:underline font-medium'
-                  >
-                    Contact us
-                  </a>
-                </p>
-                <p className='text-[10px] text-foreground/40 mt-1'>
-                  Works instantly on mobile or desktop and every browser
-                </p>
-              </div>
+            )}
+          </div>
+          {previewMode === 'x' ? (
+            <div className='mx-auto mt-4 hidden max-w-[560px] flex-col gap-1.5 text-center text-xs text-foreground/50 md:flex'>
+              <p>
+                But if you like this tool, you can always{' '}
+                <a
+                  href='https://github.com/sponsors/the-monkeys'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-brand-orange hover:underline font-medium'
+                >
+                  fund us on github.com.co
+                </a>
+              </p>
+              <p>
+                Issues?{' '}
+                <a
+                  href='mailto:support@monkeys.com.co'
+                  className='text-brand-orange hover:underline font-medium'
+                >
+                  Contact us
+                </a>
+              </p>
+              <p className='text-[10px] text-foreground/40 mt-1'>
+                Works instantly on mobile or desktop and every browser
+              </p>
             </div>
-          )}
-        </div>
+          ) : null}
+        </StudioPreviewSticky>
 
         {activeError ? (
           <p role='alert' className='text-sm text-alert-red'>
@@ -525,7 +555,7 @@ export const SnapshotStudio = ({
           </Accordion>
         )}
 
-        <div className='sticky bottom-0 -mx-1 mt-2 flex flex-col gap-2 border-t bg-background-light/95 px-1 py-3 dark:bg-background-dark/95'>
+        <div className='mt-2 hidden flex-col gap-2 border-t bg-background-light px-1 py-3 dark:bg-background-dark md:sticky md:bottom-0 md:z-20 md:flex'>
           {previewMode === 'x' ? (
             <div className='flex items-center gap-2 w-full'>
               {/* Sponsor button */}

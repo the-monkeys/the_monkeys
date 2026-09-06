@@ -44,9 +44,12 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
       if (!stageRef.current) return;
       const el = stageRef.current;
       const update = () => {
-        const available = maxPreviewWidth ?? el.clientWidth;
-        if (!available) return;
-        setScale(Math.min(1, available / template.width));
+        const availableW = maxPreviewWidth ?? el.clientWidth;
+        if (!availableW) return;
+        const byWidth = availableW / template.width;
+        const byHeight =
+          el.clientHeight > 0 ? el.clientHeight / template.height : byWidth;
+        setScale(Math.min(1, byWidth, byHeight));
       };
       update();
       const ro = new ResizeObserver(update);
@@ -69,7 +72,8 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
         {/* Measured content box — no padding, so the card never overflows. */}
         <div
           ref={stageRef}
-          style={{ width: '100%', maxWidth: maxPreviewWidth }}
+          className='flex h-full w-full items-center justify-center'
+          style={{ maxWidth: maxPreviewWidth }}
         >
           <div
             style={{

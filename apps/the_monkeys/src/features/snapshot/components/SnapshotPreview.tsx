@@ -46,16 +46,18 @@ export const SnapshotPreview = forwardRef<HTMLDivElement, SnapshotPreviewProps>(
       if (!stageRef.current) return;
       const el = stageRef.current;
       const update = () => {
-        const available = maxPreviewWidth ?? el.clientWidth;
-        if (!available) return;
-        const next = Math.min(1, available / template.width);
-        setScale(next);
+        const availableW = maxPreviewWidth ?? el.clientWidth;
+        if (!availableW) return;
+        const byWidth = availableW / template.width;
+        const byHeight =
+          el.clientHeight > 0 ? el.clientHeight / template.height : byWidth;
+        setScale(Math.min(1, byWidth, byHeight));
       };
       update();
       const ro = new ResizeObserver(update);
       ro.observe(el);
       return () => ro.disconnect();
-    }, [template.width, maxPreviewWidth]);
+    }, [template.width, template.height, maxPreviewWidth]);
 
     const Render = template.Render;
     const scaledWidth = template.width * scale;

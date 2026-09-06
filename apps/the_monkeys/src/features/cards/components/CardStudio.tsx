@@ -5,8 +5,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { copyBlobToClipboard } from '@/components/CopyImageButton';
+import { StudioMobileExportIcons } from '@/components/StudioMobileExportIcons';
+import {
+  StudioPreviewSticky,
+  studioPreviewFitClass,
+} from '@/components/StudioPreviewSticky';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
+import { cn } from '@/lib/utils';
 import {
   Accordion,
   AccordionContent,
@@ -190,30 +196,56 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
 
   return (
     <div className='flex flex-col gap-6 lg:flex-row lg:gap-8'>
-      {/* Preview column */}
-      <div className='flex flex-col gap-4 lg:sticky lg:top-20 lg:w-[520px] lg:self-start xl:w-[600px]'>
-        <CardPreview
-          ref={cardRef}
-          input={state.input}
-          templateId={state.templateId}
-          themeId={state.themeId}
-          customization={state.customization}
-          qrDataUrl={qrDataUrl}
-          className='rounded-xl border border-foreground/10 bg-foreground/5 p-4'
-        />
+      {/* Preview column — `contents` on mobile so sticky preview shares a
+          parent with the form; otherwise the short preview row cannot stick. */}
+      <div className='contents lg:sticky lg:top-20 lg:flex lg:w-[520px] lg:flex-col lg:gap-4 lg:self-start xl:w-[600px]'>
+        <StudioPreviewSticky
+          actionsClassName='md:flex lg:hidden'
+          actions={
+            <StudioMobileExportIcons
+              onCopy={handleCopy}
+              onPng={() =>
+                exportImage({ format: 'png', pixelRatio: 3, filename })
+              }
+              onJpeg={() =>
+                exportImage({ format: 'jpeg', pixelRatio: 3, filename })
+              }
+              onVCard={handleVCard}
+              copied={copied}
+              copying={isCopying}
+              exporting={isExporting}
+              disabled={!hasName}
+            />
+          }
+        >
+          <CardPreview
+            ref={cardRef}
+            input={state.input}
+            templateId={state.templateId}
+            themeId={state.themeId}
+            customization={state.customization}
+            qrDataUrl={qrDataUrl}
+            className={cn(
+              'flex items-center justify-center overflow-hidden rounded-xl border border-foreground/10 bg-background-light p-4 dark:bg-background-dark',
+              studioPreviewFitClass
+            )}
+          />
+        </StudioPreviewSticky>
 
         {error && <p className='text-sm text-destructive'>{error.message}</p>}
 
-        <ExportMenu
-          isExporting={isExporting}
-          onExport={exportImage}
-          onCopy={handleCopy}
-          copying={isCopying}
-          copied={copied}
-          onDownloadVCard={handleVCard}
-          filename={filename}
-          disabled={!hasName}
-        />
+        <div className='hidden lg:block'>
+          <ExportMenu
+            isExporting={isExporting}
+            onExport={exportImage}
+            onCopy={handleCopy}
+            copying={isCopying}
+            copied={copied}
+            onDownloadVCard={handleVCard}
+            filename={filename}
+            disabled={!hasName}
+          />
+        </div>
       </div>
 
       {/* Options column */}
