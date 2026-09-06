@@ -6,9 +6,8 @@ import { cn } from '@/lib/utils';
 
 /**
  * Keeps the studio canvas visible while the options panel scrolls.
- * Sticks just below the live header height (`--app-header-h`) so the
- * topic bar cannot show through a gap on mobile.
- * `actions` is a mobile-only icon column beside the preview.
+ * Actions overlay the preview on mobile so they cannot collapse its width
+ * (iOS Safari flex + min-width:0 was shrinking the canvas to a 1px sliver).
  */
 export function StudioPreviewSticky({
   children,
@@ -24,7 +23,7 @@ export function StudioPreviewSticky({
   return (
     <div
       className={cn(
-        'sticky top-[var(--app-header-h,6.75rem)] z-30 isolate self-start lg:top-20',
+        'sticky top-[var(--app-header-h,6.75rem)] z-30 isolate w-full self-start lg:top-20',
         '-mx-4 px-4 pb-3',
         'border-b border-border-light/60 bg-background-light',
         'dark:border-border-dark/60 dark:bg-background-dark',
@@ -32,12 +31,12 @@ export function StudioPreviewSticky({
         className
       )}
     >
-      <div className='flex items-center gap-2'>
-        <div className='min-w-0 flex-1'>{children}</div>
+      <div className='relative w-full'>
+        {children}
         {actions ? (
           <div
             className={cn(
-              'flex shrink-0 flex-col justify-center md:hidden',
+              'absolute right-1 top-1/2 z-10 -translate-y-1/2 md:hidden',
               actionsClassName
             )}
           >
@@ -49,11 +48,6 @@ export function StudioPreviewSticky({
   );
 }
 
-/**
- * Full-width 4:5 well on desktop. On a phone, keep width 100% and cap
- * height so the sticky preview cannot collapse or swallow the form.
- * Do not use `w-auto` here: the canvas is `width: 100%`, so auto +
- * percentage children resolve to 0px and the image disappears.
- */
+/** Mobile-first: full column on phones, then tablet/desktop max widths. Height follows the canvas. */
 export const studioPreviewFitClass =
-  'h-[min(42vh,360px)] w-full max-w-[560px] md:aspect-[1080/1350] md:h-auto';
+  'relative w-full sm:max-w-[420px] md:max-w-[520px] lg:max-w-[560px]';

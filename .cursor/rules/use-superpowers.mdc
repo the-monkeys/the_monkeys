@@ -1,0 +1,22 @@
+---
+description: Always use Superpowers process skills before coding. Do not skip or cancel them.
+alwaysApply: true
+---
+
+# Superpowers is required
+
+This repo has Superpowers installed. The agent does **not** have permission to skip, cancel, or “save for later” those skills.
+
+Before exploring or writing code:
+
+1. Read `using-superpowers`.
+2. For new UI, layout, or behavior: `brainstorming` then a spec, then `writing-plans`. No patches until the user approves the spec.
+3. For bugs: `systematic-debugging` before any fix.
+4. Before claiming done: `verification-before-completion`.
+
+Cursor’s Chromium browser is not iPhone Safari. Do not claim a mobile Safari bug is fixed from a Chromium screenshot.
+
+```
+❌ BAD: change h-80 / padding / aspect until a screenshot looks better
+✅ GOOD: write spec → plan → one change that matches the spec → verify
+```

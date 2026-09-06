@@ -22,6 +22,7 @@ import {
 import { useDataUrlImage } from '../hooks/useDataUrlImage';
 import { useExport } from '../hooks/useExport';
 import { useSnapshotState } from '../hooks/useSnapshotState';
+import { fitPreviewScale } from '../lib/fitPreviewScale';
 import { inlineImagesForExport } from '../lib/inlineImagesForExport';
 import { parseTweetId } from '../lib/parseTweetUrl';
 import { punchOverlayVideoHole } from '../lib/punchOverlayVideoHole';
@@ -136,14 +137,18 @@ export const SnapshotStudio = ({
   useEffect(() => {
     if (previewMode !== 'x' || !xStageRef.current) return;
     const el = xStageRef.current;
+    let tries = 0;
     const update = () => {
       const available = el.clientWidth;
-      if (!available) return;
-      const next = Math.min(
-        1,
-        available / tweetCanvasSize.width,
-        el.clientHeight > 0 ? el.clientHeight / tweetCanvasSize.height : 1
-      );
+      if (!available) {
+        if (tries++ < 12) window.requestAnimationFrame(update);
+        return;
+      }
+      const next = fitPreviewScale(
+        tweetCanvasSize.width,
+        tweetCanvasSize.height,
+        available
+      ).scale;
       setXScale(next);
     };
     update();
@@ -365,30 +370,30 @@ export const SnapshotStudio = ({
         >
           <div
             className={cn(
-              'mx-auto flex overflow-hidden rounded-2xl border bg-background-light p-2 dark:bg-background-dark sm:p-4',
+              'mx-auto box-border rounded-2xl border bg-background-light p-2 dark:bg-background-dark sm:p-4',
               studioPreviewFitClass
             )}
+            style={{ width: '100%' }}
           >
             {previewMode === 'template' ? (
               <SnapshotPreview
                 ref={snapshotRef}
-                className='flex h-full min-h-0 w-full items-center justify-center overflow-hidden'
+                className='w-full'
                 input={renderedInput}
                 templateId={state.templateId}
                 themeId={state.themeId}
                 accent={state.accent}
               />
             ) : (
-              <div
-                ref={xStageRef}
-                className='flex h-full w-full items-center justify-center overflow-hidden'
-              >
+              <div ref={xStageRef} className='w-full'>
                 <div
                   style={{
                     width: tweetCanvasSize.width * xScale,
                     height: tweetCanvasSize.height * xScale,
                     overflow: 'hidden',
                     position: 'relative',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
                   }}
                 >
                   <div

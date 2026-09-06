@@ -2,6 +2,7 @@
 
 import { CSSProperties, forwardRef, useEffect, useRef, useState } from 'react';
 
+import { fitPreviewScale } from '../lib/fitPreviewScale';
 import { getTemplateById } from '../registry';
 import { getThemeById } from '../themes';
 import { SnapshotInput } from '../types';
@@ -45,13 +46,18 @@ export const SnapshotPreview = forwardRef<HTMLDivElement, SnapshotPreviewProps>(
     useEffect(() => {
       if (!stageRef.current) return;
       const el = stageRef.current;
+      let tries = 0;
       const update = () => {
         const availableW = maxPreviewWidth ?? el.clientWidth;
-        if (!availableW) return;
-        const byWidth = availableW / template.width;
-        const byHeight =
-          el.clientHeight > 0 ? el.clientHeight / template.height : byWidth;
-        const next = Math.min(1, byWidth, byHeight);
+        if (!availableW) {
+          if (tries++ < 12) window.requestAnimationFrame(update);
+          return;
+        }
+        const next = fitPreviewScale(
+          template.width,
+          template.height,
+          availableW
+        ).scale;
         setScale((prev) => (Math.abs(prev - next) < 0.001 ? prev : next));
       };
       update();
@@ -66,10 +72,7 @@ export const SnapshotPreview = forwardRef<HTMLDivElement, SnapshotPreviewProps>(
 
     const stageStyle: CSSProperties = {
       width: '100%',
-      height: '100%',
       maxWidth: maxPreviewWidth,
-      minHeight: 0,
-      overflow: 'hidden',
       backgroundColor: stageBackground,
     };
 

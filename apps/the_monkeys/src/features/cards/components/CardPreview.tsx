@@ -2,6 +2,8 @@
 
 import { forwardRef, useEffect, useRef, useState } from 'react';
 
+import { fitPreviewScale } from '@/features/snapshot/lib/fitPreviewScale';
+
 import { getTemplateById } from '../registry';
 import { getThemeById } from '../themes';
 import { CardCustomization, CardInput } from '../types';
@@ -43,13 +45,18 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
     useEffect(() => {
       if (!stageRef.current) return;
       const el = stageRef.current;
+      let tries = 0;
       const update = () => {
         const availableW = maxPreviewWidth ?? el.clientWidth;
-        if (!availableW) return;
-        const byWidth = availableW / template.width;
-        const byHeight =
-          el.clientHeight > 0 ? el.clientHeight / template.height : byWidth;
-        const next = Math.min(1, byWidth, byHeight);
+        if (!availableW) {
+          if (tries++ < 12) window.requestAnimationFrame(update);
+          return;
+        }
+        const next = fitPreviewScale(
+          template.width,
+          template.height,
+          availableW
+        ).scale;
         setScale((prev) => (Math.abs(prev - next) < 0.001 ? prev : next));
       };
       update();
@@ -66,6 +73,7 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
       <div
         className={className}
         style={{
+          width: '100%',
           backgroundColor:
             stageBackground === 'transparent' ? undefined : stageBackground,
         }}
@@ -73,7 +81,7 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
         {/* Measured content box — no padding, so the card never overflows. */}
         <div
           ref={stageRef}
-          className='flex h-full w-full items-center justify-center'
+          className='w-full'
           style={{ maxWidth: maxPreviewWidth }}
         >
           <div
