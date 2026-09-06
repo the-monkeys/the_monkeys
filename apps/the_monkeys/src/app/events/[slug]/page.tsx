@@ -64,7 +64,9 @@ export default async function EventDetailPage({
         <>
           <script
             type='application/ld+json'
-            dangerouslySetInnerHTML={{ __html: serializeJsonLd(eventJsonLd(event)) }}
+            dangerouslySetInnerHTML={{
+              __html: serializeJsonLd(eventJsonLd(event)),
+            }}
           />
           <script
             type='application/ld+json'
