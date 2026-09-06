@@ -32,6 +32,7 @@ import {
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import { Label } from '@the-monkeys/ui/atoms/label';
+import { RadioGroup, RadioGroupItem } from '@the-monkeys/ui/atoms/radio-group';
 import { TextArea } from '@the-monkeys/ui/atoms/text-area';
 
 type Props = {
@@ -57,6 +58,28 @@ const RSVP_CLOSE_OPTIONS: { value: number; label: string }[] = [
   { value: 24, label: '1 day before' },
   { value: 72, label: '3 days before' },
   { value: 168, label: '1 week before' },
+];
+
+const REPEAT_OPTIONS: { value: RecurrenceFreq | 'off'; label: string }[] = [
+  { value: 'off', label: 'One-time' },
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'yearly', label: 'Yearly' },
+];
+
+const VISIBILITY_OPTIONS: {
+  value: EventVisibility;
+  label: string;
+  hint: string;
+}[] = [
+  { value: 'public', label: 'Public', hint: 'Anyone can find and RSVP' },
+  { value: 'unlisted', label: 'Unlisted', hint: 'Reachable by link only' },
+  {
+    value: 'private',
+    label: 'Private',
+    hint: 'Invitees can find and RSVP',
+  },
 ];
 
 function splitList(value: string): string[] {
@@ -435,19 +458,29 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           {!event && (
             <div className='rounded-lg border border-border-light p-4 space-y-3 dark:border-border-dark/60'>
               <Field label='Repeat'>
-                <select
+                <RadioGroup
+                  aria-label='Repeat'
                   value={repeatFreq}
-                  onChange={(e) =>
-                    setRepeatFreq(e.target.value as RecurrenceFreq | 'off')
+                  onValueChange={(value) =>
+                    setRepeatFreq(value as RecurrenceFreq | 'off')
                   }
-                  className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+                  className='grid grid-cols-2 gap-2 sm:grid-cols-3'
                 >
-                  <option value='off'>One-time</option>
-                  <option value='daily'>Daily</option>
-                  <option value='weekly'>Weekly</option>
-                  <option value='monthly'>Monthly</option>
-                  <option value='yearly'>Yearly</option>
-                </select>
+                  {REPEAT_OPTIONS.map((option) => (
+                    <div key={option.value} className='flex items-center gap-2'>
+                      <RadioGroupItem
+                        value={option.value}
+                        id={`repeat-${option.value}`}
+                      />
+                      <Label
+                        htmlFor={`repeat-${option.value}`}
+                        className='cursor-pointer font-inter text-sm'
+                      >
+                        {option.label}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
               </Field>
               {repeatFreq !== 'off' && (
                 <>
@@ -611,19 +644,45 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                 </Field>
               )}
 
-          <Field label='Visibility'>
-            <select
-              value={visibility}
-              disabled={ended}
-              onChange={(e) => setVisibility(e.target.value as EventVisibility)}
-              className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
-            >
-              <option value='public'>Public</option>
-              <option value='unlisted'>Unlisted</option>
-              <option value='private'>Private</option>
-              {hasGroup && <option value='group_members'>Members only</option>}
-            </select>
-          </Field>
+          <fieldset>
+            <legend className='mb-2 font-inter text-sm font-medium'>
+              Visibility
+            </legend>
+            <div className='grid grid-cols-1 gap-2 sm:grid-cols-3'>
+              {[
+                ...VISIBILITY_OPTIONS,
+                ...(hasGroup
+                  ? [
+                      {
+                        value: 'group_members' as EventVisibility,
+                        label: 'Members only',
+                        hint: 'Only community members can find and RSVP',
+                      },
+                    ]
+                  : []),
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type='button'
+                  aria-pressed={visibility === option.value}
+                  disabled={ended}
+                  onClick={() => setVisibility(option.value)}
+                  className={`rounded-lg border-2 px-3 py-2 text-left font-inter transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                    visibility === option.value
+                      ? 'border-brand-orange bg-brand-orange/5'
+                      : 'border-border-light dark:border-border-dark'
+                  }`}
+                >
+                  <span className='block text-sm font-semibold'>
+                    {option.label}
+                  </span>
+                  <span className='block text-xs text-gray-500'>
+                    {option.hint}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
 
           {!event && (
             <Field label='Co-hosts'>
@@ -635,16 +694,19 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             </Field>
           )}
 
-          {!event && (
+          {!event && includeTier && (
             <div className='rounded-lg border border-border-light dark:border-border-dark/60 p-4 space-y-3'>
-              <label className='flex items-center gap-2 font-inter text-sm'>
+              {/* Ticket tiers are temporarily hidden until ticket setup is
+              available again. Keep the form state and fields nearby so this
+              control can be restored without changing the submit payload. */}
+              {/* <label className='flex items-center gap-2 font-inter text-sm'>
                 <input
                   type='checkbox'
                   checked={includeTier}
                   onChange={(e) => setIncludeTier(e.target.checked)}
                 />
                 Add a ticket
-              </label>
+              </label> */}
               {includeTier && (
                 <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
                   <Input

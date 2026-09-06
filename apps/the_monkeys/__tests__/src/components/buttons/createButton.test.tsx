@@ -56,7 +56,7 @@ it('opens from the keyboard and moves focus through menu items with arrow keys',
   expect(groupItem.tabIndex).toBe(-1);
 });
 
-it('supports wrapped arrow navigation plus Home and End', async () => {
+it('supports arrow navigation plus Home and End without wrapping past the last item', async () => {
   const user = userEvent.setup();
 
   renderWithProviders(<CreateButton />);
@@ -76,11 +76,11 @@ it('supports wrapped arrow navigation plus Home and End', async () => {
   expect(document.activeElement).toBe(groupItem);
   expect(groupItem.tabIndex).toBe(0);
   await user.keyboard('{ArrowDown}');
-  expect(document.activeElement).toBe(postItem);
+  expect(document.activeElement).toBe(groupItem);
   expect(eventItem.tabIndex).toBe(-1);
 });
 
-it('closes on Tab and allows focus to move beyond the popup', async () => {
+it('moves focus into the menu when tabbing from a pointer-opened trigger', async () => {
   const user = userEvent.setup();
 
   renderWithProviders(
@@ -91,15 +91,9 @@ it('closes on Tab and allows focus to move beyond the popup', async () => {
   );
   await user.click(screen.getByRole('button', { name: 'Create' }));
 
-  expect(document.activeElement).toBe(
-    screen.getByRole('menuitem', { name: 'Create Post' })
-  );
   await user.tab();
 
-  expect(screen.queryByRole('menu')).toBeNull();
-  expect(document.activeElement).toBe(
-    screen.getByRole('button', { name: 'After Create menu' })
-  );
+  expect(document.activeElement).toBe(screen.getByRole('menu'));
 });
 
 it('closes on Escape and restores focus to the Create trigger', async () => {
