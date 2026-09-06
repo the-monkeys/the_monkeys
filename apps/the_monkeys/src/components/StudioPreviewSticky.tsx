@@ -32,8 +32,8 @@ export function StudioPreviewSticky({
         className
       )}
     >
-      <div className='flex items-stretch gap-2'>
-        <div className='min-h-0 min-w-0 flex-1'>{children}</div>
+      <div className='flex items-center gap-2'>
+        <div className='min-w-0 flex-1'>{children}</div>
         {actions ? (
           <div
             className={cn(
@@ -50,8 +50,10 @@ export function StudioPreviewSticky({
 }
 
 /**
- * 4:5 well. On a phone, height is capped so the sticky preview
- * cannot swallow the form; width follows the aspect ratio.
+ * Full-width 4:5 well on desktop. On a phone, keep width 100% and cap
+ * height so the sticky preview cannot collapse or swallow the form.
+ * Do not use `w-auto` here: the canvas is `width: 100%`, so auto +
+ * percentage children resolve to 0px and the image disappears.
  */
 export const studioPreviewFitClass =
-  'aspect-[1080/1350] w-full max-w-[560px] max-md:h-[min(42svh,360px)] max-md:w-auto max-md:max-w-full';
+  'h-[min(42vh,360px)] w-full max-w-[560px] md:aspect-[1080/1350] md:h-auto';
