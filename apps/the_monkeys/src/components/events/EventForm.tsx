@@ -9,12 +9,15 @@ import {
   useState,
 } from 'react';
 
+import { CategoryChips } from '@/components/geo/CategoryChips';
+import { PlacePin } from '@/components/geo/PlacePin';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import useAuth from '@/hooks/auth/useAuth';
 import { useUploadEventCover } from '@/hooks/events/useEventQueries';
 import { useUserGroups } from '@/hooks/groups/useGroupQueries';
 import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
+import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import {
   defaultTimezone,
   fromLocalInput,
@@ -22,6 +25,7 @@ import {
   rsvpCloseHoursFromEvent,
   toLocalInput,
 } from '@/lib/eventTime';
+import { pinFromCoords } from '@/lib/geoSearch';
 import {
   EventBody,
   EventItem,
@@ -116,6 +120,12 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [eventType, setEventType] = useState<EventType>(
     event?.event_type || 'virtual'
   );
+  const [pin, setPin] = useState(() =>
+    pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
+  );
+  const [selectedTags, setSelectedTags] = useState(
+    () => partitionTags(event?.tags).selected
+  );
   const [includeTier, setIncludeTier] = useState(false);
   // Group linkage is chosen at creation time; visibility is editable anytime.
   const [groupSlug, setGroupSlug] = useState(event?.group_slug || '');
@@ -196,7 +206,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
-      tags: event?.tags?.join(', ') || '',
+      tags: partitionTags(event?.tags).extra,
       tierName: 'General',
       // Paid ticket pricing is temporarily disabled; keep the previous
       // form default here so the control can be restored with its state.
@@ -255,8 +265,16 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       meeting_link: String(form.get('meeting_link') || '').trim(),
       capacity: Number(form.get('capacity') || 0) || 0,
       cover_image: coverImage.trim(),
-      tags: splitList(String(form.get('tags') || '')),
+      tags: mergeCategoryTags(
+        selectedTags,
+        splitList(String(form.get('tags') || ''))
+      ),
     };
+
+    if (eventType !== 'virtual' && pin) {
+      body.latitude = pin.latitude;
+      body.longitude = pin.longitude;
+    }
 
     // 'group_members' visibility is only valid for a group-attached event; the
     // backend rejects the mismatch, so guard it here for a clean UX.
@@ -421,14 +439,17 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       </fieldset>
 
       {showPlace && (
-        <Field label='Place'>
-          <Input
-            name='location'
-            defaultValue={initial.location}
-            placeholder='City or venue'
-            readOnly={ended}
-          />
-        </Field>
+        <>
+          <Field label='Place'>
+            <Input
+              name='location'
+              defaultValue={initial.location}
+              placeholder='City or venue'
+              readOnly={ended}
+            />
+          </Field>
+          <PlacePin value={pin} onChange={setPin} disabled={ended} />
+        </>
       )}
       {showLink && (
         <Field label='Meeting link'>
@@ -441,6 +462,25 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           />
         </Field>
       )}
+
+      <Field label='Topics'>
+        <CategoryChips
+          selected={selectedTags}
+          onToggle={(tag) =>
+            setSelectedTags((prev) =>
+              prev.includes(tag)
+                ? prev.filter((t) => t !== tag)
+                : [...prev, tag]
+            )
+          }
+        />
+        <Input
+          name='tags'
+          defaultValue={initial.tags}
+          placeholder='More tags, comma separated'
+          className='mt-2'
+        />
+      </Field>
 
       <details className='rounded-lg border border-border-light p-4 dark:border-border-dark/60'>
         <summary className='cursor-pointer font-inter text-sm font-medium marker:hidden [&::-webkit-details-marker]:hidden'>
@@ -608,14 +648,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
               min={0}
               defaultValue={initial.capacity}
               readOnly={ended}
-            />
-          </Field>
-
-          <Field label='Tags (comma separated)'>
-            <Input
-              name='tags'
-              defaultValue={initial.tags}
-              placeholder='tech, meetup'
             />
           </Field>
 

@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
+import { ConfirmDialog } from '@/components/common/ConfirmDialog';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import {
   useEventAttendees,
@@ -76,17 +77,27 @@ export function EventManage({
           </Button>
         )}
         {owner && (
-          <Button
-            variant='destructive'
-            onClick={() =>
-              act(async () => {
+          <ConfirmDialog
+            trigger={<Button variant='destructive'>Delete</Button>}
+            title='Delete this event?'
+            description='If anyone has paid, cancel the event first so refunds can run. Unsold tickets do not block delete. This cannot be undone.'
+            confirmLabel='Delete event'
+            destructive
+            onConfirm={async () => {
+              try {
                 await deleteEvent(event.slug);
+                await refresh();
+                toast({ title: 'Deleted' });
                 router.replace(EVENTS_ROUTE);
-              }, 'Deleted')
-            }
-          >
-            Delete
-          </Button>
+              } catch (err) {
+                toast({
+                  title: 'Could not delete',
+                  description: eventError(err),
+                });
+                throw err;
+              }
+            }}
+          />
         )}
       </section>
 

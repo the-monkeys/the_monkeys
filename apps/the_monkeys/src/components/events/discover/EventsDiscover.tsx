@@ -5,6 +5,8 @@ import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import { EventGridCard } from '@/components/events/EventGridCard';
+import { CategoryChips } from '@/components/geo/CategoryChips';
+import { RadiusChips, RadiusChoice } from '@/components/geo/RadiusChips';
 import { GroupGridCard } from '@/components/groups/GroupGridCard';
 import Icon from '@/components/icon';
 import {
@@ -16,7 +18,11 @@ import { useEventList } from '@/hooks/events/useEventQueries';
 import { useGroupList } from '@/hooks/groups/useGroupQueries';
 import { useIPLocation } from '@/hooks/useIPLocation';
 import { uniqueSeriesEvents } from '@/lib/eventTime';
-import { geoRadiusSteps } from '@/lib/geoSearch';
+import {
+  defaultRadiusStepIndex,
+  geoRadiusSteps,
+  nearMeQuery,
+} from '@/lib/geoSearch';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -27,15 +33,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@the-monkeys/ui/atoms/select';
-
-// Category pills map to the backend `tags` filter (GET /events binds `tags`).
-const CATEGORIES: { label: string; tag: string }[] = [
-  { label: 'Networking', tag: 'networking' },
-  { label: 'Tech & AI', tag: 'tech' },
-  { label: 'Writing & Storytelling', tag: 'writing' },
-  { label: 'Outdoor', tag: 'outdoor' },
-  { label: 'Sports & Hobbies', tag: 'sports' },
-];
 
 const FAQS: { q: string; a: string }[] = [
   {
@@ -109,12 +106,27 @@ function GridSkeleton({ count = 4 }: { count?: number }) {
   );
 }
 
-const EventGrid = memo(function EventGrid({ events }: { events: EventItem[] }) {
+const EventGrid = memo(function EventGrid({
+  events,
+  updating,
+}: {
+  events: EventItem[];
+  updating?: boolean;
+}) {
   return (
-    <div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-      {uniqueSeriesEvents(events).map((event) => (
-        <EventGridCard key={event.id || event.slug} event={event} />
-      ))}
+    <div className='relative' aria-busy={updating || undefined}>
+      {updating && (
+        <p className='mb-3 font-inter text-sm text-gray-500'>Updating…</p>
+      )}
+      <div
+        className={`grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 ${
+          updating ? 'pointer-events-none opacity-60' : ''
+        }`}
+      >
+        {uniqueSeriesEvents(events).map((event) => (
+          <EventGridCard key={event.id || event.slug} event={event} />
+        ))}
+      </div>
     </div>
   );
 });
@@ -135,25 +147,27 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   const ipLocation = useIPLocation();
 
   const [activeTag, setActiveTag] = useState('');
+  const [moreOpen, setMoreOpen] = useState(false);
+  const [customTagLive, setCustomTagLive] = useState('');
   const [dateFilter, setDateFilter] = useState<
     'upcoming' | 'this-week' | 'this-month'
   >('upcoming');
   const [typeFilter, setTypeFilter] = useState<
     'all' | 'in-person' | 'online' | 'hybrid'
   >('all');
-  const [sortBy, setSortBy] = useState<'soonest' | 'popular' | 'newest'>(
-    'soonest'
-  );
+  const [sortBy, setSortBy] = useState<
+    'soonest' | 'popular' | 'newest' | 'nearest'
+  >('soonest');
 
   const gridRef = useRef<HTMLDivElement | null>(null);
   const locationInputRef = useRef<HTMLInputElement | null>(null);
 
-  // City first, then country. Never worldwide for in-person events.
-  const radiusSteps = useMemo(
-    () => geoRadiusSteps(ipLocation.country),
-    [ipLocation.country]
+  const radiusSteps = useMemo(() => geoRadiusSteps(), []);
+  const [radiusIndex, setRadiusIndex] = useState(() =>
+    defaultRadiusStepIndex()
   );
-  const [radiusIndex, setRadiusIndex] = useState(0);
+  const [radiusLocked, setRadiusLocked] = useState(false);
+  const [nationwide, setNationwide] = useState(false);
   const currentRadius =
     radiusSteps[Math.min(radiusIndex, radiusSteps.length - 1)];
 
@@ -177,15 +191,31 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     return () => clearTimeout(t);
   }, [qLive, locationLive, location]);
 
-  // Build filters using lat/lng + radius instead of string matching
+  useEffect(() => {
+    if (!moreOpen) return;
+    const t = setTimeout(() => {
+      const tag = customTagLive.trim().toLowerCase();
+      if (tag) setActiveTag(tag);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [moreOpen, customTagLive]);
+
   const hasCoords = ipLocation.latitude !== 0 && ipLocation.longitude !== 0;
-  const atCountryMax = radiusIndex >= radiusSteps.length - 1;
-  const filters: ListFilters = useMemo(
-    () => ({
+  const pinActive = !manualOverride && !nationwide && hasCoords;
+  const filters: ListFilters = useMemo(() => {
+    const geo = nearMeQuery({
+      lat: ipLocation.latitude,
+      lng: ipLocation.longitude,
+      radiusKm: currentRadius,
+      nationwide: nationwide || manualOverride,
+    });
+    const cityLabel = location.trim() || ipLocation.city.trim();
+    return {
       limit: 12,
       offset: 0,
       q: q.trim() || undefined,
-      location: manualOverride ? location.trim() || undefined : undefined,
+      // Send the city with near-me so unpinned local events still match.
+      location: !nationwide && cityLabel ? cityLabel : undefined,
       tags: activeTag || undefined,
       type:
         typeFilter === 'all'
@@ -196,44 +226,53 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
                 ? 'virtual'
                 : typeFilter) as ListFilters['type']),
       date: dateFilter,
-      sort: sortBy === 'soonest' ? undefined : sortBy,
-      user_lat: !manualOverride && hasCoords ? ipLocation.latitude : undefined,
-      user_lng: !manualOverride && hasCoords ? ipLocation.longitude : undefined,
-      radius:
-        !manualOverride && hasCoords && currentRadius > 0
-          ? currentRadius
-          : undefined,
-    }),
-    [
-      q,
-      location,
-      activeTag,
-      typeFilter,
-      dateFilter,
-      sortBy,
-      manualOverride,
-      hasCoords,
-      ipLocation.latitude,
-      ipLocation.longitude,
-      currentRadius,
-    ]
-  );
+      sort:
+        sortBy === 'soonest'
+          ? undefined
+          : sortBy === 'nearest' && !pinActive
+            ? undefined
+            : sortBy,
+      ...geo,
+    };
+  }, [
+    q,
+    location,
+    activeTag,
+    typeFilter,
+    dateFilter,
+    sortBy,
+    manualOverride,
+    nationwide,
+    pinActive,
+    currentRadius,
+    ipLocation.latitude,
+    ipLocation.longitude,
+  ]);
 
-  const popular = useEventList(filters);
-  const communities = useGroupList({
-    limit: 8,
-    ...(manualOverride
-      ? { city: location.trim() || undefined }
-      : hasCoords && !atCountryMax
-        ? {
-            user_lat: ipLocation.latitude,
-            user_lng: ipLocation.longitude,
-            radius: currentRadius,
-          }
-        : ipLocation.countryName
-          ? { country: ipLocation.countryName }
-          : { city: location.trim() || undefined }),
-  });
+  const geoReady = !ipLocation.isLoading || nationwide || manualOverride;
+  const popular = useEventList(filters, geoReady);
+  const nearbyGroups = useMemo(() => {
+    if (manualOverride) return { city: location.trim() || undefined };
+    if (nationwide) return {};
+    const geo = nearMeQuery({
+      lat: ipLocation.latitude,
+      lng: ipLocation.longitude,
+      radiusKm: currentRadius,
+    });
+    const city = location.trim() || ipLocation.city.trim() || undefined;
+    if (geo.radius) return { ...geo, city };
+    if (ipLocation.countryName) return { country: ipLocation.countryName };
+    return { city };
+  }, [
+    manualOverride,
+    nationwide,
+    location,
+    currentRadius,
+    ipLocation.latitude,
+    ipLocation.longitude,
+    ipLocation.countryName,
+  ]);
+  const communities = useGroupList({ limit: 8, ...nearbyGroups }, geoReady);
 
   const popularEvents = popular.data?.events || [];
   const groups = communities.data?.groups || [];
@@ -243,10 +282,18 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   const lookingForInPerson = typeFilter === 'all' || typeFilter === 'in-person';
 
   useEffect(() => {
-    setRadiusIndex(0);
-  }, [q, activeTag, typeFilter, dateFilter, manualOverride]);
+    if (!radiusLocked) setRadiusIndex(defaultRadiusStepIndex());
+  }, [
+    q,
+    activeTag,
+    typeFilter,
+    dateFilter,
+    manualOverride,
+    nationwide,
+    radiusLocked,
+  ]);
 
-  // Widen from city toward country while no in-person events are in range.
+  // Widen toward 100 km while no in-person events are in range.
   // Virtual/hybrid are already included globally and must not freeze the radius.
   useEffect(() => {
     if (
@@ -255,6 +302,8 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
       !popular.isFetching &&
       nearbyInPerson.length === 0 &&
       !manualOverride &&
+      !nationwide &&
+      !radiusLocked &&
       hasCoords &&
       currentRadius > 0 &&
       radiusIndex < radiusSteps.length - 1
@@ -267,6 +316,8 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     popular.isFetching,
     nearbyInPerson.length,
     manualOverride,
+    nationwide,
+    radiusLocked,
     hasCoords,
     currentRadius,
     radiusIndex,
@@ -274,6 +325,8 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   ]);
 
   const applyTag = (tag: string) => {
+    setMoreOpen(false);
+    setCustomTagLive('');
     setActiveTag((prev) => (prev === tag ? '' : tag));
     // Reveal the filtered grid.
     requestAnimationFrame(() =>
@@ -281,25 +334,30 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     );
   };
 
-  const hasActiveFilters = !!activeTag || !!q.trim() || !!location.trim();
-  const displayLocation = location.trim() || 'you';
+  const hasActiveFilters =
+    !!activeTag || !!q.trim() || manualOverride || nationwide;
+  const displayLocation = nationwide ? 'everywhere' : location.trim() || 'you';
+
+  const applyRadius = (v: RadiusChoice) => {
+    setRadiusLocked(true);
+    setManualOverride(false);
+    if (v === 'everywhere') {
+      setNationwide(true);
+      return;
+    }
+    setNationwide(false);
+    const i = radiusSteps.indexOf(v);
+    if (i >= 0) setRadiusIndex(i);
+    if (ipLocation.city) {
+      setLocation(ipLocation.city);
+      setLocationLive(ipLocation.city);
+    }
+  };
 
   return (
     <div className='space-y-14 sm:space-y-20'>
       {/* ---- Hero: search + category chips ---- */}
       <section className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-orange to-[#E03A1F] px-5 py-10 sm:px-10 sm:py-14 shadow-md'>
-        {/* Create Button positioned in top right of hero */}
-        <div className='absolute right-5 top-5 z-10 sm:right-8 sm:top-8'>
-          <Button
-            asChild
-            className='h-9 sm:h-10 px-5 rounded-full bg-white font-semibold text-text-light shadow-sm hover:bg-gray-100 transition-colors'
-          >
-            <Link href={signedIn ? `${EVENTS_ROUTE}/new` : LOGIN_ROUTE}>
-              Create event
-            </Link>
-          </Button>
-        </div>
-
         <div className='relative max-w-4xl'>
           {/* Eyebrow */}
           <p className='font-inter text-[11px] font-bold uppercase tracking-[0.22em] text-white/80'>
@@ -341,36 +399,49 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
               <Input
                 ref={locationInputRef}
                 value={locationLive}
-                onChange={(e) => setLocationLive(e.target.value)}
+                onChange={(e) => {
+                  setLocationLive(e.target.value);
+                  setNationwide(false);
+                }}
                 placeholder={locationLive ? locationLive : 'City or online'}
                 className='h-12 w-full rounded-xl border-border-light bg-white pl-11 text-text-light placeholder:text-gray-400 focus:border-brand-orange focus:ring-2 focus:ring-brand-orange/20 dark:border-border-dark/40 dark:bg-background-dark dark:text-text-dark'
               />
             </label>
           </div>
+          <div className='mt-3'>
+            <RadiusChips
+              variant='hero'
+              value={nationwide ? 'everywhere' : currentRadius}
+              onChange={applyRadius}
+            />
+          </div>
 
           {/* Category chips - transparent with white text/border */}
-          <div className='-mx-1 mt-6 flex flex-wrap gap-2'>
-            {CATEGORIES.map((c) => (
+          <div className='mt-6'>
+            <CategoryChips
+              variant='hero'
+              selected={activeTag ? [activeTag] : []}
+              onToggle={applyTag}
+            />
+            <div className='mt-2 flex flex-wrap items-center gap-2'>
               <button
-                key={c.tag}
                 type='button'
-                onClick={() => applyTag(c.tag)}
-                aria-pressed={activeTag === c.tag}
-                className={`whitespace-nowrap rounded-full border px-4 py-2 font-inter text-sm transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 ${
-                  activeTag === c.tag
-                    ? 'border-white bg-white text-brand-orange shadow-sm'
-                    : 'border-white/30 text-white hover:border-white/60 hover:bg-white/10'
-                }`}
+                aria-pressed={moreOpen}
+                onClick={() => setMoreOpen((v) => !v)}
+                className='min-h-11 whitespace-nowrap rounded-full border border-white/30 px-4 py-2 font-inter text-sm text-white/80 transition-colors duration-150 hover:border-white/60 hover:text-white'
               >
-                {c.label}
+                More
               </button>
-            ))}
-            <button
-              type='button'
-              className='whitespace-nowrap rounded-full border border-white/30 px-4 py-2 font-inter text-sm text-white/80 transition-colors duration-150 hover:border-white/60 hover:text-white'
-            >
-              More
-            </button>
+              {moreOpen && (
+                <input
+                  aria-label='Custom tag'
+                  value={customTagLive}
+                  onChange={(e) => setCustomTagLive(e.target.value)}
+                  placeholder='Any tag'
+                  className='min-h-11 min-w-[10rem] rounded-full border border-white/30 bg-transparent px-4 font-inter text-sm text-white placeholder:text-white/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40'
+                />
+              )}
+            </div>
           </div>
         </div>
       </section>
@@ -405,10 +476,16 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
                   type='button'
                   onClick={() => {
                     setActiveTag('');
+                    setMoreOpen(false);
+                    setCustomTagLive('');
                     setQ('');
                     setQLive('');
                     setLocation('');
                     setLocationLive('');
+                    setManualOverride(false);
+                    setNationwide(false);
+                    setRadiusLocked(false);
+                    setRadiusIndex(defaultRadiusStepIndex());
                   }}
                   className='inline-flex items-center gap-1 font-inter text-sm font-medium text-brand-orange'
                 >
@@ -467,12 +544,15 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
                   <SelectItem value='soonest'>Soonest</SelectItem>
                   <SelectItem value='popular'>Most popular</SelectItem>
                   <SelectItem value='newest'>Newest</SelectItem>
+                  {pinActive && (
+                    <SelectItem value='nearest'>Nearest</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
             </div>
           }
         />
-        {popular.isLoading ? (
+        {!geoReady || popular.isLoading ? (
           <GridSkeleton count={8} />
         ) : popular.isError ? (
           <p className='py-10 text-center font-inter text-sm text-gray-500'>
@@ -484,9 +564,11 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
               <Icon name='RiCalendar' size={26} />
             </div>
             <h3 className='font-newsreader text-2xl font-bold'>
-              {location.trim()
-                ? `No events around ${location.trim()} yet`
-                : 'No events yet'}
+              {nationwide
+                ? 'No matching events yet'
+                : location.trim()
+                  ? `No events around ${location.trim()} yet`
+                  : 'No events yet'}
             </h3>
             <p className='mx-auto mt-2 max-w-sm font-inter text-sm text-gray-500'>
               This corner of the community is just getting started. Host the
@@ -503,8 +585,9 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
                   variant='outline'
                   className='h-11'
                   onClick={() => {
-                    setLocation('');
-                    setLocationLive('');
+                    setNationwide(true);
+                    setRadiusLocked(true);
+                    setManualOverride(false);
                   }}
                 >
                   Show everywhere
@@ -513,7 +596,10 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
             </div>
           </div>
         ) : (
-          <EventGrid events={popularEvents} />
+          <EventGrid
+            events={popularEvents}
+            updating={popular.isFetching && !popular.isLoading}
+          />
         )}
       </section>
 
@@ -576,9 +662,11 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
         <SectionHeader
           eyebrow='Communities'
           title={
-            location.trim()
+            location.trim() && !nationwide
               ? `Popular communities in ${location.trim()}`
-              : 'Popular communities'
+              : nationwide
+                ? 'Popular communities everywhere'
+                : 'Popular communities'
           }
           action={
             <Link
@@ -590,7 +678,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
             </Link>
           }
         />
-        {communities.isLoading ? (
+        {!geoReady || communities.isLoading ? (
           <GridSkeleton count={4} />
         ) : groups.length === 0 ? (
           <p className='rounded-xl border border-dashed border-border-light py-12 text-center font-inter text-sm text-gray-500 dark:border-border-dark/40'>

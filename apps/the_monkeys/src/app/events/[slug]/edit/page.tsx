@@ -12,8 +12,10 @@ import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useEventDetail } from '@/hooks/events/useEventQueries';
 import { isHost } from '@/lib/eventTime';
+import { invalidateAfterEventWrite } from '@/lib/queryFreshness';
 import { EventBody } from '@/services/events/eventTypes';
 import { eventError, updateEvent } from '@/services/events/eventsApi';
+import { getQueryClient } from '@/utils/get-query-client';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 
 export default function EditEventPage({
@@ -51,6 +53,7 @@ export default function EditEventPage({
     try {
       await updateEvent(event.slug, body);
       toast({ title: 'Saved' });
+      await invalidateAfterEventWrite(getQueryClient(), event.slug);
       router.push(`${EVENTS_ROUTE}/${event.slug}`);
     } catch (err) {
       toast({ title: 'Could not save', description: eventError(err) });

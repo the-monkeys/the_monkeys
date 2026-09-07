@@ -117,6 +117,7 @@ export function EventActions({
       });
       const slug = res.event?.slug;
       toast({ title: 'Draft created' });
+      await refresh();
       router.push(slug ? `${EVENTS_ROUTE}/${slug}/edit` : EVENTS_ROUTE);
     } catch (err) {
       toast({

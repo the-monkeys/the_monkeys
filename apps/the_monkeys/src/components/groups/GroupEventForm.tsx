@@ -2,7 +2,11 @@
 
 import { FormEvent, useMemo, useState } from 'react';
 
+import { CategoryChips } from '@/components/geo/CategoryChips';
+import { PlacePin } from '@/components/geo/PlacePin';
+import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
+import { pinFromCoords } from '@/lib/geoSearch';
 import { EventItem, EventType } from '@/services/events/eventTypes';
 import {
   GroupEventBody,
@@ -65,6 +69,12 @@ export function GroupEventForm({
   const [eventType, setEventType] = useState<EventType>(
     event?.event_type || 'in_person'
   );
+  const [pin, setPin] = useState(() =>
+    pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
+  );
+  const [selectedTags, setSelectedTags] = useState(
+    () => partitionTags(event?.tags).selected
+  );
   const [visibility, setVisibility] = useState<GroupEventVisibility>(
     (event?.visibility as GroupEventVisibility) || 'public'
   );
@@ -84,7 +94,7 @@ export function GroupEventForm({
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
       cover_image: event?.cover_image || '',
-      tags: event?.tags?.join(', ') || '',
+      tags: partitionTags(event?.tags).extra,
     }),
     [event]
   );
@@ -120,9 +130,16 @@ export function GroupEventForm({
       meeting_link: String(form.get('meeting_link') || '').trim(),
       capacity: Number(form.get('capacity') || 0) || 0,
       cover_image: String(form.get('cover_image') || '').trim(),
-      tags: splitList(String(form.get('tags') || '')),
+      tags: mergeCategoryTags(
+        selectedTags,
+        splitList(String(form.get('tags') || ''))
+      ),
       visibility,
     };
+    if (eventType !== 'virtual' && pin) {
+      body.latitude = pin.latitude;
+      body.longitude = pin.longitude;
+    }
     if (!body.title) return;
     onSubmit(body);
   };
@@ -211,13 +228,16 @@ export function GroupEventForm({
       </fieldset>
 
       {showPlace && (
-        <Field label='Place'>
-          <Input
-            name='location'
-            defaultValue={initial.location}
-            placeholder='City or venue'
-          />
-        </Field>
+        <>
+          <Field label='Place'>
+            <Input
+              name='location'
+              defaultValue={initial.location}
+              placeholder='City or venue'
+            />
+          </Field>
+          <PlacePin value={pin} onChange={setPin} />
+        </>
       )}
       {showLink && (
         <Field label='Meeting link'>
@@ -248,11 +268,22 @@ export function GroupEventForm({
         </Field>
       </div>
 
-      <Field label='Tags (comma separated)'>
+      <Field label='Topics'>
+        <CategoryChips
+          selected={selectedTags}
+          onToggle={(tag) =>
+            setSelectedTags((prev) =>
+              prev.includes(tag)
+                ? prev.filter((t) => t !== tag)
+                : [...prev, tag]
+            )
+          }
+        />
         <Input
           name='tags'
           defaultValue={initial.tags}
-          placeholder='tech, meetup'
+          placeholder='More tags, comma separated'
+          className='mt-2'
         />
       </Field>
 

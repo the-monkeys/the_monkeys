@@ -8,6 +8,7 @@ import { BackButton } from '@/components/buttons/backButton';
 import { EventForm } from '@/components/events/EventForm';
 import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
+import { invalidateAfterEventWrite } from '@/lib/queryFreshness';
 import { EventBody } from '@/services/events/eventTypes';
 import {
   createEvent,
@@ -16,6 +17,7 @@ import {
   updateEvent,
   uploadEventCover,
 } from '@/services/events/eventsApi';
+import { getQueryClient } from '@/utils/get-query-client';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 
 export default function NewEventPage() {
@@ -51,6 +53,7 @@ export default function NewEventPage() {
         }
       }
       toast({ title: body.recurrence ? 'Series created' : 'Draft saved' });
+      await invalidateAfterEventWrite(getQueryClient(), slug);
       router.push(slug ? `${EVENTS_ROUTE}/${slug}` : EVENTS_ROUTE);
     } catch (err) {
       toast({ title: 'Could not create event', description: eventError(err) });

@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
+import {
+  CachedIpLocation,
+  readCachedIpLocation,
+  writeCachedIpLocation,
+} from '@/lib/ipLocationCache';
+
 export interface IPLocationData {
   city: string;
   country: string;
@@ -12,40 +18,34 @@ export interface IPLocationData {
   error: boolean;
 }
 
+const emptyLocation: CachedIpLocation = {
+  city: '',
+  country: '',
+  countryName: '',
+  latitude: 0,
+  longitude: 0,
+};
+
 export const useIPLocation = (): IPLocationData => {
-  const [data, setData] = useState<Omit<IPLocationData, 'isLoading' | 'error'>>(
-    {
-      city: '',
-      country: '',
-      countryName: '',
-      latitude: 0,
-      longitude: 0,
-    }
-  );
+  const [data, setData] = useState<CachedIpLocation>(emptyLocation);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    // We use sessionStorage to avoid hitting the API on every page navigation
-    const cached = sessionStorage.getItem('user_ip_location');
+    const cached = readCachedIpLocation();
     if (cached) {
-      try {
-        setData(JSON.parse(cached));
-        setIsLoading(false);
-        return;
-      } catch (e) {
-        // Fallthrough to fetch
-      }
+      setData(cached);
+      setIsLoading(false);
+      return;
     }
 
     const fetchLocation = async () => {
       try {
-        // Fetch from ipapi.co (free tier, no key required for frontend)
         const res = await fetch('https://ipapi.co/json/');
         if (!res.ok) throw new Error('Failed to fetch location');
         const json = await res.json();
 
-        const locData = {
+        const locData: CachedIpLocation = {
           city: json.city || '',
           country: json.country || '',
           countryName: json.country_name || '',
@@ -54,7 +54,7 @@ export const useIPLocation = (): IPLocationData => {
         };
 
         setData(locData);
-        sessionStorage.setItem('user_ip_location', JSON.stringify(locData));
+        writeCachedIpLocation(locData);
       } catch (err) {
         console.error('IP location detection failed:', err);
         setError(true);

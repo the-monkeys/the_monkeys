@@ -177,6 +177,8 @@ export type GroupEventBody = {
   timezone?: string;
   event_type: EventType;
   location?: string;
+  latitude?: number;
+  longitude?: number;
   meeting_link?: string;
   capacity?: number;
   cover_image?: string;

@@ -9,8 +9,12 @@ import {
   useState,
 } from 'react';
 
+import { CategoryChips } from '@/components/geo/CategoryChips';
+import { PlacePin } from '@/components/geo/PlacePin';
 import { useUploadGroupImage } from '@/hooks/groups/useGroupQueries';
+import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import { defaultTimezone } from '@/lib/eventTime';
+import { pinFromCoords } from '@/lib/geoSearch';
 import {
   GroupBody,
   GroupImageKind,
@@ -51,6 +55,12 @@ export function GroupForm({ group, saving, submitLabel, onSubmit }: Props) {
   const [visibility, setVisibility] = useState<GroupVisibility>(
     group?.visibility || 'public'
   );
+  const [pin, setPin] = useState(() =>
+    pinFromCoords(group?.latitude, group?.longitude)
+  );
+  const [selectedTopics, setSelectedTopics] = useState(
+    () => partitionTags(group?.topics).selected
+  );
 
   const initial = useMemo(
     () => ({
@@ -60,7 +70,7 @@ export function GroupForm({ group, saving, submitLabel, onSubmit }: Props) {
       region: group?.region || '',
       country: group?.country || '',
       timezone: group?.timezone || defaultTimezone(),
-      topics: group?.topics?.join(', ') || '',
+      topics: partitionTags(group?.topics).extra,
       cover_image: group?.cover_image || '',
       logo_image: group?.logo_image || '',
     }),
@@ -137,8 +147,15 @@ export function GroupForm({ group, saving, submitLabel, onSubmit }: Props) {
       timezone: String(form.get('timezone') || defaultTimezone()),
       cover_image: coverImage.trim(),
       logo_image: logoImage.trim(),
-      topics: splitList(String(form.get('topics') || '')),
+      topics: mergeCategoryTags(
+        selectedTopics,
+        splitList(String(form.get('topics') || ''))
+      ),
     };
+    if (pin) {
+      body.latitude = pin.latitude;
+      body.longitude = pin.longitude;
+    }
     if (!body.name) return;
     onSubmit(body, {
       logo: logoFile ?? undefined,
@@ -191,6 +208,32 @@ export function GroupForm({ group, saving, submitLabel, onSubmit }: Props) {
         </div>
       </fieldset>
 
+      <PlacePin
+        value={pin}
+        onChange={setPin}
+        label='City pin (optional)'
+        hint='Helps people nearby find this group. City, region, and country still work without it.'
+      />
+
+      <Field label='Topics'>
+        <CategoryChips
+          selected={selectedTopics}
+          onToggle={(tag) =>
+            setSelectedTopics((prev) =>
+              prev.includes(tag)
+                ? prev.filter((t) => t !== tag)
+                : [...prev, tag]
+            )
+          }
+        />
+        <Input
+          name='topics'
+          defaultValue={initial.topics}
+          placeholder='More topics, comma separated'
+          className='mt-2'
+        />
+      </Field>
+
       <details className='rounded-lg border border-border-light p-4 dark:border-border-dark/60'>
         <summary className='cursor-pointer font-inter text-sm font-medium marker:hidden [&::-webkit-details-marker]:hidden'>
           More group options
@@ -210,14 +253,6 @@ export function GroupForm({ group, saving, submitLabel, onSubmit }: Props) {
 
           <Field label='Timezone'>
             <Input name='timezone' defaultValue={initial.timezone} />
-          </Field>
-
-          <Field label='Topics (comma separated)'>
-            <Input
-              name='topics'
-              defaultValue={initial.topics}
-              placeholder='rust, systems, meetup'
-            />
           </Field>
 
           <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>

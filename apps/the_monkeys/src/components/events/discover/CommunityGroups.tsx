@@ -4,13 +4,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
+import { RadiusChips, RadiusChoice } from '@/components/geo/RadiusChips';
 import { GroupEmpty } from '@/components/groups/GroupCard';
 import { GroupGridCard } from '@/components/groups/GroupGridCard';
 import Icon from '@/components/icon';
 import { GROUPS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import { useGroupList, useUserGroups } from '@/hooks/groups/useGroupQueries';
 import { useIPLocation } from '@/hooks/useIPLocation';
-import { geoRadiusSteps } from '@/lib/geoSearch';
+import {
+  defaultRadiusStepIndex,
+  geoRadiusSteps,
+  nearMeQuery,
+} from '@/lib/geoSearch';
 import { GroupItem, GroupListFilters } from '@/services/groups/groupsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -68,15 +73,14 @@ export function CommunityGroups({
   const [manualOverride, setManualOverride] = useState(false);
   const ipLocation = useIPLocation();
 
-  const radiusSteps = useMemo(
-    () => geoRadiusSteps(ipLocation.country),
-    [ipLocation.country]
+  const radiusSteps = useMemo(() => geoRadiusSteps(), []);
+  const [radiusIndex, setRadiusIndex] = useState(() =>
+    defaultRadiusStepIndex()
   );
-  const [radiusIndex, setRadiusIndex] = useState(0);
-  const atCountryFallback = radiusIndex >= radiusSteps.length;
-  const currentRadius = atCountryFallback
-    ? 0
-    : radiusSteps[Math.min(radiusIndex, radiusSteps.length - 1)];
+  const [radiusLocked, setRadiusLocked] = useState(false);
+  const [nationwide, setNationwide] = useState(false);
+  const currentRadius =
+    radiusSteps[Math.min(radiusIndex, radiusSteps.length - 1)];
 
   // Signed-in members land on "Your groups" so a freshly-created draft (which
   // never appears in the public "All groups" list) is immediately visible.
@@ -128,12 +132,13 @@ export function CommunityGroups({
       base.city = city.trim() || undefined;
       return base;
     }
-    if (hasCoords && !atCountryFallback) {
-      base.user_lat = ipLocation.latitude;
-      base.user_lng = ipLocation.longitude;
-      base.radius = currentRadius;
-      return base;
-    }
+    if (nationwide) return base;
+    const geo = nearMeQuery({
+      lat: ipLocation.latitude,
+      lng: ipLocation.longitude,
+      radiusKm: currentRadius,
+    });
+    if (geo.radius) return { ...base, ...geo };
     if (ipLocation.countryName) {
       base.country = ipLocation.countryName;
     }
@@ -143,8 +148,7 @@ export function CommunityGroups({
     city,
     topic,
     manualOverride,
-    hasCoords,
-    atCountryFallback,
+    nationwide,
     currentRadius,
     ipLocation.latitude,
     ipLocation.longitude,
@@ -158,8 +162,8 @@ export function CommunityGroups({
   const groups = active.data?.groups || [];
 
   useEffect(() => {
-    setRadiusIndex(0);
-  }, [q, city, topic, manualOverride]);
+    if (!radiusLocked) setRadiusIndex(defaultRadiusStepIndex());
+  }, [q, city, topic, manualOverride, nationwide, radiusLocked]);
 
   useEffect(() => {
     if (
@@ -167,8 +171,10 @@ export function CommunityGroups({
       all.isSuccess &&
       groups.length === 0 &&
       !manualOverride &&
+      !nationwide &&
+      !radiusLocked &&
       hasCoords &&
-      radiusIndex < radiusSteps.length
+      radiusIndex < radiusSteps.length - 1
     ) {
       setRadiusIndex((prev) => prev + 1);
     }
@@ -176,11 +182,29 @@ export function CommunityGroups({
     all.isSuccess,
     groups.length,
     manualOverride,
+    nationwide,
+    radiusLocked,
     hasCoords,
     radiusIndex,
-    view,
     radiusSteps.length,
+    view,
   ]);
+
+  const applyRadius = (v: RadiusChoice) => {
+    setRadiusLocked(true);
+    setManualOverride(false);
+    if (v === 'everywhere') {
+      setNationwide(true);
+      return;
+    }
+    setNationwide(false);
+    const i = radiusSteps.indexOf(v);
+    if (i >= 0) setRadiusIndex(i);
+    if (ipLocation.city) {
+      setCity(ipLocation.city);
+      setCityLive(ipLocation.city);
+    }
+  };
 
   return (
     <div className='space-y-6'>
@@ -230,11 +254,20 @@ export function CommunityGroups({
           />
           <Input
             value={cityLive}
-            onChange={(e) => setCityLive(e.target.value)}
+            onChange={(e) => {
+              setCityLive(e.target.value);
+              setNationwide(false);
+            }}
             placeholder='City'
             className='sm:w-44'
           />
         </div>
+      )}
+      {view === 'all' && (
+        <RadiusChips
+          value={nationwide ? 'everywhere' : currentRadius}
+          onChange={applyRadius}
+        />
       )}
 
       {view === 'mine' && !signedIn ? (

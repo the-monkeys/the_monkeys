@@ -42,6 +42,7 @@ export function GroupSettings({ group }: { group: GroupItem }) {
       router.replace(GROUPS_ROUTE);
     } catch (err) {
       toast({ title: 'Could not delete', description: groupError(err) });
+      throw err;
     }
   };
 
@@ -71,8 +72,8 @@ export function GroupSettings({ group }: { group: GroupItem }) {
             Danger zone
           </p>
           <p className='mb-3 mt-1 font-inter text-sm text-gray-500'>
-            Deleting a group is permanent and removes its members, rules and
-            events.
+            Deleting a group is permanent. If a child event has payments, cancel
+            those events first so refunds can run, then try again.
           </p>
           <ConfirmDialog
             trigger={
@@ -81,7 +82,7 @@ export function GroupSettings({ group }: { group: GroupItem }) {
               </Button>
             }
             title={`Delete "${group.name}"?`}
-            description='This cannot be undone.'
+            description='Members, rules, and events are removed. Paid child events will block this until they are cancelled.'
             confirmLabel='Delete group'
             destructive
             onConfirm={onDelete}

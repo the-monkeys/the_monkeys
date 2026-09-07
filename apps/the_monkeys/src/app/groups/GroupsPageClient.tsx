@@ -5,11 +5,19 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { CategoryChips } from '@/components/geo/CategoryChips';
+import { RadiusChips, RadiusChoice } from '@/components/geo/RadiusChips';
 import { GroupCard, GroupEmpty } from '@/components/groups/GroupCard';
 import { Loader } from '@/components/loader';
 import { GROUPS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useGroupList, useUserGroups } from '@/hooks/groups/useGroupQueries';
+import { useIPLocation } from '@/hooks/useIPLocation';
+import {
+  defaultRadiusStepIndex,
+  geoRadiusSteps,
+  nearMeQuery,
+} from '@/lib/geoSearch';
 import { GroupListFilters } from '@/services/groups/groupsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -26,6 +34,14 @@ export default function GroupsPageClient() {
   const [q, setQ] = useState('');
   const [city, setCity] = useState('');
   const [topic, setTopic] = useState('');
+  const ipLocation = useIPLocation();
+  const radiusSteps = useMemo(() => geoRadiusSteps(), []);
+  const [radiusIndex, setRadiusIndex] = useState(() =>
+    defaultRadiusStepIndex()
+  );
+  const [nationwide, setNationwide] = useState(false);
+  const currentRadius =
+    radiusSteps[Math.min(radiusIndex, radiusSteps.length - 1)];
 
   // Debounce every free-text filter behind a single 300ms window.
   useEffect(() => {
@@ -37,18 +53,52 @@ export default function GroupsPageClient() {
     return () => clearTimeout(t);
   }, [qLive, cityLive, topicLive]);
 
-  const filters: GroupListFilters = useMemo(
-    () => ({
+  const typedCity = city.trim();
+  const filters: GroupListFilters = useMemo(() => {
+    const base: GroupListFilters = {
       limit: 30,
       offset: 0,
       q: q.trim() || undefined,
-      city: city.trim() || undefined,
       topics: topic.trim() ? [topic.trim()] : undefined,
-    }),
-    [q, city, topic]
-  );
+    };
+    if (typedCity) {
+      base.city = typedCity;
+      return base;
+    }
+    if (nationwide) return base;
+    const geo = nearMeQuery({
+      lat: ipLocation.latitude,
+      lng: ipLocation.longitude,
+      radiusKm: currentRadius,
+    });
+    const ipCity = ipLocation.city.trim() || undefined;
+    if (geo.radius) return { ...base, ...geo, city: ipCity };
+    return base;
+  }, [
+    q,
+    topic,
+    typedCity,
+    nationwide,
+    currentRadius,
+    ipLocation.latitude,
+    ipLocation.longitude,
+  ]);
 
-  const discover = useGroupList(filters, tab === 'discover');
+  const applyRadius = (v: RadiusChoice) => {
+    setCity('');
+    setCityLive('');
+    if (v === 'everywhere') {
+      setNationwide(true);
+      return;
+    }
+    setNationwide(false);
+    const i = radiusSteps.indexOf(v);
+    if (i >= 0) setRadiusIndex(i);
+  };
+
+  const waitingGeo =
+    tab === 'discover' && ipLocation.isLoading && !nationwide && !typedCity;
+  const discover = useGroupList(filters, tab === 'discover' && !waitingGeo);
   const mine = useUserGroups(
     session?.username,
     filters,
@@ -116,17 +166,32 @@ export default function GroupsPageClient() {
             className='sm:flex-1'
           />
           <Input
-            value={topicLive}
-            onChange={(e) => setTopicLive(e.target.value)}
-            placeholder='Topic'
-            className='sm:w-40'
-          />
-          <Input
             value={cityLive}
-            onChange={(e) => setCityLive(e.target.value)}
+            onChange={(e) => {
+              setCityLive(e.target.value);
+              setNationwide(false);
+            }}
             placeholder='City'
             className='sm:w-40'
           />
+        </div>
+      )}
+      {tab === 'discover' && (
+        <div className='mb-6 space-y-3'>
+          <CategoryChips
+            selected={topic ? [topic] : []}
+            onToggle={(tag) => {
+              const next = topic === tag ? '' : tag;
+              setTopic(next);
+              setTopicLive(next);
+            }}
+          />
+          {!typedCity && (
+            <RadiusChips
+              value={nationwide ? 'everywhere' : currentRadius}
+              onChange={applyRadius}
+            />
+          )}
         </div>
       )}
 
@@ -137,7 +202,7 @@ export default function GroupsPageClient() {
         />
       )}
 
-      {active.isLoading && (
+      {(waitingGeo || active.isLoading) && (
         <div className='flex justify-center py-16'>
           <Loader size={28} />
         </div>
@@ -150,7 +215,8 @@ export default function GroupsPageClient() {
         />
       )}
 
-      {!active.isLoading &&
+      {!waitingGeo &&
+        !active.isLoading &&
         !active.isError &&
         groups.length === 0 &&
         tab === 'mine' &&
@@ -161,7 +227,8 @@ export default function GroupsPageClient() {
           />
         )}
 
-      {!active.isLoading &&
+      {!waitingGeo &&
+        !active.isLoading &&
         !active.isError &&
         groups.length === 0 &&
         tab === 'discover' && (
@@ -171,6 +238,12 @@ export default function GroupsPageClient() {
       {groups.map((group) => (
         <GroupCard key={group.id || group.slug} group={group} />
       ))}
+      {tab === 'discover' &&
+        discover.isFetching &&
+        !discover.isLoading &&
+        groups.length > 0 && (
+          <p className='mt-3 font-inter text-sm text-gray-500'>Updating…</p>
+        )}
     </div>
   );
 }
