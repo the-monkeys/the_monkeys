@@ -33,7 +33,7 @@ export const TWEET_ASPECT_DIMENSIONS: Record<
 export const DEFAULT_TWEET_SCREENSHOT_OPTIONS: TweetScreenshotOptions = {
   backgroundColor: '#4b5e68',
   darkCard: false,
-  aspect: '1080x1080',
+  aspect: '1080x1350',
   showXIcon: true,
   showProfilePhoto: true,
   showAuthorInfo: true,

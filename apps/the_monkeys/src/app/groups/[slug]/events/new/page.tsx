@@ -58,7 +58,7 @@ export default function NewGroupEventPage({
       const res = await create.mutateAsync(body);
       const slug = res.event?.slug;
       toast({ title: 'Event created' });
-      router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
+      router.push(slug ? `${EVENTS_ROUTE}/${slug}` : EVENTS_ROUTE);
     } catch (err) {
       toast({ title: 'Could not create event', description: groupError(err) });
     }

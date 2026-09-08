@@ -112,6 +112,11 @@ export const metadata: Metadata = {
     'lifestyle blogs',
     'personal development articles',
     'collaborative writing',
+    'research events',
+    'research groups',
+    'instagram templates',
+    'twitter screenshot generator',
+    'digital business card',
   ],
   openGraph: {
     title: 'Monkeys - Quality Blogging Community & Trusted Content Platform',
@@ -148,6 +153,9 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       noimageindex: false,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
     },
   },
 };
@@ -163,7 +171,7 @@ const schema = {
     'https://www.instagram.com/monkeys_com_co?igsh=ZnhjYWZqN3hidThj',
   ],
   description:
-    'A collaborative blogging platform where writers contribute articles that build upon each other, creating a continuous flow of insightful content.',
+    'A research-first platform where writers publish journals, host community events, run groups, and create share-ready social images.',
   foundingDate: '2023-01-01',
   founders: [
     {
@@ -180,11 +188,53 @@ const schema = {
   },
 
   knowsAbout: [
+    'Research Journals',
     'Collaborative Blogging',
-    'Content Writing',
-    'Interconnected Articles',
-    'Topic Clustering',
+    'Research Events',
+    'Academic Meetups',
+    'Community Groups',
+    'Instagram Templates',
+    'Twitter Screenshot Generator',
+    'Digital Business Cards',
   ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Monkeys products',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Events',
+          url: `${LIVE_URL}/events`,
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Groups',
+          url: `${LIVE_URL}/groups`,
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'WebApplication',
+          name: 'Studio',
+          url: `${LIVE_URL}/snapshot/new`,
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'WebApplication',
+          name: 'Digital business cards',
+          url: `${LIVE_URL}/cards`,
+        },
+      },
+    ],
+  },
 };
 
 const RootLayout = async ({

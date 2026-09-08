@@ -8,13 +8,16 @@ import { BackButton } from '@/components/buttons/backButton';
 import { EventForm } from '@/components/events/EventForm';
 import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
+import { invalidateAfterEventWrite } from '@/lib/queryFreshness';
 import { EventBody } from '@/services/events/eventTypes';
 import {
   createEvent,
+  createSeries,
   eventError,
   updateEvent,
   uploadEventCover,
 } from '@/services/events/eventsApi';
+import { getQueryClient } from '@/utils/get-query-client';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 
 export default function NewEventPage() {
@@ -31,10 +34,12 @@ export default function NewEventPage() {
   const onSubmit = async (body: EventBody, coverFile?: File) => {
     setSaving(true);
     try {
-      const res = await createEvent(body);
+      const res = body.recurrence
+        ? await createSeries(body)
+        : await createEvent(body);
       const slug = res.event?.slug;
-      // A cover picked before the event existed is uploaded now and persisted
-      // on the event. Failure here must not lose the draft, so it is non-fatal.
+      // One v2 upload. For a series the backend maps that URL onto every
+      // occurrence — do not upload once per date.
       if (slug && coverFile) {
         try {
           const up = await uploadEventCover(slug, coverFile);
@@ -47,8 +52,9 @@ export default function NewEventPage() {
           });
         }
       }
-      toast({ title: 'Draft saved' });
-      router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
+      toast({ title: body.recurrence ? 'Series created' : 'Draft saved' });
+      await invalidateAfterEventWrite(getQueryClient(), slug);
+      router.push(slug ? `${EVENTS_ROUTE}/${slug}` : EVENTS_ROUTE);
     } catch (err) {
       toast({ title: 'Could not create event', description: eventError(err) });
     } finally {
@@ -57,14 +63,17 @@ export default function NewEventPage() {
   };
 
   return (
-    <div className='mx-auto max-w-2xl'>
+    <main className='mx-auto w-full max-w-2xl px-4 py-6 sm:px-6 lg:py-10'>
       <div className='mb-4'>
-        <BackButton />
+        <BackButton href={EVENTS_ROUTE} />
       </div>
-      <h1 className='font-newsreader font-bold text-3xl md:text-4xl mb-6'>
+      <h1 className='font-newsreader text-3xl font-bold md:text-4xl'>
         Create event
       </h1>
+      <p className='mb-6 mt-2 font-inter text-sm text-text-light/70 dark:text-text-dark/70'>
+        Share the essentials now. You can add the details when you are ready.
+      </p>
       <EventForm submitLabel='Save draft' saving={saving} onSubmit={onSubmit} />
-    </div>
+    </main>
   );
 }

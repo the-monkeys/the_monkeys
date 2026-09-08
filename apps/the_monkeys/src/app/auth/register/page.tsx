@@ -1,6 +1,15 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+
+import {
+  loginHref,
+  rememberAuthCallback,
+  safeCallbackPath,
+} from '@/lib/authRedirect';
 
 import {
   FormHeader,
@@ -10,6 +19,12 @@ import {
 import RegisterUserForm from '../components/forms/RegisterUserForm';
 
 export default function Register() {
+  const callbackURL = safeCallbackPath(useSearchParams().get('callbackURL'));
+
+  useEffect(() => {
+    rememberAuthCallback(callbackURL);
+  }, [callbackURL]);
+
   return (
     <>
       <FormHeader>
@@ -24,7 +39,7 @@ export default function Register() {
           <span>Already have an account? </span>
 
           <Link
-            href='/auth/login'
+            href={loginHref(callbackURL)}
             className='font-medium hover:underline text-brand-orange'
           >
             Login instead

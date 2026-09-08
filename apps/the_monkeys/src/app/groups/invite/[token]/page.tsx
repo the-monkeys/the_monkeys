@@ -5,12 +5,13 @@ import { useRouter } from 'next/navigation';
 import { GroupEmpty } from '@/components/groups/GroupCard';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
-import { GROUPS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
+import { GROUPS_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import {
   useAcceptInvite,
   useInvitePreview,
 } from '@/hooks/groups/useGroupQueries';
+import { loginHref } from '@/lib/authRedirect';
 import { groupError } from '@/services/groups/groupsApi';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
@@ -89,7 +90,7 @@ export default function GroupInvitePage({
         ) : (
           <Button
             className='min-h-[44px] w-full'
-            onClick={() => router.push(LOGIN_ROUTE)}
+            onClick={() => router.push(loginHref(`/groups/invite/${token}`))}
           >
             Sign in to join
           </Button>

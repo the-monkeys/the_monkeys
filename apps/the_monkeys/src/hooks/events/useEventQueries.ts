@@ -1,3 +1,4 @@
+import { LIVE_LIST_STALE_MS } from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
 import { ListFilters } from '@/services/events/eventTypes';
 import {
@@ -14,13 +15,20 @@ import {
   uploadEventCover,
   uploadEventPhoto,
 } from '@/services/events/eventsApi';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 export function useEventList(filters: ListFilters, enabled = true) {
   return useQuery({
     queryKey: queryKeys.events.list(filters),
     queryFn: () => listEvents(filters),
     enabled,
+    staleTime: LIVE_LIST_STALE_MS,
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -33,6 +41,7 @@ export function useUserEvents(
     queryKey: queryKeys.events.user(username, filters),
     queryFn: () => listUserEvents(username!, filters),
     enabled: enabled && !!username,
+    staleTime: LIVE_LIST_STALE_MS,
   });
 }
 
@@ -45,6 +54,7 @@ export function useGroupEvents(
     queryKey: queryKeys.events.group(slug, filters),
     queryFn: () => listGroupEvents(slug!, filters),
     enabled: enabled && !!slug,
+    staleTime: LIVE_LIST_STALE_MS,
   });
 }
 
@@ -53,6 +63,7 @@ export function useAttendingEvents(filters: ListFilters = {}, enabled = true) {
     queryKey: queryKeys.events.attending,
     queryFn: () => listAttendingEvents(filters),
     enabled,
+    staleTime: LIVE_LIST_STALE_MS,
   });
 }
 

@@ -1,3 +1,8 @@
+import {
+  LIVE_LIST_STALE_MS,
+  invalidateAfterGroupEventWrite,
+  invalidateAfterGroupWrite,
+} from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
 import {
   acceptInvite,
@@ -40,7 +45,12 @@ import {
   MemberListParams,
   MemberRoleBody,
 } from '@/services/groups/groupsTypes';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 // -----------------------------------------------------------------------------
 // Queries
@@ -51,6 +61,8 @@ export function useGroupList(filters: GroupListFilters = {}, enabled = true) {
     queryKey: queryKeys.groups.list(filters),
     queryFn: () => listGroups(filters),
     enabled,
+    staleTime: LIVE_LIST_STALE_MS,
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -63,6 +75,7 @@ export function useUserGroups(
     queryKey: queryKeys.groups.user(username, filters),
     queryFn: () => listUserGroups(username!, filters),
     enabled: enabled && !!username,
+    staleTime: LIVE_LIST_STALE_MS,
   });
 }
 
@@ -104,14 +117,7 @@ export function useGroupInvites(slug: string | undefined, enabled = true) {
 // members, and invite caches so mutations reflect immediately across the UI.
 export function useRefreshGroups(slug?: string) {
   const qc = useQueryClient();
-  return () => {
-    qc.invalidateQueries({ queryKey: queryKeys.groups.all });
-    if (slug) {
-      qc.invalidateQueries({ queryKey: queryKeys.groups.detail(slug) });
-      qc.invalidateQueries({ queryKey: queryKeys.groups.members(slug) });
-      qc.invalidateQueries({ queryKey: queryKeys.groups.invites(slug) });
-    }
-  };
+  return () => invalidateAfterGroupWrite(qc, slug);
 }
 
 // -----------------------------------------------------------------------------
@@ -303,9 +309,9 @@ export function useDeleteGroupRule(slug: string) {
 // -----------------------------------------------------------------------------
 
 export function useCreateGroupEvent(slug: string) {
-  const refresh = useRefreshGroups(slug);
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (body: GroupEventBody) => createGroupEvent(slug, body),
-    onSuccess: refresh,
+    onSuccess: () => invalidateAfterGroupEventWrite(qc, slug),
   });
 }

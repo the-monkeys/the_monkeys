@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Icon from '@/components/icon';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
+import { safeCallbackPath } from '@/lib/authRedirect';
 import { otpVerificationSchema, registerUserSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import {
@@ -138,7 +139,7 @@ export default function RegisterUserForm() {
         title: 'Account created successfully',
       });
 
-      router.replace(params.get('callbackURL') || '/feed');
+      router.replace(safeCallbackPath(params.get('callbackURL')) || '/feed');
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : 'Invalid verification code';

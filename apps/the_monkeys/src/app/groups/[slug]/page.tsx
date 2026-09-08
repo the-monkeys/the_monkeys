@@ -1,21 +1,22 @@
 import { Metadata } from 'next';
 
-import { API_URL, LIVE_URL } from '@/constants/api';
+import { JsonLd } from '@/components/seo/JsonLd';
+import {
+  breadcrumb,
+  indexRobots,
+  noIndexRobots,
+  pageMetadata,
+  truncateMeta,
+} from '@/lib/seo';
+import { groupJsonLd } from '@/lib/seoSchema';
 import { GroupResp } from '@/services/groups/groupsTypes';
 
 import GroupDetailClient from './GroupDetailClient';
+import { loadGroupForMetadata } from './groupMetadata';
 
-async function loadGroup(slug: string): Promise<GroupResp | null> {
-  if (!API_URL) return null;
-  try {
-    const res = await fetch(`${API_URL}/groups/${encodeURIComponent(slug)}`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch {
-    return null;
-  }
+function isIndexable(group: NonNullable<GroupResp['group']>) {
+  const published = !group.status || group.status === 'published';
+  return group.visibility === 'public' && published;
 }
 
 export async function generateMetadata({
@@ -23,52 +24,54 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const data = await loadGroup(params.slug);
+  const data = await loadGroupForMetadata(params.slug);
   const group = data?.group;
   if (!group) {
-    return { title: 'Group not found' };
+    return { title: 'Group not found', robots: noIndexRobots };
   }
 
-  const base = LIVE_URL || 'https://monkeys.com.co';
-  const title = group.name;
-  const description = (group.description || '').slice(0, 160);
-  const url = `${base}/groups/${group.slug}`;
-  const imageUrl =
-    group.cover_image ||
-    group.logo_image ||
-    `${base}/social-snapshot-placeholder.png`;
+  if (!isIndexable(group)) {
+    return { title: group.name, robots: noIndexRobots };
+  }
 
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: 'Monkeys',
-      type: 'website',
-      images: [
-        {
-          url: imageUrl,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: [imageUrl],
-    },
+    ...pageMetadata({
+      title: group.name,
+      description: truncateMeta(
+        group.description ||
+          `${group.name}. A research group on Monkeys. Join the community and follow its events.`
+      ),
+      path: `/groups/${group.slug}`,
+      keywords: group.topics,
+      image: group.cover_image || group.logo_image,
+    }),
+    robots: indexRobots,
   };
 }
 
-export default function GroupDetailPage({
+export default async function GroupDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  return <GroupDetailClient slug={params.slug} />;
+  const data = await loadGroupForMetadata(params.slug);
+  const group = data?.group;
+
+  return (
+    <>
+      {group && isIndexable(group) && (
+        <>
+          <JsonLd data={groupJsonLd(group)} />
+          <JsonLd
+            data={breadcrumb([
+              { name: 'Home', path: '/' },
+              { name: 'Groups', path: '/groups' },
+              { name: group.name, path: `/groups/${group.slug}` },
+            ])}
+          />
+        </>
+      )}
+      <GroupDetailClient slug={params.slug} />
+    </>
+  );
 }

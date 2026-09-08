@@ -2,6 +2,8 @@
 
 import { forwardRef, useEffect, useRef, useState } from 'react';
 
+import { fitPreviewScale } from '@/features/snapshot/lib/fitPreviewScale';
+
 import { getTemplateById } from '../registry';
 import { getThemeById } from '../themes';
 import { CardCustomization, CardInput } from '../types';
@@ -43,16 +45,25 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
     useEffect(() => {
       if (!stageRef.current) return;
       const el = stageRef.current;
+      let tries = 0;
       const update = () => {
-        const available = maxPreviewWidth ?? el.clientWidth;
-        if (!available) return;
-        setScale(Math.min(1, available / template.width));
+        const availableW = maxPreviewWidth ?? el.clientWidth;
+        if (!availableW) {
+          if (tries++ < 12) window.requestAnimationFrame(update);
+          return;
+        }
+        const next = fitPreviewScale(
+          template.width,
+          template.height,
+          availableW
+        ).scale;
+        setScale((prev) => (Math.abs(prev - next) < 0.001 ? prev : next));
       };
       update();
       const ro = new ResizeObserver(update);
       ro.observe(el);
       return () => ro.disconnect();
-    }, [template.width, maxPreviewWidth]);
+    }, [template.width, template.height, maxPreviewWidth]);
 
     const Render = template.Render;
     const scaledW = template.width * scale;
@@ -62,6 +73,7 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
       <div
         className={className}
         style={{
+          width: '100%',
           backgroundColor:
             stageBackground === 'transparent' ? undefined : stageBackground,
         }}
@@ -69,7 +81,8 @@ export const CardPreview = forwardRef<HTMLDivElement, CardPreviewProps>(
         {/* Measured content box — no padding, so the card never overflows. */}
         <div
           ref={stageRef}
-          style={{ width: '100%', maxWidth: maxPreviewWidth }}
+          className='w-full'
+          style={{ maxWidth: maxPreviewWidth }}
         >
           <div
             style={{

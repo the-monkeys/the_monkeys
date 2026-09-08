@@ -9,22 +9,34 @@ import {
   useState,
 } from 'react';
 
+import { CategoryChips } from '@/components/geo/CategoryChips';
+import { PlacePin } from '@/components/geo/PlacePin';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import useAuth from '@/hooks/auth/useAuth';
 import { useUploadEventCover } from '@/hooks/events/useEventQueries';
 import { useUserGroups } from '@/hooks/groups/useGroupQueries';
 import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
-import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
+import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
+import {
+  defaultTimezone,
+  fromLocalInput,
+  isEventEnded,
+  rsvpCloseHoursFromEvent,
+  toLocalInput,
+} from '@/lib/eventTime';
+import { pinFromCoords } from '@/lib/geoSearch';
 import {
   EventBody,
   EventItem,
   EventType,
   EventVisibility,
+  RecurrenceFreq,
 } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import { Label } from '@the-monkeys/ui/atoms/label';
+import { RadioGroup, RadioGroupItem } from '@the-monkeys/ui/atoms/radio-group';
 import { TextArea } from '@the-monkeys/ui/atoms/text-area';
 
 type Props = {
@@ -43,6 +55,36 @@ const TYPES: { value: EventType; label: string }[] = [
 // Only communities the viewer runs may host events; the backend enforces the
 // same rule, so this list is a convenience, not the security boundary.
 const ORGANIZER_ROLES = new Set(['organizer', 'co_organizer']);
+
+const RSVP_CLOSE_OPTIONS: { value: number; label: string }[] = [
+  { value: 0, label: 'Off' },
+  { value: 12, label: '12 hours before' },
+  { value: 24, label: '1 day before' },
+  { value: 72, label: '3 days before' },
+  { value: 168, label: '1 week before' },
+];
+
+const REPEAT_OPTIONS: { value: RecurrenceFreq | 'off'; label: string }[] = [
+  { value: 'off', label: 'One-time' },
+  { value: 'daily', label: 'Daily' },
+  { value: 'weekly', label: 'Weekly' },
+  { value: 'monthly', label: 'Monthly' },
+  { value: 'yearly', label: 'Yearly' },
+];
+
+const VISIBILITY_OPTIONS: {
+  value: EventVisibility;
+  label: string;
+  hint: string;
+}[] = [
+  { value: 'public', label: 'Public', hint: 'Anyone can find and RSVP' },
+  { value: 'unlisted', label: 'Unlisted', hint: 'Reachable by link only' },
+  {
+    value: 'private',
+    label: 'Private',
+    hint: 'Invitees can find and RSVP',
+  },
+];
 
 function splitList(value: string): string[] {
   return value
@@ -78,7 +120,13 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [eventType, setEventType] = useState<EventType>(
     event?.event_type || 'virtual'
   );
-  const [includeTier, setIncludeTier] = useState(!event);
+  const [pin, setPin] = useState(() =>
+    pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
+  );
+  const [selectedTags, setSelectedTags] = useState(
+    () => partitionTags(event?.tags).selected
+  );
+  const [includeTier, setIncludeTier] = useState(false);
   // Group linkage is chosen at creation time; visibility is editable anytime.
   const [groupSlug, setGroupSlug] = useState(event?.group_slug || '');
   const [visibility, setVisibility] = useState<EventVisibility>(
@@ -99,6 +147,21 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
   const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
   const [dateError, setDateError] = useState('');
+  const [repeatFreq, setRepeatFreq] = useState<RecurrenceFreq | 'off'>('off');
+  const [repeatInterval, setRepeatInterval] = useState(1);
+  const [repeatDays, setRepeatDays] = useState<string[]>([]);
+  const [repeatEnd, setRepeatEnd] = useState<'never' | 'until' | 'count'>(
+    'never'
+  );
+  const [repeatUntil, setRepeatUntil] = useState('');
+  const [repeatCount, setRepeatCount] = useState(12);
+  const [rsvpClosesVal, setRsvpClosesVal] = useState(
+    toLocalInput(event?.rsvp_closes_at)
+  );
+  const [rsvpCloseHours, setRsvpCloseHours] = useState(
+    rsvpCloseHoursFromEvent(event)
+  );
+  const ended = isEventEnded(event);
   // Recomputed once on mount; a stale minute is harmless and the browser plus
   // the submit guard both re-validate against the real clock.
   const minStart = useMemo(() => localNowInput(), []);
@@ -143,9 +206,11 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
-      tags: event?.tags?.join(', ') || '',
+      tags: partitionTags(event?.tags).extra,
       tierName: 'General',
-      tierPrice: '0',
+      // Paid ticket pricing is temporarily disabled; keep the previous
+      // form default here so the control can be restored with its state.
+      // tierPrice: '0',
       tierCapacity: '',
     }),
     [event]
@@ -154,17 +219,18 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    const start = fromLocalInput(String(form.get('start') || ''));
-    const end = fromLocalInput(String(form.get('end') || ''));
+    const start = fromLocalInput(startVal);
+    const end = fromLocalInput(endVal);
     if (!start || !end) return;
 
     // Block past starts and inverted ranges at the boundary. The browser's
     // `min` handles the common case, but a crafted value or a stale tab could
-    // still submit one, and the backend also rejects it.
+    // still submit one, and the backend also rejects it. Ended events keep
+    // their original window, so skip the past-start check there.
     const startMs = new Date(start).getTime();
     const endMs = new Date(end).getTime();
     const nowMs = Date.now();
-    if (startMs < nowMs - 60_000) {
+    if (!ended && startMs < nowMs - 60_000) {
       setDateError('Start time cannot be in the past.');
       return;
     }
@@ -173,6 +239,20 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       return;
     }
     setDateError('');
+
+    const isSeries = !!event?.series_id || repeatFreq !== 'off';
+    if (!isSeries && rsvpClosesVal) {
+      const closes = fromLocalInput(rsvpClosesVal);
+      const closeMs = new Date(closes).getTime();
+      if (!ended && closeMs < nowMs - 60_000) {
+        setDateError('Last day to RSVP cannot be in the past.');
+        return;
+      }
+      if (closeMs >= startMs) {
+        setDateError('Last day to RSVP must be before the meetup starts.');
+        return;
+      }
+    }
 
     const body: EventBody = {
       title: String(form.get('title') || '').trim(),
@@ -185,8 +265,16 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       meeting_link: String(form.get('meeting_link') || '').trim(),
       capacity: Number(form.get('capacity') || 0) || 0,
       cover_image: coverImage.trim(),
-      tags: splitList(String(form.get('tags') || '')),
+      tags: mergeCategoryTags(
+        selectedTags,
+        splitList(String(form.get('tags') || ''))
+      ),
     };
+
+    if (eventType !== 'virtual' && pin) {
+      body.latitude = pin.latitude;
+      body.longitude = pin.longitude;
+    }
 
     // 'group_members' visibility is only valid for a group-attached event; the
     // backend rejects the mismatch, so guard it here for a clean UX.
@@ -201,13 +289,40 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         body.ticket_tiers = [
           {
             name: String(form.get('tierName') || 'General').trim() || 'General',
-            price: Number(form.get('tierPrice') || 0) || 0,
+            // Paid ticket pricing is temporarily disabled. Keep the former
+            // form read nearby, but submit every new ticket tier as free.
+            // price: Number(form.get('tierPrice') || 0) || 0,
+            price: 0,
             capacity: Number(form.get('tierCapacity') || 0) || 0,
             currency: 'INR',
             sort_order: 0,
           },
         ];
       }
+      if (repeatFreq !== 'off') {
+        body.recurrence = {
+          freq: repeatFreq,
+          interval: Math.max(1, repeatInterval || 1),
+          by_day:
+            repeatFreq === 'weekly'
+              ? repeatDays.length
+                ? repeatDays
+                : [weekdayFromLocal(startVal)]
+              : undefined,
+          count: repeatEnd === 'count' ? Math.max(1, repeatCount) : undefined,
+          until:
+            repeatEnd === 'until' && repeatUntil
+              ? new Date(`${repeatUntil}T23:59:59`).toISOString()
+              : undefined,
+          rsvp_close_hours_before: rsvpCloseHours || undefined,
+        };
+      } else if (rsvpClosesVal) {
+        body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
+      }
+    } else if (event.series_id) {
+      body.rsvp_close_hours_before = rsvpCloseHours;
+    } else if (rsvpClosesVal) {
+      body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
     }
 
     onSubmit(body, coverFile ?? undefined);
@@ -216,8 +331,24 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const showPlace = eventType !== 'virtual';
   const showLink = eventType !== 'in_person';
 
+  const WEEKDAYS = [
+    { id: 'MO', label: 'Mon' },
+    { id: 'TU', label: 'Tue' },
+    { id: 'WE', label: 'Wed' },
+    { id: 'TH', label: 'Thu' },
+    { id: 'FR', label: 'Fri' },
+    { id: 'SA', label: 'Sat' },
+    { id: 'SU', label: 'Sun' },
+  ] as const;
+
   return (
     <form onSubmit={handleSubmit} className='space-y-5'>
+      {ended && (
+        <p className='rounded-md border border-border-light bg-foreground-light/40 px-3 py-2 font-inter text-sm text-gray-600 dark:border-border-dark/60 dark:bg-foreground-dark/30 dark:text-gray-400'>
+          This meetup has ended. You can still update the writeup, cover, and
+          tags.
+        </p>
+      )}
       <Field label='Title'>
         <Input
           name='title'
@@ -236,17 +367,26 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         />
       </Field>
 
+      <EventCoverField
+        slug={event?.slug}
+        value={coverImage}
+        onChange={handleCoverUrl}
+        onFileSelected={handleCoverFile}
+        pendingPreview={coverPreview}
+      />
+
       <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
         <Field label='Starts'>
           <Input
             name='start'
             type='datetime-local'
             required
-            min={minStart}
+            min={ended ? undefined : minStart}
+            readOnly={ended}
             value={startVal}
             onChange={(e) => {
+              if (ended) return;
               setStartVal(e.target.value);
-              // Keep end at or after start so the range stays valid.
               if (endVal && e.target.value && endVal < e.target.value) {
                 setEndVal(e.target.value);
               }
@@ -259,9 +399,11 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             name='end'
             type='datetime-local'
             required
-            min={startVal || minStart}
+            min={ended ? undefined : startVal || minStart}
+            readOnly={ended}
             value={endVal}
             onChange={(e) => {
+              if (ended) return;
               setEndVal(e.target.value);
               if (dateError) setDateError('');
             }}
@@ -274,10 +416,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         </p>
       )}
 
-      <Field label='Timezone'>
-        <Input name='timezone' defaultValue={initial.timezone} />
-      </Field>
-
       <fieldset>
         <legend className='mb-2 font-inter text-sm font-medium'>Type</legend>
         <div className='flex flex-wrap gap-2'>
@@ -285,12 +423,14 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             <button
               key={t.value}
               type='button'
-              onClick={() => setEventType(t.value)}
+              onClick={() => {
+                if (!ended) setEventType(t.value);
+              }}
               className={`rounded-full px-3 py-1.5 text-sm font-inter border-2 transition-colors ${
                 eventType === t.value
                   ? 'border-brand-orange bg-brand-orange text-white'
                   : 'border-border-light dark:border-border-dark'
-              }`}
+              } ${ended ? 'opacity-60' : ''}`}
             >
               {t.label}
             </button>
@@ -299,13 +439,17 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       </fieldset>
 
       {showPlace && (
-        <Field label='Place'>
-          <Input
-            name='location'
-            defaultValue={initial.location}
-            placeholder='City or venue'
-          />
-        </Field>
+        <>
+          <Field label='Place'>
+            <Input
+              name='location'
+              defaultValue={initial.location}
+              placeholder='City or venue'
+              readOnly={ended}
+            />
+          </Field>
+          <PlacePin value={pin} onChange={setPin} disabled={ended} />
+        </>
       )}
       {showLink && (
         <Field label='Meeting link'>
@@ -314,121 +458,317 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             type='url'
             defaultValue={initial.meeting_link}
             placeholder='https://'
+            readOnly={ended}
           />
         </Field>
       )}
 
-      <Field label='Max people (0 = no limit)'>
-        <Input
-          name='capacity'
-          type='number'
-          min={0}
-          defaultValue={initial.capacity}
+      <Field label='Topics'>
+        <CategoryChips
+          selected={selectedTags}
+          onToggle={(tag) =>
+            setSelectedTags((prev) =>
+              prev.includes(tag)
+                ? prev.filter((t) => t !== tag)
+                : [...prev, tag]
+            )
+          }
         />
-      </Field>
-
-      <EventCoverField
-        slug={event?.slug}
-        value={coverImage}
-        onChange={handleCoverUrl}
-        onFileSelected={handleCoverFile}
-        pendingPreview={coverPreview}
-      />
-
-      <Field label='Tags (comma separated)'>
         <Input
           name='tags'
           defaultValue={initial.tags}
-          placeholder='tech, meetup'
+          placeholder='More tags, comma separated'
+          className='mt-2'
         />
       </Field>
 
-      {!event
-        ? organizerGroups.length > 0 && (
-            <Field label='Host under a community (optional)'>
+      <details className='rounded-lg border border-border-light p-4 dark:border-border-dark/60'>
+        <summary className='cursor-pointer font-inter text-sm font-medium marker:hidden [&::-webkit-details-marker]:hidden'>
+          More event options
+        </summary>
+        <div className='mt-4 space-y-5'>
+          <Field label='Timezone'>
+            <Input
+              name='timezone'
+              defaultValue={initial.timezone}
+              readOnly={ended}
+            />
+          </Field>
+
+          {!event && (
+            <div className='rounded-lg border border-border-light p-4 space-y-3 dark:border-border-dark/60'>
+              <Field label='Repeat'>
+                <RadioGroup
+                  aria-label='Repeat'
+                  value={repeatFreq}
+                  onValueChange={(value) =>
+                    setRepeatFreq(value as RecurrenceFreq | 'off')
+                  }
+                  className='grid grid-cols-2 gap-2 sm:grid-cols-3'
+                >
+                  {REPEAT_OPTIONS.map((option) => (
+                    <div key={option.value} className='flex items-center gap-2'>
+                      <RadioGroupItem
+                        value={option.value}
+                        id={`repeat-${option.value}`}
+                      />
+                      <Label
+                        htmlFor={`repeat-${option.value}`}
+                        className='cursor-pointer font-inter text-sm'
+                      >
+                        {option.label}
+                      </Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+              </Field>
+              {repeatFreq !== 'off' && (
+                <>
+                  <Field label='Every'>
+                    <div className='flex items-center gap-2'>
+                      <Input
+                        type='number'
+                        min={1}
+                        max={52}
+                        value={repeatInterval}
+                        onChange={(e) =>
+                          setRepeatInterval(
+                            Math.max(1, Number(e.target.value) || 1)
+                          )
+                        }
+                        className='w-24'
+                      />
+                      <span className='font-inter text-sm text-gray-500'>
+                        {repeatFreq === 'daily'
+                          ? 'day(s)'
+                          : repeatFreq === 'weekly'
+                            ? 'week(s)'
+                            : repeatFreq === 'monthly'
+                              ? 'month(s)'
+                              : 'year(s)'}
+                      </span>
+                    </div>
+                  </Field>
+                  {repeatFreq === 'weekly' && (
+                    <div className='flex flex-wrap gap-2'>
+                      {WEEKDAYS.map((d) => {
+                        const on = repeatDays.includes(d.id);
+                        return (
+                          <button
+                            key={d.id}
+                            type='button'
+                            onClick={() =>
+                              setRepeatDays((prev) =>
+                                on
+                                  ? prev.filter((x) => x !== d.id)
+                                  : [...prev, d.id]
+                              )
+                            }
+                            className={`rounded-full px-3 py-1.5 text-sm font-inter border-2 ${
+                              on
+                                ? 'border-brand-orange bg-brand-orange text-white'
+                                : 'border-border-light dark:border-border-dark'
+                            }`}
+                          >
+                            {d.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                  <Field label='Ends'>
+                    <select
+                      value={repeatEnd}
+                      onChange={(e) =>
+                        setRepeatEnd(e.target.value as typeof repeatEnd)
+                      }
+                      className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+                    >
+                      <option value='never'>Never (next 12 dates)</option>
+                      <option value='until'>On a date</option>
+                      <option value='count'>After a number of events</option>
+                    </select>
+                  </Field>
+                  {repeatEnd === 'until' && (
+                    <Input
+                      type='date'
+                      value={repeatUntil}
+                      onChange={(e) => setRepeatUntil(e.target.value)}
+                    />
+                  )}
+                  {repeatEnd === 'count' && (
+                    <Input
+                      type='number'
+                      min={1}
+                      max={52}
+                      value={repeatCount}
+                      onChange={(e) =>
+                        setRepeatCount(Math.max(1, Number(e.target.value) || 1))
+                      }
+                    />
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {!ended && (!!event?.series_id || repeatFreq !== 'off') ? (
+            <Field label='Close RSVP'>
               <select
-                value={groupSlug}
-                onChange={(e) => setGroupSlug(e.target.value)}
-                className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
+                value={rsvpCloseHours}
+                onChange={(e) => setRsvpCloseHours(Number(e.target.value) || 0)}
+                className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
               >
-                <option value=''>No community — standalone event</option>
-                {organizerGroups.map((g) => (
-                  <option key={g.slug} value={g.slug}>
-                    {g.name}
+                {RSVP_CLOSE_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
                   </option>
                 ))}
               </select>
             </Field>
-          )
-        : event.group_slug && (
-            <Field label='Community'>
-              <p className='font-inter text-sm text-text-light/70 dark:text-text-dark/70'>
-                Hosted under {event.group_name || event.group_slug}
-              </p>
+          ) : !ended ? (
+            <Field label='Last day to RSVP'>
+              <Input
+                type='datetime-local'
+                min={minStart}
+                max={startVal || undefined}
+                value={rsvpClosesVal}
+                onChange={(e) => {
+                  setRsvpClosesVal(e.target.value);
+                  if (dateError) setDateError('');
+                }}
+              />
+            </Field>
+          ) : null}
+
+          <Field label='Max people (0 = no limit)'>
+            <Input
+              name='capacity'
+              type='number'
+              min={0}
+              defaultValue={initial.capacity}
+              readOnly={ended}
+            />
+          </Field>
+
+          {!event
+            ? organizerGroups.length > 0 && (
+                <Field label='Host under a community (optional)'>
+                  <select
+                    value={groupSlug}
+                    onChange={(e) => setGroupSlug(e.target.value)}
+                    className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
+                  >
+                    <option value=''>Standalone event</option>
+                    {organizerGroups.map((g) => (
+                      <option key={g.slug} value={g.slug}>
+                        {g.name}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              )
+            : event.group_slug && (
+                <Field label='Community'>
+                  <p className='font-inter text-sm text-text-light/70 dark:text-text-dark/70'>
+                    Hosted under {event.group_name || event.group_slug}
+                  </p>
+                </Field>
+              )}
+
+          <fieldset>
+            <legend className='mb-2 font-inter text-sm font-medium'>
+              Visibility
+            </legend>
+            <div className='grid grid-cols-1 gap-2 sm:grid-cols-3'>
+              {[
+                ...VISIBILITY_OPTIONS,
+                ...(hasGroup
+                  ? [
+                      {
+                        value: 'group_members' as EventVisibility,
+                        label: 'Members only',
+                        hint: 'Only community members can find and RSVP',
+                      },
+                    ]
+                  : []),
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  type='button'
+                  aria-pressed={visibility === option.value}
+                  disabled={ended}
+                  onClick={() => setVisibility(option.value)}
+                  className={`rounded-lg border-2 px-3 py-2 text-left font-inter transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+                    visibility === option.value
+                      ? 'border-brand-orange bg-brand-orange/5'
+                      : 'border-border-light dark:border-border-dark'
+                  }`}
+                >
+                  <span className='block text-sm font-semibold'>
+                    {option.label}
+                  </span>
+                  <span className='block text-xs text-gray-500'>
+                    {option.hint}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          {!event && (
+            <Field label='Co-hosts'>
+              <CohostPicker
+                value={cohosts}
+                onChange={setCohosts}
+                exclude={session?.username}
+              />
             </Field>
           )}
 
-      <Field label='Visibility'>
-        <select
-          value={visibility}
-          onChange={(e) => setVisibility(e.target.value as EventVisibility)}
-          className='w-full rounded-md border-2 border-border-light dark:border-border-dark bg-transparent px-3 py-2 font-inter text-sm'
-        >
-          <option value='public'>Public — anyone can find it</option>
-          <option value='unlisted'>Unlisted — only people with the link</option>
-          <option value='private'>Private — invite only</option>
-          {hasGroup && (
-            <option value='group_members'>Members only — group members</option>
-          )}
-        </select>
-      </Field>
-
-      {!event && (
-        <Field label='Co-hosts'>
-          <CohostPicker
-            value={cohosts}
-            onChange={setCohosts}
-            exclude={session?.username}
-          />
-        </Field>
-      )}
-
-      {!event && (
-        <div className='rounded-lg border border-border-light dark:border-border-dark/60 p-4 space-y-3'>
-          <label className='flex items-center gap-2 font-inter text-sm'>
-            <input
-              type='checkbox'
-              checked={includeTier}
-              onChange={(e) => setIncludeTier(e.target.checked)}
-            />
-            Add a ticket
-          </label>
-          {includeTier && (
-            <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
-              <Input
-                name='tierName'
-                defaultValue={initial.tierName}
-                placeholder='Name'
-              />
-              <Input
+          {!event && includeTier && (
+            <div className='rounded-lg border border-border-light dark:border-border-dark/60 p-4 space-y-3'>
+              {/* Ticket tiers are temporarily hidden until ticket setup is
+              available again. Keep the form state and fields nearby so this
+              control can be restored without changing the submit payload. */}
+              {/* <label className='flex items-center gap-2 font-inter text-sm'>
+                <input
+                  type='checkbox'
+                  checked={includeTier}
+                  onChange={(e) => setIncludeTier(e.target.checked)}
+                />
+                Add a ticket
+              </label> */}
+              {includeTier && (
+                <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
+                  <Input
+                    name='tierName'
+                    defaultValue={initial.tierName}
+                    placeholder='Name'
+                  />
+                  {/* Paid ticket pricing is temporarily disabled. Keep this
+                  control in source so it can be restored with the payload. */}
+                  {/* <Input
                 name='tierPrice'
                 type='number'
                 min={0}
                 step='1'
                 defaultValue={initial.tierPrice}
                 placeholder='Price (0 = free)'
-              />
-              <Input
-                name='tierCapacity'
-                type='number'
-                min={0}
-                defaultValue={initial.tierCapacity}
-                placeholder='Seats (0 = no limit)'
-              />
+              /> */}
+                  <Input
+                    name='tierCapacity'
+                    type='number'
+                    min={0}
+                    defaultValue={initial.tierCapacity}
+                    placeholder='Seats (0 = no limit)'
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
-      )}
+      </details>
 
       <Button
         type='submit'
@@ -440,6 +780,12 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       </Button>
     </form>
   );
+}
+
+function weekdayFromLocal(value: string): string {
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return 'MO';
+  return ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'][d.getDay()];
 }
 
 function Field({

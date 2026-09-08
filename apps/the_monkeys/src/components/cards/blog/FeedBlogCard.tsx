@@ -210,7 +210,7 @@ const ListCard = ({ blog, showBookmark = false }: CardProps) => {
             <BlogCardImage
               title={title || 'Untitled Post'}
               image={image}
-              className='group-hover:scale-105 transition-transform duration-200'
+              className='h-full w-full object-cover object-center'
             />
           </Link>
         </div>

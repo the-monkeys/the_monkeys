@@ -1,11 +1,28 @@
-'use client';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { CARDS_SEO } from '@/lib/seo';
+import { studioHubGraph } from '@/lib/seoSchema';
 
-import { CardGallery } from '@/features/cards/components/CardGallery';
+import CardsPageClient from './CardsPageClient';
 
 export default function CardsPage() {
   return (
-    <div className='mx-auto w-full max-w-5xl px-4 py-8'>
-      <CardGallery />
-    </div>
+    <>
+      <JsonLd
+        data={studioHubGraph({
+          path: CARDS_SEO.path,
+          name: CARDS_SEO.title,
+          description: CARDS_SEO.description,
+          faqs: CARDS_SEO.faqs,
+          featureList: [
+            'Digital business card templates',
+            'QR code to save contact',
+            'Download PNG, JPEG, or vCard',
+            'Photo, logo, and social links',
+          ],
+        })}
+      />
+      <h1 className='hidden text-2xl font-bold'>{CARDS_SEO.title}</h1>
+      <CardsPageClient />
+    </>
   );
 }

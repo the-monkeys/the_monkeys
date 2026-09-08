@@ -12,7 +12,6 @@ import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
 
 import { generateSlug } from './blog/utils/generateSlug';
 
-// Fetch posts from the API using fetch
 async function fetchBlogPosts(): Promise<MetaBlog[]> {
   try {
     const response = await fetch(
@@ -67,6 +66,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}/events`,
       changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/groups`,
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/snapshot/new`,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/cards`,
+      changeFrequency: 'weekly',
       priority: 0.7,
     },
     {

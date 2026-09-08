@@ -7,8 +7,7 @@ import { AuthorProfileCardSkeleton } from '@/components/skeletons/profileSkeleto
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 
-import { Blogs } from './components/Blogs';
-import { ProfileEvents } from './components/ProfileEvents';
+import { ProfileActivity } from './components/ProfileActivity';
 import { ProfileSection } from './components/profile/ProfileSection';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
@@ -60,12 +59,11 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
 
       <section className='order-last max-w-4xl space-y-6 lg:order-first lg:col-span-2'>
         <BackButton />
-        <h6 className='font-dm_sans text-2xl font-bold tracking-tight sm:text-3xl'>
-          Latest from {user?.first_name}
-        </h6>
-
-        <Blogs username={params.username} user={data} />
-        <ProfileEvents username={params.username} />
+        <ProfileActivity
+          username={params.username}
+          viewer={data}
+          firstName={user?.first_name}
+        />
       </section>
     </div>
   );

@@ -154,7 +154,7 @@ const TemplateWireframe = ({ id }: { id: string }) => {
 
 export const TemplatePicker = ({ value, onChange }: TemplatePickerProps) => {
   return (
-    <div className='grid grid-cols-2 gap-2.5 w-full'>
+    <div className='grid w-full grid-cols-3 gap-2'>
       {SNAPSHOT_TEMPLATES.map((tpl) => {
         const selected = tpl.id === value;
         return (
@@ -162,35 +162,24 @@ export const TemplatePicker = ({ value, onChange }: TemplatePickerProps) => {
             key={tpl.id}
             type='button'
             onClick={() => onChange(tpl.id)}
-            className={`group flex flex-col h-[184px] items-stretch rounded-xl border bg-background overflow-hidden text-left transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 ${
+            title={`${tpl.label} · ${tpl.aspect}`}
+            className={`group flex flex-col items-center gap-1.5 rounded-lg border p-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-brand-orange/30 ${
               selected
-                ? 'border-brand-orange ring-1 ring-brand-orange/20 shadow-sm bg-brand-orange/[0.02]'
-                : 'border-border-light/60 dark:border-border-dark/60 hover:border-brand-orange/40 hover:bg-foreground-light/5 dark:hover:bg-foreground-dark/5'
+                ? 'border-brand-orange bg-brand-orange/[0.03] ring-1 ring-brand-orange/20'
+                : 'border-border-light/60 hover:border-brand-orange/40 hover:bg-foreground-light/5 dark:border-border-dark/60 dark:hover:bg-foreground-dark/5'
             }`}
           >
-            {/* Visual Preview Wireframe */}
-            <div className='h-[82px] bg-foreground-light/10 dark:bg-foreground-dark/20 flex items-center justify-center border-b border-border-light/40 dark:border-border-dark/40 shrink-0 p-2'>
+            {/* Compact wireframe thumbnail */}
+            <div className='flex h-16 w-full items-center justify-center overflow-hidden rounded-md bg-foreground-light/10 dark:bg-foreground-dark/20'>
               <TemplateWireframe id={tpl.id} />
             </div>
 
-            {/* Label and Info */}
-            <div className='p-2.5 flex flex-col justify-between flex-1 min-w-0'>
-              <div className='flex flex-col gap-0.5 min-w-0'>
-                <span
-                  className={`text-[13px] font-semibold tracking-tight truncate transition-colors ${selected ? 'text-brand-orange' : 'text-foreground'}`}
-                >
-                  {tpl.label}
-                </span>
-                <span className='text-[10px] text-foreground/50 leading-normal line-clamp-2'>
-                  {tpl.description}
-                </span>
-              </div>
-              <div className='flex items-center justify-between mt-1 text-[9px] font-medium'>
-                <span className='font-mono text-foreground/40 bg-foreground-light/40 dark:bg-foreground-dark/50 px-1 py-0 rounded border border-border-light/20 dark:border-border-dark/20 shrink-0'>
-                  {tpl.aspect}
-                </span>
-              </div>
-            </div>
+            {/* Label only — full name + dimensions available on hover/title */}
+            <span
+              className={`w-full truncate text-center text-[11px] font-medium leading-tight ${selected ? 'text-brand-orange' : 'text-foreground/80'}`}
+            >
+              {tpl.label}
+            </span>
           </button>
         );
       })}
