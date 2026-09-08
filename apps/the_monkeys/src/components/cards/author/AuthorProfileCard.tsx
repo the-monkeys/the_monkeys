@@ -72,15 +72,15 @@ export const AuthorProfileCard = ({
           </div>
 
           <div className='min-w-0 flex-1 space-y-1 mt-1'>
-            <h2 className='flex items-center gap-1.5 max-w-full break-words font-dm_sans text-[1.6rem] font-bold capitalize leading-tight tracking-tight sm:text-[1.8rem]'>
+            <h2 className='inline-flex max-w-full items-center gap-1 font-dm_sans text-[1.6rem] font-bold capitalize leading-tight tracking-tight sm:text-[1.8rem]'>
               <span>
-                {user?.first_name} {user?.last_name ? user.last_name : ''}
+                {[user?.first_name, user?.last_name].filter(Boolean).join(' ')}
               </span>
               <VerifiedBadge
                 isVerified={user?.is_verified === true}
                 showText={false}
-                size={24}
-                className='mt-[2px]'
+                size={20}
+                className='shrink-0'
               />
             </h2>
 

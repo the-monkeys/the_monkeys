@@ -53,18 +53,18 @@ export const ProfileBlogCard = ({
   return (
     <div className='pb-4 border-b-1 border-border-light/60 dark:border-border-dark/60'>
       <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
-        <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
-          <Link href={blogURL} className='group'>
+        <div className='relative shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
+          <Link href={blogURL} className='absolute inset-0'>
             {isNonValidBannerImage(imageContent) ? (
               <BlogPlaceholderImage
                 title={titleContent}
-                className='group-hover:scale-105 transition-transform duration-200'
+                className='h-full w-full object-cover object-center'
               />
             ) : (
               <BlogImage
                 title={titleContent}
                 image={imageContent}
-                className='group-hover:scale-105 transition-transform duration-200'
+                className='h-full w-full object-cover object-center'
               />
             )}
           </Link>
