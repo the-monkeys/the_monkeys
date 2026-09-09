@@ -33,7 +33,7 @@ export const BlogsByTopic = ({ topic }: { topic: string }) => {
     };
 
     fetchBlogs();
-  }, []);
+  }, [topic]);
 
   if (blogsLoading) {
     return <FeedBlogCardListSkeleton />;
