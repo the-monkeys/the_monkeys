@@ -17,6 +17,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import { useUploadEventCover } from '@/hooks/events/useEventQueries';
 import { useUserGroups } from '@/hooks/groups/useGroupQueries';
 import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
+import { useIPLocation } from '@/hooks/useIPLocation';
 import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import {
   defaultTimezone,
@@ -25,7 +26,7 @@ import {
   rsvpCloseHoursFromEvent,
   toLocalInput,
 } from '@/lib/eventTime';
-import { pinFromCoords } from '@/lib/geoSearch';
+import { geocodeAddress, pinFromCoords } from '@/lib/geoSearch';
 import {
   EventBody,
   EventItem,
@@ -104,6 +105,7 @@ function localNowInput(): string {
 
 export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const { data: session } = useAuth();
+  const ipLocation = useIPLocation();
   const myGroups = useUserGroups(
     session?.username,
     { limit: 100 },
@@ -161,6 +163,9 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [rsvpCloseHours, setRsvpCloseHours] = useState(
     rsvpCloseHoursFromEvent(event)
   );
+  const [requiresHostReview, setRequiresHostReview] = useState(
+    !!event?.requires_host_review
+  );
   const ended = isEventEnded(event);
   // Recomputed once on mount; a stale minute is harmless and the browser plus
   // the submit guard both re-validate against the real clock.
@@ -216,7 +221,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     [event]
   );
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const start = fromLocalInput(startVal);
@@ -269,11 +274,18 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         selectedTags,
         splitList(String(form.get('tags') || ''))
       ),
+      requires_host_review: requiresHostReview,
     };
 
-    if (eventType !== 'virtual' && pin) {
-      body.latitude = pin.latitude;
-      body.longitude = pin.longitude;
+    if (eventType !== 'virtual') {
+      let resolved = pin;
+      if (!resolved && body.location) {
+        resolved = await geocodeAddress(body.location, ipLocation.city);
+      }
+      if (resolved) {
+        body.latitude = resolved.latitude;
+        body.longitude = resolved.longitude;
+      }
     }
 
     // 'group_members' visibility is only valid for a group-attached event; the
@@ -481,6 +493,24 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           className='mt-2'
         />
       </Field>
+
+      {!ended && (
+        <label className='flex items-start gap-3 rounded-lg border border-border-light p-3 dark:border-border-dark/60'>
+          <input
+            type='checkbox'
+            className='mt-1'
+            checked={requiresHostReview}
+            onChange={(e) => setRequiresHostReview(e.target.checked)}
+          />
+          <span className='font-inter text-sm'>
+            <span className='block font-medium'>Approve guests</span>
+            <span className='mt-0.5 block text-xs text-gray-500'>
+              People send a public profile link. You or a co-host approve before
+              they get a seat or pay — including free meetups.
+            </span>
+          </span>
+        </label>
+      )}
 
       <details className='rounded-lg border border-border-light p-4 dark:border-border-dark/60'>
         <summary className='cursor-pointer font-inter text-sm font-medium marker:hidden [&::-webkit-details-marker]:hidden'>

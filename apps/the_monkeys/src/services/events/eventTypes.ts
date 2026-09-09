@@ -9,6 +9,7 @@ export type EventStatus =
 
 export type RsvpStatus =
   | 'pending_payment'
+  | 'pending_host_review'
   | 'confirmed'
   | 'waitlisted'
   | 'cancelled'
@@ -106,6 +107,10 @@ export type EventItem = {
   questions?: EventQuestion[];
   // Organizer-authored FAQ (optional; rendered only when present).
   faqs?: EventFaq[];
+  // When true, guests apply with a public profile URL and wait for the host
+  // or a co-host to approve before occupying a seat or paying. Works for
+  // free and paid meetups.
+  requires_host_review?: boolean;
 };
 
 export type Venue = {
@@ -172,6 +177,7 @@ export type EventBody = {
   recurrence?: Recurrence;
   rsvp_closes_at?: string;
   rsvp_close_hours_before?: number;
+  requires_host_review?: boolean;
 };
 
 export type RecurrenceFreq = 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -215,6 +221,8 @@ export type Attendee = {
   coupon_used?: string;
   checked_in?: boolean;
   created_at?: ProtoTime;
+  social_proof_url?: string;
+  review_note?: string;
 };
 
 // Host-driven attendance transitions accepted by

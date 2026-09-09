@@ -52,9 +52,12 @@ export default function NewEventPage() {
           });
         }
       }
-      toast({ title: body.recurrence ? 'Series created' : 'Draft saved' });
+      toast({
+        title: 'Draft saved',
+        description: 'It is not on Discover yet. Publish when you are ready.',
+      });
       await invalidateAfterEventWrite(getQueryClient(), slug);
-      router.push(slug ? `${EVENTS_ROUTE}/${slug}` : EVENTS_ROUTE);
+      router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
     } catch (err) {
       toast({ title: 'Could not create event', description: eventError(err) });
     } finally {
@@ -71,7 +74,8 @@ export default function NewEventPage() {
         Create event
       </h1>
       <p className='mb-6 mt-2 font-inter text-sm text-text-light/70 dark:text-text-dark/70'>
-        Share the essentials now. You can add the details when you are ready.
+        Share the essentials. This stays a draft until you publish — people will
+        not find it on Discover yet.
       </p>
       <EventForm submitLabel='Save draft' saving={saving} onSubmit={onSubmit} />
     </main>

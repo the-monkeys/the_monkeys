@@ -182,6 +182,7 @@ export const rsvpEvent = (
     ticket_tier_id: number;
     coupon_code?: string;
     scope?: 'this' | 'series';
+    social_proof_url?: string;
   }
 ) =>
   axiosInstance
@@ -191,6 +192,18 @@ export const rsvpEvent = (
 export const cancelRsvp = (slug: string) =>
   axiosInstance
     .delete(`${root}/${encodeURIComponent(slug)}/rsvp`)
+    .then((r) => r.data);
+
+export const reviewRsvp = (
+  slug: string,
+  attendeeId: number,
+  body: { decision: 'approve' | 'reject'; note?: string }
+) =>
+  axiosInstance
+    .post<RsvpResp>(
+      `${root}/${encodeURIComponent(slug)}/attendees/${attendeeId}/review`,
+      body
+    )
     .then((r) => r.data);
 
 // Host marks an attendee checked in / registered / no-show / not-coming.

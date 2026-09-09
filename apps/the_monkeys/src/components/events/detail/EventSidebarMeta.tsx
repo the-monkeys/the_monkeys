@@ -10,10 +10,16 @@ import { EventItem } from '@/services/events/eventTypes';
 
 /**
  * Sticky right-rail metadata: date/time card, venue card and an optional
- * community-chat quick-join callout. Purely informational — RSVP lives in the
- * RsvpPanel so payment logic is never duplicated.
+ * community-chat quick-join callout. The meeting link is only for the host
+ * or a confirmed guest — pending applicants must not see it.
  */
-export function EventSidebarMeta({ event }: { event: EventItem }) {
+export function EventSidebarMeta({
+  event,
+  canJoinMeeting,
+}: {
+  event: EventItem;
+  canJoinMeeting?: boolean;
+}) {
   const parts = eventDateParts(event.start_time, event.timezone);
   const address = formatVenueAddress(event.venue);
   const locationLabel = eventLocationLabel(event);
@@ -86,7 +92,7 @@ export function EventSidebarMeta({ event }: { event: EventItem }) {
       )}
 
       {/* Community chat callout */}
-      {event.meeting_link && (
+      {canJoinMeeting && event.meeting_link && (
         <a
           href={event.meeting_link}
           target='_blank'

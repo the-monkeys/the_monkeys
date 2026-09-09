@@ -33,6 +33,7 @@ import {
   isHost,
 } from '@/lib/eventTime';
 import { getShareMeta } from '@/services/events/eventsApi';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 export default function EventDetailClient({ slug }: { slug: string }) {
   const { data: session } = useAuth();
@@ -82,7 +83,7 @@ export default function EventDetailClient({ slug }: { slug: string }) {
   return (
     <>
       {/* Extra bottom padding leaves room for the fixed registration bar. */}
-      <div className='mx-auto max-w-5xl pb-28'>
+      <div className='mx-auto max-w-5xl px-4 pb-36 sm:px-6 lg:pb-28'>
         <div className='mb-4'>
           <BackButton href={EVENTS_ROUTE} />
         </div>
@@ -109,7 +110,22 @@ export default function EventDetailClient({ slug }: { slug: string }) {
               {event.status !== 'published'
                 ? ` · ${eventStatusLabel(event.status)}`
                 : ''}
+              {event.requires_host_review ? ' · Host approval' : ''}
             </p>
+
+            {host && event.status === 'draft' && (
+              <div className='mt-4 flex flex-col gap-3 rounded-lg border border-brand-orange/40 bg-brand-orange/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between'>
+                <p className='font-inter text-sm'>
+                  This meetup is a draft. People cannot find it on Discover
+                  until you publish.
+                </p>
+                <Button asChild variant='brand' size='sm' className='shrink-0'>
+                  <Link href={`${EVENTS_ROUTE}/${event.slug}/manage`}>
+                    Publish
+                  </Link>
+                </Button>
+              </div>
+            )}
 
             {/* Fluid title scales smoothly across viewports via clamp(). */}
             <h1
@@ -213,8 +229,8 @@ export default function EventDetailClient({ slug }: { slug: string }) {
             </div>
           </article>
 
-          <aside className='hidden lg:block'>
-            <div className='sticky top-24 space-y-6'>
+          <aside className='hidden min-w-0 lg:block'>
+            <div className='sticky top-24 min-w-0 space-y-6'>
               <div data-rsvp-anchor className='scroll-mt-24'>
                 {host ? (
                   <EventHostPanel event={event} />
@@ -226,7 +242,12 @@ export default function EventDetailClient({ slug }: { slug: string }) {
                   />
                 )}
               </div>
-              <EventSidebarMeta event={event} />
+              <EventSidebarMeta
+                event={event}
+                canJoinMeeting={
+                  host || data?.viewer_rsvp_status === 'confirmed'
+                }
+              />
             </div>
           </aside>
         </div>

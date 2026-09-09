@@ -28,14 +28,17 @@ export default function EventsPageClient() {
   const filters: ListFilters = useMemo(() => ({ limit: 30, offset: 0 }), []);
 
   const going = useAttendingEvents(filters, tab === 'going' && !!session);
-  const hosting = useUserEvents(
-    session?.username,
-    filters,
-    tab === 'hosting' && !!session
-  );
+  const hosting = useUserEvents(session?.username, filters, !!session);
+  const hostedEvents = hosting.data?.events || [];
+  const draftCount = hostedEvents.filter((e) => e.status === 'draft').length;
+  const sortedHosted = [...hostedEvents].sort((a, b) => {
+    if (a.status === 'draft' && b.status !== 'draft') return -1;
+    if (a.status !== 'draft' && b.status === 'draft') return 1;
+    return 0;
+  });
 
   const active = tab === 'hosting' ? hosting : going;
-  const events = active.data?.events || [];
+  const events = tab === 'hosting' ? sortedHosted : going.data?.events || [];
 
   return (
     <div className='mx-auto max-w-6xl'>
@@ -65,11 +68,33 @@ export default function EventsPageClient() {
             }`}
           >
             {label}
+            {id === 'hosting' && draftCount > 0 ? ` (${draftCount})` : ''}
           </button>
         ))}
       </div>
 
-      {tab === 'discover' && <EventsDiscover signedIn={!!session} />}
+      {tab === 'discover' && (
+        <>
+          {session && draftCount > 0 && (
+            <div className='mb-6 flex flex-col gap-2 rounded-lg border border-brand-orange/40 bg-brand-orange/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between'>
+              <p className='font-inter text-sm'>
+                You have {draftCount} unpublished{' '}
+                {draftCount === 1 ? 'meetup' : 'meetups'}. They are not on
+                Discover until you publish.
+              </p>
+              <Button
+                type='button'
+                variant='brand'
+                size='sm'
+                onClick={() => setTab('hosting')}
+              >
+                View drafts
+              </Button>
+            </div>
+          )}
+          <EventsDiscover signedIn={!!session} />
+        </>
+      )}
 
       {tab === 'groups' && (
         <CommunityGroups signedIn={!!session} username={session?.username} />
@@ -85,6 +110,12 @@ export default function EventsPageClient() {
               <h1 className='mt-1 font-newsreader text-3xl font-bold sm:text-4xl'>
                 {tab === 'going' ? 'Going' : 'Hosting'}
               </h1>
+              {tab === 'hosting' && (
+                <p className='mt-1 font-inter text-sm text-gray-500'>
+                  Drafts stay private until you publish. Then they show on
+                  Discover.
+                </p>
+              )}
             </div>
             <Button asChild variant='brand'>
               <Link href={session ? `${EVENTS_ROUTE}/new` : LOGIN_ROUTE}>

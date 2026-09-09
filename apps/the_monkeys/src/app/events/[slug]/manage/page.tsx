@@ -44,8 +44,12 @@ export default function ManageEventPage({
       <div className='mb-4'>
         <BackButton href={`${EVENTS_ROUTE}/${event.slug}`} />
       </div>
-      <p className='font-inter text-xs uppercase tracking-[0.18em] text-gray-500 mb-1'>
-        {event.status}
+      <p
+        className={`font-inter text-xs uppercase tracking-[0.18em] mb-1 ${
+          event.status === 'draft' ? 'text-brand-orange' : 'text-gray-500'
+        }`}
+      >
+        {event.status === 'draft' ? 'Draft · not on Discover' : event.status}
       </p>
       <h1 className='font-newsreader font-bold text-3xl md:text-4xl mb-8'>
         {event.title}

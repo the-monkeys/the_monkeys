@@ -4,11 +4,14 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
+import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
 import { loginHref } from '@/lib/authRedirect';
 import { formatPrice, isEventEnded, isRsvpClosed } from '@/lib/eventTime';
 import { openRazorpay } from '@/lib/razorpayCheckout';
+import { hasOpenRsvp, rsvpStatusCopy } from '@/lib/rsvpStatus';
+import { socialProofUrlError } from '@/lib/socialProofUrl';
 import {
   EventItem,
   RsvpStatus,
@@ -45,25 +48,37 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
   const [discount, setDiscount] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [allUpcoming, setAllUpcoming] = useState(false);
+  const [profileUrl, setProfileUrl] = useState('');
+  const [confirmLeave, setConfirmLeave] = useState(false);
 
   const selected = tiers.find((t) => t.id === tierId) || tiers[0];
   const closed = isEventEnded(event);
   const rsvpClosed = isRsvpClosed(event);
-  const going =
-    viewerStatus === 'confirmed' ||
-    viewerStatus === 'waitlisted' ||
-    viewerStatus === 'pending_payment';
+  const going = hasOpenRsvp(viewerStatus);
+  const needsReview = !!event.requires_host_review;
+  const waiting = viewerStatus === 'pending_host_review';
+  const needsPay = viewerStatus === 'pending_payment';
   const selectedFree = !!selected && !(selected.price > 0);
-  const canRsvpSeries = !!event.series_id && selectedFree && !going;
+  const canRsvpSeries =
+    !!event.series_id && selectedFree && !going && !needsReview;
 
   const onRsvp = async () => {
     if (!selected) return;
+    if (needsReview && !waiting && !needsPay) {
+      const urlErr = socialProofUrlError(profileUrl);
+      if (urlErr) {
+        toast({ title: 'Profile link needed', description: urlErr });
+        return;
+      }
+    }
     setBusy(true);
     try {
       const res = await rsvpEvent(event.slug, {
         ticket_tier_id: selected.id,
         coupon_code: code.trim() || undefined,
         scope: canRsvpSeries && allUpcoming ? 'series' : undefined,
+        social_proof_url:
+          needsReview && !needsPay ? profileUrl.trim() : undefined,
       });
 
       if (
@@ -89,7 +104,7 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
       } else {
         toast({
           title: res.message || 'Saved',
-          description: statusCopy(res.status),
+          description: rsvpStatusCopy(res.status),
         });
       }
       refresh();
@@ -104,7 +119,13 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
     setBusy(true);
     try {
       await cancelRsvp(event.slug);
-      toast({ title: 'RSVP cancelled' });
+      setConfirmLeave(false);
+      toast({
+        title: waiting ? 'Application withdrawn' : 'RSVP cancelled',
+        description: waiting
+          ? 'The host will not see this request.'
+          : 'Your spot was released.',
+      });
       refresh();
     } catch (err) {
       toast({ title: 'Could not cancel', description: eventError(err) });
@@ -147,17 +168,51 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
     );
   }
 
+  if (waiting) {
+    return (
+      <aside className='min-w-0 overflow-hidden rounded-lg border border-border-light dark:border-border-dark/60 p-4 sm:p-5 space-y-4'>
+        <h2 className='font-dm_sans font-semibold text-lg'>Tickets</h2>
+        <PendingApplication
+          tier={selected}
+          busy={busy}
+          confirmLeave={confirmLeave}
+          onAskLeave={() => setConfirmLeave(true)}
+          onKeep={() => setConfirmLeave(false)}
+          onWithdraw={onCancel}
+        />
+      </aside>
+    );
+  }
+
+  if (viewerStatus === 'confirmed') {
+    return (
+      <aside className='min-w-0 overflow-hidden rounded-lg border border-border-light dark:border-border-dark/60 p-4 sm:p-5 space-y-4'>
+        <h2 className='font-dm_sans font-semibold text-lg'>Tickets</h2>
+        <ConfirmedSpot
+          event={event}
+          tier={selected}
+          busy={busy}
+          confirmLeave={confirmLeave}
+          onAskLeave={() => setConfirmLeave(true)}
+          onKeep={() => setConfirmLeave(false)}
+          onCancel={onCancel}
+        />
+      </aside>
+    );
+  }
+
   return (
-    <aside className='rounded-lg border border-border-light dark:border-border-dark/60 p-5 space-y-4'>
+    <aside className='min-w-0 overflow-hidden rounded-lg border border-border-light dark:border-border-dark/60 p-4 sm:p-5 space-y-4'>
       <h2 className='font-dm_sans font-semibold text-lg'>Tickets</h2>
 
       {going && (
         <p className='font-inter text-sm text-brand-orange'>
-          Your status: {viewerStatus?.replace('_', ' ')}
+          {rsvpStatusCopy(viewerStatus) ||
+            `Your status: ${viewerStatus?.replace(/_/g, ' ')}`}
         </p>
       )}
 
-      {event.meeting_link && (
+      {event.meeting_link && viewerStatus === 'confirmed' && (
         <a
           href={event.meeting_link}
           target='_blank'
@@ -217,13 +272,18 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
       )}
 
       {selected && selected.price > 0 && (
-        <div className='flex gap-2'>
+        <div className='flex min-w-0 flex-col gap-2'>
           <Input
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder='Coupon code'
           />
-          <Button type='button' variant='outline' onClick={onCheckCoupon}>
+          <Button
+            type='button'
+            variant='outline'
+            className='min-h-11 sm:w-auto'
+            onClick={onCheckCoupon}
+          >
             Apply
           </Button>
         </div>
@@ -245,52 +305,292 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
           <span>RSVP all upcoming in this series</span>
         </label>
       )}
-      {!!event.series_id && selected && selected.price > 0 && !going && (
-        <p className='font-inter text-sm text-gray-500'>
-          RSVP each date separately for paid meetups.
-        </p>
+      {needsReview && !going && (
+        <div className='space-y-1.5'>
+          <p className='font-inter text-sm text-gray-500'>
+            The host reviews guests. Share a public profile link (LinkedIn,
+            Instagram, GitHub, or your site).
+          </p>
+          <Input
+            type='url'
+            value={profileUrl}
+            onChange={(e) => setProfileUrl(e.target.value)}
+            placeholder='https://'
+            required
+          />
+        </div>
       )}
 
+      {!!event.series_id && needsReview && !going && (
+        <p className='font-inter text-sm text-gray-500'>
+          Apply to each date separately when the host reviews guests.
+        </p>
+      )}
+      {!!event.series_id &&
+        selected &&
+        selected.price > 0 &&
+        !going &&
+        !needsReview && (
+          <p className='font-inter text-sm text-gray-500'>
+            RSVP each date separately for paid meetups.
+          </p>
+        )}
+
       {!session ? (
-        <Button asChild variant='brand' className='w-full'>
+        <Button asChild variant='brand' className='w-full min-h-11'>
           <Link href={loginHref(`${EVENTS_ROUTE}/${event.slug}`)}>
             Log in to RSVP
           </Link>
         </Button>
-      ) : going ? (
-        <Button
-          variant='outline'
-          className='w-full'
-          disabled={busy}
-          onClick={onCancel}
-        >
-          {busy ? 'Please wait…' : 'Cancel my RSVP'}
-        </Button>
       ) : (
-        <Button
-          variant='brand'
-          className='w-full'
-          disabled={busy || !selected}
-          onClick={onRsvp}
-        >
-          {busy
-            ? 'Please wait…'
-            : selected && selected.price > 0
-              ? 'Get ticket'
-              : allUpcoming && canRsvpSeries
-                ? 'RSVP all upcoming'
-                : 'RSVP'}
-        </Button>
+        <div className='space-y-2'>
+          {needsPay && (
+            <Button
+              variant='brand'
+              className='w-full min-h-11'
+              disabled={busy || !selected}
+              onClick={onRsvp}
+            >
+              {busy ? 'Please wait…' : 'Complete payment'}
+            </Button>
+          )}
+          {going ? (
+            <LeaveSpotControls
+              busy={busy}
+              confirmLeave={confirmLeave}
+              askLabel='Cancel my RSVP'
+              keepLabel='Keep my spot'
+              confirmLabel='Yes, cancel'
+              title='Cancel your RSVP?'
+              body='Are you sure you do not want to attend? Your spot will be released. You can RSVP again later if seats remain.'
+              onAsk={() => setConfirmLeave(true)}
+              onKeep={() => setConfirmLeave(false)}
+              onConfirm={onCancel}
+            />
+          ) : (
+            <Button
+              variant='brand'
+              className='w-full min-h-11'
+              disabled={busy || !selected}
+              onClick={onRsvp}
+            >
+              {busy
+                ? 'Please wait…'
+                : needsReview
+                  ? 'Apply to join'
+                  : selected && selected.price > 0
+                    ? 'Get ticket'
+                    : allUpcoming && canRsvpSeries
+                      ? 'RSVP all upcoming'
+                      : 'RSVP'}
+            </Button>
+          )}
+        </div>
       )}
     </aside>
   );
 }
 
-function statusCopy(status?: string) {
-  if (status === 'waitlisted')
-    return 'The event is full. You are on the waitlist.';
-  if (status === 'confirmed') return 'You are in.';
-  if (status === 'pending_payment')
-    return 'Finish payment to confirm your seat.';
-  return '';
+function TicketSummary({ tier, note }: { tier?: TicketTier; note: string }) {
+  if (!tier) return null;
+  return (
+    <div className='flex items-start gap-3 rounded-lg border border-border-light dark:border-border-dark/50 p-3 sm:p-4'>
+      <Icon
+        name='RiCoupon3'
+        size={20}
+        className='mt-0.5 shrink-0 text-gray-500'
+      />
+      <div className='min-w-0 flex-1'>
+        <div className='flex items-start justify-between gap-3'>
+          <p className='break-words font-dm_sans font-medium'>{tier.name}</p>
+          <p className='shrink-0 font-inter text-sm'>
+            {formatPrice(tier.price, tier.currency)}
+          </p>
+        </div>
+        <p className='mt-1 font-inter text-sm text-gray-500'>{note}</p>
+      </div>
+    </div>
+  );
+}
+
+function LeaveSpotControls({
+  busy,
+  confirmLeave,
+  askLabel,
+  keepLabel,
+  confirmLabel,
+  title,
+  body,
+  onAsk,
+  onKeep,
+  onConfirm,
+}: {
+  busy: boolean;
+  confirmLeave: boolean;
+  askLabel: string;
+  keepLabel: string;
+  confirmLabel: string;
+  title: string;
+  body: string;
+  onAsk: () => void;
+  onKeep: () => void;
+  onConfirm: () => void;
+}) {
+  if (!confirmLeave) {
+    return (
+      <Button
+        variant='outline'
+        className='h-auto min-h-11 w-full gap-2 border-red-300 px-3 py-2.5 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/60 dark:text-red-400 dark:hover:bg-red-950/40'
+        disabled={busy}
+        onClick={onAsk}
+      >
+        <Icon name='RiClose' size={16} className='shrink-0' />
+        {busy ? 'Please wait…' : askLabel}
+      </Button>
+    );
+  }
+
+  return (
+    <div className='min-w-0 space-y-3 rounded-lg border border-red-200 bg-red-50/70 px-3 py-3 dark:border-red-900/50 dark:bg-red-950/30'>
+      <div className='min-w-0'>
+        <p className='font-dm_sans font-medium'>{title}</p>
+        <p className='mt-1 font-inter text-sm leading-5 text-gray-600 dark:text-gray-400'>
+          {body}
+        </p>
+      </div>
+      <div className='flex min-w-0 flex-col gap-2'>
+        <Button
+          variant='brand'
+          className='h-auto min-h-11 w-full min-w-0 whitespace-normal px-3 py-2.5 text-center'
+          disabled={busy}
+          onClick={onKeep}
+        >
+          {keepLabel}
+        </Button>
+        <Button
+          variant='outline'
+          className='h-auto min-h-11 w-full min-w-0 whitespace-normal px-3 py-2.5 text-center border-red-300 text-red-600 hover:bg-red-50 dark:border-red-900/60 dark:text-red-400'
+          disabled={busy}
+          onClick={onConfirm}
+        >
+          {busy ? 'Please wait…' : confirmLabel}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+function PendingApplication({
+  tier,
+  busy,
+  confirmLeave,
+  onAskLeave,
+  onKeep,
+  onWithdraw,
+}: {
+  tier?: TicketTier;
+  busy: boolean;
+  confirmLeave: boolean;
+  onAskLeave: () => void;
+  onKeep: () => void;
+  onWithdraw: () => void;
+}) {
+  return (
+    <div className='space-y-3'>
+      <div className='flex gap-3 rounded-lg border border-brand-orange/25 bg-brand-orange/5 px-3 py-3 sm:px-4 sm:py-4'>
+        <Icon
+          name='RiTime'
+          size={20}
+          className='mt-0.5 shrink-0 text-brand-orange'
+        />
+        <div className='min-w-0'>
+          <p className='font-dm_sans font-medium'>Application pending</p>
+          <p className='mt-1 font-inter text-sm leading-5 text-gray-600 dark:text-gray-400'>
+            The host is reviewing your application. You&apos;ll be notified once
+            a decision is made.
+          </p>
+        </div>
+      </div>
+
+      <TicketSummary tier={tier} note='Your application has been submitted.' />
+
+      <LeaveSpotControls
+        busy={busy}
+        confirmLeave={confirmLeave}
+        askLabel='Withdraw application'
+        keepLabel='Keep application'
+        confirmLabel='Yes, withdraw'
+        title='Withdraw your application?'
+        body='The host will not see this request. You can apply again later if RSVPs are still open.'
+        onAsk={onAskLeave}
+        onKeep={onKeep}
+        onConfirm={onWithdraw}
+      />
+    </div>
+  );
+}
+
+function ConfirmedSpot({
+  event,
+  tier,
+  busy,
+  confirmLeave,
+  onAskLeave,
+  onKeep,
+  onCancel,
+}: {
+  event: EventItem;
+  tier?: TicketTier;
+  busy: boolean;
+  confirmLeave: boolean;
+  onAskLeave: () => void;
+  onKeep: () => void;
+  onCancel: () => void;
+}) {
+  return (
+    <div className='space-y-3'>
+      <div className='flex gap-3 rounded-lg border border-emerald-600/25 bg-emerald-600/10 px-3 py-3 sm:px-4 sm:py-4'>
+        <Icon
+          name='RiCheck'
+          type='Fill'
+          size={20}
+          className='mt-0.5 shrink-0 text-emerald-700 dark:text-emerald-400'
+        />
+        <div className='min-w-0'>
+          <p className='font-dm_sans font-medium text-emerald-800 dark:text-emerald-300'>
+            You&apos;re going
+          </p>
+          <p className='mt-1 font-inter text-sm leading-5 text-gray-600 dark:text-gray-400'>
+            Your spot is confirmed. We&apos;ll see you there.
+          </p>
+        </div>
+      </div>
+
+      {event.meeting_link && (
+        <a
+          href={event.meeting_link}
+          target='_blank'
+          rel='noreferrer'
+          className='block font-inter text-sm text-brand-orange hover:underline break-all'
+        >
+          Join meeting
+        </a>
+      )}
+
+      <TicketSummary tier={tier} note='This is your ticket for the meetup.' />
+
+      <LeaveSpotControls
+        busy={busy}
+        confirmLeave={confirmLeave}
+        askLabel='Cancel my RSVP'
+        keepLabel='Keep my spot'
+        confirmLabel='Yes, cancel'
+        title='Cancel your RSVP?'
+        body='Are you sure you do not want to attend? Your spot will be released. You can RSVP again later if seats remain.'
+        onAsk={onAskLeave}
+        onKeep={onKeep}
+        onConfirm={onCancel}
+      />
+    </div>
+  );
 }
