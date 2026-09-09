@@ -11,13 +11,15 @@ import { UserRecommendationCardSkeleton } from '@/components/skeletons/userSkele
 import { SEARCH_USERS_PER_PAGE } from '@/constants/posts';
 import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
 import { usePagination } from '@/hooks/user/usePagination';
+import { formatPersonName } from '@/lib/personName';
 import { SearchUserV2 } from '@/services/search/searchTypes';
 
 const SearchUserCard = ({ user }: { user: SearchUserV2 }) => {
-  const displayName = [user.first_name, user.last_name]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+  const displayName = formatPersonName(
+    user.first_name,
+    user.last_name,
+    user.username
+  );
 
   return (
     <div className='p-2 flex gap-3 items-start overflow-hidden'>

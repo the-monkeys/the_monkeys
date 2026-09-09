@@ -26,6 +26,7 @@ import {
   toLocalInput,
 } from '@/lib/eventTime';
 import { pinFromCoords } from '@/lib/geoSearch';
+import { formatPersonName } from '@/lib/personName';
 import {
   EventBody,
   EventItem,
@@ -995,29 +996,35 @@ function CohostPicker({
               </p>
             ) : (
               <ul className='max-h-64 overflow-y-auto'>
-                {results.map((u) => (
-                  <li key={u.account_id}>
-                    <button
-                      type='button'
-                      onClick={() => add(u.username)}
-                      className='flex min-h-[44px] w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800'
-                    >
-                      <ProfileFrame className='h-8 w-8'>
-                        <ProfileImage username={u.username} />
-                      </ProfileFrame>
-                      <span className='min-w-0'>
-                        <span className='block truncate font-dm_sans text-sm font-medium'>
-                          @{u.username}
-                        </span>
-                        {(u.first_name || u.last_name) && (
-                          <span className='block truncate font-inter text-xs text-gray-500'>
-                            {`${u.first_name} ${u.last_name}`.trim()}
+                {results.map((u) => {
+                  const personName = formatPersonName(
+                    u.first_name,
+                    u.last_name
+                  );
+                  return (
+                    <li key={u.account_id}>
+                      <button
+                        type='button'
+                        onClick={() => add(u.username)}
+                        className='flex min-h-[44px] w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800'
+                      >
+                        <ProfileFrame className='h-8 w-8'>
+                          <ProfileImage username={u.username} />
+                        </ProfileFrame>
+                        <span className='min-w-0'>
+                          <span className='block truncate font-dm_sans text-sm font-medium'>
+                            @{u.username}
                           </span>
-                        )}
-                      </span>
-                    </button>
-                  </li>
-                ))}
+                          {personName ? (
+                            <span className='block truncate font-inter text-xs text-gray-500'>
+                              {personName}
+                            </span>
+                          ) : null}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>

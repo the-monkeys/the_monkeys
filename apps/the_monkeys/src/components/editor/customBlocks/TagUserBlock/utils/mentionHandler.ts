@@ -1,3 +1,4 @@
+import { formatPersonName } from '@/lib/personName';
 import { fetcherV2 } from '@/services/fetcher';
 
 import '../style.css';
@@ -166,10 +167,11 @@ export default class MentionHandler {
 
         return {
           ...user,
-          full_name: [user.first_name, user.last_name]
-            .filter(Boolean)
-            .join(' ')
-            .trim(),
+          full_name: formatPersonName(
+            user.first_name,
+            user.last_name,
+            user.username
+          ),
           avatar_url: finalAvatarUrl,
         };
       })

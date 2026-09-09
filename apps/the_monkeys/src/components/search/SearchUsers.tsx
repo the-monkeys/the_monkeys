@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
+import { formatPersonName } from '@/lib/personName';
 import { SearchUserV2 } from '@/services/search/searchTypes';
 
 import ProfileImage, { ProfileFrame } from '../profileImage';
@@ -15,10 +16,11 @@ const SearchUserCard = ({
   user: SearchUserV2;
   onClose?: () => void;
 }) => {
-  const displayName = [user.first_name, user.last_name]
-    .filter(Boolean)
-    .join(' ')
-    .trim();
+  const displayName = formatPersonName(
+    user.first_name,
+    user.last_name,
+    user.username
+  );
 
   return (
     <div className='p-1 flex gap-2 items-center overflow-hidden'>

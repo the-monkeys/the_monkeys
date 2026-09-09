@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Container from '@/components/layout/Container';
 import { API_URL, LIVE_URL } from '@/constants/api';
 import { baseUrl } from '@/constants/baseUrl';
+import { formatPersonName } from '@/lib/personName';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 
 interface ProfileLayoutProps {
@@ -89,7 +90,11 @@ export async function generateMetadata({
         // Ignore errors, we'll just use the fallback placeholder
       }
     }
-    const fullName = `${userData.first_name} ${userData.last_name ?? ''}`;
+    const fullName = formatPersonName(
+      userData.first_name,
+      userData.last_name,
+      username
+    );
     const description =
       userData.bio ||
       `${fullName}'s profile on Monkeys. ${
