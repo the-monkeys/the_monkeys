@@ -212,17 +212,6 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
         </p>
       )}
 
-      {event.meeting_link && viewerStatus === 'confirmed' && (
-        <a
-          href={event.meeting_link}
-          target='_blank'
-          rel='noreferrer'
-          className='block font-inter text-sm text-brand-orange hover:underline break-all'
-        >
-          Join meeting
-        </a>
-      )}
-
       {tiers.length === 0 ? (
         <p className='font-inter text-sm text-gray-500'>
           Tickets will show when this event is published.
