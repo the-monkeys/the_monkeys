@@ -6,6 +6,7 @@ import {
   defaultRadiusStepIndex,
   geoRadiusSteps,
   geocodeAddress,
+  geocodeQueryFallbacks,
   nearMeQuery,
 } from '@/lib/geoSearch';
 import { describe, expect, it } from 'vitest';
@@ -64,6 +65,19 @@ describe('nearMeQuery', () => {
       user_lng: 77.59,
       radius: 100,
     });
+  });
+});
+
+describe('geocodeQueryFallbacks', () => {
+  it('tries venue plus locality before the raw address', () => {
+    const got = geocodeQueryFallbacks(
+      'Ecospace Tech Park, Bellandur',
+      'Bengaluru'
+    );
+    expect(got[0]).toBe('Ecospace Bellandur');
+    expect(got).toContain('Ecospace Bellandur, Bengaluru');
+    expect(got).toContain('Bellandur');
+    expect(got).toContain('Ecospace Tech Park, Bellandur');
   });
 });
 

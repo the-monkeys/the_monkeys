@@ -12,7 +12,11 @@ import {
 } from '@/hooks/events/useEventQueries';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
 import { formatPrice, isOrganizer } from '@/lib/eventTime';
-import { EventItem, TicketTierInput } from '@/services/events/eventTypes';
+import {
+  Attendee,
+  EventItem,
+  TicketTierInput,
+} from '@/services/events/eventTypes';
 import {
   addCoHost,
   cancelEvent,
@@ -25,6 +29,7 @@ import {
   exportAttendeesCsv,
   publishEvent,
   removeCoHost,
+  reviewRsvp,
   updateAttendance,
   updateTier,
 } from '@/services/events/eventsApi';
@@ -112,6 +117,7 @@ export function EventManage({
         slug={event.slug}
         attendees={attendeesQ.data?.attendees || []}
         total={attendeesQ.data?.total || 0}
+        requiresHostReview={!!event.requires_host_review}
         onChange={refresh}
       />
     </div>
@@ -407,22 +413,20 @@ function AttendeesBlock({
   slug,
   attendees,
   total,
+  requiresHostReview,
   onChange,
 }: {
   slug: string;
-  attendees: {
-    id: number;
-    user_name?: string;
-    user_email?: string;
-    ticket_tier_name?: string;
-    status?: string;
-    checked_in?: boolean;
-  }[];
+  attendees: Attendee[];
   total: number;
+  requiresHostReview?: boolean;
   onChange: () => void;
 }) {
   const { toast } = useToast();
   const [busyId, setBusyId] = useState<number | null>(null);
+  const [notes, setNotes] = useState<Record<number, string>>({});
+  const pending = attendees.filter((a) => a.status === 'pending_host_review');
+  const rest = attendees.filter((a) => a.status !== 'pending_host_review');
   const checkedInCount = attendees.filter((a) => a.checked_in).length;
 
   const setCheckedIn = async (id: number, checkedIn: boolean) => {
@@ -440,64 +444,162 @@ function AttendeesBlock({
     }
   };
 
+  const decide = async (id: number, decision: 'approve' | 'reject') => {
+    setBusyId(id);
+    try {
+      const res = await reviewRsvp(slug, id, {
+        decision,
+        note: decision === 'reject' ? notes[id]?.trim() : undefined,
+      });
+      toast({
+        title:
+          decision === 'approve' ? 'Guest approved' : 'Application declined',
+        description: res.message,
+      });
+      onChange();
+    } catch (err) {
+      toast({ title: 'Could not review', description: eventError(err) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
   return (
-    <section className='space-y-3'>
-      <div className='flex items-center justify-between'>
-        <h2 className='font-dm_sans font-semibold text-xl'>
-          People ({total})
-          {checkedInCount > 0 && (
-            <span className='ml-2 text-sm font-normal text-gray-500'>
-              {checkedInCount} checked in
-            </span>
+    <section className='space-y-6'>
+      {(pending.length > 0 || requiresHostReview) && (
+        <div className='space-y-3'>
+          <h2 className='font-dm_sans font-semibold text-xl'>
+            Applications ({pending.length})
+          </h2>
+          <p className='font-inter text-sm text-gray-500'>
+            Approve to confirm a free seat, or to let a paid guest check out.
+            Pending people do not hold a spot.
+          </p>
+          {pending.length === 0 ? (
+            <p className='font-inter text-sm text-gray-500'>
+              No applications waiting.
+            </p>
+          ) : (
+            <ul className='space-y-3'>
+              {pending.map((a) => (
+                <li
+                  key={a.id}
+                  className='rounded-lg border border-border-light p-3 space-y-2 dark:border-border-dark/60'
+                >
+                  <div className='flex flex-wrap items-start justify-between gap-2'>
+                    <div>
+                      <p className='font-dm_sans font-medium'>@{a.user_name}</p>
+                      <p className='text-xs text-gray-500'>{a.user_email}</p>
+                      {a.ticket_tier_name && (
+                        <p className='text-xs text-gray-500'>
+                          {a.ticket_tier_name}
+                        </p>
+                      )}
+                    </div>
+                    {a.social_proof_url && (
+                      <a
+                        href={a.social_proof_url}
+                        target='_blank'
+                        rel='noreferrer'
+                        className='font-inter text-sm text-brand-orange hover:underline break-all'
+                      >
+                        View profile
+                      </a>
+                    )}
+                  </div>
+                  <Input
+                    value={notes[a.id] || ''}
+                    onChange={(e) =>
+                      setNotes((prev) => ({ ...prev, [a.id]: e.target.value }))
+                    }
+                    placeholder='Optional note if you decline'
+                  />
+                  <div className='flex flex-wrap gap-2'>
+                    <Button
+                      size='sm'
+                      variant='brand'
+                      disabled={busyId === a.id}
+                      onClick={() => decide(a.id, 'approve')}
+                    >
+                      Approve
+                    </Button>
+                    <Button
+                      size='sm'
+                      variant='outline'
+                      disabled={busyId === a.id}
+                      onClick={() => decide(a.id, 'reject')}
+                    >
+                      Decline
+                    </Button>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
-        </h2>
-        <Button
-          size='sm'
-          variant='outline'
-          onClick={() =>
-            exportAttendeesCsv(slug).catch((err) =>
-              toast({ title: 'Could not export', description: eventError(err) })
-            )
-          }
-        >
-          Export CSV
-        </Button>
-      </div>
-      <div className='overflow-x-auto'>
-        <table className='w-full text-sm font-inter'>
-          <thead>
-            <tr className='text-left text-gray-500'>
-              <th className='py-2 pr-3'>User</th>
-              <th className='py-2 pr-3'>Email</th>
-              <th className='py-2 pr-3'>Ticket</th>
-              <th className='py-2 pr-3'>Status</th>
-              <th className='py-2 text-right'>Check-in</th>
-            </tr>
-          </thead>
-          <tbody>
-            {attendees.map((a) => (
-              <tr
-                key={a.id}
-                className='border-t border-border-light/60 dark:border-border-dark/40'
-              >
-                <td className='py-2 pr-3'>@{a.user_name}</td>
-                <td className='py-2 pr-3'>{a.user_email}</td>
-                <td className='py-2 pr-3'>{a.ticket_tier_name}</td>
-                <td className='py-2 pr-3'>{a.status}</td>
-                <td className='py-2 text-right'>
-                  <Button
-                    size='sm'
-                    variant={a.checked_in ? 'constructive' : 'outline'}
-                    disabled={busyId === a.id}
-                    onClick={() => setCheckedIn(a.id, !a.checked_in)}
-                  >
-                    {a.checked_in ? 'Checked in' : 'Check in'}
-                  </Button>
-                </td>
+        </div>
+      )}
+
+      <div className='space-y-3'>
+        <div className='flex items-center justify-between'>
+          <h2 className='font-dm_sans font-semibold text-xl'>
+            People ({total})
+            {checkedInCount > 0 && (
+              <span className='ml-2 text-sm font-normal text-gray-500'>
+                {checkedInCount} checked in
+              </span>
+            )}
+          </h2>
+          <Button
+            size='sm'
+            variant='outline'
+            onClick={() =>
+              exportAttendeesCsv(slug).catch((err) =>
+                toast({
+                  title: 'Could not export',
+                  description: eventError(err),
+                })
+              )
+            }
+          >
+            Export CSV
+          </Button>
+        </div>
+        <div className='overflow-x-auto'>
+          <table className='w-full text-sm font-inter'>
+            <thead>
+              <tr className='text-left text-gray-500'>
+                <th className='py-2 pr-3'>User</th>
+                <th className='py-2 pr-3'>Email</th>
+                <th className='py-2 pr-3'>Ticket</th>
+                <th className='py-2 pr-3'>Status</th>
+                <th className='py-2 text-right'>Check-in</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rest.map((a) => (
+                <tr
+                  key={a.id}
+                  className='border-t border-border-light/60 dark:border-border-dark/40'
+                >
+                  <td className='py-2 pr-3'>@{a.user_name}</td>
+                  <td className='py-2 pr-3'>{a.user_email}</td>
+                  <td className='py-2 pr-3'>{a.ticket_tier_name}</td>
+                  <td className='py-2 pr-3'>{a.status?.replace(/_/g, ' ')}</td>
+                  <td className='py-2 text-right'>
+                    <Button
+                      size='sm'
+                      variant={a.checked_in ? 'constructive' : 'outline'}
+                      disabled={busyId === a.id}
+                      onClick={() => setCheckedIn(a.id, !a.checked_in)}
+                    >
+                      {a.checked_in ? 'Checked in' : 'Check in'}
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   );

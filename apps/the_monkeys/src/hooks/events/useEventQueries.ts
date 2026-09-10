@@ -86,7 +86,7 @@ export function useEventComments(slug: string | undefined, offset = 0) {
 export function useEventAttendees(slug: string | undefined, enabled = true) {
   return useQuery({
     queryKey: queryKeys.events.attendees(slug),
-    queryFn: () => listAttendees(slug!, { limit: 50 }),
+    queryFn: () => listAttendees(slug!, { limit: 200 }),
     enabled: enabled && !!slug,
   });
 }

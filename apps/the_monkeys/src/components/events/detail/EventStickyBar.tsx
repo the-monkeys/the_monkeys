@@ -13,6 +13,7 @@ import {
   isRsvpClosed,
   spotsLeft,
 } from '@/lib/eventTime';
+import { hasOpenRsvp, stickyAttendLabel } from '@/lib/rsvpStatus';
 import { cn } from '@/lib/utils';
 import { EventItem, RsvpStatus } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -41,10 +42,7 @@ export function EventStickyBar({
   const left = spotsLeft(event);
   const closed = isEventEnded(event);
   const rsvpClosed = isRsvpClosed(event);
-  const going =
-    viewerStatus === 'confirmed' ||
-    viewerStatus === 'waitlisted' ||
-    viewerStatus === 'pending_payment';
+  const going = hasOpenRsvp(viewerStatus);
 
   // Reveal the bar only after the user scrolls past the hero, using
   // IntersectionObserver when available and a scroll fallback otherwise.
@@ -122,15 +120,14 @@ export function EventStickyBar({
               disabled={closed || (rsvpClosed && !going)}
               onClick={handleAttend}
             >
-              {closed
-                ? event.status === 'cancelled'
-                  ? 'Cancelled'
-                  : 'Ended'
-                : rsvpClosed && !going
-                  ? 'Closed'
-                  : going
-                    ? 'You’re in'
-                    : 'Attend'}
+              {stickyAttendLabel({
+                cancelled: event.status === 'cancelled',
+                closed,
+                rsvpClosed,
+                going,
+                requiresHostReview: !!event.requires_host_review,
+                status: viewerStatus,
+              })}
             </Button>
           )}
         </div>

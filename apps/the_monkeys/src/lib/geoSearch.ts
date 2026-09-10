@@ -65,10 +65,101 @@ export function nearMeQuery(opts: {
   return { user_lat: opts.lat, user_lng: opts.lng, radius: km };
 }
 
-export async function geocodeAddress(query: string): Promise<GeoPin | null> {
+const WEAK_ADDRESS_WORDS = new Set([
+  'tech',
+  'park',
+  'parks',
+  'campus',
+  'mall',
+  'plaza',
+  'complex',
+  'tower',
+  'towers',
+  'limited',
+  'ltd',
+  'pvt',
+  'private',
+  'office',
+  'offices',
+  'building',
+  'phase',
+  'sector',
+  'block',
+  'unit',
+]);
+
+const WEAK_GEOCODE_TOKENS = new Set([
+  'india',
+  'usa',
+  'uk',
+  'us',
+  'in',
+  'united states',
+  'united kingdom',
+]);
+
+function hasCountryHint(s: string): boolean {
+  const lower = s.toLowerCase();
+  return (
+    lower.includes('india') ||
+    lower.includes('united states') ||
+    lower.includes('united kingdom')
+  );
+}
+
+function significantHead(segment: string): string {
+  const fields = segment.trim().split(/\s+/).filter(Boolean);
+  const keep = fields.filter(
+    (w) => !WEAK_ADDRESS_WORDS.has(w.replace(/[.,#]/g, '').toLowerCase())
+  );
+  const words = keep.length ? keep : fields;
+  return words.slice(0, 2).join(' ');
+}
+
+/** Nominatim misses venue+locality strings; try building+area, then area. */
+export function geocodeQueryFallbacks(query: string, near = ''): string[] {
+  const loc = query.trim();
+  if (!loc) return [];
+  const hint = near.trim();
+  const out: string[] = [];
+  const add = (s: string) => {
+    const t = s.trim();
+    if (!t) return;
+    if (out.some((x) => x.toLowerCase() === t.toLowerCase())) return;
+    out.push(t);
+  };
+  const comma = loc.lastIndexOf(',');
+  const last = comma >= 0 ? loc.slice(comma + 1).trim() : '';
+  const first = comma >= 0 ? loc.slice(0, comma).trim() : loc;
+  const head = significantHead(first);
+  const weakLast =
+    last.length < 3 || WEAK_GEOCODE_TOKENS.has(last.toLowerCase());
+  if (last && last.toLowerCase() !== loc.toLowerCase() && !weakLast) {
+    if (head && head.toLowerCase() !== last.toLowerCase()) {
+      add(`${head} ${last}`);
+      if (hint) add(`${head} ${last}, ${hint}`);
+      if (!hasCountryHint(last)) add(`${head} ${last}, India`);
+    }
+    add(last);
+    if (hint) add(`${last}, ${hint}`);
+    if (!hasCountryHint(last)) add(`${last}, India`);
+  }
+  add(loc);
+  add(loc.replace(/,/g, ' ').replace(/\s+/g, ' ').trim());
+  if (hint) add(`${loc}, ${hint}`);
+  if (!hasCountryHint(loc)) add(`${loc}, India`);
+  return out;
+}
+
+export async function geocodeAddress(
+  query: string,
+  near?: string
+): Promise<GeoPin | null> {
   const q = query.trim();
   if (!q) return null;
-  const res = await fetch(`/api/geocode?q=${encodeURIComponent(q)}`);
+  const params = new URLSearchParams({ q });
+  if (near?.trim()) params.set('near', near.trim());
+  const res = await fetch(`/api/geocode?${params.toString()}`);
   if (!res.ok) return null;
   const body = (await res.json()) as { latitude?: number; longitude?: number };
   return pinFromCoords(body.latitude, body.longitude);

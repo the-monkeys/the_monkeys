@@ -91,7 +91,9 @@ export type IconName =
   | 'RiCloseLarge'
   | 'RiMenu'
   | 'RiAdd'
-  | 'RiDraft';
+  | 'RiDraft'
+  | 'RiTime'
+  | 'RiCoupon3';
 
 export type IconProps = {
   name: IconName;

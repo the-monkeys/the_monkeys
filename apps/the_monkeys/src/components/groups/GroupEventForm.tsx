@@ -4,9 +4,10 @@ import { FormEvent, useMemo, useState } from 'react';
 
 import { CategoryChips } from '@/components/geo/CategoryChips';
 import { PlacePin } from '@/components/geo/PlacePin';
+import { useIPLocation } from '@/hooks/useIPLocation';
 import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
-import { pinFromCoords } from '@/lib/geoSearch';
+import { geocodeAddress, pinFromCoords } from '@/lib/geoSearch';
 import { EventItem, EventType } from '@/services/events/eventTypes';
 import {
   GroupEventBody,
@@ -66,6 +67,7 @@ export function GroupEventForm({
   submitLabel,
   onSubmit,
 }: Props) {
+  const ipLocation = useIPLocation();
   const [eventType, setEventType] = useState<EventType>(
     event?.event_type || 'in_person'
   );
@@ -77,6 +79,9 @@ export function GroupEventForm({
   );
   const [visibility, setVisibility] = useState<GroupEventVisibility>(
     (event?.visibility as GroupEventVisibility) || 'public'
+  );
+  const [requiresHostReview, setRequiresHostReview] = useState(
+    !!event?.requires_host_review
   );
   // Controlled so the end picker can forbid a moment before the start and so
   // both fields reject past times.
@@ -99,7 +104,7 @@ export function GroupEventForm({
     [event]
   );
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const start = fromLocalInput(startVal);
@@ -135,10 +140,17 @@ export function GroupEventForm({
         splitList(String(form.get('tags') || ''))
       ),
       visibility,
+      requires_host_review: requiresHostReview,
     };
-    if (eventType !== 'virtual' && pin) {
-      body.latitude = pin.latitude;
-      body.longitude = pin.longitude;
+    if (eventType !== 'virtual') {
+      let resolved = pin;
+      if (!resolved && body.location) {
+        resolved = await geocodeAddress(body.location, ipLocation.city);
+      }
+      if (resolved) {
+        body.latitude = resolved.latitude;
+        body.longitude = resolved.longitude;
+      }
     }
     if (!body.title) return;
     onSubmit(body);
@@ -308,6 +320,22 @@ export function GroupEventForm({
           ))}
         </div>
       </fieldset>
+
+      <label className='flex items-start gap-3 rounded-lg border border-border-light p-3 dark:border-border-dark/60'>
+        <input
+          type='checkbox'
+          className='mt-1'
+          checked={requiresHostReview}
+          onChange={(e) => setRequiresHostReview(e.target.checked)}
+        />
+        <span className='font-inter text-sm'>
+          <span className='block font-medium'>Approve guests</span>
+          <span className='mt-0.5 block text-xs text-gray-500'>
+            Guests send a public profile link. You or a co-host must approve
+            each guest before they can join. This is the same for free meetups.
+          </span>
+        </span>
+      </label>
 
       <Button
         type='submit'

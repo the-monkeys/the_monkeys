@@ -85,7 +85,11 @@ export const EventGridCard = memo(function EventGridCard({
 
       <div className='flex flex-1 flex-col p-4'>
         <p className='font-inter text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange'>
-          {ended ? 'Ended' : category}
+          {event.status === 'draft'
+            ? 'Draft · not listed'
+            : ended
+              ? 'Ended'
+              : category}
         </p>
         <Link href={href} className='mt-1 block'>
           <h3 className='font-newsreader text-lg font-bold leading-[1.3] text-text-light line-clamp-2 transition-colors group-hover:text-brand-orange dark:text-text-dark'>

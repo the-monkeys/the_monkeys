@@ -1,12 +1,14 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
-import ThemeSwitch from '@/components/themeSwitch';
-import { ACTIVITY_ROUTE, LIBRARY_ROUTE } from '@/constants/routeConstants';
+import { VerifiedBadge } from '@/components/user/VerifiedBadge';
+import { LIBRARY_ROUTE } from '@/constants/routeConstants';
+import useUser from '@/hooks/user/useUser';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
 import sessionManager from '@/utils/sessionManager';
@@ -18,11 +20,28 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@the-monkeys/ui/atoms/dropdown-menu';
-import { Separator } from '@the-monkeys/ui/atoms/separator';
+
+function personName(session?: IUser) {
+  const name = [session?.first_name, session?.last_name]
+    .filter(Boolean)
+    .join(' ')
+    .trim();
+  return name || session?.username || 'Profile';
+}
 
 const ProfileDropdown = ({ session }: { session?: IUser }) => {
-  const router = useRouter();
   const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const { user } = useUser(session?.username);
+  const displayName = personName(session);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const close = () => setOpen(false);
+    window.addEventListener('scroll', close, true);
+    return () => window.removeEventListener('scroll', close, true);
+  }, [open]);
 
   const handleSignout = async () => {
     await axiosInstance.get('/auth/logout');
@@ -32,31 +51,45 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <div className='hover:opacity-80 cursor-pointer'>
+    <DropdownMenu modal={false} open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <button
+          type='button'
+          aria-label='Open profile menu'
+          className='hover:opacity-80 cursor-pointer rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange'
+        >
           <ProfileFrame className='size-9 border-1 border-border-light/80 dark:border-border-dark/80'>
             <ProfileImage username={session?.username} />
           </ProfileFrame>
-        </div>
+        </button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className='mt-2 mr-2 w-[100px] sm:w-[180px]'>
-        <DropdownMenuItem className='p-2' asChild>
+      <DropdownMenuContent
+        align='end'
+        sideOffset={8}
+        className='mr-1 w-[min(18rem,calc(100vw-1.5rem))] rounded-2xl p-2'
+      >
+        <DropdownMenuItem className='rounded-xl p-2' asChild>
           <Link
             href={`/${session?.username}`}
-            className='flex items-center gap-2 overflow-hidden'
+            className='flex items-center gap-3'
           >
-            <ProfileFrame className='size-10 sm:size-12 shrink-0'>
+            <ProfileFrame className='size-11 shrink-0'>
               <ProfileImage username={session?.username} />
             </ProfileFrame>
 
-            <div className='flex-1 flex flex-col overflow-hidden'>
-              <p className='font-dm_sans font-medium text-base truncate'>
-                {session?.first_name}{' '}
-                {session?.last_name ? session?.last_name : ''}
+            <div className='min-w-0 flex-1'>
+              <p className='flex items-center gap-1 font-dm_sans font-medium text-base leading-snug'>
+                <span className='min-w-0 break-words'>{displayName}</span>
+                <VerifiedBadge
+                  isVerified={user?.is_verified}
+                  showText={false}
+                  size={16}
+                />
               </p>
-              <p className='text-[13px] opacity-80 truncate'>View profile</p>
+              <p className='mt-0.5 font-inter text-[13px] text-brand-orange'>
+                View profile →
+              </p>
             </div>
           </Link>
         </DropdownMenuItem>
@@ -64,40 +97,56 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild>
-          <Link href='/settings' className='flex w-full items-center gap-2'>
-            <Icon name='RiSettings3' size={18} />
-            <p className='font-dm_sans text-sm sm:text-base'>Settings</p>
+          <Link
+            href='/settings'
+            className='flex min-h-11 w-full items-center gap-3 rounded-lg px-3'
+          >
+            <Icon name='RiSettings3' size={18} className='shrink-0' />
+            <p className='flex-1 font-dm_sans text-sm sm:text-base'>Settings</p>
+            <Icon
+              name='RiArrowRightS'
+              size={16}
+              className='shrink-0 opacity-50'
+            />
           </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <Link href={LIBRARY_ROUTE} className='flex w-full items-center gap-2'>
-            <Icon name='RiBookShelf' size={18} />
-            <p className='font-dm_sans text-sm sm:text-base'>Library</p>
+          <Link
+            href={LIBRARY_ROUTE}
+            className='flex min-h-11 w-full items-center gap-3 rounded-lg px-3'
+          >
+            <Icon name='RiBookShelf' size={18} className='shrink-0' />
+            <p className='flex-1 font-dm_sans text-sm sm:text-base'>Library</p>
+            <Icon
+              name='RiArrowRightS'
+              size={16}
+              className='shrink-0 opacity-50'
+            />
           </Link>
         </DropdownMenuItem>
 
-        {/* <DropdownMenuItem asChild>
-          <Link
-            href={`${ACTIVITY_ROUTE}?user=${session?.username}`}
-            className='flex w-full items-center gap-2'
-          >
-            <Icon name='RiHistory' size={18} />
-            <p className='font-dm_sans text-sm sm:text-base'>Activity</p>
-          </Link>
-        </DropdownMenuItem> */}
-
-        <Separator />
+        <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild>
           <button
+            type='button'
             onClick={handleSignout}
-            className='flex w-full items-center gap-2'
+            className='flex min-h-11 w-full items-center gap-3 rounded-lg px-3'
           >
-            <Icon name='RiLogoutBoxR' size={18} className='text-alert-red' />
-            <p className='font-dm_sans text-sm sm:text-base text-alert-red'>
+            <Icon
+              name='RiLogoutBoxR'
+              size={18}
+              className='shrink-0 text-brand-orange'
+            />
+            <p className='flex-1 text-left font-dm_sans text-sm sm:text-base text-brand-orange'>
               Logout
             </p>
+            <Icon
+              name='RiArrowRightS'
+              size={16}
+              className='shrink-0 text-brand-orange opacity-70'
+            />
           </button>
         </DropdownMenuItem>
       </DropdownMenuContent>

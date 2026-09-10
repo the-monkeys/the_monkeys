@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 
+import { useIPLocation } from '@/hooks/useIPLocation';
 import { GeoPin, geocodeAddress } from '@/lib/geoSearch';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
@@ -31,6 +32,7 @@ export function PlacePin({
 }) {
   const [busy, setBusy] = useState<'geo' | 'addr' | ''>('');
   const [error, setError] = useState('');
+  const ipLocation = useIPLocation();
 
   const useMyLocation = () => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
@@ -65,7 +67,7 @@ export function PlacePin({
     }
     setBusy('addr');
     setError('');
-    const pin = await geocodeAddress(q);
+    const pin = await geocodeAddress(q, ipLocation.city);
     setBusy('');
     if (!pin) {
       setError('Could not pin that address. Try Use my location.');

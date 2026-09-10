@@ -24,13 +24,19 @@ export function EventHostPanel({ event }: { event: EventItem }) {
       </div>
 
       <p className='mt-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
-        {going} {going === 1 ? 'person is' : 'people are'} going so far.
+        {event.status === 'draft'
+          ? 'This is a draft. People will not find it on Discover until you publish.'
+          : `${going} ${going === 1 ? 'person is' : 'people are'} going so far.${
+              event.requires_host_review
+                ? ' Guests apply first; you or a co-host approve before they get a seat.'
+                : ''
+            }`}
       </p>
 
       <div className='mt-4 flex flex-col gap-2'>
         <Button asChild variant='brand' className='w-full'>
           <Link href={`${EVENTS_ROUTE}/${event.slug}/manage`}>
-            Manage event
+            {event.status === 'draft' ? 'Publish or manage' : 'Manage event'}
           </Link>
         </Button>
         <Button asChild variant='outline' className='w-full'>

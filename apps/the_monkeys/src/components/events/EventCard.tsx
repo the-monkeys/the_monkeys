@@ -51,11 +51,18 @@ export function EventCard({ event }: { event: EventItem }) {
               {eventTypeLabel(event.event_type)}
             </span>
           )}
-          {event.status && event.status !== 'published' && (
-            <span className='font-inter text-[10px] uppercase tracking-wider text-gray-500'>
-              {eventStatusLabel(event.status)}
+          {event.status === 'draft' && (
+            <span className='rounded-full bg-brand-orange/15 px-2 py-0.5 font-inter text-[10px] font-bold uppercase tracking-wider text-brand-orange'>
+              Draft · not listed
             </span>
           )}
+          {event.status &&
+            event.status !== 'published' &&
+            event.status !== 'draft' && (
+              <span className='font-inter text-[10px] uppercase tracking-wider text-gray-500'>
+                {eventStatusLabel(event.status)}
+              </span>
+            )}
         </div>
 
         <Link href={href} className='block mt-1.5'>

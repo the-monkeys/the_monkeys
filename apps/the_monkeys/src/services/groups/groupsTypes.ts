@@ -184,6 +184,7 @@ export type GroupEventBody = {
   cover_image?: string;
   tags?: string[];
   visibility?: GroupEventVisibility;
+  requires_host_review?: boolean;
 };
 
 export type GroupListFilters = {
