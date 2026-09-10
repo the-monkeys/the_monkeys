@@ -11,7 +11,7 @@ const fetchFRNNotifications = async (): Promise<FRNNotification[]> => {
   // Use the gateway's proxy path which adds the API key server-side.
   // Falls back gracefully when FRN is offline.
   const { data } = await axiosInstance.get<FRNNotificationListResponse>(
-    '/notification/notifications'
+    '/notification/frn?page_size=50&channel=in_app'
   );
   return data?.notifications ?? [];
 };

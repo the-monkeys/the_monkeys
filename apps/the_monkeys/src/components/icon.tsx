@@ -93,7 +93,8 @@ export type IconName =
   | 'RiAdd'
   | 'RiDraft'
   | 'RiTime'
-  | 'RiCoupon3';
+  | 'RiCoupon3'
+  | 'RiShield';
 
 export type IconProps = {
   name: IconName;

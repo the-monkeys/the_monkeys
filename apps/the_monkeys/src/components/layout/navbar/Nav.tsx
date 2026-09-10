@@ -99,7 +99,9 @@ const Nav = () => {
                 </div>
 
                 <ThemeSwitch />
-                {session && <WSNotificationDropdown />}
+                {session && (
+                  <WSNotificationDropdown username={session.username} />
+                )}
 
                 <div className={STYLES.divider} />
 
