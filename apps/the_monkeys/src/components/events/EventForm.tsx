@@ -505,8 +505,9 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           <span className='font-inter text-sm'>
             <span className='block font-medium'>Approve guests</span>
             <span className='mt-0.5 block text-xs text-gray-500'>
-              People send a public profile link. You or a co-host approve before
-              they get a seat or pay — including free meetups.
+              Guests send a public profile link. You or a co-host must approve
+              each guest before they can join. This is the same for free
+              meetups.
             </span>
           </span>
         </label>
