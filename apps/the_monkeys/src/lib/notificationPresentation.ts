@@ -27,6 +27,19 @@ export function isUnreadStatus(status?: string): boolean {
   return status !== 'read' && status !== 'seen';
 }
 
+export function notificationRowsAfterPanelChange(
+  notifications: FRNNotification[],
+  open: boolean
+): FRNNotification[] {
+  if (open) return notifications;
+
+  return notifications.map((notification) =>
+    isUnreadStatus(notification.status)
+      ? { ...notification, status: 'read' }
+      : notification
+  );
+}
+
 export function actorUsername(
   data?: Record<string, unknown>
 ): string | undefined {

@@ -8,6 +8,7 @@ import {
   notificationCopy,
   notificationHref,
   notificationIcon,
+  notificationRowsAfterPanelChange,
   postHref,
   postTitle,
   profileHref,
@@ -35,6 +36,18 @@ describe('notificationPresentation', () => {
     expect(isUnreadStatus('delivered')).toBe(true);
     expect(isUnreadStatus('read')).toBe(false);
     expect(isUnreadStatus('seen')).toBe(false);
+  });
+
+  it('keeps unread rows visible while the panel is open and settles them when it closes', () => {
+    const unread = notif({ status: 'delivered' });
+
+    expect(notificationRowsAfterPanelChange([unread], true)[0].status).toBe(
+      'delivered'
+    );
+    expect(notificationRowsAfterPanelChange([unread], false)[0].status).toBe(
+      'read'
+    );
+    expect(unread.status).toBe('delivered');
   });
 
   it('picks the actor username from known data keys', () => {

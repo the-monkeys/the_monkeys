@@ -43,14 +43,16 @@ export function NotificationRow({ notif, onNavigate }: Props) {
     copy.fallbackBody !== copy.fallbackTitle;
 
   const inner = (
-    <div className='flex min-w-0 items-start gap-3'>
+    <div className='flex min-w-0 items-start gap-2.5 sm:gap-3'>
+      {unread ? <span className='sr-only'>Unread notification</span> : null}
+
       {unread ? (
         <span
           aria-hidden
-          className='mt-3 size-2 shrink-0 rounded-full bg-brand-orange'
+          className='mt-2.5 size-2.5 shrink-0 rounded-full bg-brand-orange shadow-[0_0_0_3px_rgba(255,85,66,0.12)]'
         />
       ) : (
-        <span aria-hidden className='mt-3 size-2 shrink-0' />
+        <span aria-hidden className='mt-2.5 size-2.5 shrink-0' />
       )}
 
       {actor ? (
@@ -58,13 +60,22 @@ export function NotificationRow({ notif, onNavigate }: Props) {
           <ProfileImage username={actor} />
         </ProfileFrame>
       ) : (
-        <span className='mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-foreground-light/40 dark:bg-foreground-dark/40'>
-          <Icon name={icon} size={18} className='text-gray-500' />
+        <span className='mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full border border-border-light/70 bg-foreground-light/30 dark:border-border-dark/60 dark:bg-foreground-dark/30'>
+          <Icon
+            name={icon}
+            size={18}
+            className={unread ? 'text-brand-orange' : 'text-gray-500'}
+          />
         </span>
       )}
 
       <div className='min-w-0 flex-1'>
-        <p className='break-words font-dm_sans text-sm font-medium leading-5'>
+        <p
+          className={twMerge(
+            'break-words font-dm_sans text-sm leading-5',
+            unread ? 'font-semibold' : 'font-medium'
+          )}
+        >
           {showComposed && userHref ? (
             <>
               <Link
@@ -106,14 +117,21 @@ export function NotificationRow({ notif, onNavigate }: Props) {
       </div>
 
       <div className='flex shrink-0 items-center gap-1 pt-0.5'>
-        <span className='whitespace-nowrap font-inter text-xs text-gray-500'>
+        <span
+          className={twMerge(
+            'whitespace-nowrap font-inter text-[11px] leading-4 sm:text-xs',
+            unread
+              ? 'font-medium text-[#c93422] dark:text-brand-orange'
+              : 'text-gray-500 dark:text-gray-400'
+          )}
+        >
           {timeAgo(notif.created_at)}
         </span>
         {href ? (
           <Icon
             name='RiArrowRightS'
             size={16}
-            className='hidden text-gray-400 sm:block'
+            className='hidden text-gray-400 transition-transform duration-150 group-hover:translate-x-0.5 sm:block'
           />
         ) : null}
       </div>
@@ -121,9 +139,21 @@ export function NotificationRow({ notif, onNavigate }: Props) {
   );
 
   const className = twMerge(
-    'block min-w-0 rounded-xl px-2 py-2.5',
-    href && 'hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+    'group block min-w-0 rounded-xl px-2.5 py-3 transition-colors duration-150 sm:px-3',
+    unread &&
+      'bg-brand-orange/[0.06] ring-1 ring-inset ring-brand-orange/10 dark:bg-brand-orange/[0.09] dark:ring-brand-orange/15',
+    href &&
+      (unread
+        ? 'hover:bg-brand-orange/[0.11] dark:hover:bg-brand-orange/[0.14]'
+        : 'hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40')
   );
 
-  return <div className={className}>{inner}</div>;
+  return (
+    <div
+      className={className}
+      data-notification-state={unread ? 'unread' : 'read'}
+    >
+      {inner}
+    </div>
+  );
 }
