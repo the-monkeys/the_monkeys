@@ -1,7 +1,6 @@
 'use client';
 
 import { Loader } from '@/components/loader';
-import useAuth from '@/hooks/auth/useAuth';
 import { useGetAllNotifications } from '@/hooks/notification/useGetAllNotifications';
 
 import { MarkReadButton } from './components/MarkReadButton';
@@ -9,7 +8,6 @@ import { NotificationCard } from './components/NotificationCard';
 
 const NotificationsPage = () => {
   const { notifications, isLoading, isError } = useGetAllNotifications();
-  const { data: session } = useAuth();
 
   if (isLoading) {
     return (
@@ -29,13 +27,10 @@ const NotificationsPage = () => {
   }
 
   return (
-    <div className='mx-auto w-full sm:w-4/5 md:w-3/5 px-4 flex flex-col items-center sm:items-end space-y-4'>
-      <MarkReadButton
-        notificationIds={notifications.map((n) => ({
-          id: n.notification_id,
-        }))}
-        userId={session?.username}
-      />
+    <div className='mx-auto w-full max-w-2xl px-4 flex flex-col space-y-4'>
+      <div className='flex justify-end'>
+        <MarkReadButton />
+      </div>
 
       <div className='w-full space-y-2'>
         {notifications.length ? (
