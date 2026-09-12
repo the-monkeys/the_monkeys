@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
+import { EventMeetingAccessCard } from '@/components/events/detail/EventMeetingAccessCard';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
@@ -186,18 +187,23 @@ export function RsvpPanel({ event, viewerStatus, session }: Props) {
 
   if (viewerStatus === 'confirmed') {
     return (
-      <aside className='min-w-0 overflow-hidden rounded-lg border border-border-light dark:border-border-dark/60 p-4 sm:p-5 space-y-4'>
-        <h2 className='font-dm_sans font-semibold text-lg'>Tickets</h2>
-        <ConfirmedSpot
-          event={event}
-          tier={selected}
-          busy={busy}
-          confirmLeave={confirmLeave}
-          onAskLeave={() => setConfirmLeave(true)}
-          onKeep={() => setConfirmLeave(false)}
-          onCancel={onCancel}
+      <div className='space-y-4'>
+        <aside className='min-w-0 overflow-hidden rounded-lg border border-border-light dark:border-border-dark/60 p-4 sm:p-5 space-y-4'>
+          <h2 className='font-dm_sans font-semibold text-lg'>Tickets</h2>
+          <ConfirmedSpot
+            tier={selected}
+            busy={busy}
+            confirmLeave={confirmLeave}
+            onAskLeave={() => setConfirmLeave(true)}
+            onKeep={() => setConfirmLeave(false)}
+            onCancel={onCancel}
+          />
+        </aside>
+
+        <EventMeetingAccessCard
+          meetingLink={session ? event.meeting_link : undefined}
         />
-      </aside>
+      </div>
     );
   }
 
@@ -520,7 +526,6 @@ function PendingApplication({
 }
 
 function ConfirmedSpot({
-  event,
   tier,
   busy,
   confirmLeave,
@@ -528,7 +533,6 @@ function ConfirmedSpot({
   onKeep,
   onCancel,
 }: {
-  event: EventItem;
   tier?: TicketTier;
   busy: boolean;
   confirmLeave: boolean;
@@ -554,17 +558,6 @@ function ConfirmedSpot({
           </p>
         </div>
       </div>
-
-      {event.meeting_link && (
-        <a
-          href={event.meeting_link}
-          target='_blank'
-          rel='noreferrer'
-          className='block font-inter text-sm text-brand-orange hover:underline break-all'
-        >
-          Join meeting
-        </a>
-      )}
 
       <TicketSummary tier={tier} note='This is your ticket for the meetup.' />
 
