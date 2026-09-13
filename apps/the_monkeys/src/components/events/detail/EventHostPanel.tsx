@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { EventMeetingAccessCard } from '@/components/events/detail/EventMeetingAccessCard';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { EventItem } from '@/services/events/eventTypes';
@@ -17,32 +18,40 @@ export function EventHostPanel({ event }: { event: EventItem }) {
     typeof event.attendee_count === 'number' ? event.attendee_count : 0;
 
   return (
-    <div className='rounded-2xl border border-border-light dark:border-border-dark/60 p-5'>
-      <div className='flex items-center gap-2 text-brand-orange'>
-        <Icon name='RiVerifiedBadge' type='Fill' size={20} />
-        <p className='font-dm_sans font-semibold'>You’re hosting this event</p>
+    <div className='space-y-4'>
+      <div className='rounded-2xl border border-border-light dark:border-border-dark/60 p-5'>
+        <div className='flex items-center gap-2 text-brand-orange'>
+          <Icon name='RiVerifiedBadge' type='Fill' size={20} />
+          <p className='font-dm_sans font-semibold'>
+            You’re hosting this event
+          </p>
+        </div>
+
+        <p className='mt-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
+          {event.status === 'draft'
+            ? 'This is a draft. People will not find it on Discover until you publish.'
+            : `${going} ${going === 1 ? 'person is' : 'people are'} going so far.${
+                event.requires_host_review
+                  ? ' Guests apply first; you or a co-host approve before they get a seat.'
+                  : ''
+              }`}
+        </p>
+
+        <div className='mt-4 flex flex-col gap-2'>
+          <Button asChild variant='brand' className='w-full'>
+            <Link href={`${EVENTS_ROUTE}/${event.slug}/manage`}>
+              {event.status === 'draft' ? 'Publish or manage' : 'Manage event'}
+            </Link>
+          </Button>
+          <Button asChild variant='outline' className='w-full'>
+            <Link href={`${EVENTS_ROUTE}/${event.slug}/edit`}>
+              Edit details
+            </Link>
+          </Button>
+        </div>
       </div>
 
-      <p className='mt-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
-        {event.status === 'draft'
-          ? 'This is a draft. People will not find it on Discover until you publish.'
-          : `${going} ${going === 1 ? 'person is' : 'people are'} going so far.${
-              event.requires_host_review
-                ? ' Guests apply first; you or a co-host approve before they get a seat.'
-                : ''
-            }`}
-      </p>
-
-      <div className='mt-4 flex flex-col gap-2'>
-        <Button asChild variant='brand' className='w-full'>
-          <Link href={`${EVENTS_ROUTE}/${event.slug}/manage`}>
-            {event.status === 'draft' ? 'Publish or manage' : 'Manage event'}
-          </Link>
-        </Button>
-        <Button asChild variant='outline' className='w-full'>
-          <Link href={`${EVENTS_ROUTE}/${event.slug}/edit`}>Edit details</Link>
-        </Button>
-      </div>
+      <EventMeetingAccessCard meetingLink={event.meeting_link} />
     </div>
   );
 }

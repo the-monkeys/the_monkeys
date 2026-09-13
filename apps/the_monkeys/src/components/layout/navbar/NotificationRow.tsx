@@ -55,10 +55,19 @@ export function NotificationRow({ notif, onNavigate }: Props) {
         <span aria-hidden className='mt-2.5 size-2.5 shrink-0' />
       )}
 
-      {actor ? (
-        <ProfileFrame className='mt-0.5 size-10 shrink-0'>
-          <ProfileImage username={actor} />
-        </ProfileFrame>
+      {actor && userHref ? (
+        <Link
+          href={userHref}
+          onClick={(e) => {
+            e.stopPropagation();
+            onNavigate?.();
+          }}
+          className='mt-0.5 size-10 shrink-0 rounded-full outline-none ring-brand-orange/50 transition-shadow focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black'
+        >
+          <ProfileFrame className='size-full'>
+            <ProfileImage username={actor} />
+          </ProfileFrame>
+        </Link>
       ) : (
         <span className='mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full border border-border-light/70 bg-foreground-light/30 dark:border-border-dark/60 dark:bg-foreground-dark/30'>
           <Icon

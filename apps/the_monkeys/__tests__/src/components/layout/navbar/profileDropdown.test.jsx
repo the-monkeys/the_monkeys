@@ -68,7 +68,8 @@ describe('ProfileDropdown', () => {
   it('Shows user name', async () => {
     await renderAndOpenDropdown();
 
-    const profileLink = screen.getByText('View profile');
+    const profileLink = screen.getByRole('menuitem', { name: /Test User/ });
     expect(profileLink).toBeDefined();
+    expect(profileLink.getAttribute('href')).toBe('/testuser');
   });
 });

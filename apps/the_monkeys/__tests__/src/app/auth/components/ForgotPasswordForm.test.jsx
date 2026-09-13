@@ -1,215 +1,122 @@
 import ForgotPasswordForm from '@/app/auth/components/forms/ForgotPasswordForm';
 import * as Services from '@/services/auth/auth';
-import { cleanup, screen } from '@testing-library/react';
+import { cleanup, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../../../utils';
 
+const { routerPush } = vi.hoisted(() => ({ routerPush: vi.fn() }));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: routerPush }),
+}));
+
+async function submitEmail(email) {
+  const user = userEvent.setup();
+  await user.type(screen.getByPlaceholderText('Enter email address'), email);
+  await user.click(
+    screen.getByRole('button', { name: 'Send Verification Code' })
+  );
+}
+
 describe('ForgotPasswordForm', () => {
   afterEach(() => {
     cleanup();
+    vi.restoreAllMocks();
+    routerPush.mockReset();
   });
 
-  it('Shows invalid email error on invalid email', async () => {
+  it('shows an invalid email error before requesting a verification code', async () => {
     renderWithProviders(<ForgotPasswordForm />);
 
-    const submitButton = screen.getByRole('button');
-    const emailInput = screen.getByRole('textbox');
+    await submitEmail('johndoe@example');
 
-    await userEvent.click(emailInput);
-    await userEvent.keyboard('johndoe@example');
-    await userEvent.click(submitButton);
-
-    const emailErrorMessage = await screen.findByText('Invalid email');
-
-    expect(emailErrorMessage).toBeDefined();
+    expect(await screen.findByText('Invalid email')).toBeDefined();
   });
 
-  it('Shows required error text on values', async () => {
+  it('requires an email before requesting a verification code', async () => {
+    const user = userEvent.setup();
     renderWithProviders(<ForgotPasswordForm />);
 
-    const submitButton = screen.getByRole('button');
-    await userEvent.click(submitButton);
-
-    const emailErrorMessage = await screen.findByText('Email is required');
-
-    expect(emailErrorMessage).toBeDefined();
-  });
-
-  it('Clear button is hidden when field is empty', async () => {
-    renderWithProviders(<ForgotPasswordForm />);
-    const clearButton = screen.queryByRole('button', { name: 'clear button' });
-
-    expect(clearButton).toBeNull();
-  });
-
-  it('Clear button is visible when field is empty', async () => {
-    renderWithProviders(<ForgotPasswordForm />);
-    const emailInput = screen.getByRole('textbox');
-
-    await userEvent.type(emailInput, 'john@example.com');
-
-    screen.getByRole('button', { name: 'clear button' });
-  });
-
-  it('Clear button clears the email field', async () => {
-    renderWithProviders(<ForgotPasswordForm />);
-    const emailInput = screen.getByRole('textbox');
-
-    await userEvent.type(emailInput, 'john@example.com');
-    await userEvent.click(screen.getByRole('button', { name: 'clear button' }));
-
-    expect(emailInput.textContent).toBe('');
-    expect(emailInput.value).toBe('');
-  });
-
-  it('Successful submit', async () => {
-    const spy = vi
-      .spyOn(Services, 'forgotPass')
-      .mockImplementation((values) => ({
-        status: 200,
-        data: {
-          message: 'rest link is sent to your registered email',
-        },
-      }));
-
-    renderWithProviders(<ForgotPasswordForm />);
-
-    const submitButton = screen.getByRole('button');
-    const emailInput = screen.getByRole('textbox');
-
-    await userEvent.click(emailInput);
-    await userEvent.keyboard('john@doe.com');
-    await userEvent.click(submitButton);
-
-    expect(spy).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalledWith({
-      email: 'john@doe.com',
-    });
-
-    expect(submitButton.textContent).toBe('Submitted Successfully');
-    expect(submitButton.disabled).toBe(true);
-  });
-
-  it('Clicking clear button after successful submit - resets form and button', async () => {
-    const spy = vi
-      .spyOn(Services, 'forgotPass')
-      .mockImplementation((values) => ({
-        status: 200,
-        data: {
-          message: 'rest link is sent to your registered email',
-        },
-      }));
-
-    renderWithProviders(<ForgotPasswordForm />);
-
-    const submitButton = screen.getByRole('button');
-    const emailInput = screen.getByRole('textbox');
-
-    await userEvent.click(emailInput);
-    await userEvent.keyboard('john@doe.com');
-    await userEvent.click(submitButton);
-
-    expect(spy).toHaveBeenCalled();
-    expect(spy).toHaveBeenCalledWith({
-      email: 'john@doe.com',
-    });
-
-    expect(submitButton.textContent).toBe('Submitted Successfully');
-    expect(submitButton.disabled).toBe(true);
-
-    const clearButton = screen.getByRole('button', { name: 'clear button' });
-
-    await userEvent.click(clearButton);
-
-    expect(emailInput.value).toBe('');
-    expect(submitButton.textContent).toBe('Submit');
-    expect(submitButton.disabled).toBe(false);
-  });
-
-  it('Error submit', async () => {
-    renderWithProviders(<ForgotPasswordForm />);
-
-    const submitButton = screen.getByRole('button');
-    const emailInput = screen.getByRole('textbox');
-
-    const spy = vi.spyOn(Services, 'forgotPass').mockImplementation(() => {
-      throw new Error('test error');
-    });
-
-    await userEvent.click(emailInput);
-    await userEvent.keyboard('john@doe.com');
-    await userEvent.click(submitButton);
-
-    const errorMessage = await screen.findByText(
-      'An unexpected error occurred while submitting the form, please retry again or contact support'
+    await user.click(
+      screen.getByRole('button', { name: 'Send Verification Code' })
     );
 
-    expect(spy).toThrowError('test error');
-    expect(errorMessage).not.toBeNull();
-    expect(submitButton.textContent).toBe('Click to retry');
-    expect(submitButton.disabled).toBe(false);
+    expect(await screen.findByText('Email is required')).toBeDefined();
   });
 
-  it('Clicking clear button after error', async () => {
+  it('shows the clear control only for a populated email and clears it', async () => {
+    const user = userEvent.setup();
     renderWithProviders(<ForgotPasswordForm />);
 
-    const submitButton = screen.getByRole('button');
-    const emailInput = screen.getByRole('textbox');
+    expect(
+      screen.queryByRole('button', { name: 'clear button' })
+    ).toBeNull();
 
-    const spy = vi.spyOn(Services, 'forgotPass').mockImplementation(() => {
-      throw new Error('test error');
-    });
-
-    await userEvent.click(emailInput);
-    await userEvent.keyboard('john@doe.com');
-    await userEvent.click(submitButton);
-
-    const errorMessage = await screen.findByText(
-      'An unexpected error occurred while submitting the form, please retry again or contact support'
-    );
-
-    expect(spy).toThrowError('test error');
-    expect(errorMessage).not.toBeNull();
-    expect(submitButton.textContent).toBe('Click to retry');
-    expect(submitButton.disabled).toBe(false);
-
-    const clearButton = screen.getByRole('button', { name: 'clear button' });
-
-    await userEvent.click(clearButton);
+    const emailInput = screen.getByPlaceholderText('Enter email address');
+    await user.type(emailInput, 'john@example.com');
+    await user.click(screen.getByRole('button', { name: 'clear button' }));
 
     expect(emailInput.value).toBe('');
-    expect(submitButton.textContent).toBe('Submit');
-    expect(submitButton.disabled).toBe(false);
+    expect(
+      screen.queryByRole('button', { name: 'clear button' })
+    ).toBeNull();
   });
 
-  it('Editing input field after submitting enables submit button', async () => {
+  it('requests a code and advances to OTP verification', async () => {
+    const requestSpy = vi
+      .spyOn(Services, 'forgotPass')
+      .mockResolvedValue({ status: 200 });
     renderWithProviders(<ForgotPasswordForm />);
 
-    const submitButton = screen.getByRole('button');
-    const emailInput = screen.getByRole('textbox');
+    await submitEmail('john@doe.com');
 
-    const spy = vi
-      .spyOn(Services, 'forgotPass')
-      .mockImplementation((values) => ({
-        status: 200,
-        data: {
-          message: 'rest link is sent to your registered email',
-        },
-      }));
+    expect(
+      await screen.findByRole('textbox', { name: 'Verification Code' })
+    ).toBeDefined();
+    expect(requestSpy).toHaveBeenCalledWith({ email: 'john@doe.com' });
+    expect(
+      screen.getByText((content) => content.includes('john@doe.com'))
+    ).toBeDefined();
+  });
 
-    await userEvent.click(emailInput);
-    await userEvent.keyboard('john@doe.com');
-    await userEvent.click(submitButton);
+  it('does not reveal whether an email exists when requesting a code fails', async () => {
+    vi.spyOn(Services, 'forgotPass').mockRejectedValue(new Error('not found'));
+    renderWithProviders(<ForgotPasswordForm />);
 
-    expect(submitButton.textContent).toBe('Submitted Successfully');
-    expect(submitButton.disabled).toBe(true);
+    await submitEmail('unknown@doe.com');
 
-    await userEvent.click(emailInput);
-    await userEvent.keyboard('1');
+    expect(
+      await screen.findByRole('textbox', { name: 'Verification Code' })
+    ).toBeDefined();
+    expect(
+      screen.getByText((content) => content.includes('unknown@doe.com'))
+    ).toBeDefined();
+  });
 
-    expect(submitButton.textContent).toBe('Submit');
-    expect(submitButton.disabled).toBe(false);
+  it('verifies a six digit code and opens the reset-password route', async () => {
+    vi.spyOn(Services, 'forgotPass').mockResolvedValue({ status: 200 });
+    const verifySpy = vi
+      .spyOn(Services, 'verifyResetOTP')
+      .mockResolvedValue({ token: 'reset token' });
+    const user = userEvent.setup();
+    renderWithProviders(<ForgotPasswordForm />);
+
+    await submitEmail('john+test@doe.com');
+    const codeInput = await screen.findByRole('textbox', {
+      name: 'Verification Code',
+    });
+    await user.type(codeInput, '123456');
+
+    await waitFor(() => {
+      expect(verifySpy).toHaveBeenCalledWith({
+        email: 'john+test@doe.com',
+        otp_code: '123456',
+      });
+    });
+    expect(routerPush).toHaveBeenCalledWith(
+      '/auth/reset-password?token=reset%20token&email=john%2Btest%40doe.com'
+    );
   });
 });

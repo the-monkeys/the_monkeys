@@ -106,10 +106,14 @@ export const BlogImage = ({
   title,
   image,
   className,
+  priority = true,
+  sizes,
 }: {
   title: string;
   image: string;
   className?: string;
+  priority?: boolean;
+  sizes?: string;
 }) => {
   return (
     <Image
@@ -119,7 +123,8 @@ export const BlogImage = ({
       width='800'
       className={twMerge('h-full w-full object-contain', className)}
       quality={100}
-      priority
+      priority={priority}
+      sizes={sizes}
     />
   );
 };
@@ -127,9 +132,13 @@ export const BlogImage = ({
 export const BlogPlaceholderImage = ({
   title,
   className,
+  priority = true,
+  sizes,
 }: {
   title: string;
   className?: string;
+  priority?: boolean;
+  sizes?: string;
 }) => {
   return (
     <Image
@@ -139,6 +148,8 @@ export const BlogPlaceholderImage = ({
       width='800'
       className={twMerge('h-full w-full object-cover object-center', className)}
       quality={100}
+      priority={priority}
+      sizes={sizes}
     />
   );
 };
