@@ -19,12 +19,14 @@ export interface FeaturedAuthorAvatarProps {
   firstName?: string;
   /** Override the default route. Defaults to `/{username}`. */
   href?: string;
+  variant?: 'default' | 'compact';
 }
 
 export const FeaturedAuthorAvatar = ({
   username,
   firstName,
   href,
+  variant = 'default',
 }: FeaturedAuthorAvatarProps) => {
   const { imageUrl, isLoading, isError } = useProfileImage(username);
 
@@ -37,9 +39,15 @@ export const FeaturedAuthorAvatar = ({
   return (
     <Link
       href={href ?? `/${username}`}
-      className='flex flex-col items-center gap-2 shrink-0'
+      className={`flex shrink-0 snap-start flex-col items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background-dark ${
+        variant === 'compact' ? 'gap-1.5' : 'gap-2'
+      }`}
     >
-      <div className='flex h-20 w-20 items-center justify-center rounded-full border-2 p-1 border-brand-orange'>
+      <div
+        className={`flex items-center justify-center rounded-full border-2 border-brand-orange p-1 ${
+          variant === 'compact' ? 'h-12 w-12' : 'h-20 w-20'
+        }`}
+      >
         <div className='relative h-full w-full overflow-hidden rounded-full bg-foreground-light/10 dark:bg-foreground-dark/10'>
           {isLoading || !imageUrl ? (
             // Plain skeleton while the image loads — avoids the
@@ -58,7 +66,12 @@ export const FeaturedAuthorAvatar = ({
           )}
         </div>
       </div>
-      <p className='max-w-24 truncate text-center text-xs font-semibold text-gray-900 dark:text-gray-100'>
+      <p
+        title={firstName ?? username}
+        className={`truncate text-center text-xs font-semibold text-gray-900 dark:text-gray-100 ${
+          variant === 'compact' ? 'max-w-20 text-[11px]' : 'max-w-24'
+        }`}
+      >
         {firstName ?? username}
       </p>
     </Link>

@@ -242,12 +242,7 @@ export default function EventDetailClient({ slug }: { slug: string }) {
                   />
                 )}
               </div>
-              <EventSidebarMeta
-                event={event}
-                canJoinMeeting={
-                  host || data?.viewer_rsvp_status === 'confirmed'
-                }
-              />
+              <EventSidebarMeta event={event} />
             </div>
           </aside>
         </div>

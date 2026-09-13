@@ -37,15 +37,22 @@ export const ProfileFrame = ({
   );
 };
 
-export const ProfileImage = ({ username }: { username?: string }) => {
+export const ProfileImage = ({
+  username,
+  alt,
+}: {
+  username?: string;
+  alt?: string;
+}) => {
   const { imageUrl, isLoading, isError } = useProfileImage(username);
+  const imageLabel = alt || `Author: ${username}`;
 
   if (isLoading || isError || imageUrl === '')
     return (
       <Image
         src='/default-profile.svg'
-        alt={`Author: ${username}`}
-        title={`Author: ${username}`}
+        alt={imageLabel}
+        title={imageLabel}
         width={32}
         height={32}
         className='w-full h-full object-cover rounded-full'
@@ -56,8 +63,8 @@ export const ProfileImage = ({ username }: { username?: string }) => {
   return (
     <Image
       src={imageUrl}
-      alt={`Author: ${username}`}
-      title={`Author: ${username}`}
+      alt={imageLabel}
+      title={imageLabel}
       width={50}
       height={50}
       className='w-full h-full object-cover rounded-full'
