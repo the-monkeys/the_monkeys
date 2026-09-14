@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 import { JsonLd } from '@/components/seo/JsonLd';
 import { META_FEED_QUERY_KEY } from '@/hooks/blog/useGetMetaFeedBlogs';
-import { LANDING_EVENT_FILTERS } from '@/lib/landingPage';
+import { LANDING_EVENT_FILTERS, LANDING_POST_LIMIT } from '@/lib/landingPage';
 import { landingCollectionSchema, landingMetadata } from '@/lib/landingPageSeo';
 import { queryKeys } from '@/lib/queryKeys';
 import { listEvents } from '@/services/events/eventsApi';
@@ -16,7 +16,7 @@ export const metadata: Metadata = landingMetadata;
 
 export default async function LandingPage() {
   const queryClient = getQueryClient();
-  const limit = 30;
+  const limit = LANDING_POST_LIMIT;
 
   await Promise.all([
     queryClient.prefetchQuery({

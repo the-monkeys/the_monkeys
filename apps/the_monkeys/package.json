@@ -44,7 +44,6 @@
     "next-runtime-env": "^3.3.0",
     "next-themes": "^0.2.1",
     "prismjs": "^1.30.0",
-    "public-ip": "^7.0.1",
     "qrcode": "^1.5.4",
     "react": "^18",
     "react-dom": "^18",

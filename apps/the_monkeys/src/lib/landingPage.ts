@@ -1,6 +1,8 @@
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
 
+export const LANDING_POST_LIMIT = 12;
+
 export const LANDING_EVENT_FILTERS = {
   limit: 3,
   status: 'published',
@@ -33,8 +35,8 @@ function dedupeValidPosts(posts: MetaBlog[]): MetaBlog[] {
   const seen = new Set<string>();
 
   return posts.filter((post) => {
-    const id = post?.blog_id?.trim();
-    const title = post?.title?.trim();
+    const id = typeof post?.blog_id === 'string' ? post.blog_id.trim() : '';
+    const title = typeof post?.title === 'string' ? post.title.trim() : '';
     if (!id || !title || seen.has(id)) return false;
     seen.add(id);
     return true;
@@ -63,8 +65,10 @@ export function selectLandingEvents(events: EventItem[]): LandingEventSlots {
   const valid = events.filter(
     (event) =>
       Boolean(event?.id) &&
-      Boolean(event?.title?.trim()) &&
-      Boolean(event?.slug?.trim())
+      typeof event?.title === 'string' &&
+      Boolean(event.title.trim()) &&
+      typeof event?.slug === 'string' &&
+      Boolean(event.slug.trim())
   );
 
   return {

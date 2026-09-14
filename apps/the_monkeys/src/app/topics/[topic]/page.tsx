@@ -10,13 +10,44 @@ import {
   PageSubheading,
 } from '@/components/layout/pageHeading';
 import { LIVE_URL } from '@/constants/api';
+import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
 import { slugToTopic, topicToSlug } from '@/utils/topicUtils';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { BlogsByTopic } from './components/BlogsByTopic';
 import TopicFollowButton from './components/TopicFollowButton';
 
-async function fetchTopicData(topic: string) {
+function normalizeTopicPost(value: unknown): MetaBlog | null {
+  if (!value || typeof value !== 'object') return null;
+
+  const post = value as Partial<MetaBlog>;
+  if (typeof post.blog_id !== 'string' || typeof post.title !== 'string') {
+    return null;
+  }
+
+  return {
+    blog_id: post.blog_id,
+    title: post.title,
+    first_image: typeof post.first_image === 'string' ? post.first_image : '',
+    first_paragraph:
+      typeof post.first_paragraph === 'string' ? post.first_paragraph : '',
+    owner_account_id:
+      typeof post.owner_account_id === 'string' ? post.owner_account_id : '',
+    published_time:
+      typeof post.published_time === 'string' ? post.published_time : '',
+    tags: Array.isArray(post.tags)
+      ? post.tags.filter((tag): tag is string => typeof tag === 'string')
+      : [],
+    like_count:
+      typeof post.like_count === 'number' ? post.like_count : undefined,
+    bookmark_count:
+      typeof post.bookmark_count === 'number' ? post.bookmark_count : undefined,
+    content_type:
+      typeof post.content_type === 'string' ? post.content_type : undefined,
+  };
+}
+
+async function fetchTopicData(topic: string): Promise<GetMetaFeedBlogs> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL_V2 || 'https://monkeys.support/api/v2'}/blog/meta-feed`,
@@ -28,13 +59,23 @@ async function fetchTopicData(topic: string) {
       }
     );
 
-    if (!response.ok) return null;
+    if (!response.ok) return { blogs: [] };
 
-    const data = await response.json();
-    return data;
+    const data = (await response.json()) as Partial<GetMetaFeedBlogs>;
+    const blogs = Array.isArray(data.blogs)
+      ? data.blogs
+          .map((post) => normalizeTopicPost(post))
+          .filter((post): post is MetaBlog => post !== null)
+      : [];
+
+    return {
+      blogs,
+      total_blogs:
+        typeof data.total_blogs === 'number' ? data.total_blogs : blogs.length,
+    };
   } catch (error) {
     console.error('Error fetching topic data:', error);
-    return null;
+    return { blogs: [] };
   }
 }
 
@@ -246,7 +287,7 @@ const TopicBlogsPage = async ({
         </div>
 
         <div className='mx-auto max-w-4xl min-h-[800px]'>
-          <BlogsByTopic topic={topic} />
+          <BlogsByTopic blogs={topicData.blogs} />
         </div>
       </Container>
     </>

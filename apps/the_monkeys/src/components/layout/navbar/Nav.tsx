@@ -43,6 +43,15 @@ const Nav = () => {
       );
     };
     apply();
+
+    if (typeof ResizeObserver !== 'function') {
+      window.addEventListener('resize', apply);
+      return () => {
+        window.removeEventListener('resize', apply);
+        document.documentElement.style.removeProperty('--app-header-h');
+      };
+    }
+
     const ro = new ResizeObserver(apply);
     ro.observe(el);
     return () => {

@@ -127,7 +127,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
-  const blogTitle = blog?.blog.blocks[0].data.text;
+  const blogTitle = blog?.blog?.blocks?.[0]?.data?.text;
   const sanitizedBlogTitle = purifyHTMLString(blogTitle);
 
   const blogDataWithoutHeading = () => {

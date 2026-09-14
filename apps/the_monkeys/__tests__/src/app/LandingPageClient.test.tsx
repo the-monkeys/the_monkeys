@@ -131,6 +131,23 @@ describe('LandingPageClient', () => {
     vi.unstubAllGlobals();
   });
 
+  it('requests only the posts used by the landing layout', () => {
+    vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
+      blogs: { blogs: [] },
+      isLoading: false,
+      isError: false,
+    });
+    vi.mocked(useEventList).mockReturnValue({
+      data: { events: [] },
+      isLoading: false,
+      isError: false,
+    } as ReturnType<typeof useEventList>);
+
+    renderWithProviders(<LandingPageClient />);
+
+    expect(useGetMetaFeedBlogs).toHaveBeenCalledWith({ limit: 12 });
+  });
+
   it('keeps events and the dispatch signup discoverable when posts fail', () => {
     vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
       blogs: undefined,
@@ -357,9 +374,7 @@ describe('LandingPageClient', () => {
 
     expect(navigation.nextElementSibling?.contains(feed)).toBe(true);
 
-    await user.click(
-      screen.getByRole('link', { name: 'Articles & analysis' })
-    );
+    await user.click(screen.getByRole('link', { name: 'Articles & analysis' }));
     expect(feed.querySelectorAll('[aria-label="Feed post"]')).toHaveLength(3);
     expect(feed.querySelectorAll('[aria-label="Feed event"]')).toHaveLength(0);
   });
