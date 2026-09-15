@@ -1,82 +1,162 @@
 # Contributing to Monkeys
 
-Thanks for your interest in contributing! 
+Thank you for your interest in contributing to Monkeys! We welcome bug fixes, documentation improvements, UI enhancements, and new features.
 
-If anything here is unclear, that is a documentation bug worth reporting — open
-an issue and we will fix it.
+This guide provides the necessary steps to set up the repository locally, understand the architecture, and submit changes.
 
-## What this repository is
+---
 
-This repository is the **frontend** of the Monkeys platform — the Next.js web
-application that people see and interact with in the browser.
+## 🏛️ Project Architecture
 
-The **backend** is a separate Go repository,
-[monkeys_brain](https://github.com/the-monkeys/monkeys_brain). You don't need it
-for most frontend work — the app talks to it over the network using the URLs you
-set in your environment file (see
-[Set up environment variables](#3-set-up-environment-variables)).
+Monkeys is organized as a **Turborepo monorepo** managed with **pnpm**:
 
+* **`apps/the_monkeys`**: The primary web application built with [Next.js 14](https://nextjs.org/) (App Router), [React 18](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), and [TanStack Query](https://tanstack.com/query).
+* **`packages/ui`**: Shared UI component library (`@the-monkeys/ui`) composed of Radix UI primitives and Tailwind CSS styles.
+* **`packages/config`**: Shared configuration packages across the workspace.
 
-## Prerequisites
+### Backend
 
-Install these before you start:
+The Monkeys backend is written in Go and hosted in a separate repository:
+* **Repository**: [Monkeys Engine](https://github.com/the-monkeys/monkeys_engine)
 
-| Tool                              | Version              | Why it's needed                                              |
-| --------------------------------- | -------------------- | ------------------------------------------------------------ |
-| [Git](https://git-scm.com/)       | any recent           | To clone the repository and manage your changes.             |
-| [Node.js](https://nodejs.org/)    | **18.17.0 or later** | Runs the app and the tooling.                                |
-| [pnpm](https://pnpm.io/)          | optional             | The package manager. `npm run install-deps` installs it for you. |
+You do not need to run the backend locally for most frontend work. The frontend connects to the backend over HTTP REST and WebSockets using the endpoints defined in your environment file.
 
-## Local development
+---
 
-### 1. Clone the repository
+## 📋 Prerequisites
 
-```sh
+Ensure you have the following installed before starting:
+
+| Tool | Recommended Version | Purpose |
+| :--- | :--- | :--- |
+| [Git](https://git-scm.com/) | Recent version | Version control |
+| [Node.js](https://nodejs.org/) | `>= 18.17.0` (see [`.nvmrc`](./.nvmrc)) | JavaScript runtime |
+| [pnpm](https://pnpm.io/) | `>= 10.0.0` (specified in [`package.json`](./package.json)) | Workspace package manager |
+
+> [!TIP]
+> If `pnpm` is not installed globally on your system, you can bootstrap it from the repository root:
+> ```bash
+> npm run install-deps
+> ```
+
+---
+
+## 🛠️ Local Development Setup
+
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/the-monkeys/the_monkeys.git
 cd the_monkeys
 ```
 
-### 2. Install dependencies
+### 2. Install Dependencies
 
-```sh
-npm run install-deps
-```
+Install all dependencies across the monorepo workspaces:
 
-```sh
+```bash
 pnpm install
 ```
 
-### 3. Set up environment variables
+### 3. Configure Environment Variables
 
-1. Create a file named `.env.local` inside `apps/the_monkeys`.
-2. Copy the variable names from `apps/the_monkeys/.env.example` into it, then
-   fill in the values.
+1. Copy the example configuration to `.env.local` inside `apps/the_monkeys`:
 
-For `.env.example`, ask maintainer for details.
+```bash
+cp apps/the_monkeys/.env.example apps/the_monkeys/.env.local
+```
 
-### 4. Start the development server
+2. Review the variables in `apps/the_monkeys/.env.local`:
 
-```sh
-npm run dev
-# or
+```env
+NEXT_PUBLIC_API_URL=http://local.monkeys.com.co:8080/api/v1
+NEXT_PUBLIC_API_URL_V2=http://local.monkeys.com.co:8080/api/v2
+NEXT_PUBLIC_WSS_URL=ws://local.monkeys.com.co:8080/ws
+NEXT_PUBLIC_LIVE_URL=http://localhost:3000
+AUTH_SECRET=your_development_secret
+```
+
+> [!NOTE]
+> Client components read configuration via [`next-runtime-env`](https://www.npmjs.com/package/next-runtime-env) (`PublicEnvScript` in `layout.tsx`), which allows configuration to be supplied dynamically at runtime.
+
+### 4. Configure Local Host Mapping (Optional)
+
+To allow authentication cookies to be shared properly between the frontend and a local backend instance across subdomains, map `local.monkeys.com.co`:
+
+```bash
+make setup-hosts
+```
+
+* Alternatively on Linux/macOS:
+  ```bash
+  sudo bash ./scripts/setup-hosts.sh
+  ```
+* On Windows (PowerShell as Administrator):
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File "scripts/setup-hosts.ps1"
+  ```
+
+### 5. Start the Development Server
+
+Start Turborepo in development mode:
+
+```bash
 pnpm dev
 ```
 
-The app runs directly at **[http://localhost:3000](http://localhost:3000)**.
-Open that URL in your browser and you're ready to go.
+Open [http://localhost:3000](http://localhost:3000) (or `http://local.monkeys.com.co:3000`) in your browser.
 
-## Common commands
+---
 
-Run these from the repository root; Turborepo forwards each one to the
-workspaces that need it:
+## ⌨️ Common Commands
 
-| Command             | What it does                                  |
-| ------------------- | --------------------------------------------- |
-| `pnpm dev`          | Start the development server (with hot reload). |
-| `pnpm build`        | Create a production build.                    |
-| `pnpm test`         | Run the test suite (Vitest).                  |
-| `pnpm lint`         | Check code for lint errors.                   |
-| `pnpm format`       | Auto-format the code.                         |
+Run these commands from the repository root. Turborepo coordinates execution across `apps/` and `packages/`:
 
-Please follow the issue and pull request templates when raising an issue or PR —
-it helps maintainers review your work faster.
+| Command | What it does |
+| :--- | :--- |
+| `pnpm dev` | Starts the Next.js development server with Turborepo hot-reloading |
+| `pnpm build` | Runs lint checks and produces production builds across all workspaces |
+| `pnpm test` | Runs the full Vitest unit and component test suite |
+| `pnpm lint` | Runs Next.js ESLint and Biome checks across apps and packages |
+| `pnpm format` | Formats the codebase using Prettier and Biome |
+
+To target a specific workspace directly:
+
+```bash
+# Run tests only in apps/the_monkeys
+pnpm --filter the_monkeys test
+
+# Run lint only in packages/ui
+pnpm --filter @the-monkeys/ui lint
+```
+
+---
+
+## 🔀 Contribution Workflow
+
+1. **Create a branch**:
+   ```bash
+   git checkout -b feature/your-feature-name
+   # or
+   git checkout -b fix/your-bug-fix
+   ```
+2. **Make your changes**: Ensure code follows existing TypeScript conventions and styling patterns.
+3. **Run checks locally**:
+   ```bash
+   pnpm lint
+   pnpm test
+   pnpm build
+   ```
+4. **Commit using descriptive messages**:
+   ```bash
+   git commit -m "feat(studio): add responsive scaling for story templates"
+   ```
+5. **Open a Pull Request**: Provide a clear description of the problem solved, any visual or behavioral changes, and manual testing steps.
+
+---
+
+## ❓ Need Help?
+
+If you find a bug, encounter unclear documentation, or have a feature proposal:
+* Open an issue on GitHub: [Issues](https://github.com/the-monkeys/the_monkeys/issues)
+* Review backend details at: [Monkeys Engine](https://github.com/the-monkeys/monkeys_engine)

@@ -357,9 +357,7 @@ describe('LandingPageClient', () => {
 
     expect(navigation.nextElementSibling?.contains(feed)).toBe(true);
 
-    await user.click(
-      screen.getByRole('link', { name: 'Articles & analysis' })
-    );
+    await user.click(screen.getByRole('link', { name: 'Articles & analysis' }));
     expect(feed.querySelectorAll('[aria-label="Feed post"]')).toHaveLength(3);
     expect(feed.querySelectorAll('[aria-label="Feed event"]')).toHaveLength(0);
   });
