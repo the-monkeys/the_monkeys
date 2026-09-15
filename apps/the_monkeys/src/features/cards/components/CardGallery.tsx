@@ -29,6 +29,7 @@ export const CardGallery = () => {
   }, [refresh]);
 
   const handleDelete = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this card?')) return;
     await deleteCard(id);
     refresh();
   };
@@ -95,7 +96,7 @@ export const CardGallery = () => {
                   })}
                 </p>
               </Link>
-              <div className='flex gap-2 opacity-0 transition-opacity group-hover:opacity-100'>
+              <div className='flex gap-2 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100'>
                 <Link
                   href={`/cards/${card.id}`}
                   className='text-xs text-foreground/60 hover:text-foreground'

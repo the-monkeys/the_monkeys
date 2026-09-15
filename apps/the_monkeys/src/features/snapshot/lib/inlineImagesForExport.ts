@@ -29,6 +29,9 @@ export const inlineImagesForExport = async (
         if (!img.getAttribute('crossorigin')) {
           img.setAttribute('crossorigin', 'anonymous');
         }
+        if ('decode' in img && typeof img.decode === 'function') {
+          await img.decode().catch(() => {});
+        }
       } catch {
         /* keep original src if proxy fails */
       }

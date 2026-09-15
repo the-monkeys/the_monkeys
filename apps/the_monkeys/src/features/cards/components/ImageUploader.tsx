@@ -12,9 +12,68 @@ export interface ImageUploaderProps {
   onChange: (dataUrl: string | undefined) => void;
 }
 
+export function resizeImageDimensions(
+  origW: number,
+  origH: number,
+  maxDim = 512
+): { width: number; height: number } {
+  if (origW <= maxDim && origH <= maxDim) {
+    return { width: origW, height: origH };
+  }
+  if (origW > origH) {
+    const scale = maxDim / origW;
+    return { width: maxDim, height: Math.round(origH * scale) };
+  }
+  const scale = maxDim / origH;
+  return { width: Math.round(origW * scale), height: maxDim };
+}
+
+export async function processUploadedImage(
+  file: File,
+  maxDim = 512
+): Promise<string> {
+  if (file.type === 'image/svg+xml') {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const { width, height } = resizeImageDimensions(
+          img.naturalWidth || img.width,
+          img.naturalHeight || img.height,
+          maxDim
+        );
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          resolve(String(reader.result));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        const mime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+        resolve(canvas.toDataURL(mime, 0.85));
+      };
+      img.onerror = () => resolve(String(reader.result));
+      img.src = String(reader.result);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 /**
  * Reads a file as data URL so the image is self-contained for canvas export
- * (no cross-origin tainting). Validates type and size.
+ * (no cross-origin tainting). Validates type and size, resizing large images.
  */
 export const ImageUploader = ({
   label,
@@ -24,7 +83,7 @@ export const ImageUploader = ({
   onChange,
 }: ImageUploaderProps) => {
   const handleFile = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
 
@@ -39,15 +98,14 @@ export const ImageUploader = ({
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          onChange(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
-      // Reset input so the same file can be re-selected
-      e.target.value = '';
+      try {
+        const dataUrl = await processUploadedImage(file);
+        onChange(dataUrl);
+      } catch {
+        /* ignore read failure */
+      } finally {
+        e.target.value = '';
+      }
     },
     [accept, maxSizeKb, onChange]
   );

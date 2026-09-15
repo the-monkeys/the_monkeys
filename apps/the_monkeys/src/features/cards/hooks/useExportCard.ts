@@ -2,6 +2,8 @@
 
 import { RefObject, useCallback, useState } from 'react';
 
+import { inlineImagesForExport } from '@/features/snapshot/lib/inlineImagesForExport';
+
 import { CardExportOptions } from '../types';
 
 const slugify = (s: string) =>
@@ -53,6 +55,8 @@ export const useExportCard = (
       setIsExporting(true);
       setError(null);
       try {
+        await inlineImagesForExport(node);
+        await document.fonts?.ready;
         const { toBlob } = await import('html-to-image');
         const mimeType = format === 'jpeg' ? 'image/jpeg' : 'image/png';
         const blob = await toBlob(node, {

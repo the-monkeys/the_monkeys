@@ -14,11 +14,14 @@ import { CardInput } from '../types';
  * Generation is async and debounced by React's effect scheduling; the returned
  * value is `undefined` until the first code is ready or when `enabled` is false.
  */
-export const useCardQr = (
-  input: CardInput,
-  enabled: boolean
-): string | undefined => {
+export interface CardQrResult {
+  qrDataUrl: string | undefined;
+  isGenerating: boolean;
+}
+
+export const useCardQr = (input: CardInput, enabled: boolean): CardQrResult => {
   const [dataUrl, setDataUrl] = useState<string | undefined>(undefined);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const hasContact = Boolean(
     input.contact.firstName || input.contact.lastName || input.contact.email
@@ -32,10 +35,12 @@ export const useCardQr = (
   useEffect(() => {
     if (!enabled || !hasContact) {
       setDataUrl(undefined);
+      setIsGenerating(false);
       return;
     }
 
     let cancelled = false;
+    setIsGenerating(true);
     QRCode.toDataURL(vcard, {
       errorCorrectionLevel: 'M',
       margin: 0,
@@ -43,10 +48,16 @@ export const useCardQr = (
       color: { dark: '#0A0A0AFF', light: '#FFFFFFFF' },
     })
       .then((url) => {
-        if (!cancelled) setDataUrl(url);
+        if (!cancelled) {
+          setDataUrl(url);
+          setIsGenerating(false);
+        }
       })
       .catch(() => {
-        if (!cancelled) setDataUrl(undefined);
+        if (!cancelled) {
+          setDataUrl(undefined);
+          setIsGenerating(false);
+        }
       });
 
     return () => {
@@ -54,5 +65,5 @@ export const useCardQr = (
     };
   }, [vcard, enabled, hasContact]);
 
-  return dataUrl;
+  return { qrDataUrl: dataUrl, isGenerating };
 };

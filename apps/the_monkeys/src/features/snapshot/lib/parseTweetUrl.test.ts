@@ -17,6 +17,14 @@ describe('parseTweetId', () => {
     expect(parseTweetId('1234567890123456789')).toBe('1234567890123456789');
   });
 
+  it('parses protocol-less x.com and twitter.com URLs', () => {
+    expect(parseTweetId('x.com/elonmusk/status/1234567890123456789')).toBe(
+      '1234567890123456789'
+    );
+    expect(parseTweetId('twitter.com/jack/status/20')).toBe('20');
+    expect(parseTweetId('www.x.com/jack/status/20')).toBe('20');
+  });
+
   it('rejects non-tweet URLs', () => {
     expect(parseTweetId('https://monkeys.com.co/blog/foo')).toBeNull();
     expect(isTweetUrl('https://monkeys.com.co')).toBe(false);

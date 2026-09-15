@@ -17,7 +17,10 @@ export const parseTweetId = (raw: string): string | null => {
   if (/^\d{5,}$/.test(trimmed)) return trimmed;
 
   try {
-    const url = new URL(trimmed);
+    const candidate = /^[a-zA-Z]+:\/\//i.test(trimmed)
+      ? trimmed
+      : `https://${trimmed}`;
+    const url = new URL(candidate);
     const host = url.hostname.replace(/^www\./, '');
     if (!TWEET_HOSTS.has(host) && !TWEET_HOSTS.has(url.hostname)) {
       return null;

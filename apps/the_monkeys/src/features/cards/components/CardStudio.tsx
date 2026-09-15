@@ -28,7 +28,7 @@ import { buildProfilePrefill, fetchProfileAvatarDataUrl } from '../lib/prefill';
 import { clearDraft, loadDraft, saveDraft } from '../lib/storage';
 import { downloadVCard } from '../lib/vcard';
 import { getTemplateById } from '../registry';
-import { CardState } from '../types';
+import { CardContact, CardState } from '../types';
 import { CardPreview } from './CardPreview';
 import { CardTemplatePicker } from './CardTemplatePicker';
 import { CardThemePicker } from './CardThemePicker';
@@ -71,32 +71,57 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
   const router = useRouter();
 
   // Prefill a pristine new card from the signed-in user's profile.
-  const { data: session } = useAuth();
-  const { data: profile } = useGetAuthUserProfile(session?.username);
+  const { data: session, isLoading: isSessionLoading } = useAuth();
+  const { data: profile, isLoading: isProfileLoading } = useGetAuthUserProfile(
+    session?.username
+  );
   const prefilledRef = useRef(false);
   const avatarPrefilledRef = useRef(false);
   const shouldPrefill = !cardId && !initial && !draftInitial;
 
   useEffect(() => {
     if (!shouldPrefill || prefilledRef.current) return;
-    if (!session && !profile) return;
-    const c = state.input.contact;
-    const pristine =
-      !c.firstName && !c.lastName && !c.email && !c.phone && !c.address;
-    if (!pristine) {
-      prefilledRef.current = true;
+    if (!session && !profile) {
+      if (isSessionLoading === false) {
+        prefilledRef.current = true;
+      }
       return;
     }
-    const { contact, socialLinks } = buildProfilePrefill(session, profile);
-    if (Object.keys(contact).length) updateContact(contact);
-    if (socialLinks.length && !state.input.socialLinks.length) {
-      setSocialLinks(socialLinks);
+
+    const c = state.input.contact;
+    const { contact: prefillContact, socialLinks: prefillSocial } =
+      buildProfilePrefill(session, profile);
+
+    const toPatch: Partial<CardContact> = {};
+    if (!c.firstName && prefillContact.firstName) {
+      toPatch.firstName = prefillContact.firstName;
     }
-    prefilledRef.current = true;
+    if (!c.lastName && prefillContact.lastName) {
+      toPatch.lastName = prefillContact.lastName;
+    }
+    if (!c.email && prefillContact.email) {
+      toPatch.email = prefillContact.email;
+    }
+    if (!c.phone && prefillContact.phone) {
+      toPatch.phone = prefillContact.phone;
+    }
+
+    if (Object.keys(toPatch).length > 0) {
+      updateContact(toPatch);
+    }
+    if (prefillSocial.length > 0 && state.input.socialLinks.length === 0) {
+      setSocialLinks(prefillSocial);
+    }
+
+    if (profile !== undefined || (session && isProfileLoading === false)) {
+      prefilledRef.current = true;
+    }
   }, [
     shouldPrefill,
     session,
     profile,
+    isSessionLoading,
+    isProfileLoading,
     state.input.contact,
     state.input.socialLinks.length,
     updateContact,
@@ -124,13 +149,16 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
 
   // Persist the working draft on every change (new cards only).
   useEffect(() => {
-    if (cardId) return;
+    if (cardId || savedId) return;
     saveDraft(state);
-  }, [state, cardId]);
+  }, [state, cardId, savedId]);
 
   const template = getTemplateById(state.templateId);
   const cardRef = useRef<HTMLDivElement | null>(null);
-  const qrDataUrl = useCardQr(state.input, state.customization.showQr);
+  const { qrDataUrl, isGenerating: isGeneratingQr } = useCardQr(
+    state.input,
+    state.customization.showQr
+  );
 
   const { exportImage, isExporting, error } = useExportCard(cardRef, {
     width: template.width,
@@ -173,7 +201,7 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
   const [isCopying, setIsCopying] = useState(false);
 
   const handleCopy = async () => {
-    if (!hasName) return;
+    if (!hasName || isGeneratingQr) return;
     setIsCopying(true);
     try {
       const blob = await exportImage({
@@ -214,7 +242,7 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
               copied={copied}
               copying={isCopying}
               exporting={isExporting}
-              disabled={!hasName}
+              disabled={!hasName || isGeneratingQr}
             />
           }
         >
@@ -243,7 +271,7 @@ export const CardStudio = ({ cardId = null, initial }: CardStudioProps) => {
             copied={copied}
             onDownloadVCard={handleVCard}
             filename={filename}
-            disabled={!hasName}
+            disabled={!hasName || isGeneratingQr}
           />
         </div>
       </div>

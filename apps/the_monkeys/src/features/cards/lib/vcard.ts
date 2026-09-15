@@ -6,11 +6,29 @@ import { CardContact, SocialLink } from '../types';
  */
 const sanitize = (value: string): string =>
   value
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
     .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '') // strip control chars
     .replace(/\\/g, '\\\\')
     .replace(/;/g, '\\;')
     .replace(/,/g, '\\,')
     .replace(/\n/g, '\\n');
+
+export const getVCardFilename = (
+  contact: Pick<CardContact, 'firstName' | 'lastName'>
+): string => {
+  const raw = `${contact.firstName ?? ''} ${contact.lastName ?? ''}`
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+
+  const slug = raw
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  return slug ? `${slug}.vcf` : 'business-card.vcf';
+};
 
 /**
  * Generate a vCard 3.0 (.vcf) string from card contact data.
@@ -70,9 +88,7 @@ export const downloadVCard = (
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${contact.firstName}-${contact.lastName}.vcf`
-    .toLowerCase()
-    .replace(/[^a-z0-9.-]/g, '-');
+  a.download = getVCardFilename(contact);
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
