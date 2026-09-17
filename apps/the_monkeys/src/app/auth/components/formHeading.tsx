@@ -10,6 +10,8 @@ const FormSubheading = ({
   subheading,
 }: {
   subheading: string;
+
+  hade: string;
   className?: string;
 }) => {
   return <p className='text-sm text-center opacity-90'>{subheading}</p>;
