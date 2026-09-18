@@ -38,7 +38,7 @@ const COMMON_TIMEZONES = [
   'Pacific/Auckland',
 ];
 
-const detectBrowserTimezone = (): string => {
+export const detectBrowserTimezone = (): string => {
   try {
     return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
   } catch {
@@ -54,24 +54,98 @@ const getTodayDateString = (): string => {
   return `${yyyy}-${mm}-${dd}`;
 };
 
-const parseDateString = (iso?: string): string => {
+export const parseDateInTimezone = (
+  iso?: string,
+  timeZone?: string
+): string => {
   if (!iso) return '';
   const d = new Date(iso);
   if (isNaN(d.getTime())) return '';
-  const yyyy = d.getFullYear();
-  const mm = String(d.getMonth() + 1).padStart(2, '0');
-  const dd = String(d.getDate()).padStart(2, '0');
-  return `${yyyy}-${mm}-${dd}`;
+  try {
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timeZone || detectBrowserTimezone(),
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+    return formatter.format(d);
+  } catch {
+    return d.toISOString().split('T')[0];
+  }
 };
 
-const parseTimeString = (iso?: string): string => {
+export const parseTimeInTimezone = (
+  iso?: string,
+  timeZone?: string
+): string => {
   if (!iso) return '';
   const d = new Date(iso);
   if (isNaN(d.getTime())) return '';
-  const hh = String(d.getHours()).padStart(2, '0');
-  const min = String(d.getMinutes()).padStart(2, '0');
-  return `${hh}:${min}`;
+  try {
+    const formatter = new Intl.DateTimeFormat('en-GB', {
+      timeZone: timeZone || detectBrowserTimezone(),
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    });
+    return formatter.format(d);
+  } catch {
+    const hh = String(d.getUTCHours()).padStart(2, '0');
+    const min = String(d.getUTCMinutes()).padStart(2, '0');
+    return `${hh}:${min}`;
+  }
 };
+
+function getTimezoneOffsetMs(date: Date, timeZone: string): number {
+  try {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
+    const parts = formatter.formatToParts(date);
+    const getPart = (type: string) =>
+      parts.find((p) => p.type === type)?.value ?? '0';
+
+    const year = parseInt(getPart('year'), 10);
+    const month = parseInt(getPart('month'), 10) - 1;
+    const day = parseInt(getPart('day'), 10);
+    let hour = parseInt(getPart('hour'), 10);
+    if (hour === 24) hour = 0;
+    const minute = parseInt(getPart('minute'), 10);
+    const second = parseInt(getPart('second'), 10);
+
+    const asUtc = Date.UTC(year, month, day, hour, minute, second);
+    return asUtc - date.getTime();
+  } catch {
+    return 0;
+  }
+}
+
+export function localDateTimeToUtcIso(
+  dateStr: string,
+  timeStr: string,
+  timeZone: string
+): string {
+  const [year, month, day] = dateStr.split('-').map((v) => parseInt(v, 10));
+  const [hour, minute] = timeStr.split(':').map((v) => parseInt(v, 10));
+
+  const targetUtcEstimate = Date.UTC(year, month - 1, day, hour, minute, 0);
+  const offset = getTimezoneOffsetMs(new Date(targetUtcEstimate), timeZone);
+  let actualUtc = targetUtcEstimate - offset;
+
+  // Refine offset across daylight savings transitions
+  const refinedOffset = getTimezoneOffsetMs(new Date(actualUtc), timeZone);
+  if (refinedOffset !== offset) {
+    actualUtc = targetUtcEstimate - refinedOffset;
+  }
+  return new Date(actualUtc).toISOString();
+}
 
 export default function ScheduleDrawer({
   isOpen = true,
@@ -84,9 +158,15 @@ export default function ScheduleDrawer({
   disabled = false,
 }: ScheduleDrawerProps) {
   const browserTz = useMemo(() => detectBrowserTimezone(), []);
-  const [date, setDate] = useState(() => parseDateString(initialScheduledAt));
-  const [time, setTime] = useState(() => parseTimeString(initialScheduledAt));
-  const [timezone, setTimezone] = useState(() => initialTimezone || browserTz);
+  const initialTz = initialTimezone || browserTz;
+
+  const [date, setDate] = useState(() =>
+    parseDateInTimezone(initialScheduledAt, initialTz)
+  );
+  const [time, setTime] = useState(() =>
+    parseTimeInTimezone(initialScheduledAt, initialTz)
+  );
+  const [timezone, setTimezone] = useState(() => initialTz);
   const [error, setError] = useState<string | null>(null);
 
   const availableTimezones = useMemo(() => {
@@ -102,15 +182,16 @@ export default function ScheduleDrawer({
 
   useEffect(() => {
     if (initialScheduledAt) {
-      const parsedDate = parseDateString(initialScheduledAt);
-      const parsedTime = parseTimeString(initialScheduledAt);
+      const tz = initialTimezone || browserTz;
+      const parsedDate = parseDateInTimezone(initialScheduledAt, tz);
+      const parsedTime = parseTimeInTimezone(initialScheduledAt, tz);
       if (parsedDate) setDate(parsedDate);
       if (parsedTime) setTime(parsedTime);
     }
     if (initialTimezone) {
       setTimezone(initialTimezone);
     }
-  }, [initialScheduledAt, initialTimezone]);
+  }, [initialScheduledAt, initialTimezone, browserTz]);
 
   if (!isOpen) {
     return null;
@@ -127,7 +208,15 @@ export default function ScheduleDrawer({
       return;
     }
 
-    const targetDate = new Date(`${date}T${time}`);
+    let scheduledAtIso = '';
+    try {
+      scheduledAtIso = localDateTimeToUtcIso(date, time, timezone);
+    } catch {
+      setError('Please select a valid date and time.');
+      return;
+    }
+
+    const targetDate = new Date(scheduledAtIso);
     if (isNaN(targetDate.getTime())) {
       setError('Please select a valid date and time.');
       return;
@@ -139,7 +228,6 @@ export default function ScheduleDrawer({
     }
 
     setError(null);
-    const scheduledAtIso = targetDate.toISOString();
     onSchedule?.(scheduledAtIso, timezone);
     onConfirm?.({ scheduledAt: scheduledAtIso, timezone });
   };
@@ -162,7 +250,7 @@ export default function ScheduleDrawer({
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className='space-y-4'>
+      <form onSubmit={handleSubmit} noValidate className='space-y-4'>
         <div className='grid gap-4 sm:grid-cols-3'>
           <div>
             <label
@@ -253,7 +341,6 @@ export default function ScheduleDrawer({
           </button>
           <button
             type='submit'
-            onClick={handleSubmit}
             disabled={isLoading || disabled}
             className='rounded-lg bg-brand-orange px-5 py-2 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50'
           >

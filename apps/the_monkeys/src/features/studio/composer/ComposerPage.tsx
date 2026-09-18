@@ -210,6 +210,12 @@ export default function ComposerPage({ postId }: { postId?: string }) {
         </h2>
       </header>
 
+      {isScheduled && (
+        <div className='rounded-lg border border-brand-orange/30 bg-brand-orange/5 px-4 py-2.5 text-xs text-brand-orange'>
+          To edit post content, cancel the schedule first.
+        </div>
+      )}
+
       <section className='rounded-xl border bg-background-light p-5 dark:bg-background-dark'>
         <label htmlFor='base-text' className='mb-2 block text-sm font-semibold'>
           Base post
@@ -333,7 +339,9 @@ export default function ComposerPage({ postId }: { postId?: string }) {
               <span>
                 Scheduled:{' '}
                 {post?.scheduled_at
-                  ? new Date(post.scheduled_at).toLocaleString()
+                  ? new Date(post.scheduled_at).toLocaleString(undefined, {
+                      timeZone: post?.schedule_timezone || 'UTC',
+                    })
                   : ''}{' '}
                 ({post?.schedule_timezone || 'UTC'})
               </span>
@@ -412,7 +420,7 @@ export default function ComposerPage({ postId }: { postId?: string }) {
                 {publishNow?.isPending ? 'Publishing...' : 'Publish now'}
               </button>
             </>
-          ) : (
+          ) : isDraft ? (
             <>
               <button
                 type='button'
@@ -450,7 +458,7 @@ export default function ComposerPage({ postId }: { postId?: string }) {
                   : 'Save draft'}
               </button>
             </>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

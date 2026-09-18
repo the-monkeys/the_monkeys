@@ -174,6 +174,31 @@ describe('ComposerActions - ScheduleDrawer & Action Bar', () => {
       expect(isoString).toMatch(/^2099-12-31T/);
       expect(tz).toBe('UTC');
     });
+
+    it('accurately converts local date and time in selected timezone to UTC ISO string', () => {
+      const onSchedule = vi.fn();
+      const onCancel = vi.fn();
+
+      render(<ScheduleDrawer onSchedule={onSchedule} onCancel={onCancel} />);
+
+      const dateInput = screen.getByLabelText('Schedule date');
+      const timeInput = screen.getByLabelText('Schedule time');
+      const tzSelect = screen.getByLabelText('Schedule timezone');
+      const confirmButton = screen.getByRole('button', {
+        name: /confirm schedule/i,
+      });
+
+      // 2099-07-15 is EDT (UTC-4). 10:00 EDT should be 14:00:00.000Z
+      fireEvent.change(dateInput, { target: { value: '2099-07-15' } });
+      fireEvent.change(timeInput, { target: { value: '10:00' } });
+      fireEvent.change(tzSelect, { target: { value: 'America/New_York' } });
+      fireEvent.click(confirmButton);
+
+      expect(onSchedule).toHaveBeenCalledTimes(1);
+      const [isoString, tz] = onSchedule.mock.calls[0];
+      expect(isoString).toBe('2099-07-15T14:00:00.000Z');
+      expect(tz).toBe('America/New_York');
+    });
   });
 
   describe('Draft mode action bar in ComposerPage', () => {
@@ -475,6 +500,42 @@ describe('ComposerActions - ScheduleDrawer & Action Bar', () => {
           reschedule: true,
         });
       });
+    });
+
+    it('displays helper note informing user to cancel schedule to edit content', () => {
+      render(<ComposerPage postId='post-sched-100' />);
+
+      expect(
+        screen.getByText(/to edit post content, cancel the schedule first/i)
+      ).toBeTruthy();
+    });
+  });
+
+  describe('Publishing and published modes in ComposerPage', () => {
+    it('does not render draft action buttons when post is in publishing state', () => {
+      const publishingPost = {
+        id: 'post-pub-1',
+        version: 1,
+        base_text: 'Publishing now',
+        state: 'publishing',
+        status: 'publishing',
+        renditions: [],
+      };
+
+      vi.mocked(useSocialPost).mockReturnValue({
+        data: publishingPost,
+        isLoading: false,
+        isError: false,
+      } as any);
+
+      render(<ComposerPage postId='post-pub-1' />);
+
+      expect(screen.getByText(/publishing\.\.\./i)).toBeTruthy();
+      expect(screen.queryByRole('button', { name: /save draft/i })).toBeNull();
+      expect(
+        screen.queryByRole('button', { name: /schedule\.\.\./i })
+      ).toBeNull();
+      expect(screen.queryByRole('button', { name: /publish now/i })).toBeNull();
     });
   });
 
