@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -61,21 +61,38 @@ export default function MonthGrid({
     return eachDayOfInterval({ start: calendarStart, end: calendarEnd });
   }, [currentDate]);
 
-  // Helper to filter posts matching a day using isSameDay(parseISO(post.scheduled_at), day)
-  const getPostsForDay = (day: Date): SocialPost[] => {
-    return posts.filter((post) => {
-      if (!post.scheduled_at) return false;
+  // Memoize posts grouped by date string (yyyy-MM-dd) for O(1) lookups
+  const postsByDate = useMemo(() => {
+    const map = new Map<string, SocialPost[]>();
+    for (const post of posts) {
+      if (!post.scheduled_at) continue;
       try {
         const postDate =
           typeof post.scheduled_at === 'string'
             ? parseISO(post.scheduled_at)
             : new Date(post.scheduled_at);
-        return isSameDay(postDate, day);
+        if (isNaN(postDate.getTime())) continue;
+        const key = format(postDate, 'yyyy-MM-dd');
+        const existing = map.get(key);
+        if (existing) {
+          existing.push(post);
+        } else {
+          map.set(key, [post]);
+        }
       } catch {
-        return false;
+        // ignore unparseable dates
       }
-    });
-  };
+    }
+    return map;
+  }, [posts]);
+
+  const getPostsForDay = useCallback(
+    (day: Date): SocialPost[] => {
+      const key = format(day, 'yyyy-MM-dd');
+      return postsByDate.get(key) || [];
+    },
+    [postsByDate]
+  );
 
   const handleSelectDay = (day: Date) => {
     setSelectedDay(day);
@@ -84,8 +101,7 @@ export default function MonthGrid({
 
   const selectedDayPosts = useMemo(
     () => getPostsForDay(selectedDay),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [posts, selectedDay]
+    [getPostsForDay, selectedDay]
   );
 
   return (

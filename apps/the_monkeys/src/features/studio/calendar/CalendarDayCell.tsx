@@ -40,7 +40,8 @@ export default function CalendarDayCell({
     onClick?.(day);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return;
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onClick?.(day);
@@ -77,6 +78,7 @@ export default function CalendarDayCell({
           href={`/studio/compose?date=${dateStr}`}
           aria-label={`Schedule post on ${dateStr}`}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
           className='flex h-6 w-6 items-center justify-center rounded-md text-foreground/50 opacity-0 transition-opacity hover:bg-foreground-light/80 hover:text-foreground group-hover:opacity-100 dark:hover:bg-foreground-dark/80'
           title='Schedule post'
         >
@@ -93,7 +95,7 @@ export default function CalendarDayCell({
       </div>
 
       {/* Post chips list */}
-      <div className='mt-1.5 flex flex-1 flex-col gap-1 overflow-hidden'>
+      <div className='mt-1.5 flex flex-1 flex-col gap-1'>
         {displayedPosts.map((post) => (
           <CalendarPostChip
             key={post.id}

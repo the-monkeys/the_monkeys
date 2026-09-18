@@ -192,6 +192,40 @@ describe('MonthGrid & Subcomponents', () => {
 
       expect(screen.getByText('+1 more')).toBeDefined();
     });
+
+    it('does not trigger cell onClick when Enter/Space is pressed on schedule link', () => {
+      const handleClick = vi.fn();
+      render(
+        <CalendarDayCell
+          day={targetDate}
+          currentDate={octMonth}
+          posts={[]}
+          onClick={handleClick}
+        />
+      );
+
+      const addBtn = screen.getByRole('link', {
+        name: /schedule post on 2026-10-15/i,
+      });
+      fireEvent.keyDown(addBtn, { key: 'Enter' });
+      fireEvent.keyDown(addBtn, { key: ' ' });
+
+      expect(handleClick).not.toHaveBeenCalled();
+    });
+
+    it('does not have overflow-hidden on the chip container to prevent menu clipping', () => {
+      const { container } = render(
+        <CalendarDayCell
+          day={targetDate}
+          currentDate={octMonth}
+          posts={samplePosts.slice(0, 1)}
+        />
+      );
+
+      const chipsContainer = container.querySelector('.flex-1.flex-col');
+      expect(chipsContainer).not.toBeNull();
+      expect(chipsContainer?.className).not.toContain('overflow-hidden');
+    });
   });
 
   describe('MonthGrid', () => {
