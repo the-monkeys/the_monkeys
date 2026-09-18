@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -81,9 +81,12 @@ export default function ComposerPage({ postId }: { postId?: string }) {
         : [...current, platform]
     );
 
-  const getPlatformTextLength = (platform: SocialPlatform) => {
-    return (overrides[platform] || baseText).length;
-  };
+  const getPlatformTextLength = useCallback(
+    (platform: SocialPlatform) => {
+      return (overrides[platform] || baseText).length;
+    },
+    [overrides, baseText]
+  );
 
   const isExceeded = useMemo(() => {
     return selected.some((platformId) => {
@@ -91,7 +94,7 @@ export default function ComposerPage({ postId }: { postId?: string }) {
       if (!def) return false;
       return getPlatformTextLength(platformId) > def.limit;
     });
-  }, [selected, overrides, baseText]);
+  }, [selected, getPlatformTextLength]);
 
   const save = async (): Promise<SocialPost> => {
     let result = post;
