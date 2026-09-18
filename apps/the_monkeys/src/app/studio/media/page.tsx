@@ -4,6 +4,8 @@ import { useSocialMedia } from '@/hooks/studio/useSocialPosts';
 
 export default function MediaPage() {
   const { data, isLoading, isError } = useSocialMedia();
+  const assets = Array.isArray(data) ? data : [];
+
   return (
     <div className='space-y-6'>
       <header>
@@ -20,14 +22,14 @@ export default function MediaPage() {
         {isError ? (
           <p className='text-sm text-alert-red'>Unable to load media.</p>
         ) : null}
-        {!isLoading && !isError && !data?.length ? (
+        {!isLoading && !isError && assets.length === 0 ? (
           <p className='py-12 text-center text-sm text-foreground/60'>
             Upload images and videos from the composer when media endpoints are
             enabled.
           </p>
         ) : null}
         <div className='grid grid-cols-2 gap-4 sm:grid-cols-4'>
-          {data?.map((asset) => (
+          {assets.map((asset) => (
             <div key={asset.id} className='overflow-hidden rounded-lg border'>
               <img
                 src={asset.url}

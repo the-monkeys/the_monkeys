@@ -30,14 +30,20 @@ export default function StudioPage() {
       </header>
       <div className='grid gap-4 sm:grid-cols-3'>
         {[
-          ['Drafts', posts.filter((post) => post.status === 'draft').length],
+          [
+            'Drafts',
+            posts.filter((post) => (post.state ?? post.status) === 'draft')
+              .length,
+          ],
           [
             'Scheduled',
-            posts.filter((post) => post.status === 'scheduled').length,
+            posts.filter((post) => (post.state ?? post.status) === 'scheduled')
+              .length,
           ],
           [
             'Published',
-            posts.filter((post) => post.status === 'published').length,
+            posts.filter((post) => (post.state ?? post.status) === 'published')
+              .length,
           ],
         ].map(([label, value]) => (
           <div
@@ -79,7 +85,7 @@ export default function StudioPage() {
                   {post.base_text || 'Untitled post'}
                 </span>
                 <span className='shrink-0 text-xs capitalize text-foreground/50'>
-                  {post.status}
+                  {post.state || post.status}
                 </span>
               </div>
             </Link>

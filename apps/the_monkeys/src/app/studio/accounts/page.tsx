@@ -14,6 +14,8 @@ const platforms: { id: SocialPlatform; label: string }[] = [
 
 export default function AccountsPage() {
   const { data: accounts, isLoading } = useSocialAccounts();
+  const safeAccounts = Array.isArray(accounts) ? accounts : [];
+
   return (
     <div className='space-y-6'>
       <header>
@@ -25,7 +27,7 @@ export default function AccountsPage() {
       </header>
       <div className='grid gap-4 sm:grid-cols-2'>
         {platforms.map((platform) => {
-          const account = accounts?.find(
+          const account = safeAccounts.find(
             (item) => item.platform === platform.id
           );
           return (
@@ -44,6 +46,18 @@ export default function AccountsPage() {
                   ? `@${account.handle}`
                   : 'Account provisioning is still loading'}
               </p>
+              {account?.validation ? (
+                <div className='mt-3 space-y-1 text-xs text-foreground/50'>
+                  {account.validation.max_text_characters ? (
+                    <p>
+                      Character limit: {account.validation.max_text_characters}
+                    </p>
+                  ) : null}
+                  {account.validation.max_media_count ? (
+                    <p>Max media: {account.validation.max_media_count}</p>
+                  ) : null}
+                </div>
+              ) : null}
               {!account && !isLoading ? (
                 <p className='mt-4 text-xs text-alert-red'>
                   Account was not provisioned. Refresh after signing in again.
