@@ -120,6 +120,7 @@ export default function CalendarToolbar({
 
         {/* Segmented toggle: Month vs Week */}
         <div
+          role='group'
           className='inline-flex rounded-xl border border-border/70 bg-foreground-light/30 p-0.5 dark:bg-foreground-dark/30'
           aria-label='Calendar view mode'
         >

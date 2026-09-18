@@ -1,11 +1,5 @@
 import type { SocialPost } from '@/features/studio/types';
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import {
   endOfMonth,
   endOfWeek,
