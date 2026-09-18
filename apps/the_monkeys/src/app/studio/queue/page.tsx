@@ -1,5 +1,5 @@
-import StudioCollectionPage from '@/features/studio/components/StudioCollectionPage';
+import QueueView from '@/features/studio/queue/QueueView';
 
 export default function QueuePage() {
-  return <StudioCollectionPage kind='queue' />;
+  return <QueueView />;
 }
