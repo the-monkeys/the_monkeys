@@ -27,6 +27,9 @@ const mutationConfig = (expectedVersion?: number) => ({
     : { params: { expected_version: expectedVersion } }),
 });
 
+const unwrapPost = (data: any): SocialPost =>
+  ((data as any)?.post ?? data) as SocialPost;
+
 export const socialPostsApi = {
   async list(filters: SocialPostFilters = {}) {
     const { data } = await axiosInstance.get<SocialPostList>(root, {
@@ -58,7 +61,7 @@ export const socialPostsApi = {
   },
   async get(id: string): Promise<SocialPost> {
     const { data } = await axiosInstance.get<any>(`${root}/${id}`);
-    return ((data as any)?.post ?? data) as SocialPost;
+    return unwrapPost(data);
   },
   async create(input: SocialPostInput): Promise<SocialPost> {
     const { data } = await axiosInstance.post<any>(
@@ -66,7 +69,7 @@ export const socialPostsApi = {
       input,
       mutationConfig()
     );
-    return ((data as any)?.post ?? data) as SocialPost;
+    return unwrapPost(data);
   },
   async update(
     id: string,
@@ -78,7 +81,7 @@ export const socialPostsApi = {
       { ...input, expected_version },
       mutationConfig(expected_version)
     );
-    return ((data as any)?.post ?? data) as SocialPost;
+    return unwrapPost(data);
   },
   async delete(id: string, expectedVersion?: number): Promise<void> {
     await axiosInstance.delete(`${root}/${id}`, {
@@ -98,7 +101,7 @@ export const socialPostsApi = {
       { ...rendition, expected_version },
       mutationConfig(expected_version)
     );
-    return ((data as any)?.post ?? data) as SocialPost;
+    return unwrapPost(data);
   },
   async setRenditionMedia(
     id: string,
@@ -111,7 +114,7 @@ export const socialPostsApi = {
       { social_account_id, asset_ids, expected_version },
       mutationConfig(expected_version)
     );
-    return ((data as any)?.post ?? data) as SocialPost;
+    return unwrapPost(data);
   },
   async schedule(
     id: string,
@@ -125,7 +128,7 @@ export const socialPostsApi = {
       data: input,
       ...mutationConfig(input.expected_version),
     });
-    return ((data as any)?.post ?? data) as SocialPost;
+    return unwrapPost(data);
   },
   async cancelSchedule(id: string, expected_version: number): Promise<void> {
     await axiosInstance.delete(`${root}/${id}/schedule`, {
@@ -139,7 +142,7 @@ export const socialPostsApi = {
       { expected_version },
       mutationConfig(expected_version)
     );
-    return ((data as any)?.post ?? data) as SocialPost;
+    return unwrapPost(data);
   },
   async history(id: string, page_size?: number) {
     const { data } = await axiosInstance.get<SocialHistoryEntry[]>(
@@ -167,7 +170,8 @@ export const socialPostsApi = {
     const { data } = await axiosInstance.get<any>(
       `${root}/validation-metadata`
     );
-    return (data as any)?.platforms ?? data;
+    const platforms = (data as any)?.platforms ?? data;
+    return Array.isArray(platforms) ? (platforms as ValidationMetadata[]) : [];
   },
   async media(page_size?: number): Promise<SocialMediaAsset[]> {
     const { data } = await axiosInstance.get<any>(`${root}/media`, {

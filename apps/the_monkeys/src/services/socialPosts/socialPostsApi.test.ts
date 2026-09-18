@@ -192,10 +192,14 @@ describe('socialPostsApi normalization', () => {
       },
     });
     const result = await socialPostsApi.validationMetadata();
-    const platforms = Array.isArray(result)
-      ? result
-      : (result as any).platforms;
-    expect(Array.isArray(platforms)).toBe(true);
-    expect(platforms[0].platform).toBe('x');
+    expect(Array.isArray(result)).toBe(true);
+    expect(result[0].platform).toBe('x');
+
+    (axiosInstance.get as any).mockResolvedValueOnce({
+      data: null,
+    });
+    const emptyPlatforms = await socialPostsApi.validationMetadata();
+    expect(Array.isArray(emptyPlatforms)).toBe(true);
+    expect(emptyPlatforms.length).toBe(0);
   });
 });
