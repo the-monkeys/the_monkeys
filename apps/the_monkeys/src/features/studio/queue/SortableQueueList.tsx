@@ -22,14 +22,18 @@ export default function SortableQueueList({
   const [localItems, setLocalItems] = useState<SocialPost[]>(items);
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
 
+  const [isLocalReordering, setIsLocalReordering] = useState(false);
+
   const mutations = useSocialPostMutations();
   const reorderQueue = mutations?.reorderQueue;
+  const isReordering = Boolean(isLocalReordering || reorderQueue?.isPending);
 
   useEffect(() => {
     setLocalItems(items);
   }, [items]);
 
   const performReorder = async (fromIndex: number, toIndex: number) => {
+    if (isReordering) return;
     if (
       fromIndex < 0 ||
       fromIndex >= localItems.length ||
@@ -49,6 +53,7 @@ export default function SortableQueueList({
     setLocalItems(newItems);
 
     const newIds = newItems.map((item) => item.id);
+    setIsLocalReordering(true);
     try {
       await reorderQueue?.mutateAsync(newIds);
       onActionComplete?.();
@@ -61,6 +66,8 @@ export default function SortableQueueList({
         description:
           'Unable to update queue order. Changes have been rolled back.',
       });
+    } finally {
+      setIsLocalReordering(false);
     }
   };
 
@@ -123,6 +130,7 @@ export default function SortableQueueList({
           onDrop={handleDrop}
           onDragEnd={handleDragEnd}
           isDragging={draggedIndex === index}
+          isReordering={isReordering}
         />
       ))}
     </div>

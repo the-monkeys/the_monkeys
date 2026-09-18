@@ -98,6 +98,7 @@ const samplePosts: SocialPost[] = [
 describe('QueueView', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockReorderQueue.isPending = false;
     mockReorderQueue.mutateAsync.mockResolvedValue({ items: samplePosts });
     mockUseSocialQueue.mockReturnValue({
       data: { items: samplePosts },
@@ -319,5 +320,74 @@ describe('QueueView', () => {
     render(<QueueView />);
 
     expect(screen.getByTestId('queue-skeleton')).toBeDefined();
+  });
+
+  it('disables up and down buttons and drag capability across all items when reorderQueue is pending', () => {
+    mockReorderQueue.isPending = true;
+
+    render(<QueueView />);
+
+    const moveUpButtons = screen.getAllByRole('button', { name: /move up/i });
+    const moveDownButtons = screen.getAllByRole('button', {
+      name: /move down/i,
+    });
+
+    expect(moveUpButtons).toHaveLength(3);
+    expect(moveDownButtons).toHaveLength(3);
+
+    moveUpButtons.forEach((btn) => {
+      expect(btn.hasAttribute('disabled')).toBe(true);
+    });
+    moveDownButtons.forEach((btn) => {
+      expect(btn.hasAttribute('disabled')).toBe(true);
+    });
+
+    const dragHandles = screen.getAllByTitle('Drag to reorder');
+    dragHandles.forEach((handle) => {
+      const row = handle.closest('[draggable]');
+      expect(row?.getAttribute('draggable')).toBe('false');
+    });
+  });
+
+  it('ignores duplicate or concurrent moves when a reorder is in flight', async () => {
+    let resolveReorder!: (value: unknown) => void;
+    const pendingPromise = new Promise((resolve) => {
+      resolveReorder = resolve;
+    });
+    mockReorderQueue.mutateAsync.mockReturnValueOnce(pendingPromise);
+
+    render(<QueueView />);
+
+    const moveDownButtons = screen.getAllByRole('button', {
+      name: /move down/i,
+    });
+
+    // Trigger first move down on post-1
+    fireEvent.click(moveDownButtons[0]);
+    expect(mockReorderQueue.mutateAsync).toHaveBeenCalledTimes(1);
+    expect(mockReorderQueue.mutateAsync).toHaveBeenCalledWith([
+      'post-2',
+      'post-1',
+      'post-3',
+    ]);
+
+    // While in flight, buttons are disabled
+    const updatedMoveDownButtons = screen.getAllByRole('button', {
+      name: /move down/i,
+    });
+    expect(updatedMoveDownButtons[1].hasAttribute('disabled')).toBe(true);
+
+    // Attempt second move down while first is still pending
+    fireEvent.click(updatedMoveDownButtons[1]);
+    expect(mockReorderQueue.mutateAsync).toHaveBeenCalledTimes(1);
+
+    // Resolve in-flight mutation
+    resolveReorder({ items: samplePosts });
+    await waitFor(() => {
+      const reenabledMoveDownButtons = screen.getAllByRole('button', {
+        name: /move down/i,
+      });
+      expect(reenabledMoveDownButtons[0].hasAttribute('disabled')).toBe(false);
+    });
   });
 });

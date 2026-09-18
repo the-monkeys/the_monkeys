@@ -18,6 +18,7 @@ export interface QueueItemProps {
   onDrop?: (e: React.DragEvent<HTMLDivElement>, index: number) => void;
   onDragEnd?: (e: React.DragEvent<HTMLDivElement>) => void;
   isDragging?: boolean;
+  isReordering?: boolean;
 }
 
 const PLATFORM_LABELS: Record<string, string> = {
@@ -88,6 +89,7 @@ export default function QueueItem({
   onDrop,
   onDragEnd,
   isDragging = false,
+  isReordering = false,
 }: QueueItemProps) {
   const platforms = extractPlatforms(post);
   const formattedDate = formatScheduledTimestamp(
@@ -97,7 +99,7 @@ export default function QueueItem({
 
   return (
     <div
-      draggable={draggable}
+      draggable={draggable && !isReordering}
       onDragStart={(e) => onDragStart?.(e, index)}
       onDragOver={(e) => onDragOver?.(e, index)}
       onDrop={(e) => onDrop?.(e, index)}
@@ -131,7 +133,7 @@ export default function QueueItem({
           type='button'
           aria-label='Move up'
           title='Move up'
-          disabled={index === 0}
+          disabled={index === 0 || isReordering}
           onClick={() => onMoveUp(index)}
           className='flex h-5 w-5 items-center justify-center rounded text-[10px] text-foreground/60 transition hover:bg-foreground-light/60 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-25 dark:hover:bg-foreground-dark/60'
         >
@@ -141,7 +143,7 @@ export default function QueueItem({
           type='button'
           aria-label='Move down'
           title='Move down'
-          disabled={index === total - 1}
+          disabled={index === total - 1 || isReordering}
           onClick={() => onMoveDown(index)}
           className='flex h-5 w-5 items-center justify-center rounded text-[10px] text-foreground/60 transition hover:bg-foreground-light/60 hover:text-foreground disabled:cursor-not-allowed disabled:opacity-25 dark:hover:bg-foreground-dark/60'
         >
