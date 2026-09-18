@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import {
+  COMMON_TIMEZONES,
   detectBrowserTimezone,
   localDateTimeToUtcIso,
   parseDateInTimezone,
@@ -17,25 +18,6 @@ export interface RescheduleModalProps {
   onClose: () => void;
   onSuccess?: () => void;
 }
-
-const COMMON_TIMEZONES = [
-  'UTC',
-  'America/New_York',
-  'America/Chicago',
-  'America/Denver',
-  'America/Los_Angeles',
-  'America/Sao_Paulo',
-  'Europe/London',
-  'Europe/Paris',
-  'Europe/Berlin',
-  'Asia/Dubai',
-  'Asia/Kolkata',
-  'Asia/Singapore',
-  'Asia/Shanghai',
-  'Asia/Tokyo',
-  'Australia/Sydney',
-  'Pacific/Auckland',
-];
 
 const getTodayDateString = (): string => {
   const today = new Date();
@@ -137,13 +119,20 @@ export default function RescheduleModal({
         input: {
           scheduled_at: scheduledAtIso,
           schedule_timezone: timezone,
+          expected_version: post.version,
         },
         reschedule: true,
       });
       onSuccess?.();
       onClose();
-    } catch (err: any) {
-      setError(err?.message || 'Failed to reschedule post.');
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === 'object' && err !== null && 'message' in err
+            ? String((err as { message: unknown }).message)
+            : 'Failed to reschedule post.';
+      setError(message);
     }
   };
 

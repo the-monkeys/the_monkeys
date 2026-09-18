@@ -216,6 +216,7 @@ describe('PostActionsMenu', () => {
         input: {
           scheduled_at: expect.stringMatching(/^2026-11-20T18:30:00/),
           schedule_timezone: 'UTC',
+          expected_version: 2,
         },
         reschedule: true,
       });
@@ -242,5 +243,12 @@ describe('PostActionsMenu', () => {
       await screen.findByText(/scheduled time must be in the future/i)
     ).toBeDefined();
     expect(mockSchedule.mutateAsync).not.toHaveBeenCalled();
+  });
+
+  it('disables trigger button when mutation is pending', () => {
+    mockPublishNow.isPending = true;
+    render(<PostActionsMenu post={testPost} />);
+    const trigger = screen.getByRole('button', { name: /post actions/i });
+    expect(trigger).toHaveProperty('disabled', true);
   });
 });

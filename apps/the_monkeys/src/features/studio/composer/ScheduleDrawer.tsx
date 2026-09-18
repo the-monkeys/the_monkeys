@@ -19,7 +19,7 @@ export interface ScheduleDrawerProps {
   disabled?: boolean;
 }
 
-const COMMON_TIMEZONES = [
+export const COMMON_TIMEZONES = [
   'UTC',
   'America/New_York',
   'America/Chicago',

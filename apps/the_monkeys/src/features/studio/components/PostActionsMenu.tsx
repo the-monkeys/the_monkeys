@@ -127,8 +127,9 @@ export default function PostActionsMenu({
           aria-label='Post actions'
           aria-haspopup='true'
           aria-expanded={isOpen}
+          disabled={isPending}
           onClick={() => setIsOpen((prev) => !prev)}
-          className='flex h-8 w-8 items-center justify-center rounded-lg text-foreground/60 transition-colors hover:bg-foreground-light/50 hover:text-foreground dark:hover:bg-foreground-dark/50'
+          className='flex h-8 w-8 items-center justify-center rounded-lg text-foreground/60 transition-colors hover:bg-foreground-light/50 hover:text-foreground disabled:opacity-50 dark:hover:bg-foreground-dark/50'
         >
           <svg
             xmlns='http://www.w3.org/2000/svg'
