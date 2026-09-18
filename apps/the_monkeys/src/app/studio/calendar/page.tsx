@@ -1,5 +1,5 @@
-import StudioCollectionPage from '@/features/studio/components/StudioCollectionPage';
+import CalendarView from '@/features/studio/calendar/CalendarView';
 
 export default function CalendarPage() {
-  return <StudioCollectionPage kind='calendar' />;
+  return <CalendarView />;
 }
