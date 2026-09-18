@@ -190,6 +190,30 @@ describe('WeekGrid', () => {
       );
     });
 
+    it('does not have overflow-y-auto or overflow-hidden on desktop slot container to prevent menu clipping', () => {
+      render(<WeekGrid currentDate={targetDate} posts={samplePosts} />);
+
+      const slot = screen.getByTestId('desktop-hour-slot-2026-10-15-9');
+      expect(slot.className).not.toContain('overflow-y-auto');
+      expect(slot.className).not.toContain('overflow-hidden');
+    });
+
+    it('navigates to /studio/compose on Enter or Space keydown on an empty slot', () => {
+      render(<WeekGrid currentDate={targetDate} posts={samplePosts} />);
+
+      const emptySlot = screen.getByTestId('desktop-hour-slot-2026-10-15-10');
+      fireEvent.keyDown(emptySlot, { key: 'Enter' });
+      expect(mockPush).toHaveBeenCalledWith(
+        '/studio/compose?date=2026-10-15T10:00:00'
+      );
+
+      mockPush.mockClear();
+      fireEvent.keyDown(emptySlot, { key: ' ' });
+      expect(mockPush).toHaveBeenCalledWith(
+        '/studio/compose?date=2026-10-15T10:00:00'
+      );
+    });
+
     it('renders real-time indicator bar when active week includes today', () => {
       const today = new Date();
       render(<WeekGrid currentDate={today} posts={[]} />);

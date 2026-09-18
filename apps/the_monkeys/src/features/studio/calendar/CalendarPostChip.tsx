@@ -26,7 +26,7 @@ export function extractPlatforms(post: SocialPost): SocialPlatform[] {
   return Array.from(new Set(list));
 }
 
-function PlatformIcon({ platform }: { platform: string }) {
+export function PlatformIcon({ platform }: { platform: string }) {
   const p = platform.toLowerCase();
 
   switch (p) {
