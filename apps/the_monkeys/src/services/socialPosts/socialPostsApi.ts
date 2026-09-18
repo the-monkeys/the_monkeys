@@ -9,6 +9,7 @@ import type {
   SocialPostList,
   SocialPostRendition,
   SocialScheduleInput,
+  ValidationMetadata,
 } from '@/features/studio/types';
 import axiosInstance from '@/services/api/axiosInstance';
 
@@ -55,80 +56,90 @@ export const socialPostsApi = {
     );
     return data;
   },
-  async get(id: string) {
-    const { data } = await axiosInstance.get<SocialPost>(`${root}/${id}`);
-    return data;
+  async get(id: string): Promise<SocialPost> {
+    const { data } = await axiosInstance.get<any>(`${root}/${id}`);
+    return ((data as any)?.post ?? data) as SocialPost;
   },
-  async create(input: SocialPostInput) {
-    const { data } = await axiosInstance.post<SocialPost>(
+  async create(input: SocialPostInput): Promise<SocialPost> {
+    const { data } = await axiosInstance.post<any>(
       root,
       input,
       mutationConfig()
     );
-    return data;
+    return ((data as any)?.post ?? data) as SocialPost;
   },
-  async update(id: string, input: SocialPostInput, expected_version: number) {
-    const { data } = await axiosInstance.patch<SocialPost>(
+  async update(
+    id: string,
+    input: SocialPostInput,
+    expected_version: number
+  ): Promise<SocialPost> {
+    const { data } = await axiosInstance.patch<any>(
       `${root}/${id}`,
       { ...input, expected_version },
       mutationConfig(expected_version)
     );
-    return data;
+    return ((data as any)?.post ?? data) as SocialPost;
   },
-  async delete(id: string, expected_version: number) {
+  async delete(id: string, expectedVersion?: number): Promise<void> {
     await axiosInstance.delete(`${root}/${id}`, {
-      data: { expected_version },
-      ...mutationConfig(expected_version),
+      ...(expectedVersion !== undefined
+        ? { data: { expected_version: expectedVersion } }
+        : {}),
+      ...mutationConfig(expectedVersion),
     });
   },
   async upsertRendition(
     id: string,
     rendition: SocialPostRendition,
     expected_version: number
-  ) {
-    const { data } = await axiosInstance.put<SocialPost>(
+  ): Promise<SocialPost> {
+    const { data } = await axiosInstance.put<any>(
       `${root}/${id}/renditions`,
       { ...rendition, expected_version },
       mutationConfig(expected_version)
     );
-    return data;
+    return ((data as any)?.post ?? data) as SocialPost;
   },
   async setRenditionMedia(
     id: string,
     social_account_id: string,
     asset_ids: string[],
     expected_version: number
-  ) {
-    const { data } = await axiosInstance.put<SocialPost>(
+  ): Promise<SocialPost> {
+    const { data } = await axiosInstance.put<any>(
       `${root}/${id}/renditions/media`,
       { social_account_id, asset_ids, expected_version },
       mutationConfig(expected_version)
     );
-    return data;
+    return ((data as any)?.post ?? data) as SocialPost;
   },
-  async schedule(id: string, input: SocialScheduleInput, reschedule = false) {
+  async schedule(
+    id: string,
+    input: SocialScheduleInput,
+    reschedule = false
+  ): Promise<SocialPost> {
     const method = reschedule ? 'put' : 'post';
-    const { data } = await axiosInstance.request<SocialPost>({
+    const { data } = await axiosInstance.request<any>({
       method,
       url: `${root}/${id}/schedule`,
       data: input,
       ...mutationConfig(input.expected_version),
     });
-    return data;
+    return ((data as any)?.post ?? data) as SocialPost;
   },
-  async cancelSchedule(id: string, expected_version: number) {
+  async cancelSchedule(id: string, expected_version: number): Promise<void> {
     await axiosInstance.delete(`${root}/${id}/schedule`, {
-      data: { expected_version },
+      ...(expected_version !== undefined ? { data: { expected_version } } : {}),
       ...mutationConfig(expected_version),
     });
   },
-  async publishNow(id: string, expected_version: number) {
-    const { data } = await axiosInstance.post<SocialPost>(
+  async publishNow(id: string, expected_version: number): Promise<SocialPost> {
+    const { data } = await axiosInstance.post<any>(
       `${root}/${id}/publish-now`,
       { expected_version },
       mutationConfig(expected_version)
     );
-    return data;
+    return ((data as any)?.post ?? data) as SocialPost;
   },
   async history(id: string, page_size?: number) {
     const { data } = await axiosInstance.get<SocialHistoryEntry[]>(
@@ -147,30 +158,32 @@ export const socialPostsApi = {
     );
     return data;
   },
-  async accounts() {
-    const { data } = await axiosInstance.get<SocialAccount[]>(
-      `${root}/accounts`
-    );
-    return data;
+  async accounts(): Promise<SocialAccount[]> {
+    const { data } = await axiosInstance.get<any>(`${root}/accounts`);
+    const accounts = (data as any)?.accounts ?? data;
+    return Array.isArray(accounts) ? (accounts as SocialAccount[]) : [];
   },
-  async validationMetadata() {
-    const { data } = await axiosInstance.get(`${root}/validation-metadata`);
-    return data;
-  },
-  async media(page_size?: number) {
-    const { data } = await axiosInstance.get<SocialMediaAsset[]>(
-      `${root}/media`,
-      { params: { page_size } }
+  async validationMetadata(): Promise<ValidationMetadata[]> {
+    const { data } = await axiosInstance.get<any>(
+      `${root}/validation-metadata`
     );
-    return data;
+    return (data as any)?.platforms ?? data;
+  },
+  async media(page_size?: number): Promise<SocialMediaAsset[]> {
+    const { data } = await axiosInstance.get<any>(`${root}/media`, {
+      params: { page_size },
+    });
+    const assets = (data as any)?.assets ?? (data as any)?.items ?? data;
+    return Array.isArray(assets) ? (assets as SocialMediaAsset[]) : [];
   },
   async importMedia(source_asset_ref: string, source_kind: string) {
-    const { data } = await axiosInstance.post<SocialMediaAsset[]>(
+    const { data } = await axiosInstance.post<any>(
       `${root}/media/import`,
       { source_asset_ref, source_kind },
       mutationConfig()
     );
-    return data;
+    const assets = (data as any)?.assets ?? (data as any)?.items ?? data;
+    return Array.isArray(assets) ? (assets as SocialMediaAsset[]) : assets;
   },
   async deleteMedia(assetID: string) {
     await axiosInstance.delete(`${root}/media/${assetID}`);

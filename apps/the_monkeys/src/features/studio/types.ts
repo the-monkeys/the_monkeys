@@ -16,6 +16,24 @@ export type SocialPostStatus =
 
 export type SocialPostState = SocialPostStatus;
 
+export type FieldViolation = {
+  field: string;
+  rule_id: string;
+  message: string;
+  actual?: string;
+  allowed?: string;
+};
+
+export type ValidationMetadata = {
+  platform: SocialPlatform | string;
+  max_text_characters: number;
+  allowed_media_kinds: string[];
+  max_media_count: number;
+  max_media_bytes: number;
+  max_video_duration_ms: number;
+  media_required: boolean;
+};
+
 export type SocialAccount = {
   id: string;
   platform: SocialPlatform;
@@ -25,6 +43,7 @@ export type SocialAccount = {
   enabled: boolean;
   is_mock: boolean;
   social_account_id?: string;
+  validation?: ValidationMetadata;
 };
 
 export type SocialMediaAsset = {
@@ -55,6 +74,7 @@ export type SocialPost = {
   base_text: string;
   text?: string;
   media_asset_ids?: string[];
+  state: SocialPostStatus;
   status: SocialPostStatus;
   scheduled_at?: string;
   schedule_timezone?: string;
@@ -63,10 +83,13 @@ export type SocialPost = {
   renditions: SocialPostRendition[];
   error_message?: string;
   job_ids?: string[];
+  violations?: FieldViolation[];
 };
 
 export type SocialPostList = {
   items: SocialPost[];
+  posts?: SocialPost[];
+  next_page_token?: string;
   next_page?: number;
 };
 

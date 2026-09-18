@@ -85,6 +85,13 @@ export function useSocialMedia() {
   });
 }
 
+export function useValidationMetadata() {
+  return useQuery({
+    queryKey: ['validation-metadata'],
+    queryFn: socialPostsApi.validationMetadata,
+  });
+}
+
 export function useSocialPostMutations() {
   const queryClient = useQueryClient();
   const refresh = () => {
@@ -107,6 +114,16 @@ export function useSocialPostMutations() {
       input: SocialPostInput;
       expectedVersion: number;
     }) => guarded(socialPostsApi.update(id, input, expectedVersion)),
+    onSuccess: refresh,
+  });
+  const deleteDraft = useMutation({
+    mutationFn: ({
+      id,
+      expectedVersion,
+    }: {
+      id: string;
+      expectedVersion: number;
+    }) => guarded(socialPostsApi.delete(id, expectedVersion)),
     onSuccess: refresh,
   });
   const upsertRendition = useMutation({
@@ -188,6 +205,7 @@ export function useSocialPostMutations() {
   return {
     create,
     update,
+    deleteDraft,
     upsertRendition,
     setRenditionMedia,
     schedule,
