@@ -62,15 +62,15 @@ A single Docker image is built once and pushed to the container registry. Enviro
 ### Installation
 
 ```bash
-npm install next-runtime-env
+pnpm --filter the_monkeys add next-runtime-env
 ```
 
-### `app/layout.tsx`
+### `apps/the_monkeys/src/app/layout.tsx`
 
-Add `PublicEnvScript` to the `<head>`. This component reads all `NEXT_PUBLIC_*` variables available to the running server process and injects them into the HTML at render time — no build-time baking, no custom endpoints.
+Add `PublicEnvScript` to `<head>`. This component reads all `NEXT_PUBLIC_*` variables available to the running server process and injects them into the HTML at render time — no build-time baking, no custom endpoints.
 
 ```tsx
-// app/layout.tsx
+// apps/the_monkeys/src/app/layout.tsx
 import { PublicEnvScript } from 'next-runtime-env';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -90,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 Use the `env()` helper anywhere in client code. It reads from the runtime values injected by `PublicEnvScript`, not from the build-time bundle.
 
 ```tsx
-// app/some-page.tsx
+// Client component
 'use client';
 import { env } from 'next-runtime-env';
 
@@ -100,16 +100,26 @@ export default function SomePage() {
 }
 ```
 
-### `src/constants/api.ts`
+### `apps/the_monkeys/src/constants/api.ts`
 
-Updated to use `env()` instead of `process.env.NEXT_PUBLIC_*`. This removes the hard build-time dependency on environment values.
+Updated to use `env()` with a fallback to `process.env`. This removes the hard build-time dependency on environment values:
 
 ```ts
-// src/constants/api.ts
+// apps/the_monkeys/src/constants/api.ts
 import { env } from 'next-runtime-env';
 
-export const API_URL = env('NEXT_PUBLIC_API_URL');
-export const WS_URL  = env('NEXT_PUBLIC_WS_URL');
+export const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || env('NEXT_PUBLIC_API_URL');
+export const API_URL_V2 =
+  process.env.NEXT_PUBLIC_API_URL_V2 || env('NEXT_PUBLIC_API_URL_V2');
+export const WSS_URL =
+  process.env.NEXT_PUBLIC_WSS_URL || env('NEXT_PUBLIC_WSS_URL');
+export const WSS_URL_V2 =
+  process.env.NEXT_PUBLIC_WSS_URL_V2 || env('NEXT_PUBLIC_WSS_URL_V2');
+export const LIVE_URL =
+  process.env.NEXT_PUBLIC_LIVE_URL || env('NEXT_PUBLIC_LIVE_URL');
+export const FRN_URL =
+  process.env.NEXT_PUBLIC_FRN_URL || env('NEXT_PUBLIC_FRN_URL');
 ```
 
 ### Server Components and API Routes
