@@ -136,6 +136,7 @@ docker compose -f docker-compose.local.yml up
 For production deployment:
 
 ```bash
+cp .env.local.example .env  # fill in production values first
 docker compose -f docker-compose.yml up -d
 ```
 
