@@ -9,6 +9,7 @@ import type {
   SocialPostRendition,
 } from '@/features/studio/types';
 import {
+  useSocialAccounts,
   useSocialPost,
   useSocialPostMutations,
 } from '@/hooks/studio/useSocialPosts';
@@ -25,6 +26,7 @@ const platforms: { id: SocialPlatform; label: string; limit: number }[] = [
 export default function ComposerPage({ postId }: { postId?: string }) {
   const router = useRouter();
   const existing = useSocialPost(postId);
+  const { data: accounts } = useSocialAccounts();
   const { create, update, upsertRendition, setRenditionMedia } =
     useSocialPostMutations();
   const [text, setText] = useState('');
@@ -63,22 +65,20 @@ export default function ComposerPage({ postId }: { postId?: string }) {
       });
     }
     for (const platform of selected) {
-      const existingRendition = result.renditions.find(
-        (rendition) => rendition.platform === platform
-      );
-      if (!existingRendition?.social_account_id) continue;
+      const targetAccount = accounts?.find((acc) => acc.platform === platform);
+      if (!targetAccount?.id) continue;
       result = await upsertRendition.mutateAsync({
         id: result.id,
         expectedVersion: result.version,
         rendition: {
-          social_account_id: existingRendition.social_account_id,
+          social_account_id: targetAccount.id,
           text_override: overrides[platform] || undefined,
         },
       });
       if (result.media_asset_ids?.length) {
         result = await setRenditionMedia.mutateAsync({
           id: result.id,
-          accountId: existingRendition.social_account_id,
+          accountId: targetAccount.id,
           assetIds: result.media_asset_ids,
           expectedVersion: result.version,
         });
