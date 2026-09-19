@@ -10,7 +10,6 @@ export async function getAllRequestHeaders() {
 
   return {
     // IP & device info
-    'X-Real-IP': info.ip,
     'X-Device': info.device,
     'X-Browser': info.browser,
     'X-OS': info.os,

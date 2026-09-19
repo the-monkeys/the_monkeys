@@ -126,9 +126,6 @@ importers:
       prismjs:
         specifier: ^1.30.0
         version: 1.30.0
-      public-ip:
-        specifier: ^7.0.1
-        version: 7.0.1
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4

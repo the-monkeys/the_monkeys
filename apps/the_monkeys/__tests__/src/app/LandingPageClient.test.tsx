@@ -131,6 +131,23 @@ describe('LandingPageClient', () => {
     vi.unstubAllGlobals();
   });
 
+  it('requests only the posts used by the landing layout', () => {
+    vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
+      blogs: { blogs: [] },
+      isLoading: false,
+      isError: false,
+    });
+    vi.mocked(useEventList).mockReturnValue({
+      data: { events: [] },
+      isLoading: false,
+      isError: false,
+    } as ReturnType<typeof useEventList>);
+
+    renderWithProviders(<LandingPageClient />);
+
+    expect(useGetMetaFeedBlogs).toHaveBeenCalledWith({ limit: 12 });
+  });
+
   it('keeps events and the dispatch signup discoverable when posts fail', () => {
     vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
       blogs: undefined,

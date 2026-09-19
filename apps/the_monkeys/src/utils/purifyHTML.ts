@@ -1,6 +1,8 @@
 import DOMPurify from 'isomorphic-dompurify';
 
-export const purifyHTMLString = (dirtyString: string) => {
+export const purifyHTMLString = (dirtyString: unknown) => {
+  if (typeof dirtyString !== 'string') return '';
+
   let cleanString = DOMPurify.sanitize(dirtyString, {
     USE_PROFILES: { html: false },
   });
