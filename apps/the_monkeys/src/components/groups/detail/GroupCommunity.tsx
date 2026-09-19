@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import { TextTabs } from '@/components/TextTabs';
 import { EventGridCard } from '@/components/events/EventGridCard';
+import { GroupBlogsPanel } from '@/components/groups/detail/GroupBlogsPanel';
 import { GroupRules } from '@/components/groups/detail/GroupRules';
 import { GroupAddMember } from '@/components/groups/members/GroupAddMember';
 import { GroupInvites } from '@/components/groups/members/GroupInvites';
@@ -18,7 +19,7 @@ import { useGroupEvents } from '@/hooks/events/useEventQueries';
 import { canManageGroup, canViewGroupMembers } from '@/lib/groupPerms';
 import { GroupItem } from '@/services/groups/groupsTypes';
 
-type Tab = 'events' | 'about' | 'members' | 'requests' | 'invites';
+type Tab = 'events' | 'blogs' | 'about' | 'members' | 'requests' | 'invites';
 
 /**
  * Team-page community panel. Leads with the group's event agenda, then the
@@ -44,6 +45,7 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
         items={
           [
             { id: 'events', label: 'Events' },
+            { id: 'blogs', label: 'Blogs' },
             { id: 'about', label: 'About' },
             { id: 'members', label: 'Members' },
             ...(staff
@@ -58,6 +60,8 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
 
       {tab === 'events' ? (
         <GroupEventsPanel group={group} staff={staff} />
+      ) : tab === 'blogs' ? (
+        <GroupBlogsPanel group={group} />
       ) : tab === 'about' ? (
         <GroupAboutPanel group={group} />
       ) : tab === 'members' ? (
