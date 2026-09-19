@@ -16,9 +16,20 @@ import useAuth from '@/hooks/auth/useAuth';
 import useGetDraftBlogDetail, {
   DRAFT_BLOG_DETAIL_QUERY_KEY,
 } from '@/hooks/blog/useGetDraftBlogDetail';
+import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import { queryKeys } from '@/lib/queryKeys';
 import { useIsImageUploading } from '@/lib/store/useFileUpload';
 import axiosInstance from '@/services/api/axiosInstance';
-import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
+import {
+  getPublishedBlog,
+  publishBlog,
+  scheduleBlog,
+} from '@/services/blog/blogApi';
+import {
+  BlogPublicationSelection,
+  blogApiError,
+  publicationScope,
+} from '@/services/blog/blogPublication';
 import { useQueryClient } from '@tanstack/react-query';
 import { Tabs, TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
@@ -275,76 +286,102 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   }, [data, blogTopics, isConnected, accountId, formatData]);
 
   // Handle blog publishing
-  const handlePublishStep = useCallback(async () => {
-    if (!data || data.blocks.length <= 2) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Post must contain at least 3 content blocks.',
-      });
-      return;
-    }
+  const handlePublishStep = useCallback(
+    async (selection: BlogPublicationSelection) => {
+      if (!data || data.blocks.length <= 2) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Post must contain at least 3 content blocks.',
+        });
+        return;
+      }
 
-    if (data.blocks[0].type !== 'header' && data?.blocks[0].data.level !== 1) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Post should start with title (Heading 1).',
-      });
-      return;
-    }
+      if (
+        data.blocks[0].type !== 'header' &&
+        data?.blocks[0].data.level !== 1
+      ) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Post should start with title (Heading 1).',
+        });
+        return;
+      }
 
-    const titleBlockCount = data.blocks.filter(
-      (block) => block.type === 'title'
-    ).length;
-    if (titleBlockCount > 1) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Only one title block (Heading 1) is allowed in the post.',
-      });
-      return;
-    }
+      const titleBlockCount = data.blocks.filter(
+        (block) => block.type === 'title'
+      ).length;
+      if (titleBlockCount > 1) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description:
+            'Only one title block (Heading 1) is allowed in the post.',
+        });
+        return;
+      }
 
-    setBlogPublishLoading(true);
+      setBlogPublishLoading(true);
 
-    try {
-      await axiosInstance.post(
-        `/blog/publish/${blogId}`,
-        formatData(data, accountId, blogTopics)
-      );
+      try {
+        const formatted = formatData(data, accountId, blogTopics);
+        const scope = publicationScope(selection.group, selection.audience);
+        await publishBlog(blogId, {
+          tags: formatted.tags,
+          slug: formatted.slug,
+          ...scope,
+        });
 
-      toast({
-        variant: 'success',
-        title: 'Blog Published Successfully',
-        description: 'Your post is now live!',
-      });
+        let successDescription = 'Your post was published.';
+        try {
+          const actual = await getPublishedBlog(blogId);
+          queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], actual);
+          if (actual.group_slug) {
+            queryClient.invalidateQueries({
+              queryKey: queryKeys.groups.blogs(actual.group_slug),
+            });
+          }
+          if (actual.audience === 'group_only') {
+            successDescription = 'Published for group members.';
+          }
+        } catch {
+          // Publishing already succeeded. Read-back only refines local state and copy.
+        }
 
-      // Invalidate cache and redirect
-      queryClient.invalidateQueries({
-        queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
-      });
-      router.push(`/${username}`);
-    } catch (error) {
-      console.error('Publish error:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error Publishing Blog',
-        description: 'There was an error while publishing. Please try again.',
-      });
-    } finally {
-      setBlogPublishLoading(false);
-    }
-  }, [
-    data,
-    accountId,
-    blogId,
-    blogTopics,
-    formatData,
-    router,
-    username,
-    queryClient,
-  ]);
+        toast({
+          variant: 'success',
+          title: 'Post published',
+          description: successDescription,
+        });
+
+        // Invalidate cache and redirect
+        queryClient.invalidateQueries({
+          queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+        });
+        router.push(`/${username}`);
+      } catch (error) {
+        console.error('Publish error:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error Publishing Blog',
+          description: blogApiError(error),
+        });
+      } finally {
+        setBlogPublishLoading(false);
+      }
+    },
+    [
+      data,
+      accountId,
+      blogId,
+      blogTopics,
+      formatData,
+      router,
+      username,
+      queryClient,
+    ]
+  );
 
   // Initialize editor data
   useEffect(() => {
@@ -370,7 +407,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Handle blog scheduling
   const handleScheduleStep = useCallback(
-    async (scheduleTime: string, timezone: string) => {
+    async (
+      scheduleTime: string,
+      timezone: string,
+      selection: BlogPublicationSelection
+    ) => {
       if (!data || data.blocks.length <= 2) {
         toast({
           variant: 'destructive',
@@ -415,19 +456,21 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           webSocketRef.current.send(JSON.stringify(formatted));
         }
 
+        const scope = publicationScope(selection.group, selection.audience);
         const payload = {
           tags: formatted.tags,
           slug: formatted.slug,
           schedule_time: scheduleTime,
           timezone: timezone,
+          ...scope,
         };
 
-        await axiosInstanceV2.post(`/blog/${blogId}/schedule_blog`, payload);
+        await scheduleBlog(blogId, payload);
 
         toast({
           variant: 'success',
-          title: 'Blog Scheduled Successfully',
-          description: 'Your post has been scheduled!',
+          title: 'Post scheduled',
+          description: 'Your post has been scheduled.',
         });
 
         // Invalidate cache and redirect
@@ -440,7 +483,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         toast({
           variant: 'destructive',
           title: 'Error Scheduling Blog',
-          description: 'There was an error while scheduling. Please try again.',
+          description: blogApiError(error),
         });
       } finally {
         setBlogPublishLoading(false);
