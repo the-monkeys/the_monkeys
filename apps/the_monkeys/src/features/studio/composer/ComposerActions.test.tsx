@@ -24,6 +24,7 @@ vi.mock('@/hooks/studio/useSocialPosts', () => ({
   useSocialPost: vi.fn(),
   useSocialAccounts: vi.fn(),
   useSocialPostMutations: vi.fn(),
+  useSocialMedia: vi.fn(() => ({ data: [], isLoading: false })),
 }));
 
 describe('ComposerActions - ScheduleDrawer & Action Bar', () => {
