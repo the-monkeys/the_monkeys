@@ -32,9 +32,13 @@ export default function LoginPage() {
     rememberAuthCallback(callbackURL);
   }, [callbackURL]);
 
-  if (isSuccess) {
+  useEffect(() => {
+    if (!isSuccess) return;
     router.replace(callbackURL || peekAuthCallback());
-    return;
+  }, [isSuccess, callbackURL, router]);
+
+  if (isSuccess) {
+    return null;
   }
 
   return (

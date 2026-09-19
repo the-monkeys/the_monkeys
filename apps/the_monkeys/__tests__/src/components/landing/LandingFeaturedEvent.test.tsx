@@ -49,7 +49,9 @@ describe('LandingFeaturedEvent', () => {
     ).toBe('/events/community-design-session');
     expect(screen.getByText('Online')).toBeDefined();
     expect(
-      screen.getByText((_, element) => element?.textContent === 'Hosted by @host')
+      screen.getByText(
+        (_, element) => element?.textContent === 'Hosted by @host'
+      )
     ).toBeDefined();
     const attendance = screen.getByRole('group', {
       name: 'Event host and attendance',
@@ -88,9 +90,7 @@ describe('LandingFeaturedEvent', () => {
         .getAttribute('href')
     ).toBe('/account-host');
     expect(attendance.querySelector('img')).toBeDefined();
-    expect(
-      within(attendance).queryByText(internalUsername)
-    ).toBeNull();
+    expect(within(attendance).queryByText(internalUsername)).toBeNull();
   });
 
   it('resolves the host photo from the organizer account when username is absent', () => {

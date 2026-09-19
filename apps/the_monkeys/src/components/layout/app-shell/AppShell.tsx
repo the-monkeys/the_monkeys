@@ -29,6 +29,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   // create/edit/manage keep the standard shell with the left navigation so the
   // experience stays consistent with the rest of the app.
   const isEditorPage = pathname?.startsWith('/edit');
+  const isStudioPage = pathname?.startsWith('/studio');
 
   // Blog reading or editing mode: only show main content
   if (isBlogReading || isEditorPage) {
@@ -36,6 +37,16 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className='mx-auto w-full max-w-[1500px]'>
         <Navbar />
         <div className='px-[10px] py-4 sm:px-4 lg:px-8 lg:py-6'>{children}</div>
+      </div>
+    );
+  }
+
+  // Studio workspace mode: full canvas so Studio can control its own dedicated sidebar & header
+  if (isStudioPage) {
+    return (
+      <div className='flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark'>
+        <Navbar />
+        <div className='flex-1 min-w-0'>{children}</div>
       </div>
     );
   }
