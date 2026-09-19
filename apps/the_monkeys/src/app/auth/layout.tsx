@@ -3,14 +3,16 @@ import type { Metadata } from 'next';
 import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
 import Container from '@/components/layout/Container';
 import Logo from '@/components/logo';
+import { noIndexRobots } from '@/lib/seo';
 
 const title = 'Authentication';
 const description =
-  'Welcome to Monkeys — a platform for curious minds to explore, share, and grow through writing and learning';
+  'Sign in to Monkeys to publish posts, join groups, and attend community events.';
 
 export const metadata: Metadata = {
   title,
   description,
+  robots: noIndexRobots,
 };
 
 export default async function AuthLayout({

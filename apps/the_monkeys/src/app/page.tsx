@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { META_FEED_QUERY_KEY } from '@/hooks/blog/useGetMetaFeedBlogs';
 import { LANDING_EVENT_FILTERS, LANDING_POST_LIMIT } from '@/lib/landingPage';
-import { landingCollectionSchema, landingMetadata } from '@/lib/landingPageSeo';
+import { landingEntityGraph, landingMetadata } from '@/lib/landingPageSeo';
 import { queryKeys } from '@/lib/queryKeys';
 import { listEvents } from '@/services/events/eventsApi';
 import { fetcherV2 } from '@/services/fetcher';
@@ -31,7 +31,7 @@ export default async function LandingPage() {
 
   return (
     <>
-      <JsonLd data={landingCollectionSchema} />
+      <JsonLd data={landingEntityGraph} />
       <HydrationBoundary state={dehydrate(queryClient)}>
         <LandingPageClient />
       </HydrationBoundary>

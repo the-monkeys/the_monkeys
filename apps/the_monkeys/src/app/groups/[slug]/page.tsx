@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 import { JsonLd } from '@/components/seo/JsonLd';
 import {
@@ -25,6 +26,9 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const data = await loadGroupForMetadata(params.slug);
+  if (data === undefined) {
+    return { title: 'Group temporarily unavailable', robots: noIndexRobots };
+  }
   const group = data?.group;
   if (!group) {
     return { title: 'Group not found', robots: noIndexRobots };
@@ -39,7 +43,7 @@ export async function generateMetadata({
       title: group.name,
       description: truncateMeta(
         group.description ||
-          `${group.name}. A research group on Monkeys. Join the community and follow its events.`
+          `${group.name}. A community group on Monkeys. Join the conversation and discover its events.`
       ),
       path: `/groups/${group.slug}`,
       keywords: group.topics,
@@ -55,6 +59,7 @@ export default async function GroupDetailPage({
   params: { slug: string };
 }) {
   const data = await loadGroupForMetadata(params.slug);
+  if (data === null) notFound();
   const group = data?.group;
 
   return (

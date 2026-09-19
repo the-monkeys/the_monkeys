@@ -1,106 +1,54 @@
-import { MetadataRoute } from 'next';
-import { unstable_noStore as noStore } from 'next/cache';
+import type { MetadataRoute } from 'next';
 
-import { baseUrl } from '@/constants/baseUrl';
-import {
-  ABOUT_ROUTE,
-  EXPLORE_TOPICS_ROUTE,
-  FEED_ROUTE,
-  TOPIC_SITEMAP_ROUTE,
-} from '@/constants/routeConstants';
-import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
+import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { SITE_URL } from '@/lib/seo';
+import { fetchPublicPosts } from '@/lib/seoCatalog';
+import { MetaBlog } from '@/services/blog/blogTypes';
 
-import { generateSlug } from './blog/utils/generateSlug';
+const STATIC_PATHS: Array<{
+  path: string;
+  changeFrequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  priority: number;
+}> = [
+  { path: '/', changeFrequency: 'daily', priority: 1 },
+  { path: '/feed', changeFrequency: 'daily', priority: 0.9 },
+  { path: '/topics/explore', changeFrequency: 'daily', priority: 0.8 },
+  { path: '/events', changeFrequency: 'daily', priority: 0.8 },
+  { path: '/groups', changeFrequency: 'daily', priority: 0.8 },
+  { path: '/snapshot', changeFrequency: 'weekly', priority: 0.7 },
+  { path: '/snapshot/new', changeFrequency: 'weekly', priority: 0.8 },
+  { path: '/cards', changeFrequency: 'weekly', priority: 0.7 },
+  { path: '/about', changeFrequency: 'monthly', priority: 0.6 },
+  { path: '/contact-us', changeFrequency: 'yearly', priority: 0.4 },
+  { path: '/support', changeFrequency: 'monthly', priority: 0.5 },
+  { path: '/privacy', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/terms', changeFrequency: 'yearly', priority: 0.3 },
+  { path: '/cookies', changeFrequency: 'yearly', priority: 0.3 },
+];
 
-async function fetchBlogPosts(): Promise<MetaBlog[]> {
-  try {
-    const response = await fetch(
-      'https://monkeys.support/api/v2/blog/meta-feed',
-      {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
-
-    if (!response.ok) {
-      console.error(
-        `Failed to fetch posts: ${response.status} ${response.statusText}`
-      );
-      return [];
-    }
-
-    const data: GetMetaFeedBlogs = await response.json();
-    return data?.blogs || [];
-  } catch (error) {
-    console.error('Error fetching posts:', error);
-    return [];
-  }
+function validDate(value?: string): Date | undefined {
+  if (!value) return undefined;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
+export function buildMainSitemap(posts: MetaBlog[]): MetadataRoute.Sitemap {
+  const staticEntries = STATIC_PATHS.map((entry) => ({
+    url: `${SITE_URL}${entry.path === '/' ? '/' : entry.path}`,
+    changeFrequency: entry.changeFrequency,
+    priority: entry.priority,
+  }));
+  const postEntries = posts.map((post) => ({
+    url: `${SITE_URL}/blog/${generateSlug(post.title)}-${post.blog_id}`,
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+    lastModified: validDate(post.published_time),
+  }));
+  return [...staticEntries, ...postEntries];
+}
+
+export const revalidate = 300;
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  noStore();
-
-  const blogPosts = await fetchBlogPosts();
-
-  const staticUrls: MetadataRoute.Sitemap = [
-    {
-      url: `${baseUrl}`,
-      changeFrequency: 'daily',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}${FEED_ROUTE}`,
-      changeFrequency: 'daily',
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}${ABOUT_ROUTE}`,
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}${EXPLORE_TOPICS_ROUTE}`,
-      changeFrequency: 'daily',
-      priority: 0.6,
-    },
-    {
-      url: `${baseUrl}/events`,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/groups`,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/snapshot/new`,
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/cards`,
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}${TOPIC_SITEMAP_ROUTE}`,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-  ];
-
-  const blogUrls: MetadataRoute.Sitemap = blogPosts.map((post: MetaBlog) => {
-    const title = post?.title || 'Untitled Post';
-    const slug = generateSlug(title);
-
-    return {
-      url: `${baseUrl}/blog/${slug}-${post?.blog_id ?? 'unknown'}`,
-      changeFrequency: 'monthly',
-      priority: 0.9,
-      lastModified: post?.published_time,
-    };
-  });
-
-  return [...staticUrls, ...blogUrls];
+  return buildMainSitemap(await fetchPublicPosts());
 }

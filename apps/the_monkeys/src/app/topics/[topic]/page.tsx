@@ -1,6 +1,6 @@
-import { Metadata } from 'next';
-import { unstable_noStore as noStore } from 'next/cache';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
@@ -9,231 +9,48 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
-import { LIVE_URL } from '@/constants/api';
-import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
-import { slugToTopic, topicToSlug } from '@/utils/topicUtils';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { noIndexFollowRobots } from '@/lib/seo';
+import { fetchTopicCatalog } from '@/lib/topicCatalog';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { BlogsByTopic } from './components/BlogsByTopic';
 import TopicFollowButton from './components/TopicFollowButton';
+import { fetchTopicPosts } from './topicData';
+import {
+  buildTopicJsonLd,
+  buildTopicMetadata,
+  findCatalogTopic,
+} from './topicSeo';
 
-function normalizeTopicPost(value: unknown): MetaBlog | null {
-  if (!value || typeof value !== 'object') return null;
+type Props = { params: { topic: string } };
 
-  const post = value as Partial<MetaBlog>;
-  if (typeof post.blog_id !== 'string' || typeof post.title !== 'string') {
-    return null;
-  }
-
-  return {
-    blog_id: post.blog_id,
-    title: post.title,
-    first_image: typeof post.first_image === 'string' ? post.first_image : '',
-    first_paragraph:
-      typeof post.first_paragraph === 'string' ? post.first_paragraph : '',
-    owner_account_id:
-      typeof post.owner_account_id === 'string' ? post.owner_account_id : '',
-    published_time:
-      typeof post.published_time === 'string' ? post.published_time : '',
-    tags: Array.isArray(post.tags)
-      ? post.tags.filter((tag): tag is string => typeof tag === 'string')
-      : [],
-    like_count:
-      typeof post.like_count === 'number' ? post.like_count : undefined,
-    bookmark_count:
-      typeof post.bookmark_count === 'number' ? post.bookmark_count : undefined,
-    content_type:
-      typeof post.content_type === 'string' ? post.content_type : undefined,
-  };
-}
-
-async function fetchTopicData(topic: string): Promise<GetMetaFeedBlogs> {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL_V2 || 'https://monkeys.support/api/v2'}/blog/meta-feed`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ tags: [topic] }),
-        next: { revalidate: 3600 }, // Cache for 1 hour
-      }
-    );
-
-    if (!response.ok) return { blogs: [] };
-
-    const data = (await response.json()) as Partial<GetMetaFeedBlogs>;
-    const blogs = Array.isArray(data.blogs)
-      ? data.blogs
-          .map((post) => normalizeTopicPost(post))
-          .filter((post): post is MetaBlog => post !== null)
-      : [];
-
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const catalog = await fetchTopicCatalog();
+  const topic = findCatalogTopic(params.topic, catalog);
+  if (!topic) {
     return {
-      blogs,
-      total_blogs:
-        typeof data.total_blogs === 'number' ? data.total_blogs : blogs.length,
+      title: { absolute: 'Topic not found | Monkeys' },
+      robots: noIndexFollowRobots,
     };
-  } catch (error) {
-    console.error('Error fetching topic data:', error);
-    return { blogs: [] };
   }
+  const topicData = await fetchTopicPosts(topic);
+  return buildTopicMetadata(topic, params.topic, topicData.blogs);
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: {
-    topic: string;
-  };
-}): Promise<Metadata> {
-  noStore();
+export default async function TopicBlogsPage({ params }: Props) {
+  const catalog = await fetchTopicCatalog();
+  const topic = findCatalogTopic(params.topic, catalog);
+  if (!topic) notFound();
 
-  // Convert slug back to topic name
-  const topic = slugToTopic(params.topic) || 'Various Topics';
-  const topicData = await fetchTopicData(topic);
-  const blogCount = topicData?.blogs?.length || 0;
-
-  const topicUrl = `${LIVE_URL}/topics/${params.topic}`;
-  const topicImage = `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`;
-
-  // Generate dynamic title and description based on content
-  const title = `${topic} Articles & Posts | Monkeys Blogging Community`;
-  const description =
-    blogCount > 0
-      ? `Discover ${blogCount} insightful articles and posts about ${topic} on Monkeys. Expert insights, guides, and discussions from our community of writers.`
-      : `Explore articles and posts about ${topic} on Monkeys. Join our community of writers sharing insights, guides, and discussions.`;
-
-  return {
-    title: {
-      absolute: title,
-    },
-    description,
-    keywords: [
-      topic,
-      `${topic} articles`,
-      `${topic} posts`,
-      `${topic} blog`,
-      `${topic} guides`,
-      `${topic} insights`,
-      'blogging community',
-      'expert articles',
-      'quality content',
-    ],
-    alternates: {
-      canonical: topicUrl,
-    },
-    openGraph: {
-      title,
-      description,
-      url: topicUrl,
-      siteName: 'Monkeys',
-      type: 'website',
-      images: [
-        {
-          url: topicImage,
-          width: 1200,
-          height: 630,
-          alt: `${topic} articles and posts on Monkeys`,
-        },
-      ],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-      images: [topicImage],
-      site: '@monkeys_com_co',
-    },
-    robots: {
-      index: true,
-      follow: true,
-      nocache: false,
-      googleBot: {
-        index: true,
-        follow: true,
-        noimageindex: false,
-      },
-    },
-    other: {
-      'article:tag': topic,
-    },
-  };
-}
-
-// Generate structured data for topic pages
-function generateTopicSchema(topic: string, blogCount: number) {
-  const topicUrl = `${LIVE_URL}/topics/${topicToSlug(topic)}`;
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: `${topic} Articles & Posts`,
-    description: `A collection of articles and posts about ${topic} on Monkeys blogging community`,
-    url: topicUrl,
-    mainEntity: {
-      '@type': 'ItemList',
-      name: `${topic} Articles`,
-      numberOfItems: blogCount,
-      itemListElement: blogCount > 0 ? [] : undefined, // Could be populated with actual blog items
-    },
-    publisher: {
-      '@type': 'Organization',
-      name: 'Monkeys',
-      url: LIVE_URL,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`,
-      },
-    },
-    breadcrumb: {
-      '@type': 'BreadcrumbList',
-      itemListElement: [
-        {
-          '@type': 'ListItem',
-          position: 1,
-          name: 'Home',
-          item: LIVE_URL,
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
-          name: 'Topics',
-          item: `${LIVE_URL}/topics/explore`,
-        },
-        {
-          '@type': 'ListItem',
-          position: 3,
-          name: topic,
-          item: topicUrl,
-        },
-      ],
-    },
-  };
-}
-
-const TopicBlogsPage = async ({
-  params,
-}: {
-  params: {
-    topic: string;
-  };
-}) => {
-  // Convert slug back to topic name
-  const topic = slugToTopic(params.topic);
-  const topicData = await fetchTopicData(topic);
-  const blogCount = topicData?.blogs?.length || 0;
-  const topicSchema = generateTopicSchema(topic, blogCount);
+  const topicData = await fetchTopicPosts(topic);
+  const blogCount = topicData.blogs.length;
 
   return (
     <>
-      {/* Structured Data */}
-      <script
-        type='application/ld+json'
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(topicSchema) }}
-      />
+      <JsonLd data={buildTopicJsonLd(topic, params.topic, topicData.blogs)} />
 
       <Container className='pb-12 px-4 min-h-[800px]'>
-        {/* Breadcrumb Navigation */}
         <nav className='my-6' aria-label='Breadcrumb'>
           <ol className='flex items-center space-x-1 text-sm'>
             <li>
@@ -241,7 +58,6 @@ const TopicBlogsPage = async ({
                 Home
               </Link>
             </li>
-
             <li className='flex items-center'>
               <Icon name='RiArrowRight' className='mx-2' size={16} />
               <Link
@@ -251,7 +67,6 @@ const TopicBlogsPage = async ({
                 Topics
               </Link>
             </li>
-
             <li className='flex items-center'>
               <Icon name='RiArrowRight' className='mx-2' size={16} />
               <span className='font-medium'>{topic}</span>
@@ -262,24 +77,22 @@ const TopicBlogsPage = async ({
         <PageHeader>
           <PageSubheading subheading='Explore more about' />
           <PageHeading heading={topic} className='text-center' />
-
           {blogCount > 0 && (
             <p className='text-center opacity-80 mt-2'>
-              {blogCount} article{blogCount !== 1 ? 's' : ''} found
+              {blogCount} post{blogCount !== 1 ? 's' : ''} found
             </p>
           )}
         </PageHeader>
 
         <div className='pb-12 md:pb-16 flex justify-center gap-2 flex-wrap'>
           <TopicFollowButton topic={topic} />
-
           <Button
             variant='secondary'
             size='sm'
             className='rounded-full'
             asChild
           >
-            <Link href='/topics/explore' target='_blank'>
+            <Link href='/topics/explore'>
               <Icon name='RiCompass' className='mr-1' />
               Explore Topics
             </Link>
@@ -292,6 +105,4 @@ const TopicBlogsPage = async ({
       </Container>
     </>
   );
-};
-
-export default TopicBlogsPage;
+}

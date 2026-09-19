@@ -3,16 +3,15 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
+import { pageMetadata } from '@/lib/seo';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
-export const metadata: Metadata = {
-  title: 'Support Monkeys | Fund our Research & Partner With Us',
+export const metadata: Metadata = pageMetadata({
+  title: 'Support Monkeys | Partner With Buddhicintaka',
   description:
-    'Help us invest in open-source research, AI, and engineering education. Partner with Monkeys for software-as-a-service builds, training programs, and tech consulting.',
-  alternates: {
-    canonical: '/support',
-  },
-};
+    'Support Monkeys and Buddhicintaka (OPC) Pvt. Ltd. through partnerships, open-source research, engineering education, and technology consulting.',
+  path: '/support',
+});
 
 const PITCH_ITEMS: Array<{
   icon: 'RiShakeHands' | 'RiCodeSSlash' | 'RiBookShelf' | 'RiLightbulb';
@@ -57,10 +56,10 @@ const SupportPage = () => {
         </h1>
 
         <p className='mt-5 font-inter text-base sm:text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
-          Monkeys is a research-first writing platform built by working
-          engineers. We are inviting partners and supporters to help us keep the
-          lights on and push the work forward through funding, business
-          partnerships, training engagements, or consulting work.
+          Monkeys is a content and community platform built by Buddhicintaka
+          engineers. We invite partners and supporters to help us keep the
+          platform independent through funding, business partnerships, training
+          engagements, or consulting work.
         </p>
 
         <div className='mt-10 grid gap-6 sm:grid-cols-2'>

@@ -3,12 +3,19 @@ import EventDetailPage, { generateMetadata } from '@/app/events/[slug]/page';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { mockedCookies } = vi.hoisted(() => ({
+const { mockedCookies, mockedNotFound } = vi.hoisted(() => ({
   mockedCookies: vi.fn(),
+  mockedNotFound: vi.fn(() => {
+    throw new Error('NEXT_NOT_FOUND');
+  }),
 }));
 
 vi.mock('next/headers', () => ({
   cookies: mockedCookies,
+}));
+
+vi.mock('next/navigation', () => ({
+  notFound: mockedNotFound,
 }));
 
 vi.mock('@/constants/api', () => ({
@@ -25,6 +32,7 @@ describe('loadEventForMetadata', () => {
     vi.restoreAllMocks();
     vi.stubGlobal('fetch', vi.fn());
     mockedCookies.mockReturnValue({ get: vi.fn().mockReturnValue(undefined) });
+    mockedNotFound.mockClear();
   });
 
   it('forwards the mat cookie without caching when loading an event for metadata', async () => {
@@ -92,13 +100,75 @@ describe('loadEventForMetadata', () => {
   });
 
   it('keeps the Event not found metadata fallback for a non-OK lookup', async () => {
-    vi.mocked(fetch).mockResolvedValue({ ok: false } as Response);
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
 
     const metadata = await generateMetadata({
       params: { slug: 'private-event' },
     });
 
     expect(metadata.title).toBe('Event not found');
+  });
+
+  it('distinguishes temporary upstream failure from a confirmed missing event', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 500 } as Response);
+    await expect(
+      loadEventForMetadata('unstable-event')
+    ).resolves.toBeUndefined();
+
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
+    await expect(loadEventForMetadata('missing-event')).resolves.toBeNull();
+  });
+
+  it('returns a real not-found response for a confirmed missing event', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
+
+    await expect(
+      EventDetailPage({ params: { slug: 'missing-event' } })
+    ).rejects.toThrow('NEXT_NOT_FOUND');
+    expect(mockedNotFound).toHaveBeenCalledOnce();
+  });
+
+  it('keeps a published private event out of search indexes', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        event: {
+          id: 1,
+          title: 'Members only event',
+          slug: 'members-only-event',
+          event_type: 'virtual',
+          status: 'published',
+          visibility: 'private',
+        },
+      }),
+    } as unknown as Response);
+
+    const metadata = await generateMetadata({
+      params: { slug: 'members-only-event' },
+    });
+
+    expect(metadata.robots).toMatchObject({ index: false, follow: false });
+  });
+
+  it('keeps an event with missing visibility out of search indexes', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        event: {
+          id: 1,
+          title: 'Ambiguous event',
+          slug: 'ambiguous-event',
+          event_type: 'virtual',
+          status: 'published',
+        },
+      }),
+    } as unknown as Response);
+
+    const metadata = await generateMetadata({
+      params: { slug: 'ambiguous-event' },
+    });
+
+    expect(metadata.robots).toMatchObject({ index: false, follow: false });
   });
 
   it('escapes user-controlled closing script tags in event JSON-LD', async () => {
@@ -112,6 +182,7 @@ describe('loadEventForMetadata', () => {
           description: '</script><script>alert(1)</script>',
           event_type: 'in_person',
           status: 'published',
+          visibility: 'public',
         },
       }),
     } as unknown as Response);

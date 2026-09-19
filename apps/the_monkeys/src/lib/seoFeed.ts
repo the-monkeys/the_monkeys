@@ -8,6 +8,10 @@ export type RssItem = {
   description?: string;
 };
 
+function cdata(value: string): string {
+  return value.replace(/\]\]>/g, ']]]]><![CDATA[>');
+}
+
 export function buildRssXml({
   title,
   description,
@@ -22,7 +26,7 @@ export function buildRssXml({
   const channelLink = `${SITE_URL}${path}`;
   const itemXml = items
     .map((item) => {
-      const desc = escapeXml(item.description || '');
+      const desc = cdata(item.description || '');
       const pub = item.pubDate
         ? `<pubDate>${item.pubDate.toUTCString()}</pubDate>`
         : '';

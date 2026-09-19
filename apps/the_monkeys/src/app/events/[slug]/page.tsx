@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 import {
   breadcrumb,
@@ -12,8 +13,11 @@ import { eventJsonLd } from '@/lib/seoSchema';
 import EventDetailClient from './EventDetailClient';
 import { loadEventForMetadata } from './eventMetadata';
 
-function isIndexable(status?: string) {
-  return status === 'published' || status === 'live' || status === 'completed';
+function isIndexable(status?: string, visibility?: string) {
+  return (
+    visibility === 'public' &&
+    (status === 'published' || status === 'live' || status === 'completed')
+  );
 }
 
 function serializeJsonLd(value: unknown): string {
@@ -26,12 +30,15 @@ export async function generateMetadata({
   params: { slug: string };
 }): Promise<Metadata> {
   const data = await loadEventForMetadata(params.slug);
+  if (data === undefined) {
+    return { title: 'Event temporarily unavailable', robots: noIndexRobots };
+  }
   const event = data?.event;
   if (!event) {
     return { title: 'Event not found', robots: noIndexRobots };
   }
 
-  if (!isIndexable(event.status)) {
+  if (!isIndexable(event.status, event.visibility)) {
     return { title: event.title, robots: noIndexRobots };
   }
 
@@ -56,11 +63,12 @@ export default async function EventDetailPage({
   params: { slug: string };
 }) {
   const data = await loadEventForMetadata(params.slug);
+  if (data === null) notFound();
   const event = data?.event;
 
   return (
     <>
-      {event && isIndexable(event.status) && (
+      {event && isIndexable(event.status, event.visibility) && (
         <>
           <script
             type='application/ld+json'
