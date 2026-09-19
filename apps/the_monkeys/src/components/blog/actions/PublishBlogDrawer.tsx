@@ -1,11 +1,14 @@
 import { useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
+import { BlogPublicationScopeFields } from '@/components/blog/actions/BlogPublicationScopeFields';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
+import useAuth from '@/hooks/auth/useAuth';
 import { useScheduleState } from '@/hooks/blog/schedule/useScheduleState';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
+import { BlogPublicationSelection } from '@/services/blog/blogPublication';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Drawer,
@@ -32,8 +35,12 @@ interface PublishBlogDrawerProps {
   setTopics: React.Dispatch<React.SetStateAction<string[]>>;
   data: OutputData | null;
   setData?: React.Dispatch<React.SetStateAction<OutputData | null>>;
-  handlePublish: () => void;
-  handleSchedule?: (scheduleTime: string, timezone: string) => void;
+  handlePublish: (selection: BlogPublicationSelection) => void;
+  handleSchedule?: (
+    scheduleTime: string,
+    timezone: string,
+    selection: BlogPublicationSelection
+  ) => void;
   isPublishing: boolean;
 }
 
@@ -85,11 +92,16 @@ export const PublishBlogDrawer = ({
   handleSchedule,
   isPublishing,
 }: PublishBlogDrawerProps) => {
+  const { data: session } = useAuth();
   const { topics: allTopics } = useGetAllTopics();
 
   const [isScheduleMode, setIsScheduleMode] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
+  const [publication, setPublication] = useState<BlogPublicationSelection>({
+    group: null,
+    audience: 'public',
+  });
 
   const {
     scheduleDate,
@@ -173,9 +185,11 @@ export const PublishBlogDrawer = ({
 
   const handleActionClick = () => {
     if (isScheduleMode && handleSchedule) {
-      validateAndSubmit(handleSchedule);
+      validateAndSubmit((scheduleTime, timezone) =>
+        handleSchedule(scheduleTime, timezone, publication)
+      );
     } else {
-      handlePublish();
+      handlePublish(publication);
     }
   };
 
@@ -386,6 +400,12 @@ export const PublishBlogDrawer = ({
             {/* ---- Right column: Topics & Scheduling ---- */}
             <div className='flex flex-col justify-between h-full col-span-2 sm:col-span-1 space-y-6'>
               <div className='space-y-4'>
+                <BlogPublicationScopeFields
+                  username={session?.username}
+                  value={publication}
+                  onChange={setPublication}
+                />
+
                 <div className='space-y-1'>
                   <Label className='font-dm_sans font-medium'>
                     Topics Included
