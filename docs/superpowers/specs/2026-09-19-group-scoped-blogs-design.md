@@ -235,7 +235,9 @@ For a members-only post:
 - Do not emit Article JSON-LD.
 - Do not emit public Open Graph or social-card metadata that describes the private content.
 - Do not render the public social snapshot control.
-- Do not place the URL in sitemaps, RSS, home, search, trending, or public feeds. The engine already performs collection filtering, so the frontend does not add a second content filter.
+- Do not place the URL in sitemaps, RSS, home, search, trending, or public feeds.
+- Keep the engine as the authority for ordinary public UI collections. The frontend does not duplicate that filtering in home, search, trending, topic, or following components.
+- Add a defense-in-depth check in the SEO catalog normalizer so sitemap and RSS generation discard any record explicitly marked `audience: 'group_only'`, even if a future backend regression returns it from `meta-feed`.
 
 ### Article header
 
@@ -258,6 +260,8 @@ The My published view accepts `group_only` records. It shows a Members only badg
 The bookmarks view accepts that the server may remove inaccessible posts after the viewer leaves a group. Its existing empty state remains valid when the list becomes empty. Remove-bookmark remains usable through its existing endpoint and no client-side visibility cache is used to reinsert removed records.
 
 Home, following feed, trending, topics, and `/blog/search/v2` receive no additional filtering. The engine already excludes `group_only`, and duplicating that policy in each component would risk inconsistent behavior.
+
+Sitemap and RSS generation are a separate public-disclosure boundary. Their shared `normalizePublicPosts` function rejects explicit `group_only` records before URL or feed-item construction. Older records with no `audience` remain public for backward compatibility.
 
 ## Cache behavior
 
@@ -300,6 +304,7 @@ Implementation follows test-driven development.
 - API error extraction from both `error` and `message` response keys.
 - Viewer-aware article loader forwarding the cookie, using no-store, and distinguishing 404 from upstream failure.
 - Missing `audience` normalizing to public.
+- SEO catalog normalization excluding explicit `group_only` records while retaining old records with no audience.
 
 ### Component tests
 
