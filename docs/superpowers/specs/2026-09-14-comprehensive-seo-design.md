@@ -1,7 +1,7 @@
 # Comprehensive SEO and AI Discovery Design
 
 **Date:** 2026-09-14
-**Status:** Awaiting written-spec review
+**Status:** Approved for implementation
 **Product:** Monkeys
 **Legal publisher:** Buddhicintaka (OPC) Pvt. Ltd.
 
@@ -69,17 +69,20 @@ The brand remains **Monkeys**. Supporting metadata and structured data may use *
 The homepage will expose a connected JSON-LD graph with stable identifiers:
 
 1. `Organization` for Buddhicintaka (OPC) Pvt. Ltd.
+
    - Stable `@id` based on `https://buddhicintaka.com/#organization`.
    - Exact legal name.
    - Company URL, logo, location, and verified social profiles when available.
    - A `brand` relationship to Monkeys.
 
 2. `Brand` for Monkeys.
+
    - Stable `@id` based on `https://monkeys.com.co/#brand`.
    - Product name, URL, logo, and description.
    - Referenced by the Buddhicintaka organization's `brand` property.
 
 3. `WebSite` for Monkeys.
+
    - Stable `@id` based on `https://monkeys.com.co/#website`.
    - Publisher relationship to Buddhicintaka.
    - Brand relationship to Monkeys.

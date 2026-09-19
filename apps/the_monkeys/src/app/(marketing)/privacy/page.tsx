@@ -1,13 +1,16 @@
 import { Metadata } from 'next';
 
+import { pageMetadata } from '@/lib/seo';
+
 import { PrivacyContent } from './PrivacyContent';
 
 export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: 'Privacy Policy',
+  return pageMetadata({
+    title: 'Privacy Policy | Monkeys',
     description:
-      'Explore our privacy policy to understand how we collect, use, and protect your personal information. Read about our commitment to data security and your rights regarding your data.',
-  };
+      'Read how Monkeys and Buddhicintaka (OPC) Pvt. Ltd. collect, use, protect, and manage personal information.',
+    path: '/privacy',
+  });
 }
 
 const PrivacyPage = () => {

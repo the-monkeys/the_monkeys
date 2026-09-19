@@ -1,6 +1,15 @@
 import type { Metadata } from 'next';
 
-import { OG_IMAGE, SITE_NAME, absoluteUrl, indexRobots } from '@/lib/seo';
+import {
+  MONKEYS_WEBSITE_ID,
+  OG_IMAGE,
+  SITE_NAME,
+  absoluteUrl,
+  indexRobots,
+  monkeysBrand,
+  monkeysWebsite,
+  publisherOrg,
+} from '@/lib/seo';
 
 const title = 'Monkeys | Posts, Events and Communities';
 const description =
@@ -36,15 +45,13 @@ export const landingMetadata: Metadata = {
 };
 
 export const landingCollectionSchema = {
-  '@context': 'https://schema.org',
   '@type': 'CollectionPage',
+  '@id': `${absoluteUrl('/')}#collection`,
   name: title,
   url: absoluteUrl('/'),
   description,
   isPartOf: {
-    '@type': 'WebSite',
-    name: SITE_NAME,
-    url: absoluteUrl('/'),
+    '@id': MONKEYS_WEBSITE_ID,
   },
   about: [
     { '@type': 'Thing', name: 'Thoughtful posts' },
@@ -69,5 +76,15 @@ export const landingCollectionSchema = {
       name: 'Topics',
       url: absoluteUrl('/topics/explore'),
     },
+  ],
+};
+
+export const landingEntityGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    publisherOrg(),
+    monkeysBrand(),
+    monkeysWebsite(),
+    landingCollectionSchema,
   ],
 };

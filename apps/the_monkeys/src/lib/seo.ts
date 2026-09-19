@@ -7,6 +7,10 @@ export const SITE_URL = (LIVE_URL || baseUrl).replace(/\/$/, '');
 export const SITE_NAME = 'Monkeys';
 export const OG_IMAGE = `${SITE_URL}/opengraph-image.png?b7ef6eff2b7766be`;
 export const TWITTER_SITE = '@monkeys_com_co';
+export const LEGAL_PUBLISHER_NAME = 'Buddhicintaka (OPC) Pvt. Ltd.';
+export const LEGAL_PUBLISHER_ID = 'https://buddhicintaka.com/#organization';
+export const MONKEYS_BRAND_ID = `${SITE_URL}/#brand`;
+export const MONKEYS_WEBSITE_ID = `${SITE_URL}/#website`;
 
 export const indexRobots: Metadata['robots'] = {
   index: true,
@@ -31,9 +35,47 @@ export const noIndexRobots: Metadata['robots'] = {
   },
 };
 
+export const noIndexFollowRobots: Metadata['robots'] = {
+  index: false,
+  follow: true,
+  googleBot: {
+    index: false,
+    follow: true,
+  },
+};
+
 export const noIndexMetadata: Metadata = {
   robots: noIndexRobots,
 };
+
+const PRIVATE_ROUTE_PREFIXES = [
+  '/auth',
+  '/settings',
+  '/notifications',
+  '/library',
+  '/activity',
+  '/create',
+  '/edit',
+];
+
+export function robotsForPath(path: string): Metadata['robots'] {
+  const pathname = path.split('?')[0].replace(/\/$/, '') || '/';
+  if (pathname === '/search') return noIndexFollowRobots;
+  if (
+    /^\/groups\/[^/]+\/(members|requests|manage|edit)(?:\/|$)/.test(pathname) ||
+    /^\/events\/[^/]+\/(manage|edit)(?:\/|$)/.test(pathname)
+  ) {
+    return noIndexRobots;
+  }
+  if (
+    PRIVATE_ROUTE_PREFIXES.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+    )
+  ) {
+    return noIndexRobots;
+  }
+  return indexRobots;
+}
 
 export function noIndexPage(title: string): Metadata {
   return {
@@ -52,6 +94,28 @@ export function truncateMeta(text: string, max = 160): string {
   const trimmed = (text || '').replace(/\s+/g, ' ').trim();
   if (trimmed.length <= max) return trimmed;
   return `${trimmed.slice(0, max).replace(/\s+\S*$/, '')}…`;
+}
+
+export function normalizeSeoText(value: string, max = 160): string {
+  const normalized = (value || '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;|&#160;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;|&#34;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/\s*\u2014\s*/g, ', ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  if (normalized.length <= max) return normalized;
+
+  const raw = normalized.slice(0, max);
+  if (/\s/.test(normalized.charAt(max))) return raw.trim();
+
+  const clipped = raw.replace(/\s+\S*$/, '').trim();
+  return clipped || normalized.slice(0, max).trim();
 }
 
 export function pageMetadata({
@@ -105,18 +169,41 @@ export function pageMetadata({
 export function publisherOrg() {
   return {
     '@type': 'Organization',
+    '@id': LEGAL_PUBLISHER_ID,
+    name: LEGAL_PUBLISHER_NAME,
+    url: 'https://buddhicintaka.com/',
+    brand: { '@id': MONKEYS_BRAND_ID },
+  };
+}
+
+export function monkeysBrand() {
+  return {
+    '@type': 'Brand',
+    '@id': MONKEYS_BRAND_ID,
     name: SITE_NAME,
+    alternateName: 'Monkeys by Buddhicintaka',
     url: SITE_URL,
-    logo: {
-      '@type': 'ImageObject',
-      url: OG_IMAGE,
-      width: 1200,
-      height: 630,
-    },
+    logo: OG_IMAGE,
+    description:
+      'A content and community platform for posts, topics, events, groups, and authors.',
+    parentOrganization: { '@id': LEGAL_PUBLISHER_ID },
     sameAs: [
       'https://x.com/monkeys_com_co',
       'https://www.instagram.com/monkeys_com_co',
     ],
+  };
+}
+
+export function monkeysWebsite() {
+  return {
+    '@type': 'WebSite',
+    '@id': MONKEYS_WEBSITE_ID,
+    name: SITE_NAME,
+    alternateName: 'Monkeys by Buddhicintaka',
+    url: SITE_URL,
+    publisher: { '@id': LEGAL_PUBLISHER_ID },
+    about: { '@id': MONKEYS_BRAND_ID },
+    inLanguage: 'en',
   };
 }
 
@@ -163,9 +250,9 @@ export function escapeXml(value: string): string {
 
 export const EVENTS_SEO = {
   path: '/events',
-  title: 'Research Events & Meetups | Host or RSVP Talks, Workshops & Sessions',
+  title: 'Community Events and Meetups | Host or RSVP on Monkeys',
   description:
-    'Discover and host research meetups, academic talks, workshops, and community events on Monkeys. Free or paid RSVP, in-person or virtual. Built for writers, researchers, and local groups.',
+    'Discover and host community meetups, talks, workshops, and interest-led events on Monkeys. Find free or paid, in-person, virtual, and hybrid experiences.',
   keywords: [
     'research events',
     'academic meetups',
@@ -181,7 +268,7 @@ export const EVENTS_SEO = {
     {
       question: 'Can I host a research meetup or talk on Monkeys?',
       answer:
-        'Yes. Create a free or paid event, one-off or recurring, with RSVP, tickets, and a public page at monkeys.com.co/events.',
+        'Yes. Create a free or paid meetup, talk, workshop, or community event with RSVP, tickets, and a public page on Monkeys.',
     },
     {
       question: 'Are Monkeys events free to attend?',
@@ -191,16 +278,16 @@ export const EVENTS_SEO = {
     {
       question: 'How is Monkeys different from Meetup?',
       answer:
-        'Monkeys is a research-first publishing platform. Events and groups sit next to research journals, so communities can publish, meet, and share from one place.',
+        'Monkeys connects posts, events, groups, topics, and authors, so communities can publish, meet, and share from one place.',
     },
   ],
 };
 
 export const GROUPS_SEO = {
   path: '/groups',
-  title: 'Research Groups & Communities | Join or Start a Group on Monkeys',
+  title: 'Interest Groups and Communities | Join or Start a Group on Monkeys',
   description:
-    'Find research groups, writing circles, and local communities on Monkeys. Start a public group, host events, and grow a community around your field.',
+    'Find interest groups, writing circles, research communities, and local networks on Monkeys. Start a group, host events, and connect around shared interests.',
   keywords: [
     'research groups',
     'academic community',
@@ -212,7 +299,7 @@ export const GROUPS_SEO = {
   ],
   faqs: [
     {
-      question: 'How do I start a research group on Monkeys?',
+      question: 'How do I start a group on Monkeys?',
       answer:
         'Open Groups, tap Start a group, and publish a public community. You can then host events, invite members, and share a public group page.',
     },

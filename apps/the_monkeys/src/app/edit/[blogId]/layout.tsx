@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 
 import Container from '@/components/layout/Container';
+import { noIndexRobots } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Edit Post',
+  robots: noIndexRobots,
 };
 
 const EditPageLayout = ({

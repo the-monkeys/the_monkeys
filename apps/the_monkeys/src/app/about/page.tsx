@@ -7,72 +7,42 @@ import MembersGrid from '@/components/branding/membersGrid';
 import { StartWritingButton } from '@/components/buttons/StartWritingButton';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import { LIVE_URL } from '@/constants/api';
 import { HOME_ROUTE } from '@/constants/routeConstants';
+import {
+  LEGAL_PUBLISHER_ID,
+  MONKEYS_BRAND_ID,
+  MONKEYS_WEBSITE_ID,
+  absoluteUrl,
+  pageMetadata,
+} from '@/lib/seo';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
-export const metadata: Metadata = {
-  title: 'About Us | Monkeys - Trusted Collaborative Blogging Community',
+export const metadata: Metadata = pageMetadata({
+  title: 'About Monkeys | Content and Community Platform',
   description:
-    'Monkeys is a trusted content community for writers and thinkers. Learn about our mission to foster collaborative writing, expert articles, and meaningful storytelling across science, technology, and philosophy.',
+    'Learn how Monkeys connects thoughtful posts, topics, authors, groups, and community-led events in one platform operated by Buddhicintaka (OPC) Pvt. Ltd.',
+  path: '/about',
   keywords: [
     'about monkeys',
-    'collaborative writing platform',
-    'trusted content community',
-    'expert articles',
-    'quality blogging',
-    'social storytelling',
-    'writers community',
-    'tech and science blogs',
+    'content and community platform',
+    'community posts',
+    'events and groups',
+    'authors and topics',
   ],
-  alternates: {
-    canonical: '/about',
-  },
-  openGraph: {
-    title: {
-      absolute: 'About Us | Monkeys - Trusted Collaborative Blogging Community',
-    },
-    description:
-      'Join Monkeys, the trusted community where collaborative writing meets expert insights. Discover how we empower writers to publish meaningful content.',
-    url: `${LIVE_URL}/about`,
-    images: [
-      {
-        url: `${LIVE_URL}/opengraph-image.png`,
-        width: 1200,
-        height: 630,
-        alt: 'About Monkeys Community',
-      },
-    ],
-  },
-};
+});
 
 const AboutPage = () => {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'AboutPage',
+    '@id': `${absoluteUrl('/about')}#about`,
     name: 'About Monkeys',
     description:
-      'Monkeys is a trusted content community for writers and thinkers, fostering collaborative writing and expert articles.',
-    url: `${LIVE_URL}/about`,
-    mainEntity: {
-      '@type': 'Organization',
-      name: 'Monkeys',
-      url: LIVE_URL,
-      logo: {
-        '@type': 'ImageObject',
-        url: `${LIVE_URL}/opengraph-image.png`,
-      },
-      sameAs: [
-        'https://x.com/monkeys_com_co',
-        'https://www.instagram.com/monkeys_com_co?igsh=ZnhjYWZqN3hidThj',
-      ],
-      knowsAbout: [
-        'Collaborative Blogging',
-        'Quality Content',
-        'Expert Articles',
-        'Social Storytelling',
-      ],
-    },
+      'Monkeys is a content and community platform for posts, topics, authors, groups, and events.',
+    url: absoluteUrl('/about'),
+    about: { '@id': MONKEYS_BRAND_ID },
+    isPartOf: { '@id': MONKEYS_WEBSITE_ID },
+    publisher: { '@id': LEGAL_PUBLISHER_ID },
   };
 
   return (
@@ -92,12 +62,11 @@ const AboutPage = () => {
 
           <p className='pt-3 text-base md:text-lg text-center tracking-tight'>
             Monkeys is a{' '}
-            <span className='font-semibold'>Trusted Content Community</span> for{' '}
-            <span className='font-semibold'>writers</span> and{' '}
-            <span className='font-semibold'>thinkers</span>. We are a platform
-            to share stories that inspire, inform, and spark innovation — make
-            an impact through meaningful{' '}
-            <span className='font-semibold'>collaborative storytelling</span>.
+            <span className='font-semibold'>
+              content and community platform
+            </span>{' '}
+            where people publish thoughtful posts, explore topics, join
+            interest-based groups, and meet through community-led events.
           </p>
 
           <div className='p-6 flex flex-col sm:flex-row justify-center items-center gap-4'>
@@ -130,22 +99,16 @@ const AboutPage = () => {
         <div className='py-10 space-y-10'>
           <div className='py-8 flex flex-col items-center gap-4'>
             <h2 className='pb-3 font-dm_sans font-semibold text-4xl md:text-5xl text-center'>
-              Evolving{' '}
+              Connecting{' '}
               <span className='font-dm_sans text-brand-orange tracking-tight'>
-                Collaborative Blogging
+                Content and Community
               </span>
             </h2>
 
             <p className='text-base md:text-lg text-center'>
-              We&apos;re more than just a typical writing platform. With{' '}
-              <span className='font-semibold'>collaborative writing</span>{' '}
-              tools, <span className='font-semibold'>AI integration</span> for
-              better content,{' '}
-              <span className='font-semibold'>version control</span>, and{' '}
-              <span className='font-semibold'>social snapshots</span>,
-              we&apos;ve built the ultimate environment for{' '}
-              <span className='font-semibold'>expert articles</span> and
-              meaningful storytelling.
+              Publishing tools help authors create thoughtful posts and social
+              snapshots. Topics, groups, and events help people discover ideas,
+              build communities, and continue the conversation together.
             </p>
           </div>
 
@@ -174,8 +137,8 @@ const AboutPage = () => {
               <span className='font-semibold'>passionate innovators</span>,{' '}
               <span className='font-semibold'>storytellers</span>, and{' '}
               <span className='font-semibold'>builders</span>, who are shaping
-              the future of collaborative writing and meaningful content
-              creation.
+              the future of thoughtful content, community discovery, and
+              meaningful participation.
             </p>
           </div>
 
@@ -214,7 +177,7 @@ const AboutPage = () => {
                 <span className='font-medium'>code contributions</span>, to{' '}
                 <span className='font-medium'>bug reports</span>, from{' '}
                 <span className='font-medium'>feature ideas</span>, to{' '}
-                <span className='font-medium'>feedback</span> - you make Monkeys
+                <span className='font-medium'>feedback</span>, you make Monkeys
                 what it is.
               </p>
             </div>
