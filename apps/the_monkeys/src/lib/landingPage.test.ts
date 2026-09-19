@@ -109,4 +109,21 @@ describe('landing page content selection', () => {
     expect(allIds).not.toContain('untitled');
     expect(new Set(allIds).size).toBe(allIds.length);
   });
+
+  it('filters malformed API records instead of throwing while rendering', () => {
+    const malformedPosts = [
+      post('valid'),
+      { ...post('bad-id'), blog_id: 42 },
+      { ...post('bad-title'), title: { text: 'Wrong shape' } },
+      null,
+    ] as unknown as MetaBlog[];
+    const malformedEvents = [
+      event(1),
+      { ...event(2), title: 42 },
+      { ...event(3), slug: null },
+    ] as unknown as EventItem[];
+
+    expect(selectLandingPosts(malformedPosts).lead?.blog_id).toBe('valid');
+    expect(selectLandingEvents(malformedEvents).featured?.id).toBe(1);
+  });
 });

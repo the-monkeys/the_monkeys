@@ -26,7 +26,6 @@ axiosInstanceNoAuth.interceptors.request.use(
       console.warn('Failed to add analytics headers:', error);
 
       if (config.headers && typeof config.headers.set === 'function') {
-        config.headers.set('X-IP', 'unknown');
         config.headers.set('X-Client', 'unknown');
         config.headers.set('X-OS', 'unknown');
         config.headers.set('X-Device', 'unknown');

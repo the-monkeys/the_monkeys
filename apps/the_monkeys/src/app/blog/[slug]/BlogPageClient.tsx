@@ -113,7 +113,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
         </div>
 
         <h2 className='py-1 font-dm_sans font-medium text-lg text-center'>
-          Page not found — but at least you found us!
+          Page not found, but at least you found us!
         </h2>
 
         <p className='text-base opacity-90 text-center'>
@@ -127,7 +127,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
-  const blogTitle = blog?.blog.blocks[0].data.text;
+  const blogTitle = blog?.blog?.blocks?.[0]?.data?.text;
   const sanitizedBlogTitle = purifyHTMLString(blogTitle);
 
   const blogDataWithoutHeading = () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { landingCollectionSchema, landingMetadata } from './landingPageSeo';
+import { landingEntityGraph, landingMetadata } from './landingPageSeo';
 
 describe('landing page SEO', () => {
   it('positions Monkeys around posts, events, groups, content, and community', () => {
@@ -17,12 +17,16 @@ describe('landing page SEO', () => {
   });
 
   it('publishes crawlable navigation for the current product areas', () => {
-    const schema = JSON.stringify(landingCollectionSchema);
+    const schema = JSON.stringify(landingEntityGraph);
 
     expect(schema).toContain('CollectionPage');
     expect(schema).toContain('SiteNavigationElement');
     expect(schema).toContain('https://monkeys.com.co/events');
     expect(schema).toContain('https://monkeys.com.co/groups');
     expect(schema).toContain('https://monkeys.com.co/topics/explore');
+    expect(schema).toContain('https://buddhicintaka.com/#organization');
+    expect(schema).toContain('Buddhicintaka (OPC) Pvt. Ltd.');
+    expect(schema).toContain('https://monkeys.com.co/#brand');
+    expect(schema).toContain('https://monkeys.com.co/#website');
   });
 });

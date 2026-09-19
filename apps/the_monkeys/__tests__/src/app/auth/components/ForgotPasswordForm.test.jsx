@@ -50,18 +50,14 @@ describe('ForgotPasswordForm', () => {
     const user = userEvent.setup();
     renderWithProviders(<ForgotPasswordForm />);
 
-    expect(
-      screen.queryByRole('button', { name: 'clear button' })
-    ).toBeNull();
+    expect(screen.queryByRole('button', { name: 'clear button' })).toBeNull();
 
     const emailInput = screen.getByPlaceholderText('Enter email address');
     await user.type(emailInput, 'john@example.com');
     await user.click(screen.getByRole('button', { name: 'clear button' }));
 
     expect(emailInput.value).toBe('');
-    expect(
-      screen.queryByRole('button', { name: 'clear button' })
-    ).toBeNull();
+    expect(screen.queryByRole('button', { name: 'clear button' })).toBeNull();
   });
 
   it('requests a code and advances to OTP verification', async () => {

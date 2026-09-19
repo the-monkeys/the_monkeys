@@ -6,9 +6,14 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
+import { absoluteUrl, noIndexFollowRobots } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: 'Search',
+  title: { absolute: 'Search Posts and Authors | Monkeys' },
+  description:
+    'Search public posts and authors on Monkeys, then explore their topics, events, and communities.',
+  alternates: { canonical: absoluteUrl('/search') },
+  robots: noIndexFollowRobots,
 };
 
 const SearchPageLayout = ({

@@ -6,9 +6,11 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
+import { noIndexRobots } from '@/lib/seo';
 
 export const metadata: Metadata = {
   title: 'Activity',
+  robots: noIndexRobots,
 };
 
 const ActivityPageLayout = ({

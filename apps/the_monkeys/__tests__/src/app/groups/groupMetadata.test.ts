@@ -1,12 +1,20 @@
-import { generateMetadata } from '@/app/groups/[slug]/page';
+import { loadGroupForMetadata } from '@/app/groups/[slug]/groupMetadata';
+import GroupDetailPage, { generateMetadata } from '@/app/groups/[slug]/page';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-const { mockedCookies } = vi.hoisted(() => ({
+const { mockedCookies, mockedNotFound } = vi.hoisted(() => ({
   mockedCookies: vi.fn(),
+  mockedNotFound: vi.fn(() => {
+    throw new Error('NEXT_NOT_FOUND');
+  }),
 }));
 
 vi.mock('next/headers', () => ({
   cookies: mockedCookies,
+}));
+
+vi.mock('next/navigation', () => ({
+  notFound: mockedNotFound,
 }));
 
 vi.mock('@/constants/api', () => ({
@@ -25,6 +33,7 @@ describe('group metadata', () => {
     mockedCookies.mockReturnValue({
       get: vi.fn().mockReturnValue({ value: 'token' }),
     });
+    mockedNotFound.mockClear();
   });
 
   it('uses the authenticated request to load private group metadata', async () => {
@@ -59,5 +68,24 @@ describe('group metadata', () => {
         headers: { Authorization: 'Bearer token' },
       }
     );
+  });
+
+  it('distinguishes temporary upstream failure from a confirmed missing group', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 500 } as Response);
+    await expect(
+      loadGroupForMetadata('unstable-group')
+    ).resolves.toBeUndefined();
+
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
+    await expect(loadGroupForMetadata('missing-group')).resolves.toBeNull();
+  });
+
+  it('returns a real not-found response for a confirmed missing group', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
+
+    await expect(
+      GroupDetailPage({ params: { slug: 'missing-group' } })
+    ).rejects.toThrow('NEXT_NOT_FOUND');
+    expect(mockedNotFound).toHaveBeenCalledOnce();
   });
 });

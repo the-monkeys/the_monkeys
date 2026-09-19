@@ -25,4 +25,9 @@ describe('purifyHTMLString', () => {
 
     expect(result).toBe('');
   });
+
+  it('returns an empty string for missing or non-string API content', () => {
+    expect(purifyHTMLString(undefined)).toBe('');
+    expect(purifyHTMLString({ text: 'unexpected shape' })).toBe('');
+  });
 });

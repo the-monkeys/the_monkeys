@@ -1,8 +1,7 @@
 import { toIsoTime } from '@/lib/eventTime';
 import {
+  MONKEYS_WEBSITE_ID,
   OG_IMAGE,
-  SITE_NAME,
-  SITE_URL,
   absoluteUrl,
   breadcrumb,
   faqPage,
@@ -22,9 +21,9 @@ export function eventsHubGraph(faqs: { question: string; answer: string }[]) {
         name: 'Monkeys Events',
         url,
         description:
-          'Public research meetups, talks, workshops, and community sessions hosted on Monkeys.',
-        isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },
-        about: ['Research events', 'Academic meetups', 'Community workshops'],
+          'Public meetups, talks, workshops, and community sessions hosted on Monkeys.',
+        isPartOf: { '@id': MONKEYS_WEBSITE_ID },
+        about: ['Community events', 'Meetups', 'Talks', 'Workshops'],
       },
       faqPage(url, faqs),
       breadcrumb([
@@ -45,8 +44,8 @@ export function groupsHubGraph(faqs: { question: string; answer: string }[]) {
         name: 'Monkeys Groups',
         url,
         description:
-          'Public research groups and writing communities on Monkeys.',
-        isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },
+          'Public interest groups, writing circles, research communities, and local networks on Monkeys.',
+        isPartOf: { '@id': MONKEYS_WEBSITE_ID },
       },
       faqPage(url, faqs),
       breadcrumb([
@@ -147,46 +146,47 @@ export function eventJsonLd(event: EventItem) {
   }
   if (event.tags?.length) jsonLd.keywords = event.tags.join(', ');
 
-  if (event.event_type !== 'virtual' && event.location) {
-    const place: Record<string, unknown> = {
-      '@type': 'Place',
-      name: event.venue?.name || event.location,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: event.venue?.address_line1 || event.location,
-        addressLocality: event.venue?.city,
-        addressRegion: event.venue?.region,
-        addressCountry: event.venue?.country,
-        postalCode: event.venue?.postal_code,
-      },
+  const physicalPlace: Record<string, unknown> | undefined = event.location
+    ? {
+        '@type': 'Place',
+        name: event.venue?.name || event.location,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: event.venue?.address_line1 || event.location,
+          addressLocality: event.venue?.city,
+          addressRegion: event.venue?.region,
+          addressCountry: event.venue?.country,
+          postalCode: event.venue?.postal_code,
+        },
+      }
+    : undefined;
+  if (
+    physicalPlace &&
+    event.venue?.latitude != null &&
+    event.venue?.longitude != null
+  ) {
+    physicalPlace.geo = {
+      '@type': 'GeoCoordinates',
+      latitude: event.venue.latitude,
+      longitude: event.venue.longitude,
     };
-    if (event.venue?.latitude && event.venue?.longitude) {
-      place.geo = {
-        '@type': 'GeoCoordinates',
-        latitude: event.venue.latitude,
-        longitude: event.venue.longitude,
-      };
-    }
-    jsonLd.location = place;
-  } else if (event.event_type === 'virtual') {
+  }
+
+  if (event.event_type === 'virtual') {
     jsonLd.location = {
       '@type': 'VirtualLocation',
-      url: event.meeting_link || url,
+      url,
     };
   } else if (event.event_type === 'hybrid') {
     jsonLd.location = [
-      event.location
-        ? {
-            '@type': 'Place',
-            name: event.location,
-            address: event.location,
-          }
-        : undefined,
+      physicalPlace,
       {
         '@type': 'VirtualLocation',
-        url: event.meeting_link || url,
+        url,
       },
     ].filter(Boolean);
+  } else if (physicalPlace) {
+    jsonLd.location = physicalPlace;
   }
 
   const tiers = event.ticket_tiers || [];
@@ -232,7 +232,7 @@ export function groupJsonLd(group: GroupItem) {
   const jsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    '@id': url,
+    '@id': `${url}#group`,
     name: group.name,
     url,
     description: truncateMeta(group.description || '', 400),
@@ -242,18 +242,18 @@ export function groupJsonLd(group: GroupItem) {
         ? absoluteUrl(group.logo_image)
         : undefined,
     logo: group.logo_image ? absoluteUrl(group.logo_image) : undefined,
-    parentOrganization: publisherOrg(),
-    memberOf: {
-      '@type': 'WebSite',
-      name: SITE_NAME,
-      url: SITE_URL,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url,
+      isPartOf: { '@id': MONKEYS_WEBSITE_ID },
     },
   };
 
   if (group.member_count) {
-    jsonLd.numberOfEmployees = {
-      '@type': 'QuantitativeValue',
-      value: group.member_count,
+    jsonLd.interactionStatistic = {
+      '@type': 'InteractionCounter',
+      interactionType: { '@type': 'JoinAction' },
+      userInteractionCount: group.member_count,
     };
   }
   if (group.topics?.length) jsonLd.knowsAbout = group.topics;
