@@ -13,11 +13,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 vi.mock('@/hooks/studio/useSocialPosts', () => ({
   useSocialPosts: vi.fn(),
   useSocialAccounts: vi.fn(),
+  useSocialAccountMutations: vi.fn(),
   useSocialMedia: vi.fn(),
-  useSocialAccountMutations: vi.fn(() => ({
-    delink: { mutateAsync: vi.fn(), isPending: false },
-    createMock: { mutateAsync: vi.fn(), isPending: false },
-  })),
 }));
 
 describe('Studio Pages', () => {
@@ -25,6 +22,10 @@ describe('Studio Pages', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useSocialAccountMutations).mockReturnValue({
+      delink: { mutateAsync: vi.fn().mockResolvedValue({ success: true, drafts_reverted_count: 1 }), isPending: false },
+      createMock: { mutateAsync: vi.fn().mockResolvedValue({ id: 'mock-123' }), isPending: false },
+    } as any);
   });
 
   describe('StudioPage', () => {
@@ -218,23 +219,21 @@ describe('Studio Pages', () => {
       expect(screen.getByText(/Character limit:\s*3000/)).toBeDefined();
     });
 
-    it('renders multiple accounts for the same platform with Demo/Mock badges', () => {
+    it('displays multiple accounts for the same platform with demo badge', () => {
       const mockAccounts = [
         {
-          id: 'acc-1',
+          id: 'acc-x-1',
           platform: 'x',
           handle: 'personal_x',
           display_name: 'Personal X',
-          is_mock: true,
-          status: 'active',
+          is_mock: false,
         },
         {
-          id: 'acc-2',
+          id: 'acc-x-2',
           platform: 'x',
-          handle: 'work_x',
-          display_name: 'Work X',
-          is_mock: false,
-          status: 'active',
+          handle: 'brand_x',
+          display_name: 'Brand X',
+          is_mock: true,
         },
       ];
 
@@ -244,32 +243,28 @@ describe('Studio Pages', () => {
       } as any);
 
       render(<AccountsPage />);
+
       expect(screen.getByText('@personal_x')).toBeDefined();
-      expect(screen.getByText('@work_x')).toBeDefined();
-      expect(screen.getByText('Demo / Mock')).toBeDefined();
+      expect(screen.getByText('@brand_x')).toBeDefined();
+      expect(screen.getByText('Demo')).toBeDefined();
     });
 
-    it('opens delink warning modal when clicking Delink and calls mutation on confirm', async () => {
-      const delinkMutateAsync = vi
-        .fn()
-        .mockResolvedValue({
-          success: true,
-          cancelled_jobs_count: 2,
-          drafts_reverted_count: 1,
-        });
-      vi.mocked(useSocialAccountMutations).mockReturnValue({
-        delink: { mutateAsync: delinkMutateAsync, isPending: false } as any,
-        createMock: { mutateAsync: vi.fn(), isPending: false } as any,
+    it('opens delink modal on click and calls delink on confirmation', async () => {
+      const mockDelink = vi.fn().mockResolvedValue({
+        success: true,
+        drafts_reverted_count: 2,
       });
+      vi.mocked(useSocialAccountMutations).mockReturnValue({
+        delink: { mutateAsync: mockDelink, isPending: false },
+        createMock: { mutateAsync: vi.fn(), isPending: false },
+      } as any);
 
       const mockAccounts = [
         {
-          id: 'acc-1',
+          id: 'acc-x-1',
           platform: 'x',
           handle: 'personal_x',
           display_name: 'Personal X',
-          is_mock: true,
-          status: 'active',
         },
       ];
 
@@ -279,23 +274,19 @@ describe('Studio Pages', () => {
       } as any);
 
       render(<AccountsPage />);
-      const delinkButton = screen.getByRole('button', {
-        name: /delink|disconnect/i,
-      });
-      fireEvent.click(delinkButton);
 
+      const delinkBtn = screen.getByLabelText('Disconnect @personal_x');
+      fireEvent.click(delinkBtn);
+
+      expect(screen.getByText('Disconnect Account')).toBeDefined();
       expect(
-        screen.getByText(
-          /Any scheduled posts targeted to this account will be cancelled/i
-        )
+        screen.getByText(/Any scheduled posts targeted to this channel will be/i)
       ).toBeDefined();
 
-      const confirmButton = screen.getByRole('button', {
-        name: /confirm disconnect/i,
-      });
-      fireEvent.click(confirmButton);
+      const confirmBtn = screen.getByText('Confirm Disconnect');
+      fireEvent.click(confirmBtn);
 
-      expect(delinkMutateAsync).toHaveBeenCalledWith('acc-1');
+      expect(mockDelink).toHaveBeenCalledWith('acc-x-1');
     });
   });
 

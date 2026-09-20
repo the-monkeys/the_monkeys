@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import type { SocialAccount, SocialPlatform } from '@/features/studio/types';
 import {
   useSocialAccountMutations,
@@ -8,24 +9,25 @@ import {
 import {
   RiAddLine,
   RiAlertLine,
+  RiCheckLine,
   RiCloseLine,
-  RiDeleteBinLine,
   RiErrorWarningLine,
   RiFacebookBoxFill,
   RiInstagramFill,
   RiLinkedinBoxFill,
+  RiLinkUnlinkM,
+  RiLoader4Line,
   RiTiktokFill,
   RiTwitterXFill,
   RiYoutubeFill,
 } from '@remixicon/react';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
-import React, { useState } from 'react';
 
 interface PlatformConfig {
   id: SocialPlatform;
   label: string;
   description: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string; size?: number }>;
   accentColor: string;
   badgeBg: string;
 }
@@ -86,55 +88,71 @@ const PLATFORMS: PlatformConfig[] = [
 export default function AccountsPage() {
   const { data: accounts, isLoading } = useSocialAccounts();
   const safeAccounts = Array.isArray(accounts) ? accounts : [];
-  const { delink, createMock } = useSocialAccountMutations();
+  const mutations = useSocialAccountMutations();
+  const delinkMutation = mutations?.delink;
+  const createMockMutation = mutations?.createMock;
 
-  // Delink modal state
+  // Modals state
   const [accountToDelink, setAccountToDelink] = useState<SocialAccount | null>(
     null
   );
-  const [delinkMessage, setDelinkMessage] = useState<string | null>(null);
+  const [mockModalPlatform, setMockModalPlatform] =
+    useState<PlatformConfig | null>(null);
+  const [mockHandle, setMockHandle] = useState('');
+  const [mockDisplayName, setMockDisplayName] = useState('');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Mock / OAuth connect modal state
-  const [isConnectModalOpen, setIsConnectModalOpen] = useState(false);
-  const [selectedPlatform, setSelectedPlatform] = useState<SocialPlatform>('x');
-  const [handleInput, setHandleInput] = useState('');
-  const [displayNameInput, setDisplayNameInput] = useState('');
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 4000);
+  };
 
   const handleConfirmDelink = async () => {
-    if (!accountToDelink) return;
+    if (!accountToDelink || !delinkMutation?.mutateAsync) return;
     try {
-      const res = await delink.mutateAsync(accountToDelink.id);
-      setDelinkMessage(
-        `Disconnected @${accountToDelink.handle}. ${res.cancelled_jobs_count || 0} scheduled jobs cancelled, ${res.drafts_reverted_count || 0} posts moved to drafts.`
-      );
+      const res = await delinkMutation.mutateAsync(accountToDelink.id);
       setAccountToDelink(null);
-    } catch (err: any) {
-      setDelinkMessage(
-        err?.message || 'Failed to disconnect account. Please try again.'
+      const reverted = res?.drafts_reverted_count ?? 0;
+      showToast(
+        reverted > 0
+          ? `Disconnected @${accountToDelink.handle}. ${reverted} scheduled post(s) returned to drafts.`
+          : `Disconnected @${accountToDelink.handle}.`
       );
+    } catch (err: any) {
+      showToast(err?.message || 'Failed to disconnect account');
     }
   };
 
   const handleCreateMockAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!handleInput.trim()) return;
-    const cleanHandle = handleInput.trim().replace(/^@/, '');
-    await createMock.mutateAsync({
-      platform: selectedPlatform,
-      handle: cleanHandle,
-      display_name: displayNameInput.trim() || cleanHandle,
-    });
-    setHandleInput('');
-    setDisplayNameInput('');
-    setIsConnectModalOpen(false);
-  };
+    if (!mockModalPlatform || !mockHandle.trim() || !createMockMutation?.mutateAsync)
+      return;
 
-  const handleOAuthConnect = (platform: SocialPlatform) => {
-    window.location.href = `/api/v1/social-posts/oauth/${platform}/authorize`;
+    try {
+      await createMockMutation.mutateAsync({
+        platform: mockModalPlatform.id,
+        handle: mockHandle.startsWith('@') ? mockHandle.slice(1) : mockHandle,
+        display_name: mockDisplayName.trim() || mockHandle.trim(),
+      });
+      setMockModalPlatform(null);
+      setMockHandle('');
+      setMockDisplayName('');
+      showToast(`Connected @${mockHandle} (${mockModalPlatform.label}) in Demo mode.`);
+    } catch (err: any) {
+      showToast(err?.message || 'Failed to connect mock account');
+    }
   };
 
   return (
     <div className='w-full min-w-0 space-y-6 sm:space-y-8'>
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className='fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-xl bg-zinc-900 px-4 py-3 text-sm font-medium text-white shadow-xl dark:bg-zinc-100 dark:text-zinc-900 animate-in fade-in slide-in-from-bottom-5 duration-200'>
+          <RiCheckLine size={18} className='text-green-400' />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* Header */}
       <header className='flex flex-col justify-between gap-3 sm:flex-row sm:items-end'>
         <div className='min-w-0'>
@@ -147,29 +165,11 @@ export default function AccountsPage() {
             Accounts
           </h2>
           <p className='mt-1 max-w-2xl text-xs sm:text-sm lg:text-base text-foreground/60'>
-            Connect and manage your social channels. You can link multiple
-            accounts for each platform. Each platform enforces its own character
-            limits and media validation constraints.
+            Connect multiple social media accounts per channel. Link via OAuth or
+            provision demo channels to preview publishing and validation rules.
           </p>
         </div>
       </header>
-
-      {/* Notification / Toast Banner */}
-      {delinkMessage ? (
-        <div className='flex items-center justify-between gap-3 rounded-xl border border-brand-orange/20 bg-brand-orange/10 p-3.5 text-xs sm:text-sm text-brand-orange'>
-          <div className='flex items-center gap-2 min-w-0'>
-            <RiAlertLine size={18} className='shrink-0' />
-            <span className='truncate'>{delinkMessage}</span>
-          </div>
-          <button
-            type='button'
-            onClick={() => setDelinkMessage(null)}
-            className='shrink-0 rounded p-1 hover:bg-brand-orange/20'
-          >
-            <RiCloseLine size={16} />
-          </button>
-        </div>
-      ) : null}
 
       {/* Loading Skeletons */}
       {isLoading && safeAccounts.length === 0 ? (
@@ -205,6 +205,7 @@ export default function AccountsPage() {
           );
           const hasAccounts = platformAccounts.length > 0;
           const Icon = platform.icon;
+          const firstAccount = platformAccounts[0];
 
           return (
             <div
@@ -212,7 +213,7 @@ export default function AccountsPage() {
               className='group flex flex-col justify-between min-w-0 rounded-2xl border border-border-light bg-background-light p-4 sm:p-5 lg:p-6 transition-all duration-200 hover:border-brand-orange/30 hover:shadow-md dark:border-border-dark/60 dark:bg-background-dark'
             >
               <div className='min-w-0 space-y-4'>
-                {/* Platform Header: Icon + Title + Add Account Button */}
+                {/* Platform Header: Icon + Title + Add/Connect Button */}
                 <div className='flex items-start justify-between gap-2.5 min-w-0'>
                   <div className='flex items-center gap-3 min-w-0 flex-1'>
                     <div
@@ -221,104 +222,151 @@ export default function AccountsPage() {
                       <Icon size={22} className={platform.accentColor} />
                     </div>
                     <div className='min-w-0 flex-1'>
-                      <h3 className='truncate font-semibold text-sm sm:text-base text-foreground dark:text-text-dark'>
-                        {platform.label}
-                      </h3>
+                      <div className='flex items-center gap-2'>
+                        <h3 className='truncate font-semibold text-sm sm:text-base text-foreground dark:text-text-dark'>
+                          {platform.label}
+                        </h3>
+                        {hasAccounts && (
+                          <span className='rounded-full bg-foreground-light/40 px-2 py-0.2 text-[10px] font-bold text-foreground/70 dark:bg-foreground-dark/40'>
+                            {platformAccounts.length}
+                          </span>
+                        )}
+                      </div>
                       <p className='truncate text-xs text-foreground/50'>
                         {platform.description}
                       </p>
                     </div>
                   </div>
 
-                  <button
-                    type='button'
-                    onClick={() => {
-                      setSelectedPlatform(platform.id);
-                      setIsConnectModalOpen(true);
-                    }}
-                    className='inline-flex items-center gap-1 rounded-lg border border-brand-orange/30 bg-brand-orange/10 px-2 sm:px-2.5 py-1 text-xs font-semibold text-brand-orange hover:bg-brand-orange/20 transition-colors'
-                  >
-                    <RiAddLine size={14} />
-                    <span>Connect</span>
-                  </button>
+                  {/* Connect / Add Account Button */}
+                  <div className='shrink-0 flex items-center gap-1.5'>
+                    <button
+                      type='button'
+                      onClick={() => setMockModalPlatform(platform)}
+                      className='inline-flex items-center gap-1 rounded-lg border border-border-light bg-background px-2.5 py-1 text-xs font-medium text-foreground hover:bg-foreground/5 transition-colors dark:border-border-dark dark:bg-background-dark dark:hover:bg-foreground-dark/30'
+                      title={`Connect ${platform.label} account`}
+                    >
+                      <RiAddLine size={14} />
+                      <span>{hasAccounts ? 'Add' : 'Connect'}</span>
+                    </button>
+                  </div>
                 </div>
 
-                {/* Accounts List for this platform */}
+                {/* Accounts List / Identities */}
                 {hasAccounts ? (
                   <div className='space-y-2.5'>
-                    {platformAccounts.map((account) => (
-                      <div
-                        key={account.id}
-                        className='flex flex-col gap-2 rounded-xl bg-foreground-light/20 p-3 min-w-0 dark:bg-foreground-dark/20'
-                      >
-                        <div className='flex items-center justify-between gap-2 min-w-0'>
-                          <div className='min-w-0 flex-1'>
-                            <div className='flex items-center gap-1.5 min-w-0'>
-                              <p className='truncate font-mono font-semibold text-xs sm:text-sm text-foreground dark:text-text-dark'>
-                                @{account.handle}
-                              </p>
-                              {account.is_mock ? (
-                                <span className='inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/10 px-1.5 py-0.2 text-[10px] font-semibold text-amber-600 dark:text-amber-400'>
-                                  Demo / Mock
-                                </span>
-                              ) : null}
+                    <p className='text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-foreground/40'>
+                      Connected Accounts
+                    </p>
+                    <div className='space-y-2'>
+                      {platformAccounts.map((account) => (
+                        <div
+                          key={account.id}
+                          className='flex items-center justify-between gap-2 rounded-xl bg-foreground-light/20 p-2.5 min-w-0 dark:bg-foreground-dark/20'
+                        >
+                          <div className='min-w-0 flex-1 flex items-center gap-2.5'>
+                            {account.avatar_url ? (
+                              <img
+                                src={account.avatar_url}
+                                alt={account.handle}
+                                className='h-7 w-7 rounded-full object-cover shrink-0'
+                              />
+                            ) : (
+                              <div className='h-7 w-7 rounded-full bg-brand-orange/10 flex items-center justify-center text-xs font-bold text-brand-orange shrink-0'>
+                                {account.handle.slice(0, 1).toUpperCase()}
+                              </div>
+                            )}
+                            <div className='min-w-0 flex-1'>
+                              <div className='flex items-center gap-1.5'>
+                                <p className='truncate font-mono text-xs font-semibold text-foreground dark:text-text-dark'>
+                                  @{account.handle}
+                                </p>
+                                {account.is_mock && (
+                                  <span className='rounded bg-amber-500/10 px-1.5 py-0.2 text-[10px] font-semibold text-amber-600 border border-amber-500/20 shrink-0'>
+                                    Demo
+                                  </span>
+                                )}
+                              </div>
+                              {account.display_name &&
+                                account.display_name !== account.handle && (
+                                  <p className='truncate text-[11px] text-foreground/50'>
+                                    {account.display_name}
+                                  </p>
+                                )}
                             </div>
-                            {account.display_name &&
-                            account.display_name !== account.handle ? (
-                              <p className='truncate text-[11px] text-foreground/60'>
-                                {account.display_name}
-                              </p>
-                            ) : null}
                           </div>
 
+                          {/* Status + Delink action */}
                           <div className='flex items-center gap-2 shrink-0'>
-                            <span className='inline-flex items-center gap-1 rounded-full border border-green-500/20 bg-green-500/10 px-2 py-0.5 text-[11px] font-semibold text-green-600 dark:text-green-400'>
+                            <span className='hidden sm:inline-flex items-center gap-1 rounded-full border border-green-500/20 bg-green-500/10 px-2 py-0.5 text-[10px] font-semibold text-green-600 dark:text-green-400'>
                               <span className='h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse' />
                               <span>Connected</span>
                             </span>
+
                             <button
                               type='button'
                               onClick={() => setAccountToDelink(account)}
-                              className='rounded-md p-1 text-foreground/40 hover:bg-alert-red/10 hover:text-alert-red transition-colors text-xs font-medium'
-                              title='Disconnect channel'
-                              aria-label='Disconnect channel'
+                              className='rounded-lg p-1.5 text-foreground/40 hover:bg-alert-red/10 hover:text-alert-red transition-colors'
+                              title={`Disconnect @${account.handle}`}
+                              aria-label={`Disconnect @${account.handle}`}
                             >
-                              <span className='hidden sm:inline mr-1 text-[11px]'>
-                                Disconnect
-                              </span>
-                              <RiDeleteBinLine
-                                size={15}
-                                className='inline-block -mt-0.5'
-                              />
+                              <RiLinkUnlinkM size={16} />
                             </button>
                           </div>
                         </div>
-
-                        {/* Validation limits if provided */}
-                        {account.validation ? (
-                          <div className='flex items-center gap-2 text-[11px] text-foreground/50 border-t border-border-light/40 dark:border-border-dark/30 pt-1.5'>
-                            {account.validation.max_text_characters ? (
-                              <span>
-                                Character limit:{' '}
-                                {account.validation.max_text_characters}
-                              </span>
-                            ) : null}
-                            {account.validation.max_media_count ? (
-                              <span>
-                                · Max media: {account.validation.max_media_count}
-                              </span>
-                            ) : null}
-                          </div>
-                        ) : null}
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 ) : (
-                  <div className='rounded-xl border border-dashed border-border-light/80 p-4 text-center dark:border-border-dark/60'>
-                    <p className='text-xs text-foreground/50 italic'>
-                      {isLoading
-                        ? 'Account provisioning is still loading'
-                        : 'Account was not provisioned. Refresh after signing in again.'}
+                  /* Empty state for platform */
+                  <div className='rounded-xl bg-foreground-light/20 p-3 min-w-0 dark:bg-foreground-dark/20'>
+                    <p className='text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-foreground/40 mb-1'>
+                      Channel Identity
+                    </p>
+                    <div className='text-xs sm:text-sm font-medium text-foreground dark:text-text-dark truncate'>
+                      <p className='text-foreground/60 italic truncate'>
+                        {isLoading
+                          ? 'Account provisioning is still loading'
+                          : 'No accounts connected yet'}
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Validation Info (Character Limit & Media Rules) from first account */}
+                {firstAccount?.validation ? (
+                  <div className='space-y-2 border-t border-border-light/70 pt-3 dark:border-border-dark/50'>
+                    <p className='text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-foreground/40'>
+                      Publishing Rules
+                    </p>
+                    <div className='space-y-1.5 text-xs text-foreground/60'>
+                      {firstAccount.validation.max_text_characters ? (
+                        <div className='rounded-lg bg-foreground-light/15 px-2.5 py-1.5 dark:bg-foreground-dark/15'>
+                          <p className='truncate'>
+                            Character limit:{' '}
+                            {firstAccount.validation.max_text_characters}
+                          </p>
+                        </div>
+                      ) : null}
+
+                      {firstAccount.validation.max_media_count ? (
+                        <div className='rounded-lg bg-foreground-light/15 px-2.5 py-1.5 dark:bg-foreground-dark/15'>
+                          <p className='truncate'>
+                            Max media: {firstAccount.validation.max_media_count}
+                          </p>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Not provisioned notice if no accounts and not loading */}
+                {!hasAccounts && !isLoading && (
+                  <div className='flex items-start gap-2 rounded-xl border border-alert-red/20 bg-alert-red/5 p-3 text-xs text-alert-red'>
+                    <RiErrorWarningLine size={16} className='shrink-0 mt-0.5' />
+                    <p className='leading-tight'>
+                      Account was not provisioned. Refresh after signing in
+                      again.
                     </p>
                   </div>
                 )}
@@ -329,139 +377,159 @@ export default function AccountsPage() {
       </div>
 
       {/* Delink Confirmation Modal */}
-      {accountToDelink ? (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-150'>
-          <div className='w-full max-w-md rounded-2xl border border-border-light bg-background-light p-6 shadow-xl dark:border-border-dark dark:bg-background-dark space-y-4'>
-            <div className='flex items-start gap-3'>
-              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-alert-red/10 text-alert-red'>
-                <RiErrorWarningLine size={24} />
+      {accountToDelink && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm animate-in fade-in duration-150'>
+          <div className='w-full max-w-md rounded-2xl border border-border-light bg-background-light p-6 shadow-2xl dark:border-border-dark dark:bg-background-dark space-y-4'>
+            <div className='flex items-center gap-3 text-alert-red'>
+              <div className='rounded-xl bg-alert-red/10 p-2.5'>
+                <RiAlertLine size={24} />
               </div>
-              <div className='min-w-0 flex-1'>
-                <h3 className='font-semibold text-lg text-foreground dark:text-text-dark'>
-                  Disconnect @{accountToDelink.handle}?
-                </h3>
-                <p className='mt-1 text-sm text-foreground/70'>
-                  Are you sure you want to disconnect @{accountToDelink.handle}?
-                  Any scheduled posts targeted to this account will be cancelled
-                  and moved back to drafts.
+              <div>
+                <h4 className='font-semibold text-base text-foreground dark:text-text-dark'>
+                  Disconnect Account
+                </h4>
+                <p className='text-xs text-foreground/50'>
+                  @{accountToDelink.handle}
                 </p>
               </div>
             </div>
+
+            <p className='text-sm text-foreground/70 leading-relaxed'>
+              Are you sure you want to disconnect{' '}
+              <span className='font-semibold font-mono text-foreground dark:text-text-dark'>
+                @{accountToDelink.handle}
+              </span>
+              ? Any scheduled posts targeted to this channel will be{' '}
+              <span className='font-semibold text-alert-red'>
+                cancelled and returned to your drafts
+              </span>
+              .
+            </p>
 
             <div className='flex items-center justify-end gap-3 pt-2'>
               <button
                 type='button'
                 onClick={() => setAccountToDelink(null)}
-                className='rounded-xl border border-border-light px-4 py-2 text-sm font-medium text-foreground hover:bg-foreground-light/30 dark:border-border-dark dark:hover:bg-foreground-dark/30 transition-colors'
+                className='rounded-xl border border-border-light px-4 py-2 text-xs font-semibold text-foreground hover:bg-foreground/5 transition-colors dark:border-border-dark'
               >
                 Cancel
               </button>
               <button
                 type='button'
                 onClick={handleConfirmDelink}
-                disabled={delink.isPending}
-                className='rounded-xl bg-alert-red px-4 py-2 text-sm font-semibold text-white hover:bg-alert-red/90 transition-colors disabled:opacity-50'
+                disabled={delinkMutation?.isPending}
+                className='inline-flex items-center gap-1.5 rounded-xl bg-alert-red px-4 py-2 text-xs font-semibold text-white hover:bg-alert-red/90 transition-colors disabled:opacity-50'
               >
-                {delink.isPending ? 'Disconnecting...' : 'Confirm Disconnect'}
+                {delinkMutation?.isPending && (
+                  <RiLoader4Line size={14} className='animate-spin' />
+                )}
+                <span>Confirm Disconnect</span>
               </button>
             </div>
           </div>
         </div>
-      ) : null}
+      )}
 
-      {/* Connect Account Modal (OAuth + Mock Fallback) */}
-      {isConnectModalOpen ? (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm animate-in fade-in duration-150'>
-          <div className='w-full max-w-md rounded-2xl border border-border-light bg-background-light p-6 shadow-xl dark:border-border-dark dark:bg-background-dark space-y-5'>
+      {/* Connect / Mock Account Modal */}
+      {mockModalPlatform && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm animate-in fade-in duration-150'>
+          <div className='w-full max-w-md rounded-2xl border border-border-light bg-background-light p-6 shadow-2xl dark:border-border-dark dark:bg-background-dark space-y-4'>
             <div className='flex items-center justify-between'>
-              <h3 className='font-semibold text-lg text-foreground dark:text-text-dark'>
-                Connect {selectedPlatform.toUpperCase()} Channel
-              </h3>
+              <div className='flex items-center gap-3'>
+                <div
+                  className={`flex h-10 w-10 items-center justify-center rounded-xl ${mockModalPlatform.badgeBg}`}
+                >
+                  <mockModalPlatform.icon
+                    size={22}
+                    className={mockModalPlatform.accentColor}
+                  />
+                </div>
+                <div>
+                  <h4 className='font-semibold text-base text-foreground dark:text-text-dark'>
+                    Connect {mockModalPlatform.label}
+                  </h4>
+                  <p className='text-xs text-foreground/50'>
+                    OAuth Redirect or Demo Provisioning
+                  </p>
+                </div>
+              </div>
               <button
                 type='button'
-                onClick={() => setIsConnectModalOpen(false)}
-                className='rounded-lg p-1 text-foreground/50 hover:bg-foreground-light/30 dark:hover:bg-foreground-dark/30'
+                onClick={() => setMockModalPlatform(null)}
+                className='rounded-lg p-1 text-foreground/40 hover:text-foreground'
               >
                 <RiCloseLine size={20} />
               </button>
             </div>
 
-            {/* OAuth Redirect Action */}
-            <div className='space-y-2 rounded-xl bg-foreground-light/20 p-4 dark:bg-foreground-dark/20'>
-              <p className='text-xs font-semibold uppercase tracking-wider text-foreground/50'>
-                Option 1: Social Platform OAuth
+            {/* Real OAuth Redirect Option */}
+            <div className='rounded-xl border border-border-light p-3.5 space-y-2 dark:border-border-dark'>
+              <p className='text-xs font-semibold text-foreground dark:text-text-dark'>
+                Standard OAuth 2.0
               </p>
-              <p className='text-xs text-foreground/70'>
-                Authenticate directly with {selectedPlatform.toUpperCase()} via
-                OAuth 2.0.
+              <p className='text-xs text-foreground/60'>
+                Redirect to {mockModalPlatform.label}&apos;s official authorization page
+                to grant publishing permissions.
               </p>
-              <button
-                type='button'
-                onClick={() => handleOAuthConnect(selectedPlatform)}
-                className='w-full mt-2 rounded-xl bg-brand-orange px-4 py-2.5 text-xs sm:text-sm font-semibold text-white hover:bg-brand-orange/90 transition-colors'
+              <a
+                href={`/api/v1/social-posts/oauth/${mockModalPlatform.id}/authorize`}
+                className='inline-flex items-center justify-center w-full rounded-xl bg-foreground px-4 py-2 text-xs font-semibold text-background hover:opacity-90 transition-opacity'
               >
-                Authenticate with {selectedPlatform.toUpperCase()}
-              </button>
+                Connect with {mockModalPlatform.label}
+              </a>
             </div>
 
-            {/* Manual Mock Fallback Form */}
-            <form onSubmit={handleCreateMockAccount} className='space-y-3 pt-2'>
-              <div className='flex items-center justify-between'>
-                <p className='text-xs font-semibold uppercase tracking-wider text-foreground/50'>
-                  Option 2: Demo / Mock Account
-                </p>
-                <span className='rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-600 dark:text-amber-400'>
-                  Local Dev
-                </span>
-              </div>
+            <div className='flex items-center gap-2 my-2'>
+              <div className='h-px flex-1 bg-border-light dark:bg-border-dark' />
+              <span className='text-[10px] uppercase font-bold text-foreground/40 tracking-wider'>
+                OR DEMO / MOCK
+              </span>
+              <div className='h-px flex-1 bg-border-light dark:bg-border-dark' />
+            </div>
+
+            {/* Mock Provisioning Form */}
+            <form onSubmit={handleCreateMockAccount} className='space-y-3'>
               <div>
                 <label className='block text-xs font-medium text-foreground/70 mb-1'>
-                  Handle
+                  Account Handle
                 </label>
                 <input
                   type='text'
                   required
-                  placeholder='e.g. acme_corp'
-                  value={handleInput}
-                  onChange={(e) => setHandleInput(e.target.value)}
-                  className='w-full rounded-xl border border-border-light bg-background-light px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-orange/50 dark:border-border-dark dark:bg-background-dark'
+                  placeholder='@my_brand_channel'
+                  value={mockHandle}
+                  onChange={(e) => setMockHandle(e.target.value)}
+                  className='w-full rounded-xl border border-border-light bg-background px-3 py-2 text-xs text-foreground focus:border-brand-orange focus:outline-none dark:border-border-dark dark:bg-background-dark'
                 />
               </div>
+
               <div>
                 <label className='block text-xs font-medium text-foreground/70 mb-1'>
                   Display Name (Optional)
                 </label>
                 <input
                   type='text'
-                  placeholder='e.g. Acme Corp Main'
-                  value={displayNameInput}
-                  onChange={(e) => setDisplayNameInput(e.target.value)}
-                  className='w-full rounded-xl border border-border-light bg-background-light px-3 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-brand-orange/50 dark:border-border-dark dark:bg-background-dark'
+                  placeholder='My Brand Official'
+                  value={mockDisplayName}
+                  onChange={(e) => setMockDisplayName(e.target.value)}
+                  className='w-full rounded-xl border border-border-light bg-background px-3 py-2 text-xs text-foreground focus:border-brand-orange focus:outline-none dark:border-border-dark dark:bg-background-dark'
                 />
               </div>
 
-              <div className='flex items-center justify-end gap-3 pt-2'>
-                <button
-                  type='button'
-                  onClick={() => setIsConnectModalOpen(false)}
-                  className='rounded-xl border border-border-light px-4 py-2 text-xs sm:text-sm font-medium text-foreground hover:bg-foreground-light/30 dark:border-border-dark dark:hover:bg-foreground-dark/30'
-                >
-                  Cancel
-                </button>
-                <button
-                  type='submit'
-                  disabled={createMock.isPending || !handleInput.trim()}
-                  className='rounded-xl bg-foreground text-background px-4 py-2 text-xs sm:text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50'
-                >
-                  {createMock.isPending
-                    ? 'Connecting...'
-                    : 'Connect Mock Account'}
-                </button>
-              </div>
+              <button
+                type='submit'
+                disabled={!mockHandle.trim() || createMockMutation?.isPending}
+                className='inline-flex items-center justify-center gap-1.5 w-full rounded-xl border border-brand-orange/40 bg-brand-orange/10 px-4 py-2 text-xs font-semibold text-brand-orange hover:bg-brand-orange/20 transition-colors disabled:opacity-50'
+              >
+                {createMockMutation?.isPending && (
+                  <RiLoader4Line size={14} className='animate-spin' />
+                )}
+                <span>Add Demo Account</span>
+              </button>
             </form>
           </div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
