@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+
+import type { SocialMediaAsset } from '@/features/studio/types';
 import { useSocialMedia } from '@/hooks/studio/useSocialPosts';
 import { RiCloseLine, RiImageLine } from '@remixicon/react';
 
@@ -11,6 +14,18 @@ interface MediaLibraryModalProps {
   onSelectMedia: (media: ComposerMedia) => void;
 }
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+  ).filter(
+    (el) =>
+      !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true'
+  );
+}
+
 function MediaLibraryModalContent({
   onClose,
   onSelectMedia,
@@ -19,13 +34,84 @@ function MediaLibraryModalContent({
   onSelectMedia: (media: ComposerMedia) => void;
 }) {
   const { data, isLoading } = useSocialMedia();
-  const assets = Array.isArray(data) ? data : [];
+  const assets: SocialMediaAsset[] = Array.isArray(data)
+    ? (data as SocialMediaAsset[])
+    : [];
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Restore focus to previous element on unmount
+  useEffect(() => {
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    return () => {
+      previouslyFocused?.focus();
+    };
+  }, []);
+
+  // Escape key handler & focus trapping
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        if (!modalRef.current) return;
+        const focusableElements = getFocusableElements(modalRef.current);
+        if (focusableElements.length === 0) {
+          e.preventDefault();
+          return;
+        }
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (
+            document.activeElement === firstElement ||
+            !modalRef.current.contains(document.activeElement)
+          ) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (
+            document.activeElement === lastElement ||
+            !modalRef.current.contains(document.activeElement)
+          ) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  // Initial focus inside modal
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (modalRef.current) {
+        const focusable = getFocusableElements(modalRef.current);
+        if (focusable.length > 0) {
+          focusable[0].focus();
+        }
+      }
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div
+      ref={modalRef}
       role='dialog'
       aria-modal='true'
       aria-labelledby='media-modal-title'
+      aria-describedby='media-modal-desc'
       className='fixed inset-0 z-50 flex items-center justify-center p-4'
     >
       {/* Backdrop */}
@@ -41,13 +127,14 @@ function MediaLibraryModalContent({
             <h3 id='media-modal-title' className='font-semibold text-lg'>
               Studio Media Library
             </h3>
-            <p className='text-xs text-foreground/50'>
+            <p id='media-modal-desc' className='text-xs text-foreground/50'>
               Select existing assets to attach to your post
             </p>
           </div>
           <button
             type='button'
             onClick={onClose}
+            aria-label='Close media library'
             className='flex h-8 w-8 items-center justify-center rounded-lg text-foreground/50 hover:bg-foreground-light/40 hover:text-foreground dark:hover:bg-foreground-dark/40'
           >
             <RiCloseLine size={20} />
@@ -68,7 +155,7 @@ function MediaLibraryModalContent({
             </div>
           ) : (
             <div className='grid grid-cols-2 gap-3 sm:grid-cols-4'>
-              {assets.map((asset: any) => (
+              {assets.map((asset: SocialMediaAsset) => (
                 <button
                   key={asset.id}
                   type='button'

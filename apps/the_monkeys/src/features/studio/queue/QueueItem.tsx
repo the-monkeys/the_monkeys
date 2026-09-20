@@ -48,7 +48,7 @@ export function extractPlatforms(post: SocialPost): string[] {
   const fromRenditions = (post.renditions || [])
     .map((r) => r.platform)
     .filter((p): p is NonNullable<typeof p> => Boolean(p));
-  const fromPlatforms = (post as any).platforms;
+  const fromPlatforms = post.platforms;
   const list = [
     ...fromRenditions,
     ...(Array.isArray(fromPlatforms) ? fromPlatforms : []),

@@ -1,6 +1,7 @@
 'use client';
 
 import type {
+  SocialPlatform,
   SocialPostFilters,
   SocialPostInput,
   SocialPostRendition,
@@ -9,6 +10,7 @@ import type {
 import { socialPostKeys } from '@/services/socialPosts/queryKeys';
 import { socialPostsApi } from '@/services/socialPosts/socialPostsApi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 
 export class SocialPostConflictError extends Error {
   constructor() {
@@ -17,14 +19,34 @@ export class SocialPostConflictError extends Error {
   }
 }
 
+const isConflictError = (error: unknown): boolean => {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    return status === 409 || status === 412;
+  }
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'response' in error &&
+    typeof (error as { response?: unknown }).response === 'object' &&
+    (error as { response?: { status?: unknown } }).response !== null &&
+    'status' in (error as { response: { status?: unknown } }).response
+  ) {
+    const status = (error as { response: { status?: unknown } }).response
+      .status;
+    return status === 409 || status === 412;
+  }
+  return false;
+};
+
 const withConflictState = async <T>(
   request: Promise<T>,
   refresh: () => void
 ) => {
   try {
     return await request;
-  } catch (error: any) {
-    if (error?.response?.status === 409 || error?.response?.status === 412) {
+  } catch (error: unknown) {
+    if (isConflictError(error)) {
       refresh();
       throw new SocialPostConflictError();
     }
@@ -103,6 +125,9 @@ export function useSocialPostMutations() {
   const create = useMutation({
     mutationFn: (input: SocialPostInput) => socialPostsApi.create(input),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to create social post:', error);
+    },
   });
   const update = useMutation({
     mutationFn: ({
@@ -115,6 +140,9 @@ export function useSocialPostMutations() {
       expectedVersion: number;
     }) => guarded(socialPostsApi.update(id, input, expectedVersion)),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to update social post:', error);
+    },
   });
   const deleteDraft = useMutation({
     mutationFn: ({
@@ -125,6 +153,9 @@ export function useSocialPostMutations() {
       expectedVersion: number;
     }) => guarded(socialPostsApi.delete(id, expectedVersion)),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to delete draft:', error);
+    },
   });
   const upsertRendition = useMutation({
     mutationFn: ({
@@ -138,6 +169,9 @@ export function useSocialPostMutations() {
     }) =>
       guarded(socialPostsApi.upsertRendition(id, rendition, expectedVersion)),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to upsert rendition:', error);
+    },
   });
   const setRenditionMedia = useMutation({
     mutationFn: ({
@@ -160,6 +194,9 @@ export function useSocialPostMutations() {
         )
       ),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to set rendition media:', error);
+    },
   });
   const schedule = useMutation({
     mutationFn: ({
@@ -172,6 +209,9 @@ export function useSocialPostMutations() {
       reschedule?: boolean;
     }) => guarded(socialPostsApi.schedule(id, input, reschedule)),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to schedule social post:', error);
+    },
   });
   const cancelSchedule = useMutation({
     mutationFn: ({
@@ -182,6 +222,9 @@ export function useSocialPostMutations() {
       expectedVersion: number;
     }) => guarded(socialPostsApi.cancelSchedule(id, expectedVersion)),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to cancel schedule:', error);
+    },
   });
   const publishNow = useMutation({
     mutationFn: ({
@@ -192,14 +235,23 @@ export function useSocialPostMutations() {
       expectedVersion: number;
     }) => guarded(socialPostsApi.publishNow(id, expectedVersion)),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to publish post now:', error);
+    },
   });
   const reorderQueue = useMutation({
     mutationFn: socialPostsApi.reorderQueue,
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to reorder queue:', error);
+    },
   });
   const replayJob = useMutation({
     mutationFn: socialPostsApi.replayJob,
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to replay job:', error);
+    },
   });
 
   return {
@@ -226,16 +278,22 @@ export function useSocialAccountMutations() {
   const delink = useMutation({
     mutationFn: (id: string) => socialPostsApi.delinkAccount(id),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to delink account:', error);
+    },
   });
 
   const createMock = useMutation({
     mutationFn: (payload: {
-      platform: any;
+      platform: SocialPlatform;
       handle: string;
       display_name?: string;
       avatar_url?: string;
     }) => socialPostsApi.createMockAccount(payload),
     onSuccess: refresh,
+    onError: (error: unknown) => {
+      console.error('Failed to create mock account:', error);
+    },
   });
 
   return {

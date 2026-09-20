@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import {
   COMMON_TIMEZONES,
@@ -69,16 +69,70 @@ export default function RescheduleModal({
     }
   }, [isOpen, post.scheduled_at, post.schedule_timezone, browserTz]);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Restore focus on unmount
+  useEffect(() => {
+    if (!isOpen) return;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
+    return () => {
+      previouslyFocused?.focus();
+    };
+  }, [isOpen]);
+
+  // Escape key handler & focus trap
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        e.preventDefault();
         onClose();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        if (!modalRef.current) return;
+        const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusable.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (e.shiftKey) {
+          if (
+            document.activeElement === first ||
+            !modalRef.current.contains(document.activeElement)
+          ) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (
+            document.activeElement === last ||
+            !modalRef.current.contains(document.activeElement)
+          ) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
+
+  // Initial focus inside modal
+  useEffect(() => {
+    if (isOpen && modalRef.current) {
+      const firstInput =
+        modalRef.current.querySelector<HTMLElement>('input, button');
+      firstInput?.focus();
+    }
+  }, [isOpen]);
 
   if (!isOpen) {
     return null;
@@ -148,7 +202,10 @@ export default function RescheduleModal({
         }
       }}
     >
-      <div className='w-full max-w-md rounded-2xl border bg-background-light p-6 shadow-xl dark:bg-background-dark'>
+      <div
+        ref={modalRef}
+        className='w-full max-w-md rounded-2xl border bg-background-light p-6 shadow-xl dark:bg-background-dark'
+      >
         <div className='mb-4 flex items-center justify-between'>
           <h3
             id='reschedule-modal-title'

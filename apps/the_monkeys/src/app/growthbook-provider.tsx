@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useState } from 'react';
 
-import { createGrowthbook } from '@/lib/growthbook';
+import { createGrowthbook, isAbsoluteHttpUrl } from '@/lib/growthbook';
 import { GrowthBook, GrowthBookProvider } from '@growthbook/growthbook-react';
 
 type Props = {
@@ -17,9 +17,12 @@ export default function GrowthbookClientProvider({
   const [growthbook] = useState<GrowthBook>(() => createGrowthbook(attributes));
 
   useEffect(() => {
-    growthbook.init({
-      streaming: true,
-    });
+    const apiHost = process.env.NEXT_PUBLIC_GROWTHBOOK_API_HOST;
+    if (isAbsoluteHttpUrl(apiHost)) {
+      growthbook.init({
+        streaming: true,
+      });
+    }
   }, [growthbook]);
 
   return (

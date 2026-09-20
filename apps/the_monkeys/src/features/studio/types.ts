@@ -75,6 +75,7 @@ export type SocialPost = {
   base_text: string;
   text?: string;
   media_asset_ids?: string[];
+  platforms?: string[];
   state: SocialPostStatus;
   status: SocialPostStatus;
   scheduled_at?: string;

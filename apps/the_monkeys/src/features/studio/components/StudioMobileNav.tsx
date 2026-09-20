@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -18,6 +20,18 @@ interface StudioMobileNavProps {
   isDrawerOpen: boolean;
   onCloseDrawer: () => void;
   onOpenDrawer: () => void;
+}
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+  ).filter(
+    (el) =>
+      !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true'
+  );
 }
 
 const BOTTOM_TABS = [
@@ -49,6 +63,74 @@ export default function StudioMobileNav({
   onOpenDrawer,
 }: StudioMobileNavProps) {
   const pathname = usePathname();
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const prevOpenRef = useRef(isDrawerOpen);
+
+  // Restore focus to trigger button when drawer closes
+  useEffect(() => {
+    if (prevOpenRef.current && !isDrawerOpen) {
+      triggerRef.current?.focus();
+    } else if (!prevOpenRef.current && isDrawerOpen) {
+      const timer = setTimeout(() => {
+        if (drawerRef.current) {
+          const focusable = getFocusableElements(drawerRef.current);
+          if (focusable.length > 0) {
+            focusable[0].focus();
+          }
+        }
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+    prevOpenRef.current = isDrawerOpen;
+  }, [isDrawerOpen]);
+
+  // Escape key listener & focus trapping
+  useEffect(() => {
+    if (!isDrawerOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        e.stopPropagation();
+        onCloseDrawer();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        if (!drawerRef.current) return;
+        const focusableElements = getFocusableElements(drawerRef.current);
+        if (focusableElements.length === 0) {
+          e.preventDefault();
+          return;
+        }
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (
+            document.activeElement === firstElement ||
+            !drawerRef.current.contains(document.activeElement)
+          ) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (
+            document.activeElement === lastElement ||
+            !drawerRef.current.contains(document.activeElement)
+          ) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isDrawerOpen, onCloseDrawer]);
 
   const isLinkActive = (href: string) => {
     if (href === '/studio') {
@@ -91,9 +173,11 @@ export default function StudioMobileNav({
 
         {/* More Drawer Button */}
         <button
+          ref={triggerRef}
           type='button'
           onClick={onOpenDrawer}
           aria-label='Open full studio menu'
+          aria-expanded={isDrawerOpen}
           className='flex flex-1 flex-col items-center justify-center gap-1 py-1 text-center text-foreground/60 transition-colors hover:text-foreground'
         >
           <div className='flex h-7 w-7 items-center justify-center rounded-full'>
@@ -106,6 +190,7 @@ export default function StudioMobileNav({
       {/* Slide-over Drawer for mobile navigation */}
       {isDrawerOpen && (
         <div
+          ref={drawerRef}
           role='dialog'
           aria-modal='true'
           aria-label='Studio Navigation Drawer'
