@@ -18,6 +18,8 @@ export const fromMetaBlog = (blog: MetaBlog): BlogCardData => ({
   title: purifyHTMLString(blog.title),
   description: purifyHTMLString(blog.first_paragraph),
   image: blog.first_image,
+  audience: blog.audience,
+  groupSlug: blog.group_slug,
 });
 
 export const fromFollowingFeed = (blog: FollowingFeed): BlogCardData => {
