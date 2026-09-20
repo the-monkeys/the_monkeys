@@ -42,6 +42,7 @@ export type SocialAccount = {
   avatar_url?: string;
   enabled: boolean;
   is_mock: boolean;
+  status?: 'active' | 'disabled' | 'disconnected';
   social_account_id?: string;
   validation?: ValidationMetadata;
 };

@@ -166,6 +166,14 @@ export const socialPostsApi = {
     const accounts = (data as any)?.accounts ?? data;
     return Array.isArray(accounts) ? (accounts as SocialAccount[]) : [];
   },
+  async delinkAccount(id: string): Promise<{ success: boolean; cancelled_jobs_count: number; drafts_reverted_count: number }> {
+    const { data } = await axiosInstance.delete(`${root}/accounts/${id}`);
+    return data;
+  },
+  async createMockAccount(payload: { platform: string; handle: string; display_name?: string; avatar_url?: string }): Promise<SocialAccount> {
+    const { data } = await axiosInstance.post(`${root}/accounts/mock`, payload);
+    return ((data as any)?.account ?? data) as SocialAccount;
+  },
   async validationMetadata(): Promise<ValidationMetadata[]> {
     const { data } = await axiosInstance.get<any>(
       `${root}/validation-metadata`
