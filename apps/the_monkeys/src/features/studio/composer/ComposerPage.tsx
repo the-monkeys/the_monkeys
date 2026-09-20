@@ -45,6 +45,7 @@ export default function ComposerPage({ postId }: { postId?: string }) {
   // Local state aligned with Zustand store
   const [text, setText] = useState('');
   const [selected, setSelected] = useState<SocialPlatform[]>(['x', 'linkedin']);
+  const [selectedAccountIds, setSelectedAccountIds] = useState<string[]>([]);
   const [overrides, setOverrides] = useState<Record<string, string>>({});
   const [isSynced, setIsSynced] = useState<Record<string, boolean>>({
     x: true,
@@ -84,6 +85,14 @@ export default function ComposerPage({ postId }: { postId?: string }) {
         setSelected(enabledPlatforms);
       }
 
+      const enabledAccountIds =
+        post.renditions
+          ?.filter((item) => item.enabled !== false && item.social_account_id)
+          ?.map((item) => item.social_account_id) ?? [];
+      if (enabledAccountIds.length > 0) {
+        setSelectedAccountIds(enabledAccountIds);
+      }
+
       const initialOverrides: Record<string, string> = {};
       const initialSynced: Record<string, boolean> = {
         x: true,
@@ -108,6 +117,20 @@ export default function ComposerPage({ postId }: { postId?: string }) {
     }
   }, [post]);
 
+  // Default select accounts for initially selected platforms
+  useEffect(() => {
+    if (!postId && accounts?.length && selectedAccountIds.length === 0) {
+      const defaultIds = accounts
+        .filter(
+          (a) => selected.includes(a.platform) && a.status !== 'disconnected'
+        )
+        .map((a) => a.id);
+      if (defaultIds.length > 0) {
+        setSelectedAccountIds(defaultIds);
+      }
+    }
+  }, [accounts, selected, postId, selectedAccountIds.length]);
+
   const baseText = text;
 
   // Toggle platform selection
@@ -120,16 +143,45 @@ export default function ComposerPage({ postId }: { postId?: string }) {
       if (activeTab === platform && exists) {
         setActiveTab('base');
       }
+
+      const platformAccountIds = (accounts || [])
+        .filter((a) => a.platform === platform && a.status !== 'disconnected')
+        .map((a) => a.id);
+
+      if (exists) {
+        setSelectedAccountIds((prev) =>
+          prev.filter((id) => !platformAccountIds.includes(id))
+        );
+      } else {
+        setSelectedAccountIds((prev) => [
+          ...new Set([...prev, ...platformAccountIds]),
+        ]);
+      }
+
       return next;
     });
   };
 
+  const toggleAccount = (accountId: string) => {
+    setSelectedAccountIds((prev) =>
+      prev.includes(accountId)
+        ? prev.filter((id) => id !== accountId)
+        : [...prev, accountId]
+    );
+  };
+
   const handleSelectAll = () => {
     setSelected(PLATFORM_DEFINITIONS.map((p) => p.id));
+    if (accounts?.length) {
+      setSelectedAccountIds(
+        accounts.filter((a) => a.status !== 'disconnected').map((a) => a.id)
+      );
+    }
   };
 
   const handleClearAll = () => {
     setSelected([]);
+    setSelectedAccountIds([]);
     setActiveTab('base');
   };
 
@@ -199,25 +251,39 @@ export default function ComposerPage({ postId }: { postId?: string }) {
 
     if (upsertRendition?.mutateAsync) {
       for (const platform of selected) {
-        const targetAccount = accounts?.find(
-          (acc) => acc.platform === platform
+        const targetAccounts = accounts?.filter(
+          (acc) =>
+            acc.platform === platform &&
+            acc.status !== 'disconnected' &&
+            selectedAccountIds.includes(acc.id)
         );
-        if (!targetAccount?.id) continue;
-        result = await upsertRendition.mutateAsync({
-          id: result.id,
-          expectedVersion: result.version,
-          rendition: {
-            social_account_id: targetAccount.id,
-            text_override: overrides[platform] || undefined,
-          },
-        });
-        if (result.media_asset_ids?.length && setRenditionMedia?.mutateAsync) {
-          result = await setRenditionMedia.mutateAsync({
+        const accountsToTarget =
+          targetAccounts && targetAccounts.length > 0
+            ? targetAccounts
+            : accounts
+                ?.filter(
+                  (acc) =>
+                    acc.platform === platform && acc.status !== 'disconnected'
+                )
+                .slice(0, 1) ?? [];
+
+        for (const targetAccount of accountsToTarget) {
+          result = await upsertRendition.mutateAsync({
             id: result.id,
-            accountId: targetAccount.id,
-            assetIds: result.media_asset_ids,
             expectedVersion: result.version,
+            rendition: {
+              social_account_id: targetAccount.id,
+              text_override: overrides[platform] || undefined,
+            },
           });
+          if (result.media_asset_ids?.length && setRenditionMedia?.mutateAsync) {
+            result = await setRenditionMedia.mutateAsync({
+              id: result.id,
+              accountId: targetAccount.id,
+              assetIds: result.media_asset_ids,
+              expectedVersion: result.version,
+            });
+          }
         }
       }
     }
@@ -384,6 +450,8 @@ export default function ComposerPage({ postId }: { postId?: string }) {
             onClearAll={handleClearAll}
             accounts={accounts}
             getTextLength={getPlatformTextLength}
+            selectedAccountIds={selectedAccountIds}
+            onToggleAccount={toggleAccount}
           />
 
           {/* Canonical vs Renditions Tabs */}

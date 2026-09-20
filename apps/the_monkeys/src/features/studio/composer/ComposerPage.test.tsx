@@ -273,4 +273,77 @@ describe('ComposerPage', () => {
       },
     });
   });
+
+  it('displays account sub-selector when multiple accounts exist for a platform and creates renditions for each selected account', async () => {
+    vi.mocked(useSocialAccounts).mockReturnValue({
+      data: [
+        {
+          id: 'acc-x-1',
+          platform: 'x',
+          handle: 'personal_x',
+          display_name: 'Personal X',
+          status: 'active',
+        },
+        {
+          id: 'acc-x-2',
+          platform: 'x',
+          handle: 'brand_x',
+          display_name: 'Brand X',
+          status: 'active',
+        },
+      ],
+      isLoading: false,
+      isError: false,
+    } as any);
+
+    mockCreateMutateAsync.mockResolvedValueOnce({
+      id: 'post-new-multi',
+      version: 1,
+      renditions: [],
+    });
+    mockUpsertRenditionMutateAsync
+      .mockResolvedValueOnce({
+        id: 'post-new-multi',
+        version: 2,
+        renditions: [{ platform: 'x', social_account_id: 'acc-x-1' }],
+      })
+      .mockResolvedValueOnce({
+        id: 'post-new-multi',
+        version: 3,
+        renditions: [
+          { platform: 'x', social_account_id: 'acc-x-1' },
+          { platform: 'x', social_account_id: 'acc-x-2' },
+        ],
+      });
+
+    render(<ComposerPage />);
+
+    expect(screen.getAllByText('@personal_x').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('@brand_x').length).toBeGreaterThanOrEqual(1);
+
+    const saveButton = screen.getByRole('button', { name: /save draft/i });
+    fireEvent.click(saveButton);
+
+    await waitFor(() => {
+      expect(mockUpsertRenditionMutateAsync).toHaveBeenCalledTimes(2);
+    });
+
+    expect(mockUpsertRenditionMutateAsync).toHaveBeenCalledWith({
+      id: 'post-new-multi',
+      expectedVersion: 1,
+      rendition: {
+        social_account_id: 'acc-x-1',
+        text_override: undefined,
+      },
+    });
+
+    expect(mockUpsertRenditionMutateAsync).toHaveBeenCalledWith({
+      id: 'post-new-multi',
+      expectedVersion: 2,
+      rendition: {
+        social_account_id: 'acc-x-2',
+        text_override: undefined,
+      },
+    });
+  });
 });

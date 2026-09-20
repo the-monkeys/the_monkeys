@@ -80,6 +80,8 @@ interface PlatformSelectorProps {
   onClearAll: () => void;
   accounts?: SocialAccount[];
   getTextLength: (platform: SocialPlatform) => number;
+  selectedAccountIds?: string[];
+  onToggleAccount?: (accountId: string) => void;
 }
 
 export default function PlatformSelector({
@@ -89,6 +91,8 @@ export default function PlatformSelector({
   onClearAll,
   accounts = [],
   getTextLength,
+  selectedAccountIds,
+  onToggleAccount,
 }: PlatformSelectorProps) {
   const allSelected =
     PLATFORM_DEFINITIONS.length > 0 &&
@@ -164,6 +168,54 @@ export default function PlatformSelector({
           );
         })}
       </div>
+
+      {/* Account Sub-Selector for selected platforms with multiple accounts */}
+      {selected.map((platformId) => {
+        const platformDef = PLATFORM_DEFINITIONS.find((p) => p.id === platformId);
+        const platformAccounts = accounts.filter(
+          (a) => a.platform === platformId && a.status !== 'disconnected'
+        );
+        if (platformAccounts.length <= 1) return null;
+
+        return (
+          <div
+            key={platformId}
+            className='flex flex-wrap items-center gap-2 rounded-xl border border-border-light/60 bg-foreground-light/10 p-2.5 dark:border-border-dark/60 dark:bg-foreground-dark/10'
+          >
+            <span className='text-[10px] font-semibold uppercase tracking-wider text-foreground/50 mr-1'>
+              {platformDef?.label ?? platformId} Accounts:
+            </span>
+            {platformAccounts.map((acc) => {
+              const isAccSelected =
+                !selectedAccountIds || selectedAccountIds.includes(acc.id);
+              return (
+                <button
+                  key={acc.id}
+                  type='button'
+                  onClick={() => onToggleAccount?.(acc.id)}
+                  className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs font-mono transition-colors ${
+                    isAccSelected
+                      ? 'border-brand-orange/60 bg-brand-orange/10 text-brand-orange font-semibold'
+                      : 'border-border-light bg-background-light text-foreground/50 hover:text-foreground dark:border-border-dark dark:bg-background-dark'
+                  }`}
+                >
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${
+                      isAccSelected ? 'bg-brand-orange' : 'bg-foreground/30'
+                    }`}
+                  />
+                  <span>@{acc.handle}</span>
+                  {acc.is_mock && (
+                    <span className='rounded bg-amber-500/10 px-1 py-0.2 text-[9px] font-semibold text-amber-600 border border-amber-500/20'>
+                      Demo
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 }
