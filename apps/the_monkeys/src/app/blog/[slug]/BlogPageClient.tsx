@@ -29,6 +29,7 @@ import { RiPencilFill } from 'react-icons/ri';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
+import { BlogScopeLine } from '../components/BlogScopeLine';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -52,6 +53,8 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
     !!session?.account_id && String(authorId) === String(session?.account_id);
 
   useEffect(() => {
+    if (!blog || isLoading || isError) return;
+
     const startTime = Date.now();
     let hasSent = false;
 
@@ -97,7 +100,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       sendData();
     };
-  }, [urlBlogId]);
+  }, [blog, isError, isLoading, urlBlogId]);
 
   if (isLoading) {
     return <BlogPageSkeleton />;
@@ -164,6 +167,8 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
             {moment(date).utc().format('hh:mm A')} UTC
           </p>
 
+          <BlogScopeLine groupSlug={blog.group_slug} audience={blog.audience} />
+
           <BlogHeading
             title={sanitizedBlogTitle || 'Untitled Post'}
             className='pt-1 pb-4 font-dm_sans font-semibold text-[28px] sm:text-3xl md:text-4xl !leading-[1.32] text-center'
@@ -180,7 +185,11 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
             <Editor key={blogId} data={blogDataWithoutHeading()} />
           </div>
 
-          <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
+          <BlogReactionsContainer
+            blogURL={fullSlug}
+            blogId={blogId}
+            showShare={blog.audience !== 'group_only'}
+          />
 
           <div className='pt-10 space-y-12'>
             <div className='space-y-4'>
@@ -190,7 +199,9 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
 
             {/* <AuthorInfoCard userId={authorId} /> */}
 
-            <SocialSnapshotCard blog={blog} />
+            {blog.audience !== 'group_only' && (
+              <SocialSnapshotCard blog={blog} />
+            )}
           </div>
         </Container>
       </div>
