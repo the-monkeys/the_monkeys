@@ -2,17 +2,22 @@ import AccountsPage from '@/app/studio/accounts/page';
 import MediaPage from '@/app/studio/media/page';
 import StudioPage from '@/app/studio/page';
 import {
+  useSocialAccountMutations,
   useSocialAccounts,
   useSocialMedia,
   useSocialPosts,
 } from '@/hooks/studio/useSocialPosts';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/hooks/studio/useSocialPosts', () => ({
   useSocialPosts: vi.fn(),
   useSocialAccounts: vi.fn(),
   useSocialMedia: vi.fn(),
+  useSocialAccountMutations: vi.fn(() => ({
+    delink: { mutateAsync: vi.fn(), isPending: false },
+    createMock: { mutateAsync: vi.fn(), isPending: false },
+  })),
 }));
 
 describe('Studio Pages', () => {
@@ -211,6 +216,86 @@ describe('Studio Pages', () => {
       expect(screen.getAllByText('Connected')).toHaveLength(2);
       expect(screen.getByText(/Character limit:\s*280/)).toBeDefined();
       expect(screen.getByText(/Character limit:\s*3000/)).toBeDefined();
+    });
+
+    it('renders multiple accounts for the same platform with Demo/Mock badges', () => {
+      const mockAccounts = [
+        {
+          id: 'acc-1',
+          platform: 'x',
+          handle: 'personal_x',
+          display_name: 'Personal X',
+          is_mock: true,
+          status: 'active',
+        },
+        {
+          id: 'acc-2',
+          platform: 'x',
+          handle: 'work_x',
+          display_name: 'Work X',
+          is_mock: false,
+          status: 'active',
+        },
+      ];
+
+      vi.mocked(useSocialAccounts).mockReturnValue({
+        data: mockAccounts as any,
+        isLoading: false,
+      } as any);
+
+      render(<AccountsPage />);
+      expect(screen.getByText('@personal_x')).toBeDefined();
+      expect(screen.getByText('@work_x')).toBeDefined();
+      expect(screen.getByText('Demo / Mock')).toBeDefined();
+    });
+
+    it('opens delink warning modal when clicking Delink and calls mutation on confirm', async () => {
+      const delinkMutateAsync = vi
+        .fn()
+        .mockResolvedValue({
+          success: true,
+          cancelled_jobs_count: 2,
+          drafts_reverted_count: 1,
+        });
+      vi.mocked(useSocialAccountMutations).mockReturnValue({
+        delink: { mutateAsync: delinkMutateAsync, isPending: false } as any,
+        createMock: { mutateAsync: vi.fn(), isPending: false } as any,
+      });
+
+      const mockAccounts = [
+        {
+          id: 'acc-1',
+          platform: 'x',
+          handle: 'personal_x',
+          display_name: 'Personal X',
+          is_mock: true,
+          status: 'active',
+        },
+      ];
+
+      vi.mocked(useSocialAccounts).mockReturnValue({
+        data: mockAccounts as any,
+        isLoading: false,
+      } as any);
+
+      render(<AccountsPage />);
+      const delinkButton = screen.getByRole('button', {
+        name: /delink|disconnect/i,
+      });
+      fireEvent.click(delinkButton);
+
+      expect(
+        screen.getByText(
+          /Any scheduled posts targeted to this account will be cancelled/i
+        )
+      ).toBeDefined();
+
+      const confirmButton = screen.getByRole('button', {
+        name: /confirm disconnect/i,
+      });
+      fireEvent.click(confirmButton);
+
+      expect(delinkMutateAsync).toHaveBeenCalledWith('acc-1');
     });
   });
 
