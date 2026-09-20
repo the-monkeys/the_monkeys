@@ -276,7 +276,10 @@ export default function ComposerPage({ postId }: { postId?: string }) {
               text_override: overrides[platform] || undefined,
             },
           });
-          if (result.media_asset_ids?.length && setRenditionMedia?.mutateAsync) {
+          if (
+            result.media_asset_ids?.length &&
+            setRenditionMedia?.mutateAsync
+          ) {
             result = await setRenditionMedia.mutateAsync({
               id: result.id,
               accountId: targetAccount.id,

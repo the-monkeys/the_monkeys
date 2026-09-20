@@ -1,5 +1,5 @@
-import StudioCollectionPage from '@/features/studio/components/StudioCollectionPage';
+import HistoryView from '@/features/studio/history/HistoryView';
 
 export default function HistoryPage() {
-  return <StudioCollectionPage kind='history' />;
+  return <HistoryView />;
 }

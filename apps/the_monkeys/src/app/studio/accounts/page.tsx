@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import type { SocialAccount, SocialPlatform } from '@/features/studio/types';
 import {
   useSocialAccountMutations,
@@ -14,8 +15,8 @@ import {
   RiErrorWarningLine,
   RiFacebookBoxFill,
   RiInstagramFill,
-  RiLinkedinBoxFill,
   RiLinkUnlinkM,
+  RiLinkedinBoxFill,
   RiLoader4Line,
   RiTiktokFill,
   RiTwitterXFill,
@@ -125,7 +126,11 @@ export default function AccountsPage() {
 
   const handleCreateMockAccount = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!mockModalPlatform || !mockHandle.trim() || !createMockMutation?.mutateAsync)
+    if (
+      !mockModalPlatform ||
+      !mockHandle.trim() ||
+      !createMockMutation?.mutateAsync
+    )
       return;
 
     try {
@@ -137,7 +142,9 @@ export default function AccountsPage() {
       setMockModalPlatform(null);
       setMockHandle('');
       setMockDisplayName('');
-      showToast(`Connected @${mockHandle} (${mockModalPlatform.label}) in Demo mode.`);
+      showToast(
+        `Connected @${mockHandle} (${mockModalPlatform.label}) in Demo mode.`
+      );
     } catch (err: any) {
       showToast(err?.message || 'Failed to connect mock account');
     }
@@ -165,8 +172,9 @@ export default function AccountsPage() {
             Accounts
           </h2>
           <p className='mt-1 max-w-2xl text-xs sm:text-sm lg:text-base text-foreground/60'>
-            Connect multiple social media accounts per channel. Link via OAuth or
-            provision demo channels to preview publishing and validation rules.
+            Connect multiple social media accounts per channel. Link via OAuth
+            or provision demo channels to preview publishing and validation
+            rules.
           </p>
         </div>
       </header>
@@ -468,8 +476,8 @@ export default function AccountsPage() {
                 Standard OAuth 2.0
               </p>
               <p className='text-xs text-foreground/60'>
-                Redirect to {mockModalPlatform.label}&apos;s official authorization page
-                to grant publishing permissions.
+                Redirect to {mockModalPlatform.label}&apos;s official
+                authorization page to grant publishing permissions.
               </p>
               <a
                 href={`/api/v1/social-posts/oauth/${mockModalPlatform.id}/authorize`}

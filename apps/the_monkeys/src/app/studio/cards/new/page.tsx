@@ -13,10 +13,10 @@ export default function NewCardPage() {
       <CardsAuthGuard>
         <div className='mb-6 flex items-center gap-3'>
           <Link
-            href='/cards'
+            href='/studio/cards'
             className='text-sm text-foreground/50 hover:text-foreground'
           >
-            ? Cards
+            ← Cards
           </Link>
           <h1 className='font-newsreader text-3xl'>Create Card</h1>
         </div>

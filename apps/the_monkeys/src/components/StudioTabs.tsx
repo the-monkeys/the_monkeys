@@ -1,18 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export type StudioTab = 'template' | 'x' | 'card';
-
-const TABS: { id: StudioTab; label: string; href: string }[] = [
-  {
-    id: 'template',
-    label: 'Image template',
-    href: '/snapshot/new?view=template',
-  },
-  { id: 'x', label: 'X screenshot', href: '/snapshot/new?view=x' },
-  { id: 'card', label: 'Business card', href: '/cards' },
-];
 
 export interface StudioTabsProps {
   active: StudioTab;
@@ -34,47 +25,72 @@ export const StudioTabs = ({
   active,
   onSelect,
   className,
-}: StudioTabsProps) => (
-  <div
-    className={`mb-8 flex gap-1 border-b border-border-light dark:border-border-dark/40 ${
-      className ?? ''
-    }`}
-    role='tablist'
-    aria-label='Studio mode'
-  >
-    {TABS.map(({ id, label, href }) => {
-      const cls = `px-3 py-2 font-inter text-sm ${
-        active === id
-          ? 'border-b-2 border-brand-orange font-medium'
-          : 'text-gray-500 hover:text-foreground'
-      }`;
+}: StudioTabsProps) => {
+  const pathname = usePathname();
+  const isStudio = pathname?.startsWith('/studio');
 
-      if (onSelect && (id === 'template' || id === 'x')) {
+  const tabs: { id: StudioTab; label: string; href: string }[] = [
+    {
+      id: 'template',
+      label: 'Image template',
+      href: isStudio
+        ? '/studio/snapshot/new?view=template'
+        : '/snapshot/new?view=template',
+    },
+    {
+      id: 'x',
+      label: 'X screenshot',
+      href: isStudio ? '/studio/snapshot/new?view=x' : '/snapshot/new?view=x',
+    },
+    {
+      id: 'card',
+      label: 'Business card',
+      href: isStudio ? '/studio/cards' : '/cards',
+    },
+  ];
+
+  return (
+    <div
+      className={`mb-8 flex gap-1 border-b border-border-light dark:border-border-dark/40 ${
+        className ?? ''
+      }`}
+      role='tablist'
+      aria-label='Studio mode'
+    >
+      {tabs.map(({ id, label, href }) => {
+        const cls = `px-3 py-2 font-inter text-sm ${
+          active === id
+            ? 'border-b-2 border-brand-orange font-medium'
+            : 'text-gray-500 hover:text-foreground'
+        }`;
+
+        if (onSelect && (id === 'template' || id === 'x')) {
+          return (
+            <button
+              key={id}
+              type='button'
+              role='tab'
+              aria-selected={active === id}
+              onClick={() => onSelect(id)}
+              className={cls}
+            >
+              {label}
+            </button>
+          );
+        }
+
         return (
-          <button
+          <Link
             key={id}
-            type='button'
+            href={href}
             role='tab'
             aria-selected={active === id}
-            onClick={() => onSelect(id)}
             className={cls}
           >
             {label}
-          </button>
+          </Link>
         );
-      }
-
-      return (
-        <Link
-          key={id}
-          href={href}
-          role='tab'
-          aria-selected={active === id}
-          className={cls}
-        >
-          {label}
-        </Link>
-      );
-    })}
-  </div>
-);
+      })}
+    </div>
+  );
+};

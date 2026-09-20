@@ -1,5 +1,7 @@
 import Link from 'next/link';
 
+import { RiCalendarScheduleLine, RiTimeLine } from '@remixicon/react';
+
 export interface QueueHeaderProps {
   totalCount: number;
   className?: string;
@@ -18,8 +20,11 @@ export default function QueueHeader({
           <h1 className='font-newsreader text-3xl font-medium text-foreground sm:text-4xl'>
             Publishing Queue
           </h1>
-          <span className='inline-flex items-center rounded-full bg-brand-orange/10 px-2.5 py-0.5 text-xs font-semibold text-brand-orange'>
-            {totalCount} {totalCount === 1 ? 'post' : 'posts'} scheduled
+          <span className='inline-flex items-center gap-1.5 rounded-full bg-brand-orange/10 px-2.5 py-0.5 text-xs font-semibold text-brand-orange'>
+            <RiCalendarScheduleLine size={13} className='shrink-0' />
+            <span>
+              {totalCount} {totalCount === 1 ? 'post' : 'posts'} scheduled
+            </span>
           </span>
         </div>
         <p className='mt-1 text-sm text-foreground/60'>
@@ -30,7 +35,7 @@ export default function QueueHeader({
       <div>
         <Link
           href='/studio/compose'
-          className='inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:opacity-90'
+          className='inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-orange px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-orange/90'
         >
           + Add to Queue
         </Link>

@@ -205,3 +205,4 @@ Allow users to manually link and delink multiple social media accounts of each p
   - `ComposerPage.test.tsx`:
     - Platform toggle reveals account sub-selector when multiple accounts exist.
     - Selected accounts generate renditions for each `social_account_id`.
+

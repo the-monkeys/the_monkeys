@@ -171,7 +171,9 @@ export default function PlatformSelector({
 
       {/* Account Sub-Selector for selected platforms with multiple accounts */}
       {selected.map((platformId) => {
-        const platformDef = PLATFORM_DEFINITIONS.find((p) => p.id === platformId);
+        const platformDef = PLATFORM_DEFINITIONS.find(
+          (p) => p.id === platformId
+        );
         const platformAccounts = accounts.filter(
           (a) => a.platform === platformId && a.status !== 'disconnected'
         );

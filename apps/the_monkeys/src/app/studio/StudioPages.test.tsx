@@ -23,8 +23,16 @@ describe('Studio Pages', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useSocialAccountMutations).mockReturnValue({
-      delink: { mutateAsync: vi.fn().mockResolvedValue({ success: true, drafts_reverted_count: 1 }), isPending: false },
-      createMock: { mutateAsync: vi.fn().mockResolvedValue({ id: 'mock-123' }), isPending: false },
+      delink: {
+        mutateAsync: vi
+          .fn()
+          .mockResolvedValue({ success: true, drafts_reverted_count: 1 }),
+        isPending: false,
+      },
+      createMock: {
+        mutateAsync: vi.fn().mockResolvedValue({ id: 'mock-123' }),
+        isPending: false,
+      },
     } as any);
   });
 
@@ -280,7 +288,9 @@ describe('Studio Pages', () => {
 
       expect(screen.getByText('Disconnect Account')).toBeDefined();
       expect(
-        screen.getByText(/Any scheduled posts targeted to this channel will be/i)
+        screen.getByText(
+          /Any scheduled posts targeted to this channel will be/i
+        )
       ).toBeDefined();
 
       const confirmBtn = screen.getByText('Confirm Disconnect');

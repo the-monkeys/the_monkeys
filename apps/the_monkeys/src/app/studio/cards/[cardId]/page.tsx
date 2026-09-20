@@ -51,7 +51,7 @@ export default function EditCardPage() {
             <p className='text-foreground/60'>
               This card may have been deleted or the link is invalid.
             </p>
-            <Link href='/cards'>
+            <Link href='/studio/cards'>
               <Button variant='outline'>Back to Cards</Button>
             </Link>
           </div>
@@ -59,10 +59,10 @@ export default function EditCardPage() {
           <>
             <div className='mb-6 flex items-center gap-3'>
               <Link
-                href='/cards'
+                href='/studio/cards'
                 className='text-sm text-foreground/50 hover:text-foreground'
               >
-                ? Cards
+                ← Cards
               </Link>
               <h1 className='font-newsreader text-3xl'>
                 {card.name || 'Edit Card'}

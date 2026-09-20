@@ -68,7 +68,7 @@ export default function SnapshotStudioPage({
         <p className='mb-6 text-foreground/70'>
           We could not load this post. It may be unpublished.
         </p>
-        <Link href='/snapshot' className='text-brand-orange underline'>
+        <Link href='/studio/snapshot' className='text-brand-orange underline'>
           Pick another post
         </Link>
       </div>
@@ -82,10 +82,10 @@ export default function SnapshotStudioPage({
       <div className='mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
         <div className='flex flex-col gap-1'>
           <Link
-            href='/snapshot'
+            href='/studio/snapshot'
             className='text-xs text-foreground/60 hover:text-foreground'
           >
-            ? All posts
+            ← All posts
           </Link>
           <h1 className='font-newsreader text-2xl'>
             Snapshot
