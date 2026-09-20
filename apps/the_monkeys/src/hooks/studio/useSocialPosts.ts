@@ -78,34 +78,6 @@ export function useSocialAccounts() {
   });
 }
 
-export function useSocialAccountMutations() {
-  const queryClient = useQueryClient();
-  const refresh = () => {
-    void queryClient.invalidateQueries({ queryKey: socialPostKeys.accounts });
-    void queryClient.invalidateQueries({ queryKey: socialPostKeys.all });
-  };
-
-  const delink = useMutation({
-    mutationFn: (id: string) => socialPostsApi.delinkAccount(id),
-    onSuccess: refresh,
-  });
-
-  const createMock = useMutation({
-    mutationFn: (payload: {
-      platform: string;
-      handle: string;
-      display_name?: string;
-      avatar_url?: string;
-    }) => socialPostsApi.createMockAccount(payload),
-    onSuccess: refresh,
-  });
-
-  return {
-    delink,
-    createMock,
-  };
-}
-
 export function useSocialMedia() {
   return useQuery({
     queryKey: socialPostKeys.media(),
@@ -243,3 +215,32 @@ export function useSocialPostMutations() {
     replayJob,
   };
 }
+
+export function useSocialAccountMutations() {
+  const queryClient = useQueryClient();
+  const refresh = () => {
+    void queryClient.invalidateQueries({ queryKey: socialPostKeys.accounts });
+    void queryClient.invalidateQueries({ queryKey: socialPostKeys.all });
+  };
+
+  const delink = useMutation({
+    mutationFn: (id: string) => socialPostsApi.delinkAccount(id),
+    onSuccess: refresh,
+  });
+
+  const createMock = useMutation({
+    mutationFn: (payload: {
+      platform: any;
+      handle: string;
+      display_name?: string;
+      avatar_url?: string;
+    }) => socialPostsApi.createMockAccount(payload),
+    onSuccess: refresh,
+  });
+
+  return {
+    delink,
+    createMock,
+  };
+}
+
