@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import Link from 'next/link';
 
@@ -16,22 +16,62 @@ import { Loader } from '@/components/loader';
 import { GROUPS_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useGroupEvents } from '@/hooks/events/useEventQueries';
-import { canManageGroup, canViewGroupMembers } from '@/lib/groupPerms';
+import {
+  GroupCommunityTab,
+  groupCommunityLocation,
+  groupCommunityTabs,
+  parseGroupCommunityTab,
+} from '@/lib/groupCommunityTab';
+import {
+  canManageGroup,
+  canViewGroupMembers,
+  groupFeedEmptyCopy,
+  isActiveGroupMember,
+} from '@/lib/groupPerms';
 import { GroupItem } from '@/services/groups/groupsTypes';
 
-type Tab = 'events' | 'blogs' | 'about' | 'members' | 'requests' | 'invites';
+const TAB_LABELS: Record<GroupCommunityTab, string> = {
+  posts: 'Posts',
+  events: 'Events',
+  about: 'About',
+  members: 'Members',
+  requests: 'Join requests',
+  invites: 'Invites',
+};
 
 /**
- * Team-page community panel. Leads with the group's event agenda, then the
- * member roster (with admin/co-admin role labels), and — for staff only —
- * "Join requests" and "Invites" tabs. Every staff tab is UI-gated here and
- * enforced server-side, so non-staff viewers never see or act on them.
+ * Team-page community panel. Posts lead, then events, about, members, and —
+ * for staff only — join requests and invites. Tab choice is stored in the
+ * URL hash (`#events`) so a refresh restores it without creating extra
+ * indexable paths. The default Posts tab keeps `/groups/:slug` hash-free.
  */
 export function GroupCommunity({ group }: { group: GroupItem }) {
   const { data: session } = useAuth();
   const staff = canManageGroup(group);
   const canView = canViewGroupMembers(group);
-  const [tab, setTab] = useState<Tab>('events');
+  const [tab, setTab] = useState<GroupCommunityTab>('posts');
+
+  useLayoutEffect(() => {
+    const applyHash = () => {
+      setTab(parseGroupCommunityTab(window.location.hash, staff));
+    };
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, [staff]);
+
+  const selectTab = (next: GroupCommunityTab) => {
+    setTab(next);
+    const nextUrl = groupCommunityLocation(
+      window.location.pathname,
+      window.location.search,
+      next
+    );
+    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (current !== nextUrl) {
+      window.history.replaceState(null, '', nextUrl);
+    }
+  };
 
   // Private/unlisted groups hide the panel from non-members and non-staff.
   if (!canView && !staff) return null;
@@ -41,27 +81,17 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
       <TextTabs
         aria-label='Group community'
         value={tab}
-        onChange={setTab}
-        items={
-          [
-            { id: 'events', label: 'Events' },
-            { id: 'blogs', label: 'Blogs' },
-            { id: 'about', label: 'About' },
-            { id: 'members', label: 'Members' },
-            ...(staff
-              ? [
-                  { id: 'requests', label: 'Join requests' },
-                  { id: 'invites', label: 'Invites' },
-                ]
-              : []),
-          ] as { id: Tab; label: string }[]
-        }
+        onChange={selectTab}
+        items={groupCommunityTabs(staff).map((id) => ({
+          id,
+          label: TAB_LABELS[id],
+        }))}
       />
 
-      {tab === 'events' ? (
-        <GroupEventsPanel group={group} staff={staff} />
-      ) : tab === 'blogs' ? (
+      {tab === 'posts' ? (
         <GroupBlogsPanel group={group} />
+      ) : tab === 'events' ? (
+        <GroupEventsPanel group={group} staff={staff} />
       ) : tab === 'about' ? (
         <GroupAboutPanel group={group} />
       ) : tab === 'members' ? (
@@ -91,12 +121,14 @@ function GroupEventsPanel({
   group: GroupItem;
   staff: boolean;
 }) {
+  const { data: session } = useAuth();
   const [when, setWhen] = useState<'upcoming' | 'past'>('upcoming');
   const { data, isLoading } = useGroupEvents(group.slug, {
     date: when,
     limit: 24,
   });
   const events = data?.events ?? [];
+  const member = isActiveGroupMember(group);
 
   return (
     <div>
@@ -116,11 +148,14 @@ function GroupEventsPanel({
       ) : events.length === 0 ? (
         <div className='rounded-lg border border-dashed border-border-light py-10 text-center dark:border-border-dark'>
           <p className='font-inter text-sm text-gray-500'>
-            {when === 'past'
-              ? 'No past events yet.'
-              : 'No events scheduled yet.'}
+            {groupFeedEmptyCopy({
+              kind: 'events',
+              member,
+              signedIn: !!session,
+              when,
+            })}
           </p>
-          {staff && when === 'upcoming' && (
+          {staff && member && when === 'upcoming' && (
             <Link
               href={`${GROUPS_ROUTE}/${group.slug}/events/new`}
               className='mt-2 inline-block font-dm_sans text-sm font-medium text-brand-orange hover:underline'

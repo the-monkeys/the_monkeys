@@ -2,12 +2,15 @@
 
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { Loader } from '@/components/loader';
+import useAuth from '@/hooks/auth/useAuth';
 import { useGroupBlogs } from '@/hooks/groups/useGroupQueries';
+import { groupFeedEmptyCopy, isActiveGroupMember } from '@/lib/groupPerms';
 import { GroupItem } from '@/services/groups/groupsTypes';
 import { fromBlog } from '@/utils/blogCardAdapters';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 export function GroupBlogsPanel({ group }: { group: GroupItem }) {
+  const { data: session } = useAuth();
   const {
     data,
     isLoading,
@@ -40,7 +43,11 @@ export function GroupBlogsPanel({ group }: { group: GroupItem }) {
     return (
       <div className='rounded-xl border border-dashed border-border-light px-4 py-10 text-center dark:border-border-dark'>
         <p className='font-inter text-sm text-gray-500'>
-          No posts have been published to this group yet.
+          {groupFeedEmptyCopy({
+            kind: 'posts',
+            member: isActiveGroupMember(group),
+            signedIn: !!session,
+          })}
         </p>
       </div>
     );

@@ -10,6 +10,10 @@ vi.mock('@/hooks/groups/useGroupQueries', () => ({
   useGroupBlogs: vi.fn(),
 }));
 
+vi.mock('@/hooks/auth/useAuth', () => ({
+  default: vi.fn(() => ({ data: null })),
+}));
+
 vi.mock('@/components/cards/blog/FeedBlogCard', () => ({
   FeedBlogCard: ({ blog }: { blog: { title: string; audience?: string } }) => (
     <article>
@@ -25,6 +29,12 @@ const publicGroup = {
   name: 'Writers',
   visibility: 'public',
   status: 'published',
+} satisfies GroupItem;
+
+const memberGroup = {
+  ...publicGroup,
+  viewer_role: 'member',
+  viewer_member_status: 'active',
 } satisfies GroupItem;
 
 const membersOnlyBlog = {
@@ -58,7 +68,7 @@ const mockedUseGroupBlogs = vi.mocked(useGroupBlogs);
 describe('GroupBlogsPanel', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  it('renders a successful empty state', () => {
+  it('asks logged-out visitors to log in and join when the public list is empty', () => {
     mockedUseGroupBlogs.mockReturnValue({
       data: { pages: [{ blogs: [] }], pageParams: [0] },
       isLoading: false,
@@ -69,6 +79,23 @@ describe('GroupBlogsPanel', () => {
     } as never);
 
     render(<GroupBlogsPanel group={publicGroup} />);
+
+    expect(
+      screen.getByText('Log in and join this group to see posts.')
+    ).toBeTruthy();
+  });
+
+  it('keeps the true-empty copy for members', () => {
+    mockedUseGroupBlogs.mockReturnValue({
+      data: { pages: [{ blogs: [] }], pageParams: [0] },
+      isLoading: false,
+      isError: false,
+      hasNextPage: false,
+      fetchNextPage: vi.fn(),
+      isFetchingNextPage: false,
+    } as never);
+
+    render(<GroupBlogsPanel group={memberGroup} />);
 
     expect(
       screen.getByText('No posts have been published to this group yet.')
