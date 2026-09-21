@@ -22,6 +22,13 @@ import { Badge } from '@the-monkeys/ui/atoms/badge';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import { Label } from '@the-monkeys/ui/atoms/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@the-monkeys/ui/atoms/select';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 
@@ -329,49 +336,51 @@ export const VerificationPanel = () => {
           <div className='grid gap-4 sm:grid-cols-2'>
             <div className='space-y-1.5'>
               <Label htmlFor='ver-country'>Country</Label>
-              <select
-                id='ver-country'
-                value={values.country ?? ''}
-                onChange={(e) => {
-                  const cc = e.target.value;
+              <Select
+                value={values.country || undefined}
+                onValueChange={(cc) => {
                   setValue('country', cc);
                   if (!allowedDocTypes(cc).includes(values.id_document_type!)) {
                     setValue('id_document_type', undefined);
                   }
                 }}
-                className='w-full h-9 rounded-md border-1 border-border-light dark:border-border-dark bg-transparent px-2 text-sm'
               >
-                <option value=''>Select…</option>
-                {COUNTRY_CODES.map((cc) => (
-                  <option key={cc} value={cc}>
-                    {countryLabel(cc)} ({cc})
-                  </option>
-                ))}
-                <option value='OT'>Other / not listed</option>
-              </select>
+                <SelectTrigger id='ver-country' className='w-full h-9'>
+                  <SelectValue placeholder='Select…' />
+                </SelectTrigger>
+                <SelectContent side='bottom' className='max-h-60'>
+                  {COUNTRY_CODES.map((cc) => (
+                    <SelectItem key={cc} value={cc}>
+                      {countryLabel(cc)} ({cc})
+                    </SelectItem>
+                  ))}
+                  <SelectItem value='OT'>Other / not listed</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className='space-y-1.5'>
               <Label htmlFor='ver-doctype'>Document type</Label>
-              <select
-                id='ver-doctype'
-                value={values.id_document_type ?? ''}
-                onChange={(e) =>
+              <Select
+                value={values.id_document_type || undefined}
+                onValueChange={(dt) =>
                   setValue(
                     'id_document_type',
-                    (e.target.value ||
-                      undefined) as VerificationFormValues['id_document_type']
+                    dt as VerificationFormValues['id_document_type']
                   )
                 }
-                className='w-full h-9 rounded-md border-1 border-border-light dark:border-border-dark bg-transparent px-2 text-sm'
               >
-                <option value=''>Select…</option>
-                {docTypes.map((dt) => (
-                  <option key={dt} value={dt}>
-                    {ID_DOCUMENT_TYPE_LABELS[dt]}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger id='ver-doctype' className='w-full h-9'>
+                  <SelectValue placeholder='Select…' />
+                </SelectTrigger>
+                <SelectContent side='bottom' className='max-h-60'>
+                  {docTypes.map((dt) => (
+                    <SelectItem key={dt} value={dt}>
+                      {ID_DOCUMENT_TYPE_LABELS[dt]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
