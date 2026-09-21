@@ -2,6 +2,7 @@ import { memo } from 'react';
 
 import Link from 'next/link';
 
+import { EventHostName } from '@/components/events/EventHostName';
 import { EventSeriesNote } from '@/components/events/detail/EventSeriesNote';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
@@ -118,10 +119,14 @@ export const EventGridCard = memo(function EventGridCard({
         </p>
 
         <div className='mt-auto flex items-center justify-between gap-3 pt-4 font-inter text-xs text-gray-500 dark:text-gray-400'>
-          {event.organizer_username ? (
-            <span className='flex items-center gap-1.5 truncate'>
-              <Icon name='RiUser' size={14} className='opacity-70' />@
-              {event.organizer_username}
+          {event.organizer_username || event.organizer_account_id ? (
+            <span className='flex min-w-0 items-center gap-1.5'>
+              <Icon name='RiUser' size={14} className='shrink-0 opacity-70' />
+              <EventHostName
+                username={event.organizer_username}
+                accountId={event.organizer_account_id}
+                className='text-inherit'
+              />
             </span>
           ) : (
             <span />
