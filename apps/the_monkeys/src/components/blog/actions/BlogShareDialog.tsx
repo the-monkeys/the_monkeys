@@ -5,6 +5,7 @@ import {
   ShareButtonContainer,
 } from '@/components/buttons/shareButton';
 import Icon from '@/components/icon';
+import { cn } from '@/lib/utils';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -15,7 +16,6 @@ import {
   DialogTrigger,
 } from '@the-monkeys/ui/atoms/dialog';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
-import { twMerge } from 'tailwind-merge';
 
 interface BlogShareDialogProps {
   blogURL: string;
@@ -52,7 +52,7 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
     <Dialog>
       <DialogTrigger asChild>
         <button
-          className={twMerge(
+          className={cn(
             'p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100 transition-colors',
             triggerClassName
           )}
