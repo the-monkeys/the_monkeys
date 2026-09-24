@@ -57,7 +57,7 @@ export function dropStaleEditorRoots(
   live?: HTMLElement | null
 ): void {
   if (!holder) return;
-  const editors = [...holder.querySelectorAll(':scope > .codex-editor')];
+  const editors = Array.from(holder.querySelectorAll(':scope > .codex-editor'));
   if (live && holder.contains(live)) {
     editors.forEach((el) => {
       if (el !== live) el.remove();
