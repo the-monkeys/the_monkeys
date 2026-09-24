@@ -5,6 +5,7 @@ import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import DatasetBlock from '@/components/editor/customBlocks/DatasetBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import FormulaBlock from '@/components/editor/customBlocks/FormulaBlock';
+import MarkdownBlock from '@/components/editor/customBlocks/MarkdownBlock';
 import MethodologyBlock from '@/components/editor/customBlocks/MethodologyBlock';
 import MentionUserTool from '@/components/editor/customBlocks/TagUserBlock';
 import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
@@ -21,6 +22,9 @@ export const editorConfig: EditorConfig = {
   holder: 'monkeys_editor_editor-container',
   readOnly: true,
   tools: {
+    title: {
+      class: TitleBlockTool,
+    },
     header: {
       class: Header,
       config: {
@@ -72,6 +76,9 @@ export const editorConfig: EditorConfig = {
     },
     dataset: {
       class: DatasetBlock,
+    },
+    markdown: {
+      class: MarkdownBlock,
     },
     embed: {
       class: CustomEmbed,

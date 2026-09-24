@@ -1,5 +1,11 @@
 import { generateSlug } from '@/app/blog/utils/generateSlug';
-import { Block, FollowingFeed, MetaBlog } from '@/services/blog/blogTypes';
+import { getCardContent } from '@/components/blog/getBlogContent';
+import {
+  Block,
+  Blog,
+  FollowingFeed,
+  MetaBlog,
+} from '@/services/blog/blogTypes';
 import { BlogCardData } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
@@ -12,6 +18,8 @@ export const fromMetaBlog = (blog: MetaBlog): BlogCardData => ({
   title: purifyHTMLString(blog.title),
   description: purifyHTMLString(blog.first_paragraph),
   image: blog.first_image,
+  audience: blog.audience,
+  groupSlug: blog.group_slug,
 });
 
 export const fromFollowingFeed = (blog: FollowingFeed): BlogCardData => {
@@ -36,5 +44,25 @@ export const fromFollowingFeed = (blog: FollowingFeed): BlogCardData => {
     initialIsLiked: blog.IsLikedByMe,
     initialIsBookmarked: blog.IsBookmarkedByMe,
     initialLikeCount: blog.LikeCount,
+  };
+};
+
+export const fromBlog = (post: Blog): BlogCardData => {
+  const { titleContent, descriptionContent, imageContent } = getCardContent({
+    blog: post,
+  });
+
+  return {
+    blogId: post.blog_id,
+    authorId: post.owner_account_id,
+    date: post.published_time,
+    slug: generateSlug(titleContent),
+    tags: post.tags ?? [],
+    title: titleContent,
+    description: descriptionContent,
+    image: imageContent ?? '',
+    audience: post.audience,
+    groupSlug: post.group_slug,
+    initialLikeCount: post.like_count ?? post.LikeCount,
   };
 };

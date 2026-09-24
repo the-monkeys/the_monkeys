@@ -4,13 +4,16 @@ import { notFound } from 'next/navigation';
 import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { USER_PROFILE_QUERY_KEY } from '@/hooks/user/useGetProfileInfoByUserId';
 import { noIndexFollowRobots } from '@/lib/seo';
-import { Blog } from '@/services/blog/blogTypes';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 import { getQueryClient } from '@/utils/get-query-client';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import BlogPageClient from './BlogPageClient';
-import { loadPublicAuthorForSeo, loadPublicBlogForSeo } from './blogData';
+import {
+  loadBlogForViewer,
+  loadPublicAuthorForSeo,
+  loadPublicBlogForSeo,
+} from './blogData';
 import {
   authorDisplayName,
   buildBlogJsonLd,
@@ -49,7 +52,7 @@ export default async function BlogPage({ params }: Props) {
 
   if (!blogId) return null;
 
-  const blog = await loadPublicBlogForSeo(blogId);
+  const blog = await loadBlogForViewer(blogId);
   if (blog === null || blog?.is_draft) notFound();
   if (blog) queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], blog);
 
