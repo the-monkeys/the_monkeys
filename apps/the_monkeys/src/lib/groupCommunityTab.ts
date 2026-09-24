@@ -15,10 +15,7 @@ const TAB_ALIASES: Record<string, GroupCommunityTab> = {
   blogs: 'posts',
 };
 
-const STAFF_ONLY_TABS: ReadonlySet<GroupCommunityTab> = new Set([
-  'requests',
-  'invites',
-]);
+const STAFF_ONLY_TABS = new Set<GroupCommunityTab>(['requests', 'invites']);
 
 export function groupCommunityTabs(staff: boolean): GroupCommunityTab[] {
   if (staff) return [...GROUP_COMMUNITY_TABS];
