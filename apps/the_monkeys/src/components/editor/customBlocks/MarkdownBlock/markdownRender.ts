@@ -25,19 +25,9 @@ const ALLOWED_TAGS = [
 export async function renderMarkdownHtml(markdown: string): Promise<string> {
   const { marked } = await import('marked');
   const renderer = new marked.Renderer();
-  const heading = renderer.heading.bind(renderer);
-  renderer.heading = ((
-    ...args: Parameters<typeof heading>
-  ): ReturnType<typeof heading> => {
-    const first = args[0] as { text?: string; depth?: number } | string;
-    if (typeof first === 'object' && first && 'text' in first) {
-      const level = Math.min(Math.max(first.depth ?? 1, 1), 3);
-      return `<h${level}>${first.text}</h${level}>\n`;
-    }
-    const text = String(first);
-    const depth = typeof args[1] === 'number' ? args[1] : 1;
-    const level = Math.min(Math.max(depth, 1), 3);
-    return `<h${level}>${text}</h${level}>\n`;
+  renderer.heading = ((token: { text: string; depth: number }) => {
+    const level = Math.min(Math.max(token.depth ?? 1, 1), 3);
+    return `<h${level}>${token.text}</h${level}>\n`;
   }) as typeof renderer.heading;
   renderer.image = (() => '') as typeof renderer.image;
 
