@@ -41,6 +41,7 @@ vi.mock('@/components/blog/LikesCount', () => ({
 vi.mock('@/components/blog/getBlogContent', () => ({
   BlogHeading: ({ title }: { title: string }) => <h1>{title}</h1>,
   getCardContent: vi.fn(),
+  withoutPostTitle: (data: { blocks?: unknown[] } | undefined) => data,
 }));
 
 vi.mock('@/components/buttons/backButton', () => ({

@@ -104,8 +104,10 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
         </>
       ) : tab === 'requests' ? (
         <GroupJoinRequests group={group} />
-      ) : (
+      ) : tab === 'invites' ? (
         <GroupInvites group={group} />
+      ) : (
+        <GroupBlogsPanel group={group} />
       )}
     </section>
   );

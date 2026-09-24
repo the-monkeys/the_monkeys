@@ -209,7 +209,7 @@ export const PublishBlogDrawer = ({
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent>
+      <DrawerContent data-shortcut-scope='chrome'>
         <DrawerHeader className='!p-0 !pt-4'>
           <DrawerTitle>Publish Post</DrawerTitle>
 

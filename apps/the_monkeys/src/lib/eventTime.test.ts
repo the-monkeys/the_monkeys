@@ -1,4 +1,11 @@
-import { formatPrice, parseEventTime, toIsoTime } from '@/lib/eventTime';
+import {
+  eventDateParts,
+  formatEventCardWhen,
+  formatEventWhen,
+  formatPrice,
+  parseEventTime,
+  toIsoTime,
+} from '@/lib/eventTime';
 import { describe, expect, it } from 'vitest';
 
 describe('parseEventTime', () => {
@@ -31,5 +38,16 @@ describe('toIsoTime', () => {
 describe('formatPrice', () => {
   it('shows Free for zero', () => {
     expect(formatPrice(0)).toBe('Free');
+  });
+});
+
+describe('event timezone formatting', () => {
+  it('does not throw for an invalid IANA timezone', () => {
+    const start = '2026-09-20T14:34:00Z';
+    expect(() => formatEventCardWhen(start, 'Not/AZone')).not.toThrow();
+    expect(() => eventDateParts(start, 'Not/AZone')).not.toThrow();
+    expect(() => formatEventWhen(start, undefined, 'Not/AZone')).not.toThrow();
+    expect(formatEventCardWhen(start, 'Not/AZone').length).toBeGreaterThan(0);
+    expect(eventDateParts(start, 'Not/AZone')).not.toBeNull();
   });
 });

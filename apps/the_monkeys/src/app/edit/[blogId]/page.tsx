@@ -7,7 +7,9 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
+import { isDocumentTitleBlock } from '@/components/blog/getBlogContent';
 import BlogPreview from '@/components/editor/BlogPreview';
+import { withFirstBlockTitleId } from '@/components/editor/postCanvas/withFirstBlockTitleId';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
@@ -76,6 +78,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const blogTopicsRef = useRef<string[]>([]);
   const webSocketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isConnectedRef = useRef(false);
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
@@ -84,6 +87,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
+  isConnectedRef.current = isConnected;
 
   const [data, setData] = useState<OutputData | null>(
     isNew ? INITIAL_DATA : null
@@ -155,7 +159,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         blog: {
           time: data?.time || Date.now(),
           blocks:
-            data?.blocks?.map((block) => ({
+            withFirstBlockTitleId(data?.blocks)?.map((block) => ({
               ...block,
               author: [accountId],
               time: Date.now(),
@@ -245,7 +249,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
     // Handle tab visibility changes
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && !isConnected && token) {
+      if (
+        document.visibilityState === 'visible' &&
+        !isConnectedRef.current &&
+        token
+      ) {
         // Reconnect immediately when tab becomes visible
         if (reconnectTimeoutRef.current) {
           clearTimeout(reconnectTimeoutRef.current);
@@ -266,7 +274,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [token, blogId, formatData, isConnected]);
+  }, [token, blogId, formatData]);
 
   // Auto-save when data changes
   useEffect(() => {
@@ -297,10 +305,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         return;
       }
 
-      if (
-        data.blocks[0].type !== 'header' &&
-        data?.blocks[0].data.level !== 1
-      ) {
+      if (!isDocumentTitleBlock(data.blocks[0])) {
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -421,10 +426,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         return;
       }
 
-      if (
-        data.blocks[0].type !== 'header' &&
-        data?.blocks[0].data.level !== 1
-      ) {
+      if (!isDocumentTitleBlock(data.blocks[0])) {
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -500,7 +502,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         </div>
       ) : (
         <div className='relative min-h-screen'>
-          <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
+          <div
+            className='pt-4 pb-3 flex justify-between items-center gap-2'
+            data-shortcut-scope='chrome'
+          >
             <div
               className={twMerge(
                 'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',

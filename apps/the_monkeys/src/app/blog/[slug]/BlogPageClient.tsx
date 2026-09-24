@@ -7,9 +7,14 @@ import { useRouter } from 'next/navigation';
 
 // import AdUnit from '@/components/AdSense/AdUnit';
 import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
-import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
+import {
+  BlogHeading,
+  getCardContent,
+  withoutPostTitle,
+} from '@/components/blog/getBlogContent';
 import { BackButton } from '@/components/buttons/backButton';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
+import { PostArticleCanvas } from '@/components/editor/postCanvas/PostArticleCanvas';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
 import {
@@ -133,16 +138,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const blogTitle = blog?.blog?.blocks?.[0]?.data?.text;
   const sanitizedBlogTitle = purifyHTMLString(blogTitle);
 
-  const blogDataWithoutHeading = () => {
-    const firstBlock = blog?.blog?.blocks[0];
-
-    if (firstBlock?.type !== 'header') return blog?.blog;
-
-    return {
-      ...blog.blog,
-      blocks: blog?.blog.blocks.slice(1),
-    };
-  };
+  const blogDataWithoutHeading = () => withoutPostTitle(blog?.blog);
 
   return (
     <>
@@ -181,10 +177,9 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
       {/* <AdUnit slot='4598536509' /> */}
       <div className='p-4'>
         <Container className='max-w-3xl'>
-          <div className='px-1 pb-4 overflow-hidden'>
+          <PostArticleCanvas className='px-1 pb-4 overflow-hidden'>
             <Editor key={blogId} data={blogDataWithoutHeading()} />
-          </div>
-
+          </PostArticleCanvas>
           <BlogReactionsContainer
             blogURL={fullSlug}
             blogId={blogId}

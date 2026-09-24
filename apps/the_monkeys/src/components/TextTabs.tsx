@@ -20,7 +20,7 @@ export function TextTabs<T extends string>({
     <div
       role='tablist'
       aria-label={ariaLabel}
-      className='mb-4 flex w-full items-center gap-1 overflow-x-auto overscroll-x-contain border-b border-border-light dark:border-border-dark'
+      className='mb-4 flex w-full items-center gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scrollbar-hide border-b border-border-light dark:border-border-dark'
     >
       {items.map((item) => {
         const active = item.id === value;

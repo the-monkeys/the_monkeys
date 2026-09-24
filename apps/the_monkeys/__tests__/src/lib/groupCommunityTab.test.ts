@@ -35,6 +35,11 @@ describe('groupCommunityTab', () => {
     expect(parseGroupCommunityTab('#not-a-tab', true)).toBe('posts');
   });
 
+  it('never treats an unknown tab as invites', () => {
+    expect(parseGroupCommunityTab('#invites-please', true)).toBe('posts');
+    expect(parseGroupCommunityTab('not-invites', false)).toBe('posts');
+  });
+
   it('keeps the canonical group path hash-free on the default tab', () => {
     expect(groupCommunityHash('posts')).toBe('');
     expect(groupCommunityHash('events')).toBe('#events');

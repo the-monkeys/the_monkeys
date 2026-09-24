@@ -5,8 +5,10 @@ import CustomList from '@/components/editor/customBlocks/CustomListBlock';
 import DatasetBlock from '@/components/editor/customBlocks/DatasetBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
 import FormulaBlock from '@/components/editor/customBlocks/FormulaBlock';
+import MarkdownBlock from '@/components/editor/customBlocks/MarkdownBlock';
 import MethodologyBlock from '@/components/editor/customBlocks/MethodologyBlock';
 import MentionUserTool from '@/components/editor/customBlocks/TagUserBlock';
+import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
 import TrendBlock from '@/components/editor/customBlocks/TrendBlock';
 import { uploadImage } from '@/components/editor/utils/uploadFile';
 import Delimiter from '@editorjs/delimiter';
@@ -20,6 +22,10 @@ import { EditorConfig } from '@themonkeys/monkeys-editor';
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'monkeys_editor_editor-container',
   tools: {
+    title: {
+      class: TitleBlockTool,
+      toolbox: false,
+    },
     header: {
       class: Header,
       inlineToolbar: true,
@@ -62,6 +68,9 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     },
     dataset: {
       class: DatasetBlock,
+    },
+    markdown: {
+      class: MarkdownBlock,
     },
     embed: {
       class: CustomEmbed,
