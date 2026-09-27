@@ -77,9 +77,11 @@ export const BlogReactionsContainer = ({
         {blogId && <BlogReportDialog size={24} blogId={blogId} />}
       </div>
 
-      <div className='shrink-0 px-[10px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
-        <BlogShareDialog blogURL={url} size={20} />
-      </div>
+      <BlogShareDialog
+        blogURL={url}
+        size={20}
+        className='shrink-0 rounded-full bg-foreground-light/80 px-[10px] py-[6px] shadow-sm ring-1 ring-border-light backdrop-blur-sm dark:bg-foreground-dark/80 dark:ring-border-dark'
+      />
     </div>
   );
 };
