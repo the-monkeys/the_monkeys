@@ -92,6 +92,13 @@ export async function clearPostCanvasDocument(opts: {
   const live = getEditorRoot(opts.editor);
   dropStaleEditorRoots(opts.holder, live);
 
+  if (typeof opts.editor.render === 'function') {
+    await opts.editor.render(data);
+    dropStaleEditorRoots(opts.holder, getEditorRoot(opts.editor));
+    opts.onCleared?.(data);
+    return;
+  }
+
   const blocks = opts.editor.blocks;
   const canDelete =
     typeof blocks?.getBlocksCount === 'function' &&
@@ -105,12 +112,8 @@ export async function clearPostCanvasDocument(opts: {
         console.warn('post canvas block delete failed', err);
       }
     }
-  } else if (typeof blocks?.clear === 'function') {
-    await blocks.clear();
   } else if (typeof opts.editor.clear === 'function') {
     await opts.editor.clear();
-  } else if (typeof opts.editor.render === 'function') {
-    await opts.editor.render(data);
   }
 
   let remaining =
@@ -162,8 +165,6 @@ export async function clearPostCanvasDocument(opts: {
         'title'
       );
     }
-  } else if (remaining > 0 && typeof opts.editor.render === 'function') {
-    await opts.editor.render(data);
   }
 
   dropStaleEditorRoots(opts.holder, getEditorRoot(opts.editor));

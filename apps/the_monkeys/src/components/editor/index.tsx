@@ -1,24 +1,24 @@
 'use client';
 
-import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 
 import { getEditorConfig } from '@/config/editor/monkeys_editor.config';
-import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import MonkeysEditor, { OutputData } from '@themonkeys/monkeys-editor';
 
-import { attachEditorUndo } from './postCanvas/attachEditorUndo';
+import { applyEditorDocument } from './postCanvas/applyEditorDocument';
 import {
-  clearPostCanvasDocument,
   dropEditorRoot,
   dropStaleEditorRoots,
   getEditorRoot,
 } from './postCanvas/clearPostCanvasDocument';
-import type { PostUndoController, PostUndoHandle } from './postCanvas/types';
+import { createEditorHistorySession } from './postCanvas/editorHistorySession';
+import { normalizePostDocument } from './postCanvas/normalizePostDocument';
+import { preserveEditorSelection } from './postCanvas/preserveEditorSelection';
+import { readEditorDocument } from './postCanvas/readEditorDocument';
+import type { PostUndoHandle } from './postCanvas/types';
 import { usePostCanvasShortcuts } from './postCanvas/usePostCanvasShortcuts';
-import { withFirstBlockTitleId } from './postCanvas/withFirstBlockTitleId';
 
 export type { PostUndoHandle };
-
 export type EditorProps = {
   blogId: string;
   data: OutputData;
@@ -26,204 +26,143 @@ export type EditorProps = {
   onUndoHandleChange?: (handle: PostUndoHandle | null) => void;
 };
 
-// Extract all file URLs from MonkeysEditor blocks that have data.file.url
-function extractFileUrls(blocks: OutputData['blocks']): Set<string> {
-  const urls = new Set<string>();
-  for (const block of blocks) {
-    const url = block?.data?.file?.url;
-    if (typeof url === 'string' && url.length > 0) {
-      urls.add(url);
-    }
-  }
-  return urls;
-}
-
-// Delete an orphaned file from v2 storage.
-function deleteOrphanedFile(url: string) {
-  const v2Prefix = '/api/v2';
-  const path = url.startsWith(v2Prefix) ? url.slice(v2Prefix.length) : url;
-
-  axiosInstanceV2.delete(path).catch((err) => {
-    console.warn('Failed to delete orphaned file:', path, err);
-  });
-}
-
-function abandonEditor(editor: MonkeysEditor | null) {
-  try {
-    editor?.destroy?.();
-  } catch (err) {
-    console.warn('editor destroy failed', err);
-  }
-  dropEditorRoot(editor);
-}
-
 const Editor: FC<EditorProps> = React.memo(function Editor({
   blogId,
   data,
   onChange,
   onUndoHandleChange,
 }) {
-  const editorInstance = useRef<MonkeysEditor | null>(null);
-  const prevFileUrls = useRef<Set<string>>(extractFileUrls(data?.blocks || []));
-  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
-  const localDataRef = useRef<OutputData | null>(data);
   const canvasRef = useRef<HTMLDivElement>(null);
-  const undoControllerRef = useRef<PostUndoController | null>(null);
-  const detachUndoRef = useRef<(() => void) | null>(null);
-  const undoAttachGen = useRef(0);
-  const [undoReady, setUndoReady] = useState(false);
+  const sessionRef = useRef<ReturnType<
+    typeof createEditorHistorySession
+  > | null>(null);
+  const localDataRef = useRef(data);
+  const latest = useRef({ data, onChange, onUndoHandleChange });
+  latest.current = { data, onChange, onUndoHandleChange };
+  const [ready, setReady] = useState(false);
+  const reportError = (error: unknown) =>
+    console.warn('Editor operation failed', error);
 
-  // Pre-calculate the config based on the blogId
-  const editorConfig = useMemo(() => getEditorConfig(blogId), [blogId]);
-
+  const run = (command: 'undo' | 'redo' | 'clear') => {
+    void sessionRef.current?.[command]().catch(reportError);
+  };
   usePostCanvasShortcuts({
     canvasRef,
-    undo: undoReady
-      ? {
-          undo: () => {
-            undoControllerRef.current?.undo();
-            dropStaleEditorRoots(
-              canvasRef.current,
-              getEditorRoot(editorInstance.current)
-            );
-          },
-          redo: () => {
-            undoControllerRef.current?.redo();
-            dropStaleEditorRoots(
-              canvasRef.current,
-              getEditorRoot(editorInstance.current)
-            );
-          },
-        }
-      : null,
-    clearDocument: () => {
-      const editor = editorInstance.current;
-      if (!editor) return;
-      void clearPostCanvasDocument({
-        editor,
-        holder: canvasRef.current,
-        onCleared: (empty) => {
-          localDataRef.current = empty as OutputData;
-          onChange(empty as OutputData);
-        },
-      }).catch((err) => {
-        console.warn('post canvas clear failed', err);
-      });
-    },
+    undo: ready ? { undo: () => run('undo'), redo: () => run('redo') } : null,
+    clearDocument: ready ? () => run('clear') : null,
   });
 
   useEffect(() => {
-    const attachGen = ++undoAttachGen.current;
-    let cancelled = false;
-
-    const previous = editorInstance.current;
-    editorInstance.current = null;
-    abandonEditor(previous);
-    canvasRef.current?.replaceChildren();
-
-    editorInstance.current = new MonkeysEditor({
-      ...editorConfig,
-      data: data,
-      onChange: (api) => {
-        // Debounce the save operation to prevent UI jank during typing
-        if (debounceTimer.current) clearTimeout(debounceTimer.current);
-
-        debounceTimer.current = setTimeout(async () => {
-          if (!onChange) return;
-          try {
-            const savedData = await api.saver.save();
-            const nextData = {
-              ...savedData,
-              blocks: withFirstBlockTitleId(savedData.blocks),
-            };
-            localDataRef.current = nextData;
-
-            // Detect removed file blocks and delete their files from storage.
-            const currentUrls = extractFileUrls(savedData.blocks);
-            Array.from(prevFileUrls.current).forEach((url) => {
-              if (!currentUrls.has(url)) {
-                deleteOrphanedFile(url);
-              }
-            });
-            prevFileUrls.current = currentUrls;
-
-            onChange(nextData);
-          } catch (err) {
-            console.warn('editor save failed', err);
-          }
-        }, 500); // 500ms debounce
+    const holder = canvasRef.current;
+    if (!holder) return;
+    // The library destroys its entire holder. A late-ready StrictMode instance
+    // must never share that holder with the next live editor.
+    const instanceHolder = document.createElement('div');
+    holder.append(instanceHolder);
+    let disposed = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let session: ReturnType<typeof createEditorHistorySession> | null = null;
+    const initial = normalizePostDocument(latest.current.data);
+    localDataRef.current = initial;
+    setReady(false);
+    const editor = new MonkeysEditor({
+      ...getEditorConfig(blogId),
+      holder: instanceHolder,
+      data: initial,
+      onChange: () => {
+        if (disposed || !session || session.isApplying()) return;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          void session?.capture().catch(reportError);
+        }, 500);
       },
     });
-
-    const editor = editorInstance.current;
-    void editor.isReady.then(
-      () => {
-        if (cancelled || undoAttachGen.current !== attachGen) {
-          // Do not destroy(): EditorJS destroy empties the shared holder and
-          // would wipe the live remount. Only drop this instance's wrapper.
+    const publish = (doc: OutputData) => {
+      if (disposed) return;
+      localDataRef.current = doc;
+      latest.current.onChange(doc);
+      if (session)
+        latest.current.onUndoHandleChange?.({
+          undo: () => run('undo'),
+          redo: () => run('redo'),
+          canUndo: session.canUndo(),
+          canRedo: session.canRedo(),
+        });
+    };
+    void editor.isReady
+      .then(async () => {
+        if (disposed) {
+          editor.destroy();
           dropEditorRoot(editor);
           return;
         }
-        dropStaleEditorRoots(canvasRef.current, getEditorRoot(editor));
-      },
-      () => {
-        if (cancelled || undoAttachGen.current !== attachGen) {
-          dropEditorRoot(editor);
+        dropStaleEditorRoots(instanceHolder, getEditorRoot(editor));
+        let baseline = initial;
+        // Draft data may arrive while the library is initializing. Reconcile it
+        // before publishing anything back to the parent or seeding undo history.
+        while (!disposed) {
+          const incoming = normalizePostDocument(latest.current.data);
+          if (
+            JSON.stringify(incoming.blocks) === JSON.stringify(baseline.blocks)
+          )
+            break;
+          await editor.blocks.render(incoming);
+          baseline = incoming;
         }
-      }
-    );
-    void attachEditorUndo({
-      editor,
-      initialData: data,
-      onHandleChange: (handle) => {
-        if (cancelled || undoAttachGen.current !== attachGen) return;
-        undoControllerRef.current = handle
-          ? { undo: handle.undo, redo: handle.redo }
-          : null;
-        setUndoReady(Boolean(handle));
-        onUndoHandleChange?.(handle);
-      },
-    }).then((detach) => {
-      if (cancelled || undoAttachGen.current !== attachGen) {
-        detach();
-        return;
-      }
-      detachUndoRef.current = detach;
-    });
+        if (disposed) {
+          editor.destroy();
+          return;
+        }
+        session = createEditorHistorySession(baseline, {
+          read: async () => {
+            clearTimeout(timer);
+            return readEditorDocument(editor);
+          },
+          apply: async (from, to, focusTitle) => {
+            if (disposed) return;
+            clearTimeout(timer);
+            await preserveEditorSelection(
+              holder,
+              async () => {
+                await applyEditorDocument(editor.blocks, from, to);
+              },
+              focusTitle
+            );
+          },
+          publish,
+        });
+        sessionRef.current = session;
+        setReady(true);
+        publish(baseline);
+      })
+      .catch(reportError);
 
+    // Removed assets can still be referenced by undo snapshots. Reversible
+    // document edits must not permanently delete uploaded files from storage.
     return () => {
-      cancelled = true;
-      undoAttachGen.current += 1;
-      detachUndoRef.current?.();
-      detachUndoRef.current = null;
-      undoControllerRef.current = null;
-      setUndoReady(false);
-      onUndoHandleChange?.(null);
-      if (debounceTimer.current) clearTimeout(debounceTimer.current);
-      const editorToDestroy = editorInstance.current;
-      editorInstance.current = null;
-      abandonEditor(editorToDestroy);
-      canvasRef.current?.replaceChildren();
+      disposed = true;
+      clearTimeout(timer);
+      session?.dispose();
+      if (sessionRef.current === session) sessionRef.current = null;
+      latest.current.onUndoHandleChange?.(null);
+      if (session) {
+        editor.destroy();
+        dropEditorRoot(editor);
+      }
+      instanceHolder.remove();
     };
-  }, [blogId, editorConfig, onChange, onUndoHandleChange]);
+  }, [blogId]);
 
-  // Sync editor data if updated from outside (e.g. from PublishBlogDrawer)
   useEffect(() => {
-    if (!editorInstance.current || !data) return;
-
-    const isDifferent =
-      !localDataRef.current ||
-      JSON.stringify(data.blocks) !==
-        JSON.stringify(localDataRef.current.blocks);
-
-    if (isDifferent) {
-      editorInstance.current.isReady.then(() => {
-        if (!editorInstance.current) return;
-        editorInstance.current.render(data);
-        localDataRef.current = data;
-      });
-    }
-  }, [data]);
+    if (!ready || !sessionRef.current) return;
+    const incoming = normalizePostDocument(data);
+    if (
+      JSON.stringify(incoming.blocks) ===
+      JSON.stringify(localDataRef.current.blocks)
+    )
+      return;
+    void sessionRef.current.replace(incoming).catch(reportError);
+  }, [data, ready]);
 
   return (
     <div
@@ -231,7 +170,7 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
       className='w-full px-4 space-y-6 select-text'
       id='monkeys_editor_editor-container'
       data-post-canvas
-    ></div>
+    />
   );
 });
 

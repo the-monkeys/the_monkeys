@@ -11,8 +11,6 @@ describe('editor crash guards', () => {
     expect(preview).toMatch(/try\s*\{[\s\S]*destroy[\s\S]*\}\s*catch/);
   });
 
-  it('catches edit saver.save failures instead of an unhandled rejection', () => {
-    const editor = readFileSync(join(dir, 'index.tsx'), 'utf8');
-    expect(editor).toMatch(/saver\.save\(\)[\s\S]*catch/);
-  });
+  // Edit save failures are exercised behaviorally in index.test.tsx rather
+  // than assuming a particular saver call spelling or component layout.
 });

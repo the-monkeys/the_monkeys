@@ -85,16 +85,35 @@ export function isPostCanvasFullySelected(root: HTMLElement): boolean {
     }
     const range = sel.getRangeAt(0);
     if (range.collapsed) return false;
-    const full = document.createRange();
-    full.selectNodeContents(root);
-    return (
-      range.compareBoundaryPoints(Range.START_TO_START, full) === 0 &&
-      range.compareBoundaryPoints(Range.END_TO_END, full) === 0
-    );
+    const content = postSelectionRoot(root);
+    if (
+      !content.contains(range.startContainer) ||
+      !content.contains(range.endContainer)
+    )
+      return false;
+    const before = document.createRange();
+    before.selectNodeContents(content);
+    before.setEnd(range.startContainer, range.startOffset);
+    const after = document.createRange();
+    after.selectNodeContents(content);
+    after.setStart(range.endContainer, range.endOffset);
+    const hasContent = (part: Range) => {
+      const fragment = part.cloneContents();
+      return Boolean(
+        fragment.textContent?.trim() ||
+          fragment.querySelector('img,video,audio,iframe,input,textarea')
+      );
+    };
+    return !hasContent(before) && !hasContent(after);
   } catch (err) {
     console.warn('isPostCanvasFullySelected failed', err);
     return false;
   }
+}
+
+export function postSelectionRoot(root: HTMLElement): HTMLElement {
+  const redactor = root.querySelector('.codex-editor__redactor');
+  return redactor instanceof HTMLElement ? redactor : root;
 }
 
 export function selectPostCanvas(root: HTMLElement): void {
@@ -102,7 +121,7 @@ export function selectPostCanvas(root: HTMLElement): void {
     const sel = window.getSelection?.();
     if (!sel) return;
     const range = document.createRange();
-    range.selectNodeContents(root);
+    range.selectNodeContents(postSelectionRoot(root));
     sel.removeAllRanges();
     sel.addRange(range);
   } catch (err) {

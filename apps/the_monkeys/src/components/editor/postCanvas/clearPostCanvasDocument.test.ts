@@ -11,7 +11,7 @@ afterEach(() => {
 
 describe('clearPostCanvasDocument', () => {
   it('renders the Heading 1 used by a new post when the blocks API is missing', async () => {
-    const render = vi.fn(async () => undefined);
+    const render = vi.fn(async (_data: { blocks: unknown[] }) => undefined);
     const onCleared = vi.fn();
     await clearPostCanvasDocument({
       editor: { render },
@@ -29,40 +29,7 @@ describe('clearPostCanvasDocument', () => {
     expect(onCleared).toHaveBeenCalledWith(data);
   });
 
-  it('replaces an auto-inserted paragraph with Heading 1 instead of render()', async () => {
-    let count = 2;
-    const deleted: number[] = [];
-    const insert = vi.fn();
-    const render = vi.fn();
-    await clearPostCanvasDocument({
-      editor: {
-        render,
-        blocks: {
-          getBlocksCount: () => count,
-          delete: (index: number) => {
-            deleted.push(index);
-            count -= 1;
-            if (count === 0) {
-              count = 1;
-            }
-          },
-          insert,
-        },
-      },
-    });
-    expect(insert).toHaveBeenCalledWith(
-      'header',
-      { text: 'Untitled Post', level: 1 },
-      undefined,
-      0,
-      true,
-      true,
-      'title'
-    );
-    expect(render).not.toHaveBeenCalled();
-  });
-
-  it('deletes every block then inserts Heading 1 with id title', async () => {
+  it('renders the empty document once when render exists', async () => {
     let count = 3;
     const deleted: number[] = [];
     const insert = vi.fn();
@@ -80,17 +47,16 @@ describe('clearPostCanvasDocument', () => {
         },
       },
     });
-    expect(deleted).toEqual([2, 1, 0]);
-    expect(insert).toHaveBeenCalledWith(
-      'header',
-      { text: 'Untitled Post', level: 1 },
-      undefined,
-      0,
-      true,
-      false,
-      'title'
-    );
-    expect(render).not.toHaveBeenCalled();
+    expect(render).toHaveBeenCalledTimes(1);
+    expect(deleted).toEqual([]);
+    expect(insert).not.toHaveBeenCalled();
+    expect(render.mock.calls[0][0].blocks).toEqual([
+      {
+        id: 'title',
+        type: 'header',
+        data: { text: 'Untitled Post', level: 1 },
+      },
+    ]);
   });
 
   it('removes leftover EditorJS roots so only the live editor remains', async () => {

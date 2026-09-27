@@ -25,38 +25,38 @@ export function usePostCanvasShortcuts(opts: {
   const clearDocumentRef = useRef(opts.clearDocument);
   clearDocumentRef.current = opts.clearDocument;
   const canvasRef = opts.canvasRef;
-  const documentSelectedRef = useRef(false);
 
   useEffect(() => {
-    let ignoreSelectionSync = false;
-
-    const syncDocumentSelection = () => {
-      if (ignoreSelectionSync) return;
-      const canvas = canvasRef.current;
-      documentSelectedRef.current = canvas
-        ? isPostCanvasFullySelected(canvas)
-        : false;
+    const isExternalField = (target: EventTarget | null) => {
+      if (!(target instanceof Element)) return false;
+      const editable = target.closest(
+        '[contenteditable]:not([contenteditable="false"])'
+      );
+      return Boolean(
+        target.closest('input,textarea,select') ||
+          (editable && !canvasRef.current?.contains(editable))
+      );
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
       try {
-        const isChrome = isChromeShortcutTarget(event.target);
+        if (isExternalField(event.target)) return;
+        const isChrome =
+          isChromeShortcutTarget(event.target) || isExternalField(event.target);
         const canvas = canvasRef.current;
-        const isFullySelected =
-          documentSelectedRef.current ||
-          Boolean(canvas && isPostCanvasFullySelected(canvas));
+        const kind = shortcutKind(event);
 
         if (
           canvas &&
           shouldHandleClearDocument(event, {
             isChrome,
             hasClear: Boolean(clearDocumentRef.current),
-            isFullySelected,
+            isFullySelected: isPostCanvasFullySelected(canvas),
           })
         ) {
           event.preventDefault();
           event.stopPropagation();
-          documentSelectedRef.current = false;
+          event.stopImmediatePropagation();
           try {
             clearDocumentRef.current?.();
           } catch (err) {
@@ -65,21 +65,16 @@ export function usePostCanvasShortcuts(opts: {
           return;
         }
 
-        const kind = shortcutKind(event);
         if (!kind) return;
 
-        const chromeField = isChromeEditableField(event.target);
+        const chromeField =
+          isChromeEditableField(event.target) || isExternalField(event.target);
 
         if (canvas && shouldHandleSelectAll(event, { isChrome: chromeField })) {
           event.preventDefault();
           event.stopPropagation();
           event.stopImmediatePropagation();
-          ignoreSelectionSync = true;
           selectPostCanvas(canvas);
-          documentSelectedRef.current = true;
-          requestAnimationFrame(() => {
-            ignoreSelectionSync = false;
-          });
           return;
         }
 
@@ -117,11 +112,31 @@ export function usePostCanvasShortcuts(opts: {
       }
     };
 
+    const onBeforeInput = (event: InputEvent) => {
+      const canvas = canvasRef.current;
+      if (
+        !event.cancelable ||
+        event.isComposing ||
+        !event.inputType.startsWith('delete')
+      )
+        return;
+      if (
+        !canvas ||
+        !clearDocumentRef.current ||
+        isChromeShortcutTarget(event.target) ||
+        isExternalField(event.target)
+      )
+        return;
+      if (!isPostCanvasFullySelected(canvas)) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      clearDocumentRef.current();
+    };
     document.addEventListener('keydown', onKeyDown, true);
-    document.addEventListener('selectionchange', syncDocumentSelection);
+    document.addEventListener('beforeinput', onBeforeInput, true);
     return () => {
       document.removeEventListener('keydown', onKeyDown, true);
-      document.removeEventListener('selectionchange', syncDocumentSelection);
+      document.removeEventListener('beforeinput', onBeforeInput, true);
     };
   }, [canvasRef]);
 }
