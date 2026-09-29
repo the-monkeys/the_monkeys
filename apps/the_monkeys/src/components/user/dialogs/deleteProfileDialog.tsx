@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
@@ -29,24 +29,36 @@ export const DeleteProfilePhotoConfirmation = ({
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
-  const clearImageCache = () => {
+  const clearImageCache = useCallback(() => {
     queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
-    queryClient.setQueryData(['profile', username], (old: any) =>
-      old ? { ...old, user: { ...old.user, image_url: null } } : old
+    queryClient.setQueryData(
+      ['profile', username],
+      (old: Record<string, unknown> | undefined) =>
+        old
+          ? {
+              ...old,
+              user: {
+                ...((old.user as Record<string, unknown>) || {}),
+                image_url: null,
+              },
+            }
+          : old
     );
 
-    queryClient.removeQueries({ queryKey: [PROFILE_IMAGE_QUERY_KEY, username] });
-    queryClient.invalidateQueries({ queryKey: [PROFILE_IMAGE_QUERY_KEY, username] });
+    queryClient.removeQueries({
+      queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+    });
     queryClient.invalidateQueries({ queryKey: ['profile', username] });
     queryClient.invalidateQueries({ queryKey: ['user', username] });
-  };
+  }, [queryClient, username]);
 
   const onProfileDelete = async () => {
     setLoading(true);
     try {
-      await axiosInstanceV2.delete(
-        `/storage/profiles/${username}/profile`
-      );
+      await axiosInstanceV2.delete(`/storage/profiles/${username}/profile`);
 
       clearImageCache();
       toast({
