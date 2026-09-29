@@ -45,14 +45,26 @@ export const DeleteProfilePhotoConfirmation = ({
           : old
     );
 
-    queryClient.removeQueries({
-      queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    });
-    queryClient.invalidateQueries({
-      queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    });
+    queryClient.setQueryData(
+      ['auth'],
+      (old: Record<string, unknown> | undefined) =>
+        old
+          ? {
+              ...old,
+              image_url: null,
+            }
+          : old
+    );
+
+    // We intentionally DO NOT invalidate or remove the PROFILE_IMAGE_QUERY_KEY here.
+    // If we invalidate it, TanStack Query will immediately try to refetch it.
+    // Because the browser caches the GET request, it might return the old image
+    // from the browser's disk cache before the backend 404s it.
+    // Setting it to null is enough to clear the UI.
+
     queryClient.invalidateQueries({ queryKey: ['profile', username] });
     queryClient.invalidateQueries({ queryKey: ['user', username] });
+    queryClient.invalidateQueries({ queryKey: ['auth'] });
   }, [queryClient, username]);
 
   const onProfileDelete = async () => {
