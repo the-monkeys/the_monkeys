@@ -35,12 +35,8 @@ export const DeleteProfilePhotoConfirmation = ({
       old ? { ...old, user: { ...old.user, image_url: null } } : old
     );
 
-    queryClient.removeQueries({
-      queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    });
-    queryClient.invalidateQueries({
-      queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    });
+    queryClient.removeQueries({ queryKey: [PROFILE_IMAGE_QUERY_KEY, username] });
+    queryClient.invalidateQueries({ queryKey: [PROFILE_IMAGE_QUERY_KEY, username] });
     queryClient.invalidateQueries({ queryKey: ['profile', username] });
     queryClient.invalidateQueries({ queryKey: ['user', username] });
   };
@@ -48,7 +44,9 @@ export const DeleteProfilePhotoConfirmation = ({
   const onProfileDelete = async () => {
     setLoading(true);
     try {
-      await axiosInstanceV2.delete(`/storage/profiles/${username}/profile`);
+      await axiosInstanceV2.delete(
+        `/storage/profiles/${username}/profile`
+      );
 
       clearImageCache();
       toast({
