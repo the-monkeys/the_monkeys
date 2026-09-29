@@ -67,8 +67,8 @@ export const DeleteProfilePhotoConfirmation = ({
         description: 'Your profile photo has been deleted successfully',
       });
       onSuccess();
-    } catch (err: unknown) {
-      const is404 = axios.isAxiosError(err) && err.response?.status === 404;
+    } catch (err: any) {
+      const is404 = err?.response?.status === 404;
 
       if (is404) {
         clearImageCache();
@@ -80,8 +80,14 @@ export const DeleteProfilePhotoConfirmation = ({
         onSuccess();
       } else {
         let description = 'An unknown error occurred.';
-        if (err instanceof Error) {
-          description = err.message || 'Failed to delete profile photo.';
+        if (axios.isAxiosError(err)) {
+          description =
+            err.response?.data?.message ||
+            err.response?.data?.error ||
+            err.message ||
+            'Failed to delete profile photo.';
+        } else if (err instanceof Error) {
+          description = err.message;
         }
         toast({
           variant: 'error',
