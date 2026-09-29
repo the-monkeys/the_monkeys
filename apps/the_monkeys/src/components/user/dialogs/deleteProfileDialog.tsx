@@ -37,23 +37,20 @@ export const DeleteProfilePhotoConfirmation = ({
       );
 
       if (response.status === 200 || response.status === 204) {
-        // 1. Force the image cache to null immediately
+        // 1. Immediately overwrite cache data to null across all keys
         queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
-
-        // 2. Invalidate and trigger active refetching across all relevant user/profile query keys
+        queryClient.setQueryData(['profile', username], (old: any) =>
+          old ? { ...old, user: { ...old.user, image_url: null } } : old
+        );
+        queryClient.removeQueries({
+          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+        });
         await Promise.all([
-          queryClient.invalidateQueries({
+          queryClient.resetQueries({
             queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-            refetchType: 'all',
           }),
-          queryClient.invalidateQueries({
-            queryKey: ['profile', username],
-            refetchType: 'all',
-          }),
-          queryClient.invalidateQueries({
-            queryKey: ['user', username],
-            refetchType: 'all',
-          }),
+          queryClient.resetQueries({ queryKey: ['profile', username] }),
+          queryClient.resetQueries({ queryKey: ['user', username] }),
         ]);
 
         toast({
