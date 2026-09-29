@@ -29,54 +29,56 @@ export const DeleteProfilePhotoConfirmation = ({
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
+  const clearImageCache = () => {
+    queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
+    queryClient.setQueryData(['profile', username], (old: any) =>
+      old ? { ...old, user: { ...old.user, image_url: null } } : old
+    );
+
+    queryClient.removeQueries({
+      queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+    });
+    queryClient.invalidateQueries({
+      queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+    });
+    queryClient.invalidateQueries({ queryKey: ['profile', username] });
+    queryClient.invalidateQueries({ queryKey: ['user', username] });
+  };
+
   const onProfileDelete = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstanceV2.delete(
-        `/storage/profiles/${username}/profile`
-      );
+      await axiosInstanceV2.delete(`/storage/profiles/${username}/profile`);
 
-      if (response.status === 200 || response.status === 204) {
-        // 1. Immediately overwrite cache data to null across all keys
-        queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
-        queryClient.setQueryData(['profile', username], (old: any) =>
-          old ? { ...old, user: { ...old.user, image_url: null } } : old
-        );
-        queryClient.removeQueries({
-          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-        });
-        await Promise.all([
-          queryClient.resetQueries({
-            queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-          }),
-          queryClient.resetQueries({ queryKey: ['profile', username] }),
-          queryClient.resetQueries({ queryKey: ['user', username] }),
-        ]);
+      clearImageCache();
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your profile photo has been deleted successfully',
+      });
+      onSuccess();
+    } catch (err: unknown) {
+      const is404 = axios.isAxiosError(err) && err.response?.status === 404;
 
+      if (is404) {
+        clearImageCache();
         toast({
           variant: 'success',
           title: 'Success',
-          description: 'Your profile photo has been deleted successfully',
+          description: 'Profile photo reset to default',
         });
-
         onSuccess();
+      } else {
+        let description = 'An unknown error occurred.';
+        if (err instanceof Error) {
+          description = err.message || 'Failed to delete profile photo.';
+        }
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description,
+        });
       }
-    } catch (err: unknown) {
-      const isMissingProfileImage =
-        axios.isAxiosError(err) && err.response?.status === 404;
-
-      let description = 'An unknown error occurred.';
-      if (isMissingProfileImage) {
-        description = 'No profile photo found.';
-      } else if (err instanceof Error) {
-        description = err.message || 'Failed to delete profile photo.';
-      }
-
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description,
-      });
     } finally {
       setLoading(false);
     }
