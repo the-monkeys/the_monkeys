@@ -36,16 +36,32 @@ export const DeleteProfilePhotoConfirmation = ({
         `/storage/profiles/${username}/profile`
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 || response.status === 204) {
+        // 1. Force the image cache to null immediately
         queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
-        queryClient.invalidateQueries({
-          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-        });
+
+        // 2. Invalidate and trigger active refetching across all relevant user/profile query keys
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+            refetchType: 'all',
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['profile', username],
+            refetchType: 'all',
+          }),
+          queryClient.invalidateQueries({
+            queryKey: ['user', username],
+            refetchType: 'all',
+          }),
+        ]);
+
         toast({
           variant: 'success',
           title: 'Success',
           description: 'Your profile photo has been deleted successfully',
         });
+
         onSuccess();
       }
     } catch (err: unknown) {
