@@ -1,3 +1,5 @@
+export type BlogAudience = 'public' | 'group_only';
+
 export interface Blog {
   blog_id: string;
   owner_account_id: string;
@@ -12,6 +14,8 @@ export interface Blog {
   like_count: number;
   BookmarkCount: number;
   bookmark_count: number;
+  audience?: BlogAudience;
+  group_slug?: string;
 }
 
 export interface MetaBlog {
@@ -25,6 +29,8 @@ export interface MetaBlog {
   tags: string[];
   bookmark_count?: number;
   content_type?: string;
+  audience?: BlogAudience;
+  group_slug?: string;
 }
 
 export interface Block {
@@ -120,6 +126,8 @@ export interface FollowingFeed {
   slug?: string;
   tags: string[];
   user_agent?: string;
+  audience?: BlogAudience;
+  group_slug?: string;
 }
 
 export interface BlogCardData {
@@ -134,4 +142,6 @@ export interface BlogCardData {
   initialIsLiked?: boolean;
   initialIsBookmarked?: boolean;
   initialLikeCount?: number;
+  audience?: BlogAudience;
+  groupSlug?: string;
 }

@@ -7,6 +7,7 @@ import {
   absoluteUrl,
   indexRobots,
   noIndexFollowRobots,
+  noIndexRobots,
   normalizeSeoText,
   pageMetadata,
   publisherOrg,
@@ -85,6 +86,13 @@ export function buildBlogMetadata(
   _requestedSlug: string,
   authorName = 'Monkeys Author'
 ): Metadata {
+  if (blog.audience === 'group_only') {
+    return {
+      title: { absolute: 'Members-only post | Monkeys' },
+      robots: noIndexRobots,
+    };
+  }
+
   if (blog.is_draft) {
     return {
       title: { absolute: 'Post unavailable | Monkeys' },
@@ -125,6 +133,8 @@ export function buildBlogJsonLd(
   authorName = 'Monkeys Author',
   authorUsername?: string
 ) {
+  if (blog.audience === 'group_only') return null;
+
   const content = blogContent(blog);
   const slug = canonicalBlogSlug(blog);
   const url = absoluteUrl(`/blog/${slug}`);

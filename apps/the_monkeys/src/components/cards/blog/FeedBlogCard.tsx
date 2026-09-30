@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { BlogAudienceBadge } from '@/components/blog/BlogAudienceBadge';
 import { LikesCount } from '@/components/blog/LikesCount';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
@@ -23,6 +24,7 @@ import { topicToSlug } from '@/utils/topicUtils';
 interface CardProps {
   blog: BlogCardData;
   showBookmark?: boolean;
+  showShare?: boolean;
 }
 
 const BlogCardImage = ({
@@ -75,6 +77,7 @@ const ArticleActions = ({
   initialIsLiked,
   initialIsBookmarked,
   initialLikeCount,
+  showShare = true,
 }: {
   blogId: string;
   blogURL: string;
@@ -83,15 +86,18 @@ const ArticleActions = ({
   initialIsLiked?: boolean;
   initialIsBookmarked?: boolean;
   initialLikeCount?: number;
+  showShare?: boolean;
 }) => (
   <div className='flex items-center gap-2 text-gray-400 dark:text-gray-500'>
     <div className='flex items-center hover:text-brand-orange transition-colors cursor-pointer group/action'>
       <LikeButton blogId={blogId} size={size} initialIsLiked={initialIsLiked} />
       <LikesCount blogId={blogId} initialCount={initialLikeCount} />
     </div>
-    <div className='hover:text-brand-orange transition-colors cursor-pointer'>
-      <BlogShareDialog blogURL={blogURL} size={size} />
-    </div>
+    {showShare && (
+      <div className='hover:text-brand-orange transition-colors cursor-pointer'>
+        <BlogShareDialog blogURL={blogURL} size={size} />
+      </div>
+    )}
     {showBookmark && (
       <div className='hover:text-brand-orange transition-colors cursor-pointer'>
         <BookmarkButton
@@ -116,7 +122,11 @@ const FormattedDate = ({ date }: { date: string }) => (
 
 // ─── Card variants ────────────────────────────────────────────────────────────
 
-const HorizontalCard = ({ blog, showBookmark = false }: CardProps) => {
+const HorizontalCard = ({
+  blog,
+  showBookmark = false,
+  showShare = true,
+}: CardProps) => {
   const {
     blogId,
     authorId,
@@ -129,6 +139,7 @@ const HorizontalCard = ({ blog, showBookmark = false }: CardProps) => {
     initialIsLiked,
     initialIsBookmarked,
     initialLikeCount,
+    audience,
   } = blog;
   const blogURL = `${BLOG_ROUTE}/${slug}-${blogId}`;
 
@@ -147,10 +158,13 @@ const HorizontalCard = ({ blog, showBookmark = false }: CardProps) => {
 
         <div className='md:w-[60%] py-4 md:py-8 md:px-10 flex flex-col justify-between gap-8'>
           <div className='space-y-4'>
-            <ArticleTag
-              tag={tags[0]}
-              className='inline-block font-inter font-bold text-[12px] text-brand-orange uppercase tracking-[0.2em] hover:opacity-80 transition-opacity'
-            />
+            <div className='flex flex-wrap items-center gap-2'>
+              <ArticleTag
+                tag={tags[0]}
+                className='inline-block font-inter font-bold text-[12px] text-brand-orange uppercase tracking-[0.2em] hover:opacity-80 transition-opacity'
+              />
+              {audience === 'group_only' && <BlogAudienceBadge />}
+            </div>
             <Link href={blogURL} className='block group/title'>
               <BlogTitle
                 className='font-newsreader font-bold text-[32px] md:text-[40px] leading-[1.1] text-gray-900 dark:text-gray-100 group-hover/title:text-brand-orange transition-colors line-clamp-3'
@@ -178,6 +192,7 @@ const HorizontalCard = ({ blog, showBookmark = false }: CardProps) => {
               initialIsLiked={initialIsLiked}
               initialIsBookmarked={initialIsBookmarked}
               initialLikeCount={initialLikeCount}
+              showShare={showShare && audience !== 'group_only'}
             />
           </div>
         </div>
@@ -186,7 +201,11 @@ const HorizontalCard = ({ blog, showBookmark = false }: CardProps) => {
   );
 };
 
-const ListCard = ({ blog, showBookmark = false }: CardProps) => {
+const ListCard = ({
+  blog,
+  showBookmark = false,
+  showShare = true,
+}: CardProps) => {
   const {
     blogId,
     authorId,
@@ -199,6 +218,7 @@ const ListCard = ({ blog, showBookmark = false }: CardProps) => {
     initialIsLiked,
     initialIsBookmarked,
     initialLikeCount,
+    audience,
   } = blog;
   const blogURL = `${BLOG_ROUTE}/${slug}-${blogId}`;
 
@@ -236,13 +256,14 @@ const ListCard = ({ blog, showBookmark = false }: CardProps) => {
           </div>
 
           <div className='w-full flex justify-between items-center gap-2'>
-            <div className='min-w-0 flex items-center gap-[6px]'>
+            <div className='min-w-0 flex flex-wrap items-center gap-[6px]'>
               <ArticleTag
                 tag={tags?.[0]}
                 className='shrink min-w-0 font-medium text-sm text-brand-orange capitalize hover:underline truncate'
                 showFallback
                 openInNewTab
               />
+              {audience === 'group_only' && <BlogAudienceBadge />}
             </div>
             <ArticleActions
               blogId={blogId}
@@ -252,6 +273,7 @@ const ListCard = ({ blog, showBookmark = false }: CardProps) => {
               initialIsLiked={initialIsLiked}
               initialIsBookmarked={initialIsBookmarked}
               initialLikeCount={initialLikeCount}
+              showShare={showShare && audience !== 'group_only'}
             />
           </div>
         </div>
@@ -260,7 +282,11 @@ const ListCard = ({ blog, showBookmark = false }: CardProps) => {
   );
 };
 
-const VerticalCard = ({ blog, showBookmark = false }: CardProps) => {
+const VerticalCard = ({
+  blog,
+  showBookmark = false,
+  showShare = true,
+}: CardProps) => {
   const {
     blogId,
     authorId,
@@ -273,6 +299,7 @@ const VerticalCard = ({ blog, showBookmark = false }: CardProps) => {
     initialIsLiked,
     initialIsBookmarked,
     initialLikeCount,
+    audience,
   } = blog;
   const blogURL = `${BLOG_ROUTE}/${slug}-${blogId}`;
 
@@ -296,6 +323,7 @@ const VerticalCard = ({ blog, showBookmark = false }: CardProps) => {
               className='font-inter font-medium text-xs text-gray-500 uppercase tracking-widest hover:text-brand-orange transition-colors'
               showFallback
             />
+            {audience === 'group_only' && <BlogAudienceBadge />}
           </div>
           <Link href={blogURL} className='group/title'>
             <BlogTitle
@@ -324,6 +352,7 @@ const VerticalCard = ({ blog, showBookmark = false }: CardProps) => {
             initialIsLiked={initialIsLiked}
             initialIsBookmarked={initialIsBookmarked}
             initialLikeCount={initialLikeCount}
+            showShare={showShare && audience !== 'group_only'}
           />
         </div>
       </article>
@@ -344,8 +373,9 @@ const CARD_VARIANTS = {
 export const FeedBlogCard = ({
   blog,
   showBookmark = false,
+  showShare = true,
   variant = 'vertical',
 }: CardProps & { variant?: keyof typeof CARD_VARIANTS }) => {
   const Card = CARD_VARIANTS[variant];
-  return <Card blog={blog} showBookmark={showBookmark} />;
+  return <Card blog={blog} showBookmark={showBookmark} showShare={showShare} />;
 };

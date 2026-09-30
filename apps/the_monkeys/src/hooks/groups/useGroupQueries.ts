@@ -19,6 +19,7 @@ import {
   getInvite,
   joinGroup,
   leaveGroup,
+  listGroupBlogs,
   listGroups,
   listInvites,
   listMembers,
@@ -47,6 +48,7 @@ import {
 } from '@/services/groups/groupsTypes';
 import {
   keepPreviousData,
+  useInfiniteQuery,
   useMutation,
   useQuery,
   useQueryClient,
@@ -96,6 +98,25 @@ export function useGroupMembers(
     queryKey: queryKeys.groups.members(slug, params as Record<string, unknown>),
     queryFn: () => listMembers(slug!, params),
     enabled: enabled && !!slug,
+  });
+}
+
+export function useGroupBlogs(
+  slug: string | undefined,
+  limit = 20,
+  enabled = true
+) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.groups.blogs(slug, { limit }),
+    queryFn: ({ pageParam }) =>
+      listGroupBlogs(slug!, { limit, offset: pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.blogs.length === limit
+        ? pages.reduce((count, page) => count + page.blogs.length, 0)
+        : undefined,
+    enabled: enabled && !!slug,
+    staleTime: LIVE_LIST_STALE_MS,
   });
 }
 

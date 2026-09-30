@@ -61,7 +61,7 @@ export const SearchInput = ({ className }: { className?: string }) => {
   }, [searchQuery]);
 
   return (
-    <div className={twMerge(className)}>
+    <div className={twMerge(className)} data-shortcut-scope='chrome'>
       <form onSubmit={handleEnterKeySubmit}>
         <div className='relative px-4 py-2 flex items-center gap-2.5 bg-background-light dark:bg-background-dark transition-colors rounded-full border border-gray-200 dark:border-gray-400 focus-within:border-gray-900 focus-within:bg-white focus-within:shadow-sm max-w-[240px] '>
           <Icon

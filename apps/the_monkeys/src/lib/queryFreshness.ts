@@ -28,6 +28,7 @@ export async function invalidateAfterGroupWrite(
   await Promise.all([
     qc.invalidateQueries({ queryKey: queryKeys.groups.detail(slug) }),
     qc.invalidateQueries({ queryKey: queryKeys.groups.members(slug) }),
+    qc.invalidateQueries({ queryKey: queryKeys.groups.blogs(slug) }),
     qc.invalidateQueries({ queryKey: queryKeys.groups.invites(slug) }),
   ]);
 }

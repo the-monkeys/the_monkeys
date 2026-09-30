@@ -8,6 +8,8 @@ import {
   BanBody,
   BasicResp,
   CreateInviteBody,
+  GroupBlogsParams,
+  GroupBlogsResponse,
   GroupBody,
   GroupEventBody,
   GroupEventResp,
@@ -74,6 +76,11 @@ export const listUserGroups = (username: string, filters?: GroupListFilters) =>
 export const getGroup = (slug: string) =>
   axiosInstanceNoAuth
     .get<GroupResp>(`${root}/${seg(slug)}`)
+    .then((r) => r.data);
+
+export const listGroupBlogs = (slug: string, params: GroupBlogsParams = {}) =>
+  axiosInstanceNoAuth
+    .get<GroupBlogsResponse>(`${root}/${seg(slug)}/blogs`, { params })
     .then((r) => r.data);
 
 // -----------------------------------------------------------------------------

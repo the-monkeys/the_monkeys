@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import { EventItem } from '@/services/events/eventTypes';
@@ -27,13 +28,13 @@ export function EventHost({ event }: { event: EventItem }) {
           <p className='font-inter text-xs uppercase tracking-wider text-gray-500'>
             Hosted by
           </p>
-          {username ? (
-            <Link
-              href={`/${username}`}
-              className='font-dm_sans font-semibold hover:text-brand-orange'
-            >
-              @{username}
-            </Link>
+          {username || event.organizer_account_id ? (
+            <EventHostName
+              username={username}
+              accountId={event.organizer_account_id}
+              size={16}
+              className='font-dm_sans font-semibold'
+            />
           ) : (
             <span className='font-dm_sans font-semibold'>
               Monkeys community
@@ -62,13 +63,12 @@ export function EventHost({ event }: { event: EventItem }) {
         <div className='mt-4 flex flex-wrap items-center gap-2 border-t border-border-light dark:border-border-dark/40 pt-4'>
           <span className='font-inter text-xs text-gray-500'>Co-hosts:</span>
           {coHosts.map((c) => (
-            <Link
+            <EventHostName
               key={c}
-              href={`/${c}`}
-              className='font-inter text-xs text-brand-orange hover:underline'
-            >
-              @{c}
-            </Link>
+              username={c}
+              size={12}
+              className='font-inter text-xs text-brand-orange'
+            />
           ))}
         </div>
       )}

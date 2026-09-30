@@ -17,9 +17,14 @@ export default function GrowthbookClientProvider({
   const [growthbook] = useState<GrowthBook>(() => createGrowthbook(attributes));
 
   useEffect(() => {
-    growthbook.init({
-      streaming: true,
-    });
+    try {
+      if (!process.env.NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY) return;
+      growthbook.init({
+        streaming: true,
+      });
+    } catch {
+      // Missing/invalid local keys must not white-screen the app.
+    }
   }, [growthbook]);
 
   return (

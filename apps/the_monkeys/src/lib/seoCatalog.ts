@@ -38,6 +38,7 @@ export function normalizePublicPosts(value: unknown): MetaBlog[] {
   return blogs.flatMap((raw): MetaBlog[] => {
     if (!raw || typeof raw !== 'object') return [];
     const post = raw as Partial<MetaBlog>;
+    if (post.audience === 'group_only') return [];
     if (
       typeof post.blog_id !== 'string' ||
       !post.blog_id.trim() ||
@@ -71,6 +72,10 @@ export function normalizePublicPosts(value: unknown): MetaBlog[] {
           : {}),
         ...(typeof post.content_type === 'string'
           ? { content_type: post.content_type }
+          : {}),
+        ...(post.audience === 'public' ? { audience: post.audience } : {}),
+        ...(typeof post.group_slug === 'string'
+          ? { group_slug: post.group_slug }
           : {}),
       },
     ];

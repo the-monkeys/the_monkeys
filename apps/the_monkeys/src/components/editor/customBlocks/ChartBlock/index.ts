@@ -21,7 +21,10 @@ const DEFAULT_DATA: ChartBlockData = {
 
 function normalizeData(data?: Partial<ChartBlockData>): ChartBlockData {
   const raw = data || {};
-  const normalizedSeries = (raw.series || DEFAULT_DATA.series)
+  const seriesSource = Array.isArray(raw.series)
+    ? raw.series
+    : DEFAULT_DATA.series;
+  const normalizedSeries = seriesSource
     .filter((s) => s && typeof s.name === 'string')
     .map((s) => ({
       name: s.name || 'Series',
@@ -62,7 +65,7 @@ export default createBlock<ChartBlockData>({
     title: true,
     xLabel: true,
     yLabel: true,
-    showLegend: false,
+    showLegend: true,
     palette: true,
     labels: true,
     series: { name: true, values: true },

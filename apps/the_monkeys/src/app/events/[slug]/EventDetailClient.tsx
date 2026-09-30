@@ -8,6 +8,7 @@ import { BackButton } from '@/components/buttons/backButton';
 import { EventActions } from '@/components/events/EventActions';
 import { EventEmpty } from '@/components/events/EventCard';
 import { EventComments } from '@/components/events/EventComments';
+import { EventHostName } from '@/components/events/EventHostName';
 import { EventReactions } from '@/components/events/EventReactions';
 import { RsvpPanel } from '@/components/events/RsvpPanel';
 import { EventAttendees } from '@/components/events/detail/EventAttendees';
@@ -145,13 +146,12 @@ export default function EventDetailClient({ slug }: { slug: string }) {
             </p>
 
             <div className='mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500'>
-              {event.organizer_username && (
-                <Link
-                  href={`/${event.organizer_username}`}
-                  className='hover:text-brand-orange'
-                >
-                  Hosted by @{event.organizer_username}
-                </Link>
+              {(event.organizer_username || event.organizer_account_id) && (
+                <EventHostName
+                  username={event.organizer_username}
+                  accountId={event.organizer_account_id}
+                  prefix='Hosted by '
+                />
               )}
               {event.location && event.event_type !== 'virtual' && (
                 <span className='inline-flex items-center gap-1'>

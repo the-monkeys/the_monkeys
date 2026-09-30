@@ -54,16 +54,21 @@ export const BlogReactions = ({
 export const BlogReactionsContainer = ({
   blogId,
   blogURL,
+  showShare = true,
 }: {
   blogId?: string;
   blogURL: string | string[];
+  showShare?: boolean;
 }) => {
   const url = `${LIVE_URL}${BLOG_ROUTE}/${blogURL}`;
 
   const reportFeatureEnabled = useFeatureIsOn('reports-frontend');
 
   return (
-    <div className='sticky left-0 bottom-[20px] mx-auto w-full flex items-center gap-2 z-20'>
+    <div
+      data-testid='blog-reactions'
+      className='sticky left-0 bottom-[20px] mx-auto w-full flex items-center gap-2 z-20'
+    >
       <div className='flex-1 px-[14px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
         <BlogReactions blogId={blogId} />
       </div>
@@ -77,9 +82,11 @@ export const BlogReactionsContainer = ({
         {blogId && <BlogReportDialog size={24} blogId={blogId} />}
       </div>
 
-      <div className='shrink-0 px-[10px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
-        <BlogShareDialog blogURL={url} size={20} />
-      </div>
+      {showShare && (
+        <div className='shrink-0 px-[10px] py-[6px] bg-foreground-light/80 dark:bg-foreground-dark/80 backdrop-blur-sm rounded-full shadow-sm ring-1 ring-border-light dark:ring-border-dark'>
+          <BlogShareDialog blogURL={url} size={20} />
+        </div>
+      )}
     </div>
   );
 };

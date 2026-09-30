@@ -1,3 +1,4 @@
+import { Blog } from '@/services/blog/blogTypes';
 import { EventResp, EventType, ProtoTime } from '@/services/events/eventTypes';
 
 export type GroupVisibility = 'public' | 'private' | 'unlisted';
@@ -206,6 +207,15 @@ export type MemberListParams = {
   limit?: number;
   offset?: number;
   status?: string;
+};
+
+export type GroupBlogsParams = {
+  limit?: number;
+  offset?: number;
+};
+
+export type GroupBlogsResponse = {
+  blogs: Blog[];
 };
 
 export type GroupResp = {

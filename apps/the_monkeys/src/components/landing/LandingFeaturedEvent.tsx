@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
@@ -134,9 +135,18 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
               {eventPlace(event)}
             </p>
             {organizerLabel && (
-              <p className='flex items-center gap-2'>
-                <Icon name='RiUser' size={15} className='text-[#ff9688]' />
-                Hosted by {organizerLabel}
+              <p className='flex min-w-0 items-center gap-2'>
+                <Icon
+                  name='RiUser'
+                  size={15}
+                  className='shrink-0 text-[#ff9688]'
+                />
+                <EventHostName
+                  username={event.organizer_username}
+                  accountId={event.organizer_account_id}
+                  prefix='Hosted by '
+                  className='text-white/80'
+                />
               </p>
             )}
           </div>

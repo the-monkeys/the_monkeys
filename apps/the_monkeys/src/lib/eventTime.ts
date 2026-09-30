@@ -31,6 +31,25 @@ export function fromLocalInput(value: string): string {
   return Number.isNaN(d.getTime()) ? '' : d.toISOString();
 }
 
+function formatInZone(
+  date: Date,
+  options: Intl.DateTimeFormatOptions,
+  timezone?: string
+): string {
+  const opts: Intl.DateTimeFormatOptions = { ...options };
+  if (timezone) opts.timeZone = timezone;
+  try {
+    return date.toLocaleString(undefined, opts);
+  } catch {
+    try {
+      const { timeZone: _ignored, ...rest } = opts;
+      return date.toLocaleString(undefined, rest);
+    } catch {
+      return '';
+    }
+  }
+}
+
 export function formatEventWhen(
   start: ProtoTime,
   end?: ProtoTime,
@@ -46,16 +65,15 @@ export function formatEventWhen(
     hour: 'numeric',
     minute: '2-digit',
   };
-  if (timezone) opts.timeZone = timezone;
-
-  const startLabel = from.toLocaleString(undefined, opts);
+  const startLabel = formatInZone(from, opts, timezone);
   const to = parseEventTime(end);
   if (!to) return startLabel;
 
   const sameDay = from.toDateString() === to.toDateString();
-  const endLabel = to.toLocaleString(
-    undefined,
-    sameDay ? { hour: 'numeric', minute: '2-digit', timeZone: timezone } : opts
+  const endLabel = formatInZone(
+    to,
+    sameDay ? { hour: 'numeric', minute: '2-digit' } : opts,
+    timezone
   );
   return `${startLabel} – ${endLabel}`;
 }
@@ -68,17 +86,12 @@ export function formatEventCardWhen(
   const d = parseEventTime(start);
   if (!d) return '';
   const tz = timezone || undefined;
-  const date = d.toLocaleString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    timeZone: tz,
-  });
-  const time = d.toLocaleString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZone: tz,
-  });
+  const date = formatInZone(
+    d,
+    { weekday: 'short', month: 'short', day: 'numeric' },
+    tz
+  );
+  const time = formatInZone(d, { hour: 'numeric', minute: '2-digit' }, tz);
   return `${date} · ${time}`;
 }
 
@@ -95,16 +108,10 @@ export function formatUpcomingDates(
   const tz = timezone || undefined;
   return parsed
     .map((d, i) => {
-      const day = d.toLocaleString(undefined, { day: 'numeric', timeZone: tz });
-      const month = d.toLocaleString(undefined, {
-        month: 'short',
-        timeZone: tz,
-      });
+      const day = formatInZone(d, { day: 'numeric' }, tz);
+      const month = formatInZone(d, { month: 'short' }, tz);
       if (i === 0) return `${month} ${day}`;
-      const prevMonth = parsed[i - 1].toLocaleString(undefined, {
-        month: 'short',
-        timeZone: tz,
-      });
+      const prevMonth = formatInZone(parsed[i - 1], { month: 'short' }, tz);
       return prevMonth === month ? day : `${month} ${day}`;
     })
     .join(' · ');
@@ -289,13 +296,9 @@ export function eventDateParts(
   if (!d) return null;
   const tz = timezone || undefined;
   return {
-    weekday: d.toLocaleString(undefined, { weekday: 'long', timeZone: tz }),
-    day: d.toLocaleString(undefined, { day: 'numeric', timeZone: tz }),
-    month: d.toLocaleString(undefined, { month: 'short', timeZone: tz }),
-    time: d.toLocaleString(undefined, {
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZone: tz,
-    }),
+    weekday: formatInZone(d, { weekday: 'long' }, tz),
+    day: formatInZone(d, { day: 'numeric' }, tz),
+    month: formatInZone(d, { month: 'short' }, tz),
+    time: formatInZone(d, { hour: 'numeric', minute: '2-digit' }, tz),
   };
 }

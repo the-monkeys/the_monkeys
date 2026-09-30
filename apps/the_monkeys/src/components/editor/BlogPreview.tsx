@@ -1,6 +1,10 @@
 import dynamic from 'next/dynamic';
 
-import { BlogHeading } from '@/components/blog/getBlogContent';
+import {
+  BlogHeading,
+  withoutPostTitle,
+} from '@/components/blog/getBlogContent';
+import { PostArticleCanvas } from '@/components/editor/postCanvas/PostArticleCanvas';
 import Container from '@/components/layout/Container';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
@@ -24,20 +28,6 @@ const BlogPreview = ({ urlBlogId, data }: BlogPreviewProps) => {
   const date = new Date();
   const sanitizedBlogTitle = purifyHTMLString(data?.blocks[0]?.data?.text);
 
-  const blogDataWithoutHeading = (): OutputData | undefined => {
-    const firstBlock = data?.blocks?.[0];
-
-    if (firstBlock?.type === 'header') {
-      return {
-        version: data?.version || '',
-        time: data?.time || '',
-        blocks: data?.blocks?.slice(1) || [],
-      } as OutputData;
-    }
-
-    return data;
-  };
-
   return (
     <>
       <div className='px-4'>
@@ -58,9 +48,9 @@ const BlogPreview = ({ urlBlogId, data }: BlogPreviewProps) => {
       </div>
       <div className='p-4'>
         <Container className='max-w-3xl'>
-          <div className='px-1 pb-4 overflow-hidden'>
-            <Editor key={urlBlogId} data={blogDataWithoutHeading()} />
-          </div>
+          <PostArticleCanvas className='px-1 pb-4 overflow-hidden'>
+            <Editor key={urlBlogId} data={withoutPostTitle(data)} />
+          </PostArticleCanvas>
         </Container>
       </div>
     </>
