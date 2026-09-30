@@ -2,7 +2,7 @@ import { IconName } from '@/components/icon';
 
 export const HOME_ROUTE = '/';
 export const LOGIN_ROUTE = '/auth/login';
-export const FEED_ROUTE = '/feed';
+export const FEED_ROUTE = '/for_you';
 export const ABOUT_ROUTE = '/about';
 export const ACTIVITY_ROUTE = '/activity';
 export const LIBRARY_ROUTE = '/library';
