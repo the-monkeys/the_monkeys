@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
@@ -29,41 +29,84 @@ export const DeleteProfilePhotoConfirmation = ({
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
 
+  const clearImageCache = useCallback(() => {
+    queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
+    queryClient.setQueryData(
+      ['profile', username],
+      (old: Record<string, unknown> | undefined) =>
+        old
+          ? {
+              ...old,
+              user: {
+                ...((old.user as Record<string, unknown>) || {}),
+                image_url: null,
+              },
+            }
+          : old
+    );
+
+    queryClient.setQueryData(
+      ['auth'],
+      (old: Record<string, unknown> | undefined) =>
+        old
+          ? {
+              ...old,
+              image_url: null,
+            }
+          : old
+    );
+
+    // We intentionally DO NOT invalidate or remove the PROFILE_IMAGE_QUERY_KEY here.
+    // If we invalidate it, TanStack Query will immediately try to refetch it.
+    // Because the browser caches the GET request, it might return the old image
+    // from the browser's disk cache before the backend 404s it.
+    // Setting it to null is enough to clear the UI.
+
+    queryClient.invalidateQueries({ queryKey: ['profile', username] });
+    queryClient.invalidateQueries({ queryKey: ['user', username] });
+    queryClient.invalidateQueries({ queryKey: ['auth'] });
+  }, [queryClient, username]);
+
   const onProfileDelete = async () => {
     setLoading(true);
     try {
-      const response = await axiosInstanceV2.delete(
-        `/storage/profiles/${username}/profile`
-      );
+      await axiosInstanceV2.delete(`/storage/profiles/${username}/profile`);
 
-      if (response.status === 200) {
-        queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
-        queryClient.invalidateQueries({
-          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-        });
+      clearImageCache();
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Your profile photo has been deleted successfully',
+      });
+      onSuccess();
+    } catch (err: any) {
+      const is404 = err?.response?.status === 404;
+
+      if (is404) {
+        clearImageCache();
         toast({
           variant: 'success',
           title: 'Success',
-          description: 'Your profile photo has been deleted successfully',
+          description: 'Profile photo reset to default',
         });
         onSuccess();
+      } else {
+        let description = 'An unknown error occurred.';
+        if (axios.isAxiosError(err)) {
+          description =
+            err.response?.data?.message ||
+            err.response?.data?.error ||
+            err.message ||
+            'Failed to delete profile photo.';
+        } else if (err instanceof Error) {
+          description = err.message;
+        }
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description,
+        });
       }
-    } catch (err: unknown) {
-      const isMissingProfileImage =
-        axios.isAxiosError(err) && err.response?.status === 404;
-
-      let description = 'An unknown error occurred.';
-      if (isMissingProfileImage) {
-        description = 'No profile photo found.';
-      } else if (err instanceof Error) {
-        description = err.message || 'Failed to delete profile photo.';
-      }
-
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description,
-      });
     } finally {
       setLoading(false);
     }

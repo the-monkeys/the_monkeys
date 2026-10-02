@@ -44,10 +44,16 @@ export const useUploadProfileImage = ({
 
   return useMutation({
     mutationFn: (file: File) => uploadProfileImage(username, file),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-      });
+    onSuccess: (data, variables) => {
+      // Optimistically update the UI with the uploaded file
+      queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], variables);
+
+      // Delay invalidation to allow backend to propagate changes
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+        });
+      }, 2000);
 
       toast({
         variant: 'success',
@@ -74,7 +80,8 @@ const useProfileImage = (username: string | undefined) => {
 
   const { data, error, isLoading, isError } = useQuery<Blob, Error>({
     queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    queryFn: () => fetcher(`/storage/profiles/${username}/profile`),
+    queryFn: () =>
+      fetcher(`/storage/profiles/${username}/profile?t=${Date.now()}`),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
     retry: false,
