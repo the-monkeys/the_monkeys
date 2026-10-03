@@ -44,7 +44,9 @@ export const useUploadProfileImage = ({
 
   return useMutation({
     mutationFn: (file: File) => uploadProfileImage(username, file),
-    onSuccess: () => {
+    onSuccess: (_data, file) => {
+      // Optimistically update with the new file blob so UI changes immediately
+      queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], file);
       queryClient.invalidateQueries({
         queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
       });
@@ -74,7 +76,8 @@ const useProfileImage = (username: string | undefined) => {
 
   const { data, error, isLoading, isError } = useQuery<Blob, Error>({
     queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    queryFn: () => fetcher(`/storage/profiles/${username}/profile`),
+    queryFn: () =>
+      fetcher(`/storage/profiles/${username}/profile?t=${Date.now()}`),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
     retry: false,
