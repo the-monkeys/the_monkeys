@@ -1,12 +1,16 @@
 'use client';
 
+// Commented out temporarily for future use:
+/*
 import { useDailyDonationPopup } from '@/hooks/donationPopup/useDailyDonationPopup';
 import { paymentGatewayRedirectLink } from '@/utils/donationHook';
 import { RiCloseLine } from 'react-icons/ri';
 
 import DonationHeartVisual from './DonationHeartVisual';
-
+*/
 const DonationPopup = () => {
+  return null;
+  /*
   const { shouldShowPopup, handleClosePopup } = useDailyDonationPopup();
 
   if (!shouldShowPopup) return null;
@@ -63,6 +67,7 @@ const DonationPopup = () => {
       </div>
     </div>
   );
+  */
 };
 
 export default DonationPopup;

@@ -1,6 +1,9 @@
-export const ANNOUNCEMENT = {
+export const ANNOUNCEMENT = null;
+/*
+{
   label: 'Support Us',
   message: 'Fund our open-source & AI research. Partner with us.',
   href: '/support',
   ctaLabel: 'Learn More',
 };
+*/
