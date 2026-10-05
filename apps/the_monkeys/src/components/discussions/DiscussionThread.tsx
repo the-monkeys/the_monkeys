@@ -21,7 +21,9 @@ function ReplyItem({ reply }: { reply: DiscussionReply }) {
 }
 
 export function DiscussionThread({ post }: { post: Discussion }) {
-  const replies = post.replies ?? [];
+  const replies = (post.replies ?? []).filter(
+    (reply) => reply.status === 'visible'
+  );
   const topLevel = replies.filter((reply) => !reply.parent_public_id);
   const childrenOf = new Map<string, DiscussionReply[]>();
   for (const reply of replies) {
