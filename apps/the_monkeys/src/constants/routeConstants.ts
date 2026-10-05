@@ -19,6 +19,7 @@ export const SETTINGS_ROUTE = '/settings';
 export const CREATE_ROUTE = '/create';
 export const EVENTS_ROUTE = '/events';
 export const CREATE_EVENT_ROUTE = `${EVENTS_ROUTE}/new`;
+export const DISCUSSIONS_ROUTE = '/discussions';
 export const GROUPS_ROUTE = '/groups';
 export const CREATE_GROUP_ROUTE = `${GROUPS_ROUTE}/new`;
 export const PARENT_COMPANY_ROUTE = 'https://buddhicintaka.com/';
@@ -38,6 +39,7 @@ export const DISCOVER_ITEMS: NavItem[] = [
     requiresAuth: true,
   },
   { href: EVENTS_ROUTE, label: 'Events', icon: 'RiGroup' },
+  { href: DISCUSSIONS_ROUTE, label: 'Discussions', icon: 'RiChat1' },
   {
     // Studio (Image template + X screenshot) is open to everyone; only the
     // Business Card tab inside it is gated (see CardsAuthGuard).
