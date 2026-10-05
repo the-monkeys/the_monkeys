@@ -10,10 +10,8 @@ export type DiscussionLoad =
   | { state: 'missing' }
   | { state: 'unavailable' };
 
-const PRODUCTION_API = 'https://monkeys.com.co/api/v1';
-
 function origin(): string {
-  return (API_URL || PRODUCTION_API).replace(/\/$/, '');
+  return (API_URL || '').replace(/\/$/, '');
 }
 
 async function readDiscussion(
@@ -32,6 +30,7 @@ export async function loadDiscussion(
   id: string,
   cookieHeader: string
 ): Promise<DiscussionLoad> {
+  if (!origin()) return { state: 'unavailable' };
   try {
     const anonymous = await readDiscussion(id, '');
     if (anonymous.status === 200 && anonymous.discussion) {
@@ -58,6 +57,7 @@ export async function loadDiscussion(
 export async function loadSiteDiscussions(
   beforeId?: string
 ): Promise<DiscussionList | null> {
+  if (!origin()) return null;
   try {
     const query = beforeId ? `?before_id=${encodeURIComponent(beforeId)}` : '';
     const res = await fetch(`${origin()}/discussions${query}`, {
@@ -89,6 +89,7 @@ async function readVisibleIds(url: string): Promise<string[]> {
 export async function loadPublicDiscussionIds(
   limit: number
 ): Promise<string[]> {
+  if (!origin()) return [];
   const ids = new Set<string>();
   const add = (found: string[]) => {
     for (const id of found) {
