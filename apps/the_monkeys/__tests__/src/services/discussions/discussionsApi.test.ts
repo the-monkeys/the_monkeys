@@ -1,6 +1,14 @@
-import { listDiscussions } from '@/services/discussions/discussionsApi';
+import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
+import {
+  createDiscussion,
+  listDiscussions,
+} from '@/services/discussions/discussionsApi';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+vi.mock('@/services/api/axiosInstance', () => ({
+  default: { post: vi.fn() },
+}));
 
 vi.mock('@/services/api/axiosInstanceNoAuth', () => ({
   default: { get: vi.fn() },
@@ -29,5 +37,17 @@ describe('listDiscussions', () => {
     expect(axiosInstanceNoAuth.get).toHaveBeenCalledWith(
       '/groups/tea%20club/discussions'
     );
+  });
+});
+
+describe('createDiscussion', () => {
+  beforeEach(() => {
+    vi.mocked(axiosInstance.post).mockReset();
+  });
+
+  it('posts the body and does not send files', async () => {
+    vi.mocked(axiosInstance.post).mockResolvedValue({ data: { public_id: 'p1' } });
+    await createDiscussion({ kind: 'site' }, 'hello');
+    expect(axiosInstance.post).toHaveBeenCalledWith('/discussions', { body: 'hello' });
   });
 });

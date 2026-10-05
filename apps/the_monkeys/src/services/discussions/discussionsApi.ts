@@ -45,9 +45,7 @@ export const createDiscussion = (scope: DiscussionScope, body: string) => {
     scope.kind === 'site'
       ? '/discussions'
       : `/groups/${seg(scope.slug)}/discussions`;
-  return axiosInstance
-    .post<Discussion>(path, { body, files: [] })
-    .then((r) => r.data);
+  return axiosInstance.post<Discussion>(path, { body }).then((r) => r.data);
 };
 
 export const replyToDiscussion = (id: string, body: string, parentId = '') =>
