@@ -4,6 +4,7 @@ import {
   discussionAuthorName,
   discussionDescription,
   discussionHeadline,
+  discussionsSitemap,
 } from '@/lib/discussionSeo';
 import { Discussion } from '@/services/discussions/discussionsTypes';
 import { describe, expect, it } from 'vitest';
@@ -49,6 +50,17 @@ describe('discussionSeo', () => {
     expect(pub.description).toBe(discussionDescription(post.body));
     expect(JSON.stringify(pub.robots)).toContain('"index":true');
     expect(JSON.stringify(priv.robots)).toContain('"index":false');
+  });
+
+  it('lists discussion ids as encoded sitemap urls', () => {
+    expect(discussionsSitemap(['a b'], 'https://monkeys.com.co')).toEqual([
+      {
+        url: 'https://monkeys.com.co/discussions/a%20b',
+        changeFrequency: 'daily',
+        priority: 0.6,
+      },
+    ]);
+    expect(discussionsSitemap([], 'https://monkeys.com.co')).toEqual([]);
   });
 
   it('emits DiscussionForumPosting text in JSON-LD', () => {

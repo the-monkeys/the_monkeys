@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, MetadataRoute } from 'next';
 
 import {
   MONKEYS_WEBSITE_ID,
@@ -25,6 +25,17 @@ export function discussionAuthorName(username: string, gone: boolean): string {
 
 export function discussionPath(id: string): string {
   return `/discussions/${encodeURIComponent(id)}`;
+}
+
+export function discussionsSitemap(
+  ids: string[],
+  siteUrl: string
+): MetadataRoute.Sitemap {
+  return ids.map((id) => ({
+    url: `${siteUrl}${discussionPath(id)}`,
+    changeFrequency: 'daily' as const,
+    priority: 0.6,
+  }));
 }
 
 export function buildDiscussionMetadata(
