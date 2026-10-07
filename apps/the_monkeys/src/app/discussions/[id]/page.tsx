@@ -1,3 +1,5 @@
+import { cache } from 'react';
+
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -15,8 +17,11 @@ interface Props {
   params: { id: string };
 }
 
+// Dedupe the no-store fetch between generateMetadata and the page per request.
+const loadDiscussionForRequest = cache(loadDiscussion);
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const found = await loadDiscussion(params.id, cookies().toString());
+  const found = await loadDiscussionForRequest(params.id, cookies().toString());
   if (found.state === 'missing') {
     return noIndexPage('Discussion not found | Monkeys');
   }
@@ -27,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function DiscussionPage({ params }: Props) {
-  const found = await loadDiscussion(params.id, cookies().toString());
+  const found = await loadDiscussionForRequest(params.id, cookies().toString());
   if (found.state === 'missing') notFound();
 
   if (found.state === 'unavailable') {

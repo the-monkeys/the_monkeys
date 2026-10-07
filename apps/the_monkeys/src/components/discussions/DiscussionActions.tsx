@@ -23,6 +23,7 @@ export function DiscussionActions({ post }: { post: Discussion }) {
   const [body, setBody] = useState(post.body);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   if (!username) return null;
 
@@ -51,11 +52,16 @@ export function DiscussionActions({ post }: { post: Discussion }) {
       router.refresh();
     });
 
-  const onDelete = () =>
-    run(async () => {
+  const onDelete = () => {
+    if (!confirmingDelete) {
+      setConfirmingDelete(true);
+      return;
+    }
+    return run(async () => {
       await deleteDiscussion(post.public_id);
       router.refresh();
     });
+  };
 
   async function onSave(e: FormEvent) {
     e.preventDefault();
@@ -99,7 +105,7 @@ export function DiscussionActions({ post }: { post: Discussion }) {
             onClick={onDelete}
             type='button'
           >
-            Delete
+            {confirmingDelete ? 'Confirm delete' : 'Delete'}
           </button>
         ) : null}
       </div>
