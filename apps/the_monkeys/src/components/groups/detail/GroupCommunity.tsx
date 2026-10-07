@@ -5,6 +5,7 @@ import { useLayoutEffect, useState } from 'react';
 import Link from 'next/link';
 
 import { TextTabs } from '@/components/TextTabs';
+import { GroupDiscussions } from '@/components/discussions/GroupDiscussions';
 import { EventGridCard } from '@/components/events/EventGridCard';
 import { GroupBlogsPanel } from '@/components/groups/detail/GroupBlogsPanel';
 import { GroupRules } from '@/components/groups/detail/GroupRules';
@@ -33,6 +34,7 @@ import { GroupItem } from '@/services/groups/groupsTypes';
 const TAB_LABELS: Record<GroupCommunityTab, string> = {
   posts: 'Posts',
   events: 'Events',
+  discussions: 'Discussions',
   about: 'About',
   members: 'Members',
   requests: 'Join requests',
@@ -40,9 +42,9 @@ const TAB_LABELS: Record<GroupCommunityTab, string> = {
 };
 
 /**
- * Team-page community panel. Posts lead, then events, about, members, and —
- * for staff only — join requests and invites. Tab choice is stored in the
- * URL hash (`#events`) so a refresh restores it without creating extra
+ * Team-page community panel. Posts lead, then events, discussions, about,
+ * members, and staff-only requests and invites. Tab choice is stored in the
+ * URL hash (#events) so a refresh restores it without creating extra
  * indexable paths. The default Posts tab keeps `/groups/:slug` hash-free.
  */
 export function GroupCommunity({ group }: { group: GroupItem }) {
@@ -92,6 +94,8 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
         <GroupBlogsPanel group={group} />
       ) : tab === 'events' ? (
         <GroupEventsPanel group={group} staff={staff} />
+      ) : tab === 'discussions' ? (
+        <GroupDiscussions group={group} />
       ) : tab === 'about' ? (
         <GroupAboutPanel group={group} />
       ) : tab === 'members' ? (

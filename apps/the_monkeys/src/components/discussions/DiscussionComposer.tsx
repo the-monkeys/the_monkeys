@@ -14,9 +14,11 @@ import type { DiscussionScope } from '@/services/discussions/discussionsTypes';
 export function DiscussionComposer({
   scope,
   lockedMessage,
+  onPosted,
 }: {
   scope: DiscussionScope;
   lockedMessage: string | null;
+  onPosted?: () => void;
 }) {
   const router = useRouter();
   const [body, setBody] = useState('');
@@ -43,6 +45,7 @@ export function DiscussionComposer({
       await createDiscussion(scope, body.trim());
       setBody('');
       router.refresh();
+      onPosted?.();
     } catch (err) {
       setError(discussionError(err));
     } finally {

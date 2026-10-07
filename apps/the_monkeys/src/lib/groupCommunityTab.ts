@@ -1,6 +1,7 @@
 export const GROUP_COMMUNITY_TABS = [
   'posts',
   'events',
+  'discussions',
   'about',
   'members',
   'requests',
