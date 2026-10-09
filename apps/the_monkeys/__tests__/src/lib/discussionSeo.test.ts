@@ -42,6 +42,18 @@ describe('discussionSeo', () => {
   it('names a deleted author', () => {
     expect(discussionAuthorName('dave', false)).toBe('dave');
     expect(discussionAuthorName('', true)).toBe('Deleted account');
+    expect(discussionAuthorName(undefined, undefined)).toBe('Deleted account');
+  });
+
+  it('writes API timestamps as ISO dates in JSON-LD', () => {
+    const seconds = Date.parse('2026-10-05T04:00:00Z') / 1000;
+    const data = buildDiscussionJsonLd({
+      ...post,
+      created_at: { seconds },
+      replies: [{ ...post.replies![0], created_at: { seconds } }],
+    }) as { datePublished?: unknown; comment?: { dateCreated?: unknown }[] };
+    expect(data.datePublished).toBe('2026-10-05T04:00:00.000Z');
+    expect(data.comment?.[0].dateCreated).toBe('2026-10-05T04:00:00.000Z');
   });
 
   it('indexes a public post and hides a member-only post', () => {

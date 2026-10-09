@@ -362,10 +362,86 @@ const VerticalCard = ({
 
 // ─── Variants map — eliminates the if/else chain ──────────────────────────────
 
+const CompactCard = ({
+  blog,
+  showBookmark = false,
+  showShare = true,
+}: CardProps) => {
+  const {
+    blogId,
+    authorId,
+    date,
+    slug,
+    tags,
+    title,
+    description,
+    image,
+    initialIsLiked,
+    initialIsBookmarked,
+    initialLikeCount,
+    audience,
+  } = blog;
+  const blogURL = `${BLOG_ROUTE}/${slug}-${blogId}`;
+
+  return (
+    <article className='flex gap-3 sm:gap-4'>
+      <div className='h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-foreground-light/60 sm:h-24 sm:w-36 dark:bg-foreground-dark/60'>
+        <Link href={blogURL} className='block h-full w-full'>
+          <BlogCardImage
+            title={title || 'Untitled Post'}
+            image={image}
+            className='h-full w-full object-cover object-center'
+          />
+        </Link>
+      </div>
+      <div className='flex min-w-0 flex-1 flex-col justify-between gap-2'>
+        <div className='min-w-0'>
+          <UserInfoCardShowcase
+            authorID={authorId}
+            date={date ? getRelativeTime(date) : undefined}
+          />
+          <Link href={blogURL} className='mt-1 block'>
+            <BlogTitle
+              className='font-dm_sans text-base font-semibold leading-snug line-clamp-2 hover:text-brand-orange'
+              title={title || 'Untitled Post'}
+            />
+          </Link>
+          {description ? (
+            <BlogDescription
+              description={description}
+              className='mt-1 font-inter text-sm text-gray-500 line-clamp-2 dark:text-gray-400'
+            />
+          ) : null}
+        </div>
+        <div className='flex items-center justify-between gap-2'>
+          <div className='flex min-w-0 flex-wrap items-center gap-1.5'>
+            <ArticleTag
+              tag={tags?.[0]}
+              className='truncate font-inter text-xs font-medium capitalize text-brand-orange hover:underline'
+            />
+            {audience === 'group_only' && <BlogAudienceBadge />}
+          </div>
+          <ArticleActions
+            blogId={blogId}
+            blogURL={`${LIVE_URL}${blogURL}`}
+            size={16}
+            showBookmark={showBookmark}
+            initialIsLiked={initialIsLiked}
+            initialIsBookmarked={initialIsBookmarked}
+            initialLikeCount={initialLikeCount}
+            showShare={showShare && audience !== 'group_only'}
+          />
+        </div>
+      </div>
+    </article>
+  );
+};
+
 const CARD_VARIANTS = {
   horizontal: HorizontalCard,
   list: ListCard,
   vertical: VerticalCard,
+  compact: CompactCard,
 } as const;
 
 // ─── Public export ────────────────────────────────────────────────────────────

@@ -18,14 +18,24 @@ export default async function DiscussionsPage() {
   return (
     <div className='mx-auto w-full min-w-0 max-w-2xl pb-24 lg:pb-0'>
       <JsonLd data={buildDiscussionFeedJsonLd()} />
-      <h1 className='font-inter mb-6 text-2xl font-semibold'>Discussions</h1>
+      <header className='mb-6'>
+        <p className='font-inter text-[11px] font-bold uppercase tracking-[0.22em] text-brand-orange'>
+          Community
+        </p>
+        <h1 className='mt-1 font-newsreader text-4xl font-bold md:text-5xl'>
+          Discussions
+        </h1>
+        <p className='mt-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
+          Short posts and replies from the Monkeys community.
+        </p>
+      </header>
       {list ? (
         <DiscussionListClient
           initial={list.discussions ?? []}
           key={list.discussions?.[0]?.public_id ?? 'empty'}
         />
       ) : (
-        <p className='font-inter text-base leading-relaxed'>
+        <p className='font-inter text-sm text-gray-500'>
           Discussions are temporarily unavailable.
         </p>
       )}

@@ -38,7 +38,7 @@ export default async function DiscussionPage({ params }: Props) {
   if (found.state === 'unavailable') {
     return (
       <div className='mx-auto w-full min-w-0 max-w-2xl pb-24 lg:pb-0'>
-        <p className='font-inter text-base leading-relaxed'>
+        <p className='font-inter text-sm text-gray-500'>
           This discussion is temporarily unavailable.
         </p>
       </div>

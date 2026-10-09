@@ -2,6 +2,7 @@ import {
   activePublishGroups,
   blogApiError,
   effectiveBlogAudience,
+  publicationForGroup,
   publicationScope,
 } from '@/services/blog/blogPublication';
 import { GroupItem } from '@/services/groups/groupsTypes';
@@ -45,6 +46,20 @@ describe('blog publication scope', () => {
       );
     }
   );
+
+  it('preselects an active group as members only', () => {
+    const selected = publicationForGroup(
+      [
+        group({ slug: 'writers', name: 'Writers' }),
+        group({ slug: 'left', viewer_member_status: 'left' }),
+      ],
+      'writers'
+    );
+    expect(selected?.group.slug).toBe('writers');
+    expect(selected?.audience).toBe('group_only');
+    expect(publicationForGroup([group()], 'missing')).toBeNull();
+    expect(publicationForGroup([group()], '  ')).toBeNull();
+  });
 
   it('omits group fields when no group is selected', () => {
     expect(publicationScope(null, 'group_only')).toEqual({});

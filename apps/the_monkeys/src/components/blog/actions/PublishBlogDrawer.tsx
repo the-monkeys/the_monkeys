@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
 import { BlogPublicationScopeFields } from '@/components/blog/actions/BlogPublicationScopeFields';
@@ -7,8 +7,12 @@ import { Loader } from '@/components/loader';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useAuth from '@/hooks/auth/useAuth';
 import { useScheduleState } from '@/hooks/blog/schedule/useScheduleState';
+import { useUserGroups } from '@/hooks/groups/useGroupQueries';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
-import { BlogPublicationSelection } from '@/services/blog/blogPublication';
+import {
+  BlogPublicationSelection,
+  publicationForGroup,
+} from '@/services/blog/blogPublication';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Drawer,
@@ -42,6 +46,7 @@ interface PublishBlogDrawerProps {
     selection: BlogPublicationSelection
   ) => void;
   isPublishing: boolean;
+  preferredGroupSlug?: string;
 }
 
 const INVALID_IMAGE_EXTENSIONS = ['gif', 'apng'];
@@ -91,9 +96,16 @@ export const PublishBlogDrawer = ({
   handlePublish,
   handleSchedule,
   isPublishing,
+  preferredGroupSlug,
 }: PublishBlogDrawerProps) => {
   const { data: session } = useAuth();
   const { topics: allTopics } = useGetAllTopics();
+  const { data: memberships } = useUserGroups(
+    session?.username,
+    { limit: 100, offset: 0 },
+    !!session?.username && !!preferredGroupSlug
+  );
+  const appliedGroup = useRef(false);
 
   const [isScheduleMode, setIsScheduleMode] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -102,6 +114,13 @@ export const PublishBlogDrawer = ({
     group: null,
     audience: 'public',
   });
+
+  useEffect(() => {
+    if (appliedGroup.current || !preferredGroupSlug || !memberships) return;
+    appliedGroup.current = true;
+    const next = publicationForGroup(memberships.groups, preferredGroupSlug);
+    if (next) setPublication(next);
+  }, [memberships, preferredGroupSlug]);
 
   const {
     scheduleDate,

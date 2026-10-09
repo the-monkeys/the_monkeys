@@ -7,6 +7,7 @@ import { DiscussionComposer } from '@/components/discussions/DiscussionComposer'
 import useAuth from '@/hooks/auth/useAuth';
 import { listDiscussions } from '@/services/discussions/discussionsApi';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 const PAGE_SIZE = 20;
 
@@ -36,39 +37,49 @@ export function DiscussionListClient({ initial }: { initial: Discussion[] }) {
   }
 
   return (
-    <div className='flex min-w-0 flex-col gap-6'>
+    <div className='min-w-0'>
       <DiscussionComposer
-        lockedMessage={signedIn ? null : 'Log in to post a discussion.'}
+        locked={signedIn ? null : 'login'}
         scope={{ kind: 'site' }}
       />
-      {posts.length === 0 ? (
-        <p className='font-inter text-base leading-relaxed'>
-          No discussions yet.
-        </p>
-      ) : (
-        <ul className='flex min-w-0 flex-col gap-6'>
-          {posts.map((post) => (
-            <li className='min-w-0' key={post.public_id}>
-              <DiscussionCard linked post={post} />
-            </li>
-          ))}
-        </ul>
-      )}
+      <DiscussionFeed posts={posts} />
       {failed ? (
-        <p className='font-inter text-base' role='alert'>
+        <p className='mt-4 font-inter text-sm text-alert-red' role='alert'>
           Could not load older discussions.
         </p>
       ) : null}
       {posts.length > 0 && hasMore ? (
-        <button
-          className='min-h-11 self-start rounded border px-4'
-          disabled={busy}
-          onClick={loadOlder}
-          type='button'
-        >
-          Older discussions
-        </button>
+        <div className='mt-6 flex justify-center'>
+          <Button
+            disabled={busy}
+            onClick={loadOlder}
+            size='sm'
+            type='button'
+            variant='outline'
+          >
+            Older discussions
+          </Button>
+        </div>
       ) : null}
     </div>
+  );
+}
+
+export function DiscussionFeed({ posts }: { posts: Discussion[] }) {
+  if (posts.length === 0) {
+    return (
+      <p className='py-10 text-center font-inter text-sm text-gray-500'>
+        No discussions yet.
+      </p>
+    );
+  }
+  return (
+    <ul className='mt-4 min-w-0'>
+      {posts.map((post) => (
+        <li className='min-w-0' key={post.public_id}>
+          <DiscussionCard linked post={post} />
+        </li>
+      ))}
+    </ul>
   );
 }

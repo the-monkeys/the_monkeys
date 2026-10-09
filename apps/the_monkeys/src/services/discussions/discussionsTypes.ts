@@ -1,30 +1,38 @@
+import type { DiscussionInstant } from '@/lib/discussionTime';
+
 export type DiscussionFile = {
   storage_key: string;
   content_type: string;
 };
 
-export type DiscussionReply = {
-  public_id: string;
-  parent_public_id: string;
-  body: string;
-  status: string;
-  author_username: string;
-  author_gone: boolean;
-  created_at?: string;
+// The gateway serialises protobuf with omitempty, so empty strings, zeros,
+// and false arrive as missing fields.
+export type DiscussionAuthor = {
+  author_username?: string;
+  author_gone?: boolean;
 };
 
-export type Discussion = {
+export type DiscussionReply = DiscussionAuthor & {
+  public_id: string;
+  parent_public_id?: string;
+  body: string;
+  status: string;
+  created_at?: DiscussionInstant;
+};
+
+export type DiscussionAudience = 'public' | 'group_only';
+
+export type Discussion = DiscussionAuthor & {
   public_id: string;
   body: string;
   status: string;
-  author_username: string;
-  author_gone: boolean;
-  group_slug: string;
-  reply_count: number;
-  like_count: number;
-  liked: boolean;
-  created_at?: string;
-  edited_until?: string;
+  group_slug?: string;
+  audience?: DiscussionAudience;
+  reply_count?: number;
+  like_count?: number;
+  liked?: boolean;
+  created_at?: DiscussionInstant;
+  edited_until?: DiscussionInstant;
   files?: DiscussionFile[];
   replies?: DiscussionReply[];
 };

@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 
-import { DiscussionCard } from '@/components/discussions/DiscussionCard';
 import { DiscussionComposer } from '@/components/discussions/DiscussionComposer';
+import { DiscussionFeed } from '@/components/discussions/DiscussionListClient';
 import useAuth from '@/hooks/auth/useAuth';
 import { isActiveGroupMember } from '@/lib/groupPerms';
 import { listDiscussions } from '@/services/discussions/discussionsApi';
@@ -35,37 +35,26 @@ export function GroupDiscussions({ group }: { group: GroupItem }) {
     void load();
   }, [load]);
 
-  const signedIn = Boolean(session);
-  const member = isActiveGroupMember(group);
-  const lockedMessage = !signedIn
-    ? 'Log in to post a discussion.'
-    : !member
-      ? 'Join the group to post a discussion.'
+  const locked = !session
+    ? 'login'
+    : !isActiveGroupMember(group)
+      ? 'join'
       : null;
 
   return (
-    <div className='flex min-w-0 flex-col gap-6 py-4'>
+    <div className='min-w-0 py-4'>
       <DiscussionComposer
-        lockedMessage={lockedMessage}
+        chooseAudience={group.visibility === 'public'}
+        locked={locked}
         onPosted={load}
         scope={{ kind: 'group', slug }}
       />
       {error ? (
-        <p className='font-inter text-base' role='alert'>
+        <p className='mt-4 font-inter text-sm text-alert-red' role='alert'>
           {error}
         </p>
-      ) : posts === null ? null : posts.length === 0 ? (
-        <p className='font-inter text-base leading-relaxed'>
-          No discussions yet.
-        </p>
-      ) : (
-        <ul className='flex min-w-0 flex-col gap-6'>
-          {posts.map((post) => (
-            <li className='min-w-0' key={post.public_id}>
-              <DiscussionCard linked post={post} />
-            </li>
-          ))}
-        </ul>
+      ) : posts === null ? null : (
+        <DiscussionFeed posts={posts} />
       )}
     </div>
   );

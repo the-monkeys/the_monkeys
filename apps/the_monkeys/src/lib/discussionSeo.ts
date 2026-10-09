@@ -1,5 +1,6 @@
 import type { Metadata, MetadataRoute } from 'next';
 
+import { discussionIsoTime } from '@/lib/discussionTime';
 import {
   MONKEYS_WEBSITE_ID,
   absoluteUrl,
@@ -18,9 +19,14 @@ export function discussionDescription(body: string): string {
   return normalizeSeoText(body, 160) || 'A public discussion on Monkeys.';
 }
 
-export function discussionAuthorName(username: string, gone: boolean): string {
-  if (gone || !username.trim()) return 'Deleted account';
-  return username.trim();
+// The gateway omits empty and false fields, so both can arrive undefined.
+export function discussionAuthorName(
+  username?: string,
+  gone?: boolean
+): string {
+  const name = (username ?? '').trim();
+  if (gone || !name) return 'Deleted account';
+  return name;
 }
 
 export function discussionPath(id: string): string {
@@ -65,16 +71,20 @@ export function buildDiscussionJsonLd(
   const url = absoluteUrl(discussionPath(post.public_id));
   const comments = (post.replies ?? [])
     .filter((reply) => reply.status === 'visible')
-    .map((reply) => ({
-      '@type': 'Comment',
-      text: reply.body,
-      url: `${url}#reply-${reply.public_id}`,
-      author: {
-        '@type': 'Person',
-        name: discussionAuthorName(reply.author_username, reply.author_gone),
-      },
-      ...(reply.created_at ? { dateCreated: reply.created_at } : {}),
-    }));
+    .map((reply) => {
+      const dateCreated = discussionIsoTime(reply.created_at);
+      return {
+        '@type': 'Comment',
+        text: reply.body,
+        url: `${url}#reply-${reply.public_id}`,
+        author: {
+          '@type': 'Person',
+          name: discussionAuthorName(reply.author_username, reply.author_gone),
+        },
+        ...(dateCreated ? { dateCreated } : {}),
+      };
+    });
+  const datePublished = discussionIsoTime(post.created_at);
 
   return {
     '@context': 'https://schema.org',
@@ -83,7 +93,7 @@ export function buildDiscussionJsonLd(
     articleBody: post.body,
     url,
     mainEntityOfPage: url,
-    ...(post.created_at ? { datePublished: post.created_at } : {}),
+    ...(datePublished ? { datePublished } : {}),
     author: {
       '@type': 'Person',
       name: discussionAuthorName(post.author_username, post.author_gone),
@@ -99,12 +109,12 @@ export function buildDiscussionJsonLd(
       {
         '@type': 'InteractionCounter',
         interactionType: 'https://schema.org/LikeAction',
-        userInteractionCount: post.like_count,
+        userInteractionCount: post.like_count ?? 0,
       },
       {
         '@type': 'InteractionCounter',
         interactionType: 'https://schema.org/CommentAction',
-        userInteractionCount: post.reply_count,
+        userInteractionCount: post.reply_count ?? 0,
       },
     ],
     ...(comments.length ? { comment: comments } : {}),

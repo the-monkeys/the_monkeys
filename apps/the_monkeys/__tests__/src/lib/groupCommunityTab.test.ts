@@ -13,7 +13,6 @@ describe('groupCommunityTab', () => {
     expect(groupCommunityTabs(false)).toEqual([
       'posts',
       'events',
-      'discussions',
       'about',
       'members',
     ]);
@@ -21,13 +20,11 @@ describe('groupCommunityTab', () => {
   });
 
   it('defaults empty hash to posts and aliases blogs', () => {
-    expect(parseGroupCommunityTab('', false)).toBe(
-      DEFAULT_GROUP_COMMUNITY_TAB
-    );
+    expect(parseGroupCommunityTab('', false)).toBe(DEFAULT_GROUP_COMMUNITY_TAB);
     expect(parseGroupCommunityTab('#', false)).toBe('posts');
     expect(parseGroupCommunityTab('#blogs', false)).toBe('posts');
     expect(parseGroupCommunityTab('#events', false)).toBe('events');
-    expect(parseGroupCommunityTab('#discussions', false)).toBe('discussions');
+    expect(parseGroupCommunityTab('#discussions', false)).toBe('posts');
     expect(parseGroupCommunityTab('#about', true)).toBe('about');
   });
 
@@ -45,7 +42,6 @@ describe('groupCommunityTab', () => {
   it('keeps the canonical group path hash-free on the default tab', () => {
     expect(groupCommunityHash('posts')).toBe('');
     expect(groupCommunityHash('events')).toBe('#events');
-    expect(groupCommunityHash('discussions')).toBe('#discussions');
     expect(
       groupCommunityLocation('/groups/monkeys-admin-a8df79c4', '', 'posts')
     ).toBe('/groups/monkeys-admin-a8df79c4');

@@ -22,6 +22,13 @@ const GROUP_ITEMS: CreateMenuItem[] = [
   { id: 'event', label: 'Create Event', icon: 'RiCalendar' },
 ];
 
-export function createMenuItems(variant: CreateMenuVariant): CreateMenuItem[] {
-  return variant === 'site' ? [...SITE_ITEMS] : [...GROUP_ITEMS];
+export function createMenuItems(
+  variant: CreateMenuVariant,
+  options?: { includeEvent?: boolean }
+): CreateMenuItem[] {
+  const items = variant === 'site' ? SITE_ITEMS : GROUP_ITEMS;
+  if (variant === 'group' && options?.includeEvent === false) {
+    return items.filter((item) => item.id !== 'event');
+  }
+  return [...items];
 }

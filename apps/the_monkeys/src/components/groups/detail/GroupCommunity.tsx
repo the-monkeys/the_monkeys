@@ -1,13 +1,12 @@
 'use client';
 
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 import Link from 'next/link';
 
 import { TextTabs } from '@/components/TextTabs';
-import { GroupDiscussions } from '@/components/discussions/GroupDiscussions';
 import { EventGridCard } from '@/components/events/EventGridCard';
-import { GroupBlogsPanel } from '@/components/groups/detail/GroupBlogsPanel';
+import { GroupPostsFeed } from '@/components/groups/detail/GroupPostsFeed';
 import { GroupRules } from '@/components/groups/detail/GroupRules';
 import { GroupAddMember } from '@/components/groups/members/GroupAddMember';
 import { GroupInvites } from '@/components/groups/members/GroupInvites';
@@ -34,7 +33,6 @@ import { GroupItem } from '@/services/groups/groupsTypes';
 const TAB_LABELS: Record<GroupCommunityTab, string> = {
   posts: 'Posts',
   events: 'Events',
-  discussions: 'Discussions',
   about: 'About',
   members: 'Members',
   requests: 'Join requests',
@@ -42,12 +40,20 @@ const TAB_LABELS: Record<GroupCommunityTab, string> = {
 };
 
 /**
- * Team-page community panel. Posts lead, then events, discussions, about,
- * members, and staff-only requests and invites. Tab choice is stored in the
- * URL hash (#events) so a refresh restores it without creating extra
+ * Team-page community panel. Posts (blogs and discussions) lead, then events,
+ * about, members, and staff-only requests and invites. Tab choice is stored
+ * in the URL hash (#events) so a refresh restores it without creating extra
  * indexable paths. The default Posts tab keeps `/groups/:slug` hash-free.
  */
-export function GroupCommunity({ group }: { group: GroupItem }) {
+export function GroupCommunity({
+  group,
+  forcePostsToken = 0,
+  focusDiscussionToken = 0,
+}: {
+  group: GroupItem;
+  forcePostsToken?: number;
+  focusDiscussionToken?: number;
+}) {
   const { data: session } = useAuth();
   const staff = canManageGroup(group);
   const canView = canViewGroupMembers(group);
@@ -55,7 +61,12 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
 
   useLayoutEffect(() => {
     const applyHash = () => {
+      const raw = window.location.hash.replace(/^#/, '').trim().toLowerCase();
       setTab(parseGroupCommunityTab(window.location.hash, staff));
+      if (raw === 'discussions') {
+        const next = `${window.location.pathname}${window.location.search}`;
+        window.history.replaceState(null, '', next);
+      }
     };
     applyHash();
     window.addEventListener('hashchange', applyHash);
@@ -75,6 +86,10 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
     }
   };
 
+  useEffect(() => {
+    if (forcePostsToken > 0) selectTab('posts');
+  }, [forcePostsToken]);
+
   // Private/unlisted groups hide the panel from non-members and non-staff.
   if (!canView && !staff) return null;
 
@@ -91,11 +106,12 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
       />
 
       {tab === 'posts' ? (
-        <GroupBlogsPanel group={group} />
+        <GroupPostsFeed
+          focusComposerToken={focusDiscussionToken}
+          group={group}
+        />
       ) : tab === 'events' ? (
         <GroupEventsPanel group={group} staff={staff} />
-      ) : tab === 'discussions' ? (
-        <GroupDiscussions group={group} />
       ) : tab === 'about' ? (
         <GroupAboutPanel group={group} />
       ) : tab === 'members' ? (
@@ -111,7 +127,10 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
       ) : tab === 'invites' ? (
         <GroupInvites group={group} />
       ) : (
-        <GroupBlogsPanel group={group} />
+        <GroupPostsFeed
+          focusComposerToken={focusDiscussionToken}
+          group={group}
+        />
       )}
     </section>
   );

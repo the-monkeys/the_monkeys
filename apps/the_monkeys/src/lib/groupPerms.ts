@@ -49,7 +49,7 @@ export function groupFeedEmptyCopy({
         ? 'No past events yet.'
         : 'No events scheduled yet.';
     }
-    return 'No posts have been published to this group yet.';
+    return 'No posts or discussions yet.';
   }
   if (kind === 'events') {
     return signedIn

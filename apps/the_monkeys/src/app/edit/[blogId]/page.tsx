@@ -66,6 +66,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isNew = searchParams.get('isNew') === 'true';
+  const preferredGroupSlug = useRef(searchParams.get('group')?.trim() || '');
 
   const { blog, isLoading, isError } = useGetDraftBlogDetail(blogId, {
     enabled: !isNew,
@@ -573,6 +574,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               isPublishing={blogPublishLoading}
               handlePublish={handlePublishStep}
               handleSchedule={handleScheduleStep}
+              preferredGroupSlug={preferredGroupSlug.current}
             />
           </div>
 

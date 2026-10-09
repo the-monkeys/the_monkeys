@@ -11,7 +11,22 @@ const mocks = vi.hoisted(() => ({
   createDiscussion: vi.fn(),
 }));
 
-vi.mock('next/navigation', () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
+  usePathname: () => '/groups/bees',
+}));
+vi.mock('@/components/discussions/DiscussionAvatar', () => ({
+  DiscussionAvatar: () => null,
+}));
+vi.mock('@/hooks/user/useUser', () => ({
+  default: () => ({ user: undefined }),
+}));
+vi.mock('@/hooks/search/useSearchV2', () => ({
+  useSearchPeopleV2: () => ({ users: null, isLoading: false }),
+}));
+vi.mock('@/hooks/groups/useGroupQueries', () => ({
+  useGroupDetail: () => ({ data: undefined }),
+}));
 vi.mock('@/hooks/auth/useAuth', () => ({
   default: () => ({ data: mocks.session }),
 }));
@@ -79,7 +94,7 @@ describe('GroupDiscussions', () => {
     mocks.listDiscussions.mockResolvedValue({ discussions: [post] });
     render(<GroupDiscussions group={group()} />);
     expect(await screen.findByText('Hello hive')).toBeTruthy();
-    expect(screen.getByText('Log in to post a discussion.')).toBeTruthy();
+    expect(screen.getByRole('link', { name: 'Log in' })).toBeTruthy();
   });
 
   it('asks signed in non-members to join', async () => {
@@ -104,7 +119,8 @@ describe('GroupDiscussions', () => {
     );
     expect(mocks.createDiscussion).toHaveBeenCalledWith(
       { kind: 'group', slug: 'bees' },
-      'Hello hive'
+      'Hello hive',
+      'group_only'
     );
     await waitFor(() => expect(mocks.listDiscussions).toHaveBeenCalledTimes(2));
     expect(await screen.findByText('Hello hive')).toBeTruthy();

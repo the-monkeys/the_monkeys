@@ -4,6 +4,7 @@ import axios from 'axios';
 
 import {
   Discussion,
+  DiscussionAudience,
   DiscussionList,
   DiscussionReply,
   DiscussionScope,
@@ -40,12 +41,18 @@ export const getDiscussion = (id: string) =>
     .get<Discussion>(`/discussions/${seg(id)}`)
     .then((r) => r.data);
 
-export const createDiscussion = (scope: DiscussionScope, body: string) => {
+export const createDiscussion = (
+  scope: DiscussionScope,
+  body: string,
+  audience?: DiscussionAudience
+) => {
   const path =
     scope.kind === 'site'
       ? '/discussions'
       : `/groups/${seg(scope.slug)}/discussions`;
-  return axiosInstance.post<Discussion>(path, { body }).then((r) => r.data);
+  return axiosInstance
+    .post<Discussion>(path, { body, audience })
+    .then((r) => r.data);
 };
 
 export const replyToDiscussion = (id: string, body: string, parentId = '') =>

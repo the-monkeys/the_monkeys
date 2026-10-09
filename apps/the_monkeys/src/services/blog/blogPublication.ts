@@ -26,6 +26,22 @@ export const effectiveBlogAudience = (
   return requested === 'group_only' ? 'group_only' : 'public';
 };
 
+/** Group create-post defaults to members only, then follows the usual audience rules. */
+export function publicationForGroup(
+  groups: GroupItem[] = [],
+  slug?: string | null
+): BlogPublicationSelection | null {
+  const wanted = slug?.trim();
+  if (!wanted) return null;
+  const group =
+    activePublishGroups(groups).find((item) => item.slug === wanted) ?? null;
+  if (!group) return null;
+  return {
+    group,
+    audience: effectiveBlogAudience(group, 'group_only'),
+  };
+}
+
 export const publicationScope = (
   group: GroupItem | null,
   requested: BlogAudience

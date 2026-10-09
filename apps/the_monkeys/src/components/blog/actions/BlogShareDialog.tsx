@@ -19,11 +19,19 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 interface BlogShareDialogProps {
   blogURL: string;
   size?: number;
+  triggerTitle?: string;
+  dialogTitle?: string;
+  copiedTitle?: string;
+  copiedDescription?: string;
 }
 
 export const BlogShareDialog: FC<BlogShareDialogProps> = ({
   blogURL,
   size = 18,
+  triggerTitle = 'Share Blog',
+  dialogTitle = 'Invite to Read',
+  copiedTitle = 'Blog Link Copied',
+  copiedDescription = 'The link to this post has been copied.',
 }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
@@ -31,15 +39,15 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
         () => {
           toast({
             variant: 'default',
-            title: 'Blog Link Copied',
-            description: 'The link to this post has been copied.',
+            title: copiedTitle,
+            description: copiedDescription,
           });
         },
         () => {
           toast({
             variant: 'error',
             title: 'Copy Failed',
-            description: 'Unable to copy the post link.',
+            description: 'Unable to copy the link.',
           });
         }
       );
@@ -49,8 +57,10 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
     <Dialog>
       <DialogTrigger asChild>
         <button
+          aria-label={triggerTitle}
           className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
-          title='Share Blog'
+          title={triggerTitle}
+          type='button'
         >
           <Icon name='RiShare' size={size} />
         </button>
@@ -58,7 +68,7 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Invite to Read</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
