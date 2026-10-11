@@ -52,18 +52,30 @@ export const DeleteProfilePhotoConfirmation = ({
       const isMissingProfileImage =
         axios.isAxiosError(err) && err.response?.status === 404;
 
-      let description = 'An unknown error occurred.';
       if (isMissingProfileImage) {
-        description = 'No profile photo found.';
-      } else if (err instanceof Error) {
-        description = err.message || 'Failed to delete profile photo.';
-      }
+        // If the server has no photo (404), ensure the client cache is also cleared
+        queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
+        queryClient.invalidateQueries({
+          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+        });
+        toast({
+          variant: 'success',
+          title: 'Profile photo removed',
+          description: 'Your profile photo has been removed.',
+        });
+        onSuccess();
+      } else {
+        const description =
+          err instanceof Error
+            ? err.message || 'Failed to delete profile photo.'
+            : 'An unknown error occurred.';
 
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description,
-      });
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description,
+        });
+      }
     } finally {
       setLoading(false);
     }
