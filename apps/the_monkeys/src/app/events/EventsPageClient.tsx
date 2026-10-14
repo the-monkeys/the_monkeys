@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { EventCard, EventEmpty } from '@/components/events/EventCard';
 import { CommunityGroups } from '@/components/events/discover/CommunityGroups';
@@ -15,15 +15,38 @@ import {
   useAttendingEvents,
   useUserEvents,
 } from '@/hooks/events/useEventQueries';
+import { loginHref } from '@/lib/authRedirect';
+import {
+  EVENT_TABS,
+  EVENT_TAB_LABELS,
+  EventTab,
+  eventsTabLocation,
+  parseEventTab,
+} from '@/lib/eventsTab';
 import { ListFilters } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
-
-type Tab = 'discover' | 'groups' | 'going' | 'hosting';
 
 export default function EventsPageClient() {
   const { data: session } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>('discover');
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // URL is the source of truth: refresh, share, and back/forward all restore the tab.
+  const tab = parseEventTab(searchParams.get('tab'));
+
+  const setTab = (next: EventTab) => {
+    if ((next === 'going' || next === 'hosting') && !session) {
+      router.push(
+        loginHref(eventsTabLocation(pathname, searchParams.toString(), next))
+      );
+      return;
+    }
+    if (next === tab) return;
+    router.push(eventsTabLocation(pathname, searchParams.toString(), next), {
+      scroll: false,
+    });
+  };
 
   const filters: ListFilters = useMemo(() => ({ limit: 30, offset: 0 }), []);
 
@@ -43,31 +66,18 @@ export default function EventsPageClient() {
   return (
     <div className='mx-auto max-w-6xl'>
       <div className='mb-8 flex gap-1 border-b border-border-light dark:border-border-dark/40'>
-        {(
-          [
-            ['discover', 'Discover'],
-            ['groups', 'Groups'],
-            ['going', 'Going'],
-            ['hosting', 'Hosting'],
-          ] as const
-        ).map(([id, label]) => (
+        {EVENT_TABS.map((id) => (
           <button
             key={id}
             type='button'
-            onClick={() => {
-              if ((id === 'going' || id === 'hosting') && !session) {
-                router.push(LOGIN_ROUTE);
-                return;
-              }
-              setTab(id);
-            }}
+            onClick={() => setTab(id)}
             className={`px-3 py-2 font-inter text-sm ${
               tab === id
                 ? 'border-b-2 border-brand-orange font-medium'
                 : 'text-gray-500'
             }`}
           >
-            {label}
+            {EVENT_TAB_LABELS[id]}
             {id === 'hosting' && draftCount > 0 ? ` (${draftCount})` : ''}
           </button>
         ))}
