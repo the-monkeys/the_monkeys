@@ -6,8 +6,7 @@
 }
 
 .cdx-list__item-content {
-  display: inline-block;
-  vertical-align: top;
+  display: block;
   min-height: 24px;
   width: auto;
   outline: none !important;

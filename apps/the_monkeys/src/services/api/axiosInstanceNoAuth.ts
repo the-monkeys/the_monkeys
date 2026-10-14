@@ -1,9 +1,12 @@
+import { API_URL } from '@/constants/api';
 import clientInfo from '@/utils/clientInfo';
 import { getAllRequestHeaders } from '@/utils/requestHeaders';
 import axios from 'axios';
 
+const isServer = typeof window === 'undefined';
+
 const axiosInstanceNoAuth = axios.create({
-  baseURL: '/api/v1',
+  baseURL: isServer ? API_URL : '/api/v1',
   timeout: 30000,
 });
 
@@ -23,7 +26,6 @@ axiosInstanceNoAuth.interceptors.request.use(
       console.warn('Failed to add analytics headers:', error);
 
       if (config.headers && typeof config.headers.set === 'function') {
-        config.headers.set('X-IP', 'unknown');
         config.headers.set('X-Client', 'unknown');
         config.headers.set('X-OS', 'unknown');
         config.headers.set('X-Device', 'unknown');

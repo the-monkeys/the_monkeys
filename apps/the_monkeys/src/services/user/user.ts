@@ -1,4 +1,5 @@
 import axiosInstance from '../api/axiosInstance';
+import axiosInstanceV2 from '../api/axiosInstanceV2';
 import { IUser } from '../models/user';
 
 export async function updateUserName({
@@ -92,3 +93,28 @@ export const unfollowTopicApi = async (username: string, topic: string) => {
     topics: [topic],
   });
 };
+
+export const followUserApi = (username: string) => {
+  return axiosInstance.post(`/user/follow/${username}`);
+};
+
+export const unfollowUserApi = (username: string) => {
+  return axiosInstance.post(`/user/unfollow/${username}`);
+};
+
+export const getFollowStatusApi = (username: string) => {
+  return axiosInstance
+    .get(`/user/is-followed/${username}`)
+    .then((res) => res.data);
+};
+export async function uploadProfileImage(username: string, file: File) {
+  const formData = new FormData();
+  formData.append('profile_pic', file);
+
+  const response = await axiosInstanceV2.post(
+    `/storage/profiles/${username}/profile`,
+    formData
+  );
+
+  return response.data;
+}

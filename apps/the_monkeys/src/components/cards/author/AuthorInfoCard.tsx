@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { AuthorInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import { AuthorName } from '@/components/user/AuthorName';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
@@ -34,9 +35,9 @@ export const AuthorInfoCard = ({
     >
       <div className='mb-[20px] px-4 py-3 w-full bg-foreground-light/25 dark:bg-foreground-dark/25 space-y-3'>
         <div className='flex items-center justify-end gap-[6px]'>
-          {userData?.username !== session?.username && isSuccess && (
-            <FollowButton username={userData?.username} />
-          )}
+          {userData?.username &&
+            userData.username !== session?.username &&
+            isSuccess && <FollowButton username={userData.username} />}
 
           <Button
             variant='secondary'
@@ -58,9 +59,13 @@ export const AuthorInfoCard = ({
           <div className='flex-1 overflow-hidden'>
             <p className='text-sm truncate'>{`@${userData?.username}`}</p>
 
-            <h2 className='flex-1 font-dm_sans font-medium text-2xl capitalize'>
-              {userData?.first_name}{' '}
-              {userData?.last_name ? userData?.last_name : ''}
+            <h2 className='flex min-w-0 flex-1 items-center font-dm_sans font-medium text-2xl capitalize'>
+              <AuthorName
+                firstName={userData?.first_name}
+                lastName={userData?.last_name}
+                isVerified={userData?.is_verified}
+                size={20}
+              />
             </h2>
           </div>
         </div>

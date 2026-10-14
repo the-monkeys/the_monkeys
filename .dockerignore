@@ -126,6 +126,8 @@ Desktop.ini
 .claude
 AGENTS.md
 .agents/
+Skills/
+skills-lock.json
 
 # AI-generated temp files
 *.aider*

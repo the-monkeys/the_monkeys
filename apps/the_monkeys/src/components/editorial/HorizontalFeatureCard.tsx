@@ -32,7 +32,7 @@ export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
       <div className='grid grid-cols-1 sm:grid-cols-2'>
         <Link
           href={url}
-          className='group relative block aspect-[4/3] sm:aspect-auto sm:min-h-[280px] bg-gray-100 dark:bg-gray-800 overflow-hidden'
+          className='group relative block aspect-[4/3] sm:aspect-auto sm:min-h-[280px] overflow-hidden'
         >
           {isNonValidBannerImage(image) ? (
             <BlogPlaceholderImage
@@ -40,11 +40,19 @@ export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
               className='group-hover:scale-[1.03] transition-transform duration-700 ease-out'
             />
           ) : (
-            <BlogImage
-              title={title}
-              image={image}
-              className='group-hover:scale-[1.03] transition-transform duration-700 ease-out'
-            />
+            <>
+              <BlogImage
+                title={title}
+                image={image}
+                className='absolute inset-0 object-cover scale-110 blur-2xl opacity-60 pointer-events-none'
+              />
+              <div className='absolute inset-0 bg-black/30 pointer-events-none' />
+              <BlogImage
+                title={title}
+                image={image}
+                className='relative object-contain group-hover:scale-[1.03] transition-transform duration-700 ease-out'
+              />
+            </>
           )}
         </Link>
 

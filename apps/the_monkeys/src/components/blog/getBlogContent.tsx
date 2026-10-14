@@ -2,6 +2,7 @@ import Image from 'next/image';
 
 import { Blog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 import placeholderImage from '../../../public/image-placeholder.png';
@@ -44,6 +45,25 @@ export const getCardContent = ({ blog }: { blog: Blog }) => {
     imageContent,
   };
 };
+
+export function isDocumentTitleBlock(block?: {
+  type?: string;
+  data?: { level?: number };
+}): boolean {
+  if (!block?.type) return false;
+  if (block.type === 'title') return true;
+  return block.type === 'header' && block.data?.level === 1;
+}
+
+export function withoutPostTitle(data?: OutputData): OutputData | undefined {
+  if (!data?.blocks?.length) return data;
+  const firstType = data.blocks[0]?.type;
+  if (firstType !== 'header' && firstType !== 'title') return data;
+  return {
+    ...data,
+    blocks: data.blocks.slice(1),
+  };
+}
 
 export const BlogTitle = ({
   title,
@@ -106,10 +126,14 @@ export const BlogImage = ({
   title,
   image,
   className,
+  priority = true,
+  sizes,
 }: {
   title: string;
   image: string;
   className?: string;
+  priority?: boolean;
+  sizes?: string;
 }) => {
   return (
     <Image
@@ -117,9 +141,10 @@ export const BlogImage = ({
       alt={title}
       height='500'
       width='800'
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      className={twMerge('h-full w-full object-contain', className)}
       quality={100}
-      priority
+      priority={priority}
+      sizes={sizes}
     />
   );
 };
@@ -127,9 +152,13 @@ export const BlogImage = ({
 export const BlogPlaceholderImage = ({
   title,
   className,
+  priority = true,
+  sizes,
 }: {
   title: string;
   className?: string;
+  priority?: boolean;
+  sizes?: string;
 }) => {
   return (
     <Image
@@ -137,8 +166,10 @@ export const BlogPlaceholderImage = ({
       alt={title}
       height='500'
       width='800'
-      className={twMerge(className, 'h-full w-full object-cover object-center')}
+      className={twMerge('h-full w-full object-cover object-center', className)}
       quality={100}
+      priority={priority}
+      sizes={sizes}
     />
   );
 };

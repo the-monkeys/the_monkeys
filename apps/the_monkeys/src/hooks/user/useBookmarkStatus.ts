@@ -10,6 +10,7 @@ const STALE_TIME = 60 * 1000;
 
 export const useIsPostBookmarked = (
   blogId: string | undefined,
+  isAuthenticated: boolean,
   initialIsBookmarked?: boolean
 ) => {
   const { data, isLoading, error, isError } = useQuery<
@@ -23,7 +24,7 @@ export const useIsPostBookmarked = (
         ? undefined
         : { status: 'success', bookMarked: initialIsBookmarked },
     staleTime: STALE_TIME,
-    enabled: !!blogId,
+    enabled: !!blogId && isAuthenticated,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Icon from '@/components/icon';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
+import { safeCallbackPath } from '@/lib/authRedirect';
 import { otpVerificationSchema, registerUserSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import {
@@ -33,6 +34,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -101,12 +103,18 @@ export default function RegisterUserForm() {
         description: 'Check your email for the 6-digit code',
       });
     } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Failed to send verification code';
+      if (axios.isAxiosError(err)) {
+        const errorMessage =
+          err.response?.data?.message || 'Something went wrong.';
+        toast({ variant: 'error', title: 'Error', description: errorMessage });
+        return;
+      }
+      console.error(err);
+
       toast({
         variant: 'error',
         title: 'Registration failed',
-        description: message,
+        description: 'Something went wrong.',
       });
     } finally {
       setLoading(false);
@@ -131,7 +139,7 @@ export default function RegisterUserForm() {
         title: 'Account created successfully',
       });
 
-      router.replace(params.get('callbackURL') || '/feed');
+      router.replace(safeCallbackPath(params.get('callbackURL')) || '/feed');
     } catch (err: unknown) {
       const message =
         err instanceof Error ? err.message : 'Invalid verification code';

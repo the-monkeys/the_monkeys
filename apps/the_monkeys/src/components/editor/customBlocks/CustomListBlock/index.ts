@@ -1,4 +1,9 @@
-import { API, BlockTool, ToolboxConfig } from '@editorjs/editorjs';
+import {
+  API,
+  BlockTool,
+  HTMLPasteEvent,
+  ToolboxConfig,
+} from '@themonkeys/monkeys-editor';
 
 import './style.css';
 import { ConstructorArgs, ListItemData, ListToolData } from './utils/interface';
@@ -90,14 +95,114 @@ export default class CustomList implements BlockTool {
     ];
   }
 
+  static get pasteConfig() {
+    return {
+      tags: ['UL', 'OL', 'LI'],
+    };
+  }
+
+  /** Method to convert list to paragraph or any other format and vice-versa */
+  static get conversionConfig() {
+    return {
+      export: (data: ListToolData) => {
+        return data.items
+          .map((item) => (typeof item === 'string' ? item : item.content))
+          .join('\n');
+      },
+      import: (string: string) => {
+        return {
+          style: 'unordered',
+          items: [{ content: string, items: [] }],
+        };
+      },
+    };
+  }
+
   destroy() {
     this.removeEvents();
   }
 
+  onPaste(event: HTMLPasteEvent) {
+    const element = event.detail.data as HTMLElement;
+
+    let style: 'ordered' | 'unordered' = 'unordered';
+    if (element.tagName === 'OL') {
+      style = 'ordered';
+    }
+
+    const items = this.parsePastedList(element);
+
+    this.data = {
+      style,
+      items: items.length > 0 ? items : [{ content: '', items: [] }],
+    };
+
+    this.rebuildWrapper(style);
+  }
+
+  private parsePastedList(list: HTMLElement): ListItemData[] {
+    const items: ListItemData[] = [];
+
+    if (list.tagName === 'LI') {
+      const nestedList = list.querySelector(':scope > ul, :scope > ol');
+      const clone = list.cloneNode(true) as HTMLElement;
+      const nestedInClone = clone.querySelector(':scope > ul, :scope > ol');
+      if (nestedInClone) {
+        nestedInClone.remove();
+      }
+
+      items.push({
+        content: clone.innerHTML.trim(),
+        items: nestedList
+          ? this.parsePastedList(nestedList as HTMLElement)
+          : [],
+      });
+      return items;
+    }
+
+    Array.from(list.children).forEach((child) => {
+      if (child.tagName !== 'LI') return;
+
+      const nestedList = child.querySelector(':scope > ul, :scope > ol');
+
+      const clone = child.cloneNode(true) as HTMLElement;
+      const nestedInClone = clone.querySelector(':scope > ul, :scope > ol');
+      if (nestedInClone) {
+        nestedInClone.remove();
+      }
+
+      items.push({
+        content: clone.innerHTML.trim(),
+        items: nestedList
+          ? this.parsePastedList(nestedList as HTMLElement)
+          : [],
+      });
+    });
+
+    return items;
+  }
+
+  private rebuildWrapper(style: 'ordered' | 'unordered') {
+    const newTag = style === 'ordered' ? 'ol' : 'ul';
+    const newWrapper = document.createElement(newTag);
+    newWrapper.className = 'cdx-list';
+
+    this.data.items.forEach((item) => {
+      newWrapper.appendChild(this.renderItem(item));
+    });
+
+    this.removeEvents();
+    this.wrapper.replaceWith(newWrapper);
+    this.wrapper = newWrapper;
+    this.bindEvents();
+  }
+
   save(root: HTMLElement): ListToolData {
+    const target = this.wrapper || root;
+
     return {
-      style: root.tagName === 'OL' ? 'ordered' : 'unordered',
-      items: this.retrieveItems(Array.from(root.children)),
+      style: target.tagName === 'OL' ? 'ordered' : 'unordered',
+      items: this.retrieveItems(Array.from(target.children)),
     };
   }
 
@@ -166,14 +271,14 @@ export default class CustomList implements BlockTool {
   private onClick = (event: MouseEvent) => {
     const target = event.target as HTMLElement;
     const listItem = target.closest('.cdx-list__item') as HTMLElement;
+    if (!listItem) return;
 
-    if (listItem) {
-      const content = listItem.querySelector(
-        '.cdx-list__item-content'
-      ) as HTMLElement;
-      if (content && target !== content && !content.contains(target)) {
-        this.focusItem(listItem);
-      }
+    const content = listItem.querySelector(
+      '.cdx-list__item-content'
+    ) as HTMLElement;
+
+    if (content && target !== content && !content.contains(target)) {
+      this.focusItem(listItem, true);
     }
   };
 
@@ -272,6 +377,20 @@ export default class CustomList implements BlockTool {
 
     this.bindEvents();
     return this.wrapper;
+  }
+
+  /** Method to focus and correctly apply the caret position */
+  focus(isSetToEnd?: boolean) {
+    if (!this.wrapper) return;
+
+    const items = Array.from(this.wrapper.querySelectorAll('.cdx-list__item'));
+    if (items.length === 0) return;
+
+    const targetItem = (
+      isSetToEnd ? items[items.length - 1] : items[0]
+    ) as HTMLElement;
+
+    this.focusItem(targetItem, isSetToEnd);
   }
 
   private createListItem(contentHTML: string = ''): HTMLLIElement {
@@ -415,6 +534,9 @@ export default class CustomList implements BlockTool {
 
       // Append current text to previous item
       if (currentHTML !== '' && currentHTML !== '<br>') {
+        if (previousContent.innerHTML.trim() === '<br>') {
+          previousContent.innerHTML = '';
+        }
         previousContent.innerHTML += currentHTML;
       }
 
@@ -521,26 +643,58 @@ export default class CustomList implements BlockTool {
     }
   }
 
+  private setCaret(element: HTMLElement, atStart: boolean): void {
+    const range = document.createRange();
+    const selection = window.getSelection();
+    if (!selection) return;
+
+    const createAndFocusTextNode = (parent: Node, prepend: boolean = false) => {
+      const textNode = document.createTextNode('');
+      if (prepend) {
+        parent.insertBefore(textNode, parent.firstChild);
+      } else {
+        parent.appendChild(textNode);
+      }
+      range.setStart(textNode, 0);
+      range.setEnd(textNode, 0);
+    };
+
+    const childNodes = element.childNodes;
+    let nodeToFocus: ChildNode | null = atStart
+      ? childNodes[0] ?? null
+      : childNodes[childNodes.length - 1] ?? null;
+
+    if (nodeToFocus) {
+      while (nodeToFocus && nodeToFocus.nodeType !== Node.TEXT_NODE) {
+        nodeToFocus = (
+          atStart ? nodeToFocus.firstChild : nodeToFocus.lastChild
+        ) as ChildNode | null;
+      }
+
+      if (nodeToFocus && nodeToFocus.nodeType === Node.TEXT_NODE) {
+        const length = nodeToFocus.textContent?.length ?? 0;
+        const position = atStart ? 0 : length;
+        range.setStart(nodeToFocus, position);
+        range.setEnd(nodeToFocus, position);
+      } else {
+        createAndFocusTextNode(element, atStart);
+      }
+    } else {
+      createAndFocusTextNode(element);
+    }
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
   private focusItem(item: HTMLElement, atEnd: boolean = false) {
     const content = item.querySelector(
       '.cdx-list__item-content'
     ) as HTMLElement;
-    if (content) {
-      content.focus();
+    if (!content) return;
 
-      if (
-        typeof window.getSelection !== 'undefined' &&
-        typeof document.createRange !== 'undefined'
-      ) {
-        const range = document.createRange();
-        range.selectNodeContents(content);
-        range.collapse(!atEnd);
-
-        const sel = window.getSelection();
-        sel?.removeAllRanges();
-        sel?.addRange(range);
-      }
-    }
+    content.focus();
+    this.setCaret(content, !atEnd);
   }
 
   /**
@@ -556,9 +710,13 @@ export default class CustomList implements BlockTool {
       const contentEl = item.querySelector(':scope > .cdx-list__item-content');
       const sublist = item.querySelector(':scope > .cdx-list__sublist');
 
+      let content = contentEl ? contentEl.innerHTML : '';
+      if (content.trim() === '<br>') {
+        content = '';
+      }
+
       data.push({
-        content: contentEl ? contentEl.innerHTML : '',
-        // Recursion: Pass the sublist's children back to this same method
+        content,
         items: sublist ? this.retrieveItems(Array.from(sublist.children)) : [],
       });
     });

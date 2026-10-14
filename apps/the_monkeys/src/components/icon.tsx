@@ -20,6 +20,8 @@ export type IconName =
   | 'RiArrowRightUp'
   | 'RiArrowRight'
   | 'RiArrowLeft'
+  | 'RiArrowGoBack'
+  | 'RiArrowGoForward'
   | 'RiArrowDownS'
   | 'RiArrowUpS'
   | 'RiMore'
@@ -43,6 +45,9 @@ export type IconName =
   | 'RiShareForward'
   | 'RiEdit2'
   | 'RiHeart3'
+  | 'RiThumbUp'
+  | 'RiTrophy'
+  | 'RiQuestion'
   | 'RiCalendar'
   | 'RiMail'
   | 'RiMailOpen'
@@ -88,7 +93,10 @@ export type IconName =
   | 'RiCloseLarge'
   | 'RiMenu'
   | 'RiAdd'
-  | 'RiDraft';
+  | 'RiDraft'
+  | 'RiTime'
+  | 'RiCoupon3'
+  | 'RiShield';
 
 export type IconProps = {
   name: IconName;

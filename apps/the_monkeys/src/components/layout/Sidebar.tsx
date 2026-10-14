@@ -23,7 +23,7 @@ function SidebarInner() {
 
   return (
     <div className='flex flex-col h-full min-h-0 bg-background-light dark:bg-background-dark'>
-      <div className='flex-1 overflow-y-auto overflow-x-hidden pt-6 px-0 md:px-4 mt-2'>
+      <div className='flex-1 overflow-y-auto overflow-x-hidden pt-6 px-0 md:px-4 mt-2 flex flex-col'>
         <NavList
           items={session ? DISCOVER_ITEMS : publicItems}
           lockedItems={session ? [] : lockedItems}

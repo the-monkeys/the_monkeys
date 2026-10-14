@@ -1,233 +1,154 @@
-import { useState } from 'react';
-
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import {
-  CONNECTION_COUNT_QUERY_KEY,
-  IS_FOLLOWING_USER_QUERY_KEY,
+  useFollowUser,
   useIsFollowingUser,
 } from '@/hooks/user/useUserConnections';
-import axiosInstance from '@/services/api/axiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
-import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { twMerge } from 'tailwind-merge';
 
 export const FollowButton = ({
   username,
   className,
+  onFollowSuccess,
+  onUnfollowSuccess,
 }: {
-  username?: string;
+  username: string;
   className?: string;
+  onFollowSuccess?: () => void;
+  onUnfollowSuccess?: () => void;
 }) => {
   const queryClient = useQueryClient();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
+  const { followMutation, unfollowMutation } = useFollowUser(username, {
+    onFollowSuccess,
+    onUnfollowSuccess,
+  });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const isPending = followMutation.isPending || unfollowMutation.isPending;
 
-  // if (isLoading) return <Skeleton className='h-9 w-32 rounded-full' />;
+  if (isLoading) return <Skeleton className='h-9 w-32 rounded-full' />;
 
-  // if (isError) return null;
+  if (isError) {
+    return (
+      <Button
+        variant='outline'
+        size='sm'
+        disabled={isPending}
+        onClick={() =>
+          queryClient.invalidateQueries({
+            queryKey: ['is-following-user', username],
+          })
+        }
+        className={twMerge(className, '!text-base rounded-full')}
+        data-testid='follow-button'
+      >
+        {isPending && <Loader />}
+        Retry
+      </Button>
+    );
+  }
 
-  const onUserFollow = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(`/user/follow/${username}`);
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to follow user.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onUserUnfollow = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(`/user/unfollow/${username}`);
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to unfollow user.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (followStatus?.isFollowing) {
+    return (
+      <Button
+        variant='secondary'
+        size='sm'
+        disabled={isPending}
+        onClick={() => unfollowMutation.mutate()}
+        className={twMerge(className, '!text-base rounded-full')}
+        data-testid='unfollow-button'
+      >
+        {isPending && <Loader />}
+        Unfollow
+      </Button>
+    );
+  }
 
   return (
-    <>
-      {followStatus?.isFollowing ? (
-        <Button
-          variant='secondary'
-          disabled={loading}
-          onClick={onUserUnfollow}
-          className={twMerge(className, '!text-base rounded-full')}
-        >
-          {loading && <Loader />}
-          Unfollow
-        </Button>
-      ) : (
-        <Button
-          variant={'outline'}
-          size={'sm'}
-          disabled={loading}
-          onClick={onUserFollow}
-          className={twMerge(className, '!text-base rounded-full')}
-        >
-          {loading && <Loader />}
-          Follow
-        </Button>
-      )}
-    </>
+    <Button
+      variant='outline'
+      size='sm'
+      disabled={isPending}
+      onClick={() => followMutation.mutate()}
+      className={twMerge(className, '!text-base rounded-full')}
+      data-testid='follow-button'
+    >
+      {isPending && <Loader />}
+      Follow
+    </Button>
   );
 };
 
 export const FollowButtonIcon = ({
   username,
   className,
+  onFollowSuccess,
+  onUnfollowSuccess,
 }: {
-  username?: string;
+  username: string;
   className?: string;
+  onFollowSuccess?: () => void;
+  onUnfollowSuccess?: () => void;
 }) => {
   const queryClient = useQueryClient();
   const { followStatus, isLoading, isError } = useIsFollowingUser(username);
+  const { followMutation, unfollowMutation } = useFollowUser(username, {
+    onFollowSuccess,
+    onUnfollowSuccess,
+  });
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const isPending = followMutation.isPending || unfollowMutation.isPending;
 
   if (isLoading) return <Skeleton className='size-9 rounded-full' />;
 
-  if (isError) return null;
+  if (isError) {
+    return (
+      <Button
+        size='icon'
+        disabled={isPending}
+        onClick={() =>
+          queryClient.invalidateQueries({
+            queryKey: ['is-following-user', username],
+          })
+        }
+        className={twMerge(className, 'rounded-full')}
+        data-testid='retry-follow-icon-button'
+        aria-label='Retry follow status'
+      >
+        {isPending ? <Loader /> : <Icon name='RiResetRight' size={18} />}
+      </Button>
+    );
+  }
 
-  const onUserFollow = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(`/user/follow/${username}`);
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to follow user.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onUserUnfollow = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(`/user/unfollow/${username}`);
-
-      if (response.status === 200) {
-        queryClient.invalidateQueries({
-          queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
-        });
-        queryClient.invalidateQueries({
-          queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
-        });
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to unfollow user.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (followStatus?.isFollowing) {
+    return (
+      <Button
+        variant='secondary'
+        size='icon'
+        disabled={isPending}
+        onClick={() => unfollowMutation.mutate()}
+        className={twMerge(className, 'rounded-full')}
+        data-testid='unfollow-icon-button'
+        aria-label='Unfollow user'
+      >
+        {isPending ? <Loader /> : <Icon name='RiUserUnfollow' size={18} />}
+      </Button>
+    );
+  }
 
   return (
-    <>
-      {followStatus?.isFollowing ? (
-        <Button
-          variant='secondary'
-          size='icon'
-          disabled={loading}
-          onClick={onUserUnfollow}
-          className={twMerge(className, 'rounded-full')}
-        >
-          {loading ? <Loader /> : <Icon name='RiUserUnfollow' size={18} />}
-        </Button>
-      ) : (
-        <Button
-          size='icon'
-          disabled={loading}
-          onClick={onUserFollow}
-          className={twMerge(className, 'rounded-full')}
-        >
-          {loading ? <Loader /> : <Icon name='RiUserFollow' size={18} />}
-        </Button>
-      )}
-    </>
+    <Button
+      size='icon'
+      disabled={isPending}
+      onClick={() => followMutation.mutate()}
+      className={twMerge(className, 'rounded-full')}
+      data-testid='follow-icon-button'
+      aria-label='Follow user'
+    >
+      {isPending ? <Loader /> : <Icon name='RiUserFollow' size={18} />}
+    </Button>
   );
 };

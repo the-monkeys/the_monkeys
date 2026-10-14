@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import Icon from '@/components/icon';
+import useAuth from '@/hooks/auth/useAuth';
 import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
 import { queryKeys } from '@/lib/queryKeys';
@@ -24,8 +25,10 @@ export const BookmarkButton = ({
   initialIsBookmarked?: boolean;
 }) => {
   const queryClient = useQueryClient();
+  const { isSuccess: isAuthenticated } = useAuth();
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(
     blogId,
+    isAuthenticated,
     initialIsBookmarked
   );
 
@@ -40,7 +43,7 @@ export const BookmarkButton = ({
     );
   }
 
-  if (isError) {
+  if (isError || !isAuthenticated) {
     return (
       <>
         <button

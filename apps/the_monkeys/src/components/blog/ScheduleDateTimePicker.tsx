@@ -77,8 +77,9 @@ const ScheduleDateTimePicker = ({
                 mode='single'
                 selected={scheduleDate}
                 onSelect={onDateChange}
-                fromDate={new Date()}
-                initialFocus
+                startMonth={new Date()}
+                disabled={{ before: new Date() }}
+                autoFocus
               />
             </PopoverContent>
           </Popover>

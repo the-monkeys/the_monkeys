@@ -7,6 +7,10 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
+import { isDocumentTitleBlock } from '@/components/blog/getBlogContent';
+import BlogPreview from '@/components/editor/BlogPreview';
+import { withFirstBlockTitleId } from '@/components/editor/postCanvas/withFirstBlockTitleId';
+import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
@@ -14,11 +18,24 @@ import useAuth from '@/hooks/auth/useAuth';
 import useGetDraftBlogDetail, {
   DRAFT_BLOG_DETAIL_QUERY_KEY,
 } from '@/hooks/blog/useGetDraftBlogDetail';
+import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import { queryKeys } from '@/lib/queryKeys';
+import { useIsImageUploading } from '@/lib/store/useFileUpload';
 import axiosInstance from '@/services/api/axiosInstance';
-import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
-import { OutputData } from '@editorjs/editorjs';
+import {
+  getPublishedBlog,
+  publishBlog,
+  scheduleBlog,
+} from '@/services/blog/blogApi';
+import {
+  BlogPublicationSelection,
+  blogApiError,
+  publicationScope,
+} from '@/services/blog/blogPublication';
 import { useQueryClient } from '@tanstack/react-query';
+import { Tabs, TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {
@@ -36,10 +53,7 @@ const INITIAL_DATA: OutputData = {
     {
       id: 'title',
       type: 'header',
-      data: {
-        text: 'Untitled Post',
-        level: 1,
-      },
+      data: { text: 'Untitled Post', level: 1 },
     },
   ],
 };
@@ -56,6 +70,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const { blog, isLoading, isError } = useGetDraftBlogDetail(blogId, {
     enabled: !isNew,
   });
+  const isImageUploading = useIsImageUploading();
 
   // Refs for latest values
   const dataRef = useRef<OutputData | null>(null);
@@ -63,13 +78,16 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const blogTopicsRef = useRef<string[]>([]);
   const webSocketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isConnectedRef = useRef(false);
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
   const [blogPublishLoading, setBlogPublishLoading] = useState(false);
   const [blogTopics, setBlogTopics] = useState<string[]>([]);
   const [token, setToken] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
+  isConnectedRef.current = isConnected;
 
   const [data, setData] = useState<OutputData | null>(
     isNew ? INITIAL_DATA : null
@@ -137,11 +155,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       return {
         owner_account_id: accountId,
         author_list: [accountId],
-        content_type: 'editorjs',
+        content_type: 'monkeys_editor',
         blog: {
           time: data?.time || Date.now(),
           blocks:
-            data?.blocks?.map((block) => ({
+            withFirstBlockTitleId(data?.blocks)?.map((block) => ({
               ...block,
               author: [accountId],
               time: Date.now(),
@@ -231,7 +249,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
     // Handle tab visibility changes
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && !isConnected && token) {
+      if (
+        document.visibilityState === 'visible' &&
+        !isConnectedRef.current &&
+        token
+      ) {
         // Reconnect immediately when tab becomes visible
         if (reconnectTimeoutRef.current) {
           clearTimeout(reconnectTimeoutRef.current);
@@ -252,7 +274,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [token, blogId, formatData, isConnected]);
+  }, [token, blogId, formatData]);
 
   // Auto-save when data changes
   useEffect(() => {
@@ -272,76 +294,99 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   }, [data, blogTopics, isConnected, accountId, formatData]);
 
   // Handle blog publishing
-  const handlePublishStep = useCallback(async () => {
-    if (!data || data.blocks.length <= 2) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Post must contain at least 3 content blocks.',
-      });
-      return;
-    }
+  const handlePublishStep = useCallback(
+    async (selection: BlogPublicationSelection) => {
+      if (!data || data.blocks.length <= 2) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Post must contain at least 3 content blocks.',
+        });
+        return;
+      }
 
-    if (data.blocks[0].type !== 'header' && data?.blocks[0].data.level !== 1) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Post should start with title (Heading 1).',
-      });
-      return;
-    }
+      if (!isDocumentTitleBlock(data.blocks[0])) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Post should start with title (Heading 1).',
+        });
+        return;
+      }
 
-    const titleBlockCount = data.blocks.filter(
-      (block) => block.type === 'title'
-    ).length;
-    if (titleBlockCount > 1) {
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Only one title block (Heading 1) is allowed in the post.',
-      });
-      return;
-    }
+      const titleBlockCount = data.blocks.filter(
+        (block) => block.type === 'title'
+      ).length;
+      if (titleBlockCount > 1) {
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description:
+            'Only one title block (Heading 1) is allowed in the post.',
+        });
+        return;
+      }
 
-    setBlogPublishLoading(true);
+      setBlogPublishLoading(true);
 
-    try {
-      await axiosInstance.post(
-        `/blog/publish/${blogId}`,
-        formatData(data, accountId, blogTopics)
-      );
+      try {
+        const formatted = formatData(data, accountId, blogTopics);
+        const scope = publicationScope(selection.group, selection.audience);
+        await publishBlog(blogId, {
+          tags: formatted.tags,
+          slug: formatted.slug,
+          ...scope,
+        });
 
-      toast({
-        variant: 'success',
-        title: 'Blog Published Successfully',
-        description: 'Your post is now live!',
-      });
+        let successDescription = 'Your post was published.';
+        try {
+          const actual = await getPublishedBlog(blogId);
+          queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], actual);
+          if (actual.group_slug) {
+            queryClient.invalidateQueries({
+              queryKey: queryKeys.groups.blogs(actual.group_slug),
+            });
+          }
+          if (actual.audience === 'group_only') {
+            successDescription = 'Published for group members.';
+          }
+        } catch {
+          // Publishing already succeeded. Read-back only refines local state and copy.
+        }
 
-      // Invalidate cache and redirect
-      queryClient.invalidateQueries({
-        queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
-      });
-      router.push(`/${username}`);
-    } catch (error) {
-      console.error('Publish error:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error Publishing Blog',
-        description: 'There was an error while publishing. Please try again.',
-      });
-    } finally {
-      setBlogPublishLoading(false);
-    }
-  }, [
-    data,
-    accountId,
-    blogId,
-    blogTopics,
-    formatData,
-    router,
-    username,
-    queryClient,
-  ]);
+        toast({
+          variant: 'success',
+          title: 'Post published',
+          description: successDescription,
+        });
+
+        // Invalidate cache and redirect
+        queryClient.invalidateQueries({
+          queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+        });
+        router.push(`/${username}`);
+      } catch (error) {
+        console.error('Publish error:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error Publishing Blog',
+          description: blogApiError(error),
+        });
+      } finally {
+        setBlogPublishLoading(false);
+      }
+    },
+    [
+      data,
+      accountId,
+      blogId,
+      blogTopics,
+      formatData,
+      router,
+      username,
+      queryClient,
+    ]
+  );
 
   // Initialize editor data
   useEffect(() => {
@@ -367,7 +412,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Handle blog scheduling
   const handleScheduleStep = useCallback(
-    async (scheduleTime: string, timezone: string) => {
+    async (
+      scheduleTime: string,
+      timezone: string,
+      selection: BlogPublicationSelection
+    ) => {
       if (!data || data.blocks.length <= 2) {
         toast({
           variant: 'destructive',
@@ -377,10 +426,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         return;
       }
 
-      if (
-        data.blocks[0].type !== 'header' &&
-        data?.blocks[0].data.level !== 1
-      ) {
+      if (!isDocumentTitleBlock(data.blocks[0])) {
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -412,19 +458,21 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           webSocketRef.current.send(JSON.stringify(formatted));
         }
 
+        const scope = publicationScope(selection.group, selection.audience);
         const payload = {
           tags: formatted.tags,
           slug: formatted.slug,
           schedule_time: scheduleTime,
           timezone: timezone,
+          ...scope,
         };
 
-        await axiosInstanceV2.post(`/blog/${blogId}/schedule_blog`, payload);
+        await scheduleBlog(blogId, payload);
 
         toast({
           variant: 'success',
-          title: 'Blog Scheduled Successfully',
-          description: 'Your post has been scheduled!',
+          title: 'Post scheduled',
+          description: 'Your post has been scheduled.',
         });
 
         // Invalidate cache and redirect
@@ -437,22 +485,13 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         toast({
           variant: 'destructive',
           title: 'Error Scheduling Blog',
-          description: 'There was an error while scheduling. Please try again.',
+          description: blogApiError(error),
         });
       } finally {
         setBlogPublishLoading(false);
       }
     },
-    [
-      data,
-      accountId,
-      blogId,
-      blogTopics,
-      formatData,
-      router,
-      username,
-      queryClient,
-    ]
+    [data, accountId, blogId, blogTopics, formatData, router, queryClient]
   );
 
   return (
@@ -463,7 +502,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         </div>
       ) : (
         <div className='relative min-h-screen'>
-          <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
+          <div
+            className='pt-4 pb-3 flex justify-between items-center gap-2'
+            data-shortcut-scope='chrome'
+          >
             <div
               className={twMerge(
                 'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',
@@ -481,16 +523,57 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>
             </div>
 
-            <div className='flex items-center gap-2'>
-              <PublishBlogDrawer
-                topics={blogTopics}
-                setTopics={setBlogTopics}
-                data={data}
-                isPublishing={blogPublishLoading}
-                handlePublish={handlePublishStep}
-                handleSchedule={handleScheduleStep}
-              />
-            </div>
+            <Tabs
+              value={isPreviewMode ? 'preview' : 'edit'}
+              onValueChange={(val) => setIsPreviewMode(val === 'preview')}
+            >
+              <TabsList className='flex items-center gap-1 font-mono text-foreground/40'>
+                <TabsTrigger value='edit'>
+                  <p className='flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground transition-colors'>
+                    <Icon
+                      name='RiPencil'
+                      size={16}
+                      className='group-data-[state=active]:text-brand-orange'
+                    />
+                    Edit
+                  </p>
+                  <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+                </TabsTrigger>
+
+                <TabsTrigger
+                  value='preview'
+                  disabled={isImageUploading}
+                  className={isImageUploading ? 'cursor-not-allowed' : ''}
+                >
+                  <p
+                    className={twMerge(
+                      'flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base transition-colors',
+                      isImageUploading
+                        ? 'opacity-20'
+                        : 'opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground'
+                    )}
+                  >
+                    <Icon
+                      name='RiEye'
+                      size={16}
+                      className='group-data-[state=active]:text-brand-orange'
+                    />
+                    Preview
+                  </p>
+                  <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <PublishBlogDrawer
+              topics={blogTopics}
+              setTopics={setBlogTopics}
+              data={data}
+              setData={setData}
+              isPublishing={blogPublishLoading}
+              handlePublish={handlePublishStep}
+              handleSchedule={handleScheduleStep}
+            />
           </div>
 
           <div className='py-3'>
@@ -501,8 +584,12 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
                 </div>
               }
             >
-              {data && (
-                <Editor data={data} onChange={setData} blogId={blogId} />
+              {data && isPreviewMode ? (
+                <BlogPreview urlBlogId={blogId} data={data} />
+              ) : (
+                data && (
+                  <Editor data={data} onChange={setData} blogId={blogId} />
+                )
               )}
             </Suspense>
           </div>

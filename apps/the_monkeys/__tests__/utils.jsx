@@ -5,7 +5,9 @@ import { render } from '@testing-library/react';
 import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 
 export const renderWithProviders = (children) => {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
 
   return render(
     <QueryClientProvider client={queryClient}>
