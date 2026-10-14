@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { BlogAudienceBadge } from '@/components/blog/BlogAudienceBadge';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { DeleteBlogDialog } from '@/components/blog/actions/DeleteBlogDialog';
 import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
@@ -14,7 +15,11 @@ import {
 import Icon from '@/components/icon';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
-import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import {
+  BLOG_ROUTE,
+  GROUPS_ROUTE,
+  TOPIC_ROUTE,
+} from '@/constants/routeConstants';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
@@ -53,18 +58,18 @@ export const ProfileBlogCard = ({
   return (
     <div className='pb-4 border-b-1 border-border-light/60 dark:border-border-dark/60'>
       <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
-        <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
-          <Link href={blogURL} className='group'>
+        <div className='relative shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
+          <Link href={blogURL} className='absolute inset-0'>
             {isNonValidBannerImage(imageContent) ? (
               <BlogPlaceholderImage
                 title={titleContent}
-                className='group-hover:scale-105 transition-transform duration-200'
+                className='h-full w-full object-cover object-center'
               />
             ) : (
               <BlogImage
                 title={titleContent}
                 image={imageContent}
-                className='group-hover:scale-105 transition-transform duration-200'
+                className='h-full w-full object-cover object-center'
               />
             )}
           </Link>
@@ -77,6 +82,20 @@ export const ProfileBlogCard = ({
               date={date}
               isDraft={isDraft}
             />
+
+            {(blog.group_slug || blog.audience === 'group_only') && (
+              <div className='min-w-0 pt-2 flex flex-wrap items-center gap-2'>
+                {blog.group_slug && (
+                  <Link
+                    href={`${GROUPS_ROUTE}/${blog.group_slug}`}
+                    className='max-w-full truncate rounded-full border border-border-light px-2.5 py-1 font-inter text-xs font-semibold capitalize transition-colors hover:border-brand-orange/40 hover:text-brand-orange dark:border-border-dark'
+                  >
+                    {blog.group_slug.replace(/-/g, ' ')}
+                  </Link>
+                )}
+                {blog.audience === 'group_only' && <BlogAudienceBadge />}
+              </div>
+            )}
 
             {isDraft ? (
               <div className='w-full'>
@@ -102,8 +121,8 @@ export const ProfileBlogCard = ({
             )}
           </div>
 
-          <div className='pt-3 w-full flex justify-between items-center gap-2'>
-            <div className='flex items-center gap-[6px]'>
+          <div className='pt-3 w-full flex flex-wrap justify-between items-center gap-2'>
+            <div className='min-w-0 flex flex-wrap items-center gap-[6px]'>
               {blog?.tags.length ? (
                 <div className='w-fit flex items-center gap-1'>
                   <Link
@@ -118,7 +137,7 @@ export const ProfileBlogCard = ({
                 <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
               )}
 
-              {!isDraft && (
+              {!isDraft && blog.audience !== 'group_only' && (
                 <>
                   <p className='font-medium text-sm opacity-80'>{' · '}</p>
 

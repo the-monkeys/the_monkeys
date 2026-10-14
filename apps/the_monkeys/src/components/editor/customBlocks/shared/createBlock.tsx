@@ -57,6 +57,29 @@ interface BridgeProps<T> {
   renderKey: number;
 }
 
+/* ---- Isolate block render errors so they cannot white-screen the editor ---- */
+class BlockErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <p className='px-1 py-2 text-sm text-slate-500'>
+          This block could not be rendered.
+        </p>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function BlockBridge<T>({
   initialData,
   readOnly,
@@ -68,13 +91,15 @@ function BlockBridge<T>({
   // Pass data through; the component handles its own internal state.
   // renderKey forces a full remount when EditorJS calls render() again.
   return (
-    <Component
-      key={renderKey}
-      data={initialData}
-      readOnly={readOnly}
-      onChange={onSave}
-      api={api}
-    />
+    <BlockErrorBoundary key={renderKey}>
+      <Component
+        key={renderKey}
+        data={initialData}
+        readOnly={readOnly}
+        onChange={onSave}
+        api={api}
+      />
+    </BlockErrorBoundary>
   );
 }
 

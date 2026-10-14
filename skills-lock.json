@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "redis-core": {
+      "source": "redis/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/redis-core/SKILL.md",
+      "computedHash": "3b6196044dfba0f77942f20030faab03ca0741c396ba8d759c179710ebd2a7dd"
+    }
+  }
+}

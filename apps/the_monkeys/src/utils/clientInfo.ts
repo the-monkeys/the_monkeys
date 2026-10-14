@@ -1,5 +1,4 @@
 import Bowser from 'bowser';
-import { publicIpv4 } from 'public-ip';
 
 export interface ClientInfoData {
   ip: string;
@@ -68,14 +67,6 @@ class ClientInfo {
 
     this.initializationPromise = (async (): Promise<ClientInfoData> => {
       try {
-        // Get public IP address with timeout
-        this.ip = await Promise.race([
-          publicIpv4(),
-          new Promise<string>((resolve) => {
-            setTimeout(() => resolve('unknown'), 5000);
-          }),
-        ]).catch(() => 'unknown');
-
         // Browser detection
         try {
           const userAgent = this.getUserAgent();
@@ -190,9 +181,11 @@ class ClientInfo {
     return {
       viewportWidth: window.innerWidth.toString(),
       viewportHeight: window.innerHeight.toString(),
-      darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? '1'
-        : '0',
+      darkMode:
+        typeof window.matchMedia === 'function' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? '1'
+          : '0',
     };
   }
 

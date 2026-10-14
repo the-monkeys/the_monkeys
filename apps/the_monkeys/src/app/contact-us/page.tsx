@@ -1,3 +1,5 @@
+import type { Metadata } from 'next';
+
 import { BackgroundWaves } from '@/components/branding/BackgroundWaves';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
@@ -6,8 +8,16 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
+import { pageMetadata } from '@/lib/seo';
 
 import ContactForm from './components/ContactForm';
+
+export const metadata: Metadata = pageMetadata({
+  title: 'Contact the Monkeys Team',
+  description:
+    'Contact the Monkeys team at Buddhicintaka (OPC) Pvt. Ltd. about product feedback, support, partnerships, or community questions.',
+  path: '/contact-us',
+});
 
 const ContactPage = () => {
   return (

@@ -6,12 +6,14 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
+import { noIndexRobots } from '@/lib/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: 'Settings',
     description:
       'Manage your Monkeys account settings, preferences, and profile to personalize your creative publishing experience.',
+    robots: noIndexRobots,
   };
 }
 

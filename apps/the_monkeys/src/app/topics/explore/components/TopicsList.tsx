@@ -2,23 +2,25 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
-import useAuth from '@/hooks/auth/useAuth';
-import useUser from '@/hooks/user/useUser';
+import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { createTopicUrl } from '@/utils/topicUtils';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { TopicButton } from './TopicButton';
 
-export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
+export const TopicsList = ({
+  topics = [],
+  followedTopics = [],
+  user,
+}: {
+  topics?: string[];
+  followedTopics?: string[];
+  user?: GetPublicUserProfileApiResponse;
+}) => {
   const [showAll, setShowAll] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const displayedTopics = showAll ? topics : topics.slice(0, 6);
   const totalTopics = topics.length;
-
-  const { data: session } = useAuth();
-
-  const { user } = useUser(session?.username);
-  const followedTopics = user?.topics || [];
+  const visibleTopics = showAll ? topics : topics.slice(0, 6);
 
   const handleSuccess = () => {
     setLoading(false);
@@ -27,7 +29,7 @@ export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
   return (
     <div className='space-y-4'>
       <ul className='pl-2 space-y-1'>
-        {displayedTopics.map((topic) => (
+        {visibleTopics.map((topic) => (
           <li key={topic} className='group flex items-center justify-between'>
             <div className='flex-1'>
               <Link
@@ -38,13 +40,15 @@ export const TopicsList = ({ topics = [] }: { topics?: string[] }) => {
               </Link>
             </div>
 
-            <TopicButton
-              topic={topic}
-              isFollowed={followedTopics.includes(topic)}
-              loading={loading}
-              onSuccess={handleSuccess}
-              user={user}
-            />
+            {user && (
+              <TopicButton
+                topic={topic}
+                isFollowed={followedTopics.includes(topic)}
+                loading={loading}
+                onSuccess={handleSuccess}
+                user={user}
+              />
+            )}
           </li>
         ))}
       </ul>

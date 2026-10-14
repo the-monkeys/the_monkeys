@@ -17,6 +17,10 @@ export const TOPIC_SITEMAP_ROUTE = '/topics/sitemap.xml';
 export const NOTIFICATIONS_ROUTE = '/notifications';
 export const SETTINGS_ROUTE = '/settings';
 export const CREATE_ROUTE = '/create';
+export const EVENTS_ROUTE = '/events';
+export const CREATE_EVENT_ROUTE = `${EVENTS_ROUTE}/new`;
+export const GROUPS_ROUTE = '/groups';
+export const CREATE_GROUP_ROUTE = `${GROUPS_ROUTE}/new`;
 export const PARENT_COMPANY_ROUTE = 'https://buddhicintaka.com/';
 
 export type NavItem = {
@@ -27,14 +31,19 @@ export type NavItem = {
 };
 
 export const DISCOVER_ITEMS: NavItem[] = [
-  { href: HOME_ROUTE, label: 'Feed', icon: 'RiNewspaper' },
-  { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
-  { href: FEED_ROUTE, label: 'For You', icon: 'RiBard', requiresAuth: true },
   {
+    href: FEED_ROUTE,
+    label: 'For You',
+    icon: 'RiNewspaper',
+    requiresAuth: true,
+  },
+  { href: EVENTS_ROUTE, label: 'Events', icon: 'RiGroup' },
+  {
+    // Studio (Image template + X screenshot) is open to everyone; only the
+    // Business Card tab inside it is gated (see CardsAuthGuard).
     href: '/snapshot/new',
     label: 'Studio',
     icon: 'RiCameraLens',
-    requiresAuth: true,
   },
   {
     href: BOOKMARK_ROUTE,
@@ -42,11 +51,11 @@ export const DISCOVER_ITEMS: NavItem[] = [
     icon: 'RiBookShelf',
     requiresAuth: true,
   },
-
   {
     href: SETTINGS_ROUTE,
     label: 'Settings',
     icon: 'RiSettings3',
     requiresAuth: true,
   },
+  { href: EXPLORE_TOPICS_ROUTE, label: 'Topics', icon: 'RiCompass' },
 ];

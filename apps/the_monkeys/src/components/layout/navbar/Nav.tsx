@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -31,10 +31,41 @@ const Nav = () => {
   const pathname = usePathname();
   const { data: session, isLoading: isAuthLoading } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const apply = () => {
+      document.documentElement.style.setProperty(
+        '--app-header-h',
+        `${Math.ceil(el.getBoundingClientRect().height)}px`
+      );
+    };
+    apply();
+
+    if (typeof ResizeObserver !== 'function') {
+      window.addEventListener('resize', apply);
+      return () => {
+        window.removeEventListener('resize', apply);
+        document.documentElement.style.removeProperty('--app-header-h');
+      };
+    }
+
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+    return () => {
+      ro.disconnect();
+      document.documentElement.style.removeProperty('--app-header-h');
+    };
+  }, [pathname, session]);
 
   return (
     <>
-      <header className='sticky top-0 left-0  bg-white dark:bg-background-dark backdrop-blur-md z-40'>
+      <header
+        ref={headerRef}
+        className='sticky top-0 left-0  bg-white dark:bg-background-dark backdrop-blur-md z-40'
+      >
         <Container className='w-full  pt-2.5 flex flex-col gap-1'>
           <div className='flex items-center justify-between gap-4 w-full'>
             {/* Left: Hamburger & Logo */}
@@ -77,7 +108,9 @@ const Nav = () => {
                 </div>
 
                 <ThemeSwitch />
-                {session && <WSNotificationDropdown />}
+                {session && (
+                  <WSNotificationDropdown username={session.username} />
+                )}
 
                 <div className={STYLES.divider} />
 

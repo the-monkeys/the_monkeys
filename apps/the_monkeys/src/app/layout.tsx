@@ -15,7 +15,6 @@ import Script from 'next/script';
 import { AppShell } from '@/components/layout/app-shell/AppShell';
 import Footer from '@/components/layout/footer';
 import DonationPopup from '@/components/popup/DonationPopup';
-import { LIVE_URL } from '@/constants/api';
 import { TooltipProvider } from '@the-monkeys/ui/atoms/tooltip';
 import { Toaster } from '@the-monkeys/ui/molecules/toaster';
 import { PublicEnvScript } from 'next-runtime-env';
@@ -42,80 +41,74 @@ const newsreader = Newsreader({
   subsets: ['latin'],
   variable: '--font-newsreader',
   display: 'swap',
+  adjustFontFallback: false,
 });
 
-// Business Card studio fonts — loaded so the card "Font Family" control renders
+// Business Card studio fonts, loaded so the card "Font Family" control renders
 // the real typefaces instead of falling back to system Arial/Georgia.
 const poppins = Poppins({
   weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
   variable: '--font-poppins',
   display: 'swap',
+  preload: false,
 });
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
   variable: '--font-playfair',
   display: 'swap',
+  preload: false,
 });
 
 const montserrat = Montserrat({
   subsets: ['latin'],
   variable: '--font-montserrat',
   display: 'swap',
+  preload: false,
 });
 
 const raleway = Raleway({
   subsets: ['latin'],
   variable: '--font-raleway',
   display: 'swap',
+  preload: false,
 });
 
 const robotoSlab = Roboto_Slab({
   subsets: ['latin'],
   variable: '--font-roboto-slab',
   display: 'swap',
+  preload: false,
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-jetbrains',
   display: 'swap',
+  preload: false,
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://monkeys.com.co/'),
-  alternates: {
-    canonical: '/',
-    languages: {
-      'en-US': '/en-US',
-      'de-DE': '/de-DE',
-    },
-  },
   title: {
-    template:
-      '%s | Monkeys - Quality Blogging Community & Trusted Content Platform',
-    default:
-      'Monkeys - Inspire, Inform, Innovate with Quality Blogs, Expert Articles & Trusted Content',
+    template: '%s | Monkeys',
+    default: 'Monkeys | Posts, Events and Communities',
   },
   description:
-    'Monkeys is a trusted blogging community where writers publish meaningful, accurate, and valuable content. Explore quality blogs in science, technology, philosophy, lifestyle, and more.',
+    'Discover thoughtful posts, explore topics, meet people at community events, and join groups built around shared interests on Monkeys.',
   keywords: [
-    'quality blogging platform',
-    'trusted content community',
-    'publish blogs online',
-    'expert articles',
-    'science blogs',
-    'technology blogs',
-    'philosophy blogs',
-    'lifestyle blogs',
-    'personal development articles',
-    'collaborative writing',
+    'content and community platform',
+    'thoughtful posts',
+    'community events',
+    'interest based groups',
+    'topic discovery',
+    'authors and creators',
   ],
   openGraph: {
-    title: 'Monkeys - Quality Blogging Community & Trusted Content Platform',
+    title: 'Monkeys | Posts, Events and Communities',
     description:
-      'Join Monkeys, a community for thoughtful voices and meaningful blogs. Publish and read expert articles across science, philosophy, technology, lifestyle, and more.',
+      'Discover thoughtful posts, explore topics, attend community events, and join groups built around shared interests.',
     siteName: 'Monkeys',
     url: 'https://monkeys.com.co/',
     images: [
@@ -123,16 +116,16 @@ export const metadata: Metadata = {
         url: 'https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be',
         width: 1200,
         height: 630,
-        alt: 'Monkeys - Collaborative Blogging Platform',
+        alt: 'Monkeys content and community platform',
       },
     ],
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Monkeys - Quality Blogging Community & Trusted Content Platform',
+    title: 'Monkeys | Posts, Events and Communities',
     description:
-      'Monkeys is where writers publish meaningful blogs and readers discover trusted content across science, lifestyle, philosophy, and more.',
+      'Discover thoughtful posts, explore topics, attend community events, and join groups built around shared interests.',
     images: ['https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be'],
     site: '@monkeys_com_co',
   },
@@ -147,43 +140,11 @@ export const metadata: Metadata = {
       index: true,
       follow: true,
       noimageindex: false,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
     },
   },
-};
-
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Monkeys',
-  url: LIVE_URL,
-  logo: `${LIVE_URL}/opengraph-image.png?b7ef6eff2b7766be`,
-  sameAs: [
-    'https://x.com/monkeys_com_co',
-    'https://www.instagram.com/monkeys_com_co?igsh=ZnhjYWZqN3hidThj',
-  ],
-  description:
-    'A collaborative blogging platform where writers contribute articles that build upon each other, creating a continuous flow of insightful content.',
-  foundingDate: '2023-01-01',
-  founders: [
-    {
-      '@type': 'Person',
-      name: 'Dave Augustus',
-      url: 'https://x.com/monkeys_com_co',
-    },
-  ],
-
-  publisher: {
-    '@type': 'Organization',
-    name: 'Monkeys',
-    url: LIVE_URL,
-  },
-
-  knowsAbout: [
-    'Collaborative Blogging',
-    'Content Writing',
-    'Interconnected Articles',
-    'Topic Clustering',
-  ],
 };
 
 const RootLayout = async ({
@@ -194,10 +155,6 @@ const RootLayout = async ({
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
-        <script
-          type='application/ld+json'
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
         {/* Populates your environment at runtime rather than build time */}
         <PublicEnvScript />
       </head>
