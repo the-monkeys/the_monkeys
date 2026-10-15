@@ -25,6 +25,7 @@ import {
 } from '@/lib/eventsTab';
 import { ListFilters } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
+import { Tabs, TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 
 export default function EventsPageClient() {
   const { data: session } = useAuth();
@@ -65,23 +66,27 @@ export default function EventsPageClient() {
 
   return (
     <div className='mx-auto max-w-6xl'>
-      <div className='mb-8 flex gap-1 border-b border-border-light dark:border-border-dark/40'>
-        {EVENT_TABS.map((id) => (
-          <button
-            key={id}
-            type='button'
-            onClick={() => setTab(id)}
-            className={`px-3 py-2 font-inter text-sm ${
-              tab === id
-                ? 'border-b-2 border-brand-orange font-medium'
-                : 'text-gray-500'
-            }`}
-          >
-            {EVENT_TAB_LABELS[id]}
-            {id === 'hosting' && draftCount > 0 ? ` (${draftCount})` : ''}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(parseEventTab(value))}
+        className='mb-8'
+      >
+        <TabsList className='flex justify-start gap-1 border-b border-border-light dark:border-border-dark/40'>
+          {EVENT_TABS.map((id) => (
+            <TabsTrigger
+              key={id}
+              value={id}
+              className='px-3 py-2 font-inter text-sm text-gray-500'
+            >
+              <span className='opacity-80 transition-opacity group-hover:opacity-100 group-data-[state=active]:font-medium group-data-[state=active]:text-foreground'>
+                {EVENT_TAB_LABELS[id]}
+                {id === 'hosting' && draftCount > 0 ? ` (${draftCount})` : ''}
+              </span>
+              <span className='mt-1 h-[2px] w-0 rounded-full bg-brand-orange transition-all group-data-[state=active]:w-full' />
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
       {tab === 'discover' && (
         <>
