@@ -15,9 +15,9 @@ import {
   toLocalInput,
 } from '@/lib/eventTime';
 import { EventItem } from '@/services/events/eventTypes';
+// downloadCalendar,
 import {
   cloneEvent,
-  downloadCalendar,
   eventError,
   getShareMeta,
   reportEvent,
@@ -135,6 +135,7 @@ export function EventActions({
         <Icon name='RiShare' size={16} className='mr-1' />
         Share
       </Button>
+      {/*
       <Button
         variant='outline'
         size='sm'
@@ -150,6 +151,7 @@ export function EventActions({
         <Icon name='RiDownload2' size={16} className='mr-1' />
         Calendar
       </Button>
+      */}
       {canManage && (
         <>
           <Button asChild variant='outline' size='sm'>
