@@ -613,11 +613,26 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                       onChange={(e) =>
                         setRepeatEnd(e.target.value as typeof repeatEnd)
                       }
-                      className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+                      className='w-full rounded-md border-2 border-border-light bg-card-light text-text-light px-3 py-2 font-inter text-sm dark:border-border-dark dark:bg-card-dark dark:text-text-dark'
                     >
-                      <option value='never'>Never (next 12 dates)</option>
-                      <option value='until'>On a date</option>
-                      <option value='count'>After a number of events</option>
+                      <option
+                        value='never'
+                        className='bg-card-light text-text-light dark:bg-card-dark dark:text-text-dark'
+                      >
+                        Never (next 12 dates)
+                      </option>
+                      <option
+                        value='until'
+                        className='bg-card-light text-text-light dark:bg-card-dark dark:text-text-dark'
+                      >
+                        On a date
+                      </option>
+                      <option
+                        value='count'
+                        className='bg-card-light text-text-light dark:bg-card-dark dark:text-text-dark'
+                      >
+                        After a number of events
+                      </option>
                     </select>
                   </Field>
                   {repeatEnd === 'until' && (
@@ -642,16 +657,19 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
               )}
             </div>
           )}
-
           {!ended && (!!event?.series_id || repeatFreq !== 'off') ? (
             <Field label='Close RSVP'>
               <select
                 value={rsvpCloseHours}
                 onChange={(e) => setRsvpCloseHours(Number(e.target.value) || 0)}
-                className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
+                className='w-full rounded-md border-2 border-border-light bg-card-light text-text-light px-3 py-2 font-inter text-sm dark:border-border-dark dark:bg-card-dark dark:text-text-dark'
               >
                 {RSVP_CLOSE_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
+                  <option
+                    key={opt.value}
+                    value={opt.value}
+                    className='bg-card-light text-text-light dark:bg-card-dark dark:text-text-dark'
+                  >
                     {opt.label}
                   </option>
                 ))}
@@ -1015,13 +1033,13 @@ function CohostPicker({
         />
 
         {open && debounced.length > 0 && (
-          <div className='absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-border-light bg-white shadow-lg dark:border-border-dark dark:bg-primary-monkeyBlack'>
+          <div className='absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-border-light bg-white text-gray-900 shadow-xl dark:border-border-dark dark:bg-zinc-900 dark:text-zinc-100'>
             {isLoading ? (
-              <p className='px-3 py-2 font-inter text-sm text-gray-500'>
+              <p className='px-3 py-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
                 Searching…
               </p>
             ) : results.length === 0 ? (
-              <p className='px-3 py-2 font-inter text-sm text-gray-500'>
+              <p className='px-3 py-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
                 No matches
               </p>
             ) : (
@@ -1031,17 +1049,17 @@ function CohostPicker({
                     <button
                       type='button'
                       onClick={() => add(u.username)}
-                      className='flex min-h-[44px] w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800'
+                      className='flex min-h-[44px] w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-zinc-800'
                     >
                       <ProfileFrame className='h-8 w-8'>
                         <ProfileImage username={u.username} />
                       </ProfileFrame>
                       <span className='min-w-0'>
-                        <span className='block truncate font-dm_sans text-sm font-medium'>
+                        <span className='block truncate font-dm_sans text-sm font-medium text-gray-900 dark:text-zinc-100'>
                           @{u.username}
                         </span>
                         {(u.first_name || u.last_name) && (
-                          <span className='block truncate font-inter text-xs text-gray-500'>
+                          <span className='block truncate font-inter text-xs text-gray-500 dark:text-gray-400'>
                             {`${u.first_name} ${u.last_name}`.trim()}
                           </span>
                         )}
