@@ -21,9 +21,11 @@ const MAX_BYTES = 10 * 1024 * 1024;
 export function EventGallery({
   slug,
   canManage,
+  ended,
 }: {
   slug: string;
   canManage?: boolean;
+  ended?: boolean;
 }) {
   const { toast } = useToast();
   const { data: photos = [], isLoading } = useEventPhotos(slug);
@@ -125,7 +127,7 @@ export function EventGallery({
           id='event-gallery-heading'
           className='font-newsreader font-bold text-2xl md:text-3xl'
         >
-          Photos
+          {ended ? 'Glimpses' : 'Photos'}
         </h2>
 
         {canManage && count > 0 && (
@@ -229,8 +231,12 @@ export function EventGallery({
           <p className='font-dm_sans font-medium'>No photos for now!</p>
           <p className='mt-1 font-inter text-sm text-gray-500 dark:text-gray-400'>
             {canManage
-              ? 'Add up to four photos to bring this event to life.'
-              : 'Photos shared by the hosts will appear here.'}
+              ? ended
+                ? 'Add up to four glimpses from this meetup.'
+                : 'Add up to four photos to bring this event to life.'
+              : ended
+                ? 'Photos from this meetup will appear here.'
+                : 'Photos shared by the hosts will appear here.'}
           </p>
           {canManage && (
             <Button

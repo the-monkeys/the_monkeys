@@ -1,5 +1,9 @@
+import { memo } from 'react';
+
 import Link from 'next/link';
 
+import { EventHostName } from '@/components/events/EventHostName';
+import { EventSeriesNote } from '@/components/events/detail/EventSeriesNote';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import {
@@ -7,6 +11,8 @@ import {
   eventTypeLabel,
   formatEventCardWhen,
   formatPrice,
+  formatUpcomingDates,
+  isEventEnded,
   lowestTierPrice,
 } from '@/lib/eventTime';
 import { EventItem } from '@/services/events/eventTypes';
@@ -18,6 +24,7 @@ function Cover({ event }: { event: EventItem }) {
         src={event.cover_image}
         alt=''
         loading='lazy'
+        decoding='async'
         className='absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105'
       />
     );
@@ -39,7 +46,11 @@ function placeLabel(event: EventItem): string {
 
 // Removed thin wrapper — call eventDateParts directly to avoid arg mismatch.
 
-export function EventGridCard({ event }: { event: EventItem }) {
+export const EventGridCard = memo(function EventGridCard({
+  event,
+}: {
+  event: EventItem;
+}) {
   const href = `${EVENTS_ROUTE}/${event.slug}`;
   const date = eventDateParts(event.start_time, event.timezone);
   const price = formatPrice(
@@ -47,6 +58,8 @@ export function EventGridCard({ event }: { event: EventItem }) {
     event.ticket_tiers?.[0]?.currency
   );
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
+  const ended = isEventEnded(event);
+  const extraDates = formatUpcomingDates(event.upcoming_dates, event.timezone);
 
   return (
     <article className='group flex h-full flex-col overflow-hidden rounded-xl border border-border-light bg-background-light shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-border-dark/40 dark:bg-background-dark'>
@@ -73,7 +86,11 @@ export function EventGridCard({ event }: { event: EventItem }) {
 
       <div className='flex flex-1 flex-col p-4'>
         <p className='font-inter text-[11px] font-bold uppercase tracking-[0.16em] text-brand-orange'>
-          {category}
+          {event.status === 'draft'
+            ? 'Draft · not listed'
+            : ended
+              ? 'Ended'
+              : category}
         </p>
         <Link href={href} className='mt-1 block'>
           <h3 className='font-newsreader text-lg font-bold leading-[1.3] text-text-light line-clamp-2 transition-colors group-hover:text-brand-orange dark:text-text-dark'>
@@ -83,6 +100,15 @@ export function EventGridCard({ event }: { event: EventItem }) {
         <p className='mt-1.5 font-inter text-sm text-gray-500 dark:text-gray-400'>
           {formatEventCardWhen(event.start_time, event.timezone)}
         </p>
+        <EventSeriesNote
+          event={event}
+          className='mt-1 font-inter text-xs dark:text-gray-400'
+        />
+        {extraDates ? (
+          <p className='mt-0.5 font-inter text-xs text-gray-500 dark:text-gray-400'>
+            {extraDates}
+          </p>
+        ) : null}
         <p className='mt-1 flex items-center gap-1 font-inter text-sm text-gray-500 dark:text-gray-400'>
           <Icon
             name={event.event_type === 'virtual' ? 'RiCompass' : 'RiMapPinUser'}
@@ -93,10 +119,14 @@ export function EventGridCard({ event }: { event: EventItem }) {
         </p>
 
         <div className='mt-auto flex items-center justify-between gap-3 pt-4 font-inter text-xs text-gray-500 dark:text-gray-400'>
-          {event.organizer_username ? (
-            <span className='flex items-center gap-1.5 truncate'>
-              <Icon name='RiUser' size={14} className='opacity-70' />@
-              {event.organizer_username}
+          {event.organizer_username || event.organizer_account_id ? (
+            <span className='flex min-w-0 items-center gap-1.5'>
+              <Icon name='RiUser' size={14} className='shrink-0 opacity-70' />
+              <EventHostName
+                username={event.organizer_username}
+                accountId={event.organizer_account_id}
+                className='text-inherit'
+              />
             </span>
           ) : (
             <span />
@@ -111,4 +141,4 @@ export function EventGridCard({ event }: { event: EventItem }) {
       </div>
     </article>
   );
-}
+});

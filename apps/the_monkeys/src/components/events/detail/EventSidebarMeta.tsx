@@ -9,9 +9,7 @@ import {
 import { EventItem } from '@/services/events/eventTypes';
 
 /**
- * Sticky right-rail metadata: date/time card, venue card and an optional
- * community-chat quick-join callout. Purely informational — RSVP lives in the
- * RsvpPanel so payment logic is never duplicated.
+ * Sticky right-rail metadata for date, time, venue, and directions.
  */
 export function EventSidebarMeta({ event }: { event: EventItem }) {
   const parts = eventDateParts(event.start_time, event.timezone);
@@ -83,28 +81,6 @@ export function EventSidebarMeta({ event }: { event: EventItem }) {
             )}
           </div>
         </div>
-      )}
-
-      {/* Community chat callout */}
-      {event.meeting_link && (
-        <a
-          href={event.meeting_link}
-          target='_blank'
-          rel='noreferrer'
-          className='flex items-center gap-3 rounded-2xl border border-alert-green/40 bg-alert-green/5 p-4 hover:bg-alert-green/10'
-        >
-          <span className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-alert-green/15 text-alert-green'>
-            <Icon name='RiChat1' size={20} />
-          </span>
-          <span className='min-w-0'>
-            <span className='block font-dm_sans font-semibold'>
-              Join the chat
-            </span>
-            <span className='block font-inter text-sm text-gray-500 dark:text-gray-400'>
-              Connect with attendees before the event.
-            </span>
-          </span>
-        </a>
       )}
     </div>
   );

@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import { TextTabs } from '@/components/TextTabs';
 import { EventGridCard } from '@/components/events/EventGridCard';
+import { GroupBlogsPanel } from '@/components/groups/detail/GroupBlogsPanel';
 import { GroupRules } from '@/components/groups/detail/GroupRules';
 import { GroupAddMember } from '@/components/groups/members/GroupAddMember';
 import { GroupInvites } from '@/components/groups/members/GroupInvites';
@@ -14,61 +16,81 @@ import { Loader } from '@/components/loader';
 import { GROUPS_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useGroupEvents } from '@/hooks/events/useEventQueries';
-import { canManageGroup, canViewGroupMembers } from '@/lib/groupPerms';
+import {
+  GroupCommunityTab,
+  groupCommunityLocation,
+  groupCommunityTabs,
+  parseGroupCommunityTab,
+} from '@/lib/groupCommunityTab';
+import {
+  canManageGroup,
+  canViewGroupMembers,
+  groupFeedEmptyCopy,
+  isActiveGroupMember,
+} from '@/lib/groupPerms';
 import { GroupItem } from '@/services/groups/groupsTypes';
 
-type Tab = 'events' | 'about' | 'members' | 'requests' | 'invites';
+const TAB_LABELS: Record<GroupCommunityTab, string> = {
+  posts: 'Posts',
+  events: 'Events',
+  about: 'About',
+  members: 'Members',
+  requests: 'Join requests',
+  invites: 'Invites',
+};
 
 /**
- * Team-page community panel. Leads with the group's event agenda, then the
- * member roster (with admin/co-admin role labels), and — for staff only —
- * "Join requests" and "Invites" tabs. Every staff tab is UI-gated here and
- * enforced server-side, so non-staff viewers never see or act on them.
+ * Team-page community panel. Posts lead, then events, about, members, and —
+ * for staff only — join requests and invites. Tab choice is stored in the
+ * URL hash (`#events`) so a refresh restores it without creating extra
+ * indexable paths. The default Posts tab keeps `/groups/:slug` hash-free.
  */
 export function GroupCommunity({ group }: { group: GroupItem }) {
   const { data: session } = useAuth();
   const staff = canManageGroup(group);
   const canView = canViewGroupMembers(group);
-  const [tab, setTab] = useState<Tab>('events');
+  const [tab, setTab] = useState<GroupCommunityTab>('posts');
+
+  useLayoutEffect(() => {
+    const applyHash = () => {
+      setTab(parseGroupCommunityTab(window.location.hash, staff));
+    };
+    applyHash();
+    window.addEventListener('hashchange', applyHash);
+    return () => window.removeEventListener('hashchange', applyHash);
+  }, [staff]);
+
+  const selectTab = (next: GroupCommunityTab) => {
+    setTab(next);
+    const nextUrl = groupCommunityLocation(
+      window.location.pathname,
+      window.location.search,
+      next
+    );
+    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (current !== nextUrl) {
+      window.history.replaceState(null, '', nextUrl);
+    }
+  };
 
   // Private/unlisted groups hide the panel from non-members and non-staff.
   if (!canView && !staff) return null;
 
   return (
     <section>
-      <div
-        role='tablist'
+      <TextTabs
         aria-label='Group community'
-        className='mb-4 flex items-center gap-1 border-b border-border-light dark:border-border-dark'
-      >
-        <TabButton active={tab === 'events'} onClick={() => setTab('events')}>
-          Events
-        </TabButton>
-        <TabButton active={tab === 'about'} onClick={() => setTab('about')}>
-          About
-        </TabButton>
-        <TabButton active={tab === 'members'} onClick={() => setTab('members')}>
-          Members
-        </TabButton>
-        {staff && (
-          <TabButton
-            active={tab === 'requests'}
-            onClick={() => setTab('requests')}
-          >
-            Join requests
-          </TabButton>
-        )}
-        {staff && (
-          <TabButton
-            active={tab === 'invites'}
-            onClick={() => setTab('invites')}
-          >
-            Invites
-          </TabButton>
-        )}
-      </div>
+        value={tab}
+        onChange={selectTab}
+        items={groupCommunityTabs(staff).map((id) => ({
+          id,
+          label: TAB_LABELS[id],
+        }))}
+      />
 
-      {tab === 'events' ? (
+      {tab === 'posts' ? (
+        <GroupBlogsPanel group={group} />
+      ) : tab === 'events' ? (
         <GroupEventsPanel group={group} staff={staff} />
       ) : tab === 'about' ? (
         <GroupAboutPanel group={group} />
@@ -82,8 +104,10 @@ export function GroupCommunity({ group }: { group: GroupItem }) {
         </>
       ) : tab === 'requests' ? (
         <GroupJoinRequests group={group} />
-      ) : (
+      ) : tab === 'invites' ? (
         <GroupInvites group={group} />
+      ) : (
+        <GroupBlogsPanel group={group} />
       )}
     </section>
   );
@@ -99,40 +123,56 @@ function GroupEventsPanel({
   group: GroupItem;
   staff: boolean;
 }) {
-  const { data, isLoading } = useGroupEvents(group.slug);
+  const { data: session } = useAuth();
+  const [when, setWhen] = useState<'upcoming' | 'past'>('upcoming');
+  const { data, isLoading } = useGroupEvents(group.slug, {
+    date: when,
+    limit: 24,
+  });
   const events = data?.events ?? [];
-
-  if (isLoading) {
-    return (
-      <div className='flex justify-center py-10'>
-        <Loader size={28} />
-      </div>
-    );
-  }
-
-  if (events.length === 0) {
-    return (
-      <div className='rounded-lg border border-dashed border-border-light py-10 text-center dark:border-border-dark'>
-        <p className='font-inter text-sm text-gray-500'>
-          No events scheduled yet.
-        </p>
-        {staff && (
-          <Link
-            href={`${GROUPS_ROUTE}/${group.slug}/events/new`}
-            className='mt-2 inline-block font-dm_sans text-sm font-medium text-brand-orange hover:underline'
-          >
-            Create the first event
-          </Link>
-        )}
-      </div>
-    );
-  }
+  const member = isActiveGroupMember(group);
 
   return (
-    <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-      {events.map((event) => (
-        <EventGridCard key={event.slug} event={event} />
-      ))}
+    <div>
+      <TextTabs
+        aria-label='Group events'
+        value={when}
+        onChange={setWhen}
+        items={[
+          { id: 'upcoming', label: 'Upcoming' },
+          { id: 'past', label: 'Past' },
+        ]}
+      />
+      {isLoading ? (
+        <div className='flex justify-center py-10'>
+          <Loader size={28} />
+        </div>
+      ) : events.length === 0 ? (
+        <div className='rounded-lg border border-dashed border-border-light py-10 text-center dark:border-border-dark'>
+          <p className='font-inter text-sm text-gray-500'>
+            {groupFeedEmptyCopy({
+              kind: 'events',
+              member,
+              signedIn: !!session,
+              when,
+            })}
+          </p>
+          {staff && member && when === 'upcoming' && (
+            <Link
+              href={`${GROUPS_ROUTE}/${group.slug}/events/new`}
+              className='mt-2 inline-block font-dm_sans text-sm font-medium text-brand-orange hover:underline'
+            >
+              Create the first event
+            </Link>
+          )}
+        </div>
+      ) : (
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+          {events.map((event) => (
+            <EventGridCard key={event.slug} event={event} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -159,31 +199,5 @@ function GroupAboutPanel({ group }: { group: GroupItem }) {
         </p>
       )}
     </div>
-  );
-}
-
-function TabButton({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type='button'
-      role='tab'
-      aria-selected={active}
-      onClick={onClick}
-      className={`-mb-px min-h-[44px] border-b-2 px-3 font-inter text-sm transition-colors ${
-        active
-          ? 'border-brand-orange text-brand-orange'
-          : 'border-transparent text-gray-500 hover:text-text-light dark:hover:text-text-dark'
-      }`}
-    >
-      {children}
-    </button>
   );
 }

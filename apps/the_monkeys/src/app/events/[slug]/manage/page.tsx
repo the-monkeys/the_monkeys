@@ -2,10 +2,11 @@
 
 import { useRouter } from 'next/navigation';
 
+import { BackButton } from '@/components/buttons/backButton';
 import { EventEmpty } from '@/components/events/EventCard';
 import { EventManage } from '@/components/events/EventManage';
 import { Loader } from '@/components/loader';
-import { LOGIN_ROUTE } from '@/constants/routeConstants';
+import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useEventDetail } from '@/hooks/events/useEventQueries';
 import { isHost } from '@/lib/eventTime';
@@ -40,8 +41,15 @@ export default function ManageEventPage({
 
   return (
     <div className='mx-auto max-w-3xl'>
-      <p className='font-inter text-xs uppercase tracking-[0.18em] text-gray-500 mb-1'>
-        {event.status}
+      <div className='mb-4'>
+        <BackButton href={`${EVENTS_ROUTE}/${event.slug}`} />
+      </div>
+      <p
+        className={`font-inter text-xs uppercase tracking-[0.18em] mb-1 ${
+          event.status === 'draft' ? 'text-brand-orange' : 'text-gray-500'
+        }`}
+      >
+        {event.status === 'draft' ? 'Draft · not on Discover' : event.status}
       </p>
       <h1 className='font-newsreader font-bold text-3xl md:text-4xl mb-8'>
         {event.title}

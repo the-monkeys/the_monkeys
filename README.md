@@ -1,80 +1,162 @@
+# Monkeys
+
 <picture>
   <img src="./apps/the_monkeys/public/Banner.png" alt="Monkeys" style="height: 100%; width: 80%;">
 </picture>
 
-# Monkeys
+> Research-first publishing platform: journals, community events, groups, and a social creative studio.
 
-### Inspire, Inform, Innovate
+Monkeys is a modern, research-first community platform designed for high-quality technical and scientific writing, community events, collaborative groups, and social graphic creation.
 
-Monkeys is a community built around **meaningful, accurate, and valuable content**.  
-Our mission is to help people access knowledge that enriches their lives—whether in science, technology, personal development, psychology, philosophy, or lifestyle.
+---
 
-Unlike open forums that prioritize volume, we believe in **quality first**. Every perspective shared on Monkeys is meant to inspire growth, challenge thinking, and encourage deeper understanding.
+## 🏗️ Repository Architecture
 
-This is not just another content platform. It’s a space where members can trust what they read, knowing it comes from thoughtful, informed contributors.
+This repository is managed as a **Turborepo** monorepo powered by **pnpm workspaces**:
 
-## Our Community
+```
+the_monkeys/
+├── apps/
+│   └── the_monkeys/          # Next.js 14 App Router web application
+├── packages/
+│   ├── ui/                   # Shared UI component library (Radix UI + Tailwind CSS)
+│   └── config/               # Shared workspace configurations
+├── scripts/                  # Cross-platform utility scripts (host configuration, etc.)
+├── docker-compose.yml        # Production Docker Compose definition
+├── docker-compose.local.yml  # Local Docker Compose setup (bridges to monkeys_engine network)
+└── Dockerfile                # Multi-stage Docker build with runtime environment support
+```
 
-We value:
+### Core Technologies
 
--   **Correctness** – Insights grounded in knowledge, not noise.
--   **Clarity** – Content that informs, educates, and engages.
--   **Contribution with Purpose** – Every piece shared should add real value.
+* **Framework**: [Next.js 14](https://nextjs.org/) (App Router) with [React 18](https://react.dev/)
+* **Styling**: [Tailwind CSS](https://tailwindcss.com/) & [Radix UI](https://www.radix-ui.com/)
+* **Runtime Config**: [`next-runtime-env`](https://www.npmjs.com/package/next-runtime-env) (build once, deploy anywhere)
+* **Data Fetching**: [TanStack Query v5](https://tanstack.com/query)
+* **Testing**: [Vitest](https://vitest.dev/) and [@testing-library/react](https://testing-library.com/)
+* **Workspace Management**: [Turborepo](https://turbo.build/) with [pnpm](https://pnpm.io/)
 
-We encourage discussion, but always with the goal of **learning and growth**. Together, we’re building a more reliable and insightful community.
+---
 
-## Contributing
+## ✨ Product Features
 
-We welcome all kinds of contributions—whether they strengthen our technical foundation or enrich our content to help the platform flourish. If you’re passionate about sharing knowledge in a way that truly benefits others, we’d love to hear from you.
+* **Research Journals & Feed (`/feed`, `/blog/[slug]`)**: Long-form publishing with rich markdown, code syntax highlighting, and LaTeX math formatting via KaTeX.
+* **Events & RSVP (`/events`)**: Discover and organize community meetups, workshops, and scientific talks with integrated RSVP management and calendar integration.
+* **Research Groups (`/groups`)**: Topic-based collaborative spaces for community research and discussions.
+* **Creative Studio (`/snapshot/new`, `/cards`)**:
+  * **Social Image Templates**: Aspect-ratio-adaptive post graphics (Editorial portrait, 1:1 quotes, Instagram carousels, LinkedIn and X shares).
+  * **X / Twitter Screenshots**: Stylized tweet renders with custom backgrounds and presets.
+  * **Digital Business Cards**: Printable and shareable contact cards (`/cards`).
 
-Ways you can contribute:
+---
 
-1. **Code Contributions** – Improve platform features, fix issues, or enhance reliability.
-2. **Documentation** – Help us keep information clear and up to date.
-3. **Content Creation** – Share well-researched, thoughtful articles or tutorials.
-4. **Feature Suggestions** – Have an idea that aligns with our vision? Let us know.
+## 🔗 Backend Integration
 
-All contributions are **reviewed carefully** to ensure they reflect the standards and purpose of Monkeys community.
+The backend is built in Go and maintained in a dedicated repository:
 
-## Backend
+* **Repository**: [Monkeys Engine](https://github.com/the-monkeys/monkeys_engine)
+* **Communication**: The frontend connects via HTTP REST endpoints and WebSocket channels configured through environment variables.
+* **Runtime Variables**: Client-side endpoints are injected at container startup using `next-runtime-env`, eliminating the need to bake endpoints into the build bundle.
 
-Our platform is powered by a robust backend written in Go, maintained in a dedicated repository.
-
-Backend repo: [Monkeys Backend](https://github.com/the-monkeys/monkeys_engine)
-
-If you’d like to contribute technically, we encourage you to explore the architecture, suggest improvements, or collaborate on features that make Monkeys a stronger, more reliable space.
+---
 
 ## 🚀 Quick Start
 
-### Docker Deployment
+### Prerequisites
+
+* **Node.js**: `18.17.0` or later (refer to [`.nvmrc`](./.nvmrc))
+* **pnpm**: `10.0.0` or later (configured in [`package.json`](./package.json))
+
+> [!TIP]
+> If `pnpm` is not installed globally, bootstrap it using `npm run install-deps`.
+
+### 1. Clone & Install Dependencies
+
 ```bash
-# Setup and deploy
+git clone https://github.com/the-monkeys/the_monkeys.git
+cd the_monkeys
+pnpm install
+```
+
+### 2. Configure Environment Variables
+
+Create `.env.local` inside `apps/the_monkeys`:
+
+```bash
+cp apps/the_monkeys/.env.example apps/the_monkeys/.env.local
+```
+
+Key environment variables:
+
+| Variable | Description |
+| :--- | :--- |
+| `NEXT_PUBLIC_API_URL` | Base HTTP endpoint for the backend API |
+| `NEXT_PUBLIC_API_URL_V2` | V2 backend HTTP endpoint |
+| `NEXT_PUBLIC_WSS_URL` | WebSocket endpoint for real-time services |
+| `NEXT_PUBLIC_LIVE_URL` | Production/Public application URL |
+| `AUTH_SECRET` | Secret key used for session encryption |
+| `NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY` | (Optional) Feature flag client key |
+
+### 3. Local Domain Setup (Recommended)
+
+To allow authentication cookies to share context with a locally running backend:
+
+```bash
+make setup-hosts
+# or on Linux/macOS:
+sudo bash ./scripts/setup-hosts.sh
+# or on Windows (PowerShell as Admin):
+powershell -ExecutionPolicy Bypass -File "scripts/setup-hosts.ps1"
+```
+
+This maps `127.0.0.1 local.monkeys.com.co` in your hosts file.
+
+### 4. Run Development Server
+
+```bash
+pnpm dev
+```
+
+The application will be accessible at [http://localhost:3000](http://localhost:3000) (or `http://local.monkeys.com.co:3000` if host mapping is configured).
+
+---
+
+## 🐳 Docker Deployment
+
+The application provides multi-stage Docker builds utilizing `next-runtime-env` for runtime environment injection.
+
+```bash
+# 1. Create root environment file
 cp .env.local.example .env.local
-docker-compose -f docker-compose.local.yml up
+
+# 2. Run container connecting to the local backend network
+docker compose -f docker-compose.local.yml up
 ```
 
-### Development
-
-Requires [Node.js](https://nodejs.org/) **18.17.0 or later**.
+For production deployment:
 
 ```bash
-# Install and run
-pnpm run install-deps
-pnpm run dev
+cp .env.local.example .env  # fill in production values first
+docker compose -f docker-compose.yml up -d
 ```
 
-The app runs directly at [http://localhost:3000](http://localhost:3000). See
-[CONTRIBUTING.md](./CONTRIBUTING.md) for full setup details.
+---
 
-## Guidelines
+## 🛠️ Common Commands
 
-To keep our community focused and meaningful:
+All commands can be run from the repository root via Turborepo:
 
-1. **Issues** – Please follow the provided format when raising an issue. This helps us address matters efficiently.
-2. **Pull Requests** – PRs should align with our goals of clarity, correctness, and reliability. Use the prescribed format for faster reviews.
+| Command | Description |
+| :--- | :--- |
+| `pnpm dev` | Start development servers with hot-reload |
+| `pnpm build` | Run lint checks and create production build |
+| `pnpm test` | Run Vitest unit and component test suites |
+| `pnpm lint` | Execute linter across all workspaces |
+| `pnpm format` | Automatically format code using Prettier and Biome |
 
-By following these, you help us preserve the quality of Monkeys.
+---
 
-## Join Us
+## 🤝 Contributing & License
 
-Monkeys is a place for those who care about knowledge that **Inspire, Inform, and Innovate**. If you share that vision, we invite you to be part of the journey—whether through contributions, thoughtful feedback, or meaningful discussion.
+* Contributions are welcome! Read [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines on setup, branch naming, and pull requests.
+* Monkeys is licensed under the [Apache 2.0 License](./LICENSE.md).

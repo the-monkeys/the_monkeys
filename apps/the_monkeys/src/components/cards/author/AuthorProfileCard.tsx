@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { UpdateDialog } from '@/app/[username]/components/profile/UpdateDialog';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
-import { VerifiedBadge } from '@/components/user/VerifiedBadge';
+import { AuthorName } from '@/components/user/AuthorName';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import { ConnectionsDialog } from '@/components/user/dialogs/ConnectionsDialog';
 import { ShareProfileDialog } from '@/components/user/dialogs/ShareProfileDialog';
@@ -72,15 +72,12 @@ export const AuthorProfileCard = ({
           </div>
 
           <div className='min-w-0 flex-1 space-y-1 mt-1'>
-            <h2 className='flex items-center gap-1.5 max-w-full break-words font-dm_sans text-[1.6rem] font-bold capitalize leading-tight tracking-tight sm:text-[1.8rem]'>
-              <span>
-                {user?.first_name} {user?.last_name ? user.last_name : ''}
-              </span>
-              <VerifiedBadge
-                isVerified={user?.is_verified === true}
-                showText={false}
-                size={24}
-                className='mt-[2px]'
+            <h2 className='inline-flex max-w-full items-center gap-1 font-dm_sans text-[1.6rem] font-bold capitalize leading-tight tracking-tight sm:text-[1.8rem]'>
+              <AuthorName
+                firstName={user?.first_name}
+                lastName={user?.last_name}
+                isVerified={user?.is_verified}
+                size={20}
               />
             </h2>
 

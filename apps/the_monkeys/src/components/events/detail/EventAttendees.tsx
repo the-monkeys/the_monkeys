@@ -20,8 +20,12 @@ export function EventAttendees({
   canManage?: boolean;
 }) {
   const { data } = useEventAttendees(event.slug, canManage);
-  const attendees = data?.attendees || [];
-  const total = data?.total ?? event.attendee_count ?? attendees.length;
+  const attendees = (data?.attendees || []).filter(
+    (a) => a.status === 'confirmed' || a.status === 'waitlisted'
+  );
+  const total = canManage
+    ? attendees.length
+    : data?.total ?? event.attendee_count ?? attendees.length;
 
   const host = event.organizer_username;
   const shown = attendees.slice(0, 18);

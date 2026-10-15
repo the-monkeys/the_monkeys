@@ -11,6 +11,10 @@ export function parseEventTime(value: ProtoTime): Date | null {
   return new Date(seconds * 1000 + Math.floor((value.nanos ?? 0) / 1e6));
 }
 
+export function toIsoTime(value: ProtoTime): string | undefined {
+  return parseEventTime(value)?.toISOString();
+}
+
 export function toIso(date: Date): string {
   return date.toISOString();
 }
@@ -25,6 +29,25 @@ export function toLocalInput(value: ProtoTime): string {
 export function fromLocalInput(value: string): string {
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? '' : d.toISOString();
+}
+
+function formatInZone(
+  date: Date,
+  options: Intl.DateTimeFormatOptions,
+  timezone?: string
+): string {
+  const opts: Intl.DateTimeFormatOptions = { ...options };
+  if (timezone) opts.timeZone = timezone;
+  try {
+    return date.toLocaleString(undefined, opts);
+  } catch {
+    try {
+      const { timeZone: _ignored, ...rest } = opts;
+      return date.toLocaleString(undefined, rest);
+    } catch {
+      return '';
+    }
+  }
 }
 
 export function formatEventWhen(
@@ -42,16 +65,15 @@ export function formatEventWhen(
     hour: 'numeric',
     minute: '2-digit',
   };
-  if (timezone) opts.timeZone = timezone;
-
-  const startLabel = from.toLocaleString(undefined, opts);
+  const startLabel = formatInZone(from, opts, timezone);
   const to = parseEventTime(end);
   if (!to) return startLabel;
 
   const sameDay = from.toDateString() === to.toDateString();
-  const endLabel = to.toLocaleString(
-    undefined,
-    sameDay ? { hour: 'numeric', minute: '2-digit', timeZone: timezone } : opts
+  const endLabel = formatInZone(
+    to,
+    sameDay ? { hour: 'numeric', minute: '2-digit' } : opts,
+    timezone
   );
   return `${startLabel} – ${endLabel}`;
 }
@@ -64,18 +86,63 @@ export function formatEventCardWhen(
   const d = parseEventTime(start);
   if (!d) return '';
   const tz = timezone || undefined;
-  const date = d.toLocaleString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    timeZone: tz,
-  });
-  const time = d.toLocaleString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZone: tz,
-  });
+  const date = formatInZone(
+    d,
+    { weekday: 'short', month: 'short', day: 'numeric' },
+    tz
+  );
+  const time = formatInZone(d, { hour: 'numeric', minute: '2-digit' }, tz);
   return `${date} · ${time}`;
+}
+
+/** Compact extra series dates on a collapsed card: "Sep 5 · 12 · 19". */
+export function formatUpcomingDates(
+  dates: ProtoTime[] | undefined,
+  timezone?: string
+): string {
+  if (!dates || dates.length < 2) return '';
+  const parsed = dates
+    .map((d) => parseEventTime(d))
+    .filter((d): d is Date => !!d);
+  if (parsed.length < 2) return '';
+  const tz = timezone || undefined;
+  return parsed
+    .map((d, i) => {
+      const day = formatInZone(d, { day: 'numeric' }, tz);
+      const month = formatInZone(d, { month: 'short' }, tz);
+      if (i === 0) return `${month} ${day}`;
+      const prevMonth = formatInZone(parsed[i - 1], { month: 'short' }, tz);
+      return prevMonth === month ? day : `${month} ${day}`;
+    })
+    .join(' · ');
+}
+
+/** Safety net for an older gateway that still returns every occurrence. */
+export function uniqueSeriesEvents(events: EventItem[]): EventItem[] {
+  const earliest = new Map<number, EventItem>();
+  for (const e of events) {
+    if (!e.series_id) continue;
+    const prev = earliest.get(e.series_id);
+    if (!prev) {
+      earliest.set(e.series_id, e);
+      continue;
+    }
+    const prevMs = parseEventTime(prev.start_time)?.getTime() ?? 0;
+    const nextMs = parseEventTime(e.start_time)?.getTime() ?? Infinity;
+    if (nextMs < prevMs) earliest.set(e.series_id, e);
+  }
+  const seen = new Set<number>();
+  const out: EventItem[] = [];
+  for (const e of events) {
+    if (!e.series_id) {
+      out.push(e);
+      continue;
+    }
+    if (seen.has(e.series_id)) continue;
+    seen.add(e.series_id);
+    out.push(earliest.get(e.series_id)!);
+  }
+  return out;
 }
 
 export function eventTypeLabel(type?: EventType | string): string {
@@ -88,6 +155,35 @@ export function eventTypeLabel(type?: EventType | string): string {
 export function eventStatusLabel(status?: string): string {
   if (!status) return '';
   return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+export function isEventEnded(
+  event?: Pick<EventItem, 'status' | 'end_time'>
+): boolean {
+  if (!event) return false;
+  if (event.status === 'completed' || event.status === 'cancelled') return true;
+  const end = parseEventTime(event.end_time);
+  return !!end && end.getTime() < Date.now();
+}
+
+export function isRsvpClosed(
+  event?: Pick<EventItem, 'rsvp_closes_at'>
+): boolean {
+  if (!event) return false;
+  const closes = parseEventTime(event.rsvp_closes_at);
+  return !!closes && closes.getTime() < Date.now();
+}
+
+const RSVP_CLOSE_HOURS = [12, 24, 72, 168] as const;
+
+export function rsvpCloseHoursFromEvent(event?: EventItem): number {
+  if (!event) return 0;
+  if (event.rsvp_close_hours_before) return event.rsvp_close_hours_before;
+  const start = parseEventTime(event.start_time);
+  const closes = parseEventTime(event.rsvp_closes_at);
+  if (!start || !closes) return 0;
+  const hours = Math.round((start.getTime() - closes.getTime()) / 3_600_000);
+  return RSVP_CLOSE_HOURS.find((h) => Math.abs(h - hours) <= 1) ?? 0;
 }
 
 export function isHost(
@@ -200,13 +296,9 @@ export function eventDateParts(
   if (!d) return null;
   const tz = timezone || undefined;
   return {
-    weekday: d.toLocaleString(undefined, { weekday: 'long', timeZone: tz }),
-    day: d.toLocaleString(undefined, { day: 'numeric', timeZone: tz }),
-    month: d.toLocaleString(undefined, { month: 'short', timeZone: tz }),
-    time: d.toLocaleString(undefined, {
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZone: tz,
-    }),
+    weekday: formatInZone(d, { weekday: 'long' }, tz),
+    day: formatInZone(d, { day: 'numeric' }, tz),
+    month: formatInZone(d, { month: 'short' }, tz),
+    time: formatInZone(d, { hour: 'numeric', minute: '2-digit' }, tz),
   };
 }

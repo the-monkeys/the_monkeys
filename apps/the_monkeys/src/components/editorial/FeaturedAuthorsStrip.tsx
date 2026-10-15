@@ -19,6 +19,7 @@ const PINNED_AUTHORS: ReadonlyArray<{ username: string; firstName: string }> = [
 
 interface FeaturedAuthorsStripProps {
   title?: string;
+  variant?: 'default' | 'compact';
 }
 
 /**
@@ -35,6 +36,7 @@ interface FeaturedAuthorsStripProps {
  */
 export const FeaturedAuthorsStrip = ({
   title = 'Featured authors:',
+  variant = 'default',
 }: FeaturedAuthorsStripProps) => {
   const { details } = useActiveUsers('24h');
 
@@ -97,12 +99,31 @@ export const FeaturedAuthorsStrip = ({
   };
 
   return (
-    <section className='pb-4'>
-      <h4 className='font-dm_sans text-sm font-medium text-gray-400 mb-3'>
+    <section
+      aria-label={title}
+      className={
+        variant === 'compact'
+          ? 'flex min-w-0 items-center gap-4 border-b border-border-light/70 py-3 dark:border-border-dark/40 sm:gap-6'
+          : 'pb-4'
+      }
+    >
+      <h4
+        className={`font-dm_sans text-sm font-medium ${
+          variant === 'compact'
+            ? 'flex shrink-0 items-center gap-2 whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.12em] text-text-light dark:text-text-dark'
+            : 'mb-3 text-gray-400'
+        }`}
+      >
+        {variant === 'compact' && (
+          <span
+            aria-hidden='true'
+            className='h-2 w-2 rounded-full border-2 border-brand-orange'
+          />
+        )}
         {title}
       </h4>
 
-      <div className='relative flex items-center gap-2'>
+      <div className='relative flex min-w-0 flex-1 items-center gap-2'>
         {showLeft && (
           <button
             onClick={() => scrollBy('left')}
@@ -118,10 +139,12 @@ export const FeaturedAuthorsStrip = ({
           </button>
         )}
 
-        <div className='flex-1 overflow-hidden'>
+        <div className='min-w-0 flex-1 overflow-hidden'>
           <div
             ref={scrollRef}
-            className='flex gap-4 overflow-x-auto pb-2 scroll-smooth scrollbar-hide'
+            className={`flex snap-x overflow-x-auto scroll-smooth scrollbar-hide ${
+              variant === 'compact' ? 'gap-3' : 'gap-4 pb-2'
+            }`}
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
@@ -132,6 +155,7 @@ export const FeaturedAuthorsStrip = ({
                 key={u.username}
                 username={u.username}
                 firstName={u.firstName}
+                variant={variant}
               />
             ))}
           </div>

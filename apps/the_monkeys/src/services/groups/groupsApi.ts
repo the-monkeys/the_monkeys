@@ -8,6 +8,8 @@ import {
   BanBody,
   BasicResp,
   CreateInviteBody,
+  GroupBlogsParams,
+  GroupBlogsResponse,
   GroupBody,
   GroupEventBody,
   GroupEventResp,
@@ -48,6 +50,10 @@ function qs(filters: GroupListFilters = {}): string {
   if (filters.city) p.set('city', filters.city);
   // topics repeats the key so the gateway reads it as QueryArray.
   filters.topics?.forEach((t) => t && p.append('topics', t));
+  if (filters.user_lat) p.set('user_lat', String(filters.user_lat));
+  if (filters.user_lng) p.set('user_lng', String(filters.user_lng));
+  if (filters.radius) p.set('radius', String(filters.radius));
+  if (filters.public_only) p.set('public_only', '1');
   const s = p.toString();
   return s ? `?${s}` : '';
 }
@@ -70,6 +76,11 @@ export const listUserGroups = (username: string, filters?: GroupListFilters) =>
 export const getGroup = (slug: string) =>
   axiosInstanceNoAuth
     .get<GroupResp>(`${root}/${seg(slug)}`)
+    .then((r) => r.data);
+
+export const listGroupBlogs = (slug: string, params: GroupBlogsParams = {}) =>
+  axiosInstanceNoAuth
+    .get<GroupBlogsResponse>(`${root}/${seg(slug)}/blogs`, { params })
     .then((r) => r.data);
 
 // -----------------------------------------------------------------------------

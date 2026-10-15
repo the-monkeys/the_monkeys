@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import Icon, { IconName } from '@/components/icon';
-import { LOGIN_ROUTE } from '@/constants/routeConstants';
+import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { loginHref } from '@/lib/authRedirect';
 import {
   EventItem,
   REACTION_TYPES,
@@ -59,7 +60,7 @@ export function EventReactions({
 
   const onToggle = async (type: ReactionType) => {
     if (!session) {
-      router.push(LOGIN_ROUTE);
+      router.push(loginHref(`${EVENTS_ROUTE}/${event.slug}`));
       return;
     }
     if (pending[type]) return;

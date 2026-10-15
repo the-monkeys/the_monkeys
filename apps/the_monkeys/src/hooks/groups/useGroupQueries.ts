@@ -1,3 +1,8 @@
+import {
+  LIVE_LIST_STALE_MS,
+  invalidateAfterGroupEventWrite,
+  invalidateAfterGroupWrite,
+} from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
 import {
   acceptInvite,
@@ -14,6 +19,7 @@ import {
   getInvite,
   joinGroup,
   leaveGroup,
+  listGroupBlogs,
   listGroups,
   listInvites,
   listMembers,
@@ -40,7 +46,13 @@ import {
   MemberListParams,
   MemberRoleBody,
 } from '@/services/groups/groupsTypes';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 
 // -----------------------------------------------------------------------------
 // Queries
@@ -51,6 +63,8 @@ export function useGroupList(filters: GroupListFilters = {}, enabled = true) {
     queryKey: queryKeys.groups.list(filters),
     queryFn: () => listGroups(filters),
     enabled,
+    staleTime: LIVE_LIST_STALE_MS,
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -63,6 +77,7 @@ export function useUserGroups(
     queryKey: queryKeys.groups.user(username, filters),
     queryFn: () => listUserGroups(username!, filters),
     enabled: enabled && !!username,
+    staleTime: LIVE_LIST_STALE_MS,
   });
 }
 
@@ -86,6 +101,25 @@ export function useGroupMembers(
   });
 }
 
+export function useGroupBlogs(
+  slug: string | undefined,
+  limit = 20,
+  enabled = true
+) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.groups.blogs(slug, { limit }),
+    queryFn: ({ pageParam }) =>
+      listGroupBlogs(slug!, { limit, offset: pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, pages) =>
+      lastPage.blogs.length === limit
+        ? pages.reduce((count, page) => count + page.blogs.length, 0)
+        : undefined,
+    enabled: enabled && !!slug,
+    staleTime: LIVE_LIST_STALE_MS,
+  });
+}
+
 // Invite links are staff-only; gate the query with `enabled` so a non-staff
 // viewer never fires the request the gateway would reject.
 export function useGroupInvites(slug: string | undefined, enabled = true) {
@@ -104,14 +138,7 @@ export function useGroupInvites(slug: string | undefined, enabled = true) {
 // members, and invite caches so mutations reflect immediately across the UI.
 export function useRefreshGroups(slug?: string) {
   const qc = useQueryClient();
-  return () => {
-    qc.invalidateQueries({ queryKey: queryKeys.groups.all });
-    if (slug) {
-      qc.invalidateQueries({ queryKey: queryKeys.groups.detail(slug) });
-      qc.invalidateQueries({ queryKey: queryKeys.groups.members(slug) });
-      qc.invalidateQueries({ queryKey: queryKeys.groups.invites(slug) });
-    }
-  };
+  return () => invalidateAfterGroupWrite(qc, slug);
 }
 
 // -----------------------------------------------------------------------------
@@ -303,9 +330,9 @@ export function useDeleteGroupRule(slug: string) {
 // -----------------------------------------------------------------------------
 
 export function useCreateGroupEvent(slug: string) {
-  const refresh = useRefreshGroups(slug);
+  const qc = useQueryClient();
   return useMutation({
     mutationFn: (body: GroupEventBody) => createGroupEvent(slug, body),
-    onSuccess: refresh,
+    onSuccess: () => invalidateAfterGroupEventWrite(qc, slug),
   });
 }

@@ -4,9 +4,11 @@ import { useCallback } from 'react';
 
 import Link from 'next/link';
 
+import { BackButton } from '@/components/buttons/backButton';
 import { EventActions } from '@/components/events/EventActions';
 import { EventEmpty } from '@/components/events/EventCard';
 import { EventComments } from '@/components/events/EventComments';
+import { EventHostName } from '@/components/events/EventHostName';
 import { EventReactions } from '@/components/events/EventReactions';
 import { RsvpPanel } from '@/components/events/RsvpPanel';
 import { EventAttendees } from '@/components/events/detail/EventAttendees';
@@ -21,15 +23,18 @@ import { EventSidebarMeta } from '@/components/events/detail/EventSidebarMeta';
 import { EventStickyBar } from '@/components/events/detail/EventStickyBar';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useEventDetail } from '@/hooks/events/useEventQueries';
 import {
   eventStatusLabel,
   eventTypeLabel,
   formatEventWhen,
+  isEventEnded,
   isHost,
 } from '@/lib/eventTime';
 import { getShareMeta } from '@/services/events/eventsApi';
+import { Button } from '@the-monkeys/ui/atoms/button';
 
 export default function EventDetailClient({ slug }: { slug: string }) {
   const { data: session } = useAuth();
@@ -79,7 +84,10 @@ export default function EventDetailClient({ slug }: { slug: string }) {
   return (
     <>
       {/* Extra bottom padding leaves room for the fixed registration bar. */}
-      <div className='mx-auto max-w-5xl pb-28'>
+      <div className='mx-auto max-w-5xl px-4 pb-36 sm:px-6 lg:pb-28'>
+        <div className='mb-4'>
+          <BackButton href={EVENTS_ROUTE} />
+        </div>
         {/* Cover as a full-width hero at the top of the page, above the grid,
             so it reads as the event's banner rather than an inline figure. */}
         {event.cover_image && (
@@ -103,7 +111,22 @@ export default function EventDetailClient({ slug }: { slug: string }) {
               {event.status !== 'published'
                 ? ` · ${eventStatusLabel(event.status)}`
                 : ''}
+              {event.requires_host_review ? ' · Host approval' : ''}
             </p>
+
+            {host && event.status === 'draft' && (
+              <div className='mt-4 flex flex-col gap-3 rounded-lg border border-brand-orange/40 bg-brand-orange/5 px-4 py-3 sm:flex-row sm:items-center sm:justify-between'>
+                <p className='font-inter text-sm'>
+                  This meetup is a draft. People cannot find it on Discover
+                  until you publish.
+                </p>
+                <Button asChild variant='brand' size='sm' className='shrink-0'>
+                  <Link href={`${EVENTS_ROUTE}/${event.slug}/manage`}>
+                    Publish
+                  </Link>
+                </Button>
+              </div>
+            )}
 
             {/* Fluid title scales smoothly across viewports via clamp(). */}
             <h1
@@ -123,13 +146,12 @@ export default function EventDetailClient({ slug }: { slug: string }) {
             </p>
 
             <div className='mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500'>
-              {event.organizer_username && (
-                <Link
-                  href={`/${event.organizer_username}`}
-                  className='hover:text-brand-orange'
-                >
-                  Hosted by @{event.organizer_username}
-                </Link>
+              {(event.organizer_username || event.organizer_account_id) && (
+                <EventHostName
+                  username={event.organizer_username}
+                  accountId={event.organizer_account_id}
+                  prefix='Hosted by '
+                />
               )}
               {event.location && event.event_type !== 'virtual' && (
                 <span className='inline-flex items-center gap-1'>
@@ -195,7 +217,11 @@ export default function EventDetailClient({ slug }: { slug: string }) {
 
               <EventAttendees event={event} canManage={host} />
 
-              <EventGallery slug={event.slug} canManage={host} />
+              <EventGallery
+                slug={event.slug}
+                canManage={host}
+                ended={isEventEnded(event)}
+              />
 
               <EventRelated event={event} />
 
@@ -203,8 +229,8 @@ export default function EventDetailClient({ slug }: { slug: string }) {
             </div>
           </article>
 
-          <aside className='hidden lg:block'>
-            <div className='sticky top-24 space-y-6'>
+          <aside className='hidden min-w-0 lg:block'>
+            <div className='sticky top-24 min-w-0 space-y-6'>
               <div data-rsvp-anchor className='scroll-mt-24'>
                 {host ? (
                   <EventHostPanel event={event} />

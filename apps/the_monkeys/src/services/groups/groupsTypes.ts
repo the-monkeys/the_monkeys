@@ -1,3 +1,4 @@
+import { Blog } from '@/services/blog/blogTypes';
 import { EventResp, EventType, ProtoTime } from '@/services/events/eventTypes';
 
 export type GroupVisibility = 'public' | 'private' | 'unlisted';
@@ -177,11 +178,14 @@ export type GroupEventBody = {
   timezone?: string;
   event_type: EventType;
   location?: string;
+  latitude?: number;
+  longitude?: number;
   meeting_link?: string;
   capacity?: number;
   cover_image?: string;
   tags?: string[];
   visibility?: GroupEventVisibility;
+  requires_host_review?: boolean;
 };
 
 export type GroupListFilters = {
@@ -193,12 +197,25 @@ export type GroupListFilters = {
   region?: string;
   city?: string;
   q?: string;
+  user_lat?: number;
+  user_lng?: number;
+  radius?: number;
+  public_only?: boolean;
 };
 
 export type MemberListParams = {
   limit?: number;
   offset?: number;
   status?: string;
+};
+
+export type GroupBlogsParams = {
+  limit?: number;
+  offset?: number;
+};
+
+export type GroupBlogsResponse = {
+  blogs: Blog[];
 };
 
 export type GroupResp = {

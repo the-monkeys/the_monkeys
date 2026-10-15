@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import {
@@ -51,11 +52,18 @@ export function EventCard({ event }: { event: EventItem }) {
               {eventTypeLabel(event.event_type)}
             </span>
           )}
-          {event.status && event.status !== 'published' && (
-            <span className='font-inter text-[10px] uppercase tracking-wider text-gray-500'>
-              {eventStatusLabel(event.status)}
+          {event.status === 'draft' && (
+            <span className='rounded-full bg-brand-orange/15 px-2 py-0.5 font-inter text-[10px] font-bold uppercase tracking-wider text-brand-orange'>
+              Draft · not listed
             </span>
           )}
+          {event.status &&
+            event.status !== 'published' &&
+            event.status !== 'draft' && (
+              <span className='font-inter text-[10px] uppercase tracking-wider text-gray-500'>
+                {eventStatusLabel(event.status)}
+              </span>
+            )}
         </div>
 
         <Link href={href} className='block mt-1.5'>
@@ -69,13 +77,11 @@ export function EventCard({ event }: { event: EventItem }) {
         </p>
 
         <div className='mt-2 flex flex-wrap items-center gap-3 text-xs font-inter text-gray-500 dark:text-gray-400'>
-          {event.organizer_username && (
-            <Link
-              href={`/${event.organizer_username}`}
-              className='hover:text-brand-orange'
-            >
-              @{event.organizer_username}
-            </Link>
+          {(event.organizer_username || event.organizer_account_id) && (
+            <EventHostName
+              username={event.organizer_username}
+              accountId={event.organizer_account_id}
+            />
           )}
           {event.location && event.event_type !== 'virtual' && (
             <span className='inline-flex items-center gap-1'>
