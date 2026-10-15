@@ -31,6 +31,7 @@ const nextConfig = {
   },
   experimental: {
     missingSuspenseWithCSRBailout: false,
+    serverComponentsExternalPackages: ['isomorphic-dompurify', 'jsdom'],
   },
 };
 
