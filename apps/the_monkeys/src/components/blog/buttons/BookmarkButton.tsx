@@ -7,6 +7,7 @@ import Icon from '@/components/icon';
 import useAuth from '@/hooks/auth/useAuth';
 import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
+import { optimisticallySetBookmark } from '@/lib/bookmarkCache';
 import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { isAuthError } from '@/utils/errorUtils';
@@ -67,26 +68,35 @@ export const BookmarkButton = ({
   }
 
   const onPostBookmark = async () => {
+    if (!blogId || loading) return;
     setLoading(true);
 
+    let cacheUpdate:
+      | Awaited<ReturnType<typeof optimisticallySetBookmark>>
+      | undefined;
     try {
+      cacheUpdate = await optimisticallySetBookmark(queryClient, blogId, true);
       const response = await axiosInstance.post(`/user/bookmark/${blogId}`);
 
       if (response.status === 200) {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.blog.bookmarks.count(blogId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
+          }),
+        ]);
+
         toast({
           variant: 'success',
           title: 'Success',
           description: 'Blog bookmarked successfully.',
         });
-
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.status(blogId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.count(blogId),
-        });
       }
     } catch (err: unknown) {
+      cacheUpdate?.rollback();
+
       if (isAuthError(err)) {
         setAuthPromptOpen(true);
         return;
@@ -111,31 +121,37 @@ export const BookmarkButton = ({
   };
 
   const onPostRemoveBookmark = async () => {
+    if (!blogId || loading) return;
     setLoading(true);
 
+    let cacheUpdate:
+      | Awaited<ReturnType<typeof optimisticallySetBookmark>>
+      | undefined;
     try {
+      cacheUpdate = await optimisticallySetBookmark(queryClient, blogId, false);
       const response = await axiosInstance.post(
         `/user/remove-bookmark/${blogId}`
       );
 
       if (response.status === 200) {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.blog.bookmarks.count(blogId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
+          }),
+        ]);
+
         toast({
           variant: 'success',
           title: 'Success',
           description: 'Removed bookmark successfully.',
         });
-
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.status(blogId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.count(blogId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
-        });
       }
     } catch (err: unknown) {
+      cacheUpdate?.rollback();
+
       if (isAuthError(err)) {
         setAuthPromptOpen(true);
         return;
