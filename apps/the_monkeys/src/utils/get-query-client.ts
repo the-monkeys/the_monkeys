@@ -3,12 +3,24 @@ import {
   defaultShouldDehydrateQuery,
   isServer,
 } from '@tanstack/react-query';
+import axios from 'axios';
+
+export function shouldRetryQuery(failureCount: number, error: unknown) {
+  if (failureCount >= 2 || !axios.isAxiosError(error)) return false;
+  if (error.code === 'ERR_CANCELED') return false;
+
+  if (!error.response) return !!error.request;
+
+  const status = error.response.status;
+  return status === 408 || status === 429 || status >= 500;
+}
 
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
+        retry: shouldRetryQuery,
       },
       dehydrate: {
         // include pending queries in dehydration
