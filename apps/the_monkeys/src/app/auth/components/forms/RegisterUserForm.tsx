@@ -9,6 +9,7 @@ import Icon from '@/components/icon';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
 import { safeCallbackPath } from '@/lib/authRedirect';
+import { queryKeys } from '@/lib/queryKeys';
 import { otpVerificationSchema, registerUserSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import {
@@ -131,8 +132,8 @@ export default function RegisterUserForm() {
       });
 
       // Update auth cache so useAuth picks up the new session immediately (no hard refresh)
-      queryClient.setQueryData(['auth'], user);
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
+      queryClient.setQueryData(queryKeys.auth.session, user);
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.session });
 
       toast({
         variant: 'success',

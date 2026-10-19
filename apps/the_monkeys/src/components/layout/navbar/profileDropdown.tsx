@@ -46,8 +46,8 @@ const ProfileDropdown = ({ session }: { session?: IUser }) => {
   const handleSignout = async () => {
     await axiosInstance.get('/auth/logout');
     sessionManager.endSession();
-
-    queryClient.resetQueries({ queryKey: ['auth'] });
+    await queryClient.cancelQueries();
+    queryClient.clear();
   };
 
   return (

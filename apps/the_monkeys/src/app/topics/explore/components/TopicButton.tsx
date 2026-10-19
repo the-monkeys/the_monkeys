@@ -1,8 +1,7 @@
 import React from 'react';
 
 import Icon from '@/components/icon';
-import { ALL_TOPICS_QUERY_KEY } from '@/hooks/user/useGetAllTopics';
-import { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { useQueryClient } from '@tanstack/react-query';
@@ -45,9 +44,9 @@ export const TopicButton = ({
 
       onSuccess();
 
-      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.topics.all });
       queryClient.invalidateQueries({
-        queryKey: [USER_QUERY_KEY, username],
+        queryKey: queryKeys.user.currentProfile(username),
       });
     } catch (error: any) {
       toast({
@@ -68,9 +67,9 @@ export const TopicButton = ({
 
       onSuccess();
 
-      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.topics.all });
       queryClient.invalidateQueries({
-        queryKey: [USER_QUERY_KEY, username],
+        queryKey: queryKeys.user.currentProfile(username),
       });
     } catch (error: any) {
       toast({

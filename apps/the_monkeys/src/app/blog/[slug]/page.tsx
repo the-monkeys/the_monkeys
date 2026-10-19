@@ -1,8 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
-import { USER_PROFILE_QUERY_KEY } from '@/hooks/user/useGetProfileInfoByUserId';
+import { queryKeys } from '@/lib/queryKeys';
 import { noIndexFollowRobots } from '@/lib/seo';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 import { getQueryClient } from '@/utils/get-query-client';
@@ -54,14 +53,16 @@ export default async function BlogPage({ params }: Props) {
 
   const blog = await loadBlogForViewer(blogId);
   if (blog === null || blog?.is_draft) notFound();
-  if (blog) queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], blog);
+  if (blog) {
+    queryClient.setQueryData(queryKeys.blog.publishedDetailById(blogId), blog);
+  }
 
   let authorData: GetProfileInfoByIdResponse | null | undefined = null;
   if (blog?.owner_account_id) {
     authorData = await loadPublicAuthorForSeo(blog.owner_account_id);
     if (authorData) {
       queryClient.setQueryData(
-        [USER_PROFILE_QUERY_KEY, blog.owner_account_id],
+        queryKeys.user.publicProfileById(blog.owner_account_id),
         authorData
       );
     }

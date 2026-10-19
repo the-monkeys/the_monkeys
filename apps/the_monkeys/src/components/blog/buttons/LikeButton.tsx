@@ -34,7 +34,7 @@ export const LikeButton = ({
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { isSuccess: isAuthenticated } = useAuth();
+  const { data: session, isSuccess: isAuthenticated } = useAuth();
 
   const { likeStatus, isLoading, isError } = useIsPostLiked(
     blogId,
@@ -50,7 +50,7 @@ export const LikeButton = ({
 
   const setLikeState = (isLiked: boolean) => {
     queryClient.setQueryData<IsLikedResponse>(
-      queryKeys.blog.likes.status(blogId),
+      queryKeys.blog.likes.status(blogId, session?.account_id),
       {
         status: 'success',
         isLiked,
@@ -69,7 +69,7 @@ export const LikeButton = ({
 
   const refetchLikeQueries = () => {
     queryClient.invalidateQueries({
-      queryKey: queryKeys.blog.likes.status(blogId),
+      queryKey: queryKeys.blog.likes.status(blogId, session?.account_id),
     });
     queryClient.invalidateQueries({
       queryKey: queryKeys.blog.likes.count(blogId),

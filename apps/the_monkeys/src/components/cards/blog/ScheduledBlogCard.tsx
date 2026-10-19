@@ -7,8 +7,9 @@ import {
   BlogImage,
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
+import useAuth from '@/hooks/auth/useAuth';
 import { ScheduledBlog } from '@/hooks/blog/schedule/useGetScheduledBlogs';
-import { ALL_SCHEDULED_BLOGS_QUERY_KEY } from '@/hooks/blog/schedule/useGetScheduledBlogs';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,6 +19,7 @@ import { format } from 'date-fns';
 
 const ScheduledBlogCard = ({ blog }: { blog: ScheduledBlog }) => {
   const queryClient = useQueryClient();
+  const { data: session } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const scheduledTime = blog.schedule_time
@@ -41,9 +43,11 @@ const ScheduledBlogCard = ({ blog }: { blog: ScheduledBlog }) => {
         description: 'Blog is now in your drafts.',
       });
       queryClient.invalidateQueries({
-        queryKey: [ALL_SCHEDULED_BLOGS_QUERY_KEY],
+        queryKey: queryKeys.blog.scheduled.forAccount(session?.account_id),
       });
-      queryClient.invalidateQueries({ queryKey: ['all-draft-blogs'] });
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.blog.drafts.forAccount(session?.account_id),
+      });
     } catch (error) {
       console.error(error);
       toast({

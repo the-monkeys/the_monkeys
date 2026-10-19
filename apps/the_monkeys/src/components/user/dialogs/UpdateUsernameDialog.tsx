@@ -2,6 +2,7 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { queryKeys } from '@/lib/queryKeys';
 import { updateUsername } from '@/lib/schema/settings';
 import { User } from '@/services/models/user';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
@@ -48,7 +49,7 @@ export const UpdateUsernameDialog = ({
     mutationFn: updateUserName,
     onSuccess: (data) => {
       const user = new User(data);
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.session });
 
       form.reset();
       toast({

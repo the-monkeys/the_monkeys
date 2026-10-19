@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from 'react';
 
+import { queryKeys } from '@/lib/queryKeys';
 import fetcher from '@/services/fileFetcher';
 import { uploadProfileImage } from '@/services/user/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { z } from 'zod';
 
-export const PROFILE_IMAGE_QUERY_KEY = 'profile-image';
 export const MAX_PROFILE_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 export const PROFILE_IMAGE_ACCEPT = {
   'image/jpeg': ['.jpg', '.jpeg'],
@@ -46,9 +46,9 @@ export const useUploadProfileImage = ({
     mutationFn: (file: File) => uploadProfileImage(username, file),
     onSuccess: (_data, file) => {
       // Optimistically update with the new file blob so UI changes immediately
-      queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], file);
+      queryClient.setQueryData(queryKeys.user.profileImage(username), file);
       queryClient.invalidateQueries({
-        queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+        queryKey: queryKeys.user.profileImage(username),
       });
 
       toast({
@@ -75,7 +75,7 @@ const useProfileImage = (username: string | undefined) => {
   const [imageUrl, setImageUrl] = useState<string>('');
 
   const { data, error, isLoading, isError } = useQuery<Blob, Error>({
-    queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+    queryKey: queryKeys.user.profileImage(username),
     queryFn: () =>
       fetcher(`/storage/profiles/${username}/profile?t=${Date.now()}`),
     enabled: !!username,

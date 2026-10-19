@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { queryKeys } from '@/lib/queryKeys';
 import { updateEmailSchema } from '@/lib/schema/settings';
 import { IUser } from '@/services/models/user';
 import {
@@ -109,7 +110,7 @@ export const Email = ({ data }: { data: IUser }) => {
       emailForm.reset();
       otpForm.reset();
       // Invalidate auth cache so the UI picks up the new email without a hard refresh
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.session });
       toast({
         variant: 'success',
         title: 'Email Updated',

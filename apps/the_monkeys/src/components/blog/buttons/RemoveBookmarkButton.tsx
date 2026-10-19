@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
-import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
@@ -14,6 +15,7 @@ export const RemoveBookmarkButton = ({
   size?: number;
 }) => {
   const queryClient = useQueryClient();
+  const { data: session } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
 
   const onPostRemoveBookmark = async () => {
@@ -32,7 +34,7 @@ export const RemoveBookmarkButton = ({
         });
 
         queryClient.invalidateQueries({
-          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
+          queryKey: queryKeys.blog.savedBlogs.forAccount(session?.account_id),
         });
       }
     } catch (err: unknown) {

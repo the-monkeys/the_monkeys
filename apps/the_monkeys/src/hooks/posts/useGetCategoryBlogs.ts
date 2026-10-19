@@ -1,8 +1,7 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
-
-export const CATEGORY_BLOGS_QUERY_KEY = 'category-blogs';
 
 const useGetCategoryBlogs = ({
   category,
@@ -10,7 +9,7 @@ const useGetCategoryBlogs = ({
 }: { category?: string; limit?: number } = {}) => {
   const { data, error, isLoading, isError } = useQuery<GetMetaFeedBlogs, Error>(
     {
-      queryKey: [CATEGORY_BLOGS_QUERY_KEY, category, limit],
+      queryKey: queryKeys.blog.category(category, limit),
       queryFn: () => fetcherV2(`/posts/${category}?limit=${limit}`),
       enabled: !!category,
       staleTime: 3 * 60 * 1000, // 3 minutes

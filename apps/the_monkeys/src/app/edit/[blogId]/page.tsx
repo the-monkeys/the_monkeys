@@ -15,10 +15,7 @@ import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
-import useGetDraftBlogDetail, {
-  DRAFT_BLOG_DETAIL_QUERY_KEY,
-} from '@/hooks/blog/useGetDraftBlogDetail';
-import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import { queryKeys } from '@/lib/queryKeys';
 import { useIsImageUploading } from '@/lib/store/useFileUpload';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -341,7 +338,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         let successDescription = 'Your post was published.';
         try {
           const actual = await getPublishedBlog(blogId);
-          queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], actual);
+          queryClient.setQueryData(
+            queryKeys.blog.publishedDetailById(blogId),
+            actual
+          );
           if (actual.group_slug) {
             queryClient.invalidateQueries({
               queryKey: queryKeys.groups.blogs(actual.group_slug),
@@ -362,7 +362,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
         // Invalidate cache and redirect
         queryClient.invalidateQueries({
-          queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+          queryKey: queryKeys.blog.draftDetail(accountId, blogId),
         });
         router.push(`/${username}`);
       } catch (error) {
@@ -406,9 +406,9 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Fetch draft blog data on mount
   useEffect(() => {
     queryClient.invalidateQueries({
-      queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+      queryKey: queryKeys.blog.draftDetail(accountId, blogId),
     });
-  }, [blogId, queryClient]);
+  }, [accountId, blogId, queryClient]);
 
   // Handle blog scheduling
   const handleScheduleStep = useCallback(
@@ -477,7 +477,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
         // Invalidate cache and redirect
         queryClient.invalidateQueries({
-          queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+          queryKey: queryKeys.blog.draftDetail(accountId, blogId),
         });
         router.push(`/library?source=scheduled`);
       } catch (error) {

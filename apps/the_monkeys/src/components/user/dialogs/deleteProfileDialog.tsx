@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
-import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -37,9 +37,9 @@ export const DeleteProfilePhotoConfirmation = ({
       );
 
       if (response.status === 200) {
-        queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
+        queryClient.setQueryData(queryKeys.user.profileImage(username), null);
         queryClient.invalidateQueries({
-          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+          queryKey: queryKeys.user.profileImage(username),
         });
         toast({
           variant: 'success',
@@ -54,9 +54,9 @@ export const DeleteProfilePhotoConfirmation = ({
 
       if (isMissingProfileImage) {
         // If the server has no photo (404), ensure the client cache is also cleared
-        queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
+        queryClient.setQueryData(queryKeys.user.profileImage(username), null);
         queryClient.invalidateQueries({
-          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+          queryKey: queryKeys.user.profileImage(username),
         });
         toast({
           variant: 'success',

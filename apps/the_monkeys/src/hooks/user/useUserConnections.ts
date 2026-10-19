@@ -1,3 +1,5 @@
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import { authFetcher } from '@/services/fetcher';
 import {
   ConnectionCountResponse,
@@ -13,17 +15,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import axios from 'axios';
 
-export const CONNECTION_COUNT_QUERY_KEY = 'connection-count';
-export const FOLLOWERS_QUERY_KEY = 'followers';
-export const FOLLOWING_QUERY_KEY = 'following';
-export const IS_FOLLOWING_USER_QUERY_KEY = 'is-following-user';
-
 export const useGetConnectionCount = (username: string | undefined) => {
   const { data, error, isLoading, isError } = useQuery<
     ConnectionCountResponse,
     Error
   >({
-    queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
+    queryKey: queryKeys.user.connectionCount(username),
     queryFn: () => authFetcher(`/user/connection-count/${username}`),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
@@ -37,12 +34,15 @@ export const useGetConnectionCount = (username: string | undefined) => {
 };
 
 export const useGetFollowers = () => {
+  const { data: session } = useAuth();
+  const accountId = session?.account_id;
   const { data, error, isLoading, isError } = useQuery<
     FollowDataResponse,
     Error
   >({
-    queryKey: [FOLLOWERS_QUERY_KEY],
+    queryKey: queryKeys.user.followers(accountId),
     queryFn: () => authFetcher(`/user/followers`),
+    enabled: !!accountId,
     staleTime: 60 * 1000,
   });
 
@@ -54,12 +54,15 @@ export const useGetFollowers = () => {
 };
 
 export const useGetFollowing = () => {
+  const { data: session } = useAuth();
+  const accountId = session?.account_id;
   const { data, error, isLoading, isError } = useQuery<
     FollowDataResponse,
     Error
   >({
-    queryKey: [FOLLOWING_QUERY_KEY],
+    queryKey: queryKeys.user.following(accountId),
     queryFn: () => authFetcher(`/user/following`),
+    enabled: !!accountId,
     staleTime: 60 * 1000,
   });
 
@@ -71,12 +74,14 @@ export const useGetFollowing = () => {
 };
 
 export const useIsFollowingUser = (username: string) => {
+  const { data: session } = useAuth();
   const { data, error, isLoading, isError } = useQuery<
     IsFollowedResponse,
     Error
   >({
-    queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+    queryKey: queryKeys.user.followStatus(session?.account_id, username),
     queryFn: () => getFollowStatusApi(username),
+    enabled: !!session?.account_id && !!username,
     staleTime: 60 * 1000,
   });
 
@@ -110,14 +115,15 @@ export const useFollowUser = (
   options: UseFollowUserOptions = {}
 ) => {
   const queryClient = useQueryClient();
+  const { data: session } = useAuth();
 
   const invalidateConnectionQueries = () =>
     Promise.all([
       queryClient.invalidateQueries({
-        queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+        queryKey: queryKeys.user.followStatus(session?.account_id, username),
       }),
       queryClient.invalidateQueries({
-        queryKey: [CONNECTION_COUNT_QUERY_KEY],
+        queryKey: queryKeys.user.connectionCountRoot,
       }),
     ]);
 

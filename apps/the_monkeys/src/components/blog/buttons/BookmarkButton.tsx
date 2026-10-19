@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import Icon from '@/components/icon';
 import useAuth from '@/hooks/auth/useAuth';
-import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
 import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -25,7 +24,7 @@ export const BookmarkButton = ({
   initialIsBookmarked?: boolean;
 }) => {
   const queryClient = useQueryClient();
-  const { isSuccess: isAuthenticated } = useAuth();
+  const { data: session, isSuccess: isAuthenticated } = useAuth();
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(
     blogId,
     isAuthenticated,
@@ -80,7 +79,10 @@ export const BookmarkButton = ({
         });
 
         queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.status(blogId),
+          queryKey: queryKeys.blog.bookmarks.status(
+            blogId,
+            session?.account_id
+          ),
         });
         queryClient.invalidateQueries({
           queryKey: queryKeys.blog.bookmarks.count(blogId),
@@ -126,13 +128,16 @@ export const BookmarkButton = ({
         });
 
         queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.status(blogId),
+          queryKey: queryKeys.blog.bookmarks.status(
+            blogId,
+            session?.account_id
+          ),
         });
         queryClient.invalidateQueries({
           queryKey: queryKeys.blog.bookmarks.count(blogId),
         });
         queryClient.invalidateQueries({
-          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
+          queryKey: queryKeys.blog.savedBlogs.forAccount(session?.account_id),
         });
       }
     } catch (err: unknown) {
