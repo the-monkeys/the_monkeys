@@ -12,8 +12,9 @@ import { ProfileSection } from './components/profile/ProfileSection';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
   const { data } = useAuth();
+  const username = params.username.replace(/^@+/, '');
 
-  const { user, isLoading, isError } = useUser(params.username);
+  const { user, isLoading, isError } = useUser(username);
 
   if (isError) {
     return (
@@ -54,13 +55,13 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
   return (
     <div className='grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-16'>
       <aside className='order-first lg:order-last lg:col-span-1'>
-        <ProfileSection paramsUser={params.username} user={user} />
+        <ProfileSection paramsUser={username} user={user} />
       </aside>
 
       <section className='order-last max-w-4xl space-y-6 lg:order-first lg:col-span-2'>
         <BackButton />
         <ProfileActivity
-          username={params.username}
+          username={username}
           viewer={data}
           firstName={user?.first_name}
         />

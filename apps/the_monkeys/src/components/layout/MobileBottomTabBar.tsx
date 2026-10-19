@@ -12,8 +12,9 @@ import {
 } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { cn } from '@/lib/utils';
+import { IUser } from '@/services/models/user';
 
-type Tab = {
+export type MobileTab = {
   href: string;
   label: string;
   icon: IconName;
@@ -21,7 +22,7 @@ type Tab = {
   requiresAuth?: boolean;
 };
 
-const tabs: Tab[] = [
+export const getMobileBottomTabs = (session?: IUser | null): MobileTab[] => [
   {
     href: HOME_ROUTE,
     label: 'Home',
@@ -49,10 +50,19 @@ const tabs: Tab[] = [
     requiresAuth: true,
   },
   {
-    href: '/settings',
+    href: session?.username ? `/${session.username}` : '/auth/login',
     label: 'Profile',
     icon: 'RiUser',
-    match: (p) => p.startsWith('/settings'),
+    match: (p) => {
+      if (!session?.username) return false;
+      const cleanPath = p.replace(/\/$/, '');
+      return (
+        cleanPath === `/${session.username}` ||
+        cleanPath === `/@${session.username}` ||
+        p.startsWith(`/${session.username}/`) ||
+        p.startsWith(`/@${session.username}/`)
+      );
+    },
     requiresAuth: true,
   },
 ];
@@ -75,6 +85,8 @@ export function MobileBottomTabBar() {
   ) {
     return null;
   }
+
+  const tabs = getMobileBottomTabs(session);
 
   return (
     <nav

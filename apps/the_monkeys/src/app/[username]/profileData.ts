@@ -4,8 +4,10 @@ import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes
 
 export const loadPublicProfile = requestCache(
   async (
-    username: string
+    rawUsername: string
   ): Promise<GetPublicUserProfileApiResponse | null | undefined> => {
+    if (!rawUsername) return null;
+    const username = rawUsername.replace(/^@+/, '');
     if (!username) return null;
     if (!API_URL) return undefined;
     try {
