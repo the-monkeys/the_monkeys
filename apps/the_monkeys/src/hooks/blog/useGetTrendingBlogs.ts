@@ -9,10 +9,13 @@ type TrendingBlogsResponse = {
   total_blogs: number;
 };
 
+export const fetchTrendingBlogs = async (): Promise<TrendingBlogsResponse> =>
+  fetcherV2('/blog/trending');
+
 const useGetTrendingBlogs = () => {
   const { data, isLoading, isError } = useQuery<TrendingBlogsResponse, Error>({
     queryKey: [TRENDING_BLOGS_QUERY_KEY],
-    queryFn: () => fetcherV2('/blog/trending'),
+    queryFn: fetchTrendingBlogs,
     staleTime: 5 * 60 * 1000,
   });
 

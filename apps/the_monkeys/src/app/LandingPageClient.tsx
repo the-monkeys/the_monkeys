@@ -11,6 +11,7 @@ import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
 import { useEventList } from '@/hooks/events/useEventQueries';
 import {
+  LANDING_DATA_STALE_MS,
   LANDING_EVENT_FILTERS,
   LANDING_POST_LIMIT,
   LANDING_THIS_WEEK_EVENT_FILTERS,
@@ -51,8 +52,16 @@ const LandingPageClient = () => {
   const [feedFilter, setFeedFilter] = useState<'all' | 'articles'>('all');
   const postQuery = useGetMetaFeedBlogs({ limit: LANDING_POST_LIMIT });
   const trendingQuery = useGetTrendingBlogs();
-  const eventQuery = useEventList(LANDING_EVENT_FILTERS);
-  const weeklyEventQuery = useEventList(LANDING_THIS_WEEK_EVENT_FILTERS);
+  const eventQuery = useEventList(
+    LANDING_EVENT_FILTERS,
+    true,
+    LANDING_DATA_STALE_MS
+  );
+  const weeklyEventQuery = useEventList(
+    LANDING_THIS_WEEK_EVENT_FILTERS,
+    true,
+    LANDING_DATA_STALE_MS
+  );
   const postSlots = selectLandingPosts(postQuery.blogs?.blogs ?? []);
   const eventSlots = selectLandingEvents(eventQuery.data?.events ?? []);
   const weeklyEvents = (weeklyEventQuery.data?.events ?? [])
