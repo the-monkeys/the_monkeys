@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { fetcherV2 } from '@/services/fetcher';
 import {
   SearchBlogsV2Response,
@@ -5,13 +6,6 @@ import {
   SearchUsersV2Response,
 } from '@/services/search/searchTypes';
 import { useQuery } from '@tanstack/react-query';
-
-// React Query keys for the search-v2 endpoints. Exported so callers
-// can call `queryClient.invalidateQueries({ queryKey: [SEARCH_BLOGS_V2_KEY] })`
-// after a publish without having to know the param shape.
-export const SEARCH_BLOGS_V2_KEY = 'search-blogs-v2';
-export const SEARCH_PEOPLE_V2_KEY = 'search-people-v2';
-export const SEARCH_SUGGEST_KEY = 'search-suggest-v2';
 
 // Server caps these too (gateway hard caps people=50, blogs=50,
 // suggest=10). Mirroring them here means the client never asks for
@@ -57,7 +51,7 @@ export const useSearchPeopleV2 = ({
     SearchUsersV2Response,
     Error
   >({
-    queryKey: [SEARCH_PEOPLE_V2_KEY, q, clampedLimit, offset],
+    queryKey: queryKeys.search.people(q, clampedLimit, offset),
     queryFn: () =>
       fetcherV2(
         `user/search?search_term=${encodeURIComponent(q)}&limit=${clampedLimit}&offset=${offset}`
@@ -109,7 +103,7 @@ export const useSearchBlogsV2 = ({
     SearchBlogsV2Response,
     Error
   >({
-    queryKey: [SEARCH_BLOGS_V2_KEY, q, clampedLimit, c],
+    queryKey: queryKeys.search.blogs(q, clampedLimit, c),
     queryFn: () => fetcherV2(`blog/search/v2?${params.toString()}`),
     enabled: enabled && q.length > 0,
     staleTime: SEARCH_STALE_MS,
@@ -150,7 +144,7 @@ export const useSearchSuggest = ({
   const clampedLimit = Math.min(Math.max(limit, 1), SUGGEST_LIMIT_MAX);
 
   const { data, isLoading } = useQuery<SearchSuggestResponse, Error>({
-    queryKey: [SEARCH_SUGGEST_KEY, q, clampedLimit],
+    queryKey: queryKeys.search.suggestions(q, clampedLimit),
     queryFn: () =>
       fetcherV2(
         `search/suggest?q=${encodeURIComponent(q)}&limit=${clampedLimit}`

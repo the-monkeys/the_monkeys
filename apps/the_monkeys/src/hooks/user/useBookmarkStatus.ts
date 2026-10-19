@@ -1,3 +1,4 @@
+import useAuth from '@/hooks/auth/useAuth';
 import { queryKeys } from '@/lib/queryKeys';
 import {
   IsBookmarkedResponse,
@@ -13,11 +14,12 @@ export const useIsPostBookmarked = (
   isAuthenticated: boolean,
   initialIsBookmarked?: boolean
 ) => {
+  const { data: session } = useAuth();
   const { data, isLoading, error, isError } = useQuery<
     IsBookmarkedResponse,
     Error
   >({
-    queryKey: queryKeys.blog.bookmarks.status(blogId),
+    queryKey: queryKeys.blog.bookmarks.status(blogId, session?.account_id),
     queryFn: () => authFetcher(`/user/is-bookmarked/${blogId}`),
     initialData:
       initialIsBookmarked === undefined

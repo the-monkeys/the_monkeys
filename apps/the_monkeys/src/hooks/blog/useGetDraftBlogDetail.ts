@@ -1,17 +1,19 @@
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import { Blog } from '@/services/blog/blogTypes';
 import { authFetcherV2 } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
-
-export const DRAFT_BLOG_DETAIL_QUERY_KEY = 'draft-blog-detail';
 
 const useGetDraftBlogDetail = (
   blogId: string | null,
   options: { enabled?: boolean } = {}
 ) => {
+  const { data: session } = useAuth();
+  const accountId = session?.account_id;
   const { data, error, isLoading, isError } = useQuery<Blog, Error>({
-    queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+    queryKey: queryKeys.blog.draftDetail(accountId, blogId ?? undefined),
     queryFn: () => authFetcherV2(`/blog/my-draft/${blogId}`),
-    enabled: !!blogId && options.enabled !== false,
+    enabled: !!accountId && !!blogId && options.enabled !== false,
     refetchOnMount: true,
     refetchOnReconnect: true,
     staleTime: 0,

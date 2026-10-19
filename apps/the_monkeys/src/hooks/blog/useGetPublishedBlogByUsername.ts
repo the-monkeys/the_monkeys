@@ -1,8 +1,7 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { GetMetaFeedBlogs } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
-
-export const BLOGS_BY_USERNAME_QUERY_KEY = 'blogs-by-username';
 
 const useGetPublishedBlogByUsername = ({
   username,
@@ -15,7 +14,7 @@ const useGetPublishedBlogByUsername = ({
 }) => {
   const { data, error, isLoading, isError } = useQuery<GetMetaFeedBlogs, Error>(
     {
-      queryKey: [BLOGS_BY_USERNAME_QUERY_KEY, username, limit, offset],
+      queryKey: queryKeys.blog.publishedByUsername(username, limit, offset),
       queryFn: () =>
         fetcherV2(`blog/user/${username}?limit=${limit}&offset=${offset}`),
       enabled: !!username,

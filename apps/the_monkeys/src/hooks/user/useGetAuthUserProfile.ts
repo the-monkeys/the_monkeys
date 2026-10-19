@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { GetAuthUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { useQuery } from '@tanstack/react-query';
@@ -19,7 +20,7 @@ const useGetAuthUserProfile = (username?: string) => {
 
       return null;
     },
-    queryKey: ['user', username],
+    queryKey: queryKeys.user.authenticatedProfile(username),
     enabled: !!username,
   });
 };

@@ -1,5 +1,7 @@
 'use client';
 
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   cancelVerification,
   getMyVerification,
@@ -15,20 +17,21 @@ import {
 } from '@/services/verification/verificationTypes';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const MY_VERIFICATION_KEY = ['verification', 'me'];
-
 /**
  * Single TanStack Query surface for the verification flow. Status is polled
  * nowhere — the query refetches on window focus and after each mutation.
  */
 export const useMyVerification = () => {
   const qc = useQueryClient();
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: MY_VERIFICATION_KEY });
+  const { data: session } = useAuth();
+  const accountId = session?.account_id;
+  const verificationKey = queryKeys.verification.mine(accountId);
+  const invalidate = () => qc.invalidateQueries({ queryKey: verificationKey });
 
   const query = useQuery({
-    queryKey: MY_VERIFICATION_KEY,
+    queryKey: verificationKey,
     queryFn: getMyVerification,
+    enabled: !!accountId,
     staleTime: 60 * 1000,
   });
 
@@ -56,7 +59,7 @@ export const useMyVerification = () => {
   const submit = useMutation({
     mutationFn: (payload: SubmitVerificationPayload) =>
       submitVerification(payload),
-    onSuccess: () => qc.refetchQueries({ queryKey: MY_VERIFICATION_KEY }),
+    onSuccess: () => qc.refetchQueries({ queryKey: verificationKey }),
   });
 
   const cancel = useMutation({

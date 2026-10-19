@@ -1,3 +1,4 @@
+import useAuth from '@/hooks/auth/useAuth';
 import { queryKeys } from '@/lib/queryKeys';
 import { IsLikedResponse, likesCountResponse } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
@@ -10,8 +11,9 @@ export const useIsPostLiked = (
   isAuthenticated: boolean,
   initialIsLiked?: boolean
 ) => {
+  const { data: session } = useAuth();
   const { data, isLoading, error, isError } = useQuery<IsLikedResponse, Error>({
-    queryKey: queryKeys.blog.likes.status(blogId),
+    queryKey: queryKeys.blog.likes.status(blogId, session?.account_id),
     queryFn: () => authFetcher(`/user/is-liked/${blogId}`),
     enabled: !!blogId && isAuthenticated,
     initialData:

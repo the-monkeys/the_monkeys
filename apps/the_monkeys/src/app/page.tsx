@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 
 import { JsonLd } from '@/components/seo/JsonLd';
-import { META_FEED_QUERY_KEY } from '@/hooks/blog/useGetMetaFeedBlogs';
 import { LANDING_EVENT_FILTERS, LANDING_POST_LIMIT } from '@/lib/landingPage';
 import { landingEntityGraph, landingMetadata } from '@/lib/landingPageSeo';
 import { queryKeys } from '@/lib/queryKeys';
@@ -20,7 +19,7 @@ export default async function LandingPage() {
 
   await Promise.all([
     queryClient.prefetchQuery({
-      queryKey: [META_FEED_QUERY_KEY, limit],
+      queryKey: queryKeys.blog.metaFeed(limit),
       queryFn: () => fetcherV2(`/blog/meta-feed?limit=${limit}`),
     }),
     queryClient.prefetchQuery({

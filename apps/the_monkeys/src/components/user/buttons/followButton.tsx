@@ -4,6 +4,7 @@ import {
   useFollowUser,
   useIsFollowingUser,
 } from '@/hooks/user/useUserConnections';
+import { queryKeys } from '@/lib/queryKeys';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
@@ -39,7 +40,7 @@ export const FollowButton = ({
         disabled={isPending}
         onClick={() =>
           queryClient.invalidateQueries({
-            queryKey: ['is-following-user', username],
+            queryKey: queryKeys.user.followStatusRoot,
           })
         }
         className={twMerge(className, '!text-base rounded-full')}
@@ -111,7 +112,7 @@ export const FollowButtonIcon = ({
         disabled={isPending}
         onClick={() =>
           queryClient.invalidateQueries({
-            queryKey: ['is-following-user', username],
+            queryKey: queryKeys.user.followStatusRoot,
           })
         }
         className={twMerge(className, 'rounded-full')}

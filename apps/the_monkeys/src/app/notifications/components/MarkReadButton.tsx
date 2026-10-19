@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
-import { ALL_NOTIFICATIONS_QUERY_KEY } from '@/hooks/notification/useGetAllNotifications';
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -9,6 +10,7 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const MarkReadButton = () => {
   const queryClient = useQueryClient();
+  const { data: session } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const onMarkRead = async () => {
@@ -21,7 +23,7 @@ export const MarkReadButton = () => {
         description: 'Notifications marked as read.',
       });
       queryClient.invalidateQueries({
-        queryKey: [ALL_NOTIFICATIONS_QUERY_KEY],
+        queryKey: queryKeys.notifications.forAccount(session?.account_id),
       });
     } catch {
       toast({

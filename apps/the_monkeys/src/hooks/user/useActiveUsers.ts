@@ -1,5 +1,6 @@
 'use client';
 
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQuery } from '@tanstack/react-query';
 
@@ -32,7 +33,7 @@ interface ActiveUsersResponse {
  */
 export const useActiveUsers = (timeRange: string = '24h') => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['active-users', timeRange],
+    queryKey: queryKeys.user.activeUsers(timeRange),
     queryFn: async () => {
       const res = await axiosInstanceV2.get<ActiveUsersResponse>(
         `/user/active-users`,

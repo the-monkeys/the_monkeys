@@ -1,4 +1,5 @@
 import { Loader } from '@/components/loader';
+import { queryKeys } from '@/lib/queryKeys';
 import { updateUsername as updateUsernameSchema } from '@/lib/schema/settings';
 import { IUser } from '@/services/models/user';
 import { updateUserName } from '@/services/user/user';
@@ -31,7 +32,7 @@ export const Username = ({ data }: { data: IUser }) => {
   const mutation = useMutation({
     mutationFn: updateUserName,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.auth.session });
 
       form.reset();
       toast({

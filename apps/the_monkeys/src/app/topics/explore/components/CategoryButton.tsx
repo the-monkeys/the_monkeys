@@ -4,8 +4,8 @@ import React from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
-import { ALL_TOPICS_QUERY_KEY } from '@/hooks/user/useGetAllTopics';
-import useUser, { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import useUser from '@/hooks/user/useUser';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -63,9 +63,9 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
       });
 
       setStatus('success');
-      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.topics.all });
       queryClient.invalidateQueries({
-        queryKey: [USER_QUERY_KEY, username],
+        queryKey: queryKeys.user.currentProfile(username),
       });
       setIsAllTopicsFollowed(true);
       setIsSomeTopicsFollowed(false);
@@ -93,9 +93,9 @@ export const CategoryButton = ({ topics }: { topics: string[] }) => {
       });
 
       setStatus('success');
-      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.topics.all });
       queryClient.invalidateQueries({
-        queryKey: [USER_QUERY_KEY, username],
+        queryKey: queryKeys.user.currentProfile(username),
       });
       setIsAllTopicsFollowed(false);
       setIsSomeTopicsFollowed(false);

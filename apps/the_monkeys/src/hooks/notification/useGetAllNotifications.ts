@@ -1,11 +1,11 @@
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import {
   FRNNotification,
   FRNNotificationListResponse,
 } from '@/services/notification/notificationTypes';
 import { useQuery } from '@tanstack/react-query';
-
-export const ALL_NOTIFICATIONS_QUERY_KEY = 'notifications';
 
 const fetchFRNNotifications = async (): Promise<FRNNotification[]> => {
   // Use the gateway's proxy path which adds the API key server-side.
@@ -17,12 +17,15 @@ const fetchFRNNotifications = async (): Promise<FRNNotification[]> => {
 };
 
 export const useGetAllNotifications = () => {
+  const { data: session } = useAuth();
+  const accountId = session?.account_id;
   const { data, error, isLoading, isError } = useQuery<
     FRNNotification[],
     Error
   >({
-    queryKey: [ALL_NOTIFICATIONS_QUERY_KEY],
+    queryKey: queryKeys.notifications.forAccount(accountId),
     queryFn: fetchFRNNotifications,
+    enabled: !!accountId,
     staleTime: 5 * 60 * 1000,
   });
 

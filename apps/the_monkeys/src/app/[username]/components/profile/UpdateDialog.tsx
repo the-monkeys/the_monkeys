@@ -6,7 +6,7 @@ import { UpdateDetailsFormSkeleton } from '@/components/skeletons/formSkeleton';
 import { DeleteProfilePhotoConfirmation } from '@/components/user/dialogs/deleteProfileDialog';
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
-import { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import { queryKeys } from '@/lib/queryKeys';
 import { cn } from '@/lib/utils';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
@@ -103,7 +103,7 @@ export const UpdateDialog = ({ data }: { data: IUser }) => {
       });
       handleOpenChange(false);
       queryClient.invalidateQueries({
-        queryKey: [USER_QUERY_KEY, data.username],
+        queryKey: queryKeys.user.currentProfile(data.username),
       });
     } catch {
       toast({ variant: 'error', title: 'Error' });
