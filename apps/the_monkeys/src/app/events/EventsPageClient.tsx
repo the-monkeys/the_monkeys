@@ -1,9 +1,9 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { EventCard, EventEmpty } from '@/components/events/EventCard';
 import { CommunityGroups } from '@/components/events/discover/CommunityGroups';
@@ -15,15 +15,39 @@ import {
   useAttendingEvents,
   useUserEvents,
 } from '@/hooks/events/useEventQueries';
+import { loginHref } from '@/lib/authRedirect';
+import {
+  EVENT_TABS,
+  EVENT_TAB_LABELS,
+  EventTab,
+  eventsTabLocation,
+  parseEventTab,
+} from '@/lib/eventsTab';
 import { ListFilters } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
-
-type Tab = 'discover' | 'groups' | 'going' | 'hosting';
+import { Tabs, TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 
 export default function EventsPageClient() {
   const { data: session } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState<Tab>('discover');
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // URL is the source of truth: refresh, share, and back/forward all restore the tab.
+  const tab = parseEventTab(searchParams.get('tab'));
+
+  const setTab = (next: EventTab) => {
+    if ((next === 'going' || next === 'hosting') && !session) {
+      router.push(
+        loginHref(eventsTabLocation(pathname, searchParams.toString(), next))
+      );
+      return;
+    }
+    if (next === tab) return;
+    router.push(eventsTabLocation(pathname, searchParams.toString(), next), {
+      scroll: false,
+    });
+  };
 
   const filters: ListFilters = useMemo(() => ({ limit: 30, offset: 0 }), []);
 
@@ -42,36 +66,27 @@ export default function EventsPageClient() {
 
   return (
     <div className='mx-auto max-w-6xl'>
-      <div className='mb-8 flex gap-1 border-b border-border-light dark:border-border-dark/40'>
-        {(
-          [
-            ['discover', 'Discover'],
-            ['groups', 'Groups'],
-            ['going', 'Going'],
-            ['hosting', 'Hosting'],
-          ] as const
-        ).map(([id, label]) => (
-          <button
-            key={id}
-            type='button'
-            onClick={() => {
-              if ((id === 'going' || id === 'hosting') && !session) {
-                router.push(LOGIN_ROUTE);
-                return;
-              }
-              setTab(id);
-            }}
-            className={`px-3 py-2 font-inter text-sm ${
-              tab === id
-                ? 'border-b-2 border-brand-orange font-medium'
-                : 'text-gray-500'
-            }`}
-          >
-            {label}
-            {id === 'hosting' && draftCount > 0 ? ` (${draftCount})` : ''}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        value={tab}
+        onValueChange={(value) => setTab(parseEventTab(value))}
+        className='mb-8'
+      >
+        <TabsList className='flex justify-start gap-1 border-b border-border-light dark:border-border-dark/40'>
+          {EVENT_TABS.map((id) => (
+            <TabsTrigger
+              key={id}
+              value={id}
+              className='px-3 py-2 font-inter text-sm text-gray-500'
+            >
+              <span className='opacity-80 transition-opacity group-hover:opacity-100 group-data-[state=active]:font-medium group-data-[state=active]:text-foreground'>
+                {EVENT_TAB_LABELS[id]}
+                {id === 'hosting' && draftCount > 0 ? ` (${draftCount})` : ''}
+              </span>
+              <span className='mt-1 h-[2px] w-0 rounded-full bg-brand-orange transition-all group-data-[state=active]:w-full' />
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
 
       {tab === 'discover' && (
         <>
