@@ -48,34 +48,6 @@ export const LikeButton = ({
 
   if (!blogId) return null;
 
-  const setLikeState = (isLiked: boolean) => {
-    queryClient.setQueryData<IsLikedResponse>(
-      queryKeys.blog.likes.status(blogId),
-      {
-        status: 'success',
-        isLiked,
-      }
-    );
-  };
-
-  const updateLikesCount = (delta: 1 | -1) => {
-    queryClient.setQueryData<likesCountResponse>(
-      queryKeys.blog.likes.count(blogId),
-      (previous) => ({
-        count: Math.max(0, (previous?.count ?? 0) + delta),
-      })
-    );
-  };
-
-  const refetchLikeQueries = () => {
-    queryClient.invalidateQueries({
-      queryKey: queryKeys.blog.likes.status(blogId),
-    });
-    queryClient.invalidateQueries({
-      queryKey: queryKeys.blog.likes.count(blogId),
-    });
-  };
-
   if (isLoading) {
     return (
       <button
@@ -122,33 +94,47 @@ export const LikeButton = ({
   const toggleLike = async (shouldLike: boolean) => {
     if (loading) return;
 
-    const previousLikeState = likeStatus;
+    const statusKey = queryKeys.blog.likes.status(blogId);
     const countKey = queryKeys.blog.likes.count(blogId);
+    await Promise.all([
+      queryClient.cancelQueries({ queryKey: statusKey }),
+      queryClient.cancelQueries({ queryKey: countKey }),
+    ]);
+
+    const previousLikeData =
+      queryClient.getQueryData<IsLikedResponse>(statusKey);
     const previousCountData =
       queryClient.getQueryData<likesCountResponse>(countKey);
-    const previousCount = previousCountData?.count;
 
     setLoading(true);
-    setLikeState(shouldLike);
+    queryClient.setQueryData<IsLikedResponse>(statusKey, {
+      status: 'success',
+      isLiked: shouldLike,
+    });
     if (shouldLike) {
       setBurstKey((k) => k + 1);
     }
-    updateLikesCount(shouldLike ? 1 : -1);
+    if (previousCountData) {
+      queryClient.setQueryData<likesCountResponse>(countKey, {
+        count: Math.max(0, previousCountData.count + (shouldLike ? 1 : -1)),
+      });
+    }
 
     try {
       await axiosInstance.post(
         shouldLike ? `/user/like/${blogId}` : `/user/unlike/${blogId}`
       );
-      refetchLikeQueries();
     } catch (err: unknown) {
-      setLikeState(previousLikeState ?? false);
-
-      if (previousCount === undefined) {
+      if (previousLikeData === undefined) {
         queryClient.removeQueries({
-          queryKey: countKey,
+          queryKey: statusKey,
           exact: true,
         });
       } else {
+        queryClient.setQueryData(statusKey, previousLikeData);
+      }
+
+      if (previousCountData !== undefined) {
         queryClient.setQueryData(countKey, previousCountData);
       }
 

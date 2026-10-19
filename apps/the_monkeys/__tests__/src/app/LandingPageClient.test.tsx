@@ -2,6 +2,7 @@ import LandingPageClient from '@/app/LandingPageClient';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
 import { useEventList } from '@/hooks/events/useEventQueries';
+import { LANDING_DATA_STALE_MS } from '@/lib/landingPage';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
 import { act, cleanup, screen, within } from '@testing-library/react';
@@ -215,7 +216,9 @@ describe('LandingPageClient', () => {
     ).toBeDefined();
     expect(screen.getByText('Endpoint trending post')).toBeDefined();
     expect(useEventList).toHaveBeenCalledWith(
-      expect.objectContaining({ date: 'this-week' })
+      expect.objectContaining({ date: 'this-week' }),
+      true,
+      LANDING_DATA_STALE_MS
     );
     const eventColumn = screen.getByRole('region', {
       name: 'Featured events and discovery',

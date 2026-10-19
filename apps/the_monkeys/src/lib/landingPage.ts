@@ -2,6 +2,7 @@ import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
 
 export const LANDING_POST_LIMIT = 12;
+export const LANDING_DATA_STALE_MS = 60 * 1000;
 
 export const LANDING_EVENT_FILTERS = {
   limit: 3,

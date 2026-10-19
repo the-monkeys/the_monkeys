@@ -2,7 +2,19 @@ import type { Metadata } from 'next';
 
 import { JsonLd } from '@/components/seo/JsonLd';
 import { META_FEED_QUERY_KEY } from '@/hooks/blog/useGetMetaFeedBlogs';
-import { LANDING_EVENT_FILTERS, LANDING_POST_LIMIT } from '@/lib/landingPage';
+import {
+  TRENDING_BLOGS_QUERY_KEY,
+  fetchTrendingBlogs,
+} from '@/hooks/blog/useGetTrendingBlogs';
+import {
+  ACTIVE_USERS_QUERY_KEY,
+  fetchActiveUsers,
+} from '@/hooks/user/useActiveUsers';
+import {
+  LANDING_EVENT_FILTERS,
+  LANDING_POST_LIMIT,
+  LANDING_THIS_WEEK_EVENT_FILTERS,
+} from '@/lib/landingPage';
 import { landingEntityGraph, landingMetadata } from '@/lib/landingPageSeo';
 import { queryKeys } from '@/lib/queryKeys';
 import { listEvents } from '@/services/events/eventsApi';
@@ -26,6 +38,18 @@ export default async function LandingPage() {
     queryClient.prefetchQuery({
       queryKey: queryKeys.events.list(LANDING_EVENT_FILTERS),
       queryFn: () => listEvents(LANDING_EVENT_FILTERS),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.events.list(LANDING_THIS_WEEK_EVENT_FILTERS),
+      queryFn: () => listEvents(LANDING_THIS_WEEK_EVENT_FILTERS),
+    }),
+    queryClient.prefetchQuery({
+      queryKey: [TRENDING_BLOGS_QUERY_KEY],
+      queryFn: fetchTrendingBlogs,
+    }),
+    queryClient.prefetchQuery({
+      queryKey: [ACTIVE_USERS_QUERY_KEY, '24h'],
+      queryFn: () => fetchActiveUsers('24h'),
     }),
   ]);
 

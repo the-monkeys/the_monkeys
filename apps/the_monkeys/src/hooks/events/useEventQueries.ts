@@ -22,12 +22,16 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-export function useEventList(filters: ListFilters, enabled = true) {
+export function useEventList(
+  filters: ListFilters,
+  enabled = true,
+  staleTime = LIVE_LIST_STALE_MS
+) {
   return useQuery({
     queryKey: queryKeys.events.list(filters),
     queryFn: () => listEvents(filters),
     enabled,
-    staleTime: LIVE_LIST_STALE_MS,
+    staleTime,
     placeholderData: keepPreviousData,
   });
 }
