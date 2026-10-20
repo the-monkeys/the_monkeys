@@ -27,9 +27,9 @@ import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import { formatBlogTimestamp } from '@/lib/blogTime';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { Button } from '@the-monkeys/ui/atoms/button';
-import moment from 'moment';
 import { RiPencilFill } from 'react-icons/ri';
 
 import { BlogReactionsContainer } from '../components/BlogReactions';
@@ -157,11 +157,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
       </div>
       <div className='px-4'>
         <Container className='pt-4 sm:pt-6 pb-6 max-w-3xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
-          <p className='text-sm opacity-90'>
-            {moment(date).format('MMM DD, yyyy')}
-            {' / '}
-            {moment(date).utc().format('hh:mm A')} UTC
-          </p>
+          <p className='text-sm opacity-90'>{formatBlogTimestamp(date)}</p>
 
           <BlogScopeLine groupSlug={blog.group_slug} audience={blog.audience} />
 
