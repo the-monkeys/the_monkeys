@@ -9,9 +9,9 @@ import Container from '@/components/layout/Container';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useAuth from '@/hooks/auth/useAuth';
+import { formatBlogTimestamp } from '@/lib/blogTime';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { OutputData } from '@themonkeys/monkeys-editor';
-import moment from 'moment';
 
 const Editor = dynamic(() => import('@/components/editor/preview'), {
   ssr: false,
@@ -32,11 +32,7 @@ const BlogPreview = ({ urlBlogId, data }: BlogPreviewProps) => {
     <>
       <div className='px-4'>
         <Container className='pt-4 sm:pt-6 pb-6 max-w-3xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
-          <p className='text-sm opacity-90'>
-            {moment(date).format('MMM DD, yyyy')}
-            {' / '}
-            {moment(date).utc().format('hh:mm A')} UTC
-          </p>
+          <p className='text-sm opacity-90'>{formatBlogTimestamp(date)}</p>
 
           <BlogHeading
             title={sanitizedBlogTitle || 'Untitled Post'}
