@@ -1,14 +1,10 @@
 import Link from 'next/link';
 
 import { EventHostName } from '@/components/events/EventHostName';
+import { EventTimeDisplay } from '@/components/events/EventTimeDisplay';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
-import {
-  eventStatusLabel,
-  eventTypeLabel,
-  formatEventWhen,
-  formatPrice,
-} from '@/lib/eventTime';
+import { eventStatusLabel, eventTypeLabel, formatPrice } from '@/lib/eventTime';
 import { cn } from '@/lib/utils';
 import { EventItem } from '@/services/events/eventTypes';
 
@@ -72,8 +68,12 @@ export function EventCard({ event }: { event: EventItem }) {
           </h3>
         </Link>
 
-        <p className='mt-1.5 font-inter text-sm text-gray-500 dark:text-gray-400 line-clamp-1'>
-          {formatEventWhen(event.start_time, event.end_time, event.timezone)}
+        <p className='mt-1.5 font-inter text-sm text-gray-500 dark:text-gray-400'>
+          <EventTimeDisplay
+            start={event.start_time}
+            end={event.end_time}
+            timezone={event.timezone}
+          />
         </p>
 
         <div className='mt-2 flex flex-wrap items-center gap-3 text-xs font-inter text-gray-500 dark:text-gray-400'>
@@ -132,7 +132,12 @@ export function EventHeroCard({ event }: { event: EventItem }) {
         <div className='absolute inset-x-0 bottom-0 p-5 sm:p-7'>
           <p className='font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.18em] mb-2'>
             {eventTypeLabel(event.event_type)} ·{' '}
-            {formatEventWhen(event.start_time)}
+            <EventTimeDisplay
+              start={event.start_time}
+              timezone={event.timezone}
+              compact
+              className='inline'
+            />
           </p>
           <h3 className='font-newsreader font-bold text-2xl sm:text-3xl md:text-4xl leading-[1.15] text-white line-clamp-3 group-hover:text-brand-orange transition-colors'>
             {event.title}

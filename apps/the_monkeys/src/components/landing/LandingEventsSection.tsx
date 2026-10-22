@@ -1,9 +1,13 @@
 import Link from 'next/link';
 
 import { EventGridCard } from '@/components/events/EventGridCard';
+import {
+  EventDatePart,
+  EventTimeDisplay,
+} from '@/components/events/EventTimeDisplay';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
-import { eventDateParts, formatEventCardWhen } from '@/lib/eventTime';
+import { eventDateParts } from '@/lib/eventTime';
 import { EventItem } from '@/services/events/eventTypes';
 
 interface LandingEventsSectionProps {
@@ -94,10 +98,26 @@ export function LandingEventsSection({
                 >
                   <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-gray-50 text-center dark:bg-white/[0.04]'>
                     <span className='font-inter text-[9px] font-bold uppercase tracking-wider text-brand-orange'>
-                      {date?.month || 'Soon'}
+                      {date ? (
+                        <EventDatePart
+                          start={event.start_time}
+                          timezone={event.timezone}
+                          part='month'
+                        />
+                      ) : (
+                        'Soon'
+                      )}
                     </span>
                     <span className='font-newsreader text-lg font-semibold leading-none text-text-light dark:text-text-dark'>
-                      {date?.day || ''}
+                      {date ? (
+                        <EventDatePart
+                          start={event.start_time}
+                          timezone={event.timezone}
+                          part='day'
+                        />
+                      ) : (
+                        ''
+                      )}
                     </span>
                   </div>
                   <div className='min-w-0'>
@@ -108,7 +128,11 @@ export function LandingEventsSection({
                       {event.title}
                     </Link>
                     <p className='mt-1 font-inter text-[11px] text-gray-500 dark:text-gray-400'>
-                      {formatEventCardWhen(event.start_time, event.timezone)}
+                      <EventTimeDisplay
+                        start={event.start_time}
+                        timezone={event.timezone}
+                        compact
+                      />
                     </p>
                   </div>
                 </article>

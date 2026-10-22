@@ -3,13 +3,16 @@ import { memo } from 'react';
 import Link from 'next/link';
 
 import { EventHostName } from '@/components/events/EventHostName';
+import {
+  EventDatePart,
+  EventTimeDisplay,
+} from '@/components/events/EventTimeDisplay';
 import { EventSeriesNote } from '@/components/events/detail/EventSeriesNote';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import {
   eventDateParts,
   eventTypeLabel,
-  formatEventCardWhen,
   formatPrice,
   formatUpcomingDates,
   isEventEnded,
@@ -72,10 +75,18 @@ export const EventGridCard = memo(function EventGridCard({
         {date && (
           <span className='absolute left-3 top-3 flex min-w-[44px] flex-col items-center rounded-lg bg-background-light/95 px-2 py-1 text-center leading-none shadow-sm dark:bg-background-dark/90'>
             <span className='font-inter text-[10px] font-bold uppercase tracking-wider text-brand-orange'>
-              {date.month}
+              <EventDatePart
+                start={event.start_time}
+                timezone={event.timezone}
+                part='month'
+              />
             </span>
             <span className='font-newsreader text-lg font-bold text-text-light dark:text-text-dark'>
-              {date.day}
+              <EventDatePart
+                start={event.start_time}
+                timezone={event.timezone}
+                part='day'
+              />
             </span>
           </span>
         )}
@@ -98,7 +109,11 @@ export const EventGridCard = memo(function EventGridCard({
           </h3>
         </Link>
         <p className='mt-1.5 font-inter text-sm text-gray-500 dark:text-gray-400'>
-          {formatEventCardWhen(event.start_time, event.timezone)}
+          <EventTimeDisplay
+            start={event.start_time}
+            timezone={event.timezone}
+            compact
+          />
         </p>
         <EventSeriesNote
           event={event}
