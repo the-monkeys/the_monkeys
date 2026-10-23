@@ -4,7 +4,7 @@ import { parseEventTime } from '@/lib/eventTime';
 import { SITE_URL } from '@/lib/seo';
 import { fetchPublicGroups } from '@/lib/seoCatalog';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const groups = await fetchPublicGroups(200);
