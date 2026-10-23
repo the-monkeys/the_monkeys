@@ -86,6 +86,9 @@ describe('post SEO', () => {
   it('connects Article schema to its author and legal publisher', () => {
     const schema = buildBlogJsonLd(blog, 'useful-post-123', 'Ada', 'ada');
 
+    expect(schema).not.toBeNull();
+    if (!schema) throw new Error('Expected public article schema');
+
     expect(schema).toMatchObject({
       '@type': 'Article',
       headline: 'Useful Post',
@@ -103,5 +106,14 @@ describe('post SEO', () => {
       },
     });
     expect(schema.articleBody).toContain('central idea clearly');
+  });
+
+  it('does not build public SEO for members-only posts', () => {
+    const privateBlog = { ...blog, audience: 'group_only' as const };
+    const metadata = buildBlogMetadata(privateBlog, 'useful-post-123', 'Ada');
+
+    expect(metadata.robots).toMatchObject({ index: false, follow: false });
+    expect(metadata.openGraph).toBeUndefined();
+    expect(buildBlogJsonLd(privateBlog, 'useful-post-123', 'Ada')).toBeNull();
   });
 });

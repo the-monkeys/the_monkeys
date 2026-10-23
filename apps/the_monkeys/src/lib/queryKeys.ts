@@ -57,6 +57,8 @@ export const queryKeys = {
     detail: (slug: QueryId) => [...groupRoot, 'detail', slug] as const,
     members: (slug: QueryId, params: Record<string, unknown> = {}) =>
       [...groupRoot, 'members', slug, params] as const,
+    blogs: (slug: QueryId, params: Record<string, unknown> = {}) =>
+      [...groupRoot, 'blogs', slug, params] as const,
     invites: (slug: QueryId) => [...groupRoot, 'invites', slug] as const,
   },
 } as const;

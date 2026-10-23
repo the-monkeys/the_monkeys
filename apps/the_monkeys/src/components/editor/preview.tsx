@@ -20,7 +20,11 @@ const Editor: FC<EditorProps> = ({ data }) => {
 
     return () => {
       if (editorInstance.current && editorInstance.current.destroy) {
-        editorInstance.current.destroy();
+        try {
+          editorInstance.current.destroy();
+        } catch (err) {
+          console.warn('preview editor destroy failed', err);
+        }
         editorInstance.current = null;
       }
     };

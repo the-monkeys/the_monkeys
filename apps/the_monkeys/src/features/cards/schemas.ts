@@ -14,7 +14,7 @@ const socialLinkSchema = z.object({
     'monkeys',
     'website',
   ]),
-  url: z.string().url(),
+  url: z.url(),
 });
 
 export const cardContactSchema = z.object({
@@ -23,9 +23,9 @@ export const cardContactSchema = z.object({
   jobTitle: z.string().max(80).optional(),
   department: z.string().max(60).optional(),
   company: z.string().max(80).optional(),
-  email: z.string().email().max(120).optional().or(z.literal('')),
+  email: z.email().max(120).optional().or(z.literal('')),
   phone: z.string().max(30).optional(),
-  website: z.string().url().max(200).optional().or(z.literal('')),
+  website: z.url().max(200).optional().or(z.literal('')),
   address: z.string().max(200).optional(),
 });
 

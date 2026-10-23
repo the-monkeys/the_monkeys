@@ -10,6 +10,7 @@ import {
   UserInfoCardSkeleton,
   UserRecommendationCardSkeleton,
 } from '../skeletons/userSkeleton';
+import { AuthorName } from './AuthorName';
 
 export const RecommendedUserCard = ({ id }: { id?: string }) => {
   const { user, isLoading, isError } = useGetProfileInfoById(id);
@@ -33,10 +34,13 @@ export const RecommendedUserCard = ({ id }: { id?: string }) => {
       <div className='space-y-[6px]'>
         <Link
           href={`/${userData?.username}`}
-          className='font-medium hover:underline'
+          className='group/author inline-flex min-w-0 max-w-full font-medium'
         >
-          {userData?.first_name}{' '}
-          {userData?.last_name ? userData?.last_name : ''}
+          <AuthorName
+            firstName={userData?.first_name}
+            lastName={userData?.last_name}
+            isVerified={userData?.is_verified}
+          />
         </Link>
 
         <span className='text-sm opacity-90 line-clamp-2'>{userData?.bio}</span>
@@ -85,10 +89,13 @@ export const UserInfoCardShowcase = ({
         ) : (
           <Link
             href={`/${userData?.username}`}
-            className='shrink-0 text-[13px] md:text-sm hover:underline'
+            className='group/author inline-flex min-w-0 max-w-full text-[13px] md:text-sm'
           >
-            {userData?.first_name}{' '}
-            {userData?.last_name ? userData?.last_name : ''}
+            <AuthorName
+              firstName={userData?.first_name}
+              lastName={userData?.last_name}
+              isVerified={userData?.is_verified}
+            />
           </Link>
         )
       ) : (
@@ -130,10 +137,14 @@ export const UserInfoCardBlogPage = ({ id }: { id?: string }) => {
       <div>
         <Link
           href={`/${userData?.username}`}
-          className='font-medium text-sm md:text-base hover:underline'
+          className='group/author inline-flex min-w-0 max-w-full font-medium text-sm md:text-base'
         >
-          {userData?.first_name}{' '}
-          {userData?.last_name ? userData?.last_name : ''}
+          <AuthorName
+            firstName={userData?.first_name}
+            lastName={userData?.last_name}
+            isVerified={userData?.is_verified}
+            size={16}
+          />
         </Link>
       </div>
     </div>

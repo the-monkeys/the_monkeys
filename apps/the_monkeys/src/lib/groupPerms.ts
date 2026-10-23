@@ -26,3 +26,37 @@ export function canViewGroupMembers(group?: GroupItem | null): boolean {
     group?.visibility === 'public' || group?.viewer_member_status === 'active'
   );
 }
+
+/** Active standing in the group — not pending, left, or a logged-out stranger. */
+export function isActiveGroupMember(group?: GroupItem | null): boolean {
+  return group?.viewer_member_status === 'active';
+}
+
+export function groupFeedEmptyCopy({
+  kind,
+  member,
+  signedIn,
+  when,
+}: {
+  kind: 'posts' | 'events';
+  member: boolean;
+  signedIn: boolean;
+  when?: 'upcoming' | 'past';
+}): string {
+  if (member) {
+    if (kind === 'events') {
+      return when === 'past'
+        ? 'No past events yet.'
+        : 'No events scheduled yet.';
+    }
+    return 'No posts have been published to this group yet.';
+  }
+  if (kind === 'events') {
+    return signedIn
+      ? 'Join this group to see events.'
+      : 'Log in and join this group to see events.';
+  }
+  return signedIn
+    ? 'Join this group to see posts.'
+    : 'Log in and join this group to see posts.';
+}

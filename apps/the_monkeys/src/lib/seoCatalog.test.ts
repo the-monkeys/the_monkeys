@@ -43,6 +43,22 @@ describe('SEO public catalogs', () => {
     ]);
   });
 
+  it('excludes members-only posts from sitemap and RSS catalogs', () => {
+    const posts = normalizePublicPosts({
+      blogs: [
+        { blog_id: 'old', title: 'Old public post' },
+        { blog_id: 'public', title: 'Public post', audience: 'public' },
+        {
+          blog_id: 'private',
+          title: 'Members post',
+          audience: 'group_only',
+        },
+      ],
+    });
+
+    expect(posts.map((post) => post.blog_id)).toEqual(['old', 'public']);
+  });
+
   it('fails closed for private, unlisted, incomplete, and malformed events', () => {
     const events = normalizePublicEvents({
       events: [

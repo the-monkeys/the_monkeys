@@ -41,6 +41,8 @@ export interface GetProfileInfoByIdResponse {
     bio: string;
     location: string;
     created_at: Timestamp;
+    /** Blue-check state; absent/undefined on stale data means "unknown", never "verified". */
+    is_verified?: boolean;
   };
   followers: number;
   following: number;

@@ -17,6 +17,14 @@ vi.mock('@/hooks/user/useGetProfileInfoByUserId', () => ({
     isError: false,
   }),
 }));
+vi.mock('@/hooks/user/useUser', () => ({
+  default: () => ({
+    user: undefined,
+    isLoading: false,
+    isError: null,
+    mutate: vi.fn(),
+  }),
+}));
 
 const featuredEvent: EventItem = {
   id: 12,
@@ -49,10 +57,10 @@ describe('LandingFeaturedEvent', () => {
     ).toBe('/events/community-design-session');
     expect(screen.getByText('Online')).toBeDefined();
     expect(
-      screen.getByText(
-        (_, element) => element?.textContent === 'Hosted by @host'
-      )
-    ).toBeDefined();
+      screen
+        .getByRole('link', { name: /Hosted by @host/ })
+        .getAttribute('href')
+    ).toBe('/host');
     const attendance = screen.getByRole('group', {
       name: 'Event host and attendance',
     });

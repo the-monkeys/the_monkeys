@@ -20,6 +20,8 @@ export type IconName =
   | 'RiArrowRightUp'
   | 'RiArrowRight'
   | 'RiArrowLeft'
+  | 'RiArrowGoBack'
+  | 'RiArrowGoForward'
   | 'RiArrowDownS'
   | 'RiArrowUpS'
   | 'RiMore'

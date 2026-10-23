@@ -70,6 +70,7 @@ export const ProfileImage = ({
       className='w-full h-full object-cover rounded-full'
       loading='lazy'
       quality={100}
+      unoptimized
     />
   );
 };

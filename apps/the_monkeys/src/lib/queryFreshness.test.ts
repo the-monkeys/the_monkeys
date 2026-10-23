@@ -63,6 +63,20 @@ describe('invalidateAfterGroupWrite', () => {
       qc.getQueryState(queryKeys.events.list({ limit: 12 }))?.isInvalidated
     ).toBe(false);
   });
+
+  it('invalidates the attached blog list when a group slug is given', async () => {
+    const qc = new QueryClient();
+    qc.setQueryData(queryKeys.groups.blogs('writers', { limit: 20 }), {
+      blogs: ['old'],
+    });
+
+    await invalidateAfterGroupWrite(qc, 'writers');
+
+    expect(
+      qc.getQueryState(queryKeys.groups.blogs('writers', { limit: 20 }))
+        ?.isInvalidated
+    ).toBe(true);
+  });
 });
 
 describe('invalidateAfterGroupEventWrite', () => {
