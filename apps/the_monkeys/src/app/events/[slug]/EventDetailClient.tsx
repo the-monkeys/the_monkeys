@@ -10,6 +10,7 @@ import { EventEmpty } from '@/components/events/EventCard';
 import { EventComments } from '@/components/events/EventComments';
 import { EventHostName } from '@/components/events/EventHostName';
 import { EventReactions } from '@/components/events/EventReactions';
+import { EventTimeDisplay } from '@/components/events/EventTimeDisplay';
 import { RsvpPanel } from '@/components/events/RsvpPanel';
 import { EventAttendees } from '@/components/events/detail/EventAttendees';
 import { EventFaq } from '@/components/events/detail/EventFaq';
@@ -29,7 +30,6 @@ import { useEventDetail } from '@/hooks/events/useEventQueries';
 import {
   eventStatusLabel,
   eventTypeLabel,
-  formatEventWhen,
   isEventEnded,
   isHost,
 } from '@/lib/eventTime';
@@ -137,12 +137,11 @@ export default function EventDetailClient({ slug }: { slug: string }) {
             </h1>
 
             <p className='mt-3 font-inter text-sm text-gray-600 dark:text-gray-400 sm:text-base'>
-              {formatEventWhen(
-                event.start_time,
-                event.end_time,
-                event.timezone
-              )}
-              {event.timezone ? ` · ${event.timezone}` : ''}
+              <EventTimeDisplay
+                start={event.start_time}
+                end={event.end_time}
+                timezone={event.timezone}
+              />
             </p>
 
             <div className='mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500'>

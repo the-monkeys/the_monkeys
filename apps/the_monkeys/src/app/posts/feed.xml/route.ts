@@ -3,7 +3,7 @@ import { SITE_URL, normalizeSeoText } from '@/lib/seo';
 import { fetchPublicPosts } from '@/lib/seoCatalog';
 import { buildRssXml, rssResponse } from '@/lib/seoFeed';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 function publicationDate(value: string): Date | null {
   const date = new Date(value);

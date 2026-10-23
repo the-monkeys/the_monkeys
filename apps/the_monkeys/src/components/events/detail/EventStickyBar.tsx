@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
+import { EventTimeDisplay } from '@/components/events/EventTimeDisplay';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import {
   eventPriceLabel,
-  formatEventWhen,
   isEventEnded,
   isRsvpClosed,
   spotsLeft,
@@ -85,7 +85,10 @@ export function EventStickyBar({
             {event.title}
           </p>
           <p className='truncate font-inter text-xs text-gray-500 dark:text-gray-400'>
-            {formatEventWhen(event.start_time, undefined, event.timezone)}
+            <EventTimeDisplay
+              start={event.start_time}
+              timezone={event.timezone}
+            />
           </p>
         </div>
 

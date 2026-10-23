@@ -1,8 +1,11 @@
+import {
+  EventDatePart,
+  EventTimeDisplay,
+} from '@/components/events/EventTimeDisplay';
 import Icon from '@/components/icon';
 import {
   eventDateParts,
   eventLocationLabel,
-  formatEventWhen,
   formatVenueAddress,
   mapQuery,
 } from '@/lib/eventTime';
@@ -27,19 +30,39 @@ export function EventSidebarMeta({ event }: { event: EventItem }) {
         {parts && (
           <div className='flex h-14 w-14 shrink-0 flex-col items-center justify-center rounded-xl border border-border-light dark:border-border-dark/60 text-center'>
             <span className='font-inter text-[10px] font-bold uppercase leading-none text-brand-orange'>
-              {parts.month}
+              <EventDatePart
+                start={event.start_time}
+                timezone={event.timezone}
+                part='month'
+              />
             </span>
             <span className='font-dm_sans text-lg font-bold leading-tight'>
-              {parts.day}
+              <EventDatePart
+                start={event.start_time}
+                timezone={event.timezone}
+                part='day'
+              />
             </span>
           </div>
         )}
         <div className='min-w-0'>
           <p className='font-dm_sans font-semibold'>
-            {parts ? parts.weekday : 'Date to be announced'}
+            {parts ? (
+              <EventDatePart
+                start={event.start_time}
+                timezone={event.timezone}
+                part='weekday'
+              />
+            ) : (
+              'Date to be announced'
+            )}
           </p>
           <p className='mt-0.5 font-inter text-sm text-gray-500 dark:text-gray-400'>
-            {formatEventWhen(event.start_time, event.end_time, event.timezone)}
+            <EventTimeDisplay
+              start={event.start_time}
+              end={event.end_time}
+              timezone={event.timezone}
+            />
           </p>
           {event.recurrence_text && (
             <p className='mt-1 inline-flex items-center gap-1 font-inter text-xs text-gray-500'>

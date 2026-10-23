@@ -6,6 +6,8 @@ import {
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
+import { EventDatePart } from '@/components/events/EventTimeDisplay';
+import { EventTimeDisplay } from '@/components/events/EventTimeDisplay';
 import Icon from '@/components/icon';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import {
@@ -13,11 +15,7 @@ import {
   EVENTS_ROUTE,
   TOPIC_ROUTE,
 } from '@/constants/routeConstants';
-import {
-  eventDateParts,
-  eventTypeLabel,
-  formatEventCardWhen,
-} from '@/lib/eventTime';
+import { eventDateParts, eventTypeLabel } from '@/lib/eventTime';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
@@ -166,10 +164,26 @@ function FeedEvent({ event }: { event: EventItem }) {
     >
       <div className='flex h-16 w-16 shrink-0 flex-col items-center justify-center rounded-xl bg-gray-50 text-center dark:bg-white/[0.05]'>
         <span className='font-inter text-[9px] font-bold uppercase tracking-wider text-brand-orange'>
-          {date?.month || 'Soon'}
+          {date ? (
+            <EventDatePart
+              start={event.start_time}
+              timezone={event.timezone}
+              part='month'
+            />
+          ) : (
+            'Soon'
+          )}
         </span>
         <span className='font-newsreader text-2xl font-semibold leading-none text-text-light dark:text-text-dark'>
-          {date?.day || ''}
+          {date ? (
+            <EventDatePart
+              start={event.start_time}
+              timezone={event.timezone}
+              part='day'
+            />
+          ) : (
+            ''
+          )}
         </span>
       </div>
       <div className='min-w-0'>
@@ -182,7 +196,11 @@ function FeedEvent({ event }: { event: EventItem }) {
           </h2>
         </Link>
         <p className='mt-1 font-inter text-xs text-gray-500 dark:text-gray-400'>
-          {formatEventCardWhen(event.start_time, event.timezone)}
+          <EventTimeDisplay
+            start={event.start_time}
+            timezone={event.timezone}
+            compact
+          />
         </p>
         {description ? (
           <p

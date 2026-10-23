@@ -3,15 +3,15 @@
 import Link from 'next/link';
 
 import { EventHostName } from '@/components/events/EventHostName';
+import {
+  EventDatePart,
+  EventTimeDisplay,
+} from '@/components/events/EventTimeDisplay';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
-import {
-  eventDateParts,
-  eventTypeLabel,
-  formatEventCardWhen,
-} from '@/lib/eventTime';
+import { eventDateParts, eventTypeLabel } from '@/lib/eventTime';
 import { EventItem } from '@/services/events/eventTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 
@@ -89,10 +89,18 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
           {date && (
             <span className='flex min-w-12 flex-col rounded-lg border border-white/15 bg-white/10 px-2 py-1.5 text-center backdrop-blur-sm'>
               <span className='font-inter text-[10px] font-bold uppercase tracking-wider text-[#ff9688]'>
-                {date.month}
+                <EventDatePart
+                  start={event.start_time}
+                  timezone={event.timezone}
+                  part='month'
+                />
               </span>
               <span className='font-newsreader text-xl font-semibold leading-none'>
-                {date.day}
+                <EventDatePart
+                  start={event.start_time}
+                  timezone={event.timezone}
+                  part='day'
+                />
               </span>
             </span>
           )}
@@ -122,7 +130,11 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
           <div className='mt-5 space-y-2 rounded-xl border border-white/10 bg-white/[0.055] p-3.5 font-inter text-xs text-white/80 backdrop-blur-sm'>
             <p className='flex items-center gap-2'>
               <Icon name='RiCalendar' size={15} className='text-[#ff9688]' />
-              {formatEventCardWhen(event.start_time, event.timezone)}
+              <EventTimeDisplay
+                start={event.start_time}
+                timezone={event.timezone}
+                compact
+              />
             </p>
             <p className='flex items-center gap-2'>
               <Icon

@@ -3,7 +3,7 @@ import { EVENTS_SEO, SITE_URL, truncateMeta } from '@/lib/seo';
 import { fetchPublicEvents } from '@/lib/seoCatalog';
 import { buildRssXml, rssResponse } from '@/lib/seoFeed';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const events = await fetchPublicEvents(50);

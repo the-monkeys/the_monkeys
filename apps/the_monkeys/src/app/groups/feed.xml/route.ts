@@ -3,7 +3,7 @@ import { GROUPS_SEO, SITE_URL, truncateMeta } from '@/lib/seo';
 import { fetchPublicGroups } from '@/lib/seoCatalog';
 import { buildRssXml, rssResponse } from '@/lib/seoFeed';
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const groups = await fetchPublicGroups(50);

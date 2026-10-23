@@ -2,14 +2,11 @@
 
 import Link from 'next/link';
 
+import { EventTimeDisplay } from '@/components/events/EventTimeDisplay';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useEventList } from '@/hooks/events/useEventQueries';
-import {
-  eventPriceLabel,
-  eventTypeLabel,
-  formatEventWhen,
-} from '@/lib/eventTime';
+import { eventPriceLabel, eventTypeLabel } from '@/lib/eventTime';
 import { EventItem } from '@/services/events/eventTypes';
 
 /**
@@ -78,7 +75,10 @@ function RelatedCard({ event }: { event: EventItem }) {
           {event.title}
         </h3>
         <p className='mt-1 line-clamp-1 font-inter text-xs text-gray-500 dark:text-gray-400'>
-          {formatEventWhen(event.start_time, undefined, event.timezone)}
+          <EventTimeDisplay
+            start={event.start_time}
+            timezone={event.timezone}
+          />
         </p>
         <p className='mt-2 font-inter text-xs font-medium'>
           {eventPriceLabel(event)}

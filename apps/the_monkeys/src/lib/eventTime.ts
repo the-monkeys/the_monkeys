@@ -31,6 +31,87 @@ export function fromLocalInput(value: string): string {
   return Number.isNaN(d.getTime()) ? '' : d.toISOString();
 }
 
+/** Convert a datetime-local value that represents wall time in an IANA zone. */
+export function fromZonedInput(value: string, timezone: string): string {
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(value);
+  if (!match || !isValidTimezone(timezone)) return '';
+  const [, year, month, day, hour, minute] = match;
+  const target = Date.UTC(+year, +month - 1, +day, +hour, +minute);
+  let instant = target;
+
+  for (let i = 0; i < 4; i++) {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(new Date(instant));
+    const get = (type: Intl.DateTimeFormatPartTypes) =>
+      Number(parts.find((part) => part.type === type)?.value);
+    const represented = Date.UTC(
+      get('year'),
+      get('month') - 1,
+      get('day'),
+      get('hour'),
+      get('minute')
+    );
+    const next = target - (represented - instant);
+    if (next === instant) break;
+    instant = next;
+  }
+
+  // Reject wall times skipped by a daylight-saving transition.
+  const roundTrip = toZonedInput(new Date(instant).toISOString(), timezone);
+  return roundTrip === value ? new Date(instant).toISOString() : '';
+}
+
+/** Format an instant for a datetime-local control in the event's timezone. */
+export function toZonedInput(value: ProtoTime, timezone: string): string {
+  const date = parseEventTime(value);
+  if (!date) return '';
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: timezone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(date);
+    const part = (type: Intl.DateTimeFormatPartTypes) =>
+      parts.find((item) => item.type === type)?.value || '';
+    return `${part('year')}-${part('month')}-${part('day')}T${part('hour')}:${part('minute')}`;
+  } catch {
+    return toLocalInput(value);
+  }
+}
+
+export function isValidTimezone(timezone: string): boolean {
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: timezone });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function supportedTimezones(): string[] {
+  try {
+    const zones = (
+      Intl as typeof Intl & {
+        supportedValuesOf?: (key: 'timeZone') => string[];
+      }
+    ).supportedValuesOf?.('timeZone');
+    return zones?.length ? Array.from(new Set([...zones, 'UTC'])) : ['UTC'];
+  } catch {
+    return ['UTC'];
+  }
+}
+
 function formatInZone(
   date: Date,
   options: Intl.DateTimeFormatOptions,
@@ -69,7 +150,14 @@ export function formatEventWhen(
   const to = parseEventTime(end);
   if (!to) return startLabel;
 
-  const sameDay = from.toDateString() === to.toDateString();
+  const dayOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  };
+  const sameDay =
+    formatInZone(from, dayOptions, timezone) ===
+    formatInZone(to, dayOptions, timezone);
   const endLabel = formatInZone(
     to,
     sameDay ? { hour: 'numeric', minute: '2-digit' } : opts,
@@ -93,6 +181,97 @@ export function formatEventCardWhen(
   );
   const time = formatInZone(d, { hour: 'numeric', minute: '2-digit' }, tz);
   return `${date} · ${time}`;
+}
+
+export function formatEventTimeForViewer(
+  start: ProtoTime,
+  end: ProtoTime | undefined,
+  eventTimezone: string | undefined,
+  viewerTimezone: string,
+  compact = false
+): { primary: string; secondary?: string } {
+  const zone = eventTimezone || viewerTimezone;
+  const sameZone =
+    !!eventTimezone &&
+    canonicalTimezone(zone) === canonicalTimezone(viewerTimezone);
+  const primary = compact
+    ? formatEventCardWhen(start, viewerTimezone)
+    : formatEventWhen(start, end, viewerTimezone);
+  if (!primary) return { primary: '' };
+
+  if (sameZone) {
+    return {
+      primary: `${primary} ${timezoneAbbreviation(start, zone)} (${zone})`,
+    };
+  }
+  if (!eventTimezone) return { primary };
+
+  const eventStart = parseEventTime(start);
+  if (!eventStart) return { primary };
+  const eventEnd = parseEventTime(end);
+  const localDay = formatInZone(
+    eventStart,
+    { year: 'numeric', month: '2-digit', day: '2-digit' },
+    viewerTimezone
+  );
+  const eventDay = formatInZone(
+    eventStart,
+    { year: 'numeric', month: '2-digit', day: '2-digit' },
+    zone
+  );
+  const eventDate =
+    localDay === eventDay
+      ? ''
+      : `${formatInZone(eventStart, { weekday: 'short', month: 'short', day: 'numeric' }, zone)} · `;
+  const startClock = `${formatInZone(eventStart, { hour: 'numeric', minute: '2-digit' }, zone)} ${timezoneAbbreviation(start, zone)}`;
+  const sameEventDay =
+    !!eventEnd &&
+    formatInZone(
+      eventStart,
+      { year: 'numeric', month: '2-digit', day: 'numeric' },
+      zone
+    ) ===
+      formatInZone(
+        eventEnd,
+        { year: 'numeric', month: '2-digit', day: 'numeric' },
+        zone
+      );
+  const endClock = eventEnd
+    ? sameEventDay
+      ? ` – ${formatInZone(eventEnd, { hour: 'numeric', minute: '2-digit' }, zone)}`
+      : ` – ${formatInZone(eventEnd, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }, zone)}`
+    : '';
+  return {
+    primary: `${primary} · Your time`,
+    secondary: `Event time: ${eventDate}${startClock}${endClock} (${zone})`,
+  };
+}
+
+function canonicalTimezone(timezone: string): string {
+  try {
+    return new Intl.DateTimeFormat('en', {
+      timeZone: timezone,
+    }).resolvedOptions().timeZone;
+  } catch {
+    return timezone;
+  }
+}
+
+function timezoneAbbreviation(value: ProtoTime, timezone: string): string {
+  const date = parseEventTime(value);
+  if (!date) return '';
+  try {
+    return (
+      new Intl.DateTimeFormat('en-GB', {
+        timeZone: timezone,
+        timeZoneName: 'short',
+      })
+        .formatToParts(date)
+        .find((part) => part.type === 'timeZoneName')?.value || timezone
+    );
+  } catch {
+    return timezone;
+  }
 }
 
 /** Compact extra series dates on a collapsed card: "Sep 5 · 12 · 19". */

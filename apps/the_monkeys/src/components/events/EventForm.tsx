@@ -21,10 +21,12 @@ import { useIPLocation } from '@/hooks/useIPLocation';
 import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import {
   defaultTimezone,
-  fromLocalInput,
+  fromZonedInput,
   isEventEnded,
+  isValidTimezone,
   rsvpCloseHoursFromEvent,
-  toLocalInput,
+  supportedTimezones,
+  toZonedInput,
 } from '@/lib/eventTime';
 import { geocodeAddress, pinFromCoords } from '@/lib/geoSearch';
 import {
@@ -97,11 +99,11 @@ function splitList(value: string): string[] {
 // localNowInput returns the current instant formatted for a datetime-local
 // input (YYYY-MM-DDTHH:mm) in the viewer's own timezone, so it can be used as a
 // `min` to block selecting a past moment.
-function localNowInput(): string {
-  const d = new Date();
-  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-  return local.toISOString().slice(0, 16);
+function localNowInput(timezone: string): string {
+  return toZonedInput(new Date().toISOString(), timezone);
 }
+
+const TIMEZONES = supportedTimezones();
 
 export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const { data: session } = useAuth();
@@ -142,12 +144,19 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   // creation. In edit mode uploads happen immediately, so these stay unset.
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState('');
+  const [timezone, setTimezone] = useState(
+    event?.timezone || defaultTimezone()
+  );
   const [cohosts, setCohosts] = useState<string[]>(
     event?.co_host_usernames || []
   );
   // Track the chosen start so the end picker can forbid an earlier moment.
-  const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
-  const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
+  const [startVal, setStartVal] = useState(() =>
+    toZonedInput(event?.start_time, event?.timezone || defaultTimezone())
+  );
+  const [endVal, setEndVal] = useState(() =>
+    toZonedInput(event?.end_time, event?.timezone || defaultTimezone())
+  );
   const [dateError, setDateError] = useState('');
   const [repeatFreq, setRepeatFreq] = useState<RecurrenceFreq | 'off'>('off');
   const [repeatInterval, setRepeatInterval] = useState(1);
@@ -158,7 +167,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [repeatUntil, setRepeatUntil] = useState('');
   const [repeatCount, setRepeatCount] = useState(12);
   const [rsvpClosesVal, setRsvpClosesVal] = useState(
-    toLocalInput(event?.rsvp_closes_at)
+    toZonedInput(event?.rsvp_closes_at, event?.timezone || defaultTimezone())
   );
   const [rsvpCloseHours, setRsvpCloseHours] = useState(
     rsvpCloseHoursFromEvent(event)
@@ -169,7 +178,11 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const ended = isEventEnded(event);
   // Recomputed once on mount; a stale minute is harmless and the browser plus
   // the submit guard both re-validate against the real clock.
-  const minStart = useMemo(() => localNowInput(), []);
+  const minStart = useMemo(() => localNowInput(timezone), [timezone]);
+
+  useEffect(() => {
+    if (!event?.timezone) setTimezone(defaultTimezone());
+  }, [event?.timezone]);
 
   // Release the object URL when the pending file changes or the form unmounts.
   useEffect(
@@ -207,7 +220,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     () => ({
       title: event?.title || '',
       description: event?.description || '',
-      timezone: event?.timezone || defaultTimezone(),
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
@@ -224,9 +236,18 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    const start = fromLocalInput(startVal);
-    const end = fromLocalInput(endVal);
-    if (!start || !end) return;
+    if (!isValidTimezone(timezone)) {
+      setDateError('Choose a valid event timezone.');
+      return;
+    }
+    const start = fromZonedInput(startVal, timezone);
+    const end = fromZonedInput(endVal, timezone);
+    if (!start || !end) {
+      setDateError(
+        'Enter a valid start and end time in the selected event timezone.'
+      );
+      return;
+    }
 
     // Block past starts and inverted ranges at the boundary. The browser's
     // `min` handles the common case, but a crafted value or a stale tab could
@@ -245,9 +266,27 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     }
     setDateError('');
 
+    const recurrenceUntil =
+      repeatFreq !== 'off' && repeatEnd === 'until' && repeatUntil
+        ? fromZonedInput(`${repeatUntil}T23:59`, timezone)
+        : undefined;
+    if (
+      repeatFreq !== 'off' &&
+      repeatEnd === 'until' &&
+      repeatUntil &&
+      !recurrenceUntil
+    ) {
+      setDateError('Choose a valid recurrence end date in the event timezone.');
+      return;
+    }
+
     const isSeries = !!event?.series_id || repeatFreq !== 'off';
     if (!isSeries && rsvpClosesVal) {
-      const closes = fromLocalInput(rsvpClosesVal);
+      const closes = fromZonedInput(rsvpClosesVal, timezone);
+      if (!closes) {
+        setDateError('Enter a valid RSVP cutoff time in the event timezone.');
+        return;
+      }
       const closeMs = new Date(closes).getTime();
       if (!ended && closeMs < nowMs - 60_000) {
         setDateError('Last day to RSVP cannot be in the past.');
@@ -264,7 +303,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       description: String(form.get('description') || '').trim(),
       start_time: start,
       end_time: end,
-      timezone: String(form.get('timezone') || defaultTimezone()),
+      timezone,
       event_type: eventType,
       location: String(form.get('location') || '').trim(),
       meeting_link: String(form.get('meeting_link') || '').trim(),
@@ -322,19 +361,16 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                 : [weekdayFromLocal(startVal)]
               : undefined,
           count: repeatEnd === 'count' ? Math.max(1, repeatCount) : undefined,
-          until:
-            repeatEnd === 'until' && repeatUntil
-              ? new Date(`${repeatUntil}T23:59:59`).toISOString()
-              : undefined,
+          until: recurrenceUntil,
           rsvp_close_hours_before: rsvpCloseHours || undefined,
         };
       } else if (rsvpClosesVal) {
-        body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
+        body.rsvp_closes_at = fromZonedInput(rsvpClosesVal, timezone);
       }
     } else if (event.series_id) {
       body.rsvp_close_hours_before = rsvpCloseHours;
     } else if (rsvpClosesVal) {
-      body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
+      body.rsvp_closes_at = fromZonedInput(rsvpClosesVal, timezone);
     }
 
     onSubmit(body, coverFile ?? undefined);
@@ -387,8 +423,31 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         pendingPreview={coverPreview}
       />
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
-        <Field label='Starts'>
+      <Field label='Event timezone'>
+        <Input
+          name='timezone'
+          list='event-timezones'
+          value={timezone}
+          onChange={(e) => {
+            setTimezone(e.target.value);
+            if (dateError) setDateError('');
+          }}
+          readOnly={ended}
+          autoComplete='off'
+          spellCheck={false}
+        />
+        <datalist id='event-timezones'>
+          {TIMEZONES.map((zone) => (
+            <option key={zone} value={zone} />
+          ))}
+        </datalist>
+        <p className='mt-1 font-inter text-xs text-gray-500'>
+          Times below use this timezone. Defaults to your device timezone.
+        </p>
+      </Field>
+
+      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+        <Field label='Starts (event time)'>
           <Input
             name='start'
             type='datetime-local'
@@ -406,7 +465,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             }}
           />
         </Field>
-        <Field label='Ends'>
+        <Field label='Ends (event time)'>
           <Input
             name='end'
             type='datetime-local'
@@ -518,14 +577,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           More event options
         </summary>
         <div className='mt-4 space-y-5'>
-          <Field label='Timezone'>
-            <Input
-              name='timezone'
-              defaultValue={initial.timezone}
-              readOnly={ended}
-            />
-          </Field>
-
           {!event && (
             <div className='rounded-lg border border-border-light p-4 space-y-3 dark:border-border-dark/60'>
               <Field label='Repeat'>
