@@ -106,7 +106,7 @@ export function supportedTimezones(): string[] {
         supportedValuesOf?: (key: 'timeZone') => string[];
       }
     ).supportedValuesOf?.('timeZone');
-    return zones?.length ? [...new Set([...zones, 'UTC'])] : ['UTC'];
+    return zones?.length ? Array.from(new Set([...zones, 'UTC'])) : ['UTC'];
   } catch {
     return ['UTC'];
   }
