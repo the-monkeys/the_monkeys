@@ -17,7 +17,6 @@ import {
 import { EventItem } from '@/services/events/eventTypes';
 import {
   cloneEvent,
-  downloadCalendar,
   eventError,
   getShareMeta,
   reportEvent,
@@ -135,21 +134,21 @@ export function EventActions({
         <Icon name='RiShare' size={16} className='mr-1' />
         Share
       </Button>
-      <Button
-        variant='outline'
-        size='sm'
-        onClick={() =>
-          downloadCalendar(event.slug).catch((err) =>
-            toast({
-              title: 'Could not download calendar',
-              description: eventError(err),
-            })
-          )
-        }
-      >
-        <Icon name='RiDownload2' size={16} className='mr-1' />
-        Calendar
-      </Button>
+      {/* <Button
+          variant='outline'
+          size='sm'
+          onClick={() =>
+            downloadCalendar(event.slug).catch((err) =>
+              toast({
+                title: 'Could not download calendar',
+                description: eventError(err),
+              })
+            )
+          }
+        >
+          <Icon name='RiDownload2' size={16} className='mr-1' />
+          Calendar
+        </Button> */}
       {canManage && (
         <>
           <Button asChild variant='outline' size='sm'>
