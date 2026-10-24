@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   eventPriceLabel,
   formatEventWhen,
@@ -39,6 +40,7 @@ export function EventStickyBar({
   onAttend,
 }: Props) {
   const [visible, setVisible] = useState(false);
+  const timezone = useViewerTimezone();
   const left = spotsLeft(event);
   const closed = isEventEnded(event);
   const rsvpClosed = isRsvpClosed(event);
@@ -85,7 +87,7 @@ export function EventStickyBar({
             {event.title}
           </p>
           <p className='truncate font-inter text-xs text-gray-500 dark:text-gray-400'>
-            {formatEventWhen(event.start_time, undefined, event.timezone)}
+            {formatEventWhen(event.start_time, undefined, timezone)}
           </p>
         </div>
 

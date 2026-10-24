@@ -90,7 +90,7 @@ export const createSeries = (body: EventBody) =>
 
 export const cloneEvent = (
   slug: string,
-  body: { start_time: string; end_time: string }
+  body: { start_time: string; end_time: string; timezone?: string }
 ) =>
   axiosInstance
     .post<EventResp>(`${root}/${encodeURIComponent(slug)}/clone`, body)

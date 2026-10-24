@@ -5,12 +5,14 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { TimezoneSelect } from '@/components/events/TimezoneSelect';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
 import {
   fromLocalInput,
   isEventEnded,
+  isValidTimezone,
   parseEventTime,
   toLocalInput,
 } from '@/lib/eventTime';
@@ -43,6 +45,7 @@ export function EventActions({
   const [reason, setReason] = useState('');
   const [cloneOpen, setCloneOpen] = useState(false);
   const [cloneBusy, setCloneBusy] = useState(false);
+  const [cloneTimezone, setCloneTimezone] = useState(event.timezone || 'UTC');
   const ended = isEventEnded(event);
   const showClone = canManage && ended && !event.series_id;
 
@@ -56,10 +59,13 @@ export function EventActions({
     const next = new Date(Date.now() + 24 * 60 * 60 * 1000);
     next.setMinutes(0, 0, 0);
     return {
-      start: toLocalInput(next.toISOString()),
-      end: toLocalInput(new Date(next.getTime() + duration).toISOString()),
+      start: toLocalInput(next.toISOString(), event.timezone || 'UTC'),
+      end: toLocalInput(
+        new Date(next.getTime() + duration).toISOString(),
+        event.timezone || 'UTC'
+      ),
     };
-  }, [event.start_time, event.end_time]);
+  }, [event.start_time, event.end_time, event.timezone]);
 
   const [cloneStart, setCloneStart] = useState(cloneDefaults.start);
   const [cloneEnd, setCloneEnd] = useState(cloneDefaults.end);
@@ -106,14 +112,32 @@ export function EventActions({
   };
 
   const onClone = async () => {
-    const start = fromLocalInput(cloneStart);
-    const end = fromLocalInput(cloneEnd);
+    let start: string, end: string;
+    try {
+      if (!isValidTimezone(cloneTimezone))
+        throw new Error('Choose a valid event timezone.');
+      start = fromLocalInput(cloneStart, cloneTimezone);
+      end = fromLocalInput(cloneEnd, cloneTimezone);
+      if (!start || !end) return;
+      if (end <= start)
+        throw new Error('End time must be after the start time.');
+    } catch (error) {
+      toast({
+        title: 'Check the event schedule',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Check the timezone in the event editor.',
+      });
+      return;
+    }
     if (!start || !end) return;
     setCloneBusy(true);
     try {
       const res = await cloneEvent(event.slug, {
         start_time: start,
         end_time: end,
+        timezone: cloneTimezone,
       });
       const slug = res.event?.slug;
       toast({ title: 'Draft created' });
@@ -182,9 +206,20 @@ export function EventActions({
         </Button>
       )}
       {cloneOpen && showClone && (
-        <div className='flex w-full flex-col gap-2 rounded-lg border border-border-light p-3 dark:border-border-dark/60 sm:flex-row sm:items-end'>
+        <div className='grid w-full gap-3 rounded-lg border border-border-light p-3 dark:border-border-dark/60 sm:grid-cols-2'>
+          <div className='sm:col-span-2'>
+            <TimezoneSelect
+              value={cloneTimezone}
+              onChange={setCloneTimezone}
+              disabled={cloneBusy}
+            />
+            <p className='mt-1 font-inter text-xs text-gray-500'>
+              This timezone applies to the new draft only. The original event
+              will not change.
+            </p>
+          </div>
           <label className='min-w-0 flex-1 font-inter text-xs text-gray-500'>
-            Starts
+            Starts ({cloneTimezone})
             <Input
               type='datetime-local'
               value={cloneStart}
@@ -193,7 +228,7 @@ export function EventActions({
             />
           </label>
           <label className='min-w-0 flex-1 font-inter text-xs text-gray-500'>
-            Ends
+            Ends ({cloneTimezone})
             <Input
               type='datetime-local'
               value={cloneEnd}
@@ -202,6 +237,7 @@ export function EventActions({
             />
           </label>
           <Button
+            className='sm:col-span-2 sm:justify-self-end'
             size='sm'
             variant='brand'
             disabled={cloneBusy}

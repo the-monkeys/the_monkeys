@@ -1,7 +1,8 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 
+import { TimezoneSelect } from '@/components/events/TimezoneSelect';
 import { CategoryChips } from '@/components/geo/CategoryChips';
 import { PlacePin } from '@/components/geo/PlacePin';
 import { useIPLocation } from '@/hooks/useIPLocation';
@@ -48,14 +49,6 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
-// Local now as a `datetime-local` value (YYYY-MM-DDTHH:mm) for the `min` guard
-// that forbids scheduling an event in the past.
-function localNowInput(): string {
-  const d = new Date();
-  const off = d.getTimezoneOffset();
-  return new Date(d.getTime() - off * 60_000).toISOString().slice(0, 16);
-}
-
 /**
  * Focused form for creating an event inside a group. It maps 1:1 to the
  * group-event API body (no tiers/co-hosts, plus a group-event visibility),
@@ -85,16 +78,26 @@ export function GroupEventForm({
   );
   // Controlled so the end picker can forbid a moment before the start and so
   // both fields reject past times.
-  const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
-  const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
+  const [timezone, setTimezone] = useState(event?.timezone || 'UTC');
+  useEffect(() => {
+    if (!event) setTimezone(defaultTimezone());
+  }, [event]);
+  const [startVal, setStartVal] = useState(
+    toLocalInput(event?.start_time, event?.timezone || 'UTC')
+  );
+  const [endVal, setEndVal] = useState(
+    toLocalInput(event?.end_time, event?.timezone || 'UTC')
+  );
   const [dateError, setDateError] = useState('');
-  const minStart = useMemo(() => localNowInput(), []);
+  const minStart = useMemo(
+    () => toLocalInput(new Date().toISOString(), timezone),
+    [timezone]
+  );
 
   const initial = useMemo(
     () => ({
       title: event?.title || '',
       description: event?.description || '',
-      timezone: event?.timezone || defaultTimezone(),
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
@@ -107,8 +110,18 @@ export function GroupEventForm({
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    const start = fromLocalInput(startVal);
-    const end = fromLocalInput(endVal);
+    let start: string, end: string;
+    try {
+      start = fromLocalInput(startVal, timezone);
+      end = fromLocalInput(endVal, timezone);
+    } catch (error) {
+      setDateError(
+        error instanceof Error
+          ? error.message
+          : 'Check the event date and timezone.'
+      );
+      return;
+    }
     if (!start || !end) return;
 
     // Guard against past or inverted ranges; the browser `min` is advisory only.
@@ -118,7 +131,7 @@ export function GroupEventForm({
       setDateError('Start time cannot be in the past.');
       return;
     }
-    if (endMs < startMs) {
+    if (endMs <= startMs) {
       setDateError('End time must be after the start time.');
       return;
     }
@@ -129,7 +142,7 @@ export function GroupEventForm({
       description: String(form.get('description') || '').trim(),
       start_time: start,
       end_time: end,
-      timezone: String(form.get('timezone') || defaultTimezone()),
+      timezone,
       event_type: eventType,
       location: String(form.get('location') || '').trim(),
       meeting_link: String(form.get('meeting_link') || '').trim(),
@@ -179,6 +192,13 @@ export function GroupEventForm({
         />
       </Field>
 
+      <TimezoneSelect
+        value={timezone}
+        onChange={(zone) => {
+          setTimezone(zone);
+          setDateError('');
+        }}
+      />
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
         <Field label='Starts'>
           <Input
@@ -214,10 +234,6 @@ export function GroupEventForm({
           {dateError}
         </p>
       )}
-
-      <Field label='Timezone'>
-        <Input name='timezone' defaultValue={initial.timezone} />
-      </Field>
 
       <fieldset>
         <legend className='mb-2 font-inter text-sm font-medium'>Type</legend>
