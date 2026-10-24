@@ -2,6 +2,7 @@
 
 import React, { FC, useEffect, useRef, useState } from 'react';
 
+import { useCrossBlockSelection } from '@/components/editor/Selection';
 import { getEditorConfig } from '@/config/editor/monkeys_editor.config';
 import MonkeysEditor, { OutputData } from '@themonkeys/monkeys-editor';
 
@@ -51,6 +52,8 @@ const Editor: FC<EditorProps> = React.memo(function Editor({
     undo: ready ? { undo: () => run('undo'), redo: () => run('redo') } : null,
     clearDocument: ready ? () => run('clear') : null,
   });
+
+  useCrossBlockSelection(editorInstance, 'monkeys_editor_editor-container');
 
   useEffect(() => {
     const holder = canvasRef.current;
