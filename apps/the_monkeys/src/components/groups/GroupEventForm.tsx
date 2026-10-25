@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
 import { TimezoneSelect } from '@/components/events/TimezoneSelect';
 import { CategoryChips } from '@/components/geo/CategoryChips';
@@ -8,7 +8,11 @@ import { PlacePin } from '@/components/geo/PlacePin';
 import { useIPLocation } from '@/hooks/useIPLocation';
 import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
-import { geocodeAddress, pinFromCoords } from '@/lib/geoSearch';
+import {
+  geocodeAddress,
+  normalizePlaceText,
+  pinFromCoords,
+} from '@/lib/geoSearch';
 import { EventItem, EventType } from '@/services/events/eventTypes';
 import {
   GroupEventBody,
@@ -67,6 +71,17 @@ export function GroupEventForm({
   const [pin, setPin] = useState(() =>
     pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
   );
+  const [location, setLocation] = useState(event?.location || '');
+  const submissionId = useRef(0);
+  const invalidateSubmission = () => {
+    submissionId.current++;
+  };
+  useEffect(() => {
+    const pending = submissionId;
+    return () => {
+      pending.current++;
+    };
+  }, []);
   const [selectedTags, setSelectedTags] = useState(
     () => partitionTags(event?.tags).selected
   );
@@ -109,7 +124,9 @@ export function GroupEventForm({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
+    const element = e.currentTarget;
+    const submission = ++submissionId.current;
+    const form = new FormData(element);
     let start: string, end: string;
     try {
       start = fromLocalInput(startVal, timezone);
@@ -158,7 +175,10 @@ export function GroupEventForm({
     if (eventType !== 'virtual') {
       let resolved = pin;
       if (!resolved && body.location) {
-        resolved = await geocodeAddress(body.location, ipLocation.city);
+        // A map lookup is optional; the backend can resolve the address too.
+        resolved = await geocodeAddress(body.location, ipLocation.city).catch(
+          () => null
+        );
       }
       if (resolved) {
         body.latitude = resolved.latitude;
@@ -166,6 +186,7 @@ export function GroupEventForm({
       }
     }
     if (!body.title) return;
+    if (submission !== submissionId.current || !element.isConnected) return;
     onSubmit(body);
   };
 
@@ -173,7 +194,17 @@ export function GroupEventForm({
   const showLink = eventType !== 'in_person';
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-5'>
+    <form
+      onSubmit={handleSubmit}
+      onChangeCapture={invalidateSubmission}
+      onClickCapture={(e) => {
+        // Custom controls change state via buttons, not native change events.
+        if (e.target instanceof Element && e.target.closest('button')) {
+          invalidateSubmission();
+        }
+      }}
+      className='space-y-5'
+    >
       <Field label='Title'>
         <Input
           name='title'
@@ -260,11 +291,25 @@ export function GroupEventForm({
           <Field label='Place'>
             <Input
               name='location'
-              defaultValue={initial.location}
+              value={location}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (normalizePlaceText(next) !== normalizePlaceText(location)) {
+                  setPin(null);
+                }
+                setLocation(next);
+              }}
               placeholder='City or venue'
             />
           </Field>
-          <PlacePin value={pin} onChange={setPin} />
+          <PlacePin
+            value={pin}
+            onChange={(next) => {
+              invalidateSubmission();
+              setPin(next);
+            }}
+            address={location}
+          />
         </>
       )}
       {showLink && (

@@ -29,7 +29,11 @@ import {
   toIsoTime,
   toLocalInput,
 } from '@/lib/eventTime';
-import { geocodeAddress, pinFromCoords } from '@/lib/geoSearch';
+import {
+  geocodeAddress,
+  normalizePlaceText,
+  pinFromCoords,
+} from '@/lib/geoSearch';
 import {
   EventBody,
   EventItem,
@@ -120,6 +124,17 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [pin, setPin] = useState(() =>
     pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
   );
+  const [location, setLocation] = useState(event?.location || '');
+  const submissionId = useRef(0);
+  const invalidateSubmission = () => {
+    submissionId.current++;
+  };
+  useEffect(() => {
+    const pending = submissionId;
+    return () => {
+      pending.current++;
+    };
+  }, []);
   const [selectedTags, setSelectedTags] = useState(
     () => partitionTags(event?.tags).selected
   );
@@ -232,7 +247,9 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
+    const element = e.currentTarget;
+    const submission = ++submissionId.current;
+    const form = new FormData(element);
     let start: string,
       end: string,
       closes = '',
@@ -314,7 +331,10 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     if (eventType !== 'virtual') {
       let resolved = pin;
       if (!resolved && body.location) {
-        resolved = await geocodeAddress(body.location, ipLocation.city);
+        // A map lookup is optional; the backend can resolve the address too.
+        resolved = await geocodeAddress(body.location, ipLocation.city).catch(
+          () => null
+        );
       }
       if (resolved) {
         body.latitude = resolved.latitude;
@@ -368,6 +388,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       body.rsvp_closes_at = closes;
     }
 
+    if (submission !== submissionId.current || !element.isConnected) return;
     onSubmit(body, coverFile ?? undefined);
   };
 
@@ -385,7 +406,17 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   ] as const;
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-5'>
+    <form
+      onSubmit={handleSubmit}
+      onChangeCapture={invalidateSubmission}
+      onClickCapture={(e) => {
+        // Custom controls change state via buttons, not native change events.
+        if (e.target instanceof Element && e.target.closest('button')) {
+          invalidateSubmission();
+        }
+      }}
+      className='space-y-5'
+    >
       {ended && (
         <p className='rounded-md border border-border-light bg-foreground-light/40 px-3 py-2 font-inter text-sm text-gray-600 dark:border-border-dark/60 dark:bg-foreground-dark/30 dark:text-gray-400'>
           This meetup has ended. You can still update the writeup, cover, and
@@ -510,12 +541,27 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           <Field label='Place'>
             <Input
               name='location'
-              defaultValue={initial.location}
+              value={location}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (normalizePlaceText(next) !== normalizePlaceText(location)) {
+                  setPin(null);
+                }
+                setLocation(next);
+              }}
               placeholder='City or venue'
               readOnly={ended}
             />
           </Field>
-          <PlacePin value={pin} onChange={setPin} disabled={ended} />
+          <PlacePin
+            value={pin}
+            onChange={(next) => {
+              invalidateSubmission();
+              setPin(next);
+            }}
+            disabled={ended}
+            address={location}
+          />
         </>
       )}
       {showLink && (
