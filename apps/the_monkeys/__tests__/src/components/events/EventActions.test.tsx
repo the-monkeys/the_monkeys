@@ -1,6 +1,6 @@
 import { EventActions } from '@/components/events/EventActions';
 import { EventItem } from '@/services/events/eventTypes';
-import { cloneEvent } from '@/services/events/eventsApi';
+import { cloneEvent, downloadCalendar } from '@/services/events/eventsApi';
 import {
   cleanup,
   fireEvent,
@@ -41,6 +41,109 @@ const source: EventItem = {
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+});
+
+it.each(['completed', 'published'] as const)(
+  'uses the simple Edit label for %s events',
+  (status) => {
+    render(<EventActions event={{ ...source, status }} canManage />);
+    expect(
+      screen
+        .getByRole('link', { name: 'Edit', exact: true })
+        .getAttribute('href')
+    ).toBe('/events/legacy-meetup/edit');
+    expect(screen.queryByRole('link', { name: 'Edit writeup' })).toBeNull();
+  }
+);
+
+it('offers provider choices without downloading anything until a choice is made', async () => {
+  const user = userEvent.setup();
+  render(<EventActions event={{ ...source, timezone: 'Asia/Kolkata' }} />);
+  const trigger = screen.getByRole('button', { name: 'Add to calendar' });
+  await user.click(trigger);
+  expect(screen.getByRole('dialog', { name: 'Add to calendar' })).toBeTruthy();
+  const google = new URL(
+    screen.getByRole('link', { name: /Google Calendar/ }).getAttribute('href')!
+  );
+  expect(google.searchParams.get('dates')).toBe(
+    '20260101T133000Z/20260101T150000Z'
+  );
+  expect(screen.getByRole('link', { name: /Outlook/ })).toBeTruthy();
+  expect(downloadCalendar).not.toHaveBeenCalled();
+  await user.keyboard('{Escape}');
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(document.activeElement).toBe(trigger);
+});
+
+it('exports only the selected date to Apple by default, including for a recurring event', async () => {
+  const user = userEvent.setup();
+  render(
+    <EventActions
+      event={{ ...source, series_id: 8, recurrence_text: 'Every week on Thu' }}
+    />
+  );
+  await user.click(screen.getByRole('button', { name: 'Add to calendar' }));
+  expect(
+    (screen.getByRole('radio', { name: /This occurrence/ }) as HTMLInputElement)
+      .checked
+  ).toBe(true);
+  await user.click(screen.getByRole('button', { name: /Apple Calendar/ }));
+  await waitFor(() =>
+    expect(downloadCalendar).toHaveBeenCalledWith('legacy-meetup', 'this')
+  );
+});
+
+it('uses explicit import fallback for all providers when exporting available series dates', async () => {
+  const user = userEvent.setup();
+  render(
+    <EventActions
+      event={{ ...source, series_id: 8, recurrence_text: 'Every week on Thu' }}
+    />
+  );
+  await user.click(screen.getByRole('button', { name: 'Add to calendar' }));
+  await user.click(
+    screen.getByRole('radio', { name: /Available series dates/ })
+  );
+  expect(
+    screen.queryByRole('link', { name: /Google Calendar|Outlook/ })
+  ).toBeNull();
+  expect(
+    screen.getByText(/Google Calendar imports calendar files on a computer/)
+  ).toBeTruthy();
+  expect(screen.getByText(/do not update automatically/i)).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: /Google Calendar/ }));
+  await waitFor(() =>
+    expect(downloadCalendar).toHaveBeenCalledWith('legacy-meetup', 'series')
+  );
+});
+
+it('keeps export failures inside the dialog and lets the user retry', async () => {
+  vi.mocked(downloadCalendar).mockRejectedValueOnce(
+    new Error('Calendar series export is not available on this server yet.')
+  );
+  const user = userEvent.setup();
+  render(<EventActions event={source} />);
+  await user.click(screen.getByRole('button', { name: 'Add to calendar' }));
+  await user.click(screen.getByRole('button', { name: /Apple Calendar/ }));
+  expect((await screen.findByRole('alert')).textContent).toContain(
+    'Calendar series export is not available'
+  );
+  await user.click(screen.getByRole('button', { name: /Apple Calendar/ }));
+  await waitFor(() => expect(downloadCalendar).toHaveBeenCalledTimes(2));
+});
+
+it('offers cancellation-aware files instead of active provider appointments for a cancelled date', async () => {
+  const user = userEvent.setup();
+  render(<EventActions event={{ ...source, status: 'cancelled' }} />);
+  await user.click(screen.getByRole('button', { name: 'Add to calendar' }));
+  expect(
+    screen.queryAllByRole('link', { name: /Google Calendar|Outlook/ })
+  ).toHaveLength(0);
+  expect(screen.getByText(/This occurrence was cancelled/)).toBeTruthy();
+  await user.click(screen.getByRole('button', { name: /Google Calendar/ }));
+  await waitFor(() =>
+    expect(downloadCalendar).toHaveBeenCalledWith('legacy-meetup', 'this')
+  );
 });
 
 it('requires a valid choice for a legacy timezone and applies it only to the new draft', async () => {

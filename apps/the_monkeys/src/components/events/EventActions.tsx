@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { TimezoneSelect } from '@/components/events/TimezoneSelect';
+import { EventCalendarDialog } from '@/components/events/detail/EventCalendarDialog';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
@@ -19,7 +20,6 @@ import {
 import { EventItem } from '@/services/events/eventTypes';
 import {
   cloneEvent,
-  downloadCalendar,
   eventError,
   getShareMeta,
   reportEvent,
@@ -155,40 +155,27 @@ export function EventActions({
 
   return (
     <div className='flex flex-wrap items-center gap-2'>
-      <Button variant='outline' size='sm' onClick={share}>
+      <Button variant='outline' size='sm' className='min-h-11' onClick={share}>
         <Icon name='RiShare' size={16} className='mr-1' />
         Share
       </Button>
-      <Button
-        variant='outline'
-        size='sm'
-        onClick={() =>
-          downloadCalendar(event.slug).catch((err) =>
-            toast({
-              title: 'Could not download calendar',
-              description: eventError(err),
-            })
-          )
-        }
-      >
-        <Icon name='RiDownload2' size={16} className='mr-1' />
-        Calendar
-      </Button>
+      <EventCalendarDialog key={event.slug} event={event} />
       {canManage && (
         <>
-          <Button asChild variant='outline' size='sm'>
+          <Button asChild variant='outline' size='sm' className='min-h-11'>
             <Link href={`${EVENTS_ROUTE}/${event.slug}/edit`}>
               <Icon name='RiPencil' size={16} className='mr-1' />
-              {ended ? 'Edit writeup' : 'Edit'}
+              Edit
             </Link>
           </Button>
-          <Button asChild variant='brand' size='sm'>
+          <Button asChild variant='brand' size='sm' className='min-h-11'>
             <Link href={`${EVENTS_ROUTE}/${event.slug}/manage`}>Manage</Link>
           </Button>
           {showClone && (
             <Button
               variant='outline'
               size='sm'
+              className='min-h-11'
               onClick={() => setCloneOpen((v) => !v)}
             >
               Schedule again
@@ -200,6 +187,7 @@ export function EventActions({
         <Button
           variant='ghost'
           size='sm'
+          className='min-h-11'
           onClick={() => setReportOpen((v) => !v)}
         >
           Report
