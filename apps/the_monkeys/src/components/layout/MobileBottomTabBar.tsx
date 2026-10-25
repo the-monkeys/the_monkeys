@@ -7,7 +7,7 @@ import Icon, { IconName } from '@/components/icon';
 import {
   BOOKMARK_ROUTE,
   CREATE_ROUTE,
-  EXPLORE_TOPICS_ROUTE,
+  EVENTS_ROUTE,
   HOME_ROUTE,
 } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
@@ -30,10 +30,10 @@ export const getMobileBottomTabs = (session?: IUser | null): MobileTab[] => [
     match: (p) => p === '/' || p === '/feed',
   },
   {
-    href: EXPLORE_TOPICS_ROUTE,
-    label: 'Explore',
-    icon: 'RiCompass',
-    match: (p) => p.startsWith('/topics'),
+    href: EVENTS_ROUTE,
+    label: 'Events',
+    icon: 'RiCalendar',
+    match: (p) => p === EVENTS_ROUTE || p.startsWith(`${EVENTS_ROUTE}/`),
   },
   {
     href: CREATE_ROUTE,

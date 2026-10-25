@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef, useState } from 'react';
+
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
@@ -9,7 +11,6 @@ import {
   actorUsername,
   isUnreadStatus,
   notificationCopy,
-  notificationHref,
   notificationIcon,
   profileHref,
   timeAgo,
@@ -18,16 +19,20 @@ import {
 import { FRNNotification } from '@/services/notification/notificationTypes';
 import { twMerge } from 'tailwind-merge';
 
+import { NotificationDetailDialog } from './NotificationDetailDialog';
+
 type Props = {
   notif: FRNNotification;
   onNavigate?: () => void;
+  onOpenDetails?: (notification: FRNNotification) => void;
 };
 
-export function NotificationRow({ notif, onNavigate }: Props) {
+export function NotificationRow({ notif, onNavigate, onOpenDetails }: Props) {
+  const [selected, setSelected] = useState<FRNNotification | null>(null);
+  const detailTrigger = useRef<HTMLButtonElement>(null);
   const unread = isUnreadStatus(notif.status);
   const actor = actorUsername(notif.content?.data);
   const copy = notificationCopy(notif);
-  const href = notificationHref(notif);
   const icon = notificationIcon(notif);
   const userHref = profileHref(copy.actor);
   const post = useNotificationPost(notif.content?.data);
@@ -43,7 +48,7 @@ export function NotificationRow({ notif, onNavigate }: Props) {
     copy.fallbackBody !== copy.fallbackTitle;
 
   const inner = (
-    <div className='flex min-w-0 items-start gap-2.5 sm:gap-3'>
+    <div className='pointer-events-none relative flex min-w-0 items-start gap-2.5 sm:gap-3'>
       {unread ? <span className='sr-only'>Unread notification</span> : null}
 
       {unread ? (
@@ -62,7 +67,7 @@ export function NotificationRow({ notif, onNavigate }: Props) {
             e.stopPropagation();
             onNavigate?.();
           }}
-          className='mt-0.5 size-10 shrink-0 rounded-full outline-none ring-brand-orange/50 transition-shadow focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black'
+          className='pointer-events-auto mt-0.5 size-10 shrink-0 rounded-full outline-none ring-brand-orange/50 transition-shadow focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-black'
         >
           <ProfileFrame className='size-full'>
             <ProfileImage username={actor} />
@@ -93,7 +98,7 @@ export function NotificationRow({ notif, onNavigate }: Props) {
                   e.stopPropagation();
                   onNavigate?.();
                 }}
-                className='hover:underline'
+                className='pointer-events-auto hover:underline'
               >
                 @{copy.actor}
               </Link>
@@ -110,7 +115,7 @@ export function NotificationRow({ notif, onNavigate }: Props) {
               e.stopPropagation();
               onNavigate?.();
             }}
-            className='mt-0.5 block truncate font-inter text-sm leading-5 text-gray-500 hover:underline dark:text-gray-400'
+            className='pointer-events-auto mt-0.5 block truncate font-inter text-sm leading-5 text-gray-500 hover:underline dark:text-gray-400'
           >
             {quotedTitle}
           </Link>
@@ -136,33 +141,55 @@ export function NotificationRow({ notif, onNavigate }: Props) {
         >
           {timeAgo(notif.created_at)}
         </span>
-        {href ? (
-          <Icon
-            name='RiArrowRightS'
-            size={16}
-            className='hidden text-gray-400 transition-transform duration-150 group-hover:translate-x-0.5 sm:block'
-          />
-        ) : null}
+        <Icon
+          name='RiArrowRightS'
+          size={16}
+          className='hidden text-gray-400 transition-transform duration-150 group-hover:translate-x-0.5 sm:block'
+        />
       </div>
     </div>
   );
 
   const className = twMerge(
-    'group block min-w-0 rounded-xl px-2.5 py-3 transition-colors duration-150 sm:px-3',
+    'group relative block min-w-0 rounded-xl px-2.5 py-3 transition-colors duration-150 sm:px-3',
     unread &&
       'bg-brand-orange/[0.06] ring-1 ring-inset ring-brand-orange/10 dark:bg-brand-orange/[0.09] dark:ring-brand-orange/15',
-    href &&
-      (unread
-        ? 'hover:bg-brand-orange/[0.11] dark:hover:bg-brand-orange/[0.14]'
-        : 'hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40')
+    unread
+      ? 'hover:bg-brand-orange/[0.11] dark:hover:bg-brand-orange/[0.14]'
+      : 'hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
   );
 
   return (
-    <div
-      className={className}
-      data-notification-state={unread ? 'unread' : 'read'}
-    >
-      {inner}
-    </div>
+    <>
+      <div
+        className={className}
+        data-notification-state={unread ? 'unread' : 'read'}
+      >
+        {/* Sibling links sit above the stretched button, never nested in it. */}
+        <button
+          ref={detailTrigger}
+          type='button'
+          aria-label={`View notification: ${copy.fallbackTitle}`}
+          aria-haspopup='dialog'
+          onClick={() =>
+            onOpenDetails ? onOpenDetails(notif) : setSelected(notif)
+          }
+          className='absolute inset-0 min-h-11 w-full cursor-pointer rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange'
+        />
+        {inner}
+      </div>
+      {!onOpenDetails && (
+        <NotificationDetailDialog
+          notification={selected}
+          onOpenChange={(open) => {
+            if (!open) setSelected(null);
+          }}
+          onCloseAutoFocus={(event) => {
+            event.preventDefault();
+            detailTrigger.current?.focus();
+          }}
+        />
+      )}
+    </>
   );
 }
