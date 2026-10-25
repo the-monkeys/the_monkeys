@@ -48,9 +48,7 @@ it.each(['completed', 'published'] as const)(
   (status) => {
     render(<EventActions event={{ ...source, status }} canManage />);
     expect(
-      screen
-        .getByRole('link', { name: 'Edit', exact: true })
-        .getAttribute('href')
+      screen.getByRole('link', { name: 'Edit' }).getAttribute('href')
     ).toBe('/events/legacy-meetup/edit');
     expect(screen.queryByRole('link', { name: 'Edit writeup' })).toBeNull();
   }

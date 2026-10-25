@@ -14,7 +14,6 @@ import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
 import { formatPrice, isOrganizer } from '@/lib/eventTime';
 import { EventItem, TicketTierInput } from '@/services/events/eventTypes';
 import {
-  addCoHost,
   cancelEvent,
   createCoupon,
   createTier,
@@ -24,7 +23,6 @@ import {
   eventError,
   exportAttendeesCsv,
   publishEvent,
-  removeCoHost,
   reviewRsvp,
   updateAttendance,
   updateTier,
@@ -33,6 +31,8 @@ import { IUser } from '@/services/models/user';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
+
+import { EventCohosts } from './EventCohosts';
 
 export function EventManage({
   event,
@@ -107,7 +107,12 @@ export function EventManage({
         coupons={couponsQ.data?.coupons || []}
         onChange={refresh}
       />
-      <CohostsBlock event={event} onChange={refresh} />
+      <EventCohosts
+        key={`cohosts-${event.slug}`}
+        event={event}
+        session={session}
+        onChange={refresh}
+      />
       <AttendeesBlock
         key={event.slug}
         slug={event.slug}
@@ -335,66 +340,6 @@ function CouponsBlock({
               }
             >
               Delete
-            </Button>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
-function CohostsBlock({
-  event,
-  onChange,
-}: {
-  event: EventItem;
-  onChange: () => void;
-}) {
-  const { toast } = useToast();
-
-  const onAdd = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const username = String(form.get('username') || '').trim();
-    if (!username) return;
-    try {
-      await addCoHost(event.slug, username);
-      toast({ title: 'Co-host added' });
-      e.currentTarget.reset();
-      onChange();
-    } catch (err) {
-      toast({ title: 'Could not add co-host', description: eventError(err) });
-    }
-  };
-
-  return (
-    <section className='space-y-3'>
-      <h2 className='font-dm_sans font-semibold text-xl'>Co-hosts</h2>
-      <form onSubmit={onAdd} className='flex gap-2'>
-        <Input name='username' placeholder='username' />
-        <Button type='submit' size='sm'>
-          Add
-        </Button>
-      </form>
-      <ul className='space-y-2'>
-        {(event.co_host_usernames || []).map((name) => (
-          <li key={name} className='flex items-center justify-between text-sm'>
-            @{name}
-            <Button
-              size='sm'
-              variant='ghost'
-              onClick={() =>
-                removeCoHost(event.slug, name)
-                  .then(onChange)
-                  .catch((err) =>
-                    toast({
-                      title: 'Could not remove',
-                      description: eventError(err),
-                    })
-                  )
-              }
-            >
-              Remove
             </Button>
           </li>
         ))}

@@ -99,11 +99,11 @@ const Nav = () => {
             {/* Right: Search & Actions */}
             <div className='flex items-center justify-end gap-4 shrink-0'>
               <div className='max-w-[240px]'>
-                <SearchInput className='hidden sm:block' />
+                <SearchInput className='hidden lg:block' />
               </div>
 
               <div className='flex items-center gap-3'>
-                <div className='block sm:hidden'>
+                <div className='block lg:hidden'>
                   <SearchInputLink />
                 </div>
 
