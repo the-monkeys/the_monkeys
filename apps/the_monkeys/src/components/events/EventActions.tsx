@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { AddToCalendarMenu } from '@/components/events/AddToCalendarMenu';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
@@ -17,7 +18,6 @@ import {
 import { EventItem } from '@/services/events/eventTypes';
 import {
   cloneEvent,
-  downloadCalendar,
   eventError,
   getShareMeta,
   reportEvent,
@@ -135,21 +135,7 @@ export function EventActions({
         <Icon name='RiShare' size={16} className='mr-1' />
         Share
       </Button>
-      <Button
-        variant='outline'
-        size='sm'
-        onClick={() =>
-          downloadCalendar(event.slug).catch((err) =>
-            toast({
-              title: 'Could not download calendar',
-              description: eventError(err),
-            })
-          )
-        }
-      >
-        <Icon name='RiDownload2' size={16} className='mr-1' />
-        Calendar
-      </Button>
+      <AddToCalendarMenu event={event} />
       {canManage && (
         <>
           <Button asChild variant='outline' size='sm'>
