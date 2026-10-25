@@ -58,6 +58,8 @@ export type IconName =
   | 'RiTwitterX'
   | 'RiDiscord'
   | 'RiGoogle'
+  | 'RiApple'
+  | 'RiMicrosoft'
   | 'RiMeta'
   | 'RiWhatsapp'
   | 'RiYoutube'
