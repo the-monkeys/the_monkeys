@@ -15,11 +15,12 @@ import axiosInstance from '@/services/api/axiosInstance';
 import { FRNNotification } from '@/services/notification/notificationTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@the-monkeys/ui/atoms/dropdown-menu';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@the-monkeys/ui/atoms/popover';
 
+import { NotificationDetailDialog } from './NotificationDetailDialog';
 import { NotificationRow } from './NotificationRow';
 
 type Props = {
@@ -30,6 +31,11 @@ const WSNotificationDropdown = ({ username }: Props) => {
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<FRNNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [detail, setDetail] = useState<{
+    username: string;
+    notification: FRNNotification;
+  } | null>(null);
+  const bellRef = useRef<HTMLButtonElement>(null);
   const esRef = useRef<EventSource | null>(null);
   const reconnectTimer = useRef<ReturnType<typeof setTimeout>>();
   const generation = useRef(0);
@@ -144,6 +150,7 @@ const WSNotificationDropdown = ({ username }: Props) => {
     disconnect();
     setNotifications([]);
     setUnreadCount(0);
+    setDetail(null);
     fetchNotifications();
     connect();
 
@@ -166,91 +173,113 @@ const WSNotificationDropdown = ({ username }: Props) => {
   }, [open, unreadCount, markAllRead]);
 
   return (
-    <DropdownMenu modal={false} open={open} onOpenChange={handleOpenChange}>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant='ghost'
-          size='icon'
-          className='relative cursor-pointer rounded-full transition-colors hover:bg-foreground-light/40 hover:opacity-100 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 dark:hover:bg-foreground-dark/40'
-          title='View Notifications'
-          aria-label={
-            unreadCount > 0
-              ? `View notifications, ${unreadCount} unread`
-              : 'View notifications'
-          }
-        >
-          {unreadCount > 0 ? (
-            <Icon name='RiNotification3' type='Fill' />
-          ) : (
-            <Icon name='RiNotification3' />
-          )}
-          {unreadCount > 0 && (
-            <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#d63f2d] px-1 text-[10px] font-bold leading-none text-white ring-2 ring-background-light dark:bg-brand-orange dark:ring-background-dark'>
-              {unreadCount > 99 ? '99+' : unreadCount}
-            </span>
-          )}
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent
-        align='end'
-        sideOffset={8}
-        collisionPadding={8}
-        aria-label='Notifications'
-        className='flex max-h-[min(38rem,calc(100dvh-var(--app-header-h,5rem)-0.75rem))] w-[calc(100vw-1rem)] flex-col overflow-hidden rounded-2xl border border-border-light/80 bg-background-light p-0 shadow-[0_20px_60px_-24px_rgba(15,23,42,0.38)] sm:mr-1 sm:w-[22rem] md:w-96 dark:border-border-dark/70 dark:bg-background-dark dark:shadow-[0_24px_70px_-26px_rgba(0,0,0,0.78)]'
-      >
-        <div className='flex shrink-0 items-center justify-between border-b border-border-light/70 bg-background-light/95 px-4 py-3 backdrop-blur-md dark:border-border-dark/60 dark:bg-background-dark/95'>
-          <h3 className='font-dm_sans text-base font-semibold'>
-            Notifications
-          </h3>
-          {notifications.length > 0 ? (
-            <span
-              className='inline-flex min-w-6 items-center justify-center rounded-full bg-foreground-light/50 px-2 py-0.5 font-inter text-xs font-semibold text-gray-600 dark:bg-foreground-dark/60 dark:text-gray-300'
-              aria-label={`${notifications.length} notifications`}
-            >
-              {notifications.length}
-            </span>
-          ) : null}
-        </div>
-
-        <div className='min-h-0 flex-1 overscroll-contain overflow-y-auto px-2 py-2'>
-          {notifications.length ? (
-            notifications.map((item) => (
-              <NotificationRow
-                key={item.notification_id}
-                notif={item}
-                onNavigate={() => handleOpenChange(false)}
-              />
-            ))
-          ) : (
-            <div className='flex flex-col items-center px-4 py-10 text-center'>
-              <span className='mb-3 flex size-11 items-center justify-center rounded-full bg-foreground-light/40 text-gray-500 dark:bg-foreground-dark/40 dark:text-gray-400'>
-                <Icon name='RiNotification3' size={20} />
+    <>
+      <Popover modal={false} open={open} onOpenChange={handleOpenChange}>
+        <PopoverTrigger asChild>
+          <Button
+            ref={bellRef}
+            variant='ghost'
+            size='icon'
+            className='relative cursor-pointer rounded-full transition-colors hover:bg-foreground-light/40 hover:opacity-100 focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 dark:hover:bg-foreground-dark/40'
+            title='View Notifications'
+            aria-label={
+              unreadCount > 0
+                ? `View notifications, ${unreadCount} unread`
+                : 'View notifications'
+            }
+          >
+            {unreadCount > 0 ? (
+              <Icon name='RiNotification3' type='Fill' />
+            ) : (
+              <Icon name='RiNotification3' />
+            )}
+            {unreadCount > 0 && (
+              <span className='absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#d63f2d] px-1 text-[10px] font-bold leading-none text-white ring-2 ring-background-light dark:bg-brand-orange dark:ring-background-dark'>
+                {unreadCount > 99 ? '99+' : unreadCount}
               </span>
-              <p className='font-dm_sans text-sm font-medium'>
-                You&apos;re all caught up
-              </p>
-              <p className='mt-1 font-inter text-xs leading-5 text-gray-500 dark:text-gray-400'>
-                New activity will appear here.
-              </p>
-            </div>
-          )}
-        </div>
+            )}
+          </Button>
+        </PopoverTrigger>
 
-        <Link
-          href={NOTIFICATIONS_ROUTE}
-          onClick={() => handleOpenChange(false)}
-          className='group/footer flex shrink-0 items-center justify-center gap-1.5 border-t border-border-light/70 bg-background-light/95 px-4 py-3 font-inter text-sm font-semibold text-[#c93422] transition-colors hover:bg-brand-orange/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange dark:border-border-dark/60 dark:bg-background-dark/95 dark:text-brand-orange dark:hover:bg-brand-orange/[0.1]'
+        <PopoverContent
+          align='end'
+          sideOffset={8}
+          collisionPadding={8}
+          aria-label='Notifications'
+          onCloseAutoFocus={(event) => {
+            if (detail?.username === username) event.preventDefault();
+          }}
+          className='flex max-h-[min(38rem,calc(100dvh-var(--app-header-h,5rem)-0.75rem))] w-[calc(100vw-1rem)] flex-col overflow-hidden rounded-2xl border border-border-light/80 bg-background-light p-0 shadow-[0_20px_60px_-24px_rgba(15,23,42,0.38)] sm:mr-1 sm:w-[22rem] md:w-96 dark:border-border-dark/70 dark:bg-background-dark dark:shadow-[0_24px_70px_-26px_rgba(0,0,0,0.78)]'
         >
-          View all notifications
-          <Icon
-            name='RiArrowRight'
-            size={16}
-            className='transition-transform duration-150 group-hover/footer:translate-x-0.5'
-          />
-        </Link>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <div className='flex shrink-0 items-center justify-between border-b border-border-light/70 bg-background-light/95 px-4 py-3 backdrop-blur-md dark:border-border-dark/60 dark:bg-background-dark/95'>
+            <h3 className='font-dm_sans text-base font-semibold'>
+              Notifications
+            </h3>
+            {notifications.length > 0 ? (
+              <span
+                className='inline-flex min-w-6 items-center justify-center rounded-full bg-foreground-light/50 px-2 py-0.5 font-inter text-xs font-semibold text-gray-600 dark:bg-foreground-dark/60 dark:text-gray-300'
+                aria-label={`${notifications.length} notifications`}
+              >
+                {notifications.length}
+              </span>
+            ) : null}
+          </div>
+
+          <div className='min-h-0 flex-1 overscroll-contain overflow-y-auto px-2 py-2'>
+            {notifications.length ? (
+              notifications.map((item) => (
+                <NotificationRow
+                  key={item.notification_id}
+                  notif={item}
+                  onNavigate={() => handleOpenChange(false)}
+                  onOpenDetails={(notification) => {
+                    setDetail({ username, notification });
+                    handleOpenChange(false);
+                  }}
+                />
+              ))
+            ) : (
+              <div className='flex flex-col items-center px-4 py-10 text-center'>
+                <span className='mb-3 flex size-11 items-center justify-center rounded-full bg-foreground-light/40 text-gray-500 dark:bg-foreground-dark/40 dark:text-gray-400'>
+                  <Icon name='RiNotification3' size={20} />
+                </span>
+                <p className='font-dm_sans text-sm font-medium'>
+                  You&apos;re all caught up
+                </p>
+                <p className='mt-1 font-inter text-xs leading-5 text-gray-500 dark:text-gray-400'>
+                  New activity will appear here.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <Link
+            href={NOTIFICATIONS_ROUTE}
+            onClick={() => handleOpenChange(false)}
+            className='group/footer flex shrink-0 items-center justify-center gap-1.5 border-t border-border-light/70 bg-background-light/95 px-4 py-3 font-inter text-sm font-semibold text-[#c93422] transition-colors hover:bg-brand-orange/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand-orange dark:border-border-dark/60 dark:bg-background-dark/95 dark:text-brand-orange dark:hover:bg-brand-orange/[0.1]'
+          >
+            View all notifications
+            <Icon
+              name='RiArrowRight'
+              size={16}
+              className='transition-transform duration-150 group-hover/footer:translate-x-0.5'
+            />
+          </Link>
+        </PopoverContent>
+      </Popover>
+      <NotificationDetailDialog
+        notification={
+          detail?.username === username ? detail.notification : null
+        }
+        onOpenChange={(next) => {
+          if (!next) setDetail(null);
+        }}
+        onCloseAutoFocus={(event) => {
+          event.preventDefault();
+          bellRef.current?.focus();
+        }}
+      />
+    </>
   );
 };
 

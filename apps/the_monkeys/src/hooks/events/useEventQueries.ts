@@ -83,10 +83,14 @@ export function useEventComments(slug: string | undefined, offset = 0) {
   });
 }
 
-export function useEventAttendees(slug: string | undefined, enabled = true) {
+export function useEventAttendees(
+  slug: string | undefined,
+  enabled = true,
+  params: NonNullable<Parameters<typeof listAttendees>[1]> = { limit: 200 }
+) {
   return useQuery({
-    queryKey: queryKeys.events.attendees(slug),
-    queryFn: () => listAttendees(slug!, { limit: 200 }),
+    queryKey: queryKeys.events.attendeePage(slug, params),
+    queryFn: () => listAttendees(slug!, params),
     enabled: enabled && !!slug,
   });
 }

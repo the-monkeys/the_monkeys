@@ -1,30 +1,30 @@
+import type { OutputBlockData } from '@themonkeys/monkeys-editor';
 import { describe, expect, it } from 'vitest';
 
 import { isDocumentTitleBlock, withoutPostTitle } from './getBlogContent';
 
+type TextBlock = OutputBlockData<string, { text: string; level?: number }>;
+
 describe('isDocumentTitleBlock', () => {
   it('accepts a TitleBlock leftover from older drafts', () => {
-    expect(
-      isDocumentTitleBlock({ type: 'title', data: { text: 'Hello' } })
-    ).toBe(true);
+    const block: TextBlock = { type: 'title', data: { text: 'Hello' } };
+    expect(isDocumentTitleBlock(block)).toBe(true);
   });
 
   it('accepts Heading 1 like main create post', () => {
-    expect(
-      isDocumentTitleBlock({
-        type: 'header',
-        data: { text: 'Hello', level: 1 },
-      })
-    ).toBe(true);
+    const block: TextBlock = {
+      type: 'header',
+      data: { text: 'Hello', level: 1 },
+    };
+    expect(isDocumentTitleBlock(block)).toBe(true);
   });
 
   it('rejects Heading 2 as the post title', () => {
-    expect(
-      isDocumentTitleBlock({
-        type: 'header',
-        data: { text: 'Section', level: 2 },
-      })
-    ).toBe(false);
+    const block: TextBlock = {
+      type: 'header',
+      data: { text: 'Section', level: 2 },
+    };
+    expect(isDocumentTitleBlock(block)).toBe(false);
   });
 });
 

@@ -32,6 +32,49 @@ function notif(
 }
 
 describe('notificationPresentation', () => {
+  it.each([
+    ['event_cohost_added_inapp', ' added you as a co-host'],
+    ['event_cohost_added_sse', ' added you as a co-host'],
+    ['event_cohost_removed_inapp', ' removed you as a co-host'],
+    ['event_cohost_removed_sse', ' removed you as a co-host'],
+    ['event_cohost_left_inapp', ' left as a co-host'],
+    ['event_cohost_left_sse', ' left as a co-host'],
+  ])('presents %s with event and actor links', (template_id, rest) => {
+    const notification = notif({
+      template_id,
+      category: 'events',
+      content: {
+        title: 'Co-host update',
+        body: '',
+        data: {
+          actor_name: 'local_host',
+          remover_name: 'local_host',
+          event_slug: 'local-meetup',
+          event_title: 'Local meetup',
+        },
+      },
+    });
+    const copy = notificationCopy(notification);
+    expect(copy.actor).toBe('local_host');
+    expect(copy.rest).toBe(rest);
+    expect(copy.eventTitle).toBe('Local meetup');
+    expect(copy.eventHref).toBe('/events/local-meetup');
+    expect(notificationHref(notification)).toBe('/events/local-meetup');
+    expect(profileHref(copy.actor)).toBe('/local_host');
+    expect(notificationIcon(notification)).toBe('RiCalendar');
+  });
+
+  it('keeps co-author removal wording and profile fallback for notifications without an event', () => {
+    const notification = notif({
+      template_id: 'coauthor_removed_inapp',
+      content: { title: '', body: '', data: { remover_name: 'writer' } },
+    });
+    expect(notificationCopy(notification).rest).toBe(
+      ' removed you as a co-author'
+    );
+    expect(notificationHref(notification)).toBe('/writer');
+  });
+
   it('treats read and seen as read', () => {
     expect(isUnreadStatus('delivered')).toBe(true);
     expect(isUnreadStatus('read')).toBe(false);

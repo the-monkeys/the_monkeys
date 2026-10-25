@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useEventList } from '@/hooks/events/useEventQueries';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   eventPriceLabel,
   eventTypeLabel,
@@ -47,6 +48,7 @@ export function EventRelated({ event }: { event: EventItem }) {
 }
 
 function RelatedCard({ event }: { event: EventItem }) {
+  const timezone = useViewerTimezone();
   return (
     <Link
       href={`${EVENTS_ROUTE}/${event.slug}`}
@@ -78,7 +80,7 @@ function RelatedCard({ event }: { event: EventItem }) {
           {event.title}
         </h3>
         <p className='mt-1 line-clamp-1 font-inter text-xs text-gray-500 dark:text-gray-400'>
-          {formatEventWhen(event.start_time, undefined, event.timezone)}
+          {formatEventWhen(event.start_time, undefined, timezone)}
         </p>
         <p className='mt-2 font-inter text-xs font-medium'>
           {eventPriceLabel(event)}
