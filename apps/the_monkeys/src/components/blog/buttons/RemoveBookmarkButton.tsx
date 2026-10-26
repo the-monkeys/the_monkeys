@@ -2,6 +2,8 @@ import { useState } from 'react';
 
 import Icon from '@/components/icon';
 import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
+import { optimisticallySetBookmark } from '@/lib/bookmarkCache';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
@@ -17,25 +19,35 @@ export const RemoveBookmarkButton = ({
   const [loading, setLoading] = useState<boolean>(false);
 
   const onPostRemoveBookmark = async () => {
+    if (!blogId || loading) return;
     setLoading(true);
 
+    let cacheUpdate:
+      | Awaited<ReturnType<typeof optimisticallySetBookmark>>
+      | undefined;
     try {
+      cacheUpdate = await optimisticallySetBookmark(queryClient, blogId, false);
       const response = await axiosInstance.post(
         `/user/remove-bookmark/${blogId}`
       );
 
       if (response.status === 200) {
+        await Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.blog.bookmarks.count(blogId),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
+          }),
+        ]);
         toast({
           variant: 'success',
           title: 'Success',
           description: 'Removed bookmark successfully.',
         });
-
-        queryClient.invalidateQueries({
-          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
-        });
       }
     } catch (err: unknown) {
+      cacheUpdate?.rollback();
       if (err instanceof Error) {
         toast({
           variant: 'error',
