@@ -19,6 +19,15 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 focus-visible:ring-offset-[#171313]';
 
+// Event covers can point at any host, so they are resized by the local image
+// proxy instead of the Next.js optimizer (which needs an allowlist).
+const coverWidths = [384, 640, 828];
+const coverSizes = '(min-width: 1024px) 570px, 100vw';
+
+function coverSrc(image: string, width: number): string {
+  return `/api/proxy-image?url=${encodeURIComponent(image)}&w=${width}`;
+}
+
 function eventPlace(event: EventItem): string {
   if (event.event_type === 'virtual') return 'Online';
   if (event.venue?.city) {
@@ -39,6 +48,7 @@ function normalizeOrganizer(username?: string): string | undefined {
 
 export function LandingFeaturedEvent({ event }: { event: EventItem }) {
   const href = `${EVENTS_ROUTE}/${event.slug}`;
+  const coverImage = event.cover_image;
   const title = purifyHTMLString(event.title);
   const description = purifyHTMLString(event.description || '');
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
@@ -69,12 +79,16 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
       aria-label='Featured event'
       className='group relative flex overflow-hidden rounded-xl bg-[#171313] text-white shadow-sm'
     >
-      {event.cover_image ? (
+      {coverImage ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={event.cover_image}
+          src={coverSrc(coverImage, 828)}
+          srcSet={coverWidths
+            .map((width) => `${coverSrc(coverImage, width)} ${width}w`)
+            .join(', ')}
+          sizes={coverSizes}
           alt=''
-          loading='eager'
+          loading='lazy'
           decoding='async'
           className='absolute inset-0 h-full w-full object-cover opacity-35 transition duration-700 group-hover:scale-[1.025] group-hover:opacity-40'
         />
