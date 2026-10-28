@@ -17,11 +17,23 @@ export interface ActiveUserDetail {
   last_name?: string;
 }
 
-interface ActiveUsersResponse {
+export interface ActiveUsersResponse {
   active_users?: number;
   user_details?: ActiveUserDetail[];
   status_code?: number;
 }
+
+export const ACTIVE_USERS_QUERY_KEY = 'active-users';
+
+export const fetchActiveUsers = async (
+  timeRange: string
+): Promise<ActiveUsersResponse> => {
+  const res = await axiosInstanceV2.get<ActiveUsersResponse>(
+    `/user/active-users`,
+    { params: { time_range: timeRange } }
+  );
+  return res.data;
+};
 
 /**
  * Fetches recently-active users for the Featured Authors strip.
@@ -32,14 +44,8 @@ interface ActiveUsersResponse {
  */
 export const useActiveUsers = (timeRange: string = '24h') => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['active-users', timeRange],
-    queryFn: async () => {
-      const res = await axiosInstanceV2.get<ActiveUsersResponse>(
-        `/user/active-users`,
-        { params: { time_range: timeRange } }
-      );
-      return res.data;
-    },
+    queryKey: [ACTIVE_USERS_QUERY_KEY, timeRange],
+    queryFn: () => fetchActiveUsers(timeRange),
     // Cache for 5 minutes — this is decorative data, not a hot path.
     staleTime: 5 * 60 * 1000,
     // Fail silently; the consumer falls back to a static list.
