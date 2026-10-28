@@ -6,6 +6,7 @@ import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import {
   eventDateParts,
@@ -41,7 +42,8 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
   const title = purifyHTMLString(event.title);
   const description = purifyHTMLString(event.description || '');
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
-  const date = eventDateParts(event.start_time, event.timezone);
+  const timezone = useViewerTimezone();
+  const date = eventDateParts(event.start_time, timezone);
   const rawOrganizer = normalizeOrganizer(event.organizer_username);
   const directOrganizer = displayOrganizer(rawOrganizer);
   const { user: organizerProfile } = useGetProfileInfoById(
@@ -122,7 +124,7 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
           <div className='mt-5 space-y-2 rounded-xl border border-white/10 bg-white/[0.055] p-3.5 font-inter text-xs text-white/80 backdrop-blur-sm'>
             <p className='flex items-center gap-2'>
               <Icon name='RiCalendar' size={15} className='text-[#ff9688]' />
-              {formatEventCardWhen(event.start_time, event.timezone)}
+              {formatEventCardWhen(event.start_time, timezone)}
             </p>
             <p className='flex items-center gap-2'>
               <Icon

@@ -1,13 +1,18 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
+import { TimezoneSelect } from '@/components/events/TimezoneSelect';
 import { CategoryChips } from '@/components/geo/CategoryChips';
 import { PlacePin } from '@/components/geo/PlacePin';
 import { useIPLocation } from '@/hooks/useIPLocation';
 import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
-import { geocodeAddress, pinFromCoords } from '@/lib/geoSearch';
+import {
+  geocodeAddress,
+  normalizePlaceText,
+  pinFromCoords,
+} from '@/lib/geoSearch';
 import { EventItem, EventType } from '@/services/events/eventTypes';
 import {
   GroupEventBody,
@@ -48,14 +53,6 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
-// Local now as a `datetime-local` value (YYYY-MM-DDTHH:mm) for the `min` guard
-// that forbids scheduling an event in the past.
-function localNowInput(): string {
-  const d = new Date();
-  const off = d.getTimezoneOffset();
-  return new Date(d.getTime() - off * 60_000).toISOString().slice(0, 16);
-}
-
 /**
  * Focused form for creating an event inside a group. It maps 1:1 to the
  * group-event API body (no tiers/co-hosts, plus a group-event visibility),
@@ -74,6 +71,17 @@ export function GroupEventForm({
   const [pin, setPin] = useState(() =>
     pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
   );
+  const [location, setLocation] = useState(event?.location || '');
+  const submissionId = useRef(0);
+  const invalidateSubmission = () => {
+    submissionId.current++;
+  };
+  useEffect(() => {
+    const pending = submissionId;
+    return () => {
+      pending.current++;
+    };
+  }, []);
   const [selectedTags, setSelectedTags] = useState(
     () => partitionTags(event?.tags).selected
   );
@@ -85,16 +93,26 @@ export function GroupEventForm({
   );
   // Controlled so the end picker can forbid a moment before the start and so
   // both fields reject past times.
-  const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
-  const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
+  const [timezone, setTimezone] = useState(event?.timezone || 'UTC');
+  useEffect(() => {
+    if (!event) setTimezone(defaultTimezone());
+  }, [event]);
+  const [startVal, setStartVal] = useState(
+    toLocalInput(event?.start_time, event?.timezone || 'UTC')
+  );
+  const [endVal, setEndVal] = useState(
+    toLocalInput(event?.end_time, event?.timezone || 'UTC')
+  );
   const [dateError, setDateError] = useState('');
-  const minStart = useMemo(() => localNowInput(), []);
+  const minStart = useMemo(
+    () => toLocalInput(new Date().toISOString(), timezone),
+    [timezone]
+  );
 
   const initial = useMemo(
     () => ({
       title: event?.title || '',
       description: event?.description || '',
-      timezone: event?.timezone || defaultTimezone(),
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
@@ -106,9 +124,21 @@ export function GroupEventForm({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const start = fromLocalInput(startVal);
-    const end = fromLocalInput(endVal);
+    const element = e.currentTarget;
+    const submission = ++submissionId.current;
+    const form = new FormData(element);
+    let start: string, end: string;
+    try {
+      start = fromLocalInput(startVal, timezone);
+      end = fromLocalInput(endVal, timezone);
+    } catch (error) {
+      setDateError(
+        error instanceof Error
+          ? error.message
+          : 'Check the event date and timezone.'
+      );
+      return;
+    }
     if (!start || !end) return;
 
     // Guard against past or inverted ranges; the browser `min` is advisory only.
@@ -118,7 +148,7 @@ export function GroupEventForm({
       setDateError('Start time cannot be in the past.');
       return;
     }
-    if (endMs < startMs) {
+    if (endMs <= startMs) {
       setDateError('End time must be after the start time.');
       return;
     }
@@ -129,7 +159,7 @@ export function GroupEventForm({
       description: String(form.get('description') || '').trim(),
       start_time: start,
       end_time: end,
-      timezone: String(form.get('timezone') || defaultTimezone()),
+      timezone,
       event_type: eventType,
       location: String(form.get('location') || '').trim(),
       meeting_link: String(form.get('meeting_link') || '').trim(),
@@ -145,7 +175,10 @@ export function GroupEventForm({
     if (eventType !== 'virtual') {
       let resolved = pin;
       if (!resolved && body.location) {
-        resolved = await geocodeAddress(body.location, ipLocation.city);
+        // A map lookup is optional; the backend can resolve the address too.
+        resolved = await geocodeAddress(body.location, ipLocation.city).catch(
+          () => null
+        );
       }
       if (resolved) {
         body.latitude = resolved.latitude;
@@ -153,6 +186,7 @@ export function GroupEventForm({
       }
     }
     if (!body.title) return;
+    if (submission !== submissionId.current || !element.isConnected) return;
     onSubmit(body);
   };
 
@@ -160,7 +194,17 @@ export function GroupEventForm({
   const showLink = eventType !== 'in_person';
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-5'>
+    <form
+      onSubmit={handleSubmit}
+      onChangeCapture={invalidateSubmission}
+      onClickCapture={(e) => {
+        // Custom controls change state via buttons, not native change events.
+        if (e.target instanceof Element && e.target.closest('button')) {
+          invalidateSubmission();
+        }
+      }}
+      className='space-y-5'
+    >
       <Field label='Title'>
         <Input
           name='title'
@@ -179,6 +223,13 @@ export function GroupEventForm({
         />
       </Field>
 
+      <TimezoneSelect
+        value={timezone}
+        onChange={(zone) => {
+          setTimezone(zone);
+          setDateError('');
+        }}
+      />
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
         <Field label='Starts'>
           <Input
@@ -215,10 +266,6 @@ export function GroupEventForm({
         </p>
       )}
 
-      <Field label='Timezone'>
-        <Input name='timezone' defaultValue={initial.timezone} />
-      </Field>
-
       <fieldset>
         <legend className='mb-2 font-inter text-sm font-medium'>Type</legend>
         <div className='flex flex-wrap gap-2'>
@@ -244,11 +291,25 @@ export function GroupEventForm({
           <Field label='Place'>
             <Input
               name='location'
-              defaultValue={initial.location}
+              value={location}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (normalizePlaceText(next) !== normalizePlaceText(location)) {
+                  setPin(null);
+                }
+                setLocation(next);
+              }}
               placeholder='City or venue'
             />
           </Field>
-          <PlacePin value={pin} onChange={setPin} />
+          <PlacePin
+            value={pin}
+            onChange={(next) => {
+              invalidateSubmission();
+              setPin(next);
+            }}
+            address={location}
+          />
         </>
       )}
       {showLink && (

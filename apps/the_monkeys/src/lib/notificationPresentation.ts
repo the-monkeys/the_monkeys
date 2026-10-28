@@ -163,6 +163,15 @@ function actionRest(
 ): string {
   const template = (notif.template_id || '').toLowerCase();
 
+  if (template.includes('event_cohost_added')) {
+    return ' added you as a co-host';
+  }
+  if (template.includes('event_cohost_removed')) {
+    return ' removed you as a co-host';
+  }
+  if (template.includes('event_cohost_left')) {
+    return ' left as a co-host';
+  }
   if (template.includes('event_rsvp_host_notice')) {
     return " RSVP'd to your event";
   }

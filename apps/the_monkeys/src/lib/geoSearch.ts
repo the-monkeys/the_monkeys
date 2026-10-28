@@ -9,6 +9,11 @@ export const SEARCH_RADIUS_STEPS_KM = [10, 25, 50, 100] as const;
 
 export type GeoPin = { latitude: number; longitude: number };
 
+/** Cosmetic address edits do not invalidate an explicitly selected map pin. */
+export function normalizePlaceText(value: string): string {
+  return value.trim().replace(/\s+/g, ' ').toLowerCase();
+}
+
 export type NearMeQuery = {
   user_lat?: number;
   user_lng?: number;

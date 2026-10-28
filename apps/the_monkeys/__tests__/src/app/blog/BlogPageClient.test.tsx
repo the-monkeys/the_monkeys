@@ -18,10 +18,6 @@ vi.mock('@/components/blog/actions/BlogReportDialog', () => ({
   BlogReportDialog: () => <button>Report</button>,
 }));
 
-vi.mock('@/components/blog/actions/BlogShareDialog', () => ({
-  BlogShareDialog: () => <button data-testid='blog-share'>Share</button>,
-}));
-
 vi.mock('@/components/blog/actions/EditBlogDialog', () => ({
   EditBlogDialog: () => <button>Edit</button>,
 }));
@@ -46,10 +42,6 @@ vi.mock('@/components/blog/getBlogContent', () => ({
 
 vi.mock('@/components/buttons/backButton', () => ({
   BackButton: () => <button>Back</button>,
-}));
-
-vi.mock('@/components/social/SocialSnapshot', () => ({
-  SocialSnapshotCard: () => <div data-testid='social-snapshot'>Snapshot</div>,
 }));
 
 vi.mock('@/components/topics/topicsContainer', () => ({
@@ -169,8 +161,8 @@ describe('BlogPageClient', () => {
       screen.getByRole('link', { name: 'Writers Guild' }).getAttribute('href')
     ).toBe('/groups/writers');
     expect(screen.getByTestId('blog-reactions')).toBeTruthy();
-    expect(screen.queryByTestId('blog-share')).toBeNull();
-    expect(screen.queryByTestId('social-snapshot')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Share Blog' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Open Studio →' })).toBeNull();
   });
 
   it('keeps sharing and snapshots available for public articles', () => {
@@ -182,8 +174,10 @@ describe('BlogPageClient', () => {
 
     render(<BlogPageClient urlBlogId='123' fullSlug='post-123' />);
 
-    expect(screen.getByTestId('blog-share')).toBeTruthy();
-    expect(screen.getByTestId('social-snapshot')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Share Blog' })).toBeTruthy();
+    expect(
+      screen.getByRole('link', { name: 'Open Studio →' }).getAttribute('href')
+    ).toBe('/snapshot/123');
     expect(screen.queryByText('Members only')).toBeNull();
   });
 });
