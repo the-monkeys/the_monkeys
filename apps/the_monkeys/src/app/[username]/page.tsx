@@ -1,6 +1,7 @@
 'use client';
 
 import { BackButton } from '@/components/buttons/backButton';
+import { AuthorProfileCard } from '@/components/cards/author/AuthorProfileCard';
 import { DefaultProfile } from '@/components/profileImage';
 import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { AuthorProfileCardSkeleton } from '@/components/skeletons/profileSkeleton';
@@ -8,7 +9,6 @@ import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 
 import { ProfileActivity } from './components/ProfileActivity';
-import { ProfileSection } from './components/profile/ProfileSection';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
   const { data } = useAuth();
@@ -55,7 +55,7 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
   return (
     <div className='grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-16'>
       <aside className='order-first lg:order-last lg:col-span-1'>
-        <ProfileSection paramsUser={username} user={user} />
+        <AuthorProfileCard paramsUser={username} user={user} />
       </aside>
 
       <section className='order-last max-w-4xl space-y-6 lg:order-first lg:col-span-2'>

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 
 import {
   ShareButton,
@@ -22,10 +22,10 @@ interface ShareProfileDialogProps {
   size?: number;
 }
 
-export const ShareProfileDialog: FC<ShareProfileDialogProps> = ({
+export default function ShareProfileDialog({
   username,
   size = 18,
-}) => {
+}: ShareProfileDialogProps) {
   const profileURL = `${LIVE_URL}/${username}`;
 
   const copyToClipboard = () => {
@@ -102,4 +102,4 @@ export const ShareProfileDialog: FC<ShareProfileDialogProps> = ({
       </DialogContent>
     </Dialog>
   );
-};
+}

@@ -45,11 +45,11 @@ const ConnectionCard = ({
   );
 };
 
-export const ConnectionsDialog = ({
+export default function ConnectionsDialog({
   label,
 }: {
   label: 'followers' | 'following';
-}) => {
+}) {
   const { followers, followerLoading } = useGetFollowers();
   const { following, followingLoading } = useGetFollowing();
 
@@ -146,4 +146,4 @@ export const ConnectionsDialog = ({
       </DialogContent>
     </Dialog>
   );
-};
+}
