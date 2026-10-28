@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { DEFAULT_TEMPLATE_ID } from '../registry';
 import { ACCENT_PALETTE, DEFAULT_THEME_ID } from '../themes';
@@ -25,6 +25,25 @@ export const useSnapshotState = ({
     themeId: initialThemeId,
     accent: initialAccent,
   });
+
+  // Author is resolved asynchronously (session, profile, avatar). Capture
+  // the first paint as-is, then overwrite the byline when it arrives so a
+  // logged-in user is never stuck as "Anonymous User".
+  useEffect(() => {
+    const next = initialInput.author;
+    if (!next) return;
+    setState((s) => {
+      const cur = s.input.author;
+      if (
+        cur?.username === next.username &&
+        cur?.displayName === next.displayName &&
+        cur?.avatarUrl === next.avatarUrl
+      ) {
+        return s;
+      }
+      return { ...s, input: { ...s.input, author: next } };
+    });
+  }, [initialInput.author]);
 
   const updateInput = useCallback((patch: Partial<SnapshotInput>) => {
     setState((s) => ({ ...s, input: { ...s.input, ...patch } }));

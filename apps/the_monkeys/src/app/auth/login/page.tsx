@@ -1,11 +1,18 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { API_URL } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
+import {
+  peekAuthCallback,
+  rememberAuthCallback,
+  safeCallbackPath,
+} from '@/lib/authRedirect';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import {
@@ -18,13 +25,15 @@ import LoginForm from '../components/forms/LoginForm';
 export default function LoginPage() {
   const { isSuccess, isLoading, isFetching, isFetched } = useAuth();
   const params = useSearchParams();
-
-  const callbackURL = params.get('callbackURL');
-
+  const callbackURL = safeCallbackPath(params.get('callbackURL'));
   const router = useRouter();
 
+  useEffect(() => {
+    rememberAuthCallback(callbackURL);
+  }, [callbackURL]);
+
   if (isSuccess) {
-    router.replace(callbackURL ?? '/');
+    router.replace(callbackURL || peekAuthCallback());
     return;
   }
 
@@ -49,7 +58,11 @@ export default function LoginPage() {
           <span>New to Monkeys? </span>
 
           <Link
-            href='/auth/register'
+            href={
+              callbackURL
+                ? `/auth/register?callbackURL=${encodeURIComponent(callbackURL)}`
+                : '/auth/register'
+            }
             className='font-medium hover:underline text-brand-orange'
           >
             Join Monkeys

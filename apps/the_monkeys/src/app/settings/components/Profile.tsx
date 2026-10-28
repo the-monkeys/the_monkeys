@@ -250,6 +250,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
                           captionLayout='dropdown'
                           startMonth={new Date(1960, 0)}
                           endMonth={new Date(new Date().getFullYear(), 11)}
+                          disabled={{ after: new Date() }}
                         />
                       </PopoverContent>
                     </Popover>

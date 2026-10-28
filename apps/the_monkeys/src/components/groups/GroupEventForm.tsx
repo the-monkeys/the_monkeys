@@ -1,0 +1,426 @@
+'use client';
+
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+
+import { TimezoneSelect } from '@/components/events/TimezoneSelect';
+import { CategoryChips } from '@/components/geo/CategoryChips';
+import { PlacePin } from '@/components/geo/PlacePin';
+import { useIPLocation } from '@/hooks/useIPLocation';
+import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
+import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
+import {
+  geocodeAddress,
+  normalizePlaceText,
+  pinFromCoords,
+} from '@/lib/geoSearch';
+import { EventItem, EventType } from '@/services/events/eventTypes';
+import {
+  GroupEventBody,
+  GroupEventVisibility,
+} from '@/services/groups/groupsTypes';
+import { Button } from '@the-monkeys/ui/atoms/button';
+import { Input } from '@the-monkeys/ui/atoms/input';
+import { Label } from '@the-monkeys/ui/atoms/label';
+import { TextArea } from '@the-monkeys/ui/atoms/text-area';
+
+type Props = {
+  event?: EventItem;
+  saving?: boolean;
+  submitLabel: string;
+  onSubmit: (body: GroupEventBody) => void;
+};
+
+const TYPES: { value: EventType; label: string }[] = [
+  { value: 'virtual', label: 'Online' },
+  { value: 'in_person', label: 'In person' },
+  { value: 'hybrid', label: 'Hybrid' },
+];
+
+// Only the visibilities the group-event endpoint accepts. Ticket tiers and
+// co-hosts are intentionally omitted: the group-event create contract does not
+// accept them, so surfacing those inputs would be dead UI.
+const VISIBILITIES: { value: GroupEventVisibility; label: string }[] = [
+  { value: 'public', label: 'Public' },
+  { value: 'group_members', label: 'Members only' },
+  { value: 'unlisted', label: 'Unlisted' },
+  { value: 'private', label: 'Private' },
+];
+
+function splitList(value: string): string[] {
+  return value
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+/**
+ * Focused form for creating an event inside a group. It maps 1:1 to the
+ * group-event API body (no tiers/co-hosts, plus a group-event visibility),
+ * reusing the styling and field conventions of the standalone EventForm.
+ */
+export function GroupEventForm({
+  event,
+  saving,
+  submitLabel,
+  onSubmit,
+}: Props) {
+  const ipLocation = useIPLocation();
+  const [eventType, setEventType] = useState<EventType>(
+    event?.event_type || 'in_person'
+  );
+  const [pin, setPin] = useState(() =>
+    pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
+  );
+  const [location, setLocation] = useState(event?.location || '');
+  const submissionId = useRef(0);
+  const invalidateSubmission = () => {
+    submissionId.current++;
+  };
+  useEffect(() => {
+    const pending = submissionId;
+    return () => {
+      pending.current++;
+    };
+  }, []);
+  const [selectedTags, setSelectedTags] = useState(
+    () => partitionTags(event?.tags).selected
+  );
+  const [visibility, setVisibility] = useState<GroupEventVisibility>(
+    (event?.visibility as GroupEventVisibility) || 'public'
+  );
+  const [requiresHostReview, setRequiresHostReview] = useState(
+    !!event?.requires_host_review
+  );
+  // Controlled so the end picker can forbid a moment before the start and so
+  // both fields reject past times.
+  const [timezone, setTimezone] = useState(event?.timezone || 'UTC');
+  useEffect(() => {
+    if (!event) setTimezone(defaultTimezone());
+  }, [event]);
+  const [startVal, setStartVal] = useState(
+    toLocalInput(event?.start_time, event?.timezone || 'UTC')
+  );
+  const [endVal, setEndVal] = useState(
+    toLocalInput(event?.end_time, event?.timezone || 'UTC')
+  );
+  const [dateError, setDateError] = useState('');
+  const minStart = useMemo(
+    () => toLocalInput(new Date().toISOString(), timezone),
+    [timezone]
+  );
+
+  const initial = useMemo(
+    () => ({
+      title: event?.title || '',
+      description: event?.description || '',
+      location: event?.location || '',
+      meeting_link: event?.meeting_link || '',
+      capacity: event?.capacity ? String(event.capacity) : '',
+      cover_image: event?.cover_image || '',
+      tags: partitionTags(event?.tags).extra,
+    }),
+    [event]
+  );
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const element = e.currentTarget;
+    const submission = ++submissionId.current;
+    const form = new FormData(element);
+    let start: string, end: string;
+    try {
+      start = fromLocalInput(startVal, timezone);
+      end = fromLocalInput(endVal, timezone);
+    } catch (error) {
+      setDateError(
+        error instanceof Error
+          ? error.message
+          : 'Check the event date and timezone.'
+      );
+      return;
+    }
+    if (!start || !end) return;
+
+    // Guard against past or inverted ranges; the browser `min` is advisory only.
+    const startMs = new Date(start).getTime();
+    const endMs = new Date(end).getTime();
+    if (startMs < Date.now() - 60_000) {
+      setDateError('Start time cannot be in the past.');
+      return;
+    }
+    if (endMs <= startMs) {
+      setDateError('End time must be after the start time.');
+      return;
+    }
+    setDateError('');
+
+    const body: GroupEventBody = {
+      title: String(form.get('title') || '').trim(),
+      description: String(form.get('description') || '').trim(),
+      start_time: start,
+      end_time: end,
+      timezone,
+      event_type: eventType,
+      location: String(form.get('location') || '').trim(),
+      meeting_link: String(form.get('meeting_link') || '').trim(),
+      capacity: Number(form.get('capacity') || 0) || 0,
+      cover_image: String(form.get('cover_image') || '').trim(),
+      tags: mergeCategoryTags(
+        selectedTags,
+        splitList(String(form.get('tags') || ''))
+      ),
+      visibility,
+      requires_host_review: requiresHostReview,
+    };
+    if (eventType !== 'virtual') {
+      let resolved = pin;
+      if (!resolved && body.location) {
+        // A map lookup is optional; the backend can resolve the address too.
+        resolved = await geocodeAddress(body.location, ipLocation.city).catch(
+          () => null
+        );
+      }
+      if (resolved) {
+        body.latitude = resolved.latitude;
+        body.longitude = resolved.longitude;
+      }
+    }
+    if (!body.title) return;
+    if (submission !== submissionId.current || !element.isConnected) return;
+    onSubmit(body);
+  };
+
+  const showPlace = eventType !== 'virtual';
+  const showLink = eventType !== 'in_person';
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      onChangeCapture={invalidateSubmission}
+      onClickCapture={(e) => {
+        // Custom controls change state via buttons, not native change events.
+        if (e.target instanceof Element && e.target.closest('button')) {
+          invalidateSubmission();
+        }
+      }}
+      className='space-y-5'
+    >
+      <Field label='Title'>
+        <Input
+          name='title'
+          required
+          defaultValue={initial.title}
+          maxLength={120}
+        />
+      </Field>
+
+      <Field label='About this event'>
+        <TextArea
+          name='description'
+          defaultValue={initial.description}
+          rows={5}
+          className='min-h-32'
+        />
+      </Field>
+
+      <TimezoneSelect
+        value={timezone}
+        onChange={(zone) => {
+          setTimezone(zone);
+          setDateError('');
+        }}
+      />
+      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+        <Field label='Starts'>
+          <Input
+            name='start'
+            type='datetime-local'
+            required
+            min={minStart}
+            value={startVal}
+            onChange={(e) => {
+              const v = e.target.value;
+              setStartVal(v);
+              if (endVal && endVal < v) setEndVal(v);
+              setDateError('');
+            }}
+          />
+        </Field>
+        <Field label='Ends'>
+          <Input
+            name='end'
+            type='datetime-local'
+            required
+            min={startVal || minStart}
+            value={endVal}
+            onChange={(e) => {
+              setEndVal(e.target.value);
+              setDateError('');
+            }}
+          />
+        </Field>
+      </div>
+      {dateError && (
+        <p className='-mt-3 font-inter text-sm text-brand-orange'>
+          {dateError}
+        </p>
+      )}
+
+      <fieldset>
+        <legend className='mb-2 font-inter text-sm font-medium'>Type</legend>
+        <div className='flex flex-wrap gap-2'>
+          {TYPES.map((t) => (
+            <button
+              key={t.value}
+              type='button'
+              onClick={() => setEventType(t.value)}
+              className={`rounded-full border-2 px-3 py-1.5 font-inter text-sm transition-colors ${
+                eventType === t.value
+                  ? 'border-brand-orange bg-brand-orange text-white'
+                  : 'border-border-light dark:border-border-dark'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      {showPlace && (
+        <>
+          <Field label='Place'>
+            <Input
+              name='location'
+              value={location}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (normalizePlaceText(next) !== normalizePlaceText(location)) {
+                  setPin(null);
+                }
+                setLocation(next);
+              }}
+              placeholder='City or venue'
+            />
+          </Field>
+          <PlacePin
+            value={pin}
+            onChange={(next) => {
+              invalidateSubmission();
+              setPin(next);
+            }}
+            address={location}
+          />
+        </>
+      )}
+      {showLink && (
+        <Field label='Meeting link'>
+          <Input
+            name='meeting_link'
+            type='url'
+            defaultValue={initial.meeting_link}
+            placeholder='https://'
+          />
+        </Field>
+      )}
+
+      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+        <Field label='Max people (0 = no limit)'>
+          <Input
+            name='capacity'
+            type='number'
+            min={0}
+            defaultValue={initial.capacity}
+          />
+        </Field>
+        <Field label='Cover image URL'>
+          <Input
+            name='cover_image'
+            type='url'
+            defaultValue={initial.cover_image}
+          />
+        </Field>
+      </div>
+
+      <Field label='Topics'>
+        <CategoryChips
+          selected={selectedTags}
+          onToggle={(tag) =>
+            setSelectedTags((prev) =>
+              prev.includes(tag)
+                ? prev.filter((t) => t !== tag)
+                : [...prev, tag]
+            )
+          }
+        />
+        <Input
+          name='tags'
+          defaultValue={initial.tags}
+          placeholder='More tags, comma separated'
+          className='mt-2'
+        />
+      </Field>
+
+      <fieldset>
+        <legend className='mb-2 font-inter text-sm font-medium'>
+          Who can see this event
+        </legend>
+        <div className='grid grid-cols-2 gap-2 sm:grid-cols-4'>
+          {VISIBILITIES.map((v) => (
+            <button
+              key={v.value}
+              type='button'
+              onClick={() => setVisibility(v.value)}
+              className={`rounded-lg border-2 px-3 py-2 font-inter text-sm transition-colors ${
+                visibility === v.value
+                  ? 'border-brand-orange bg-brand-orange/5'
+                  : 'border-border-light dark:border-border-dark'
+              }`}
+            >
+              {v.label}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      <label className='flex items-start gap-3 rounded-lg border border-border-light p-3 dark:border-border-dark/60'>
+        <input
+          type='checkbox'
+          className='mt-1'
+          checked={requiresHostReview}
+          onChange={(e) => setRequiresHostReview(e.target.checked)}
+        />
+        <span className='font-inter text-sm'>
+          <span className='block font-medium'>Approve guests</span>
+          <span className='mt-0.5 block text-xs text-gray-500'>
+            Guests send a public profile link. You or a co-host must approve
+            each guest before they can join. This is the same for free meetups.
+          </span>
+        </span>
+      </label>
+
+      <Button
+        type='submit'
+        variant='brand'
+        disabled={saving}
+        className='w-full sm:w-auto'
+      >
+        {saving ? 'Saving…' : submitLabel}
+      </Button>
+    </form>
+  );
+}
+
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className='space-y-1.5'>
+      <Label className='font-inter text-sm'>{label}</Label>
+      {children}
+    </div>
+  );
+}

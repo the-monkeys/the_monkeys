@@ -17,6 +17,7 @@ import { Account } from './components/Account';
 import { Notifications } from './components/Notifications';
 import { Profile } from './components/Profile';
 import { Security } from './components/Security';
+import { Verification } from './components/Verification';
 
 const SettingsPage = () => {
   const { data, isError, isLoading } = useAuth();
@@ -77,6 +78,15 @@ const SettingsPage = () => {
           </TabsTrigger>
 
           <TabsTrigger
+            value='verification'
+            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+          >
+            <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
+              Verification
+            </p>
+          </TabsTrigger>
+
+          <TabsTrigger
             value='notifications'
             className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
           >
@@ -96,6 +106,9 @@ const SettingsPage = () => {
         </TabsContent>
         <TabsContent value='security'>
           <Security data={data} />
+        </TabsContent>
+        <TabsContent value='verification'>
+          <Verification />
         </TabsContent>
         <TabsContent value='notifications'>
           <Notifications />

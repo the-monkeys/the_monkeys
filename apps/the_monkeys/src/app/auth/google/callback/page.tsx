@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { peekAuthCallback, rememberAuthCallback } from '@/lib/authRedirect';
 import { googleSSOCallback } from '@/services/auth/auth';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
@@ -38,7 +39,9 @@ export default function GoogleCallback() {
         title: 'Login successful',
       });
 
-      router.replace('/');
+      const next = peekAuthCallback();
+      rememberAuthCallback(null);
+      router.replace(next);
     },
     onError: () => {
       toast({

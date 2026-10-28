@@ -8,12 +8,14 @@ import { AuthorProfileCardSkeleton } from '@/components/skeletons/profileSkeleto
 import useAuth from '@/hooks/auth/useAuth';
 import useUser from '@/hooks/user/useUser';
 
-import { Blogs } from './components/Blogs';
+import { ProfileActivity } from './components/ProfileActivity';
+import { ProfileSection } from './components/profile/ProfileSection';
 
 const ProfilePage = ({ params }: { params: { username: string } }) => {
   const { data } = useAuth();
+  const username = params.username.replace(/^@+/, '');
 
-  const { user, isLoading, isError } = useUser(params.username);
+  const { user, isLoading, isError } = useUser(username);
 
   if (isError) {
     return (
@@ -52,19 +54,18 @@ const ProfilePage = ({ params }: { params: { username: string } }) => {
   }
 
   return (
-    <div className='grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-16'>
-      <aside className='order-first lg:order-last lg:col-span-1 p-4'>
-        <AuthorProfileCard paramsUser={params.username} user={user} />
+    <div className='grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-16'>
+      <aside className='order-first lg:order-last lg:col-span-1'>
+        <ProfileSection paramsUser={username} user={user} />
       </aside>
 
-      <section className='order-last max-w-4xl space-y-4 font-extrabold lg:order-first lg:col-span-2'>
+      <section className='order-last max-w-4xl space-y-6 lg:order-first lg:col-span-2'>
         <BackButton />
-        <h6 className='font-dm_sans  text-3xl'>
-          Latest from{' '}
-          <span className='font-dm_sans text-3xl'>{user?.first_name}</span>
-        </h6>
-
-        <Blogs username={params.username} user={data} />
+        <ProfileActivity
+          username={username}
+          viewer={data}
+          firstName={user?.first_name}
+        />
       </section>
     </div>
   );

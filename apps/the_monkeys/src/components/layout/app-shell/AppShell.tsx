@@ -25,6 +25,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     pathname !== '/blog' &&
     !pathname?.startsWith('/blog/components') &&
     !pathname?.startsWith('/blog/utils');
+  // Only the long-form blog editor runs full-width (immersive writing). Event
+  // create/edit/manage keep the standard shell with the left navigation so the
+  // experience stays consistent with the rest of the app.
   const isEditorPage = pathname?.startsWith('/edit');
 
   // Blog reading or editing mode: only show main content
@@ -37,11 +40,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const isFeed =
-    pathname === '/' || pathname === '/feed' || pathname?.endsWith('/feed');
+  const showsGlobalRightRail =
+    pathname === '/feed' || pathname?.endsWith('/feed');
+  const contentSpacing =
+    pathname === '/' ? 'px-4 pb-4 pt-0 lg:pb-6 lg:pt-0' : 'px-4 py-4 lg:py-6';
   return (
     <>
       {/* Spotlight announcement strip — sits above the authors row. */}
+      {/*
       {ANNOUNCEMENT && (
         <AnnouncementBanner
           label={ANNOUNCEMENT.label}
@@ -50,6 +56,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ctaLabel={ANNOUNCEMENT.ctaLabel}
         />
       )}
+      */}
       <Container className='mx-auto flex w-full flex-col'>
         <Navbar />
         <div className='flex min-w-0 flex-1 '>
@@ -61,10 +68,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className='flex min-w-0 flex-1'>
             {/* Main content (extra bottom padding on mobile to clear tab bar) */}
 
-            <div className='min-w-0 flex-1 px-4 py-4 lg:py-6 '>{children}</div>
+            <div className={`min-w-0 flex-1 ${contentSpacing}`}>{children}</div>
 
             {/* Right Rail - self-sticky, only visible xl+ */}
-            {isFeed && <RightRail />}
+            {showsGlobalRightRail && <RightRail />}
           </div>
         </div>
 

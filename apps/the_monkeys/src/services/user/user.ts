@@ -94,6 +94,19 @@ export const unfollowTopicApi = async (username: string, topic: string) => {
   });
 };
 
+export const followUserApi = (username: string) => {
+  return axiosInstance.post(`/user/follow/${username}`);
+};
+
+export const unfollowUserApi = (username: string) => {
+  return axiosInstance.post(`/user/unfollow/${username}`);
+};
+
+export const getFollowStatusApi = (username: string) => {
+  return axiosInstance
+    .get(`/user/is-followed/${username}`)
+    .then((res) => res.data);
+};
 export async function uploadProfileImage(username: string, file: File) {
   const formData = new FormData();
   formData.append('profile_pic', file);

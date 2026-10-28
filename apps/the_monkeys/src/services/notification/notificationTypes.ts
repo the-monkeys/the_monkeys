@@ -52,6 +52,19 @@ export interface FRNUnreadCountResponse {
   count: number;
 }
 
+/** Substitute {{.key}} placeholders with values from FRN content.data. */
+export function resolveTemplate(
+  text: string,
+  data?: Record<string, unknown>
+): string {
+  if (!text) return '';
+  if (!data) return text;
+  return text.replace(/\{\{\s*\.?\s*(\w+)\s*\}\}/g, (_, key: string) => {
+    const val = data[key];
+    return val != null ? String(val) : '';
+  });
+}
+
 /**
  * Resolve template placeholders in a notification body.
  * FRN stores the raw template (e.g. "{{follower_name}} started following you")
@@ -59,10 +72,5 @@ export interface FRNUnreadCountResponse {
  */
 export function resolveBody(notif: FRNNotification): string {
   const body = notif.content?.body || notif.content?.title || '';
-  const data = notif.content?.data;
-  if (!data || !body) return body;
-  return body.replace(/\{\{\s*\.?\s*(\w+)\s*\}\}/g, (_, key: string) => {
-    const val = data[key];
-    return val != null ? String(val) : '';
-  });
+  return resolveTemplate(body, notif.content?.data);
 }

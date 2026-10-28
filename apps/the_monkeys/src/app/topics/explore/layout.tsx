@@ -6,13 +6,15 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
+import { pageMetadata } from '@/lib/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
-  return {
-    title: 'Explore Topics',
+  return pageMetadata({
+    title: 'Explore Topics, Posts and Communities | Monkeys',
     description:
-      'Unleash your curiosity, explore content that matters to you, and add your favorite topics to your profile for a personalized experience.',
-  };
+      'Browse topics and discover public posts, authors, events, and communities built around your interests on Monkeys.',
+    path: '/topics/explore',
+  });
 }
 
 const ExploreTopicsPageLayout = ({

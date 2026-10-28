@@ -1,10 +1,18 @@
+import ChartBlock from '@/components/editor/customBlocks/ChartBlock';
+import CitationBlock from '@/components/editor/customBlocks/CitationBlock';
 import CustomCodeTool from '@/components/editor/customBlocks/CodeBlock';
 import CustomList from '@/components/editor/customBlocks/CustomListBlock';
+import DatasetBlock from '@/components/editor/customBlocks/DatasetBlock';
 import CustomEmbed from '@/components/editor/customBlocks/EmbedBlock';
+import FormulaBlock from '@/components/editor/customBlocks/FormulaBlock';
+import MarkdownBlock from '@/components/editor/customBlocks/MarkdownBlock';
+import MethodologyBlock from '@/components/editor/customBlocks/MethodologyBlock';
 import MentionUserTool from '@/components/editor/customBlocks/TagUserBlock';
-import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
+import Header from '@/components/editor/customBlocks/TitleAwareHeader';
+import TitleBlockTool from '@/components/editor/customBlocks/TitleBlock';
+import TrendBlock from '@/components/editor/customBlocks/TrendBlock';
+import { uploadImage } from '@/components/editor/utils/uploadFile';
 import Delimiter from '@editorjs/delimiter';
-import Header from '@editorjs/header';
 import Image from '@editorjs/image';
 import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
@@ -14,6 +22,10 @@ import { EditorConfig } from '@themonkeys/monkeys-editor';
 export const getEditorConfig = (blogId: string): EditorConfig => ({
   holder: 'monkeys_editor_editor-container',
   tools: {
+    title: {
+      class: TitleBlockTool,
+      toolbox: false,
+    },
     header: {
       class: Header,
       inlineToolbar: true,
@@ -39,6 +51,27 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
     code: {
       class: CustomCodeTool,
     },
+    chart: {
+      class: ChartBlock,
+    },
+    trend: {
+      class: TrendBlock,
+    },
+    formula: {
+      class: FormulaBlock,
+    },
+    citation: {
+      class: CitationBlock,
+    },
+    methodology: {
+      class: MethodologyBlock,
+    },
+    dataset: {
+      class: DatasetBlock,
+    },
+    markdown: {
+      class: MarkdownBlock,
+    },
     embed: {
       class: CustomEmbed,
     },
@@ -58,29 +91,7 @@ export const getEditorConfig = (blogId: string): EditorConfig => ({
       config: {
         captionPlaceholder: '',
         uploader: {
-          async uploadByFile(file: File) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            // Upload via v2 storage API (MinIO-backed).
-            // The v2 response includes a CDN URL in `response.data.url`
-            // generated server-side from MINIO_CDN_URL config.
-            // Storing the CDN URL directly means:
-            //   - No runtime URL resolution on read
-            //   - CDN/domain change = one-time ES migration, not code change
-            //   - v1 routes are untouched, no frontend dependency on them
-            const response = await axiosInstanceV2.post(
-              `/storage/posts/${blogId}`,
-              formData
-            );
-
-            return {
-              success: 1,
-              file: {
-                url: response.data.url,
-              },
-            };
-          },
+          uploadByFile: (file: File) => uploadImage(blogId, file),
         },
       },
     },
