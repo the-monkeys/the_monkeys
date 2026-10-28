@@ -65,7 +65,6 @@ export const DeleteProfilePhotoConfirmation = ({
           title: 'Profile photo removed',
           description: 'Your profile photo has been removed.',
         });
-        onSuccess();
       } else {
         const description =
           err instanceof Error
