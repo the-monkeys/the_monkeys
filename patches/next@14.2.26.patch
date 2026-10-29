@@ -1,0 +1,27 @@
+diff --git a/dist/compiled/@next/font/dist/google/loader.js b/dist/compiled/@next/font/dist/google/loader.js
+index 3e5ee51589338d6b7dd387f79638ad6296c8102d..8f91f483c939b13ae16f8bfa085c0fe2a4c3b22c 100644
+--- a/dist/compiled/@next/font/dist/google/loader.js
++++ b/dist/compiled/@next/font/dist/google/loader.js
+@@ -109,7 +109,21 @@ const nextFontGoogleFontLoader = async ({ functionName, data, emitFontFile, isDe
+             if (fontFileBuffer == null) {
+                 (0, next_font_error_1.nextFontError)(`Failed to fetch \`${fontFamily}\` from Google Fonts.`);
+             }
+-            const ext = /\.(woff|woff2|eot|ttf|otf)$/.exec(googleFontFileUrl)[1];
++            const extensionMatch = /\.(woff|woff2|eot|ttf|otf)$/.exec(googleFontFileUrl.split(/[?#]/, 1)[0]);
++            // Google may use query-based URLs without a file extension.
++            // Identify those responses by their font header instead of crashing.
++            const signature = fontFileBuffer.subarray(0, 4).toString('latin1');
++            const inferredExtension = {
++                wOF2: 'woff2',
++                wOFF: 'woff',
++                OTTO: 'otf',
++                true: 'ttf',
++                '\x00\x01\x00\x00': 'ttf',
++            }[signature];
++            const ext = extensionMatch ? extensionMatch[1] : inferredExtension;
++            if (!ext) {
++                (0, next_font_error_1.nextFontError)(`Unsupported font file format for \`${fontFamily}\`.`);
++            }
+             // Emit font file to .next/static/media
+             const selfHostedFileUrl = emitFontFile(fontFileBuffer, ext, preloadFontFile, !!adjustFontFallbackMetrics);
+             return {
