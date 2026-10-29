@@ -15,6 +15,7 @@ import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
+import { useDraftPublication } from '@/hooks/blog/useDraftPublication';
 import useGetDraftBlogDetail, {
   DRAFT_BLOG_DETAIL_QUERY_KEY,
 } from '@/hooks/blog/useGetDraftBlogDetail';
@@ -28,7 +29,6 @@ import {
   scheduleBlog,
 } from '@/services/blog/blogApi';
 import {
-  BlogPublicationSelection,
   blogApiError,
   publicationScope,
 } from '@/services/blog/blogPublication';
@@ -71,6 +71,14 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const { blog, isLoading, isError } = useGetDraftBlogDetail(blogId, {
     enabled: !isNew,
   });
+  const publication = useDraftPublication({
+    draft: blog,
+    isNew,
+    preferredGroupSlug: preferredGroupSlug.current,
+    username: session?.username,
+  });
+  const publicationScopeRef = useRef(publication.draftScope);
+  publicationScopeRef.current = publication.draftScope;
   const isImageUploading = useIsImageUploading();
 
   // Refs for latest values
@@ -99,7 +107,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     if (!isNew) return;
 
     // Clean up the URL so that subsequent refreshes perform a regular fetch
-    const newUrl = window.location.pathname;
+    const query = new URLSearchParams(window.location.search);
+    query.delete('isNew');
+    const suffix = query.toString();
+    const newUrl = `${window.location.pathname}${suffix ? `?${suffix}` : ''}${window.location.hash}`;
     window.history.replaceState(
       { ...window.history.state, as: newUrl, url: newUrl },
       '',
@@ -168,6 +179,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         },
         tags: blogTopics,
         slug: blogSlug,
+        ...publicationScopeRef.current,
       };
     },
     [blogId]
@@ -201,7 +213,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         retryCount = 0;
 
         // Send latest data on reconnect
-        if (dataRef.current) {
+        if (dataRef.current && publicationScopeRef.current) {
           const formattedData = formatData(
             dataRef.current,
             accountIdRef.current,
@@ -279,7 +291,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Auto-save when data changes
   useEffect(() => {
-    if (!data || !isConnected) return;
+    if (!data || !isConnected || !publicationScopeRef.current) return;
 
     const formattedData = formatData(data, accountId, blogTopics);
 
@@ -292,102 +304,112 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       console.error('Error sending data:', error);
       setIsSaving(false);
     }
-  }, [data, blogTopics, isConnected, accountId, formatData]);
+  }, [
+    data,
+    blogTopics,
+    isConnected,
+    accountId,
+    formatData,
+    publication.draftScope?.group_slug,
+    publication.draftScope?.audience,
+  ]);
 
   // Handle blog publishing
-  const handlePublishStep = useCallback(
-    async (selection: BlogPublicationSelection) => {
-      if (!data || data.blocks.length <= 2) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: 'Post must contain at least 3 content blocks.',
-        });
-        return;
-      }
+  const handlePublishStep = useCallback(async () => {
+    if (!publication.canPublish || !publication.selection) return;
+    if (!data || data.blocks.length <= 2) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Post must contain at least 3 content blocks.',
+      });
+      return;
+    }
 
-      if (!isDocumentTitleBlock(data.blocks[0])) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: 'Post should start with title (Heading 1).',
-        });
-        return;
-      }
+    if (!isDocumentTitleBlock(data.blocks[0])) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Post should start with title (Heading 1).',
+      });
+      return;
+    }
 
-      const titleBlockCount = data.blocks.filter(
-        (block) => block.type === 'title'
-      ).length;
-      if (titleBlockCount > 1) {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description:
-            'Only one title block (Heading 1) is allowed in the post.',
-        });
-        return;
-      }
+    const titleBlockCount = data.blocks.filter(
+      (block) => block.type === 'title'
+    ).length;
+    if (titleBlockCount > 1) {
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Only one title block (Heading 1) is allowed in the post.',
+      });
+      return;
+    }
 
-      setBlogPublishLoading(true);
+    setBlogPublishLoading(true);
 
+    try {
+      const formatted = formatData(data, accountId, blogTopics);
+      const scope = publicationScope(
+        publication.selection.group,
+        publication.selection.audience
+      );
+      await publishBlog(blogId, {
+        tags: formatted.tags,
+        slug: formatted.slug,
+        ...scope,
+      });
+
+      let successDescription = 'Your post was published.';
       try {
-        const formatted = formatData(data, accountId, blogTopics);
-        const scope = publicationScope(selection.group, selection.audience);
-        await publishBlog(blogId, {
-          tags: formatted.tags,
-          slug: formatted.slug,
-          ...scope,
-        });
-
-        let successDescription = 'Your post was published.';
-        try {
-          const actual = await getPublishedBlog(blogId);
-          queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], actual);
-          if (actual.group_slug) {
-            queryClient.invalidateQueries({
-              queryKey: queryKeys.groups.blogs(actual.group_slug),
-            });
-          }
-          if (actual.audience === 'group_only') {
-            successDescription = 'Published for group members.';
-          }
-        } catch {
-          // Publishing already succeeded. Read-back only refines local state and copy.
+        const actual = await getPublishedBlog(blogId);
+        queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], actual);
+        if (actual.group_slug) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.groups.blogs(actual.group_slug),
+          });
         }
-
-        toast({
-          variant: 'success',
-          title: 'Post published',
-          description: successDescription,
-        });
-
-        // Invalidate cache and redirect
-        queryClient.invalidateQueries({
-          queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
-        });
-        router.push(`/${username}`);
-      } catch (error) {
-        console.error('Publish error:', error);
-        toast({
-          variant: 'destructive',
-          title: 'Error Publishing Blog',
-          description: blogApiError(error),
-        });
-      } finally {
-        setBlogPublishLoading(false);
+        if (actual.audience === 'group_only') {
+          successDescription = 'Published for group members.';
+        }
+      } catch {
+        // Publishing already succeeded. Read-back only refines local state and copy.
       }
-    },
-    [
-      data,
-      accountId,
-      blogId,
-      blogTopics,
-      formatData,
-      router,
-      username,
-      queryClient,
-    ]
-  );
+
+      toast({
+        variant: 'success',
+        title: 'Post published',
+        description: successDescription,
+      });
+
+      // Invalidate cache and redirect
+      queryClient.invalidateQueries({
+        queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+      });
+      router.push(`/${username}`);
+    } catch (error) {
+      console.error('Publish error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Error Publishing Blog',
+        description: blogApiError(error),
+      });
+    } finally {
+      setBlogPublishLoading(false);
+    }
+  }, [
+    data,
+    accountId,
+    blogId,
+    blogTopics,
+    formatData,
+    router,
+    username,
+    queryClient,
+    publication.canPublish,
+    publication.selection,
+  ]);
 
   // Initialize editor data
   useEffect(() => {
@@ -395,8 +417,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       if (blog && !data) {
         setData(blog.blog || INITIAL_DATA);
         setBlogTopics(blog.tags || []);
-      } else if ((isError || !blog) && !data) {
-        // Handle new draft or fetch error by providing blank slate
+      } else if (isNew && !data) {
+        // Only a new draft may start with a blank document.
         setData(INITIAL_DATA);
         setBlogTopics([]);
       }
@@ -413,11 +435,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
   // Handle blog scheduling
   const handleScheduleStep = useCallback(
-    async (
-      scheduleTime: string,
-      timezone: string,
-      selection: BlogPublicationSelection
-    ) => {
+    async (scheduleTime: string, timezone: string) => {
+      if (!publication.canPublish || !publication.selection) return;
       if (!data || data.blocks.length <= 2) {
         toast({
           variant: 'destructive',
@@ -459,7 +478,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           webSocketRef.current.send(JSON.stringify(formatted));
         }
 
-        const scope = publicationScope(selection.group, selection.audience);
+        const scope = publicationScope(
+          publication.selection.group,
+          publication.selection.audience
+        );
         const payload = {
           tags: formatted.tags,
           slug: formatted.slug,
@@ -492,7 +514,17 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         setBlogPublishLoading(false);
       }
     },
-    [data, accountId, blogId, blogTopics, formatData, router, queryClient]
+    [
+      data,
+      accountId,
+      blogId,
+      blogTopics,
+      formatData,
+      router,
+      queryClient,
+      publication.canPublish,
+      publication.selection,
+    ]
   );
 
   return (
@@ -574,7 +606,16 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               isPublishing={blogPublishLoading}
               handlePublish={handlePublishStep}
               handleSchedule={handleScheduleStep}
-              preferredGroupSlug={preferredGroupSlug.current}
+              publication={publication.selection}
+              onPublicationChange={publication.change}
+              publicationPending={publication.pending}
+              publicationError={
+                isError
+                  ? 'Could not load this draft. Refresh to try again.'
+                  : publication.error
+              }
+              intendedGroupSlug={publication.groupSlug}
+              onRetryGroup={publication.retry}
             />
           </div>
 

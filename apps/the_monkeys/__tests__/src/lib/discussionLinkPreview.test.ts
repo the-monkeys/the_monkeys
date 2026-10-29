@@ -72,9 +72,15 @@ describe('eventPreview', () => {
     expect(eventPreview(event)).toEqual({
       label: 'Event',
       title: 'Go meetup',
-      description: 'Sat, Oct 10 · 7:00 PM',
+      description: 'Sat, Oct 10 · 7:00 PM GMT+5:30',
       image: '/storage/events/go-meetup/cover',
     });
+  });
+
+  it('uses the viewing timezone for an event shared in a discussion', () => {
+    expect(eventPreview(event, 'UTC')?.description).toBe(
+      'Sat, Oct 10 · 1:30 PM UTC'
+    );
   });
 
   it('hides drafts and non-public events', () => {

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import { DiscussionAvatar } from '@/components/discussions/DiscussionAvatar';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   type LinkPreview,
   blogPreview,
@@ -33,7 +34,8 @@ const cardClass =
   'relative z-10 mt-3 flex h-[76px] min-w-0 items-center gap-3 overflow-hidden rounded-xl border border-border-light p-2.5 dark:border-border-dark/60';
 
 async function loadPreview(
-  target: InternalTarget
+  target: InternalTarget,
+  viewingTimezone?: string
 ): Promise<LinkPreview | null> {
   try {
     switch (target.kind) {
@@ -48,7 +50,8 @@ async function loadPreview(
               axiosInstanceNoAuth,
               `/events/${seg(target.slug)}`
             )
-          ).event
+          ).event,
+          viewingTimezone
         );
       case 'group':
         return groupPreview((await getGroup(target.slug)).group);
@@ -74,9 +77,11 @@ export function DiscussionLinkPreview({
   target: InternalTarget;
   href: string;
 }) {
+  const viewingTimezone = useViewerTimezone();
+  const eventTimezone = target.kind === 'event' ? viewingTimezone : undefined;
   const { data, isPending } = useQuery({
-    queryKey: ['discussion-link-preview', target],
-    queryFn: () => loadPreview(target),
+    queryKey: ['discussion-link-preview', target, eventTimezone],
+    queryFn: () => loadPreview(target, eventTimezone),
     staleTime: 5 * 60 * 1000,
     retry: false,
   });

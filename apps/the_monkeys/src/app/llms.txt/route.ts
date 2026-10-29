@@ -10,7 +10,7 @@ Monkeys (${SITE_URL}) is created and operated by Buddhicintaka (OPC) Pvt. Ltd. P
 
 ## Public collections
 
-- Latest posts: ${SITE_URL}/feed
+- Latest posts: ${SITE_URL}/
 - Explore topics: ${SITE_URL}/topics/explore
 - Events: ${SITE_URL}/events
 - Groups: ${SITE_URL}/groups

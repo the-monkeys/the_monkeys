@@ -2,15 +2,20 @@
 
 import { useState } from 'react';
 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
+import {
+  discussionActionClass,
+  discussionCountLabel,
+} from '@/components/discussions/discussionChrome';
 import Icon from '@/components/icon';
 import { LIVE_URL } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import { discussionPath } from '@/lib/discussionSeo';
-import { formatCount } from '@/lib/utils';
+import { cn, formatCount } from '@/lib/utils';
 import {
   discussionError,
   likeDiscussion,
@@ -56,41 +61,56 @@ export function DiscussionFeedActions({ post }: { post: Discussion }) {
   }
 
   return (
-    <div className='mt-2 flex items-center justify-end gap-2 text-gray-400 dark:text-gray-500'>
-      <div className='flex items-center transition-colors hover:text-brand-orange'>
-        <button
-          aria-label={liked ? 'Unlike discussion' : 'Like discussion'}
-          aria-pressed={liked}
-          className='flex cursor-pointer items-center justify-center p-1 disabled:cursor-default disabled:opacity-80'
-          disabled={busy}
-          onClick={onLike}
-          title={liked ? 'Unlike discussion' : 'Like discussion'}
-          type='button'
-        >
-          <Icon
-            className={liked ? 'text-brand-orange' : ''}
-            name='RiHeart3'
-            size={16}
-            type={liked ? 'Fill' : undefined}
-          />
-        </button>
+    <div className='-ml-2 mt-3 flex flex-wrap items-center gap-x-1 gap-y-0.5'>
+      <button
+        aria-label={liked ? 'Unlike discussion' : 'Like discussion'}
+        aria-pressed={liked}
+        className={cn(
+          discussionActionClass,
+          liked && 'text-brand-orange dark:text-brand-orange'
+        )}
+        disabled={busy}
+        onClick={onLike}
+        title={liked ? 'Unlike discussion' : 'Like discussion'}
+        type='button'
+      >
+        <Icon
+          className={liked ? 'text-brand-orange' : ''}
+          name='RiHeart3'
+          size={20}
+          type={liked ? 'Fill' : undefined}
+        />
+        <span>Like</span>
         <span
           aria-label={`${likes} ${likes === 1 ? 'like' : 'likes'}`}
           className='min-w-4 text-center font-dm_sans text-sm tabular-nums'
         >
           {formatCount(likes)}
         </span>
-      </div>
-      <div className='transition-colors hover:text-brand-orange'>
-        <BlogShareDialog
-          blogURL={shareUrl}
-          copiedDescription='The link to this discussion has been copied.'
-          copiedTitle='Discussion link copied'
-          dialogTitle='Share discussion'
-          size={16}
-          triggerTitle='Share discussion'
-        />
-      </div>
+      </button>
+      <Link
+        aria-label={`Reply, ${discussionCountLabel(post.reply_count ?? 0, 'reply', 'replies')}`}
+        className={discussionActionClass}
+        href={`${discussionPath(post.public_id)}#replies`}
+      >
+        <Icon name='RiChat1' size={20} />
+        <span>Reply</span>
+        {(post.reply_count ?? 0) > 0 ? (
+          <span className='tabular-nums'>
+            {formatCount(post.reply_count ?? 0)}
+          </span>
+        ) : null}
+      </Link>
+      <BlogShareDialog
+        blogURL={shareUrl}
+        copiedDescription='The link to this discussion has been copied.'
+        copiedTitle='Discussion link copied'
+        dialogTitle='Share discussion'
+        size={20}
+        triggerClassName={discussionActionClass}
+        triggerLabel='Share'
+        triggerTitle='Share discussion'
+      />
       <AuthPromptDialog
         callbackPath={pathname}
         description='Join Monkeys now to let the author know you like their discussion.'

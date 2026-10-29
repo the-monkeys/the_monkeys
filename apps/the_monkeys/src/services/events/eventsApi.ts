@@ -1,3 +1,4 @@
+import type { CalendarScope } from '@/lib/eventCalendar';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
@@ -90,7 +91,7 @@ export const createSeries = (body: EventBody) =>
 
 export const cloneEvent = (
   slug: string,
-  body: { start_time: string; end_time: string }
+  body: { start_time: string; end_time: string; timezone?: string }
 ) =>
   axiosInstance
     .post<EventResp>(`${root}/${encodeURIComponent(slug)}/clone`, body)
@@ -299,17 +300,41 @@ export const getShareMeta = (slug: string) =>
     .get<ShareMeta>(`${root}/${encodeURIComponent(slug)}/share`)
     .then((r) => r.data);
 
-export const downloadCalendar = async (slug: string) => {
-  const res = await axiosInstanceNoAuth.get(
-    `${root}/${encodeURIComponent(slug)}/calendar`,
-    { responseType: 'blob' }
-  );
+export const downloadCalendar = async (
+  slug: string,
+  scope: CalendarScope = 'this'
+) => {
+  const unavailableSeries = () =>
+    new Error(
+      'Calendar series export is not available on this server yet. You can still add this occurrence.'
+    );
+  const res = await axiosInstanceNoAuth
+    .get(`${root}/${encodeURIComponent(slug)}/calendar`, {
+      responseType: 'blob',
+      ...(scope === 'series' ? { params: { scope } } : {}),
+    })
+    .catch((error: unknown) => {
+      if (
+        scope === 'series' &&
+        axios.isAxiosError(error) &&
+        error.response?.status === 501
+      )
+        throw unavailableSeries();
+      throw error;
+    });
+  if (
+    scope === 'series' &&
+    res.headers['x-monkeys-calendar-scope'] !== 'series'
+  ) {
+    throw unavailableSeries();
+  }
   const url = URL.createObjectURL(res.data);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `${slug}.ics`;
+  a.download = `${slug}${scope === 'series' ? '-series' : ''}.ics`;
   a.click();
-  URL.revokeObjectURL(url);
+  // Let the browser consume the click before releasing the download URL.
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 };
 
 // -----------------------------------------------------------------------------

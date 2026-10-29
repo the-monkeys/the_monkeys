@@ -8,6 +8,8 @@ const blogInteractionRoot = (blogId: QueryId) =>
   [...blogById(blogId), 'interaction'] as const;
 
 const eventRoot = ['events'] as const;
+const eventAttendees = (slug: QueryId) =>
+  [...eventRoot, 'attendees', slug] as const;
 
 const groupRoot = ['groups'] as const;
 
@@ -44,7 +46,11 @@ export const queryKeys = {
     detail: (slug: QueryId) => [...eventRoot, 'detail', slug] as const,
     comments: (slug: QueryId, offset = 0) =>
       [...eventRoot, 'comments', slug, offset] as const,
-    attendees: (slug: QueryId) => [...eventRoot, 'attendees', slug] as const,
+    attendees: eventAttendees,
+    attendeePage: (
+      slug: QueryId,
+      params: { limit?: number; offset?: number; status?: string }
+    ) => [...eventAttendees(slug), params] as const,
     coupons: (slug: QueryId) => [...eventRoot, 'coupons', slug] as const,
     photos: (slug: QueryId) => [...eventRoot, 'photos', slug] as const,
   },

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { DiscussionLoginPrompt } from '@/components/discussions/DiscussionLoginPrompt';
 import { MentionTextArea } from '@/components/discussions/MentionTextArea';
+import { discussionActionClass } from '@/components/discussions/discussionChrome';
 import Icon from '@/components/icon';
 import useAuth from '@/hooks/auth/useAuth';
 import { discussionTextError } from '@/services/discussions/discussionText';
@@ -61,7 +62,7 @@ export function ReplyForm({
       <MentionTextArea
         aria-label='Reply'
         autoFocus={Boolean(onDone)}
-        className='min-h-20'
+        className='min-h-24 rounded-xl'
         maxLength={2000}
         onValueChange={setBody}
         placeholder='Write a reply'
@@ -73,7 +74,13 @@ export function ReplyForm({
         </p>
       ) : null}
       <div className='flex items-center gap-2'>
-        <Button disabled={busy} size='sm' type='submit' variant='brand'>
+        <Button
+          className='min-h-11 rounded-full px-5'
+          disabled={busy}
+          size='sm'
+          type='submit'
+          variant='brand'
+        >
           Reply
         </Button>
         {onDone ? (
@@ -104,11 +111,11 @@ export function ReplyToggle({
   }
   return (
     <button
-      className='mt-1 inline-flex items-center gap-1 font-inter text-xs text-gray-500 hover:text-brand-orange'
+      className={`-ml-3 mt-1 ${discussionActionClass}`}
       onClick={() => setOpen(true)}
       type='button'
     >
-      <Icon name='RiChat1' size={14} />
+      <Icon name='RiChat1' size={18} />
       Reply
     </button>
   );

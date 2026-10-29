@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 
 import { generateSlug } from '@/app/blog/utils/generateSlug';
@@ -13,6 +15,7 @@ import {
   EVENTS_ROUTE,
   TOPIC_ROUTE,
 } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   eventDateParts,
   eventTypeLabel,
@@ -154,7 +157,8 @@ function FeedPostCard({ post }: { post: MetaBlog }) {
 }
 
 function FeedEvent({ event }: { event: EventItem }) {
-  const date = eventDateParts(event.start_time, event.timezone);
+  const timezone = useViewerTimezone();
+  const date = eventDateParts(event.start_time, timezone);
   const href = `${EVENTS_ROUTE}/${event.slug}`;
   const description = purifyHTMLString(event.description || '');
   const label = event.tags?.[0] || eventTypeLabel(event.event_type);
@@ -182,7 +186,7 @@ function FeedEvent({ event }: { event: EventItem }) {
           </h2>
         </Link>
         <p className='mt-1 font-inter text-xs text-gray-500 dark:text-gray-400'>
-          {formatEventCardWhen(event.start_time, event.timezone)}
+          {formatEventCardWhen(event.start_time, timezone)}
         </p>
         {description ? (
           <p

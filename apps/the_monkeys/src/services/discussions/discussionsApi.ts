@@ -41,6 +41,17 @@ export const getDiscussion = (id: string) =>
     .get<Discussion>(`/discussions/${seg(id)}`)
     .then((r) => r.data);
 
+export const listFollowingDiscussions = (
+  beforeId?: string,
+  signal?: AbortSignal
+) =>
+  axiosInstance
+    .get<DiscussionList>('/discussions/following', {
+      params: beforeId ? { before_id: beforeId } : undefined,
+      signal,
+    })
+    .then((r) => r.data);
+
 export const createDiscussion = (
   scope: DiscussionScope,
   body: string,

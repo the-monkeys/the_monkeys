@@ -49,14 +49,95 @@ describe('discussionPageData', () => {
   });
 
   it('sends no Cookie header on the first request', async () => {
-    vi.mocked(fetch).mockResolvedValue(
-      new Response(JSON.stringify(publicPost), { status: 200 })
-    );
-    await loadDiscussion('abc', 'session=1');
-    expect(fetch).toHaveBeenCalledTimes(1);
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(publicPost), { status: 200 })
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ ...publicPost, liked: true }), {
+          status: 200,
+        })
+      );
+    expect(await loadDiscussion('abc', 'session=1')).toMatchObject({
+      state: 'ok',
+      indexable: true,
+      discussion: { liked: true },
+    });
+    expect(fetch).toHaveBeenCalledTimes(2);
     const [url, init] = vi.mocked(fetch).mock.calls[0];
     expect(url).toBe('http://api.test/discussions/abc');
     expect(new Headers(init?.headers).has('Cookie')).toBe(false);
+    expect(
+      new Headers(vi.mocked(fetch).mock.calls[1][1]?.headers).get('Cookie')
+    ).toBe('session=1');
+  });
+
+  it('renders the author view of a hidden public thread without indexing it', async () => {
+    const hidden = { ...publicPost, status: 'hidden', body: '' };
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(hidden), { status: 200 })
+      )
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify({ ...hidden, body: 'Author evidence' }), {
+          status: 200,
+        })
+      );
+    expect(await loadDiscussion('abc', 'session=1')).toMatchObject({
+      state: 'ok',
+      indexable: false,
+      discussion: { body: 'Author evidence' },
+    });
+  });
+
+  it('keeps authenticated-only content out of the public SEO payload', async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(publicPost), { status: 200 })
+      )
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({
+            ...publicPost,
+            body: 'Personalized body',
+            liked: true,
+          }),
+          { status: 200 }
+        )
+      );
+    expect(await loadDiscussion('abc', 'session=1')).toMatchObject({
+      state: 'ok',
+      indexable: true,
+      discussion: { body: 'Personalized body', liked: true },
+      publicDiscussion: { body: 'Hello', liked: false },
+    });
+  });
+
+  it('stops indexing if the authenticated read reports members-only content', async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(publicPost), { status: 200 })
+      )
+      .mockResolvedValueOnce(
+        new Response(
+          JSON.stringify({ ...publicPost, audience: 'group_only' }),
+          { status: 200 }
+        )
+      );
+    const loaded = await loadDiscussion('abc', 'session=1');
+    expect(loaded).toMatchObject({ state: 'ok', indexable: false });
+    expect(loaded).not.toHaveProperty('publicDiscussion');
+  });
+
+  it('does not reuse a public snapshot after the authorized read becomes private or missing', async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(
+        new Response(JSON.stringify(publicPost), { status: 200 })
+      )
+      .mockResolvedValueOnce(new Response('', { status: 404 }));
+    expect(await loadDiscussion('abc', 'session=1')).toEqual({
+      state: 'missing',
+    });
   });
 
   it('retries a 404 with the member cookie header', async () => {
@@ -126,6 +207,22 @@ describe('discussionPageData', () => {
   it('returns missing when nobody can read it', async () => {
     vi.mocked(fetch).mockResolvedValue(new Response('', { status: 404 }));
     expect(await loadDiscussion('abc', '')).toEqual({ state: 'missing' });
+  });
+
+  it('loads the site feed with the reader cookie and preserves the paging cursor', async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(
+      new Response(
+        JSON.stringify({ discussions: [{ ...publicPost, liked: true }] }),
+        { status: 200 }
+      )
+    );
+    expect(
+      await loadSiteDiscussions('older/id', 'session=reader')
+    ).toMatchObject({ discussions: [{ liked: true }] });
+    const [url, init] = vi.mocked(fetch).mock.calls[0];
+    expect(url).toBe('http://api.test/discussions?before_id=older%2Fid');
+    expect(new Headers(init?.headers).get('Cookie')).toBe('session=reader');
+    expect(init?.cache).toBe('no-store');
   });
 
   it('collects only visible public ids and skips a failed group', async () => {

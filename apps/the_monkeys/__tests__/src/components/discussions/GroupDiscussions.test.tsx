@@ -14,6 +14,7 @@ const mocks = vi.hoisted(() => ({
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: vi.fn() }),
   usePathname: () => '/groups/bees',
+  useSearchParams: () => new URLSearchParams(),
 }));
 vi.mock('@/components/discussions/DiscussionAvatar', () => ({
   DiscussionAvatar: () => null,

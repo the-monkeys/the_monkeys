@@ -18,7 +18,7 @@ export function GroupBlogsPanel({ group }: { group: GroupItem }) {
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useGroupBlogs(group.slug);
+  } = useGroupBlogs(group.slug, 20, true, group);
   const posts = data?.pages.flatMap((page) => page.blogs ?? []) ?? [];
 
   if (isLoading) {

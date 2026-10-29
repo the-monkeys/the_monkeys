@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 
 import Container from '@/components/layout/Container';
 import { noIndexFollowRobots } from '@/lib/seo';
@@ -12,14 +12,23 @@ interface ProfileLayoutProps {
   params: { username: string };
 }
 
+function cleanUsername(raw: string): string {
+  try {
+    return decodeURIComponent(raw).replace(/^@+/, '');
+  } catch {
+    return raw.replace(/^@+/, '');
+  }
+}
+
 export async function generateMetadata({
   params,
 }: ProfileLayoutProps): Promise<Metadata> {
-  const profile = await loadPublicProfile(params.username);
+  const username = cleanUsername(params.username);
+  const profile = await loadPublicProfile(username);
   if (profile === null) {
     return {
-      title: { absolute: `@${params.username} | Monkeys` },
-      description: `View @${params.username} on Monkeys.`,
+      title: { absolute: `@${username} | Monkeys` },
+      description: `View @${username} on Monkeys.`,
       robots: noIndexFollowRobots,
     };
   }
@@ -37,17 +46,27 @@ export default async function ProfilePageLayout({
   children,
   params,
 }: ProfileLayoutProps) {
-  const profile = await loadPublicProfile(params.username);
+  let decoded = params.username;
+  try {
+    decoded = decodeURIComponent(params.username);
+  } catch {
+    decoded = params.username;
+  }
+
+  if (decoded.startsWith('@')) {
+    redirect(`/${cleanUsername(params.username)}`);
+  }
+
+  const username = cleanUsername(params.username);
+  const profile = await loadPublicProfile(username);
   if (profile === null) notFound();
   const jsonLd = profile ? buildProfileJsonLd(profile) : null;
 
   return (
     <Container className='px-4 py-6 min-h-[800px] space-y-10'>
       <article itemScope itemType='https://schema.org/ProfilePage'>
-        <h1 className='text-2xl hidden font-bold'>
-          Profile of @{params.username}
-        </h1>
-        <meta itemProp='name' content={`@${params.username}`} />
+        <h1 className='text-2xl hidden font-bold'>{`Profile of @${username}`}</h1>
+        <meta itemProp='name' content={`@${username}`} />
         {children}
       </article>
 

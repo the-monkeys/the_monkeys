@@ -4,11 +4,17 @@ import { FormEvent, useState } from 'react';
 
 import { usePathname, useRouter } from 'next/navigation';
 
+import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { MentionTextArea } from '@/components/discussions/MentionTextArea';
-import { discussionCountLabel } from '@/components/discussions/discussionChrome';
+import {
+  discussionActionClass,
+  discussionCountLabel,
+} from '@/components/discussions/discussionChrome';
 import Icon from '@/components/icon';
+import { LIVE_URL } from '@/constants/api';
 import useAuth from '@/hooks/auth/useAuth';
 import { loginHref } from '@/lib/authRedirect';
+import { discussionPath } from '@/lib/discussionSeo';
 import { discussionInstantMs } from '@/lib/discussionTime';
 import { cn } from '@/lib/utils';
 import { discussionTextError } from '@/services/discussions/discussionText';
@@ -21,8 +27,7 @@ import {
 import type { Discussion } from '@/services/discussions/discussionsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
-const iconButtonClass =
-  'inline-flex min-h-9 items-center gap-1.5 rounded-full px-3 font-inter text-sm text-gray-500 transition-colors hover:text-brand-orange disabled:opacity-50';
+const iconButtonClass = discussionActionClass;
 
 export function DiscussionActions({ post }: { post: Discussion }) {
   const router = useRouter();
@@ -108,34 +113,42 @@ export function DiscussionActions({ post }: { post: Discussion }) {
   }
 
   return (
-    <div className='mt-3 space-y-3'>
-      <div className='-ml-1 flex flex-wrap items-center gap-1'>
+    <div className='mt-4 space-y-3 border-t border-border-light pt-2 dark:border-border-dark/40'>
+      <div className='-ml-2 flex flex-wrap items-center gap-x-1 gap-y-0.5'>
         <button
           aria-label={`Like, ${discussionCountLabel(likes, 'like', 'likes')}`}
           aria-pressed={liked}
           className={cn(
-            'inline-flex min-h-9 items-center gap-1.5 rounded-full border px-4 font-inter text-sm transition-colors disabled:opacity-70',
-            liked
-              ? 'border-brand-orange bg-brand-orange/10 text-brand-orange'
-              : 'border-border-light text-gray-600 hover:border-brand-orange hover:text-brand-orange dark:border-border-dark/40 dark:text-gray-400'
+            discussionActionClass,
+            liked && 'text-brand-orange dark:text-brand-orange'
           )}
           disabled={busy}
           onClick={onLike}
           type='button'
         >
-          <Icon name='RiThumbUp' size={16} type={liked ? 'Fill' : 'Line'} />
+          <Icon name='RiHeart3' size={20} type={liked ? 'Fill' : 'Line'} />
           <span className='font-medium'>Like</span>
           {likes > 0 ? <span className='tabular-nums'>{likes}</span> : null}
         </button>
-        <span
-          aria-label={discussionCountLabel(replies, 'reply', 'replies')}
-          className='inline-flex min-h-9 items-center gap-1.5 px-3 font-inter text-sm text-gray-500'
+        <a
+          aria-label={`Reply, ${discussionCountLabel(replies, 'reply', 'replies')}`}
+          className={discussionActionClass}
+          href='#replies'
         >
-          <Icon name='RiChat1' size={16} />
-          <span aria-hidden className='tabular-nums'>
-            {replies}
-          </span>
-        </span>
+          <Icon name='RiChat1' size={20} />
+          <span>Reply</span>
+          {replies > 0 ? <span className='tabular-nums'>{replies}</span> : null}
+        </a>
+        <BlogShareDialog
+          blogURL={`${LIVE_URL ?? ''}${discussionPath(post.public_id)}`}
+          copiedDescription='The link to this discussion has been copied.'
+          copiedTitle='Discussion link copied'
+          dialogTitle='Share discussion'
+          size={20}
+          triggerClassName={discussionActionClass}
+          triggerLabel='Share'
+          triggerTitle='Share discussion'
+        />
         {canEdit && !editing ? (
           <button
             aria-label='Edit'
@@ -144,7 +157,8 @@ export function DiscussionActions({ post }: { post: Discussion }) {
             title='Edit'
             type='button'
           >
-            <Icon name='RiEdit2' size={16} />
+            <Icon name='RiEdit2' size={18} />
+            <span>Edit</span>
           </button>
         ) : null}
         {isAuthor ? (
@@ -168,7 +182,8 @@ export function DiscussionActions({ post }: { post: Discussion }) {
               title='Delete'
               type='button'
             >
-              <Icon name='RiDeleteBin6' size={16} />
+              <Icon name='RiDeleteBin6' size={18} />
+              <span>Delete</span>
             </button>
           )
         ) : null}

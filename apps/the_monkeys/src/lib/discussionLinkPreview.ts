@@ -42,15 +42,20 @@ export function blogPreview(blog?: Blog): LinkPreview | null {
   };
 }
 
-export function eventPreview(event?: EventItem): LinkPreview | null {
+export function eventPreview(
+  event?: EventItem,
+  viewingTimezone?: string
+): LinkPreview | null {
   if (!event || event.status === 'draft') return null;
   if (event.visibility && event.visibility !== 'public') return null;
   return {
     label: 'Event',
     title: event.title,
     description:
-      formatEventCardWhen(event.start_time, event.timezone) ||
-      text(event.description),
+      formatEventCardWhen(
+        event.start_time,
+        viewingTimezone ?? event.timezone
+      ) || text(event.description),
     image: event.cover_image || undefined,
   };
 }

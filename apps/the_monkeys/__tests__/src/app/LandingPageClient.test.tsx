@@ -17,6 +17,10 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/hooks/blog/useGetMetaFeedBlogs');
 vi.mock('@/hooks/blog/useGetTrendingBlogs');
 vi.mock('@/hooks/events/useEventQueries', () => ({ useEventList: vi.fn() }));
+vi.mock('@/services/fetcher', () => ({
+  fetcher: vi.fn().mockResolvedValue(null),
+  authFetcher: vi.fn().mockResolvedValue(null),
+}));
 vi.mock('@/hooks/profile/useProfileImage', () => ({
   default: () => ({ imageUrl: '', isLoading: false, isError: true }),
 }));
@@ -137,11 +141,11 @@ describe('LandingPageClient', () => {
       isLoading: false,
       isError: false,
     });
-    vi.mocked(useEventList).mockReturnValue({
+    vi.mocked(useEventList, { partial: true }).mockReturnValue({
       data: { events: [] },
       isLoading: false,
       isError: false,
-    } as ReturnType<typeof useEventList>);
+    });
 
     renderWithProviders(<LandingPageClient />);
 

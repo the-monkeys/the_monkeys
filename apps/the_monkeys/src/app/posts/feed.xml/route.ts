@@ -16,7 +16,7 @@ export async function GET() {
     title: 'Latest Posts on Monkeys',
     description:
       'Recent public posts from authors and communities across Monkeys.',
-    path: '/feed',
+    path: '/',
     items: posts.map((post) => {
       const link = `${SITE_URL}/blog/${generateSlug(post.title)}-${post.blog_id}`;
       return {

@@ -11,7 +11,6 @@ import {
   DiscussionIdentity,
   DiscussionStats,
   discussionHandle,
-  discussionRowClass,
 } from '@/components/discussions/discussionChrome';
 import { firstInternalLink } from '@/lib/discussionLinks';
 import { discussionHeadline, discussionPath } from '@/lib/discussionSeo';
@@ -37,14 +36,16 @@ export function DiscussionCard({
   return (
     <article
       className={cn(
-        'relative flex min-w-0 items-start gap-3',
-        embedded ? 'py-0' : cn('py-4', discussionRowClass)
+        'relative grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-start gap-x-3',
+        embedded
+          ? 'py-0'
+          : 'rounded-2xl border border-border-light bg-white p-4 dark:border-border-dark/40 dark:bg-background-dark sm:p-5'
       )}
     >
       {linked ? (
         <Link
           aria-label={discussionHeadline(post.body)}
-          className='absolute inset-0 rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange'
+          className='absolute inset-0 rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange'
           href={discussionPath(post.public_id)}
         />
       ) : null}
@@ -62,20 +63,23 @@ export function DiscussionCard({
         )}
         <DiscussionBody
           body={post.body}
-          className={cn(bodyClass, embedded && 'text-base')}
+          className={cn(
+            bodyClass,
+            !linked && 'mt-3 text-base leading-7',
+            embedded && 'text-base'
+          )}
         />
         {preview ? (
           <DiscussionLinkPreview href={preview.href} target={preview.target} />
         ) : null}
-        {footer ? (
-          <div className='relative z-10'>{footer}</div>
-        ) : (
+        {!footer ? (
           <DiscussionStats
             likes={post.like_count ?? 0}
             replies={post.reply_count ?? 0}
           />
-        )}
+        ) : null}
       </div>
+      {footer ? <div className='relative z-10 col-span-2'>{footer}</div> : null}
     </article>
   );
 }

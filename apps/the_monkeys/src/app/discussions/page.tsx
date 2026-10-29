@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { cookies } from 'next/headers';
 
 import { DiscussionListClient } from '@/components/discussions/DiscussionListClient';
 import { JsonLd } from '@/components/seo/JsonLd';
@@ -13,21 +14,13 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default async function DiscussionsPage() {
-  const list = await loadSiteDiscussions();
+  const list = await loadSiteDiscussions(undefined, cookies().toString());
 
   return (
-    <div className='mx-auto w-full min-w-0 max-w-2xl pb-24 lg:pb-0'>
+    <div className='mx-auto w-full min-w-0 max-w-3xl'>
       <JsonLd data={buildDiscussionFeedJsonLd()} />
-      <header className='mb-6'>
-        <p className='font-inter text-[11px] font-bold uppercase tracking-[0.22em] text-brand-orange'>
-          Community
-        </p>
-        <h1 className='mt-1 font-newsreader text-4xl font-bold md:text-5xl'>
-          Discussions
-        </h1>
-        <p className='mt-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
-          Short posts and replies from the Monkeys community.
-        </p>
+      <header className='mb-3'>
+        <h1 className='font-newsreader text-2xl font-semibold'>Discussions</h1>
       </header>
       {list ? (
         <DiscussionListClient

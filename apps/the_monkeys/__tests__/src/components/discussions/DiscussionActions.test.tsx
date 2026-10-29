@@ -46,6 +46,26 @@ describe('DiscussionActions', () => {
     mocks.session = { username: 'dave' };
   });
 
+  it('provides labelled reply and share controls alongside Like', async () => {
+    render(<DiscussionActions post={post} />);
+
+    expect(
+      screen
+        .getByRole('link', { name: 'Reply, 0 replies' })
+        .getAttribute('href')
+    ).toBe('#replies');
+    expect(
+      screen.getByRole('button', { name: 'Share discussion' }).textContent
+    ).toContain('Share');
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Share discussion' })
+    );
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    expect(
+      screen.getByRole('heading', { name: 'Share discussion' })
+    ).toBeTruthy();
+  });
+
   it('asks for confirmation before deleting', async () => {
     const api = await import('@/services/discussions/discussionsApi');
     vi.mocked(api.deleteDiscussion).mockClear();

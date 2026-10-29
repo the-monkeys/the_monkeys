@@ -27,30 +27,100 @@ export function GroupPostsFeed({
   focusComposerToken?: number;
 }) {
   const { data: session } = useAuth();
-  const blogsQuery = useGroupBlogs(group.slug);
+  return (
+    <GroupPostsFeedForViewer
+      key={`${group.slug}:${session?.username ?? ''}:${group.viewer_member_status}:${group.visibility}`}
+      group={group}
+      focusComposerToken={focusComposerToken}
+    />
+  );
+}
+
+function GroupPostsFeedForViewer({
+  group,
+  focusComposerToken,
+}: {
+  group: GroupItem;
+  focusComposerToken: number;
+}) {
+  const { data: session } = useAuth();
+  const blogsQuery = useGroupBlogs(group.slug, 20, true, group);
+  const hasMoreBlogs = blogsQuery.hasNextPage && !blogsQuery.isError;
   const [discussions, setDiscussions] = useState<Discussion[] | null>(null);
   const [discussionError, setDiscussionError] = useState<string | null>(null);
+  const [hasMoreDiscussions, setHasMoreDiscussions] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const requestGeneration = useRef(0);
+  const moreBusy = useRef(false);
   const [composerOpen, setComposerOpen] = useState(false);
   const composerRef = useRef<HTMLDivElement>(null);
   const slug = group.slug;
 
-  const loadDiscussions = useCallback(async () => {
-    try {
-      const page = await listDiscussions({ kind: 'group', slug });
-      setDiscussions(Array.isArray(page?.discussions) ? page.discussions : []);
-      setDiscussionError(null);
-    } catch (err) {
-      setDiscussionError(
-        axios.isAxiosError(err) && err.response?.status === 404
-          ? 'This group is not available.'
-          : 'Could not load discussions.'
-      );
-    }
-  }, [slug]);
+  const loadDiscussions = useCallback(
+    async (beforeId?: string) => {
+      const generation = beforeId
+        ? requestGeneration.current
+        : ++requestGeneration.current;
+      if (!beforeId) {
+        moreBusy.current = false;
+        setLoadingMore(false);
+        setDiscussions(null);
+        setHasMoreDiscussions(false);
+      }
+      try {
+        const page = await listDiscussions({ kind: 'group', slug }, beforeId);
+        if (generation !== requestGeneration.current) return;
+        const incoming = Array.isArray(page?.discussions)
+          ? page.discussions
+          : [];
+        setDiscussions((current) => {
+          const combined = beforeId
+            ? [...(current ?? []), ...incoming]
+            : incoming;
+          return Array.from(
+            new Map(combined.map((post) => [post.public_id, post])).values()
+          );
+        });
+        setHasMoreDiscussions(
+          incoming.length >= 20 && incoming.at(-1)?.public_id !== beforeId
+        );
+        setDiscussionError(null);
+      } catch (err) {
+        if (generation !== requestGeneration.current) return;
+        setDiscussionError(
+          axios.isAxiosError(err) && err.response?.status === 404
+            ? 'This group is not available.'
+            : 'Could not load discussions.'
+        );
+      }
+    },
+    [slug]
+  );
+
+  const cancelDiscussions = useCallback(() => {
+    requestGeneration.current++;
+  }, []);
 
   useEffect(() => {
     void loadDiscussions();
-  }, [loadDiscussions]);
+    return cancelDiscussions;
+  }, [loadDiscussions, cancelDiscussions]);
+
+  const loadMore = async () => {
+    if (moreBusy.current || blogsQuery.isFetchingNextPage) return;
+    moreBusy.current = true;
+    setLoadingMore(true);
+    const generation = requestGeneration.current;
+    await Promise.allSettled([
+      ...(hasMoreBlogs ? [blogsQuery.fetchNextPage()] : []),
+      ...(hasMoreDiscussions
+        ? [loadDiscussions(discussions?.at(-1)?.public_id)]
+        : []),
+    ]);
+    if (generation !== requestGeneration.current) return;
+    moreBusy.current = false;
+    setLoadingMore(false);
+  };
 
   useEffect(() => {
     if (!focusComposerToken) return;
@@ -65,8 +135,16 @@ export function GroupPostsFeed({
     if (field instanceof HTMLTextAreaElement) field.focus();
   }, [composerOpen, focusComposerToken]);
 
-  const blogs =
-    blogsQuery.data?.pages.flatMap((page) => page.blogs ?? []) ?? [];
+  const canReadRestrictedBlogs = !!session && isActiveGroupMember(group);
+  // React Query retains old data after a failed refetch. It is no longer proof
+  // that this viewer may read those previews, even if group standing is stale.
+  const blogs = blogsQuery.isError
+    ? []
+    : (blogsQuery.data?.pages.flatMap((page) => page.blogs ?? []) ?? []).filter(
+        (post) =>
+          canReadRestrictedBlogs ||
+          (group.visibility === 'public' && post.audience !== 'group_only')
+      );
   const items = mergeGroupFeedItems(blogs, discussions ?? []);
   const discussionsLoading = discussions === null && !discussionError;
   const loading = blogsQuery.isLoading || discussionsLoading;
@@ -162,16 +240,16 @@ export function GroupPostsFeed({
         </ul>
       )}
 
-      {blogsQuery.hasNextPage ? (
+      {hasMoreBlogs || hasMoreDiscussions ? (
         <div className='flex justify-center pt-2'>
           <Button
             className='min-h-11 w-full sm:w-auto sm:min-w-40'
-            disabled={blogsQuery.isFetchingNextPage}
-            onClick={() => blogsQuery.fetchNextPage()}
+            disabled={loadingMore || blogsQuery.isFetchingNextPage}
+            onClick={loadMore}
             type='button'
             variant='outline'
           >
-            {blogsQuery.isFetchingNextPage
+            {loadingMore || blogsQuery.isFetchingNextPage
               ? 'Loading posts...'
               : 'Load more posts'}
           </Button>

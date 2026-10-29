@@ -1,6 +1,8 @@
 import {
   activePublishGroups,
   blogApiError,
+  draftPublicationScope,
+  draftScopeForSelection,
   effectiveBlogAudience,
   publicationForGroup,
   publicationScope,
@@ -55,7 +57,7 @@ describe('blog publication scope', () => {
       ],
       'writers'
     );
-    expect(selected?.group.slug).toBe('writers');
+    expect(selected?.group?.slug).toBe('writers');
     expect(selected?.audience).toBe('group_only');
     expect(publicationForGroup([group()], 'missing')).toBeNull();
     expect(publicationForGroup([group()], '  ')).toBeNull();
@@ -63,6 +65,41 @@ describe('blog publication scope', () => {
 
   it('omits group fields when no group is selected', () => {
     expect(publicationScope(null, 'group_only')).toEqual({});
+  });
+
+  it('stores group intent before resolution and defaults legacy drafts to public', () => {
+    expect(draftPublicationScope(undefined, ' writers ')).toEqual({
+      group_slug: 'writers',
+      audience: 'group_only',
+    });
+    expect(draftPublicationScope({})).toEqual({
+      group_slug: '',
+      audience: 'public',
+    });
+    expect(
+      draftPublicationScope({ group_slug: 'writers', audience: 'public' })
+    ).toEqual({ group_slug: 'writers', audience: 'public' });
+  });
+
+  it('persists explicit removal and gives it precedence over an old group URL', () => {
+    const removed = draftScopeForSelection({
+      group: null,
+      audience: 'group_only',
+    });
+    expect(removed).toEqual({ group_slug: '', audience: 'public' });
+    expect(draftPublicationScope(removed, 'writers')).toEqual({
+      group_slug: '',
+      audience: 'public',
+    });
+  });
+
+  it('coerces private draft selections to members only', () => {
+    expect(
+      draftScopeForSelection({
+        group: group({ visibility: 'private' }),
+        audience: 'public',
+      })
+    ).toEqual({ group_slug: 'writers', audience: 'group_only' });
   });
 
   it('trims the selected group slug and returns the effective audience', () => {

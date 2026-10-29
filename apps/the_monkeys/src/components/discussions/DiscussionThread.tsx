@@ -151,9 +151,9 @@ export function DiscussionThread({ post }: { post: Discussion }) {
   const canReply = !slug || isActiveGroupMember(data?.group);
 
   return (
-    <div className='mx-auto w-full min-w-0 max-w-2xl pb-24 lg:pb-0'>
+    <div className='mx-auto w-full min-w-0 max-w-3xl'>
       <Link
-        className='inline-flex items-center gap-1 font-inter text-sm text-gray-500 hover:text-brand-orange'
+        className='mb-3 inline-flex min-h-11 items-center gap-1 font-inter text-sm text-gray-500 hover:text-brand-orange'
         href={DISCUSSIONS_ROUTE}
       >
         <Icon name='RiArrowLeftS' size={16} /> Discussions
@@ -165,8 +165,15 @@ export function DiscussionThread({ post }: { post: Discussion }) {
         post={post}
       />
 
-      <section className='mt-6 space-y-4'>
-        <h2 className='font-dm_sans text-xl font-semibold'>
+      <section
+        aria-labelledby='replies-heading'
+        className='mt-4 scroll-mt-28 space-y-4 rounded-2xl border border-border-light bg-white p-4 dark:border-border-dark/40 dark:bg-background-dark sm:p-5'
+        id='replies'
+      >
+        <h2
+          className='font-newsreader text-2xl font-semibold'
+          id='replies-heading'
+        >
           {shown > 0 ? `Replies (${shown})` : 'Replies'}
         </h2>
         {canReply ? (

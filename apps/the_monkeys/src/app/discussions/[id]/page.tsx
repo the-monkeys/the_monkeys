@@ -28,7 +28,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (found.state === 'unavailable') {
     return noIndexPage('Discussion temporarily unavailable | Monkeys');
   }
-  return buildDiscussionMetadata(found.discussion, found.indexable);
+  return buildDiscussionMetadata(
+    found.publicDiscussion ?? found.discussion,
+    found.indexable
+  );
 }
 
 export default async function DiscussionPage({ params }: Props) {
@@ -47,8 +50,8 @@ export default async function DiscussionPage({ params }: Props) {
 
   return (
     <>
-      {found.indexable ? (
-        <JsonLd data={buildDiscussionJsonLd(found.discussion)} />
+      {found.indexable && found.publicDiscussion ? (
+        <JsonLd data={buildDiscussionJsonLd(found.publicDiscussion)} />
       ) : null}
       <DiscussionThread post={found.discussion} />
     </>

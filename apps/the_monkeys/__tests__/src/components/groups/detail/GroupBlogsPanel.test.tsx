@@ -2,9 +2,11 @@ import { GroupBlogsPanel } from '@/components/groups/detail/GroupBlogsPanel';
 import { useGroupBlogs } from '@/hooks/groups/useGroupQueries';
 import { Blog } from '@/services/blog/blogTypes';
 import { GroupItem } from '@/services/groups/groupsTypes';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+afterEach(cleanup);
 
 vi.mock('@/hooks/groups/useGroupQueries', () => ({
   useGroupBlogs: vi.fn(),
@@ -97,9 +99,8 @@ describe('GroupBlogsPanel', () => {
 
     render(<GroupBlogsPanel group={memberGroup} />);
 
-    expect(
-      screen.getByText('No posts have been published to this group yet.')
-    ).toBeTruthy();
+    expect(screen.getByText(/^No posts/)).toBeTruthy();
+    expect(screen.queryByText(/Log in and join/)).toBeNull();
   });
 
   it('labels members-only posts, uses a mobile-first grid, and paginates', async () => {

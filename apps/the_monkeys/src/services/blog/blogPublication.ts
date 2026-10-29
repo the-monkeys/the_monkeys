@@ -12,6 +12,33 @@ export type BlogPublicationScope = {
   audience?: BlogAudience;
 };
 
+/** Explicit values are required because each draft save replaces its document. */
+export type DraftPublicationScope = Required<BlogPublicationScope>;
+
+export function draftPublicationScope(
+  draft?: BlogPublicationScope,
+  preferredGroupSlug = ''
+): DraftPublicationScope {
+  const slug = (draft?.group_slug ?? preferredGroupSlug).trim();
+  return {
+    group_slug: slug,
+    audience: slug
+      ? draft?.audience === 'public'
+        ? 'public'
+        : 'group_only'
+      : 'public',
+  };
+}
+
+export function draftScopeForSelection(
+  selection: BlogPublicationSelection
+): DraftPublicationScope {
+  return {
+    group_slug: selection.group?.slug.trim() ?? '',
+    audience: effectiveBlogAudience(selection.group, selection.audience),
+  };
+}
+
 export const activePublishGroups = (groups: GroupItem[] = []) =>
   groups.filter((group) => group.viewer_member_status === 'active');
 

@@ -3,11 +3,12 @@ import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import {
   createDiscussion,
   listDiscussions,
+  listFollowingDiscussions,
 } from '@/services/discussions/discussionsApi';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/services/api/axiosInstance', () => ({
-  default: { post: vi.fn() },
+  default: { post: vi.fn(), get: vi.fn() },
 }));
 
 vi.mock('@/services/api/axiosInstanceNoAuth', () => ({
@@ -40,14 +41,34 @@ describe('listDiscussions', () => {
   });
 });
 
+describe('listFollowingDiscussions', () => {
+  it('uses the authenticated endpoint and forwards the independent cursor and cancellation', async () => {
+    vi.mocked(axiosInstanceNoAuth.get).mockClear();
+    vi.mocked(axiosInstance.get).mockResolvedValue({
+      data: { discussions: [] },
+    });
+    const controller = new AbortController();
+    await listFollowingDiscussions('older', controller.signal);
+    expect(axiosInstance.get).toHaveBeenCalledWith('/discussions/following', {
+      params: { before_id: 'older' },
+      signal: controller.signal,
+    });
+    expect(axiosInstanceNoAuth.get).not.toHaveBeenCalled();
+  });
+});
+
 describe('createDiscussion', () => {
   beforeEach(() => {
     vi.mocked(axiosInstance.post).mockReset();
   });
 
   it('posts the body and does not send files', async () => {
-    vi.mocked(axiosInstance.post).mockResolvedValue({ data: { public_id: 'p1' } });
+    vi.mocked(axiosInstance.post).mockResolvedValue({
+      data: { public_id: 'p1' },
+    });
     await createDiscussion({ kind: 'site' }, 'hello');
-    expect(axiosInstance.post).toHaveBeenCalledWith('/discussions', { body: 'hello' });
+    expect(axiosInstance.post).toHaveBeenCalledWith('/discussions', {
+      body: 'hello',
+    });
   });
 });

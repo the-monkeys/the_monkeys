@@ -11,6 +11,9 @@ import type { DiscussionAuthor } from '@/services/discussions/discussionsTypes';
 export const discussionRowClass =
   'border-b border-border-light/60 dark:border-border-dark/40';
 
+export const discussionActionClass =
+  'inline-flex min-h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-3 font-inter text-sm font-medium text-gray-600 transition-colors hover:bg-brand-orange/5 hover:text-brand-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange disabled:opacity-50 dark:text-gray-400';
+
 export function discussionCountLabel(count: number, one: string, many: string) {
   return `${count} ${count === 1 ? one : many}`;
 }
@@ -30,7 +33,7 @@ export function DiscussionIdentity({
   const timeLabel = discussionTimeLabel(createdAt);
 
   return (
-    <div className='flex min-w-0 items-center gap-1.5 font-inter'>
+    <div className='flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 font-inter'>
       {handle ? (
         <DiscussionAuthorLink handle={handle} />
       ) : (
@@ -67,7 +70,7 @@ export function DiscussionStats({
   return (
     <div className='mt-2 flex items-center gap-4 font-inter text-xs text-gray-500 dark:text-gray-400'>
       <span aria-label={likeLabel} className='inline-flex items-center gap-1'>
-        <Icon name='RiThumbUp' size={14} />
+        <Icon name='RiHeart3' size={18} />
         <span aria-hidden className='tabular-nums'>
           {likes}
         </span>

@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { DiscussionCard } from '@/components/discussions/DiscussionCard';
 import { DiscussionComposer } from '@/components/discussions/DiscussionComposer';
+import { DiscussionFeedActions } from '@/components/discussions/DiscussionFeedActions';
 import useAuth from '@/hooks/auth/useAuth';
 import { listDiscussions } from '@/services/discussions/discussionsApi';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
@@ -74,10 +75,14 @@ export function DiscussionFeed({ posts }: { posts: Discussion[] }) {
     );
   }
   return (
-    <ul className='mt-4 min-w-0'>
+    <ul className='mt-4 min-w-0 space-y-4'>
       {posts.map((post) => (
         <li className='min-w-0' key={post.public_id}>
-          <DiscussionCard linked post={post} />
+          <DiscussionCard
+            footer={<DiscussionFeedActions post={post} />}
+            linked
+            post={post}
+          />
         </li>
       ))}
     </ul>

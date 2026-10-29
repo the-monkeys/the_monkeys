@@ -1,3 +1,7 @@
+import {
+  FOLLOWING_DISCUSSIONS_QUERY_KEY,
+  FOLLOWING_FEED_QUERY_KEY,
+} from '@/lib/followingFeedKeys';
 import { authFetcher } from '@/services/fetcher';
 import {
   ConnectionCountResponse,
@@ -113,6 +117,8 @@ export const useFollowUser = (
 
   const invalidateConnectionQueries = () =>
     Promise.all([
+      queryClient.resetQueries({ queryKey: [FOLLOWING_DISCUSSIONS_QUERY_KEY] }),
+      queryClient.resetQueries({ queryKey: [FOLLOWING_FEED_QUERY_KEY] }),
       queryClient.invalidateQueries({
         queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
       }),

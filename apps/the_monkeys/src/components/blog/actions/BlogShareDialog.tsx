@@ -5,6 +5,7 @@ import {
   ShareButtonContainer,
 } from '@/components/buttons/shareButton';
 import Icon from '@/components/icon';
+import { cn } from '@/lib/utils';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -23,6 +24,8 @@ interface BlogShareDialogProps {
   dialogTitle?: string;
   copiedTitle?: string;
   copiedDescription?: string;
+  triggerClassName?: string;
+  triggerLabel?: string;
 }
 
 export const BlogShareDialog: FC<BlogShareDialogProps> = ({
@@ -32,6 +35,8 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
   dialogTitle = 'Invite to Read',
   copiedTitle = 'Blog Link Copied',
   copiedDescription = 'The link to this post has been copied.',
+  triggerClassName,
+  triggerLabel,
 }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
@@ -58,11 +63,15 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
       <DialogTrigger asChild>
         <button
           aria-label={triggerTitle}
-          className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
           title={triggerTitle}
           type='button'
+          className={cn(
+            'p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100 transition-colors',
+            triggerClassName
+          )}
         >
           <Icon name='RiShare' size={size} />
+          {triggerLabel ? <span>{triggerLabel}</span> : null}
         </button>
       </DialogTrigger>
 

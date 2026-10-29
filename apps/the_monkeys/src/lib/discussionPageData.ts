@@ -6,7 +6,12 @@ import {
 } from '@/services/discussions/discussionsTypes';
 
 export type DiscussionLoad =
-  | { state: 'ok'; discussion: Discussion; indexable: boolean }
+  | {
+      state: 'ok';
+      discussion: Discussion;
+      indexable: boolean;
+      publicDiscussion?: Discussion;
+    }
   | { state: 'missing' }
   | { state: 'unavailable' };
 
@@ -33,19 +38,32 @@ export async function loadDiscussion(
   if (!origin()) return { state: 'unavailable' };
   try {
     const anonymous = await readDiscussion(id, '');
-    if (anonymous.status === 200 && anonymous.discussion) {
+    const publicDiscussion =
+      anonymous.status === 200 ? anonymous.discussion : undefined;
+    if (anonymous.status !== 200 && anonymous.status !== 404)
+      return { state: 'unavailable' };
+    if (!cookieHeader && publicDiscussion) {
       return {
         state: 'ok',
-        discussion: anonymous.discussion,
-        indexable: anonymous.discussion.status === 'visible',
+        discussion: publicDiscussion,
+        indexable: publicDiscussion.status === 'visible',
+        publicDiscussion,
       };
     }
-    if (anonymous.status !== 404) return { state: 'unavailable' };
     if (!cookieHeader) return { state: 'missing' };
 
     const member = await readDiscussion(id, cookieHeader);
     if (member.status === 200 && member.discussion) {
-      return { state: 'ok', discussion: member.discussion, indexable: false };
+      const indexable =
+        publicDiscussion?.status === 'visible' &&
+        member.discussion.status === 'visible' &&
+        member.discussion.audience !== 'group_only';
+      return {
+        state: 'ok',
+        discussion: member.discussion,
+        indexable,
+        ...(indexable ? { publicDiscussion } : {}),
+      };
     }
     if (member.status === 404) return { state: 'missing' };
     return { state: 'unavailable' };
@@ -55,13 +73,15 @@ export async function loadDiscussion(
 }
 
 export async function loadSiteDiscussions(
-  beforeId?: string
+  beforeId?: string,
+  cookieHeader = ''
 ): Promise<DiscussionList | null> {
   if (!origin()) return null;
   try {
     const query = beforeId ? `?before_id=${encodeURIComponent(beforeId)}` : '';
     const res = await fetch(`${origin()}/discussions${query}`, {
       cache: 'no-store',
+      headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
     });
     if (res.status !== 200) return null;
     return (await res.json()) as DiscussionList;

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
 import { BlogPublicationScopeFields } from '@/components/blog/actions/BlogPublicationScopeFields';
@@ -7,12 +7,8 @@ import { Loader } from '@/components/loader';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useAuth from '@/hooks/auth/useAuth';
 import { useScheduleState } from '@/hooks/blog/schedule/useScheduleState';
-import { useUserGroups } from '@/hooks/groups/useGroupQueries';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
-import {
-  BlogPublicationSelection,
-  publicationForGroup,
-} from '@/services/blog/blogPublication';
+import { BlogPublicationSelection } from '@/services/blog/blogPublication';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Drawer,
@@ -46,7 +42,12 @@ interface PublishBlogDrawerProps {
     selection: BlogPublicationSelection
   ) => void;
   isPublishing: boolean;
-  preferredGroupSlug?: string;
+  publication: BlogPublicationSelection | null;
+  onPublicationChange: (selection: BlogPublicationSelection) => void;
+  publicationPending: boolean;
+  publicationError: string | null;
+  intendedGroupSlug: string;
+  onRetryGroup: () => void;
 }
 
 const INVALID_IMAGE_EXTENSIONS = ['gif', 'apng'];
@@ -96,31 +97,19 @@ export const PublishBlogDrawer = ({
   handlePublish,
   handleSchedule,
   isPublishing,
-  preferredGroupSlug,
+  publication,
+  onPublicationChange,
+  publicationPending,
+  publicationError,
+  intendedGroupSlug,
+  onRetryGroup,
 }: PublishBlogDrawerProps) => {
   const { data: session } = useAuth();
   const { topics: allTopics } = useGetAllTopics();
-  const { data: memberships } = useUserGroups(
-    session?.username,
-    { limit: 100, offset: 0 },
-    !!session?.username && !!preferredGroupSlug
-  );
-  const appliedGroup = useRef(false);
 
   const [isScheduleMode, setIsScheduleMode] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
-  const [publication, setPublication] = useState<BlogPublicationSelection>({
-    group: null,
-    audience: 'public',
-  });
-
-  useEffect(() => {
-    if (appliedGroup.current || !preferredGroupSlug || !memberships) return;
-    appliedGroup.current = true;
-    const next = publicationForGroup(memberships.groups, preferredGroupSlug);
-    if (next) setPublication(next);
-  }, [memberships, preferredGroupSlug]);
 
   const {
     scheduleDate,
@@ -203,6 +192,7 @@ export const PublishBlogDrawer = ({
   };
 
   const handleActionClick = () => {
+    if (!publication || publicationPending || publicationError) return;
     if (isScheduleMode && handleSchedule) {
       validateAndSubmit((scheduleTime, timezone) =>
         handleSchedule(scheduleTime, timezone, publication)
@@ -419,11 +409,50 @@ export const PublishBlogDrawer = ({
             {/* ---- Right column: Topics & Scheduling ---- */}
             <div className='flex flex-col justify-between h-full col-span-2 sm:col-span-1 space-y-6'>
               <div className='space-y-4'>
-                <BlogPublicationScopeFields
-                  username={session?.username}
-                  value={publication}
-                  onChange={setPublication}
-                />
+                {publicationPending || publicationError || !publication ? (
+                  <section className='space-y-3 rounded-xl border border-border-light p-4 dark:border-border-dark'>
+                    <p
+                      className='font-inter text-sm'
+                      role={publicationError ? 'alert' : 'status'}
+                    >
+                      {publicationError || 'Checking group membership...'}
+                    </p>
+                    {intendedGroupSlug && (
+                      <>
+                        <p className='break-words font-inter text-sm'>
+                          {intendedGroupSlug}
+                        </p>
+                        <Button
+                          type='button'
+                          variant='outline'
+                          onClick={() =>
+                            onPublicationChange({
+                              group: null,
+                              audience: 'public',
+                            })
+                          }
+                        >
+                          Remove group
+                        </Button>
+                      </>
+                    )}
+                    {publicationError && (
+                      <Button
+                        type='button'
+                        variant='outline'
+                        onClick={onRetryGroup}
+                      >
+                        Try again
+                      </Button>
+                    )}
+                  </section>
+                ) : (
+                  <BlogPublicationScopeFields
+                    username={session?.username}
+                    value={publication}
+                    onChange={onPublicationChange}
+                  />
+                )}
 
                 <div className='space-y-1'>
                   <Label className='font-dm_sans font-medium'>
@@ -500,7 +529,12 @@ export const PublishBlogDrawer = ({
                 <Button
                   type='button'
                   onClick={handleActionClick}
-                  disabled={isPublishing}
+                  disabled={
+                    isPublishing ||
+                    publicationPending ||
+                    !!publicationError ||
+                    !publication
+                  }
                   variant='brand'
                 >
                   {isPublishing && <Loader />}
