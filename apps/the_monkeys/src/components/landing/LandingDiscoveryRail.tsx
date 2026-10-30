@@ -34,7 +34,7 @@ interface LandingDiscoveryRailProps {
   trendingError?: boolean;
 }
 
-function TrendingPosts({
+export function TrendingPosts({
   posts,
   isLoading,
   isError,

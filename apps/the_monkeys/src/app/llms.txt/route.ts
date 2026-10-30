@@ -10,10 +10,11 @@ Monkeys (${SITE_URL}) is created and operated by Buddhicintaka (OPC) Pvt. Ltd. P
 
 ## Public collections
 
-- Latest posts: ${SITE_URL}/feed
+- Latest posts: ${SITE_URL}/
 - Explore topics: ${SITE_URL}/topics/explore
 - Events: ${SITE_URL}/events
 - Groups: ${SITE_URL}/groups
+- Discussions: ${SITE_URL}/discussions
 - About Monkeys: ${SITE_URL}/about
 
 ## Public product tools
@@ -34,6 +35,7 @@ Monkeys (${SITE_URL}) is created and operated by Buddhicintaka (OPC) Pvt. Ltd. P
 - Topic sitemap: ${SITE_URL}/topics/sitemap.xml
 - Event sitemap: ${SITE_URL}/events/sitemap.xml
 - Group sitemap: ${SITE_URL}/groups/sitemap.xml
+- Discussion sitemap: ${SITE_URL}/discussions/sitemap.xml
 `;
 
 export function GET() {

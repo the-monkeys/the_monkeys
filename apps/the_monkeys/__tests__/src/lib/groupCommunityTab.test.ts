@@ -20,12 +20,11 @@ describe('groupCommunityTab', () => {
   });
 
   it('defaults empty hash to posts and aliases blogs', () => {
-    expect(parseGroupCommunityTab('', false)).toBe(
-      DEFAULT_GROUP_COMMUNITY_TAB
-    );
+    expect(parseGroupCommunityTab('', false)).toBe(DEFAULT_GROUP_COMMUNITY_TAB);
     expect(parseGroupCommunityTab('#', false)).toBe('posts');
     expect(parseGroupCommunityTab('#blogs', false)).toBe('posts');
     expect(parseGroupCommunityTab('#events', false)).toBe('events');
+    expect(parseGroupCommunityTab('#discussions', false)).toBe('posts');
     expect(parseGroupCommunityTab('#about', true)).toBe('about');
   });
 

@@ -1,3 +1,4 @@
+import useAuth from '@/hooks/auth/useAuth';
 import {
   LIVE_LIST_STALE_MS,
   invalidateAfterGroupEventWrite,
@@ -40,6 +41,7 @@ import {
   GroupBody,
   GroupEventBody,
   GroupImageKind,
+  GroupItem,
   GroupListFilters,
   GroupRuleBody,
   JoinBody,
@@ -104,10 +106,21 @@ export function useGroupMembers(
 export function useGroupBlogs(
   slug: string | undefined,
   limit = 20,
-  enabled = true
+  enabled = true,
+  group?: Pick<GroupItem, 'visibility' | 'status' | 'viewer_member_status'>
 ) {
+  const auth = useAuth();
   return useInfiniteQuery({
-    queryKey: queryKeys.groups.blogs(slug, { limit }),
+    // Keep the existing invalidation prefix, but never share viewer-only pages.
+    queryKey: [
+      ...queryKeys.groups.blogs(slug, { limit }),
+      {
+        viewer: auth.data?.account_id ?? auth.data?.username ?? null,
+        memberStatus: group?.viewer_member_status ?? '',
+        visibility: group?.visibility ?? '',
+        status: group?.status ?? '',
+      },
+    ],
     queryFn: ({ pageParam }) =>
       listGroupBlogs(slug!, { limit, offset: pageParam }),
     initialPageParam: 0,
@@ -115,7 +128,7 @@ export function useGroupBlogs(
       lastPage.blogs.length === limit
         ? pages.reduce((count, page) => count + page.blogs.length, 0)
         : undefined,
-    enabled: enabled && !!slug,
+    enabled: enabled && !!slug && !auth.isPending,
     staleTime: LIVE_LIST_STALE_MS,
   });
 }

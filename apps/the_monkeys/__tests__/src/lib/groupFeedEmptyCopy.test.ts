@@ -5,7 +5,7 @@ describe('groupFeedEmptyCopy', () => {
   it('keeps the true-empty copy for members', () => {
     expect(
       groupFeedEmptyCopy({ kind: 'posts', member: true, signedIn: true })
-    ).toBe('No posts have been published to this group yet.');
+    ).toBe('No posts or discussions yet.');
     expect(
       groupFeedEmptyCopy({
         kind: 'events',
@@ -37,9 +37,9 @@ describe('groupFeedEmptyCopy', () => {
   });
 
   it('treats only active membership as a member', () => {
-    expect(isActiveGroupMember({ viewer_member_status: 'active' } as never)).toBe(
-      true
-    );
+    expect(
+      isActiveGroupMember({ viewer_member_status: 'active' } as never)
+    ).toBe(true);
     expect(
       isActiveGroupMember({ viewer_member_status: 'pending' } as never)
     ).toBe(false);

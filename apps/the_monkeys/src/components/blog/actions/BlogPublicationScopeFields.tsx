@@ -38,14 +38,20 @@ export function BlogPublicationScopeFields({
     { limit: 100, offset: 0 },
     !!username
   );
-  const options = useMemo<GroupOption[]>(
-    () =>
-      activePublishGroups(data?.groups).map((group) => ({
-        value: group,
-        label: group.name,
-      })),
-    [data?.groups]
-  );
+  const options = useMemo<GroupOption[]>(() => {
+    const groups = activePublishGroups(data?.groups);
+    if (
+      value.group &&
+      activePublishGroups([value.group]).length &&
+      !groups.some((group) => group.slug === value.group?.slug)
+    ) {
+      groups.unshift(value.group);
+    }
+    return groups.map((group) => ({
+      value: group,
+      label: group.name,
+    }));
+  }, [data?.groups, value.group]);
   const selectedOption =
     options.find((option) => option.value.slug === value.group?.slug) ?? null;
   const publicGroup = value.group?.visibility === 'public';

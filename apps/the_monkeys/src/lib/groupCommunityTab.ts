@@ -13,6 +13,7 @@ export const DEFAULT_GROUP_COMMUNITY_TAB: GroupCommunityTab = 'posts';
 
 const TAB_ALIASES: Record<string, GroupCommunityTab> = {
   blogs: 'posts',
+  discussions: 'posts',
 };
 
 const STAFF_ONLY_TABS = new Set<GroupCommunityTab>(['requests', 'invites']);

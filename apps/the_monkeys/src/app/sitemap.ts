@@ -11,10 +11,10 @@ const STATIC_PATHS: Array<{
   priority: number;
 }> = [
   { path: '/', changeFrequency: 'daily', priority: 1 },
-  { path: '/feed', changeFrequency: 'daily', priority: 0.9 },
   { path: '/topics/explore', changeFrequency: 'daily', priority: 0.8 },
   { path: '/events', changeFrequency: 'daily', priority: 0.8 },
   { path: '/groups', changeFrequency: 'daily', priority: 0.8 },
+  { path: '/discussions', changeFrequency: 'daily', priority: 0.8 },
   { path: '/snapshot', changeFrequency: 'weekly', priority: 0.7 },
   { path: '/snapshot/new', changeFrequency: 'weekly', priority: 0.8 },
   { path: '/cards', changeFrequency: 'weekly', priority: 0.7 },

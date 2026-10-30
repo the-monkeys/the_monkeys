@@ -5,15 +5,17 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const authMock = vi.hoisted(() =>
-  vi.fn(() => ({ data: { username: 'innovation_hub' } as { username: string } | null }))
+  vi.fn(() => ({
+    data: { username: 'innovation_hub' } as { username: string } | null,
+  }))
 );
 
 vi.mock('@/hooks/auth/useAuth', () => ({
   default: () => authMock(),
 }));
 
-vi.mock('@/components/groups/detail/GroupBlogsPanel', () => ({
-  GroupBlogsPanel: () => <div>posts-panel</div>,
+vi.mock('@/components/groups/detail/GroupPostsFeed', () => ({
+  GroupPostsFeed: () => <div>posts-panel</div>,
 }));
 
 vi.mock('@/hooks/events/useEventQueries', () => ({
@@ -87,19 +89,17 @@ describe('GroupCommunity', () => {
     expect(tabs.getAttribute('aria-selected')).toBe('true');
 
     await userEvent.click(
-      within(screen.getByRole('tablist', { name: 'Group community' })).getByRole(
-        'tab',
-        { name: 'About' }
-      )
+      within(
+        screen.getByRole('tablist', { name: 'Group community' })
+      ).getByRole('tab', { name: 'About' })
     );
     expect(window.location.hash).toBe('#about');
     expect(window.location.search).toBe('');
 
     await userEvent.click(
-      within(screen.getByRole('tablist', { name: 'Group community' })).getByRole(
-        'tab',
-        { name: 'Posts' }
-      )
+      within(
+        screen.getByRole('tablist', { name: 'Group community' })
+      ).getByRole('tab', { name: 'Posts' })
     );
     expect(window.location.hash).toBe('');
     expect(window.location.pathname).toBe('/groups/monkeys-admin-a8df79c4');

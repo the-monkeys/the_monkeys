@@ -1,21 +1,28 @@
 'use client';
 
-import Link from 'next/link';
-
 import {
   CREATE_EVENT_ROUTE,
   CREATE_GROUP_ROUTE,
   CREATE_ROUTE,
+  DISCUSSIONS_ROUTE,
 } from '@/constants/routeConstants';
+import type { CreateMenuItemId } from '@/lib/createMenuItems';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@the-monkeys/ui/atoms/dropdown-menu';
 
+import { CreateMenuContent } from '../create/CreateMenu';
 import Icon from '../icon';
+
+const siteHrefFor = (id: CreateMenuItemId): string | undefined =>
+  ({
+    discussion: DISCUSSIONS_ROUTE,
+    post: CREATE_ROUTE,
+    event: CREATE_EVENT_ROUTE,
+    group: CREATE_GROUP_ROUTE,
+  })[id];
 
 export const CreateButton = () => {
   return (
@@ -41,37 +48,7 @@ export const CreateButton = () => {
         aria-label='Create new content'
         className='w-52 rounded-xl border-brand-orange/20 bg-white py-1 shadow-lg dark:bg-black'
       >
-        <DropdownMenuItem asChild>
-          <Link
-            href={CREATE_ROUTE}
-            prefetch
-            className='flex items-center gap-3 px-4 py-2 font-dm_sans text-sm font-medium text-black transition-colors hover:bg-brand-orange/10 focus:bg-brand-orange/10 dark:text-white'
-          >
-            <Icon name='RiDraft' size={18} />
-            Create Post
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator className='my-1 bg-brand-orange/15' />
-        <DropdownMenuItem asChild>
-          <Link
-            href={CREATE_EVENT_ROUTE}
-            prefetch
-            className='flex items-center gap-3 px-4 py-2 font-dm_sans text-sm font-medium text-black transition-colors hover:bg-brand-orange/10 focus:bg-brand-orange/10 dark:text-white'
-          >
-            <Icon name='RiCalendar' size={18} />
-            Create Event
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link
-            href={CREATE_GROUP_ROUTE}
-            prefetch
-            className='flex items-center gap-3 px-4 py-2 font-dm_sans text-sm font-medium text-black transition-colors hover:bg-brand-orange/10 focus:bg-brand-orange/10 dark:text-white'
-          >
-            <Icon name='RiGroup' size={18} />
-            Create Group
-          </Link>
-        </DropdownMenuItem>
+        <CreateMenuContent variant='site' hrefFor={siteHrefFor} />
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -4,7 +4,7 @@ import {
   SearchSuggestResponse,
   SearchUsersV2Response,
 } from '@/services/search/searchTypes';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 // React Query keys for the search-v2 endpoints. Exported so callers
 // can call `queryClient.invalidateQueries({ queryKey: [SEARCH_BLOGS_V2_KEY] })`
@@ -35,6 +35,7 @@ export interface UseSearchPeopleArgs {
   limit?: number;
   offset?: number;
   enabled?: boolean;
+  keepPrevious?: boolean;
 }
 
 /**
@@ -49,6 +50,7 @@ export const useSearchPeopleV2 = ({
   limit = 10,
   offset = 0,
   enabled = true,
+  keepPrevious = false,
 }: UseSearchPeopleArgs) => {
   const q = (query ?? '').trim();
   const clampedLimit = Math.min(Math.max(limit, 1), PEOPLE_LIMIT_MAX);
@@ -64,6 +66,7 @@ export const useSearchPeopleV2 = ({
       ),
     enabled: enabled && q.length > 0,
     staleTime: SEARCH_STALE_MS,
+    placeholderData: keepPrevious ? keepPreviousData : undefined,
     // Aborted requests on unmount / key change come for free via
     // React Query 5's built-in signal handling.
   });

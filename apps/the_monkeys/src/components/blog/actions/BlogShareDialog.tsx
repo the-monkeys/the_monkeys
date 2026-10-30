@@ -20,13 +20,23 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 interface BlogShareDialogProps {
   blogURL: string;
   size?: number;
+  triggerTitle?: string;
+  dialogTitle?: string;
+  copiedTitle?: string;
+  copiedDescription?: string;
   triggerClassName?: string;
+  triggerLabel?: string;
 }
 
 export const BlogShareDialog: FC<BlogShareDialogProps> = ({
   blogURL,
   size = 18,
+  triggerTitle = 'Share Blog',
+  dialogTitle = 'Invite to Read',
+  copiedTitle = 'Blog Link Copied',
+  copiedDescription = 'The link to this post has been copied.',
   triggerClassName,
+  triggerLabel,
 }) => {
   const copyToClipboard = () => {
     if (navigator.clipboard) {
@@ -34,15 +44,15 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
         () => {
           toast({
             variant: 'default',
-            title: 'Blog Link Copied',
-            description: 'The link to this post has been copied.',
+            title: copiedTitle,
+            description: copiedDescription,
           });
         },
         () => {
           toast({
             variant: 'error',
             title: 'Copy Failed',
-            description: 'Unable to copy the post link.',
+            description: 'Unable to copy the link.',
           });
         }
       );
@@ -52,19 +62,22 @@ export const BlogShareDialog: FC<BlogShareDialogProps> = ({
     <Dialog>
       <DialogTrigger asChild>
         <button
+          aria-label={triggerTitle}
+          title={triggerTitle}
+          type='button'
           className={cn(
             'p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100 transition-colors',
             triggerClassName
           )}
-          title='Share Blog'
         >
           <Icon name='RiShare' size={size} />
+          {triggerLabel ? <span>{triggerLabel}</span> : null}
         </button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Invite to Read</DialogTitle>
+          <DialogTitle>{dialogTitle}</DialogTitle>
           <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
