@@ -23,6 +23,14 @@ import { LandingFeaturedEvent } from './LandingFeaturedEvent';
 const focusRing =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background-dark';
 
+// The hero renders full-width on mobile and, from lg, is the 1.65fr left
+// column of the two-column grid inside the max-w-[1400px] container (~62vw).
+const heroImageSizes = '(min-width: 1024px) 62vw, 100vw';
+
+// The image optimizer only serves qualities whitelisted in next.config.mjs
+// (images.qualities: [80, 100]); 80 already cuts the hero payload ~4x vs 100.
+const heroImageQuality = 80;
+
 export function LandingHero({
   lead,
   featuredEvent,
@@ -70,12 +78,16 @@ export function LandingHero({
                     <BlogPlaceholderImage
                       title={title}
                       className='transition-transform duration-700 ease-out group-hover:scale-[1.025]'
+                      sizes={heroImageSizes}
+                      quality={heroImageQuality}
                     />
                   ) : (
                     <BlogImage
                       title={title}
                       image={lead.first_image}
                       className='object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]'
+                      sizes={heroImageSizes}
+                      quality={heroImageQuality}
                     />
                   )}
                   <div className='absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10' />
