@@ -6,6 +6,7 @@ import fetcher from '@/services/fileFetcher';
 import { uploadProfileImage } from '@/services/user/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import axios from 'axios';
 import { z } from 'zod';
 
 export const PROFILE_IMAGE_QUERY_KEY = 'profile-image';
@@ -74,10 +75,9 @@ export const useUploadProfileImage = ({
 const useProfileImage = (username: string | undefined) => {
   const [imageUrl, setImageUrl] = useState<string>('');
 
-  const { data, error, isLoading, isError } = useQuery<Blob, Error>({
+  const { data, error, isLoading, isError } = useQuery<Blob | null, Error>({
     queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    queryFn: () =>
-      fetcher(`/storage/profiles/${username}/profile?t=${Date.now()}`),
+    queryFn: () => fetchProfileImage(username!),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
     retry: false,
@@ -103,3 +103,17 @@ const useProfileImage = (username: string | undefined) => {
 };
 
 export default useProfileImage;
+
+export async function fetchProfileImage(
+  username: string
+): Promise<Blob | null> {
+  try {
+    return await fetcher(`/storage/profiles/${username}/profile`);
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+
+    throw error;
+  }
+}

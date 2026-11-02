@@ -6,10 +6,6 @@ const fetcher = (url: string, config?: AxiosRequestConfig) =>
   axiosInstanceV2
     .get(url, {
       responseType: 'blob',
-      headers: {
-        'Cache-Control': 'no-cache',
-        ...config?.headers,
-      },
       ...config,
     })
     .then((response) => response.data);
