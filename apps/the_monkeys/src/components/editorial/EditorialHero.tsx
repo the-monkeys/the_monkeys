@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import {
   BlogDescription,
   BlogImage,
@@ -9,6 +8,7 @@ import {
 } from '@/components/blog/getBlogContent';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
@@ -27,7 +27,7 @@ export const EditorialHero = ({
   badge?: string;
 }) => {
   const title = purifyHTMLString(blog?.title);
-  const blogSlug = generateSlug(title);
+  const blogSlug = canonicalPostTitleSlug(blog?.title);
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blog?.blog_id}`;
   const category = (badge ?? blog?.tags?.[0] ?? 'Editorial').toUpperCase();
   const image = blog?.first_image;

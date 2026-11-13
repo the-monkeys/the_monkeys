@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { topicToSlug } from '@/utils/topicUtils';
@@ -21,7 +21,7 @@ export const MinimalBlogCard = ({
   label?: string;
 }) => {
   const title = purifyHTMLString(blog?.title);
-  const slug = generateSlug(title);
+  const slug = canonicalPostTitleSlug(blog?.title);
   const url = `${BLOG_ROUTE}/${slug}-${blog?.blog_id}`;
   const tag = blog?.tags?.[0];
   const display = (label ?? tag ?? 'Research').toUpperCase();

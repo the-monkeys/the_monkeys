@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BlogAudienceBadge } from '@/components/blog/BlogAudienceBadge';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { DeleteBlogDialog } from '@/components/blog/actions/DeleteBlogDialog';
@@ -20,6 +19,7 @@ import {
   GROUPS_ROUTE,
   TOPIC_ROUTE,
 } from '@/constants/routeConstants';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
@@ -46,7 +46,7 @@ export const ProfileBlogCard = ({
   const descriptionContent = purifyHTMLString(blog?.first_paragraph);
   const imageContent = blog?.first_image;
 
-  const blogSlug = generateSlug(titleContent);
+  const blogSlug = canonicalPostTitleSlug(blog?.title);
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   const showModificationOptions = isAuthenticated && modificationEnable;

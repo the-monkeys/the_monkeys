@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import EditPage from '@/app/edit/[blogId]/page';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
@@ -16,6 +18,7 @@ const state = vi.hoisted(() => ({
   getGroup: vi.fn(),
   publish: vi.fn(),
   schedule: vi.fn(),
+  editorMounts: 0,
 }));
 vi.mock('next/navigation', () => ({
   useSearchParams: () => state.search,
@@ -23,23 +26,46 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));
 vi.mock('next/dynamic', () => ({
-  default:
-    () =>
-    ({ data, onChange }: any) => (
-      <button
-        onClick={() =>
-          onChange({
-            ...data,
-            blocks: [
-              ...data.blocks,
-              { type: 'paragraph', data: { text: 'Changed' } },
-            ],
-          })
-        }
-      >
-        Edit content
-      </button>
-    ),
+  default: () => {
+    return function EditorHarness({ data, onChange }: any) {
+      useEffect(() => {
+        state.editorMounts++;
+      }, []);
+      return (
+        <button
+          onClick={() =>
+            onChange({
+              ...data,
+              blocks: [
+                ...data.blocks,
+                { type: 'paragraph', data: { text: 'Changed' } },
+              ],
+            })
+          }
+        >
+          Edit content
+        </button>
+      );
+    };
+  },
+}));
+vi.mock('@/features/content-readiness/ReadinessPanel', () => ({
+  ReadinessPanel: function ReadinessHarness({
+    open,
+    state,
+    report,
+    onOpenChange,
+  }: any) {
+    return open ? (
+      <div role='dialog' aria-label='Search and AI readiness'>
+        <span>{state}</span>
+        <output>{report?.visibility}</output>
+        <button type='button' onClick={() => onOpenChange(false)}>
+          Close readiness
+        </button>
+      </div>
+    ) : null;
+  },
 }));
 vi.mock('@/hooks/auth/useAuth', () => ({
   default: () => ({ data: { account_id: 'author', username: 'ada' } }),
@@ -54,7 +80,10 @@ vi.mock('@/hooks/blog/useGetPublishedBlogDetailByBlogId', () => ({
 vi.mock('@/lib/store/useFileUpload', () => ({
   useIsImageUploading: () => false,
 }));
-vi.mock('@/constants/api', () => ({ WSS_URL_V2: 'ws://unused.invalid' }));
+vi.mock('@/constants/api', () => ({
+  WSS_URL_V2: 'ws://unused.invalid',
+  LIVE_URL: undefined,
+}));
 vi.mock('@/services/api/axiosInstance', () => ({
   default: { get: async () => ({ data: { token: 'test' } }) },
 }));
@@ -166,12 +195,56 @@ describe('group draft publication', () => {
     state.publish.mockReset().mockResolvedValue({});
     state.schedule.mockReset().mockResolvedValue({});
     DraftSocket.instances = [];
+    state.editorMounts = 0;
     vi.stubGlobal('WebSocket', DraftSocket);
     window.history.replaceState(null, '', '/edit/draft1');
   });
   afterEach(() => {
     cleanup();
     vi.unstubAllGlobals();
+  });
+
+  it('opens and closes readiness without recreating the editor or saving/publishing the draft', async () => {
+    state.draft = {
+      blog: { blog: content, tags: [], audience: 'public' },
+      isLoading: false,
+      isError: false,
+    };
+    mount();
+    const socket = await openSocket();
+    const writes = socket.messages.length;
+    const mounts = state.editorMounts;
+    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+    await screen.findByRole('dialog', { name: 'Search and AI readiness' });
+    fireEvent.click(screen.getByRole('button', { name: 'Close readiness' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(state.editorMounts).toBe(mounts);
+    expect(socket.messages).toHaveLength(writes);
+    expect(state.publish).not.toHaveBeenCalled();
+    expect(state.schedule).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Edit content' }));
+    await waitFor(() => expect(socket.messages.length).toBeGreaterThan(writes));
+  });
+
+  it('keeps public-audience group drafts unknown while the enclosing group is unresolved', async () => {
+    state.getGroup.mockReturnValue(new Promise(() => {}));
+    state.draft = {
+      blog: {
+        blog: content,
+        tags: [],
+        group_slug: 'secret',
+        audience: 'public',
+      },
+      isLoading: false,
+      isError: false,
+    };
+    mount();
+    await openSocket();
+    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+    await waitFor(() =>
+      expect(screen.getByRole('dialog').textContent).toContain('unknown')
+    );
+    expect(state.publish).not.toHaveBeenCalled();
   });
 
   it('keeps group intent in the refresh URL and every new-draft write', async () => {

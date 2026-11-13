@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { TimezoneSelect } from '@/components/events/TimezoneSelect';
 import { CategoryChips } from '@/components/geo/CategoryChips';
 import { PlacePin } from '@/components/geo/PlacePin';
+import { EventReadiness } from '@/features/content-readiness/EventReadiness';
 import { useIPLocation } from '@/hooks/useIPLocation';
 import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
@@ -17,6 +18,7 @@ import { EventItem, EventType } from '@/services/events/eventTypes';
 import {
   GroupEventBody,
   GroupEventVisibility,
+  GroupItem,
 } from '@/services/groups/groupsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -24,6 +26,9 @@ import { Label } from '@the-monkeys/ui/atoms/label';
 import { TextArea } from '@the-monkeys/ui/atoms/text-area';
 
 type Props = {
+  group?: Pick<GroupItem, 'slug' | 'name' | 'visibility'>;
+  accountKey?: string;
+  organizerName?: string;
   event?: EventItem;
   saving?: boolean;
   submitLabel: string;
@@ -59,11 +64,15 @@ function splitList(value: string): string[] {
  * reusing the styling and field conventions of the standalone EventForm.
  */
 export function GroupEventForm({
+  group,
+  accountKey,
+  organizerName,
   event,
   saving,
   submitLabel,
   onSubmit,
 }: Props) {
+  const formRef = useRef<HTMLFormElement>(null);
   const ipLocation = useIPLocation();
   const [eventType, setEventType] = useState<EventType>(
     event?.event_type || 'in_person'
@@ -195,6 +204,7 @@ export function GroupEventForm({
 
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit}
       onChangeCapture={invalidateSubmission}
       onClickCapture={(e) => {
@@ -398,6 +408,42 @@ export function GroupEventForm({
         </span>
       </label>
 
+      <EventReadiness
+        formRef={formRef}
+        readValues={() => {
+          const value = (name: string) => {
+            const field = formRef.current?.elements.namedItem(name) as
+              | HTMLInputElement
+              | HTMLTextAreaElement
+              | null;
+            return field && typeof field.value === 'string' ? field.value : '';
+          };
+          return {
+            title: value('title'),
+            description: value('description'),
+            coverImage: value('cover_image'),
+            topics: mergeCategoryTags(selectedTags, splitList(value('tags'))),
+            eventType,
+            startLocal: startVal,
+            endLocal: endVal,
+            timezone,
+            location,
+            visibility,
+          };
+        }}
+        context={{
+          resourceKey: `group-event:new:${group?.slug || 'unknown-group'}`,
+          accountKey: accountKey || 'unknown-account',
+          authorName: organizerName,
+          groupSlug: group?.slug,
+          groupName: group?.name,
+          groupVisibility: group?.visibility,
+          groupLinked: true,
+          publicationState: 'draft',
+          isExistingEvent: false,
+          eventEnded: false,
+        }}
+      />
       <Button
         type='submit'
         variant='brand'

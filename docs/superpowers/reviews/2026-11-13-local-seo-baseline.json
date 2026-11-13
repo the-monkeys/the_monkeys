@@ -1,0 +1,200 @@
+{
+  "captured_at": "2026-11-13T19:09:12.1410977Z",
+  "environment": "Synthetic local API and locally rendered HTML; no production data",
+  "upstream_revision": "cca7e4a267991aca880efade1fd12e8498caf2ce",
+  "profiles_compared": [
+    "monkeys"
+  ],
+  "baseline_scope": "Technical fixture baseline; search traffic and AI citations unmeasured",
+  "routes": [
+    {
+      "fixture": "discussion",
+      "tool_base_url": "https://monkeys.com.co/discussions/seolocalthread",
+      "html_sha256": "10b17d755b95a4bf093ed3607023da144be22e7656baa71d51f7ab71e3528a7d",
+      "network_requests_by_tool": 0,
+      "title": "How can creators make community research more useful? Share concrete | Monkeys",
+      "description": "How can creators make community research more useful? Share concrete sources and practical experience.",
+      "canonical": "https://monkeys.com.co/discussions/seolocalthread",
+      "robots": "index, follow",
+      "h1": [
+        "How can creators make community research more useful? Share concrete"
+      ]
+    },
+    {
+      "fixture": "discussions",
+      "tool_base_url": "https://monkeys.com.co/discussions",
+      "html_sha256": "353b843a2d0d0916dc05f6caeeae7aa4c6ac238e5e40d225b6f7696006dfba7c",
+      "network_requests_by_tool": 0,
+      "title": "Discussions | Monkeys",
+      "description": "Public discussions on Monkeys. Read a thread or start one.",
+      "canonical": "https://monkeys.com.co/discussions",
+      "robots": "index, follow",
+      "h1": [
+        "Discussions"
+      ]
+    },
+    {
+      "fixture": "event",
+      "tool_base_url": "https://monkeys.com.co/events/local-seo-workshop",
+      "html_sha256": "1ee70243dd25af3f0de5343d28834f1ea6f8df8de9ba5df606085f761973d780",
+      "network_requests_by_tool": 0,
+      "title": "Local community SEO workshop",
+      "description": "Learn practical ways to publish clear, useful community posts at this local workshop.",
+      "canonical": "https://monkeys.com.co/events/local-seo-workshop",
+      "robots": "index, follow",
+      "h1": [
+        "Local community SEO workshop"
+      ]
+    },
+    {
+      "fixture": "events",
+      "tool_base_url": "https://monkeys.com.co/events",
+      "html_sha256": "020a0a9c4a4b7e06f37e07c20775bbdf491f63356b71ba45859a64f84a35c2ba",
+      "network_requests_by_tool": 0,
+      "title": "Community Events and Meetups | Host or RSVP on Monkeys",
+      "description": "Discover and host community meetups, talks, workshops, and interest-led events on Monkeys. Find free or paid, in-person, virtual, and hybrid experiences.",
+      "canonical": "https://monkeys.com.co/events",
+      "robots": "index, follow",
+      "h1": [
+        "Research events and meetups on Monkeys. Host or RSVP to talks, workshops, and community sessions",
+        "Find your people. Join the next meetup."
+      ]
+    },
+    {
+      "fixture": "group",
+      "tool_base_url": "https://monkeys.com.co/groups/local-seo-creators",
+      "html_sha256": "062c484a61f9da99f12f98f98d2878812c73822652b013c71403936ba341d1d8",
+      "network_requests_by_tool": 0,
+      "title": "Local SEO creators",
+      "description": "A public local community of creators sharing practical experience and evidence.",
+      "canonical": "https://monkeys.com.co/groups/local-seo-creators",
+      "robots": "index, follow",
+      "h1": [
+        "Local SEO creators"
+      ]
+    },
+    {
+      "fixture": "groups",
+      "tool_base_url": "https://monkeys.com.co/groups",
+      "html_sha256": "d3cf17c776e2d4d0546bcb6f7ed6bc676280f8a86ec6d145c9140fae8286cb8f",
+      "network_requests_by_tool": 0,
+      "title": "Interest Groups and Communities | Join or Start a Group on Monkeys",
+      "description": "Find interest groups, writing circles, research communities, and local networks on Monkeys. Start a group, host events, and connect around shared interests.",
+      "canonical": "https://monkeys.com.co/groups",
+      "robots": "index, follow",
+      "h1": [
+        "Groups"
+      ]
+    },
+    {
+      "fixture": "landing",
+      "tool_base_url": "https://monkeys.com.co/",
+      "html_sha256": "1c2061d4356a61551303c578194967e9256b048e6984a925e498e4af98d025c4",
+      "network_requests_by_tool": 0,
+      "title": "Monkeys | Posts, Events and Communities",
+      "description": "Discover thoughtful posts, join interest-based groups, and attend meaningful events on an independent content and community platform.",
+      "canonical": "https://monkeys.com.co",
+      "robots": "index, follow",
+      "h1": [
+        "Satoshi Nakamoto, The Man Who Invented Bitcoin and Disappeared"
+      ]
+    },
+    {
+      "fixture": "post",
+      "tool_base_url": "https://monkeys.com.co/blog/legacy-alias-seolocal1",
+      "html_sha256": "867985208c2567b23593384fb66e184e52d0cfdb48f012ba1e598490f54a9427",
+      "network_requests_by_tool": 0,
+      "title": "A careful practical guide to building thoughtful communities with creators and event hosts across | Monkeys",
+      "description": "A practical public introduction explaining the evidence, context and useful steps for our community.",
+      "canonical": "https://monkeys.com.co/blog/a-careful-practical-guide-to-building-thoughtful-communities-with-creators-and-event-hosts-across-seolocal1",
+      "robots": "index, follow",
+      "h1": [
+        "A careful practical guide to building thoughtful communities with creators and event hosts across countries and time zones while keeping every participant connected to useful knowledge"
+      ]
+    },
+    {
+      "fixture": "profile",
+      "tool_base_url": "https://monkeys.com.co/seo_local",
+      "html_sha256": "32a3bb6d02a542bfd38f27a1579b89d6f9d6fdf93004045cf6b0d2397ac225d2",
+      "network_requests_by_tool": 0,
+      "title": "Local Creator (@seo_local) | Monkeys",
+      "description": "A local author sharing practical research with the community.",
+      "canonical": "https://monkeys.com.co/seo_local",
+      "robots": "index, follow",
+      "h1": [
+        "Profile of @seo_local"
+      ]
+    },
+    {
+      "fixture": "search",
+      "tool_base_url": "https://monkeys.com.co/search",
+      "html_sha256": "f83b86dc6dd856f1490f2b85206c911d866aaa95e12c48f48d76e00c4cf3b39b",
+      "network_requests_by_tool": 0,
+      "title": "Search Posts and Authors | Monkeys",
+      "description": "Search public posts and authors on Monkeys, then explore their topics, events, and communities.",
+      "canonical": "https://monkeys.com.co/search",
+      "robots": "noindex, follow",
+      "h1": [
+        "Search"
+      ]
+    },
+    {
+      "fixture": "studio",
+      "tool_base_url": "https://monkeys.com.co/snapshot/new",
+      "html_sha256": "51e790a6f7e1ffe1d35b34209c08577d83f55d78c510f9bb308c009dc487c479",
+      "network_requests_by_tool": 0,
+      "title": "X / Twitter Screenshot Generator | Clean Tweet Cards (Free)",
+      "description": "Paste a public X (Twitter) post URL and download a clean screenshot card. Square, story, and share sizes with watermark controls. Free in Monkeys Studio.",
+      "canonical": "https://monkeys.com.co/snapshot/new?redacted",
+      "robots": "index, follow",
+      "h1": [
+        "X / Twitter Screenshot Generator | Clean Tweet Cards (Free)"
+      ]
+    },
+    {
+      "fixture": "topic",
+      "tool_base_url": "https://monkeys.com.co/topics/technology",
+      "html_sha256": "92e4b6670ec15f7101cf51aa5862622c88a2a6fc46565d2d172fc2df80d3d290",
+      "network_requests_by_tool": 0,
+      "title": "Technology Posts and Community | Monkeys",
+      "description": "Explore 4 public posts about Technology on Monkeys. Discover ideas, authors, and related communities.",
+      "canonical": "https://monkeys.com.co/topics/technology",
+      "robots": "index, follow",
+      "h1": [
+        "Technology"
+      ]
+    },
+    {
+      "fixture": "topics",
+      "tool_base_url": "https://monkeys.com.co/topics/explore",
+      "html_sha256": "6b9dd446689c4e25c4932ab303484247e1d237e3327ce65ce7814bcbcf2cd85e",
+      "network_requests_by_tool": 0,
+      "title": "Explore Topics, Posts and Communities | Monkeys",
+      "description": "Browse topics and discover public posts, authors, events, and communities built around your interests on Monkeys.",
+      "canonical": "https://monkeys.com.co/topics/explore",
+      "robots": "index, follow",
+      "h1": [
+        "Explore Topics"
+      ]
+    }
+  ],
+  "sitemap_entries": 18,
+  "tool_diff_results": {
+    "discussion_resolved": [
+      "links-without-text",
+      "missing-h1"
+    ],
+    "search_resolved": [
+      "links-without-text",
+      "og-url-differs-from-canonical"
+    ]
+  },
+  "interpretation": [
+    "Studio was requested locally with view=x; safe offline tool base URL omits the query.",
+    "Search was requested locally with query=community; noindex is intentional.",
+    "Legacy post alias intentionally points to its existing canonical.",
+    "HTML was captured at several local repair checkpoints, before the final group summary and reaction guard.",
+    "Final group summary was inspected separately at 390 CSS pixels.",
+    "This baseline does not measure live indexation, search clicks, rankings, visitors or AI citations."
+  ]
+}

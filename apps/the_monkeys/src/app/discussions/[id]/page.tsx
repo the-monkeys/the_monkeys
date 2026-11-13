@@ -10,6 +10,7 @@ import { loadDiscussion } from '@/lib/discussionPageData';
 import {
   buildDiscussionJsonLd,
   buildDiscussionMetadata,
+  discussionHeadline,
 } from '@/lib/discussionSeo';
 import { noIndexPage } from '@/lib/seo';
 
@@ -50,6 +51,7 @@ export default async function DiscussionPage({ params }: Props) {
 
   return (
     <>
+      <h1 className='sr-only'>{discussionHeadline(found.discussion.body)}</h1>
       {found.indexable && found.publicDiscussion ? (
         <JsonLd data={buildDiscussionJsonLd(found.publicDiscussion)} />
       ) : null}

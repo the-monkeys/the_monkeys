@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import {
   BlogImage,
   BlogPlaceholderImage,
@@ -19,6 +18,7 @@ import {
   GROUPS_ROUTE,
   TOPIC_ROUTE,
 } from '@/constants/routeConstants';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
@@ -34,7 +34,7 @@ function getPostDetails(post: MetaBlog) {
   return {
     title,
     description: purifyHTMLString(post.first_paragraph),
-    href: `${BLOG_ROUTE}/${generateSlug(title)}-${post.blog_id}`,
+    href: `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`,
     topic: post.tags?.[0],
     published: post.published_time ? getRelativeTime(post.published_time) : '',
   };

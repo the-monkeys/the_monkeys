@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import NewsletterCard from '@/components/editorial/NewsletterCard';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { FollowButton } from '@/components/user/buttons/followButton';
@@ -10,6 +9,7 @@ import {
   TOPIC_ROUTE,
 } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
@@ -73,7 +73,7 @@ export function TrendingPosts({
           {posts.slice(0, 4).map((post, index) => {
             const title = purifyHTMLString(post.title);
             const topic = post.tags?.[0];
-            const href = `${BLOG_ROUTE}/${generateSlug(title)}-${post.blog_id}`;
+            const href = `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`;
             const time = post.published_time
               ? getRelativeTime(post.published_time)
               : '';

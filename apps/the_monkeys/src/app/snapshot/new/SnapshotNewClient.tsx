@@ -18,7 +18,9 @@ const VIEW_STORAGE_KEY = 'monkeys_studio_view';
 const isStudioView = (v: unknown): v is StudioView =>
   v === 'template' || v === 'x';
 
-export default function SnapshotNewClient() {
+export default function SnapshotNewClient({
+  initialView = 'template',
+}: { initialView?: StudioView } = {}) {
   const { data: session } = useAuth();
   const username = session?.username;
   const isLoggedIn = !!username;
@@ -41,7 +43,7 @@ export default function SnapshotNewClient() {
   // Only pass a username when signed in, so the profile/avatar API is never
   // called for anonymous users (the hook is a no-op without a username).
   const { author } = useSnapshotAuthor(username, displayName);
-  const [view, setView] = useState<StudioView>('template');
+  const [view, setView] = useState<StudioView>(initialView);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -56,7 +58,7 @@ export default function SnapshotNewClient() {
     }
     const saved = localStorage.getItem(VIEW_STORAGE_KEY);
     if (isStudioView(saved)) setView(saved);
-  }, []);
+  }, [initialView]);
 
   const selectView = useCallback(
     (next: StudioView) => {

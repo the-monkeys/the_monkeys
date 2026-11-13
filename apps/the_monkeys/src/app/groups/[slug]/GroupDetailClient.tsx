@@ -14,6 +14,7 @@ import { Loader } from '@/components/loader';
 import { GROUPS_ROUTE } from '@/constants/routeConstants';
 import { useGroupDetail } from '@/hooks/groups/useGroupQueries';
 import { canManageGroup, isActiveGroupMember } from '@/lib/groupPerms';
+import { normalizeSeoText } from '@/lib/seo';
 import { GroupVisibility } from '@/services/groups/groupsTypes';
 
 const VISIBILITY: Record<
@@ -150,6 +151,12 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
                 </>
               )}
             </p>
+
+            {group.description && (
+              <p className='mt-3 max-w-3xl break-words font-inter text-sm leading-6 text-gray-600 dark:text-gray-400'>
+                {normalizeSeoText(group.description, 280)}
+              </p>
+            )}
 
             {group.topics && group.topics.length > 0 && (
               <div className='mt-3 flex flex-wrap gap-2'>

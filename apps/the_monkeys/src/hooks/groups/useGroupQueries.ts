@@ -88,6 +88,8 @@ export function useGroupDetail(slug: string | undefined) {
     queryKey: queryKeys.groups.detail(slug),
     queryFn: () => getGroup(slug!),
     enabled: !!slug,
+    // Reconcile request-scoped membership/permissions after hydration.
+    staleTime: 0,
   });
 }
 

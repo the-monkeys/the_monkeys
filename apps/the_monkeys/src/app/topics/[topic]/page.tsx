@@ -11,7 +11,7 @@ import {
 } from '@/components/layout/pageHeading';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { noIndexFollowRobots } from '@/lib/seo';
-import { fetchTopicCatalog } from '@/lib/topicCatalog';
+import { fetchTopicCatalogStrict } from '@/lib/topicCatalog';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { BlogsByTopic } from './components/BlogsByTopic';
@@ -26,7 +26,7 @@ import {
 type Props = { params: { topic: string } };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const catalog = await fetchTopicCatalog();
+  const catalog = await fetchTopicCatalogStrict();
   const topic = findCatalogTopic(params.topic, catalog);
   if (!topic) {
     return {
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function TopicBlogsPage({ params }: Props) {
-  const catalog = await fetchTopicCatalog();
+  const catalog = await fetchTopicCatalogStrict();
   const topic = findCatalogTopic(params.topic, catalog);
   if (!topic) notFound();
 

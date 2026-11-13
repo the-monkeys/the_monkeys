@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import Icon from '@/components/icon';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
@@ -67,7 +67,7 @@ export function TrendingWidget() {
       <div className='divide-y divide-gray-50 dark:divide-border-dark'>
         {blogs.slice(0, MAX_TRENDING_ITEMS).map((blog, index) => {
           const title = purifyHTMLString(blog.title);
-          const slug = generateSlug(title);
+          const slug = canonicalPostTitleSlug(blog.title);
           const url = `${BLOG_ROUTE}/${slug}-${blog.blog_id}`;
           const tag = blog.tags?.[0];
           const publish_time = getRelativeTime(blog.published_time);

@@ -1,5 +1,8 @@
+import { createElement } from 'react';
+
 import { loadEventForMetadata } from '@/app/events/[slug]/eventMetadata';
 import EventDetailPage, { generateMetadata } from '@/app/events/[slug]/page';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -188,7 +191,11 @@ describe('loadEventForMetadata', () => {
     } as unknown as Response);
 
     const markup = renderToStaticMarkup(
-      await EventDetailPage({ params: { slug: 'unsafe-event' } })
+      createElement(
+        QueryClientProvider,
+        { client: new QueryClient() },
+        await EventDetailPage({ params: { slug: 'unsafe-event' } })
+      )
     );
 
     expect(markup).not.toContain('</script><script>alert(1)</script>');

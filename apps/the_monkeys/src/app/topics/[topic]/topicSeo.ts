@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import {
   LEGAL_PUBLISHER_ID,
   MONKEYS_WEBSITE_ID,
@@ -59,7 +59,9 @@ export function buildTopicJsonLd(
         '@type': 'ListItem',
         position: index + 1,
         name: post.title,
-        url: absoluteUrl(`/blog/${generateSlug(post.title)}-${post.blog_id}`),
+        url: absoluteUrl(
+          `/blog/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`
+        ),
       })),
     },
     breadcrumb: {
