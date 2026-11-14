@@ -11,6 +11,8 @@ import { SnapshotInput } from '@/features/snapshot/types';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 
+import { STUDIO_HELP, StudioHelp } from './StudioHelp';
+
 type StudioView = 'template' | 'x';
 
 const VIEW_STORAGE_KEY = 'monkeys_studio_view';
@@ -95,7 +97,16 @@ export default function SnapshotNewClient({
   return (
     <div className='mx-auto w-full max-w-6xl px-4 py-6'>
       <StudioTabs active={view} onSelect={selectView} />
+      <header className='mb-5'>
+        <h1 className='text-xl font-semibold tracking-tight text-foreground sm:text-2xl'>
+          {STUDIO_HELP[view].title}
+        </h1>
+        <p className='mt-1 max-w-2xl text-sm leading-relaxed text-foreground/70'>
+          {STUDIO_HELP[view].description}
+        </p>
+      </header>
       <SnapshotStudio input={input} previewMode={view} />
+      <StudioHelp mode={view} />
     </div>
   );
 }
