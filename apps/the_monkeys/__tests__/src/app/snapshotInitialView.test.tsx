@@ -39,4 +39,26 @@ describe('server-selected Studio mode', () => {
     expect(html).toContain(`aria-label="Studio ${expected}"`);
     expect(html).toContain(`Preview mode: ${expected}`);
   });
+
+  it.each([
+    [
+      'x',
+      'Free X / Twitter screenshot generator',
+      'How to make an X screenshot',
+    ],
+    [undefined, 'Free social image studio', 'How to create a social image'],
+  ] as const)(
+    'renders readable, mode-specific search help for %s',
+    (view, title, help) => {
+      const html = renderToStaticMarkup(
+        <SnapshotNewPage searchParams={{ view }} />
+      );
+      expect(html.match(/<h1\b/g)).toHaveLength(1);
+      expect(html).toContain(title);
+      expect(html).not.toMatch(/<h1[^>]*class="[^"]*\bhidden\b/);
+      expect(html).toContain(help);
+      expect(html.indexOf(help)).toBeGreaterThan(html.indexOf('Preview mode:'));
+      expect(html).not.toContain('\u2014');
+    }
+  );
 });

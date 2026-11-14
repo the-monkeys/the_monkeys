@@ -343,9 +343,9 @@ export const STUDIO_SEO = {
 
 export const X_SCREENSHOT_SEO = {
   path: '/snapshot/new?view=x',
-  title: 'X / Twitter Screenshot Generator | Clean Tweet Cards (Free)',
+  title: 'Free X / Twitter Screenshot Generator | Monkeys',
   description:
-    'Paste a public X (Twitter) post URL and download a clean screenshot card. Square, story, and share sizes with watermark controls. Free in Monkeys Studio.',
+    'Turn a public X or Twitter post into a PNG image. Paste a tweet link, customize your screenshot card and download it free. No account required.',
   keywords: [
     'twitter screenshot generator',
     'X screenshot',
