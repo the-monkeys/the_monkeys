@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import {
   BlogImage,
   BlogPlaceholderImage,
@@ -8,6 +7,7 @@ import {
 import BlogActionBar from '@/components/editorial/BlogActionBar';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
@@ -21,7 +21,7 @@ import { topicToSlug } from '@/utils/topicUtils';
  */
 export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
   const title = purifyHTMLString(blog?.title);
-  const slug = generateSlug(title);
+  const slug = canonicalPostTitleSlug(blog?.title);
   const url = `${BLOG_ROUTE}/${slug}-${blog?.blog_id}`;
   const image = blog?.first_image;
   const category = (blog?.tags?.[0] ?? 'Feature').toUpperCase();

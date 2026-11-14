@@ -10,8 +10,30 @@ vi.mock('@/hooks/groups/useGroupQueries', () => ({
   useUserGroups: () => ({ data: { groups: [] } }),
 }));
 vi.mock('@/hooks/useIPLocation', () => ({ useIPLocation: () => ({}) }));
+const coverState = vi.hoisted(() => ({ pending: false }));
+vi.mock('@/hooks/events/useEventQueries', () => ({
+  useUploadEventCover: () => ({
+    isPending: coverState.pending,
+    mutate: vi.fn(),
+  }),
+}));
+vi.mock('@/features/content-readiness/EventReadiness', () => ({
+  EventReadiness: ({ readValues, context }: any) => (
+    <button
+      type='button'
+      onClick={() => {
+        const projection = readValues();
+        document.querySelector('[data-readiness-result]')!.textContent =
+          JSON.stringify({ projection, context });
+      }}
+    >
+      Check readiness
+    </button>
+  ),
+}));
 
 beforeEach(() => {
+  coverState.pending = false;
   vi.stubGlobal(
     'ResizeObserver',
     class {
@@ -27,6 +49,113 @@ afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
   vi.useRealTimers();
+});
+
+it('projects current unsaved public fields for readiness without submitting or including meeting access', () => {
+  const onSubmit = vi.fn();
+  const { container } = renderWithProviders(
+    <EventForm submitLabel='Save draft' onSubmit={onSubmit} />
+  );
+  const result = document.createElement('output');
+  result.dataset.readinessResult = '';
+  container.append(result);
+  fireEvent.change(document.querySelector('[name="title"]')!, {
+    target: { value: 'Unsaved community meetup' },
+  });
+  fireEvent.change(document.querySelector('[name="description"]')!, {
+    target: { value: 'What the group will explore together.' },
+  });
+  fireEvent.change(document.querySelector('[name="meeting_link"]')!, {
+    target: { value: 'https://private.example.test/secret-meeting-token' },
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+  const captured = JSON.parse(result.textContent!);
+  expect(captured.projection).toMatchObject({
+    title: 'Unsaved community meetup',
+    description: 'What the group will explore together.',
+    eventType: 'virtual',
+  });
+  expect(result.textContent).not.toContain('secret-meeting-token');
+  expect(result.textContent).not.toContain('meeting_link');
+  expect(onSubmit).not.toHaveBeenCalled();
+});
+
+it('supplies the original DST instants and current zone to read-only event analysis', () => {
+  const event = {
+    id: 40,
+    slug: 'saved-fold',
+    title: 'Existing event',
+    event_type: 'virtual' as const,
+    status: 'published' as const,
+    timezone: 'Europe/Berlin',
+    start_time: '2099-10-25T00:30:12Z',
+    end_time: '2099-10-25T01:30:54Z',
+    visibility: 'public',
+  };
+  const onSubmit = vi.fn();
+  const { container } = renderWithProviders(
+    <EventForm event={event} submitLabel='Save changes' onSubmit={onSubmit} />
+  );
+  const result = document.createElement('output');
+  result.dataset.readinessResult = '';
+  container.append(result);
+  fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+  expect(JSON.parse(result.textContent!).context).toMatchObject({
+    savedStart: event.start_time,
+    savedEnd: event.end_time,
+    savedTimezone: 'Europe/Berlin',
+    isExistingEvent: true,
+  });
+  expect(JSON.parse(result.textContent!).projection.timezone).toBe(
+    'Europe/Berlin'
+  );
+  expect(onSubmit).not.toHaveBeenCalled();
+});
+
+it('keeps absent legacy event visibility unknown until the host explicitly chooses it', () => {
+  const event = {
+    id: 50,
+    slug: 'legacy-visibility',
+    title: 'Legacy event',
+    event_type: 'virtual' as const,
+    status: 'published' as const,
+  };
+  const { container } = renderWithProviders(
+    <EventForm event={event} submitLabel='Save changes' onSubmit={vi.fn()} />
+  );
+  const result = document.createElement('output');
+  result.dataset.readinessResult = '';
+  container.append(result);
+  fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+  expect(JSON.parse(result.textContent!).projection.visibility).toBeUndefined();
+  fireEvent.click(screen.getByText('More event options'));
+  fireEvent.click(screen.getByRole('button', { name: /Public/ }));
+  fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+  expect(JSON.parse(result.textContent!).projection.visibility).toBe('public');
+});
+
+it('includes pending replacement cover uploads in the readiness projection', () => {
+  const event = {
+    id: 51,
+    slug: 'pending-cover',
+    title: 'Existing cover',
+    cover_image: '/old-cover.jpg',
+    event_type: 'virtual' as const,
+    status: 'published' as const,
+    visibility: 'public',
+  };
+  const view = renderWithProviders(
+    <EventForm event={event} submitLabel='Save changes' onSubmit={vi.fn()} />
+  );
+  const result = document.createElement('output');
+  result.dataset.readinessResult = '';
+  view.container.append(result);
+  coverState.pending = true;
+  view.rerender(
+    <EventForm event={event} submitLabel='Save changes' onSubmit={vi.fn()} />
+  );
+  fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+  expect(JSON.parse(result.textContent!).projection.coverPending).toBe(true);
 });
 
 it('allows a native submit of an unchanged event spanning the repeated DST hour', async () => {

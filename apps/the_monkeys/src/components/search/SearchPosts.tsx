@@ -1,8 +1,8 @@
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { useSearchBlogsV2 } from '@/hooks/search/useSearchV2';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { SearchBlogHit } from '@/services/search/searchTypes';
 import { sanitizeHighlight } from '@/utils/searchHighlight';
 
@@ -19,7 +19,7 @@ const SearchBlogTitle = ({
   onClose?: () => void;
 }) => {
   const title = hit.title ?? '';
-  const slug = hit.slug || generateSlug(title);
+  const slug = hit.slug || canonicalPostTitleSlug(title);
   const safeTitle = sanitizeHighlight(hit.highlight?.title, title);
 
   return (

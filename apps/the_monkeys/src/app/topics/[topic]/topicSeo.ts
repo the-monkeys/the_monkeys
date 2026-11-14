@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import {
   LEGAL_PUBLISHER_ID,
   MONKEYS_WEBSITE_ID,
   absoluteUrl,
+  noIndexFollowRobots,
   pageMetadata,
 } from '@/lib/seo';
 import { MetaBlog } from '@/services/blog/blogTypes';
@@ -21,6 +22,27 @@ export function findCatalogTopic(
   return topics.find((topic) => topicToSlug(topic) === slug) || null;
 }
 
+export function relatedTopicLinks(
+  topic: string,
+  posts: MetaBlog[],
+  catalog: GetAllCategoriesAPIResponse
+): Array<{ name: string; href: string }> {
+  const catalogTopics = new Map(
+    Object.values(catalog.category).flatMap((category) =>
+      category.Topics.map((name) => [topicToSlug(name), name] as const)
+    )
+  );
+  const current = topicToSlug(topic);
+  const slugs = new Set(posts.flatMap((post) => post.tags.map(topicToSlug)));
+  return Array.from(slugs)
+    .filter((slug) => slug && slug !== current && catalogTopics.has(slug))
+    .slice(0, 6)
+    .map((slug) => ({
+      name: catalogTopics.get(slug)!,
+      href: `/topics/${slug}`,
+    }));
+}
+
 export function buildTopicMetadata(
   topic: string,
   slug: string,
@@ -29,12 +51,13 @@ export function buildTopicMetadata(
   const countText = posts.length
     ? `Explore ${posts.length} public post${posts.length === 1 ? '' : 's'} about ${topic}`
     : `Explore public posts and community conversations about ${topic}`;
-  return pageMetadata({
+  const metadata = pageMetadata({
     title: `${topic} Posts and Community | Monkeys`,
     description: `${countText} on Monkeys. Discover ideas, authors, and related communities.`,
     path: `/topics/${slug}`,
     keywords: [topic, `${topic} posts`, `${topic} community`],
   });
+  return posts.length ? metadata : { ...metadata, robots: noIndexFollowRobots };
 }
 
 export function buildTopicJsonLd(
@@ -59,7 +82,9 @@ export function buildTopicJsonLd(
         '@type': 'ListItem',
         position: index + 1,
         name: post.title,
-        url: absoluteUrl(`/blog/${generateSlug(post.title)}-${post.blog_id}`),
+        url: absoluteUrl(
+          `/blog/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`
+        ),
       })),
     },
     breadcrumb: {

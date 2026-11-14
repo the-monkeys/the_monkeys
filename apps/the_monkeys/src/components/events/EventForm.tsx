@@ -14,6 +14,7 @@ import { CategoryChips } from '@/components/geo/CategoryChips';
 import { PlacePin } from '@/components/geo/PlacePin';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
+import { EventReadiness } from '@/features/content-readiness/EventReadiness';
 import useAuth from '@/hooks/auth/useAuth';
 import { useUploadEventCover } from '@/hooks/events/useEventQueries';
 import { useUserGroups } from '@/hooks/groups/useGroupQueries';
@@ -103,6 +104,7 @@ function splitList(value: string): string[] {
 }
 
 export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
+  const formRef = useRef<HTMLFormElement>(null);
   const { data: session } = useAuth();
   const ipLocation = useIPLocation();
   const myGroups = useUserGroups(
@@ -144,6 +146,8 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [visibility, setVisibility] = useState<EventVisibility>(
     (event?.visibility as EventVisibility) || 'public'
   );
+  const [visibilityChosen, setVisibilityChosen] = useState(false);
+  const [coverUploadPending, setCoverUploadPending] = useState(false);
   // Cover image and co-hosts are controlled so the upload picker and the
   // username search can drive them; both fall back to the event's saved values.
   const [coverImage, setCoverImage] = useState(event?.cover_image || '');
@@ -407,6 +411,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
 
   return (
     <form
+      ref={formRef}
       onSubmit={handleSubmit}
       onChangeCapture={invalidateSubmission}
       onClickCapture={(e) => {
@@ -442,6 +447,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       </Field>
 
       <EventCoverField
+        onPendingChange={setCoverUploadPending}
         slug={event?.slug}
         value={coverImage}
         onChange={handleCoverUrl}
@@ -848,7 +854,10 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                   type='button'
                   aria-pressed={visibility === option.value}
                   disabled={ended}
-                  onClick={() => setVisibility(option.value)}
+                  onClick={() => {
+                    setVisibilityChosen(true);
+                    setVisibility(option.value);
+                  }}
                   className={`rounded-lg border-2 px-3 py-2 text-left font-inter transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                     visibility === option.value
                       ? 'border-brand-orange bg-brand-orange/5'
@@ -920,6 +929,61 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         </div>
       </details>
 
+      <EventReadiness
+        formRef={formRef}
+        readValues={() => {
+          const value = (name: string) => {
+            const control = formRef.current?.elements.namedItem(name) as
+              | HTMLInputElement
+              | HTMLTextAreaElement
+              | null;
+            return control && typeof control.value === 'string'
+              ? control.value
+              : '';
+          };
+          return {
+            title: value('title'),
+            description: value('description'),
+            topics: mergeCategoryTags(selectedTags, splitList(value('tags'))),
+            coverImage,
+            coverPending: coverUploadPending || !!coverFile,
+            eventType,
+            startLocal: startVal,
+            endLocal: endVal,
+            timezone,
+            location,
+            visibility:
+              !event || event.visibility || visibilityChosen
+                ? visibility
+                : undefined,
+            recurrence:
+              repeatFreq !== 'off'
+                ? `Every ${repeatInterval} ${repeatFreq} interval`
+                : event?.recurrence_text,
+          };
+        }}
+        context={{
+          resourceKey: event?.slug || `event:new:${groupSlug}`,
+          accountKey:
+            session?.account_id || session?.username || 'unknown-account',
+          publicationState:
+            !event || event.status === 'draft' ? 'draft' : 'published',
+          authorName: session?.username,
+          groupSlug,
+          groupLinked: !!(groupSlug || event?.group_id),
+          groupName: organizerGroups.find((group) => group.slug === groupSlug)
+            ?.name,
+          groupVisibility: organizerGroups.find(
+            (group) => group.slug === groupSlug
+          )?.visibility,
+          slug: event?.slug,
+          isExistingEvent: !!event,
+          eventEnded: ended,
+          savedTimezone: event?.timezone,
+          savedStart: event?.start_time,
+          savedEnd: event?.end_time,
+        }}
+      />
       <Button
         type='submit'
         variant='brand'
@@ -958,12 +1022,14 @@ function Field({
 // the event exists it captures the file locally (previewed via pendingPreview)
 // and defers the upload to the parent, which runs it right after creation.
 function EventCoverField({
+  onPendingChange,
   slug,
   value,
   onChange,
   onFileSelected,
   pendingPreview,
 }: {
+  onPendingChange?: (pending: boolean) => void;
   slug?: string;
   value: string;
   onChange: (v: string) => void;
@@ -973,6 +1039,10 @@ function EventCoverField({
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
   const upload = useUploadEventCover(slug || '');
+  useEffect(() => {
+    onPendingChange?.(upload.isPending);
+  }, [upload.isPending, onPendingChange]);
+  useEffect(() => () => onPendingChange?.(false), [onPendingChange]);
 
   const onPick = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

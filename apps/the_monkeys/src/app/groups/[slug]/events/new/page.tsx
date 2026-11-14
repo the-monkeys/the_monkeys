@@ -80,6 +80,9 @@ export default function NewGroupEventPage({
       </p>
 
       <GroupEventForm
+        group={group}
+        accountKey={session?.account_id || session?.username}
+        organizerName={session?.username}
         submitLabel='Create event'
         saving={create.isPending}
         onSubmit={onSubmit}

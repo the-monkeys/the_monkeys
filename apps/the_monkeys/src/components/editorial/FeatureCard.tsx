@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import {
   BlogImage,
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
@@ -16,7 +16,7 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
  */
 export const FeatureCard = ({ blog }: { blog: MetaBlog }) => {
   const title = purifyHTMLString(blog?.title);
-  const slug = generateSlug(title);
+  const slug = canonicalPostTitleSlug(blog?.title);
   const url = `${BLOG_ROUTE}/${slug}-${blog?.blog_id}`;
   const image = blog?.first_image;
 

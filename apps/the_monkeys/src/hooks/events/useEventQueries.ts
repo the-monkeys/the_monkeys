@@ -72,6 +72,8 @@ export function useEventDetail(slug: string | undefined) {
     queryKey: queryKeys.events.detail(slug),
     queryFn: () => getEvent(slug!),
     enabled: !!slug,
+    // Refresh viewer-specific RSVP and meeting access after public SSR data.
+    staleTime: 0,
   });
 }
 

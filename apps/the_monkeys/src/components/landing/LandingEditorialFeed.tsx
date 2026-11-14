@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import {
   BlogImage,
   BlogPlaceholderImage,
@@ -21,6 +20,7 @@ import {
   eventTypeLabel,
   formatEventCardWhen,
 } from '@/lib/eventTime';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
@@ -36,7 +36,7 @@ function postDetails(post: MetaBlog) {
   return {
     title,
     description: purifyHTMLString(post.first_paragraph),
-    href: `${BLOG_ROUTE}/${generateSlug(title)}-${post.blog_id}`,
+    href: `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`,
     topic: post.tags?.[0],
     time: post.published_time ? getRelativeTime(post.published_time) : '',
   };

@@ -14,6 +14,7 @@ import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
+import { PostReadiness } from '@/features/content-readiness/PostReadiness';
 import useAuth from '@/hooks/auth/useAuth';
 import { useDraftPublication } from '@/hooks/blog/useDraftPublication';
 import useGetDraftBlogDetail, {
@@ -536,7 +537,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       ) : (
         <div className='relative min-h-screen'>
           <div
-            className='pt-4 pb-3 flex justify-between items-center gap-2'
+            className='pt-4 pb-3 flex flex-wrap justify-between items-center gap-2'
             data-shortcut-scope='chrome'
           >
             <div
@@ -598,6 +599,25 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               </TabsList>
             </Tabs>
 
+            <PostReadiness
+              document={data}
+              topics={blogTopics}
+              resourceKey={blogId}
+              accountKey={accountId || 'unknown-account'}
+              audience={publication.draftScope?.audience}
+              groupSlug={publication.groupSlug}
+              groupVisibility={publication.selection?.group?.visibility}
+              groupResolved={
+                !!publication.selection &&
+                !publication.pending &&
+                !publication.error
+              }
+              publicationState={
+                blog?.is_draft === false ? 'published' : 'draft'
+              }
+              authorName={username}
+              imagePending={isImageUploading}
+            />
             <PublishBlogDrawer
               topics={blogTopics}
               setTopics={setBlogTopics}

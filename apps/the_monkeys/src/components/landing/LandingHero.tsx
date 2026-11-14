@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import {
   BlogImage,
   BlogPlaceholderImage,
@@ -12,6 +11,7 @@ import FeaturedAuthorsStrip from '@/components/editorial/FeaturedAuthorsStrip';
 import Icon from '@/components/icon';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
@@ -37,7 +37,7 @@ export function LandingHero({
   const title = lead ? purifyHTMLString(lead.title) : '';
   const description = lead ? purifyHTMLString(lead.first_paragraph) : '';
   const postHref = lead
-    ? `${BLOG_ROUTE}/${generateSlug(title)}-${lead.blog_id}`
+    ? `${BLOG_ROUTE}/${canonicalPostTitleSlug(lead.title)}-${lead.blog_id}`
     : '';
   const topic = lead?.tags?.[0];
   const published = lead?.published_time

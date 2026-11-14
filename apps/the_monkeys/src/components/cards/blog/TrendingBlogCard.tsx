@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import {
   BlogDescription,
@@ -11,6 +10,7 @@ import {
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
@@ -26,7 +26,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const descriptionContent = blog?.first_paragraph;
   const imageContent = blog?.first_image;
 
-  const blogSlug = generateSlug(titleContent);
+  const blogSlug = canonicalPostTitleSlug(blog?.title);
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
@@ -102,7 +102,7 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
   const descriptionContent = purifyHTMLString(blog?.first_paragraph);
   const imageContent = blog?.first_image;
 
-  const blogSlug = generateSlug(titleContent);
+  const blogSlug = canonicalPostTitleSlug(blog?.title);
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (

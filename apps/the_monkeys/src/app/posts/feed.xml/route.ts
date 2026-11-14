@@ -1,6 +1,6 @@
-import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { SITE_URL, normalizeSeoText } from '@/lib/seo';
-import { fetchPublicPosts } from '@/lib/seoCatalog';
+import { fetchRecentPublicPosts } from '@/lib/seoCatalog';
 import { buildRssXml, rssResponse } from '@/lib/seoFeed';
 
 export const revalidate = 300;
@@ -11,14 +11,14 @@ function publicationDate(value: string): Date | null {
 }
 
 export async function GET() {
-  const posts = await fetchPublicPosts(100);
+  const posts = await fetchRecentPublicPosts();
   const xml = buildRssXml({
     title: 'Latest Posts on Monkeys',
     description:
       'Recent public posts from authors and communities across Monkeys.',
     path: '/',
     items: posts.map((post) => {
-      const link = `${SITE_URL}/blog/${generateSlug(post.title)}-${post.blog_id}`;
+      const link = `${SITE_URL}/blog/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`;
       return {
         title: post.title,
         link,

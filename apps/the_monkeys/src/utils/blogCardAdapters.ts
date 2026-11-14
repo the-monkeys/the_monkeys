@@ -1,5 +1,8 @@
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { getCardContent } from '@/components/blog/getBlogContent';
+import {
+  canonicalPostDocumentTitleSlug,
+  canonicalPostTitleSlug,
+} from '@/lib/postUrl';
 import {
   Block,
   Blog,
@@ -13,7 +16,7 @@ export const fromMetaBlog = (blog: MetaBlog): BlogCardData => ({
   blogId: blog.blog_id,
   authorId: blog.owner_account_id,
   date: blog.published_time,
-  slug: generateSlug(purifyHTMLString(blog.title)),
+  slug: canonicalPostTitleSlug(blog.title),
   tags: blog.tags ?? [],
   title: purifyHTMLString(blog.title),
   description: purifyHTMLString(blog.first_paragraph),
@@ -36,7 +39,7 @@ export const fromFollowingFeed = (blog: FollowingFeed): BlogCardData => {
     blogId: blog.blog_id,
     authorId: blog.owner_account_id,
     date: blog.published_time,
-    slug: blog.slug || generateSlug(title),
+    slug: blog.slug || canonicalPostDocumentTitleSlug(blog.blog),
     tags: blog.tags ?? [],
     title,
     description: purifyHTMLString(descriptionBlock?.data?.text || ''),
@@ -56,7 +59,7 @@ export const fromBlog = (post: Blog): BlogCardData => {
     blogId: post.blog_id,
     authorId: post.owner_account_id,
     date: post.published_time,
-    slug: generateSlug(titleContent),
+    slug: canonicalPostDocumentTitleSlug(post.blog),
     tags: post.tags ?? [],
     title: titleContent,
     description: descriptionContent,

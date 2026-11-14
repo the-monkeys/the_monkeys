@@ -47,7 +47,7 @@ export default function SnapshotNewPage({ searchParams }: Props) {
         })}
       />
       <h1 className='hidden text-2xl font-bold'>{copy.title}</h1>
-      <SnapshotNewClient />
+      <SnapshotNewClient initialView={isX ? 'x' : 'template'} />
     </>
   );
 }

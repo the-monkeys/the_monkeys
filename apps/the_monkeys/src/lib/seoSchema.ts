@@ -191,14 +191,22 @@ export function eventJsonLd(event: EventItem) {
 
   const tiers = event.ticket_tiers || [];
   const paid = tiers.filter((t) => Number(t.price) > 0);
+  const eventFull =
+    Number(event.capacity) > 0 &&
+    Number(event.attendee_count || 0) >= Number(event.capacity);
+  const availability = (tier?: { capacity: number; booked?: number }) =>
+    eventFull ||
+    (tier && tier.capacity > 0 && (tier.booked || 0) >= tier.capacity)
+      ? 'https://schema.org/SoldOut'
+      : 'https://schema.org/InStock';
   if (paid.length) {
-    jsonLd.offers = paid.map((t) => ({
+    jsonLd.offers = tiers.map((t) => ({
       '@type': 'Offer',
       name: t.name,
       price: Number(t.price).toFixed(2),
       priceCurrency: (t.currency || 'INR').toUpperCase(),
       url,
-      availability: 'https://schema.org/InStock',
+      availability: availability(t),
       validFrom: toIsoTime(event.rsvp_opens_at),
     }));
   } else {
@@ -208,7 +216,13 @@ export function eventJsonLd(event: EventItem) {
       price: '0',
       priceCurrency: 'INR',
       url,
-      availability: 'https://schema.org/InStock',
+      availability: tiers.length
+        ? tiers.every(
+            (tier) => availability(tier) === 'https://schema.org/SoldOut'
+          )
+          ? 'https://schema.org/SoldOut'
+          : 'https://schema.org/InStock'
+        : availability(),
     };
   }
 
