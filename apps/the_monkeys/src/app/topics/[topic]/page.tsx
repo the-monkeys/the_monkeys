@@ -21,6 +21,7 @@ import {
   buildTopicJsonLd,
   buildTopicMetadata,
   findCatalogTopic,
+  relatedTopicLinks,
 } from './topicSeo';
 
 type Props = { params: { topic: string } };
@@ -45,6 +46,7 @@ export default async function TopicBlogsPage({ params }: Props) {
 
   const topicData = await fetchTopicPosts(topic);
   const blogCount = topicData.blogs.length;
+  const related = relatedTopicLinks(topic, topicData.blogs, catalog);
 
   return (
     <>
@@ -99,8 +101,64 @@ export default async function TopicBlogsPage({ params }: Props) {
           </Button>
         </div>
 
-        <div className='mx-auto max-w-4xl min-h-[800px]'>
-          <BlogsByTopic blogs={topicData.blogs} />
+        <div className='mx-auto max-w-4xl'>
+          {blogCount > 0 ? (
+            <>
+              <BlogsByTopic blogs={topicData.blogs} />
+              {related.length > 0 && (
+                <nav
+                  className='mt-8 border-t border-border pt-6'
+                  aria-label='Related topics'
+                >
+                  <h2 className='mb-3 font-newsreader text-xl'>
+                    Keep exploring
+                  </h2>
+                  <div className='flex flex-wrap gap-2'>
+                    {related.map((link) => (
+                      <Button
+                        key={link.href}
+                        variant='outline'
+                        className='min-h-11'
+                        asChild
+                      >
+                        <Link href={link.href}>{link.name}</Link>
+                      </Button>
+                    ))}
+                  </div>
+                </nav>
+              )}
+            </>
+          ) : (
+            <section
+              className='rounded-xl border border-border p-6 sm:p-8'
+              aria-labelledby='empty-topic-heading'
+            >
+              <h2 id='empty-topic-heading' className='font-newsreader text-2xl'>
+                No public posts about {topic} yet
+              </h2>
+              <p className='mt-2 max-w-2xl text-foreground/70'>
+                Follow this topic to keep it in your interests. You can explore
+                learning resources or find an upcoming community event while new
+                posts arrive.
+              </p>
+              <div className='mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap'>
+                <Button
+                  variant='outline'
+                  className='h-auto min-h-11 whitespace-normal py-2 text-center'
+                  asChild
+                >
+                  <Link href='/learn'>Explore learning resources</Link>
+                </Button>
+                <Button
+                  variant='outline'
+                  className='h-auto min-h-11 whitespace-normal py-2 text-center'
+                  asChild
+                >
+                  <Link href='/events'>Discover events</Link>
+                </Button>
+              </div>
+            </section>
+          )}
         </div>
       </Container>
     </>

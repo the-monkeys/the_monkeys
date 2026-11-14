@@ -78,6 +78,14 @@ export const footerLinksList = [
         link: '/events',
       },
       {
+        text: 'Learning resources',
+        link: '/learn',
+      },
+      {
+        text: 'Studio',
+        link: '/snapshot',
+      },
+      {
         text: 'About Us',
         link: '/about',
       },

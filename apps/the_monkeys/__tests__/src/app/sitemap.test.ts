@@ -19,6 +19,7 @@ describe('main sitemap', () => {
 
     expect(urls).toContain('https://monkeys.com.co/');
     expect(urls).toContain('https://monkeys.com.co/topics/explore');
+    expect(urls).toContain('https://monkeys.com.co/learn');
     expect(urls).toContain('https://monkeys.com.co/blog/valid-post-1');
     expect(urls.some((url) => url.endsWith('sitemap.xml'))).toBe(false);
     expect(urls.some((url) => url.includes('unknown'))).toBe(false);

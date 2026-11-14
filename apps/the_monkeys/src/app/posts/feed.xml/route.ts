@@ -1,6 +1,6 @@
 import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { SITE_URL, normalizeSeoText } from '@/lib/seo';
-import { fetchPublicPosts } from '@/lib/seoCatalog';
+import { fetchRecentPublicPosts } from '@/lib/seoCatalog';
 import { buildRssXml, rssResponse } from '@/lib/seoFeed';
 
 export const revalidate = 300;
@@ -11,7 +11,7 @@ function publicationDate(value: string): Date | null {
 }
 
 export async function GET() {
-  const posts = await fetchPublicPosts(100);
+  const posts = await fetchRecentPublicPosts();
   const xml = buildRssXml({
     title: 'Latest Posts on Monkeys',
     description:

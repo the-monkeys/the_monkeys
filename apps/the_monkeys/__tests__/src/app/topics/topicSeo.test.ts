@@ -2,6 +2,7 @@ import {
   buildTopicJsonLd,
   buildTopicMetadata,
   findCatalogTopic,
+  relatedTopicLinks,
 } from '@/app/topics/[topic]/topicSeo';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { GetAllCategoriesAPIResponse } from '@/services/category/categoryTypes';
@@ -35,6 +36,30 @@ const posts: MetaBlog[] = [
 ];
 
 describe('topic detail SEO', () => {
+  it('links only other catalog topics represented by the loaded public posts', () => {
+    const result = relatedTopicLinks(
+      'Business',
+      [
+        {
+          ...posts[0],
+          tags: ['Business', 'Stock Market', 'Invented', 'Stock Market'],
+        },
+      ],
+      catalog
+    );
+    expect(result).toEqual([
+      { name: 'Stock Market', href: '/topics/stock-market' },
+    ]);
+    expect(relatedTopicLinks('Business', [], catalog)).toEqual([]);
+  });
+  it('keeps a valid empty topic usable while asking crawlers not to index it', () => {
+    expect(buildTopicMetadata('Business', 'business', []).robots).toMatchObject(
+      { index: false, follow: true }
+    );
+    expect(
+      buildTopicMetadata('Business', 'business', posts).robots
+    ).toMatchObject({ index: true, follow: true });
+  });
   it('resolves only a real topic from the public catalog', () => {
     expect(findCatalogTopic('stock-market', catalog)).toBe('Stock Market');
     expect(findCatalogTopic('invented-topic', catalog)).toBeNull();

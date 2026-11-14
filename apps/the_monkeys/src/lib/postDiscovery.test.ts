@@ -14,7 +14,10 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
 const { catalog } = vi.hoisted(() => ({ catalog: vi.fn() }));
-vi.mock('@/lib/seoCatalog', () => ({ fetchPublicPosts: catalog }));
+vi.mock('@/lib/seoCatalog', () => ({
+  fetchPublicPosts: catalog,
+  fetchRecentPublicPosts: catalog,
+}));
 
 function records(title: string): { post: Blog; summary: MetaBlog } {
   const post: Blog = {

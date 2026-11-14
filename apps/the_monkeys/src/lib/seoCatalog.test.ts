@@ -2,12 +2,29 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   fetchPublicPosts,
+  fetchRecentPublicPosts,
   normalizePublicEvents,
   normalizePublicGroups,
   normalizePublicPosts,
 } from './seoCatalog';
 
 describe('SEO public catalogs', () => {
+  it('loads a bounded recent feed even when the public catalog exceeds ten thousand posts', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        blogs: [{ blog_id: 'recent', title: 'Recent post' }],
+        total_blogs: 10001,
+      }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    expect(
+      (await fetchRecentPublicPosts()).map((post) => post.blog_id)
+    ).toEqual(['recent']);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(String(fetchMock.mock.calls[0][0])).toContain('limit=100&offset=0');
+  });
   afterEach(() => {
     vi.unstubAllGlobals();
   });
@@ -144,5 +161,73 @@ describe('SEO public catalogs', () => {
       expect.stringContaining('limit=1&offset=0'),
       expect.stringContaining('limit=1&offset=1'),
     ]);
+  });
+
+  it('continues after a server-capped page when the total says more posts exist', async () => {
+    const responses = [
+      { blogs: [{ blog_id: '1', title: 'First' }], total_blogs: 2 },
+      { blogs: [{ blog_id: '2', title: 'Second' }], total_blogs: 2 },
+    ];
+    const fetchMock = vi.fn().mockImplementation(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => responses.shift(),
+    }));
+    vi.stubGlobal('fetch', fetchMock);
+    expect((await fetchPublicPosts(500)).map((post) => post.blog_id)).toEqual([
+      '1',
+      '2',
+    ]);
+    expect(String(fetchMock.mock.calls[1][0])).toContain('offset=1');
+  });
+
+  it('rejects a repeated catalog page instead of silently claiming complete discovery', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          blogs: [{ blog_id: '1', title: 'Repeated' }],
+          total_blogs: 3,
+        }),
+      })
+    );
+    await expect(fetchPublicPosts(1)).rejects.toThrow(/progress|repeated/i);
+  });
+
+  it.each([[], null])(
+    'rejects a premature empty page (%j) while the API reports remaining posts',
+    async (empty) => {
+      const responses = [
+        { blogs: [{ blog_id: '1', title: 'First' }], total_blogs: 3 },
+        { blogs: empty, total_blogs: 3 },
+      ];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn().mockImplementation(async () => ({
+          ok: true,
+          status: 200,
+          json: async () => responses.shift(),
+        }))
+      );
+      await expect(fetchPublicPosts(1)).rejects.toThrow(
+        /incomplete|remaining/i
+      );
+    }
+  );
+
+  it('excludes explicit drafts, archived, scheduled and unknown private audiences while preserving legacy public posts', () => {
+    const blogs = [
+      { blog_id: 'legacy', title: 'Legacy' },
+      { blog_id: 'public', title: 'Public', audience: 'public' },
+      { blog_id: 'draft', title: 'Draft', is_draft: true },
+      { blog_id: 'archived', title: 'Archived', is_archived: true },
+      { blog_id: 'scheduled', title: 'Scheduled', is_scheduled: true },
+      { blog_id: 'other', title: 'Restricted', audience: 'private' },
+    ];
+    expect(normalizePublicPosts({ blogs }).map((post) => post.blog_id)).toEqual(
+      ['legacy', 'public']
+    );
   });
 });

@@ -1,8 +1,11 @@
 import { API_URL, API_URL_V2 } from '@/constants/api';
+import { normalizePublicPosts } from '@/lib/publicPostMetadata';
 import { fetchTopicCatalogStrict } from '@/lib/topicCatalog';
 import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem, ListEventsResp } from '@/services/events/eventTypes';
 import { GroupItem, ListGroupsResp } from '@/services/groups/groupsTypes';
+
+export { normalizePublicPosts } from '@/lib/publicPostMetadata';
 
 const PRODUCTION_API = 'https://monkeys.com.co/api/v1';
 const PRODUCTION_API_V2 = 'https://monkeys.com.co/api/v2';
@@ -28,60 +31,6 @@ async function getJson<T>(origin: string, path: string): Promise<T | null> {
   return (await res.json()) as T;
 }
 
-export function normalizePublicPosts(value: unknown): MetaBlog[] {
-  const blogs =
-    value && typeof value === 'object' && 'blogs' in value
-      ? (value as { blogs?: unknown }).blogs
-      : null;
-  if (!Array.isArray(blogs)) return [];
-
-  return blogs.flatMap((raw): MetaBlog[] => {
-    if (!raw || typeof raw !== 'object') return [];
-    const post = raw as Partial<MetaBlog>;
-    if (post.audience === 'group_only') return [];
-    if (
-      typeof post.blog_id !== 'string' ||
-      !post.blog_id.trim() ||
-      typeof post.title !== 'string' ||
-      !post.title.trim()
-    ) {
-      return [];
-    }
-    return [
-      {
-        blog_id: post.blog_id,
-        title: post.title.trim(),
-        first_image:
-          typeof post.first_image === 'string' ? post.first_image : '',
-        first_paragraph:
-          typeof post.first_paragraph === 'string' ? post.first_paragraph : '',
-        owner_account_id:
-          typeof post.owner_account_id === 'string'
-            ? post.owner_account_id
-            : '',
-        published_time:
-          typeof post.published_time === 'string' ? post.published_time : '',
-        tags: Array.isArray(post.tags)
-          ? post.tags.filter((tag): tag is string => typeof tag === 'string')
-          : [],
-        ...(typeof post.like_count === 'number'
-          ? { like_count: post.like_count }
-          : {}),
-        ...(typeof post.bookmark_count === 'number'
-          ? { bookmark_count: post.bookmark_count }
-          : {}),
-        ...(typeof post.content_type === 'string'
-          ? { content_type: post.content_type }
-          : {}),
-        ...(post.audience === 'public' ? { audience: post.audience } : {}),
-        ...(typeof post.group_slug === 'string'
-          ? { group_slug: post.group_slug }
-          : {}),
-      },
-    ];
-  });
-}
-
 function totalFrom(value: unknown, field: string): number | undefined {
   if (!value || typeof value !== 'object') return undefined;
   const total = (value as Record<string, unknown>)[field];
@@ -100,31 +49,66 @@ function uniqueBy<T>(items: T[], key: (item: T) => string | number): T[] {
   });
 }
 
+/** RSS is a recent-items feed, not a complete historical catalog traversal. */
+export async function fetchRecentPublicPosts(): Promise<MetaBlog[]> {
+  const data = await getJson<GetMetaFeedBlogs>(
+    catalogOriginV2(),
+    '/blog/meta-feed?limit=100&offset=0'
+  );
+  if (!data || (data.blogs !== null && !Array.isArray(data.blogs))) {
+    throw new Error('Recent public post catalog is unavailable');
+  }
+  if (!data.blogs?.length && (totalFrom(data, 'total_blogs') ?? 0) > 0) {
+    throw new Error('Recent public post catalog is incomplete');
+  }
+  return uniqueBy(
+    normalizePublicPosts(data).slice(0, 100),
+    (post) => post.blog_id
+  );
+}
+
 export async function fetchPublicPosts(pageSize = 500): Promise<MetaBlog[]> {
   const posts: MetaBlog[] = [];
   let offset = 0;
+  let knownTotal: number | undefined;
+  const pages = new Set<string>();
 
   for (let page = 0; page < 100; page += 1) {
     const data = await getJson<GetMetaFeedBlogs>(
       catalogOriginV2(),
       `/blog/meta-feed?limit=${pageSize}&offset=${offset}`
     );
-    if (!data) break;
+    if (!data) throw new Error('Public post catalog is unavailable');
+    if (data.blogs !== null && !Array.isArray(data.blogs)) {
+      throw new Error('Public post catalog returned an invalid post list');
+    }
     const pagePosts = normalizePublicPosts(data);
-    posts.push(...pagePosts);
     const rawCount = Array.isArray(data.blogs) ? data.blogs.length : 0;
-    const total = totalFrom(data, 'total_blogs');
+    if (rawCount > 0) {
+      const pageKey = JSON.stringify(data.blogs.map((post) => post?.blog_id));
+      if (pages.has(pageKey))
+        throw new Error('Public post catalog repeated a page without progress');
+      pages.add(pageKey);
+    }
+    posts.push(...pagePosts);
+    const total = totalFrom(data, 'total_blogs') ?? knownTotal;
+    knownTotal = total;
+    if (rawCount === 0 && total !== undefined && offset < total) {
+      throw new Error(
+        'Public post catalog is incomplete: remaining posts were not returned'
+      );
+    }
     if (
       rawCount === 0 ||
-      rawCount < pageSize ||
+      (total === undefined && rawCount < pageSize) ||
       (total !== undefined && offset + rawCount >= total)
     ) {
-      break;
+      return uniqueBy(posts, (post) => post.blog_id);
     }
     offset += rawCount;
   }
 
-  return uniqueBy(posts, (post) => post.blog_id);
+  throw new Error('Public post catalog exceeded the discovery page limit');
 }
 
 export async function fetchPublicTopics(): Promise<string[]> {
