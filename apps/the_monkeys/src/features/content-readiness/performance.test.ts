@@ -58,7 +58,7 @@ describe('bounded readiness processing', () => {
         const report = analyseReadiness(snapshot);
         times[name].push(Number((performance.now() - start).toFixed(2)));
         expect(snapshot.bodyText.length).toBeLessThanOrEqual(200000);
-        expect(report.rulesVersion).toBe('creator-event-v1');
+        expect(report.rulesVersion).toBe('publishing-readiness-v2');
         expect(document.blocks).toHaveLength(originalLength);
       }
     }

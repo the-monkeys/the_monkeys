@@ -230,7 +230,7 @@ describe('ReadinessPanelLoader failure isolation', () => {
     );
     expect(loadPanel).toHaveBeenCalledTimes(2);
     expect(screen.getByRole('status').textContent).toMatch(
-      /loading readiness report/i
+      /loading publishing readiness report/i
     );
     await act(async () => second.resolve({ ReadinessPanel: LoadedPanel }));
     expect(
@@ -282,7 +282,7 @@ describe('ReadinessPanelLoader failure isolation', () => {
         else old.reject(new Error('Old offline failure'));
       });
       expect(screen.getByRole('status').textContent).toMatch(
-        /loading readiness report/i
+        /loading publishing readiness report/i
       );
       expect(screen.queryByRole('alert')).toBeNull();
       expect(oldPanel).not.toHaveBeenCalled();
@@ -452,7 +452,9 @@ describe('PostReadiness group context plumbing', () => {
       groupResolved: true,
     };
     const view = render(<PostReadiness {...input} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Publishing readiness' })
+    );
     await screen.findByRole('region', { name: 'Loaded readiness report' });
     expect(contexts.at(-1)).toMatchObject({
       groupSlug: 'first-group',

@@ -38,7 +38,7 @@ describe('explainable post SEO checks', () => {
     );
     expect(report).toMatchObject({
       ...identity,
-      rulesVersion: 'creator-event-v1',
+      rulesVersion: 'publishing-readiness-v2',
       seoScore: 67,
       passedCount: 2,
       applicableKnownCount: 3,
@@ -71,7 +71,10 @@ describe('explainable post SEO checks', () => {
     expect(status(empty, 'post.topics')).toBe('improve');
     expect(
       status(
-        post([header('Title', 1), paragraph('Summary')]),
+        post([
+          header('Title', 1),
+          paragraph('An introduction to the subject.'),
+        ]),
         'post.description'
       )
     ).toBe('pass');
@@ -256,6 +259,7 @@ describe('event checks', () => {
       'event.schedule',
       'event.place',
       'event.cover',
+      'event.links',
     ]);
     expect(status(snapshot, 'event.organizer')).toBe('pass');
     expect(status(snapshot, 'event.group')).toBe('pass');

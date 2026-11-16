@@ -139,24 +139,24 @@ describe('ReadinessPanel', () => {
     const { onCheckAgain, onOpenChange } = show({
       report: report({ seoScore: 67, passedCount: 4, applicableKnownCount: 6 }),
     });
-    const help = screen.getByRole('button', { name: 'How this score works' });
+    const help = screen.getByRole('button', { name: 'How these checks work' });
     expect(help.getAttribute('aria-expanded')).toBe('false');
     expect(
-      screen.queryByRole('region', { name: 'How this score works' })
+      screen.queryByRole('region', { name: 'How these checks work' })
     ).toBeNull();
     fireEvent.click(help);
     const explanation = screen.getByRole('region', {
-      name: 'How this score works',
+      name: 'How these checks work',
     });
     expect(help.getAttribute('aria-expanded')).toBe('true');
     expect(explanation.id).toBe(help.getAttribute('aria-controls'));
-    expect(explanation.textContent).toContain('4 ÷ 6 × 100 = 67');
-    expect(explanation.textContent).toMatch(/each.*equal/i);
+    expect(explanation.textContent).toContain('4 of 6 automated checks passed');
+    expect(explanation.textContent).toMatch(/counted.*pass.*improve/i);
     expect(explanation.textContent).toMatch(
       /unknown.*human review.*not applicable.*excluded/i
     );
     expect(explanation.textContent).toMatch(
-      /answer readiness.*source clarity.*separate/i
+      /reader clarity.*source clarity.*separate/i
     );
     expect(explanation.textContent).toMatch(/not.*predict.*ranking.*traffic/i);
     expect(onCheckAgain).not.toHaveBeenCalled();
@@ -172,25 +172,25 @@ describe('ReadinessPanel', () => {
       }),
     });
     fireEvent.click(
-      screen.getByRole('button', { name: 'How this score works' })
+      screen.getByRole('button', { name: 'How these checks work' })
     );
     const text = screen.getByRole('region', {
-      name: 'How this score works',
+      name: 'How these checks work',
     }).textContent;
-    expect(text).toMatch(/no checks.*counted.*no estimate/i);
+    expect(text).toMatch(/no checks.*counted.*no result/i);
     expect(text).not.toMatch(/0 ÷ 0|NaN|Infinity/);
   });
 
   it('keeps score help in the scrollable report body, leaving footer actions available', () => {
     const { onOpenChange } = show();
     fireEvent.click(
-      screen.getByRole('button', { name: 'How this score works' })
+      screen.getByRole('button', { name: 'How these checks work' })
     );
     const details = screen.getByRole('region', {
       name: 'Readiness report details',
     });
     expect(
-      within(details).getByRole('region', { name: 'How this score works' })
+      within(details).getByRole('region', { name: 'How these checks work' })
     ).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Back to writing' }));
     expect(onOpenChange).toHaveBeenCalledWith(false);
@@ -200,7 +200,7 @@ describe('ReadinessPanel', () => {
     show();
     const focus = vi.spyOn(HTMLElement.prototype, 'focus');
     fireEvent.click(
-      screen.getByRole('button', { name: 'How this score works' })
+      screen.getByRole('button', { name: 'How these checks work' })
     );
     expect(focus).toHaveBeenCalledWith({ preventScroll: true });
     focus.mockRestore();
@@ -209,13 +209,17 @@ describe('ReadinessPanel', () => {
   it('uses an accessible drawer, three named sections and text statuses without a new H1', () => {
     show();
     const dialog = screen.getByRole('dialog', {
-      name: 'SEO & AI review',
+      name: 'Publishing readiness',
     });
     const description = document.getElementById(
       dialog.getAttribute('aria-describedby')!
     );
     expect(description?.textContent).toMatch(/optional.*free/i);
-    for (const name of ['SEO', 'Answer readiness', 'Source clarity']) {
+    for (const name of [
+      'Publishing basics',
+      'Reader clarity',
+      'Source clarity',
+    ]) {
       expect(within(dialog).getByRole('heading', { name })).toBeTruthy();
     }
     for (const status of [
@@ -238,8 +242,8 @@ describe('ReadinessPanel', () => {
 
   it('explains the SEO estimate and keeps manual review visible even with a perfect number', () => {
     show();
-    expect(screen.getByText('Monkeys readiness estimate')).toBeTruthy();
-    expect(screen.getByText('100/100')).toBeTruthy();
+    expect(screen.getByText('Automated checklist')).toBeTruthy();
+    expect(screen.queryByText('100/100')).toBeNull();
     expect(screen.getByText('4 of 4 automated checks passed')).toBeTruthy();
     expect(
       screen.getByText(/unknown, human review and not applicable.*excluded/i)
@@ -248,6 +252,11 @@ describe('ReadinessPanel', () => {
       screen.getByText(/does not predict.*ranking.*traffic.*AI citations/i)
     ).toBeTruthy();
     expect(screen.getByText('Review the intended question')).toBeTruthy();
+    expect(
+      screen.getByText(
+        /1 item marked for human review.*1 item could not be checked/i
+      )
+    ).toBeTruthy();
     expect(document.body.textContent).not.toMatch(
       /upgrade|subscribe|buy credits|AI score|AEO score|GEO score|guaranteed ranking/i
     );
@@ -268,7 +277,7 @@ describe('ReadinessPanel', () => {
     expect(
       screen.getByText('Unsupported content was not inspected')
     ).toBeTruthy();
-    expect(screen.getByText('No automated estimate available')).toBeTruthy();
+    expect(screen.getByText('No automated result available')).toBeTruthy();
     expect(screen.getByText('0 of 0 automated checks passed')).toBeTruthy();
     expect(screen.getByText(/search preview is unavailable/i)).toBeTruthy();
     expect(document.body.textContent).not.toContain('null');
@@ -432,7 +441,7 @@ describe('ReadinessPanel', () => {
       return (
         <>
           <button type='button' onClick={() => setOpen(true)}>
-            Check readiness
+            Publishing readiness
           </button>
           {open && (
             <ReadinessPanel
@@ -447,7 +456,7 @@ describe('ReadinessPanel', () => {
       );
     }
     render(<Host />);
-    const opener = screen.getByRole('button', { name: 'Check readiness' });
+    const opener = screen.getByRole('button', { name: 'Publishing readiness' });
     await user.click(opener);
     expect(screen.getByRole('dialog')).toBeTruthy();
     expect(document.activeElement).toBe(
@@ -467,7 +476,7 @@ describe('ReadinessPanel', () => {
       return (
         <>
           <button type='button' onClick={() => setOpen(true)}>
-            Check readiness
+            Publishing readiness
           </button>
           <input
             ref={field}
@@ -491,7 +500,9 @@ describe('ReadinessPanel', () => {
       );
     }
     render(<Host />);
-    await user.click(screen.getByRole('button', { name: 'Check readiness' }));
+    await user.click(
+      screen.getByRole('button', { name: 'Publishing readiness' })
+    );
     screen.getByRole('button', { name: 'Go to field: Topics' }).focus();
     await user.keyboard('{Enter}');
     await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());

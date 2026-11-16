@@ -80,15 +80,13 @@ export function PostReadiness({
         size='sm'
         className={
           presentation === 'toolbar'
-            ? `${editorToolClass} shrink-0 whitespace-nowrap aria-expanded:text-text-light dark:aria-expanded:text-text-dark aria-expanded:after:bg-brand-orange [&[aria-expanded=true]_svg]:text-brand-orange`
+            ? `${editorToolClass} shrink-0 max-w-full whitespace-normal aria-expanded:text-text-light dark:aria-expanded:text-text-dark aria-expanded:after:bg-brand-orange [&[aria-expanded=true]_svg]:text-brand-orange`
             : 'min-h-11 shrink-0 whitespace-nowrap'
         }
         aria-haspopup='dialog'
         aria-expanded={open}
         title={
-          presentation === 'toolbar'
-            ? 'Review search and AI readiness'
-            : undefined
+          presentation === 'toolbar' ? 'Review publishing readiness' : undefined
         }
         onClick={() => setOpen(true)}
       >
@@ -97,10 +95,10 @@ export function PostReadiness({
             <span aria-hidden='true'>
               <Icon name='RiSearch' size={16} />
             </span>
-            SEO &amp; AI
+            Publishing readiness
           </>
         ) : (
-          'Check readiness'
+          'Publishing readiness'
         )}
       </Button>
       {open && (

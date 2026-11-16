@@ -58,8 +58,8 @@ function LoadingNotice({
     >
       <p role={failed ? 'alert' : 'status'} className='text-sm'>
         {failed
-          ? 'The free readiness report could not load. Editing and saving remain available. You can retry the report when ready.'
-          : 'Loading readiness report…'}
+          ? 'The free publishing readiness report could not load. Editing and saving remain available. You can retry the report when ready.'
+          : 'Loading publishing readiness report…'}
       </p>
       <div className='mt-3 flex flex-wrap gap-2'>
         {failed && (

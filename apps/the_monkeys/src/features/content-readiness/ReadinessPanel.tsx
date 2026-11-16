@@ -40,12 +40,12 @@ const statusLabels: Record<CheckStatus, string> = {
 const sections = [
   {
     key: 'seo',
-    label: 'SEO',
-    description: 'An automated checklist of page basics.',
+    label: 'Publishing basics',
+    description: 'Checks of the text and structure supplied in this draft.',
   },
   {
     key: 'answers',
-    label: 'Answer readiness',
+    label: 'Reader clarity',
     description: 'Observations and human review of useful context and answers.',
   },
   {
@@ -106,15 +106,19 @@ export function ReadinessPanel({
   const partial =
     report?.coverage === 'partial' ||
     report?.checks.some((check) => check.status === 'unknown');
+  const manualCount =
+    report?.checks.filter((check) => check.status === 'manual').length ?? 0;
+  const unknownCount =
+    report?.checks.filter((check) => check.status === 'unknown').length ?? 0;
   const message =
     state === 'stale'
       ? 'Content changed. Check again.'
       : state === 'pending'
-        ? 'Checking readiness…'
+        ? 'Checking publishing readiness…'
         : state === 'error'
           ? 'Could not check readiness. Try Check again. Editing, saving and publishing remain available.'
           : state === 'idle' || !report
-            ? 'Add content, then check readiness to see suggestions. You can keep writing and save normally.'
+            ? 'Add content, then check readiness to see publishing suggestions. You can keep writing and save normally.'
             : null;
 
   return (
@@ -146,7 +150,7 @@ export function ReadinessPanel({
         <DrawerHeader className='shrink-0 px-4 py-2 text-left sm:px-6'>
           <div className='flex items-start justify-between gap-3'>
             <DrawerTitle className='font-newsreader text-2xl font-semibold leading-tight'>
-              SEO &amp; AI review
+              Publishing readiness
             </DrawerTitle>
             <DrawerClose asChild>
               <Button
@@ -221,23 +225,31 @@ export function ReadinessPanel({
                   </p>
                   {section.key === 'seo' && (
                     <div className='my-3 rounded-lg border border-border-light bg-foreground-light/40 p-4 dark:border-border-dark dark:bg-foreground-dark/40'>
-                      <p className='font-medium'>Monkeys readiness estimate</p>
+                      <p className='font-medium'>Automated checklist</p>
                       <p className='mt-2 font-newsreader text-3xl font-semibold'>
-                        {report.seoScore === null
-                          ? 'No automated estimate available'
-                          : `${report.seoScore}/100`}
+                        {report.applicableKnownCount === 0
+                          ? 'No automated result available'
+                          : `${report.passedCount} of ${report.applicableKnownCount} automated checks passed`}
                       </p>
-                      <p className='mt-1 text-sm'>
-                        {report.passedCount} of {report.applicableKnownCount}{' '}
-                        automated checks passed
-                      </p>
+                      {report.applicableKnownCount === 0 && (
+                        <p className='mt-1 text-sm'>
+                          {report.passedCount} of {report.applicableKnownCount}{' '}
+                          automated checks passed
+                        </p>
+                      )}
                       {partial && (
                         <p className='mt-2 font-medium'>Partial check</p>
                       )}
                       <p className='mt-2 text-sm'>
-                        This automated SEO estimate covers known applicable
-                        checks only. Unknown, human review and not applicable
-                        items are excluded.
+                        This checklist covers known applicable checks only.
+                        Unknown, human review and not applicable items are
+                        excluded.
+                      </p>
+                      <p className='mt-2 text-sm'>
+                        {manualCount} {manualCount === 1 ? 'item' : 'items'}{' '}
+                        marked for human review. {unknownCount}{' '}
+                        {unknownCount === 1 ? 'item' : 'items'} could not be
+                        checked.
                       </p>
                       <p className='mt-2 text-sm'>
                         It does not predict search ranking, indexing, traffic,
@@ -337,7 +349,7 @@ export function ReadinessPanel({
           {showScoreHelp && (
             <section
               id={scoreHelpId}
-              aria-label='How this score works'
+              aria-label='How these checks work'
               className='mt-5 rounded-lg border border-border-light p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange dark:border-border-dark'
             >
               <h3
@@ -345,7 +357,7 @@ export function ReadinessPanel({
                 tabIndex={-1}
                 className='mb-3 font-newsreader text-xl font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange'
               >
-                How this score works
+                How these checks work
               </h3>
               <ScoreExplanation report={report} />
             </section>
@@ -375,7 +387,7 @@ export function ReadinessPanel({
             aria-controls={scoreHelpId}
             onClick={() => setShowScoreHelp((value) => !value)}
           >
-            How this score works
+            How these checks work
           </Button>
         </div>
       </DrawerContent>

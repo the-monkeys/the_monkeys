@@ -56,7 +56,7 @@ export function EventReadiness({
         className='min-h-11 w-full sm:w-auto'
         onClick={() => setOpen(true)}
       >
-        Check readiness
+        Publishing readiness
       </Button>
       {open && (
         <ReadinessPanelLoader

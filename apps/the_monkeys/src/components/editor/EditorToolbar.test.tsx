@@ -6,7 +6,7 @@ import { EditorToolbar } from './EditorToolbar';
 afterEach(cleanup);
 
 const actions = {
-  readinessAction: <button type='button'>SEO &amp; AI</button>,
+  readinessAction: <button type='button'>Publishing readiness</button>,
   publishAction: <button type='button'>Publish</button>,
 };
 
@@ -43,7 +43,9 @@ describe('editor toolbar', () => {
       screen.getByRole('tab', { name: 'Preview' }).getAttribute('aria-selected')
     ).toBe('true');
     expect(
-      screen.getByRole('button', { name: 'SEO & AI' }).closest('[role=tablist]')
+      screen
+        .getByRole('button', { name: 'Publishing readiness' })
+        .closest('[role=tablist]')
     ).toBeNull();
     expect(
       screen.getByRole('button', { name: 'Publish' }).getAttribute('type')
@@ -69,8 +71,11 @@ describe('editor toolbar', () => {
       (screen.getByRole('tab', { name: 'Edit' }) as HTMLButtonElement).disabled
     ).toBe(false);
     expect(
-      (screen.getByRole('button', { name: 'SEO & AI' }) as HTMLButtonElement)
-        .disabled
+      (
+        screen.getByRole('button', {
+          name: 'Publishing readiness',
+        }) as HTMLButtonElement
+      ).disabled
     ).toBe(false);
     expect(
       screen.getByText(
