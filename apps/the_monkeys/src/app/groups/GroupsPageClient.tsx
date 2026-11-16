@@ -18,13 +18,15 @@ import {
   geoRadiusSteps,
   nearMeQuery,
 } from '@/lib/geoSearch';
-import { GroupListFilters } from '@/services/groups/groupsTypes';
+import { GroupItem, GroupListFilters } from '@/services/groups/groupsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 
 type Tab = 'discover' | 'mine';
 
-export default function GroupsPageClient() {
+export default function GroupsPageClient({
+  initialGroups = [],
+}: { initialGroups?: GroupItem[] } = {}) {
   const { data: session } = useAuth();
   const router = useRouter();
   const [tab, setTab] = useState<Tab>('discover');
@@ -106,7 +108,16 @@ export default function GroupsPageClient() {
   );
 
   const active = tab === 'mine' ? mine : discover;
-  const groups = active.data?.groups || [];
+  const usingInitialGroups =
+    tab === 'discover' &&
+    !active.data &&
+    !qLive.trim() &&
+    !cityLive.trim() &&
+    !topicLive.trim() &&
+    !nationwide &&
+    initialGroups.length > 0;
+  const groups =
+    active.data?.groups ?? (usingInitialGroups ? initialGroups : []);
 
   return (
     <div className='mx-auto max-w-3xl'>
@@ -202,13 +213,13 @@ export default function GroupsPageClient() {
         />
       )}
 
-      {(waitingGeo || active.isLoading) && (
+      {(waitingGeo || active.isLoading) && !usingInitialGroups && (
         <div className='flex justify-center py-16'>
           <Loader size={28} />
         </div>
       )}
 
-      {active.isError && (
+      {active.isError && !usingInitialGroups && (
         <GroupEmpty
           title='Could not load groups'
           hint='Please try again in a moment.'

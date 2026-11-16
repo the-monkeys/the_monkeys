@@ -23,11 +23,15 @@ import {
   eventsTabLocation,
   parseEventTab,
 } from '@/lib/eventsTab';
-import { ListFilters } from '@/services/events/eventTypes';
+import { EventItem, ListFilters } from '@/services/events/eventTypes';
+import { GroupItem } from '@/services/groups/groupsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Tabs, TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 
-export default function EventsPageClient() {
+export default function EventsPageClient({
+  initialEvents = [],
+  initialGroups = [],
+}: { initialEvents?: EventItem[]; initialGroups?: GroupItem[] } = {}) {
   const { data: session } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
@@ -107,7 +111,11 @@ export default function EventsPageClient() {
               </Button>
             </div>
           )}
-          <EventsDiscover signedIn={!!session} />
+          <EventsDiscover
+            signedIn={!!session}
+            initialEvents={initialEvents}
+            initialGroups={initialGroups}
+          />
         </>
       )}
 

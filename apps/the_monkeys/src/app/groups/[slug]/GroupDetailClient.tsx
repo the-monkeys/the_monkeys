@@ -8,14 +8,15 @@ import { GroupEmpty } from '@/components/groups/GroupCard';
 import { GroupCommunity } from '@/components/groups/detail/GroupCommunity';
 import { GroupCreateMenu } from '@/components/groups/detail/GroupCreateMenu';
 import { GroupJoinButton } from '@/components/groups/detail/GroupJoinButton';
-import { GroupRules } from '@/components/groups/detail/GroupRules';
 import Icon, { IconName } from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { GROUPS_ROUTE } from '@/constants/routeConstants';
 import { useGroupDetail } from '@/hooks/groups/useGroupQueries';
 import { canManageGroup, isActiveGroupMember } from '@/lib/groupPerms';
+import type { GroupPublicActivity } from '@/lib/groupPublicActivity';
 import { normalizeSeoText } from '@/lib/seo';
 import { GroupVisibility } from '@/services/groups/groupsTypes';
+import { createTopicUrl, topicToSlug } from '@/utils/topicUtils';
 
 const VISIBILITY: Record<
   GroupVisibility,
@@ -26,7 +27,16 @@ const VISIBILITY: Record<
   unlisted: { label: 'Unlisted group', icon: 'RiEyeClose' },
 };
 
-export default function GroupDetailClient({ slug }: { slug: string }) {
+const topicChipClass =
+  'rounded-full border border-border-light px-3 py-1 font-inter text-xs text-gray-600 dark:border-border-dark dark:text-gray-400';
+
+export default function GroupDetailClient({
+  slug,
+  initialPublicActivity,
+}: {
+  slug: string;
+  initialPublicActivity?: GroupPublicActivity;
+}) {
   const { data, isLoading, isError } = useGroupDetail(slug);
   const [forcePostsToken, setForcePostsToken] = useState(0);
   const [focusDiscussionToken, setFocusDiscussionToken] = useState(0);
@@ -160,14 +170,21 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
 
             {group.topics && group.topics.length > 0 && (
               <div className='mt-3 flex flex-wrap gap-2'>
-                {group.topics.map((topic) => (
-                  <span
-                    key={topic}
-                    className='rounded-full border border-border-light px-3 py-1 font-inter text-xs text-gray-600 dark:border-border-dark dark:text-gray-400'
-                  >
-                    {topic}
-                  </span>
-                ))}
+                {group.topics.map((topic) =>
+                  topicToSlug(topic) ? (
+                    <Link
+                      key={topic}
+                      href={createTopicUrl(topic)}
+                      className={topicChipClass}
+                    >
+                      {topic}
+                    </Link>
+                  ) : (
+                    <span key={topic} className={topicChipClass}>
+                      {topic}
+                    </span>
+                  )
+                )}
               </div>
             )}
           </div>
@@ -195,6 +212,7 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
               focusDiscussionToken={focusDiscussionToken}
               forcePostsToken={forcePostsToken}
               group={group}
+              initialPublicActivity={initialPublicActivity}
             />
           </div>
         </div>

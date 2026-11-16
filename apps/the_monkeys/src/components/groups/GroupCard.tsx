@@ -16,7 +16,7 @@ const VISIBILITY_META: Record<
 
 function memberLabel(count?: number): string {
   const n = count ?? 0;
-  return `${n.toLocaleString()} ${n === 1 ? 'member' : 'members'}`;
+  return `${n.toLocaleString('en-US')} ${n === 1 ? 'member' : 'members'}`;
 }
 
 // Small pill shown when the signed-in viewer already has standing in the group.

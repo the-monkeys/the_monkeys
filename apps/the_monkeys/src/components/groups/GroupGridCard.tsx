@@ -6,7 +6,7 @@ import { GroupItem } from '@/services/groups/groupsTypes';
 
 function memberLabel(count?: number): string {
   const n = count ?? 0;
-  return `${n.toLocaleString()} ${n === 1 ? 'member' : 'members'}`;
+  return `${n.toLocaleString('en-US')} ${n === 1 ? 'member' : 'members'}`;
 }
 
 function Cover({ group }: { group: GroupItem }) {

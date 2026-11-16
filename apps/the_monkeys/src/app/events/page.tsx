@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 
 import { JsonLd } from '@/components/seo/JsonLd';
+import {
+  loadDiscoveryEvents,
+  loadDiscoveryGroups,
+} from '@/lib/publicDiscovery';
 import { EVENTS_SEO, pageMetadata } from '@/lib/seo';
 import { eventsHubGraph } from '@/lib/seoSchema';
 
@@ -11,15 +15,18 @@ export const metadata: Metadata = pageMetadata({
   rss: '/events/feed.xml',
 });
 
-export default function EventsPage() {
+export default async function EventsPage() {
+  const [initialEvents, initialGroups] = await Promise.all([
+    loadDiscoveryEvents(),
+    loadDiscoveryGroups(),
+  ]);
   return (
     <>
       <JsonLd data={eventsHubGraph(EVENTS_SEO.faqs)} />
-      <h1 className='hidden text-2xl font-bold'>
-        Research events and meetups on Monkeys. Host or RSVP to talks,
-        workshops, and community sessions
-      </h1>
-      <EventsPageClient />
+      <EventsPageClient
+        initialEvents={initialEvents}
+        initialGroups={initialGroups}
+      />
     </>
   );
 }

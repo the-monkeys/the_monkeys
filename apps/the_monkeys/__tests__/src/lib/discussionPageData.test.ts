@@ -254,4 +254,195 @@ describe('discussionPageData', () => {
       .mockResolvedValueOnce(new Response('', { status: 404 }));
     await expect(loadPublicDiscussionIds(20)).resolves.toEqual(['s1']);
   });
+
+  it.each(['bad cursor', 'x&before_id=y', 'x\nheader', 'x\n', 'x'.repeat(201)])(
+    'does not forward an unsafe cursor: %s',
+    async (cursor) => {
+      vi.mocked(fetch).mockResolvedValue(new Response('{"discussions":[]}'));
+      await loadSiteDiscussions(cursor);
+      expect(vi.mocked(fetch).mock.calls[0][0]).toBe(
+        'http://api.test/discussions'
+      );
+    }
+  );
+
+  it('filters restricted and removed feed rows while paging from the raw tail', async () => {
+    const rows = Array.from({ length: 20 }, (_, i) => ({
+      ...publicPost,
+      public_id: `p${i}`,
+    }));
+    const restricted = [
+      { ...publicPost, public_id: 'members', audience: 'group_only' },
+      { ...publicPost, public_id: 'private', audience: 'private' },
+      { ...publicPost, public_id: 'removed', status: 'removed' },
+      { ...publicPost, public_id: 'hidden', status: 'hidden' },
+    ];
+    vi.mocked(fetch).mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          discussions: [...rows.slice(0, 16), ...restricted],
+        })
+      )
+    );
+    const page = await loadSiteDiscussions();
+    expect(page?.discussions.map((post) => post.public_id)).toEqual(
+      rows.slice(0, 16).map((post) => post.public_id)
+    );
+    expect(page).toHaveProperty('nextBeforeId', 'hidden');
+  });
+
+  it('walks older site and public group pages, deduplicating and respecting sparse legacy audiences', async () => {
+    const site = Array.from({ length: 20 }, (_, i) => ({
+      ...publicPost,
+      public_id: `s${i}`,
+    }));
+    const group = Array.from({ length: 20 }, (_, i) => ({
+      ...publicPost,
+      public_id: `g${i}`,
+      group_slug: 'tea',
+    }));
+    vi.mocked(fetch).mockImplementation(async (input) => {
+      const url = String(input);
+      const payload =
+        url.endsWith('/discussions') && !url.includes('/groups/')
+          ? { discussions: site }
+          : url.endsWith('/discussions?before_id=s19')
+            ? {
+                discussions: [
+                  {
+                    ...publicPost,
+                    public_id: 'older-site',
+                    audience: 'public',
+                  },
+                ],
+              }
+            : url.includes('/groups?')
+              ? {
+                  groups: [
+                    {
+                      id: 1,
+                      slug: 'tea',
+                      name: 'Tea',
+                      status: 'published',
+                      visibility: 'public',
+                    },
+                    {
+                      id: 2,
+                      slug: 'secret',
+                      name: 'Secret',
+                      status: 'published',
+                      visibility: 'private',
+                    },
+                  ],
+                }
+              : url.endsWith('/groups/tea/discussions')
+                ? { discussions: group }
+                : url.endsWith('/groups/tea/discussions?before_id=g19')
+                  ? {
+                      discussions: [
+                        {
+                          ...publicPost,
+                          public_id: 'older-group',
+                          group_slug: 'tea',
+                          audience: '',
+                        },
+                        site[0],
+                        {
+                          ...publicPost,
+                          public_id: 'secret',
+                          audience: 'group_only',
+                        },
+                        {
+                          ...publicPost,
+                          public_id: 'private',
+                          audience: 'private',
+                        },
+                        {
+                          ...publicPost,
+                          public_id: 'deleted',
+                          status: 'deleted',
+                        },
+                      ],
+                    }
+                  : { discussions: [] };
+      return new Response(JSON.stringify(payload));
+    });
+    const ids = await loadPublicDiscussionIds(100);
+    expect(ids).toContain('older-site');
+    expect(ids).toContain('older-group');
+    expect(ids.filter((id) => id === 's0')).toHaveLength(1);
+    expect(ids).not.toContain('secret');
+    expect(ids).not.toContain('private');
+    expect(ids).not.toContain('deleted');
+    expect(
+      vi
+        .mocked(fetch)
+        .mock.calls.some(([url]) => String(url).includes('/groups/secret/'))
+    ).toBe(false);
+    for (const [, init] of vi.mocked(fetch).mock.calls) {
+      expect(new Headers(init?.headers).has('Cookie')).toBe(false);
+    }
+  });
+
+  it('stops a repeating full page even when every row is ineligible', async () => {
+    const rows = Array.from({ length: 20 }, (_, i) => ({
+      ...publicPost,
+      public_id: `hidden${i}`,
+      audience: 'group_only',
+    }));
+    vi.mocked(fetch).mockImplementation(
+      async (url) =>
+        new Response(
+          JSON.stringify(
+            String(url).includes('/groups?')
+              ? { groups: [] }
+              : { discussions: rows }
+          )
+        )
+    );
+    expect(await loadPublicDiscussionIds(100)).toEqual([]);
+    expect(
+      vi
+        .mocked(fetch)
+        .mock.calls.filter(([url]) => String(url).includes('/discussions'))
+    ).toHaveLength(2);
+  });
+
+  it('bounds sitemap requests even if every response has a new full page', async () => {
+    let page = 0;
+    vi.mocked(fetch).mockImplementation(
+      async (url) =>
+        new Response(
+          JSON.stringify(
+            String(url).includes('/groups?')
+              ? {
+                  groups: Array.from({ length: 40 }, (_, i) => ({
+                    id: i,
+                    slug: `g${i}`,
+                    name: 'Group',
+                    status: 'published',
+                    visibility: 'public',
+                  })),
+                }
+              : {
+                  discussions: Array.from({ length: 20 }, (_, i) => ({
+                    ...publicPost,
+                    public_id: `p${page++}-${i}`,
+                    audience: 'group_only',
+                  })),
+                }
+          )
+        )
+    );
+    expect(await loadPublicDiscussionIds(200)).toEqual([]);
+    expect(vi.mocked(fetch).mock.calls.length).toBeLessThanOrEqual(41);
+  });
+
+  it.each([0, -1, NaN, Infinity])(
+    'does not fetch for an invalid sitemap limit %s',
+    async (limit) => {
+      expect(await loadPublicDiscussionIds(limit)).toEqual([]);
+      expect(fetch).not.toHaveBeenCalled();
+    }
+  );
 });

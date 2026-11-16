@@ -1,0 +1,54 @@
+/* Tool base styles were previously injected by the browser-only editor. */
+.post-reader .ce-block {
+  padding: 0.4em 0;
+}
+.post-reader .ce-block__content {
+  position: relative;
+}
+.post-reader .cdx-quote--center {
+  text-align: center;
+}
+.post-reader .image-tool__image {
+  overflow: hidden;
+  border-radius: 3px;
+}
+.post-reader .image-tool__image-picture {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.post-reader .image-tool--stretched .image-tool__image-picture {
+  width: 100%;
+}
+.post-reader .image-tool--withBorder .image-tool__image {
+  border: 1px solid #e8e8eb;
+}
+.post-reader .image-tool--withBackground .image-tool__image {
+  padding: 15px;
+  background: #eff2f5;
+}
+.post-reader .image-tool--withBackground .image-tool__image-picture {
+  max-width: 60%;
+  margin: 0 auto;
+}
+.post-reader .tc-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.post-reader .tc-cell {
+  min-width: 100px;
+  padding: 10px 12px;
+  border: 1px solid #e8e8eb;
+}
+.post-reader .ce-delimiter {
+  text-align: center;
+  line-height: 1.6em;
+}
+.post-reader .ce-delimiter::before {
+  display: inline-block;
+  content: '***';
+  font-size: 30px;
+  line-height: 65px;
+  height: 30px;
+  letter-spacing: 0.2em;
+}

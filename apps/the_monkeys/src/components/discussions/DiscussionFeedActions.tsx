@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -29,17 +29,36 @@ export function DiscussionFeedActions({ post }: { post: Discussion }) {
   const [liked, setLiked] = useState(Boolean(post.liked));
   const [likes, setLikes] = useState(post.like_count ?? 0);
   const [busy, setBusy] = useState(false);
+  const likePending = useRef(false);
   const [authOpen, setAuthOpen] = useState(false);
   const shareUrl = `${LIVE_URL ?? ''}${discussionPath(post.public_id)}`;
+  const serverLiked = Boolean(post.liked);
+  const serverLikes = post.like_count ?? 0;
+  const latestServerReaction = useRef({
+    liked: serverLiked,
+    likes: serverLikes,
+  });
+
+  useEffect(() => {
+    // Public SSR previews are replaced by viewer-scoped data in the same row.
+    // A pending toggle owns its optimistic state and eventual server result;
+    // settling it must not replay an older feed snapshot.
+    latestServerReaction.current = { liked: serverLiked, likes: serverLikes };
+    if (likePending.current) return;
+    setLiked(serverLiked);
+    setLikes(serverLikes);
+  }, [post.public_id, serverLiked, serverLikes]);
 
   async function onLike() {
     if (!session?.username) {
       setAuthOpen(true);
       return;
     }
-    if (busy) return;
+    if (likePending.current) return;
+    likePending.current = true;
     const before = likes;
     const wasLiked = liked;
+    const serverBefore = latestServerReaction.current;
     setLiked(!wasLiked);
     setLikes(Math.max(0, before + (wasLiked ? -1 : 1)));
     setBusy(true);
@@ -48,14 +67,18 @@ export function DiscussionFeedActions({ post }: { post: Discussion }) {
       setLiked(res.liked);
       setLikes(Math.max(0, before + (res.liked ? 1 : -1)));
     } catch (err) {
-      setLiked(wasLiked);
-      setLikes(before);
+      const latest = latestServerReaction.current;
+      // Prefer a viewer snapshot received during the request; otherwise undo
+      // only this click, preserving any earlier locally confirmed toggle.
+      setLiked(latest === serverBefore ? wasLiked : latest.liked);
+      setLikes(latest === serverBefore ? before : latest.likes);
       toast({
         variant: 'error',
         title: 'Error',
         description: discussionError(err),
       });
     } finally {
+      likePending.current = false;
       setBusy(false);
     }
   }

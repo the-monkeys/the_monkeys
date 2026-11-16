@@ -24,6 +24,7 @@ import {
   nearMeQuery,
 } from '@/lib/geoSearch';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
+import { GroupItem } from '@/services/groups/groupsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import {
@@ -135,7 +136,15 @@ const EventGrid = memo(function EventGrid({
 // Main landing
 // -----------------------------------------------------------------------------
 
-export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
+export function EventsDiscover({
+  signedIn,
+  initialEvents = [],
+  initialGroups = [],
+}: {
+  signedIn: boolean;
+  initialEvents?: EventItem[];
+  initialGroups?: GroupItem[];
+}) {
   const [qLive, setQLive] = useState('');
   const [q, setQ] = useState('');
 
@@ -274,8 +283,24 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
   ]);
   const communities = useGroupList({ limit: 8, ...nearbyGroups }, geoReady);
 
-  const popularEvents = popular.data?.events || [];
-  const groups = communities.data?.groups || [];
+  const untouchedDiscovery =
+    !qLive.trim() &&
+    !activeTag &&
+    !manualOverride &&
+    !radiusLocked &&
+    !nationwide &&
+    typeFilter === 'all' &&
+    dateFilter === 'upcoming' &&
+    sortBy === 'soonest';
+  const usingInitialEvents =
+    !popular.data && untouchedDiscovery && initialEvents.length > 0;
+  const usingInitialGroups =
+    !communities.data && untouchedDiscovery && initialGroups.length > 0;
+  const popularEvents =
+    popular.data?.events ?? (usingInitialEvents ? initialEvents : []);
+  const groups =
+    communities.data?.groups ??
+    (usingInitialGroups ? initialGroups.slice(0, 8) : []);
   const nearbyInPerson = popularEvents.filter(
     (e) => e.event_type === 'in_person'
   );
@@ -452,9 +477,13 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
           eyebrow="What's around"
           title={
             <span className='flex items-center gap-2'>
-              <span>Popular events near</span>
-              <span className='text-brand-orange'>{displayLocation}</span>
-              {!hasActiveFilters && (
+              <span>
+                {usingInitialEvents ? 'Upcoming events' : 'Popular events near'}
+              </span>
+              {!usingInitialEvents && (
+                <span className='text-brand-orange'>{displayLocation}</span>
+              )}
+              {!usingInitialEvents && !hasActiveFilters && (
                 <button
                   type='button'
                   onClick={() => {
@@ -552,9 +581,9 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
             </div>
           }
         />
-        {!geoReady || popular.isLoading ? (
+        {(!geoReady || popular.isLoading) && !usingInitialEvents ? (
           <GridSkeleton count={8} />
-        ) : popular.isError ? (
+        ) : popular.isError && !usingInitialEvents ? (
           <p className='py-10 text-center font-inter text-sm text-gray-500'>
             Could not load events. Please try again.
           </p>
@@ -678,7 +707,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
             </Link>
           }
         />
-        {!geoReady || communities.isLoading ? (
+        {(!geoReady || communities.isLoading) && !usingInitialGroups ? (
           <GridSkeleton count={4} />
         ) : groups.length === 0 ? (
           <p className='rounded-xl border border-dashed border-border-light py-12 text-center font-inter text-sm text-gray-500 dark:border-border-dark/40'>

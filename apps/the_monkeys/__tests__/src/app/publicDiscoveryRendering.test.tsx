@@ -26,6 +26,9 @@ vi.mock('@/app/events/[slug]/eventMetadata', () => ({
 vi.mock('@/app/groups/[slug]/groupMetadata', () => ({
   loadGroupForMetadata: groupLoader,
 }));
+vi.mock('@/lib/groupPublicActivity', () => ({
+  loadGroupPublicActivity: vi.fn().mockResolvedValue(undefined),
+}));
 vi.mock('@/app/[username]/profileData', () => ({
   loadPublicProfile: profileLoader,
 }));

@@ -11,6 +11,11 @@ import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
 import { useGroupBlogs } from '@/hooks/groups/useGroupQueries';
 import { groupFeedEmptyCopy, isActiveGroupMember } from '@/lib/groupPerms';
+import {
+  isPublicGroupBlog,
+  isPublicGroupDiscussion,
+} from '@/lib/groupPublicActivity';
+import type { GroupPublicActivity } from '@/lib/groupPublicActivity';
 import { mergeGroupFeedItems } from '@/lib/mergeGroupFeedItems';
 import { listDiscussions } from '@/services/discussions/discussionsApi';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
@@ -22,9 +27,11 @@ import axios from 'axios';
 export function GroupPostsFeed({
   group,
   focusComposerToken = 0,
+  initialPublicActivity,
 }: {
   group: GroupItem;
   focusComposerToken?: number;
+  initialPublicActivity?: GroupPublicActivity;
 }) {
   const { data: session } = useAuth();
   return (
@@ -32,6 +39,13 @@ export function GroupPostsFeed({
       key={`${group.slug}:${session?.username ?? ''}:${group.viewer_member_status}:${group.visibility}`}
       group={group}
       focusComposerToken={focusComposerToken}
+      initialPublicActivity={
+        initialPublicActivity?.slug === group.slug &&
+        group.visibility === 'public' &&
+        (!group.status || group.status === 'published')
+          ? initialPublicActivity
+          : undefined
+      }
     />
   );
 }
@@ -39,14 +53,18 @@ export function GroupPostsFeed({
 function GroupPostsFeedForViewer({
   group,
   focusComposerToken,
+  initialPublicActivity,
 }: {
   group: GroupItem;
   focusComposerToken: number;
+  initialPublicActivity?: GroupPublicActivity;
 }) {
   const { data: session } = useAuth();
   const blogsQuery = useGroupBlogs(group.slug, 20, true, group);
   const hasMoreBlogs = blogsQuery.hasNextPage && !blogsQuery.isError;
-  const [discussions, setDiscussions] = useState<Discussion[] | null>(null);
+  const [discussions, setDiscussions] = useState<Discussion[] | null>(
+    initialPublicActivity?.discussions ?? null
+  );
   const [discussionError, setDiscussionError] = useState<string | null>(null);
   const [hasMoreDiscussions, setHasMoreDiscussions] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -64,7 +82,7 @@ function GroupPostsFeedForViewer({
       if (!beforeId) {
         moreBusy.current = false;
         setLoadingMore(false);
-        setDiscussions(null);
+        if (!initialPublicActivity?.discussions) setDiscussions(null);
         setHasMoreDiscussions(false);
       }
       try {
@@ -94,7 +112,7 @@ function GroupPostsFeedForViewer({
         );
       }
     },
-    [slug]
+    [slug, initialPublicActivity?.discussions]
   );
 
   const cancelDiscussions = useCallback(() => {
@@ -136,18 +154,33 @@ function GroupPostsFeedForViewer({
   }, [composerOpen, focusComposerToken]);
 
   const canReadRestrictedBlogs = !!session && isActiveGroupMember(group);
+  const blogData =
+    blogsQuery.isLoading && initialPublicActivity?.blogs
+      ? initialPublicActivity.blogs
+      : blogsQuery.data?.pages.flatMap((page) => page.blogs ?? []) ??
+        initialPublicActivity?.blogs ??
+        [];
   // React Query retains old data after a failed refetch. It is no longer proof
   // that this viewer may read those previews, even if group standing is stale.
   const blogs = blogsQuery.isError
     ? []
-    : (blogsQuery.data?.pages.flatMap((page) => page.blogs ?? []) ?? []).filter(
+    : blogData.filter(
         (post) =>
           canReadRestrictedBlogs ||
-          (group.visibility === 'public' && post.audience !== 'group_only')
+          (group.visibility === 'public' && isPublicGroupBlog(post, slug))
       );
-  const items = mergeGroupFeedItems(blogs, discussions ?? []);
+  const visibleDiscussions = (discussions ?? []).filter(
+    (post) =>
+      post.status === 'visible' &&
+      (canReadRestrictedBlogs ||
+        (group.visibility === 'public' && isPublicGroupDiscussion(post, slug)))
+  );
+  const items = mergeGroupFeedItems(blogs, visibleDiscussions);
   const discussionsLoading = discussions === null && !discussionError;
-  const loading = blogsQuery.isLoading || discussionsLoading;
+  const loading =
+    items.length === 0 &&
+    ((blogsQuery.isLoading && !initialPublicActivity?.blogs) ||
+      discussionsLoading);
   const locked = !session
     ? 'login'
     : !isActiveGroupMember(group)

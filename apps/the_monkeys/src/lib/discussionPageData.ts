@@ -1,9 +1,11 @@
 import { API_URL } from '@/constants/api';
-import { fetchPublicGroups } from '@/lib/seoCatalog';
 import {
-  Discussion,
-  DiscussionList,
-} from '@/services/discussions/discussionsTypes';
+  PublicDiscussionPage,
+  discussionCursor,
+  publicDiscussionPage,
+} from '@/lib/discussionPagination';
+import { normalizePublicGroups } from '@/lib/seoCatalog';
+import { Discussion } from '@/services/discussions/discussionsTypes';
 
 export type DiscussionLoad =
   | {
@@ -75,60 +77,85 @@ export async function loadDiscussion(
 export async function loadSiteDiscussions(
   beforeId?: string,
   cookieHeader = ''
-): Promise<DiscussionList | null> {
+): Promise<PublicDiscussionPage | null> {
   if (!origin()) return null;
   try {
-    const query = beforeId ? `?before_id=${encodeURIComponent(beforeId)}` : '';
+    const cursor = discussionCursor(beforeId);
+    const query = cursor ? `?before_id=${encodeURIComponent(cursor)}` : '';
     const res = await fetch(`${origin()}/discussions${query}`, {
       cache: 'no-store',
       headers: cookieHeader ? { Cookie: cookieHeader } : undefined,
     });
     if (res.status !== 200) return null;
-    return (await res.json()) as DiscussionList;
+    return publicDiscussionPage(await res.json());
   } catch {
     return null;
   }
 }
 
-async function readVisibleIds(url: string): Promise<string[]> {
+async function readPublicPage(
+  url: string
+): Promise<PublicDiscussionPage | null> {
   try {
     const res = await fetch(url, { next: { revalidate: 300 } });
-    if (res.status !== 200) return [];
-    const data = (await res.json()) as Partial<DiscussionList> | null;
-    if (!data || !Array.isArray(data.discussions)) return [];
-    return data.discussions.flatMap((item) =>
-      item && item.status === 'visible' && typeof item.public_id === 'string'
-        ? [item.public_id]
-        : []
-    );
+    if (res.status !== 200) return null;
+    return publicDiscussionPage(await res.json());
   } catch {
-    return [];
+    return null;
   }
 }
 
 export async function loadPublicDiscussionIds(
   limit: number
 ): Promise<string[]> {
-  if (!origin()) return [];
+  if (!origin() || !Number.isFinite(limit) || limit < 1) return [];
+  const maxIds = Math.min(Math.floor(limit), 1000);
   const ids = new Set<string>();
-  const add = (found: string[]) => {
-    for (const id of found) {
-      if (ids.size >= limit) return;
-      ids.add(id);
+  // Bound total discussion requests as well as each scope, including pages
+  // whose rows are all filtered out. One additional request lists public groups.
+  let remainingPages = 40;
+  const traverse = async (base: string) => {
+    let cursor: string | undefined;
+    const cursors = new Set<string>();
+    for (
+      let page = 0;
+      page < 10 && remainingPages > 0 && ids.size < maxIds;
+      page++
+    ) {
+      remainingPages--;
+      const query = cursor ? `?before_id=${encodeURIComponent(cursor)}` : '';
+      const found = await readPublicPage(`${base}${query}`);
+      if (!found) break;
+      for (const post of found.discussions) {
+        ids.add(post.public_id);
+        if (ids.size >= maxIds) return;
+      }
+      const next = found.nextBeforeId;
+      if (!next || cursors.has(next)) break;
+      cursors.add(next);
+      cursor = next;
     }
   };
 
   try {
-    add(await readVisibleIds(`${origin()}/discussions`));
-    if (ids.size >= limit) return Array.from(ids);
+    await traverse(`${origin()}/discussions`);
+    if (ids.size >= maxIds || remainingPages === 0) return Array.from(ids);
 
-    const groups = await fetchPublicGroups(40);
+    const res = await fetch(
+      `${origin()}/groups?limit=40&offset=0&public_only=1`,
+      {
+        next: { revalidate: 300 },
+      }
+    );
+    if (res.status !== 200) return Array.from(ids);
+    const groups = normalizePublicGroups(await res.json()).slice(0, 40);
+    const seenGroups = new Set<string>();
     for (const group of groups) {
-      if (ids.size >= limit) break;
-      add(
-        await readVisibleIds(
-          `${origin()}/groups/${encodeURIComponent(group.slug)}/discussions`
-        )
+      if (ids.size >= maxIds || remainingPages === 0) break;
+      if (seenGroups.has(group.slug)) continue;
+      seenGroups.add(group.slug);
+      await traverse(
+        `${origin()}/groups/${encodeURIComponent(group.slug)}/discussions`
       );
     }
   } catch {

@@ -1,39 +1,68 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { DiscussionCard } from '@/components/discussions/DiscussionCard';
 import { DiscussionComposer } from '@/components/discussions/DiscussionComposer';
 import { DiscussionFeedActions } from '@/components/discussions/DiscussionFeedActions';
 import useAuth from '@/hooks/auth/useAuth';
+import { publicDiscussionPage } from '@/lib/discussionPagination';
 import { listDiscussions } from '@/services/discussions/discussionsApi';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
-const PAGE_SIZE = 20;
-
-export function DiscussionListClient({ initial }: { initial: Discussion[] }) {
+export function DiscussionListClient({
+  initial,
+  nextBeforeId,
+}: {
+  initial: Discussion[];
+  nextBeforeId?: string | null;
+}) {
   const session = useAuth().data as { username?: string } | null | undefined;
   const signedIn = Boolean(session?.username);
   const [posts, setPosts] = useState<Discussion[]>(initial);
-  const [hasMore, setHasMore] = useState(initial.length >= PAGE_SIZE);
+  const [cursor, setCursor] = useState(
+    nextBeforeId === undefined
+      ? publicDiscussionPage({ discussions: initial })?.nextBeforeId
+      : nextBeforeId ?? undefined
+  );
+  const visited = useRef(new Set<string>());
+  const loading = useRef(false);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
 
   async function loadOlder() {
-    const last = posts[posts.length - 1];
-    if (busy || !last) return;
+    if (loading.current || !cursor) return;
+    loading.current = true;
     setBusy(true);
     setFailed(false);
     try {
-      const page = await listDiscussions({ kind: 'site' }, last.public_id);
-      const older = Array.isArray(page?.discussions) ? page.discussions : [];
-      setPosts((current) => [...current, ...older]);
-      setHasMore(older.length >= PAGE_SIZE);
+      const page = publicDiscussionPage(
+        await listDiscussions({ kind: 'site' }, cursor)
+      );
+      if (!page) throw new Error('Invalid discussion page');
+      visited.current.add(cursor);
+      setPosts((current) => {
+        const ids = new Set(current.map((post) => post.public_id));
+        return [
+          ...current,
+          ...page.discussions.filter((post) => {
+            if (ids.has(post.public_id)) return false;
+            ids.add(post.public_id);
+            return true;
+          }),
+        ];
+      });
+      setCursor(
+        page.nextBeforeId && !visited.current.has(page.nextBeforeId)
+          ? page.nextBeforeId
+          : undefined
+      );
     } catch {
       setFailed(true);
     } finally {
       setBusy(false);
+      loading.current = false;
     }
   }
 
@@ -49,16 +78,31 @@ export function DiscussionListClient({ initial }: { initial: Discussion[] }) {
           Could not load older discussions.
         </p>
       ) : null}
-      {posts.length > 0 && hasMore ? (
+      {cursor ? (
         <div className='mt-6 flex justify-center'>
-          <Button
-            disabled={busy}
-            onClick={loadOlder}
-            size='sm'
-            type='button'
-            variant='outline'
-          >
-            Older discussions
+          <Button asChild size='sm' variant='outline'>
+            <a
+              aria-busy={busy}
+              aria-disabled={busy || undefined}
+              href={`/discussions?before_id=${encodeURIComponent(cursor)}`}
+              onClick={(event) => {
+                if (
+                  event.defaultPrevented ||
+                  event.button !== 0 ||
+                  event.metaKey ||
+                  event.ctrlKey ||
+                  event.shiftKey ||
+                  event.altKey
+                )
+                  return;
+                event.preventDefault();
+                // Keep incremental loads on the current history entry. Thread
+                // navigation and Back retain the existing feed behavior.
+                void loadOlder();
+              }}
+            >
+              Older discussions
+            </a>
           </Button>
         </div>
       ) : null}

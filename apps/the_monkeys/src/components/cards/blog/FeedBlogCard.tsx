@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import Link from 'next/link';
 
 import { BlogAudienceBadge } from '@/components/blog/BlogAudienceBadge';
@@ -367,6 +369,10 @@ const CompactCard = ({
   showBookmark = false,
   showShare = true,
 }: CardProps) => {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
   const {
     blogId,
     authorId,
@@ -398,7 +404,18 @@ const CompactCard = ({
         <div className='min-w-0'>
           <UserInfoCardShowcase
             authorID={authorId}
-            date={date ? getRelativeTime(date) : undefined}
+            date={
+              date
+                ? hydrated
+                  ? getRelativeTime(date)
+                  : new Date(date).toLocaleDateString('en-US', {
+                      timeZone: 'UTC',
+                      month: 'short',
+                      day: 'numeric',
+                      year: 'numeric',
+                    })
+                : undefined
+            }
           />
           <Link href={blogURL} className='mt-1 block'>
             <BlogTitle

@@ -6,6 +6,7 @@ import { EventHostName } from '@/components/events/EventHostName';
 import { EventSeriesNote } from '@/components/events/detail/EventSeriesNote';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { useViewerLocale } from '@/hooks/events/useViewerLocale';
 import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   eventDateParts,
@@ -54,14 +55,20 @@ export const EventGridCard = memo(function EventGridCard({
 }) {
   const href = `${EVENTS_ROUTE}/${event.slug}`;
   const timezone = useViewerTimezone();
-  const date = eventDateParts(event.start_time, timezone);
+  const locale = useViewerLocale();
+  const date = eventDateParts(event.start_time, timezone, locale);
   const price = formatPrice(
     lowestTierPrice(event),
-    event.ticket_tiers?.[0]?.currency
+    event.ticket_tiers?.[0]?.currency,
+    locale
   );
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
   const ended = isEventEnded(event);
-  const extraDates = formatUpcomingDates(event.upcoming_dates, timezone);
+  const extraDates = formatUpcomingDates(
+    event.upcoming_dates,
+    timezone,
+    locale
+  );
 
   return (
     <article className='group flex h-full flex-col overflow-hidden rounded-xl border border-border-light bg-background-light shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-border-dark/40 dark:bg-background-dark'>
@@ -100,7 +107,7 @@ export const EventGridCard = memo(function EventGridCard({
           </h3>
         </Link>
         <p className='mt-1.5 font-inter text-sm text-gray-500 dark:text-gray-400'>
-          {formatEventCardWhen(event.start_time, timezone)}
+          {formatEventCardWhen(event.start_time, timezone, locale)}
         </p>
         <EventSeriesNote
           event={event}

@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 import { DiscussionListClient } from '@/components/discussions/DiscussionListClient';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { loadSiteDiscussions } from '@/lib/discussionPageData';
+import { discussionCursor } from '@/lib/discussionPagination';
 import { buildDiscussionFeedJsonLd } from '@/lib/discussionSeo';
 import { pageMetadata } from '@/lib/seo';
 
@@ -13,8 +14,13 @@ export const metadata: Metadata = pageMetadata({
   path: '/discussions',
 });
 
-export default async function DiscussionsPage() {
-  const list = await loadSiteDiscussions(undefined, cookies().toString());
+export default async function DiscussionsPage({
+  searchParams,
+}: {
+  searchParams?: { before_id?: string | string[] };
+}) {
+  const beforeId = discussionCursor(searchParams?.before_id);
+  const list = await loadSiteDiscussions(beforeId, cookies().toString());
 
   return (
     <div className='mx-auto w-full min-w-0 max-w-3xl'>
@@ -25,7 +31,8 @@ export default async function DiscussionsPage() {
       {list ? (
         <DiscussionListClient
           initial={list.discussions ?? []}
-          key={list.discussions?.[0]?.public_id ?? 'empty'}
+          key={`${beforeId ?? 'latest'}:${list.discussions?.[0]?.public_id ?? 'empty'}`}
+          nextBeforeId={list.nextBeforeId ?? null}
         />
       ) : (
         <p className='font-inter text-sm text-gray-500'>

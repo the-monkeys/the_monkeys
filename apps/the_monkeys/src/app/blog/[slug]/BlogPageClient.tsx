@@ -2,25 +2,19 @@
 
 import { useEffect } from 'react';
 
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 // import AdUnit from '@/components/AdSense/AdUnit';
 import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
-import {
-  BlogHeading,
-  getCardContent,
-  withoutPostTitle,
-} from '@/components/blog/getBlogContent';
+import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
 import { BackButton } from '@/components/buttons/backButton';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import { PostArticleCanvas } from '@/components/editor/postCanvas/PostArticleCanvas';
+import { PostReader } from '@/components/editor/reader/PostReader';
+import { readerDocument } from '@/components/editor/reader/readerHtml';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import {
-  BlogPageSkeleton,
-  EditorBlockSkeleton,
-} from '@/components/skeletons/blogSkeleton';
+import { BlogPageSkeleton } from '@/components/skeletons/blogSkeleton';
 import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
@@ -35,11 +29,6 @@ import { RiPencilFill } from 'react-icons/ri';
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
 import { BlogScopeLine } from '../components/BlogScopeLine';
-
-const Editor = dynamic(() => import('@/components/editor/preview'), {
-  ssr: false,
-  loading: () => <EditorBlockSkeleton />,
-});
 
 interface BlogPageClientProps {
   urlBlogId: string;
@@ -135,10 +124,8 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const date = blog?.published_time || blog?.blog?.time;
   const tags = blog?.tags;
 
-  const blogTitle = blog?.blog?.blocks?.[0]?.data?.text;
+  const { title: blogTitle, blocks: readerBlocks } = readerDocument(blog.blog);
   const sanitizedBlogTitle = purifyHTMLString(blogTitle);
-
-  const blogDataWithoutHeading = () => withoutPostTitle(blog?.blog);
 
   return (
     <>
@@ -178,7 +165,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
       <div className='p-4'>
         <Container className='max-w-3xl'>
           <PostArticleCanvas className='px-1 pb-4 overflow-hidden'>
-            <Editor key={blogId} data={blogDataWithoutHeading()} />
+            <PostReader key={blogId} blocks={readerBlocks} />
           </PostArticleCanvas>
           <BlogReactionsContainer
             blogURL={fullSlug}

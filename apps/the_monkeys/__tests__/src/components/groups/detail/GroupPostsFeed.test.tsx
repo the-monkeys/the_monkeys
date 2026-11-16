@@ -7,6 +7,7 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const state = vi.hoisted(() => ({
@@ -68,11 +69,130 @@ describe('GroupPostsFeed pagination', () => {
     state.list.mockReset().mockResolvedValue({ discussions: [] });
     state.blogs.data = { pages: [{ blogs: [] }] };
     state.blogs.isError = false;
+    state.blogs.isLoading = false;
     state.blogs.hasNextPage = false;
     state.blogs.fetchNextPage.mockReset();
     Element.prototype.scrollIntoView = vi.fn();
   });
   afterEach(cleanup);
+
+  it('renders a public snapshot immediately while viewer requests are pending', () => {
+    state.session = null;
+    state.blogs.isLoading = true;
+    const html = renderToStaticMarkup(
+      <GroupPostsFeed
+        group={group}
+        initialPublicActivity={{
+          slug: 'writers',
+          blogs: [
+            {
+              blog_id: 'ssr',
+              title: 'Initial public blog',
+              audience: 'public',
+            } as any,
+          ],
+          discussions: [
+            {
+              public_id: 'ssr',
+              body: 'Initial public discussion',
+              status: 'visible',
+            },
+          ],
+        }}
+      />
+    );
+    expect(html).toContain('Initial public blog');
+    expect(html).toContain('Initial public discussion');
+    expect(html).not.toContain('Loading posts');
+    expect(state.list).not.toHaveBeenCalled();
+  });
+
+  it('replaces public snapshots with member responses and clears restricted results on logout', async () => {
+    state.list.mockResolvedValue({
+      discussions: [
+        {
+          public_id: 'member',
+          body: 'Member discussion',
+          status: 'visible',
+          audience: 'group_only',
+        },
+      ],
+    });
+    const snapshot = {
+      slug: 'writers',
+      blogs: [],
+      discussions: [
+        {
+          public_id: 'public',
+          body: 'Initial public discussion',
+          status: 'visible',
+        },
+      ],
+    };
+    const view = render(
+      <GroupPostsFeed group={group} initialPublicActivity={snapshot} />
+    );
+    await screen.findByText('Member discussion');
+    expect(screen.queryByText('Initial public discussion')).toBeNull();
+    state.session = null;
+    view.rerender(
+      <GroupPostsFeed group={group} initialPublicActivity={snapshot} />
+    );
+    await waitFor(() =>
+      expect(screen.queryByText('Member discussion')).toBeNull()
+    );
+  });
+
+  it('ignores a snapshot when group identity or public visibility no longer matches', () => {
+    const snapshot = {
+      slug: 'other',
+      blogs: [],
+      discussions: [
+        {
+          public_id: 'old',
+          body: 'Stale public discussion',
+          status: 'visible',
+        },
+      ],
+    };
+    const html = renderToStaticMarkup(
+      <GroupPostsFeed group={group} initialPublicActivity={snapshot} />
+    );
+    expect(html).not.toContain('Stale public discussion');
+    const privateHtml = renderToStaticMarkup(
+      <GroupPostsFeed
+        group={{ ...group, visibility: 'private' }}
+        initialPublicActivity={{ ...snapshot, slug: 'writers' }}
+      />
+    );
+    expect(privateHtml).not.toContain('Stale public discussion');
+  });
+
+  it('discards the public snapshot immediately when the group is unpublished', () => {
+    state.session = null;
+    state.list.mockImplementation(() => new Promise(() => {}));
+    const snapshot = {
+      slug: 'writers',
+      discussions: [
+        {
+          public_id: 'public',
+          body: 'Previously public discussion',
+          status: 'visible',
+        },
+      ],
+    };
+    const view = render(
+      <GroupPostsFeed group={group} initialPublicActivity={snapshot} />
+    );
+    expect(screen.getByText('Previously public discussion')).toBeTruthy();
+    view.rerender(
+      <GroupPostsFeed
+        group={{ ...group, status: 'draft' }}
+        initialPublicActivity={snapshot}
+      />
+    );
+    expect(screen.queryByText('Previously public discussion')).toBeNull();
+  });
 
   it('removes cached restricted blog previews immediately on logout, including a failed refetch', async () => {
     state.blogs.data.pages[0].blogs = [

@@ -28,6 +28,7 @@ import {
   groupFeedEmptyCopy,
   isActiveGroupMember,
 } from '@/lib/groupPerms';
+import type { GroupPublicActivity } from '@/lib/groupPublicActivity';
 import { GroupItem } from '@/services/groups/groupsTypes';
 
 const TAB_LABELS: Record<GroupCommunityTab, string> = {
@@ -49,10 +50,12 @@ export function GroupCommunity({
   group,
   forcePostsToken = 0,
   focusDiscussionToken = 0,
+  initialPublicActivity,
 }: {
   group: GroupItem;
   forcePostsToken?: number;
   focusDiscussionToken?: number;
+  initialPublicActivity?: GroupPublicActivity;
 }) {
   const { data: session } = useAuth();
   const staff = canManageGroup(group);
@@ -109,6 +112,7 @@ export function GroupCommunity({
         <GroupPostsFeed
           focusComposerToken={focusDiscussionToken}
           group={group}
+          initialPublicActivity={initialPublicActivity}
         />
       ) : tab === 'events' ? (
         <GroupEventsPanel group={group} staff={staff} />
@@ -130,6 +134,7 @@ export function GroupCommunity({
         <GroupPostsFeed
           focusComposerToken={focusDiscussionToken}
           group={group}
+          initialPublicActivity={initialPublicActivity}
         />
       )}
     </section>

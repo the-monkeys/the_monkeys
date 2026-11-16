@@ -1,6 +1,6 @@
 import { DiscussionFeedActions } from '@/components/discussions/DiscussionFeedActions';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -79,6 +79,142 @@ describe('DiscussionFeedActions', () => {
     expect(screen.getByRole('dialog')).toBeTruthy();
     expect(screen.getByRole('link', { name: 'Log in' })).toBeTruthy();
     expect(likeDiscussion).not.toHaveBeenCalled();
+  });
+
+  it('reconciles the same mounted public preview with authenticated liked state and refreshed counts', () => {
+    auth.session = null;
+    const view = render(
+      <DiscussionFeedActions
+        post={{ ...post, liked: undefined, like_count: 2 }}
+      />
+    );
+    const button = screen.getByRole('button', { name: 'Like discussion' });
+    auth.session = { username: 'dave' };
+    view.rerender(
+      <DiscussionFeedActions post={{ ...post, liked: true, like_count: 5 }} />
+    );
+    expect(screen.getByRole('button', { name: 'Unlike discussion' })).toBe(
+      button
+    );
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByLabelText('5 likes')).toBeTruthy();
+    view.rerender(
+      <DiscussionFeedActions post={{ ...post, liked: true, like_count: 8 }} />
+    );
+    expect(screen.getByLabelText('8 likes')).toBeTruthy();
+    view.rerender(
+      <DiscussionFeedActions
+        post={{ ...post, liked: undefined, like_count: undefined }}
+      />
+    );
+    expect(button.getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByLabelText('0 likes')).toBeTruthy();
+    expect(likeDiscussion).not.toHaveBeenCalled();
+  });
+
+  it('preserves the optimistic click and pending request across refreshed props, then accepts later server updates', async () => {
+    let finish!: (value: { liked: boolean }) => void;
+    likeDiscussion.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        })
+    );
+    const view = render(
+      <DiscussionFeedActions post={{ ...post, like_count: 2 }} />
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Like discussion' })
+    );
+    const button = screen.getByRole('button', { name: 'Unlike discussion' });
+    expect(button.hasAttribute('disabled')).toBe(true);
+    expect(screen.getByLabelText('3 likes')).toBeTruthy();
+    const refreshed = { ...post, like_count: 9 };
+    view.rerender(<DiscussionFeedActions post={refreshed} />);
+    expect(screen.getByRole('button', { name: 'Unlike discussion' })).toBe(
+      button
+    );
+    expect(screen.getByLabelText('3 likes')).toBeTruthy();
+    await userEvent.click(button);
+    expect(likeDiscussion).toHaveBeenCalledTimes(1);
+    await act(async () => finish({ liked: true }));
+    expect(button.hasAttribute('disabled')).toBe(false);
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByLabelText('3 likes')).toBeTruthy();
+    // A new object or an unrelated field must not replay the stale snapshot.
+    view.rerender(
+      <DiscussionFeedActions post={{ ...refreshed, reply_count: 1 }} />
+    );
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByLabelText('3 likes')).toBeTruthy();
+    view.rerender(
+      <DiscussionFeedActions
+        post={{ ...refreshed, liked: true, like_count: 10 }}
+      />
+    );
+    expect(screen.getByLabelText('10 likes')).toBeTruthy();
+  });
+
+  it('restores the newest viewer snapshot when it arrives during a failed toggle', async () => {
+    let fail!: (reason: Error) => void;
+    likeDiscussion.mockImplementationOnce(
+      () =>
+        new Promise((_, reject) => {
+          fail = reject;
+        })
+    );
+    auth.session = null;
+    const preview = { ...post, liked: undefined, like_count: 2 };
+    const view = render(<DiscussionFeedActions post={preview} />);
+    auth.session = { username: 'dave' };
+    view.rerender(<DiscussionFeedActions post={preview} />);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Like discussion' })
+    );
+    const button = screen.getByRole('button', { name: 'Unlike discussion' });
+    expect(screen.getByLabelText('3 likes')).toBeTruthy();
+    view.rerender(
+      <DiscussionFeedActions post={{ ...post, liked: true, like_count: 5 }} />
+    );
+    expect(button.hasAttribute('disabled')).toBe(true);
+    expect(screen.getByLabelText('3 likes')).toBeTruthy();
+    await act(async () => fail(new Error('offline')));
+    expect(button.hasAttribute('disabled')).toBe(false);
+    expect(button.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByLabelText('5 likes')).toBeTruthy();
+    expect(likeDiscussion).toHaveBeenCalledTimes(1);
+  });
+
+  it('restores the pre-click local reaction if no newer viewer snapshot arrives during failure', async () => {
+    let fail!: (reason: Error) => void;
+    likeDiscussion
+      .mockResolvedValueOnce({ liked: true })
+      .mockImplementationOnce(
+        () =>
+          new Promise((_, reject) => {
+            fail = reject;
+          })
+      );
+    const unchanged = { ...post, like_count: 2 };
+    const view = render(<DiscussionFeedActions post={unchanged} />);
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Like discussion' })
+    );
+    expect(screen.getByLabelText('3 likes')).toBeTruthy();
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Unlike discussion' })
+    );
+    expect(screen.getByLabelText('2 likes')).toBeTruthy();
+    view.rerender(
+      <DiscussionFeedActions post={{ ...unchanged, reply_count: 1 }} />
+    );
+    await act(async () => fail(new Error('offline')));
+    expect(
+      screen
+        .getByRole('button', { name: 'Unlike discussion' })
+        .getAttribute('aria-pressed')
+    ).toBe('true');
+    expect(screen.getByLabelText('3 likes')).toBeTruthy();
   });
 
   it('restores the count and pressed state when liking fails', async () => {

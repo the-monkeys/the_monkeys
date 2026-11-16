@@ -1,6 +1,7 @@
 import { FeedBlogCard } from '@/components/cards/blog/FeedBlogCard';
 import { BlogCardData } from '@/services/blog/blogTypes';
 import { cleanup, render, screen } from '@testing-library/react';
+import { renderToString } from 'react-dom/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('@/components/blog/actions/BlogShareDialog', () => ({
@@ -16,7 +17,9 @@ vi.mock('@/components/blog/LikesCount', () => ({
   LikesCount: () => <span>0 likes</span>,
 }));
 vi.mock('@/components/user/userInfo', () => ({
-  UserInfoCardShowcase: () => <span>Author</span>,
+  UserInfoCardShowcase: ({ date }: { date?: string }) => (
+    <span>Author {date}</span>
+  ),
 }));
 vi.mock('@/components/blog/getBlogContent', () => ({
   BlogDescription: ({ description }: { description: string }) => (
@@ -38,9 +41,32 @@ const card: BlogCardData = {
   image: '',
 };
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 describe('FeedBlogCard publication privacy', () => {
+  it('uses a deterministic UTC date for compact cards before hydration', () => {
+    const native = Date.prototype.toLocaleDateString;
+    vi.spyOn(Date.prototype, 'toLocaleDateString').mockImplementation(function (
+      this: Date,
+      locale,
+      options
+    ) {
+      return native.call(this, locale, {
+        ...options,
+        timeZone: options?.timeZone ?? 'America/Los_Angeles',
+      });
+    });
+    const html = renderToString(
+      <FeedBlogCard
+        blog={{ ...card, date: '2020-09-19T00:30:00Z' }}
+        variant='compact'
+      />
+    );
+    expect(html).toContain('Sep 19, 2020');
+  });
   it('hides sharing and labels members-only posts', () => {
     render(
       <FeedBlogCard blog={{ ...card, audience: 'group_only' }} variant='list' />

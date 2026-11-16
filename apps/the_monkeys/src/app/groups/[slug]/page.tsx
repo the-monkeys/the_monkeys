@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { JsonLd } from '@/components/seo/JsonLd';
+import { loadGroupPublicActivity } from '@/lib/groupPublicActivity';
 import { queryKeys } from '@/lib/queryKeys';
 import {
   breadcrumb,
@@ -66,6 +67,10 @@ export default async function GroupDetailPage({
   const group = data?.group;
 
   const queryClient = getQueryClient();
+  const initialPublicActivity =
+    group && isIndexable(group)
+      ? await loadGroupPublicActivity(group)
+      : undefined;
   if (group && isIndexable(group)) {
     queryClient.setQueryData(queryKeys.groups.detail(params.slug), { group });
   }
@@ -85,7 +90,10 @@ export default async function GroupDetailPage({
         </>
       )}
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <GroupDetailClient slug={params.slug} />
+        <GroupDetailClient
+          slug={params.slug}
+          initialPublicActivity={initialPublicActivity}
+        />
       </HydrationBoundary>
     </>
   );

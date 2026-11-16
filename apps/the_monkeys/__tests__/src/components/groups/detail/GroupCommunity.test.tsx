@@ -74,6 +74,51 @@ describe('GroupCommunity', () => {
     expect(window.location.pathname).toBe('/groups/monkeys-admin-a8df79c4');
   });
 
+  it('keeps the full long description only in the existing About tab', async () => {
+    const description = `${'A long community description. '.repeat(35)}\nThe final paragraph remains available.`;
+    render(<GroupCommunity group={{ ...organizerGroup, description }} />);
+    expect(screen.queryByText(/The final paragraph/)).toBeNull();
+    await userEvent.click(screen.getByRole('tab', { name: 'About' }));
+    expect(screen.getAllByRole('heading', { name: 'About us' })).toHaveLength(
+      1
+    );
+    expect(screen.getByText(/The final paragraph/).textContent).toBe(
+      description
+    );
+    expect(screen.queryByText('posts-panel')).toBeNull();
+    await userEvent.click(screen.getByRole('tab', { name: 'Posts' }));
+    expect(screen.queryByRole('heading', { name: 'About us' })).toBeNull();
+  });
+
+  it('hides private community tabs from nonmembers and preserves member and staff tabs', () => {
+    const view = render(
+      <GroupCommunity
+        group={{
+          ...organizerGroup,
+          visibility: 'private',
+          viewer_role: 'viewer',
+          viewer_member_status: '',
+        }}
+      />
+    );
+    expect(screen.queryByRole('tablist')).toBeNull();
+    view.rerender(
+      <GroupCommunity
+        group={{
+          ...organizerGroup,
+          visibility: 'private',
+          viewer_role: 'member',
+        }}
+      />
+    );
+    expect(screen.getByRole('tab', { name: 'Posts' })).toBeTruthy();
+    expect(screen.queryByRole('tab', { name: 'Invites' })).toBeNull();
+    view.rerender(
+      <GroupCommunity group={{ ...organizerGroup, visibility: 'private' }} />
+    );
+    expect(screen.getByRole('tab', { name: 'Invites' })).toBeTruthy();
+  });
+
   it('restores Events from the hash and writes it without query params', async () => {
     window.history.replaceState(
       null,
