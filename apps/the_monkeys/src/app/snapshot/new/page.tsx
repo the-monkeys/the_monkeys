@@ -30,12 +30,11 @@ export default function SnapshotNewPage({ searchParams }: Props) {
           path: copy.path,
           name: copy.title,
           description: copy.description,
-          faqs: STUDIO_SEO.faqs,
           featureList: isX
             ? [
                 'Paste a public X post URL',
                 'Clean tweet screenshot cards',
-                'Square, story, and share sizes',
+                'Square, portrait, and landscape image formats',
                 'Optional branded video overlay',
               ]
             : [
@@ -46,7 +45,6 @@ export default function SnapshotNewPage({ searchParams }: Props) {
               ],
         })}
       />
-      <h1 className='hidden text-2xl font-bold'>{copy.title}</h1>
       <SnapshotNewClient initialView={isX ? 'x' : 'template'} />
     </>
   );

@@ -1,8 +1,20 @@
 import { buildMainSitemap } from '@/app/sitemap';
+import { generateMetadata as studioMetadata } from '@/app/snapshot/new/page';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { describe, expect, it } from 'vitest';
 
 describe('main sitemap', () => {
+  it('advertises the existing X tool once using its self-canonical URL', async () => {
+    const metadata = await studioMetadata({ searchParams: { view: 'x' } });
+    const entries = buildMainSitemap([]).filter(
+      (entry) => entry.url === metadata.alternates?.canonical
+    );
+    expect(entries).toHaveLength(1);
+    expect(entries[0].url).toBe('https://monkeys.com.co/snapshot/new?view=x');
+    expect(
+      buildMainSitemap([]).some((entry) => entry.url.includes('view=template'))
+    ).toBe(false);
+  });
   it('contains canonical public pages and posts but not sitemap files', () => {
     const posts: MetaBlog[] = [
       {
