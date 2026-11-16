@@ -1,7 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 
+import Icon from '@/components/icon';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Drawer,
@@ -12,6 +13,7 @@ import {
   DrawerTitle,
 } from '@the-monkeys/ui/atoms/drawer';
 
+import { ScoreExplanation } from './ScoreExplanation';
 import type { CheckStatus, ReadinessReport, ReadinessState } from './types';
 
 export interface ReadinessPanelProps {
@@ -21,6 +23,7 @@ export interface ReadinessPanelProps {
   report: ReadinessReport | null;
   onCheckAgain: () => void;
   onGoToField?: (fieldKey: string) => void;
+  returnFocusTo?: HTMLElement | null;
 }
 
 const buttonClass =
@@ -76,9 +79,25 @@ export function ReadinessPanel({
   report,
   onCheckAgain,
   onGoToField,
+  returnFocusTo,
 }: ReadinessPanelProps) {
   const opener = useRef<HTMLElement | null>(null);
   const goToField = useRef<string | null>(null);
+  const [showScoreHelp, setShowScoreHelp] = useState(false);
+  const scoreHelpId = useId();
+  const scoreHelp = useRef<HTMLHeadingElement | null>(null);
+  const details = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const help = scoreHelp.current;
+    const body = details.current;
+    if (open && showScoreHelp && help && body) {
+      // Focusing a help section taller than the viewport can scroll even an
+      // overflow-hidden ancestor, hiding the drawer's header and footer.
+      help.focus({ preventScroll: true });
+      body.scrollTop +=
+        help.getBoundingClientRect().top - body.getBoundingClientRect().top;
+    }
+  }, [open, showScoreHelp]);
   const preview =
     report?.visibility === 'public' && report.coverage === 'complete'
       ? report.preview
@@ -101,13 +120,15 @@ export function ReadinessPanel({
   return (
     <Drawer open={open} onOpenChange={onOpenChange} autoFocus>
       <DrawerContent
-        className='mx-auto w-full max-w-2xl max-h-[90dvh] data-[vaul-drawer-direction=bottom]:mt-0 data-[vaul-drawer-direction=bottom]:max-h-[90dvh] overflow-hidden text-text-light dark:text-text-dark font-dm_sans'
+        data-shortcut-scope='chrome'
+        className='mx-auto w-full max-w-3xl max-h-[90dvh] data-[vaul-drawer-direction=bottom]:mt-0 data-[vaul-drawer-direction=bottom]:max-h-[90dvh] overflow-clip text-text-light dark:text-text-dark font-dm_sans'
         onOpenAutoFocus={() => {
           // The authoring entry owns the trigger outside this Drawer root.
           opener.current =
-            document.activeElement instanceof HTMLElement
+            returnFocusTo ??
+            (document.activeElement instanceof HTMLElement
               ? document.activeElement
-              : null;
+              : null);
           goToField.current = null;
         }}
         onCloseAutoFocus={(event) => {
@@ -122,9 +143,11 @@ export function ReadinessPanel({
           }
         }}
       >
-        <DrawerHeader className='shrink-0 text-left'>
+        <DrawerHeader className='shrink-0 px-4 py-2 text-left sm:px-6'>
           <div className='flex items-start justify-between gap-3'>
-            <DrawerTitle>Search and AI readiness</DrawerTitle>
+            <DrawerTitle className='font-newsreader text-2xl font-semibold leading-tight'>
+              SEO &amp; AI review
+            </DrawerTitle>
             <DrawerClose asChild>
               <Button
                 type='button'
@@ -132,21 +155,26 @@ export function ReadinessPanel({
                 className={buttonClass}
                 aria-label='Close readiness report'
               >
-                Close
+                <span aria-hidden='true'>
+                  <Icon name='RiClose' size={20} />
+                </span>
               </Button>
             </DrawerClose>
           </div>
-          <DrawerDescription>
-            Optional, free guidance for your content. Suggestions never block
-            saving or publishing.
-          </DrawerDescription>
         </DrawerHeader>
         <div
-          className='min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4 [overflow-wrap:anywhere]'
+          ref={details}
+          className='min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4 sm:px-6 [overflow-wrap:anywhere]'
           tabIndex={0}
           role='region'
           aria-label='Readiness report details'
+          aria-busy={state === 'pending'}
         >
+          <DrawerDescription className='mb-4 text-sm leading-relaxed text-gray-500 dark:text-gray-400'>
+            Review your title, structure and sources before publishing.
+            Optional, free guidance for your content. Suggestions never block
+            saving or publishing.
+          </DrawerDescription>
           {/* Stale text deliberately has no live region: edits must stay quiet. */}
           {message && (
             <p className='mb-4 rounded-lg bg-foreground-light dark:bg-foreground-dark p-3 text-sm'>
@@ -166,7 +194,7 @@ export function ReadinessPanel({
                   ? 'draft preview'
                   : 'published-content preview'}
               </p>
-              <div className='mb-5 rounded-lg border border-border-light dark:border-border-dark p-3 text-sm'>
+              <div className='mb-5 border-l-2 border-border-light pl-3 text-sm dark:border-border-dark'>
                 <p className='font-medium'>
                   {report.visibility === 'restricted'
                     ? 'Not intended for public search'
@@ -187,12 +215,14 @@ export function ReadinessPanel({
                   aria-label={section.label}
                   className='mb-6'
                 >
-                  <h3 className='text-lg font-medium'>{section.label}</h3>
-                  <p className='mt-1 text-sm'>{section.description}</p>
+                  <h3 className='text-base font-semibold'>{section.label}</h3>
+                  <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                    {section.description}
+                  </p>
                   {section.key === 'seo' && (
-                    <div className='my-3 rounded-lg bg-foreground-light dark:bg-foreground-dark p-3'>
+                    <div className='my-3 rounded-lg border border-border-light bg-foreground-light/40 p-4 dark:border-border-dark dark:bg-foreground-dark/40'>
                       <p className='font-medium'>Monkeys readiness estimate</p>
-                      <p className='mt-1 text-xl font-medium'>
+                      <p className='mt-2 font-newsreader text-3xl font-semibold'>
                         {report.seoScore === null
                           ? 'No automated estimate available'
                           : `${report.seoScore}/100`}
@@ -222,24 +252,29 @@ export function ReadinessPanel({
                       )}
                     </div>
                   )}
-                  <ul className='mt-3 space-y-3'>
+                  <ul className='mt-3 divide-y divide-border-light dark:divide-border-dark'>
                     {report.checks
                       .filter((check) => check.section === section.key)
                       .map((check) => (
-                        <li
-                          key={check.id}
-                          className='rounded-lg border border-border-light dark:border-border-dark p-3'
-                        >
+                        <li key={check.id} className='py-4'>
                           <div className='flex flex-wrap items-baseline justify-between gap-2'>
                             <h4 className='font-medium'>{check.label}</h4>
-                            <span className='text-sm font-medium'>
+                            <span
+                              className={`inline-flex items-center gap-1.5 text-sm font-medium ${check.status === 'improve' ? 'text-text-light dark:text-text-dark' : 'text-gray-500 dark:text-gray-400'}`}
+                            >
+                              {check.status === 'improve' && (
+                                <span
+                                  aria-hidden='true'
+                                  className='size-1.5 rounded-full bg-brand-orange'
+                                />
+                              )}
                               {statusLabels[check.status]}
                             </span>
                           </div>
                           <p className='mt-2 text-sm whitespace-pre-wrap'>
                             {check.finding}
                           </p>
-                          <p className='mt-1 text-sm whitespace-pre-wrap'>
+                          <p className='mt-1 text-sm whitespace-pre-wrap text-gray-500 dark:text-gray-400'>
                             {check.reason}
                           </p>
                           {onGoToField &&
@@ -273,7 +308,9 @@ export function ReadinessPanel({
                 </section>
               ))}
               <section aria-label='Search-result preview' className='mb-4'>
-                <h3 className='text-lg font-medium'>Search-result preview</h3>
+                <h3 className='text-base font-semibold'>
+                  Search-result preview
+                </h3>
                 <p className='mt-1 text-sm'>
                   A preview of supplied page information. Search services may
                   display different text.
@@ -281,7 +318,7 @@ export function ReadinessPanel({
                 {preview ? (
                   <div className='mt-3 rounded-lg border border-border-light dark:border-border-dark p-3'>
                     {previewUrl && <p className='text-sm'>{previewUrl}</p>}
-                    <p className='mt-1 font-medium whitespace-pre-wrap'>
+                    <p className='mt-1 font-newsreader text-xl font-semibold whitespace-pre-wrap'>
                       {preview.title}
                     </p>
                     <p className='mt-1 text-sm whitespace-pre-wrap'>
@@ -297,15 +334,48 @@ export function ReadinessPanel({
               </section>
             </>
           )}
+          {showScoreHelp && (
+            <section
+              id={scoreHelpId}
+              aria-label='How this score works'
+              className='mt-5 rounded-lg border border-border-light p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange dark:border-border-dark'
+            >
+              <h3
+                ref={scoreHelp}
+                tabIndex={-1}
+                className='mb-3 font-newsreader text-xl font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange'
+              >
+                How this score works
+              </h3>
+              <ScoreExplanation report={report} />
+            </section>
+          )}
         </div>
-        <div className='shrink-0 border-t border-border-light dark:border-border-dark p-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>
+        <div className='shrink-0 border-t border-border-light dark:border-border-dark px-4 py-2 sm:px-6 pb-[max(0.5rem,env(safe-area-inset-bottom))]'>
+          <div className='flex flex-wrap items-center justify-between gap-2'>
+            <DrawerClose asChild>
+              <Button type='button' variant='ghost' className={buttonClass}>
+                Back to writing
+              </Button>
+            </DrawerClose>
+            <Button
+              type='button'
+              variant='brand'
+              className={`${buttonClass} rounded-full`}
+              onClick={onCheckAgain}
+            >
+              Check again
+            </Button>
+          </div>
           <Button
             type='button'
-            variant='brand'
-            className={`${buttonClass} w-full`}
-            onClick={onCheckAgain}
+            variant='link'
+            className={`${buttonClass} mx-auto flex text-sm text-gray-500 dark:text-gray-400`}
+            aria-expanded={showScoreHelp}
+            aria-controls={scoreHelpId}
+            onClick={() => setShowScoreHelp((value) => !value)}
           >
-            Check again
+            How this score works
           </Button>
         </div>
       </DrawerContent>

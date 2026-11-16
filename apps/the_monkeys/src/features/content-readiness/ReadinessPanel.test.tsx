@@ -135,10 +135,81 @@ afterEach(() => {
 });
 
 describe('ReadinessPanel', () => {
+  it('opens a plain-English score explanation from the footer without running another check', () => {
+    const { onCheckAgain, onOpenChange } = show({
+      report: report({ seoScore: 67, passedCount: 4, applicableKnownCount: 6 }),
+    });
+    const help = screen.getByRole('button', { name: 'How this score works' });
+    expect(help.getAttribute('aria-expanded')).toBe('false');
+    expect(
+      screen.queryByRole('region', { name: 'How this score works' })
+    ).toBeNull();
+    fireEvent.click(help);
+    const explanation = screen.getByRole('region', {
+      name: 'How this score works',
+    });
+    expect(help.getAttribute('aria-expanded')).toBe('true');
+    expect(explanation.id).toBe(help.getAttribute('aria-controls'));
+    expect(explanation.textContent).toContain('4 ÷ 6 × 100 = 67');
+    expect(explanation.textContent).toMatch(/each.*equal/i);
+    expect(explanation.textContent).toMatch(
+      /unknown.*human review.*not applicable.*excluded/i
+    );
+    expect(explanation.textContent).toMatch(
+      /answer readiness.*source clarity.*separate/i
+    );
+    expect(explanation.textContent).toMatch(/not.*predict.*ranking.*traffic/i);
+    expect(onCheckAgain).not.toHaveBeenCalled();
+    expect(onOpenChange).not.toHaveBeenCalled();
+  });
+
+  it('does not divide by zero or turn an unavailable estimate into a zero score in the explanation', () => {
+    show({
+      report: report({
+        seoScore: null,
+        passedCount: 0,
+        applicableKnownCount: 0,
+      }),
+    });
+    fireEvent.click(
+      screen.getByRole('button', { name: 'How this score works' })
+    );
+    const text = screen.getByRole('region', {
+      name: 'How this score works',
+    }).textContent;
+    expect(text).toMatch(/no checks.*counted.*no estimate/i);
+    expect(text).not.toMatch(/0 ÷ 0|NaN|Infinity/);
+  });
+
+  it('keeps score help in the scrollable report body, leaving footer actions available', () => {
+    const { onOpenChange } = show();
+    fireEvent.click(
+      screen.getByRole('button', { name: 'How this score works' })
+    );
+    const details = screen.getByRole('region', {
+      name: 'Readiness report details',
+    });
+    expect(
+      within(details).getByRole('region', { name: 'How this score works' })
+    ).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Back to writing' }));
+    expect(onOpenChange).toHaveBeenCalledWith(false);
+  });
+
+  it('focuses long score help without letting the browser scroll the drawer header out of view', () => {
+    show();
+    const focus = vi.spyOn(HTMLElement.prototype, 'focus');
+    fireEvent.click(
+      screen.getByRole('button', { name: 'How this score works' })
+    );
+    expect(focus).toHaveBeenCalledWith({ preventScroll: true });
+    focus.mockRestore();
+  });
+
   it('uses an accessible drawer, three named sections and text statuses without a new H1', () => {
     show();
     const dialog = screen.getByRole('dialog', {
-      name: 'Search and AI readiness',
+      name: 'SEO & AI review',
     });
     const description = document.getElementById(
       dialog.getAttribute('aria-describedby')!
