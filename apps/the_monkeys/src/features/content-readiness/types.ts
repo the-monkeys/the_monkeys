@@ -70,9 +70,10 @@ export interface ReadinessSnapshot extends ReadinessIdentity {
   };
 }
 export interface ReadinessReport extends ReadinessIdentity {
-  rulesVersion: 'creator-event-v1';
+  rulesVersion: 'creator-event-v1' | 'publishing-readiness-v2';
   kind: ContentKind;
   publicationState: PublicationState;
+  /** Legacy checklist-completion field, retained for existing consumers; not a ranking score. */
   seoScore: number | null;
   passedCount: number;
   applicableKnownCount: number;

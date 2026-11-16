@@ -12,7 +12,7 @@ import { PostReadiness } from './PostReadiness';
 vi.mock('./ReadinessPanel', () => ({
   ReadinessPanel: ({ open, state, report, onOpenChange, onCheckAgain }: any) =>
     open ? (
-      <div role='dialog' aria-label='Search and AI readiness'>
+      <div role='dialog' aria-label='Publishing readiness'>
         <span>{state}</span>
         <output>{report?.preview?.title}</output>
         <button onClick={onCheckAgain}>Check again</button>
@@ -49,7 +49,9 @@ describe('creator readiness entry', () => {
   it('offers an opt-in editor tool with an explicit dialog state while keeping the document intact', async () => {
     const before = JSON.stringify(document);
     render(<PostReadiness {...props} presentation='toolbar' />);
-    const trigger = screen.getByRole('button', { name: 'SEO & AI' });
+    const trigger = screen.getByRole('button', {
+      name: 'Publishing readiness',
+    });
     expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
     expect(trigger.getAttribute('aria-expanded')).toBe('false');
     fireEvent.click(trigger);
@@ -64,8 +66,10 @@ describe('creator readiness entry', () => {
     const before = JSON.stringify(document);
     render(<PostReadiness {...props} />);
     expect(screen.queryByRole('dialog')).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
-    await screen.findByRole('dialog', { name: 'Search and AI readiness' });
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Publishing readiness' })
+    );
+    await screen.findByRole('dialog', { name: 'Publishing readiness' });
     await waitFor(() =>
       expect(screen.getByRole('dialog').textContent).toContain(
         'Legacy-safe post'
@@ -78,7 +82,9 @@ describe('creator readiness entry', () => {
 
   it('updates the report for a changed parent document without writing it back', async () => {
     const view = render(<PostReadiness {...props} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Publishing readiness' })
+    );
     await waitFor(() =>
       expect(screen.getByRole('dialog').textContent).toContain(
         'Legacy-safe post'
@@ -127,7 +133,9 @@ describe('creator readiness entry', () => {
       },
     };
     render(<PostReadiness {...props} document={input} />);
-    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Publishing readiness' })
+    );
     await waitFor(() =>
       expect(screen.getByRole('dialog').textContent).toContain('error')
     );

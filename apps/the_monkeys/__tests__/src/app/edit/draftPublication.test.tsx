@@ -57,7 +57,7 @@ vi.mock('@/features/content-readiness/ReadinessPanel', () => ({
     onOpenChange,
   }: any) {
     return open ? (
-      <div role='dialog' aria-label='Search and AI readiness'>
+      <div role='dialog' aria-label='Publishing readiness'>
         <span>{state}</span>
         <output>{report?.visibility}</output>
         <button type='button' onClick={() => onOpenChange(false)}>
@@ -246,8 +246,10 @@ describe('group draft publication', () => {
     const socket = await openSocket();
     const writes = socket.messages.length;
     const mounts = state.editorMounts;
-    fireEvent.click(screen.getByRole('button', { name: 'SEO & AI' }));
-    await screen.findByRole('dialog', { name: 'Search and AI readiness' });
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Publishing readiness' })
+    );
+    await screen.findByRole('dialog', { name: 'Publishing readiness' });
     fireEvent.click(screen.getByRole('button', { name: 'Close readiness' }));
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(state.editorMounts).toBe(mounts);
@@ -272,7 +274,9 @@ describe('group draft publication', () => {
     };
     mount();
     await openSocket();
-    fireEvent.click(screen.getByRole('button', { name: 'SEO & AI' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Publishing readiness' })
+    );
     await waitFor(() =>
       expect(screen.getByRole('dialog').textContent).toContain('unknown')
     );

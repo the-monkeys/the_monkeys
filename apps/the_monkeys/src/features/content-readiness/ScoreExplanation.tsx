@@ -1,6 +1,6 @@
 import type { ReadinessReport } from './types';
 
-/** Describes the existing scored SEO checks; no new scoring or network work. */
+/** Explains checklist evidence without presenting an overall SEO score. */
 export function ScoreExplanation({
   report,
 }: {
@@ -9,48 +9,55 @@ export function ScoreExplanation({
   return (
     <div className='flex flex-col gap-3 text-sm leading-relaxed'>
       <p>
-        Each automated SEO check that we can evaluate counts equally. We divide
-        passed checks by all counted checks, multiply by 100 and round to a
-        whole number.
+        The counted checks are automated checks we could evaluate. Each counts
+        equally: Passed means the supplied information met the listed rule;
+        Improve means something needs your attention. These are publishing
+        basics, not an overall SEO rating.
       </p>
-      <p className='font-medium'>
-        Passed checks ÷ counted checks × 100, rounded to a whole number.
-      </p>
-      {report && report.applicableKnownCount > 0 && report.seoScore !== null ? (
+      {report && report.applicableKnownCount > 0 ? (
         <p>
-          This report: {report.passedCount} ÷ {report.applicableKnownCount} ×
-          100 = {report.seoScore}/100 after rounding.
+          This report: {report.passedCount} of {report.applicableKnownCount}{' '}
+          automated checks passed.
         </p>
       ) : (
         <p>
-          If no checks can be counted, no estimate is shown. This is not a zero
+          If no checks can be counted, no result is shown. This is not a zero
           score.
         </p>
       )}
-      <p>For example, 4 passed checks out of 6 gives 67/100 after rounding.</p>
+      <p>For example, 4 of 6 means four passed and two are marked Improve.</p>
       <ul className='flex list-disc flex-col gap-2 pl-5'>
         <li>
-          Passed checks add points. Improve checks count but do not add points.
+          Unknown, Human review and Not applicable items are excluded from the
+          counted total.
         </li>
-        <li>Unknown, Human review and Not applicable items are excluded.</li>
         <li>
-          Post checks cover title, description, topics, image references,
-          heading order and link destinations when applicable. Events also have
-          their own schedule and location checks.
+          Article checks inspect non-placeholder titles and descriptions, topic
+          labels, heading order and image/link URL structure. A description
+          should add information beyond the title.
+        </li>
+        <li>
+          Event checks also inspect the schedule and timezone, a readable
+          in-person venue, cover reference and description links. Past events
+          and optional images are not penalised for being past or absent.
         </li>
       </ul>
       <p>
-        Answer readiness and Source clarity are separate observations. They do
-        not change this number and may still need your review when the score is
-        100.
+        Reader clarity and Source clarity are separate observations. They may
+        still need human review when all counted checks pass. Captions do not
+        establish that rendered image alt text is correct.
       </p>
       <p>
-        This checklist estimate does not predict search rankings, indexing,
-        traffic, registrations or AI citations. It does not verify the accuracy
-        of your content or whether a linked file loads.
+        Link and image checks inspect structure only; no destinations are
+        opened. Published-page accessibility, crawlability, indexing, factual
+        accuracy, keyword relevance and real search performance have not been
+        verified by this local draft review.
       </p>
       <p>
-        Review suggestions, return to your draft and check again after changes.
+        The checklist does not predict search rankings, traffic, registrations
+        or AI citations. There is no required word count, keyword density or
+        FAQ. Review suggestions, return to your draft and check again after
+        changes.
       </p>
     </div>
   );

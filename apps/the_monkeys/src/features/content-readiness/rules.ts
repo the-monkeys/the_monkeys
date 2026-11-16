@@ -1,5 +1,11 @@
 import { normalizeSeoText } from '@/lib/seo';
 
+import {
+  addsDescription,
+  genericLinkText,
+  usefulText,
+  usefulTopics,
+} from './contentText';
 import type { CheckStatus, ReadinessCheck, ReadinessSnapshot } from './types';
 
 /** Structural checks only: these never request a destination or load an image. */
@@ -16,7 +22,12 @@ function usableReference(value: string, image = false): boolean {
   if (!/^https?:\/\//i.test(value)) return false;
   try {
     const url = new URL(value);
-    return ['http:', 'https:'].includes(url.protocol) && !!url.hostname;
+    return (
+      ['http:', 'https:'].includes(url.protocol) &&
+      !!url.hostname &&
+      !url.username &&
+      !url.password
+    );
   } catch {
     return false;
   }
@@ -50,7 +61,8 @@ function seo(
   fieldKey: string,
   pass: string,
   improve: string,
-  reason: string
+  reason: string,
+  unknown = 'This information could not be fully checked.'
 ): ReadinessCheck {
   const finding =
     status === 'pass'
@@ -59,7 +71,7 @@ function seo(
         ? improve
         : status === 'not-applicable'
           ? 'This check does not apply to the current content.'
-          : 'This information could not be fully checked.';
+          : unknown;
   return check(id, 'seo', status, label, finding, reason, fieldKey);
 }
 
@@ -89,21 +101,74 @@ function headingStatus(s: ReadinessSnapshot): CheckStatus {
   if (!headings.length) return 'not-applicable';
   let previous = 1;
   for (const heading of headings) {
-    if (heading.level > previous + 1) return 'improve';
+    if (
+      !heading.text.trim() ||
+      heading.level === 1 ||
+      heading.level > previous + 1
+    )
+      return 'improve';
     previous = heading.level;
   }
   return 'pass';
 }
 
-export function postChecks(s: ReadinessSnapshot): ReadinessCheck[] {
-  const metadataKnown = !s.extraction.partial && !!s.preview;
-  const linkStatus = s.links.some((link) => !usableReference(link.href))
+function linkStatus(s: ReadinessSnapshot): CheckStatus {
+  return s.links.some((link) => !usableReference(link.href))
     ? 'improve'
     : s.extraction.partial
       ? 'unknown'
       : s.links.length
         ? 'pass'
         : 'not-applicable';
+}
+
+function imageContext(s: ReadinessSnapshot): ReadinessCheck {
+  const pending = s.images.some((image) => image.pending);
+  return check(
+    `${s.kind === 'post' ? 'post' : 'event'}.image-context`,
+    'answers',
+    pending || s.extraction.partial
+      ? 'unknown'
+      : s.images.length
+        ? 'manual'
+        : 'not-applicable',
+    'Image context',
+    pending || s.extraction.partial
+      ? 'Image context could not be fully inspected.'
+      : s.images.length
+        ? 'Review whether meaningful images have useful descriptions and decorative images are treated appropriately.'
+        : 'No image context is needed when no images are used.',
+    'A caption is not verified rendered alt text. Image relevance and accessibility need review; an image is optional.',
+    s.kind === 'post' ? 'image' : 'cover'
+  );
+}
+
+function linkText(s: ReadinessSnapshot): ReadinessCheck {
+  return check(
+    `${s.kind === 'post' ? 'post' : 'event'}.link-text`,
+    'answers',
+    s.extraction.partial
+      ? 'unknown'
+      : !s.links.length
+        ? 'not-applicable'
+        : s.links.some((link) => genericLinkText(link.label))
+          ? 'manual'
+          : 'pass',
+    'Link text',
+    s.extraction.partial
+      ? 'Link text could not be fully inspected.'
+      : !s.links.length
+        ? 'No link text needs review.'
+        : s.links.some((link) => genericLinkText(link.label))
+          ? 'Some inspected links have missing or generic text. Review whether readers can understand their purpose.'
+          : 'The inspected links have readable text beyond the recognised generic labels.',
+    'This observes draft link text; it does not verify destination availability, rendered accessible names or relevance.',
+    s.kind === 'post' ? 'content' : 'description'
+  );
+}
+
+export function postChecks(s: ReadinessSnapshot): ReadinessCheck[] {
+  const metadataKnown = !s.extraction.partial && !!s.preview;
   const observation = (
     id: string,
     section: 'answers' | 'sources',
@@ -128,30 +193,38 @@ export function postChecks(s: ReadinessSnapshot): ReadinessCheck[] {
   return [
     seo(
       'post.title',
-      metadataKnown ? (s.title ? 'pass' : 'improve') : 'unknown',
+      metadataKnown
+        ? usefulText(s.title, 'title')
+          ? 'pass'
+          : 'improve'
+        : 'unknown',
       'Post title',
       'title',
-      'A title can be derived using the public page rules.',
-      'Add a clear title for the reader.',
-      'The title helps readers understand the page; length alone does not predict ranking.'
+      'The title contains readable text beyond recognised placeholders.',
+      'Review the title: add readable text or replace a placeholder if it was not intended.',
+      'This checks supplied text, not how well the title matches the article or a search query.'
     ),
     seo(
       'post.description',
-      metadataKnown ? (s.description ? 'pass' : 'improve') : 'unknown',
+      metadataKnown
+        ? addsDescription(s.title, s.description)
+          ? 'pass'
+          : 'improve'
+        : 'unknown',
       'Post description',
       'description',
-      'The public page can derive a description from the post.',
-      'Consider a useful introduction or summary.',
-      'The current public metadata rules derive this description from existing content.'
+      'The derived description has non-placeholder text beyond a repeat of the title.',
+      'Add an introduction or summary beyond the title, and review any placeholder text.',
+      'The existing public metadata rules derive this text. Its usefulness and accuracy still need human review.'
     ),
     seo(
       'post.topics',
-      s.topics.length ? 'pass' : 'improve',
+      usefulTopics(s.topics) ? 'pass' : 'improve',
       'Topics',
       'topics',
-      'At least one topic is supplied.',
-      'Consider adding a relevant topic.',
-      'Topics describe the subject without rewarding keyword repetition.'
+      'Topics contain readable labels without recognised placeholders.',
+      'Choose a relevant topic and replace any placeholder labels.',
+      'The check does not verify topic relevance or reward keyword repetition.'
     ),
     seo(
       'post.image',
@@ -168,18 +241,20 @@ export function postChecks(s: ReadinessSnapshot): ReadinessCheck[] {
       'Heading order',
       'content',
       'Body headings follow a readable level order.',
-      'Review heading levels that skip a level after the title.',
+      'Review empty headings, repeated body H1s or skipped heading levels.',
       'Headings can organise content. A post does not need body headings.'
     ),
     seo(
       'post.links',
-      linkStatus,
+      linkStatus(s),
       'Link destinations',
       'content',
       'The inspected links use supported destinations.',
       'Review empty or unsupported link destinations.',
       'This checks destination structure only, without opening links or verifying their claims.'
     ),
+    imageContext(s),
+    linkText(s),
     observation(
       'post.introduction',
       'answers',
@@ -262,11 +337,7 @@ export function postChecks(s: ReadinessSnapshot): ReadinessCheck[] {
 }
 
 export function eventChecks(s: ReadinessSnapshot): ReadinessCheck[] {
-  const meaningfulDescription =
-    !!s.description &&
-    !/^(?:tbd|tba|todo|coming soon|description|event description|to be (?:announced|confirmed)|more (?:details|information) (?:coming )?soon)[.!\s]*$/i.test(
-      s.description
-    );
+  const meaningfulDescription = addsDescription(s.title, s.description);
   const venue = s.location?.text ?? '';
   const coordinatesOnly = /^[-+]?\d+(?:\.\d+)?\s*,\s*[-+]?\d+(?:\.\d+)?$/.test(
     venue
@@ -275,7 +346,9 @@ export function eventChecks(s: ReadinessSnapshot): ReadinessCheck[] {
     ? 'unknown'
     : s.location.mode === 'virtual'
       ? 'not-applicable'
-      : venue && !coordinatesOnly
+      : usefulText(venue, 'venue') &&
+          !coordinatesOnly &&
+          !/^https?:\/\//i.test(venue)
         ? 'pass'
         : 'improve';
   const groupStatus: CheckStatus =
@@ -288,30 +361,30 @@ export function eventChecks(s: ReadinessSnapshot): ReadinessCheck[] {
   return [
     seo(
       'event.title',
-      partial ? 'unknown' : s.title ? 'pass' : 'improve',
+      partial ? 'unknown' : usefulText(s.title, 'title') ? 'pass' : 'improve',
       'Event title',
       'title',
-      'The event has a title.',
-      'Add a clear event title.',
-      'A title helps attendees understand the event.'
+      'The event title contains readable text beyond recognised placeholders.',
+      'Add a readable event title and review any placeholder text.',
+      'This does not verify whether the title accurately describes the event.'
     ),
     seo(
       'event.description',
       partial ? 'unknown' : meaningfulDescription ? 'pass' : 'improve',
       'Event description',
       'description',
-      'The event has a non-placeholder description.',
-      'Describe what attendees can expect.',
+      'The event description has non-placeholder text beyond a repeat of the title.',
+      'Describe what attendees can expect beyond the title, and replace placeholder text.',
       'The description should explain the event rather than act as a placeholder.'
     ),
     seo(
       'event.topics',
-      s.topics.length ? 'pass' : 'improve',
+      usefulTopics(s.topics) ? 'pass' : 'improve',
       'Topics',
       'topics',
-      'At least one topic is supplied.',
-      'Consider a relevant event topic.',
-      'Topics help describe the event subject.'
+      'Topics contain readable labels without recognised placeholders.',
+      'Choose a relevant event topic and replace any placeholder labels.',
+      'The check does not verify topic relevance.'
     ),
     seo(
       'event.schedule',
@@ -324,7 +397,10 @@ export function eventChecks(s: ReadinessSnapshot): ReadinessCheck[] {
       'schedule',
       'The end follows the start in a valid event timezone.',
       s.schedule?.reason || 'Review the event times and timezone.',
-      'Saved instants are preserved for unchanged and ended events. A past event is not a content-quality failure.'
+      'Saved instants are preserved for unchanged and ended events. A past event is not a content-quality failure.',
+      s.schedule?.timezone
+        ? 'The start and end times could not both be resolved in the supplied timezone.'
+        : 'Choose an event timezone to check the schedule.'
     ),
     seo(
       'event.place',
@@ -333,7 +409,7 @@ export function eventChecks(s: ReadinessSnapshot): ReadinessCheck[] {
       'location',
       'A readable public venue is supplied.',
       'Add a readable public venue or address.',
-      'Coordinates alone do not describe a venue. Online attendance does not require disclosing a private meeting link.'
+      'Coordinates, URLs and placeholders alone do not describe a public venue. Online attendance does not require disclosing a private meeting link.'
     ),
     seo(
       'event.cover',
@@ -344,6 +420,17 @@ export function eventChecks(s: ReadinessSnapshot): ReadinessCheck[] {
       'Review the selected cover reference.',
       'A cover is optional. Pending uploads remain unknown; no remote file is loaded.'
     ),
+    seo(
+      'event.links',
+      linkStatus(s),
+      'Description links',
+      'description',
+      'The inspected description links use supported destination structures.',
+      'Review empty or unsupported description link destinations.',
+      'This checks URL structure only. It does not open links, verify availability or request private meeting access.'
+    ),
+    imageContext(s),
+    linkText(s),
     check(
       'event.attendance',
       'answers',

@@ -14,7 +14,7 @@ import { EventReadiness } from './EventReadiness';
 vi.mock('./ReadinessPanel', () => ({
   ReadinessPanel: ({ open, report, onOpenChange }: any) =>
     open ? (
-      <div role='dialog' aria-label='Search and AI readiness'>
+      <div role='dialog' aria-label='Publishing readiness'>
         <output>{report?.preview?.title}</output>
         <button type='button' onClick={() => onOpenChange(false)}>
           Close readiness
@@ -88,7 +88,9 @@ describe('event readiness entry', () => {
       read = vi.fn();
     render(<FormHarness submit={submit} read={read} />);
     expect(read).not.toHaveBeenCalled();
-    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Publishing readiness' })
+    );
     await waitFor(() =>
       expect(screen.getByRole('dialog').textContent).toContain('Initial event')
     );

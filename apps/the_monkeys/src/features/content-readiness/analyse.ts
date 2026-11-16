@@ -38,7 +38,7 @@ export function analyseReadiness(snapshot: ReadinessSnapshot): ReadinessReport {
   if (unknown && !coverageReasons.length)
     coverageReasons.push('Some information could not be checked.');
   return {
-    rulesVersion: 'creator-event-v1',
+    rulesVersion: 'publishing-readiness-v2',
     kind: snapshot.kind,
     publicationState: snapshot.publicationState,
     resourceKey: snapshot.resourceKey,
