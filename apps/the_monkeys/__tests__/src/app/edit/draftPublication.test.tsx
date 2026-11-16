@@ -214,7 +214,7 @@ describe('group draft publication', () => {
     const socket = await openSocket();
     const writes = socket.messages.length;
     const mounts = state.editorMounts;
-    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO & AI' }));
     await screen.findByRole('dialog', { name: 'Search and AI readiness' });
     fireEvent.click(screen.getByRole('button', { name: 'Close readiness' }));
     expect(screen.queryByRole('dialog')).toBeNull();
@@ -240,7 +240,7 @@ describe('group draft publication', () => {
     };
     mount();
     await openSocket();
-    fireEvent.click(screen.getByRole('button', { name: 'Check readiness' }));
+    fireEvent.click(screen.getByRole('button', { name: 'SEO & AI' }));
     await waitFor(() =>
       expect(screen.getByRole('dialog').textContent).toContain('unknown')
     );

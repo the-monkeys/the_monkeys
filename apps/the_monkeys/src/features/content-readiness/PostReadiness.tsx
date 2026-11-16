@@ -2,6 +2,8 @@
 
 import { useMemo, useRef, useState } from 'react';
 
+import { editorToolClass } from '@/components/editor/editorToolClass';
+import Icon from '@/components/icon';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { ReadinessPanelLoader } from './ReadinessPanelLoader';
@@ -12,6 +14,7 @@ import { useReadinessReport } from './useReadinessReport';
 export interface PostReadinessProps
   extends Omit<PostReadinessContext, 'revision'> {
   document: unknown;
+  presentation?: 'button' | 'toolbar';
 }
 
 /** Observes parent state; deliberately has no editor/save/publish capability. */
@@ -27,6 +30,7 @@ export function PostReadiness({
   groupSlug,
   groupVisibility,
   groupResolved,
+  presentation = 'button',
 }: PostReadinessProps) {
   const [open, setOpen] = useState(false);
   const [retry, setRetry] = useState(0);
@@ -72,12 +76,32 @@ export function PostReadiness({
     <>
       <Button
         type='button'
-        variant='outline'
+        variant={presentation === 'toolbar' ? 'ghost' : 'outline'}
         size='sm'
-        className='min-h-11 shrink-0 whitespace-nowrap'
+        className={
+          presentation === 'toolbar'
+            ? `${editorToolClass} shrink-0 whitespace-nowrap aria-expanded:text-text-light dark:aria-expanded:text-text-dark aria-expanded:after:bg-brand-orange [&[aria-expanded=true]_svg]:text-brand-orange`
+            : 'min-h-11 shrink-0 whitespace-nowrap'
+        }
+        aria-haspopup='dialog'
+        aria-expanded={open}
+        title={
+          presentation === 'toolbar'
+            ? 'Review search and AI readiness'
+            : undefined
+        }
         onClick={() => setOpen(true)}
       >
-        Check readiness
+        {presentation === 'toolbar' ? (
+          <>
+            <span aria-hidden='true'>
+              <Icon name='RiSearch' size={16} />
+            </span>
+            SEO &amp; AI
+          </>
+        ) : (
+          'Check readiness'
+        )}
       </Button>
       {open && (
         <ReadinessPanelLoader

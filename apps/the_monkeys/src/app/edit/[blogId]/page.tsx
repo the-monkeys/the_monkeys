@@ -9,8 +9,8 @@ import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
 import { isDocumentTitleBlock } from '@/components/blog/getBlogContent';
 import BlogPreview from '@/components/editor/BlogPreview';
+import { EditorToolbar } from '@/components/editor/EditorToolbar';
 import { withFirstBlockTitleId } from '@/components/editor/postCanvas/withFirstBlockTitleId';
-import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
@@ -34,10 +34,8 @@ import {
   publicationScope,
 } from '@/services/blog/blogPublication';
 import { useQueryClient } from '@tanstack/react-query';
-import { Tabs, TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { OutputData } from '@themonkeys/monkeys-editor';
-import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
@@ -536,108 +534,56 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         </div>
       ) : (
         <div className='relative min-h-screen'>
-          <div
-            className='pt-4 pb-3 flex flex-wrap justify-between items-center gap-2'
-            data-shortcut-scope='chrome'
-          >
-            <div
-              className={twMerge(
-                'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',
-                isConnected
-                  ? 'border-alert-green/80 bg-alert-green/20'
-                  : 'border-alert-red/80 bg-alert-red/20'
-              )}
-            >
-              <div
-                className={`inline-block size-2 rounded-full ${
-                  isConnected ? 'bg-alert-green' : 'bg-alert-red'
-                }`}
+          <EditorToolbar
+            connected={isConnected}
+            saving={isSaving}
+            preview={isPreviewMode}
+            imageUploading={isImageUploading}
+            onViewChange={setIsPreviewMode}
+            readinessAction={
+              <PostReadiness
+                presentation='toolbar'
+                document={data}
+                topics={blogTopics}
+                resourceKey={blogId}
+                accountKey={accountId || 'unknown-account'}
+                audience={publication.draftScope?.audience}
+                groupSlug={publication.groupSlug}
+                groupVisibility={publication.selection?.group?.visibility}
+                groupResolved={
+                  !!publication.selection &&
+                  !publication.pending &&
+                  !publication.error
+                }
+                publicationState={
+                  blog?.is_draft === false ? 'published' : 'draft'
+                }
+                authorName={username}
+                imagePending={isImageUploading}
               />
-
-              <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>
-            </div>
-
-            <Tabs
-              value={isPreviewMode ? 'preview' : 'edit'}
-              onValueChange={(val) => setIsPreviewMode(val === 'preview')}
-            >
-              <TabsList className='flex items-center gap-1 font-mono text-foreground/40'>
-                <TabsTrigger value='edit'>
-                  <p className='flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground transition-colors'>
-                    <Icon
-                      name='RiPencil'
-                      size={16}
-                      className='group-data-[state=active]:text-brand-orange'
-                    />
-                    Edit
-                  </p>
-                  <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
-                </TabsTrigger>
-
-                <TabsTrigger
-                  value='preview'
-                  disabled={isImageUploading}
-                  className={isImageUploading ? 'cursor-not-allowed' : ''}
-                >
-                  <p
-                    className={twMerge(
-                      'flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base transition-colors',
-                      isImageUploading
-                        ? 'opacity-20'
-                        : 'opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground'
-                    )}
-                  >
-                    <Icon
-                      name='RiEye'
-                      size={16}
-                      className='group-data-[state=active]:text-brand-orange'
-                    />
-                    Preview
-                  </p>
-                  <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <PostReadiness
-              document={data}
-              topics={blogTopics}
-              resourceKey={blogId}
-              accountKey={accountId || 'unknown-account'}
-              audience={publication.draftScope?.audience}
-              groupSlug={publication.groupSlug}
-              groupVisibility={publication.selection?.group?.visibility}
-              groupResolved={
-                !!publication.selection &&
-                !publication.pending &&
-                !publication.error
-              }
-              publicationState={
-                blog?.is_draft === false ? 'published' : 'draft'
-              }
-              authorName={username}
-              imagePending={isImageUploading}
-            />
-            <PublishBlogDrawer
-              topics={blogTopics}
-              setTopics={setBlogTopics}
-              data={data}
-              setData={setData}
-              isPublishing={blogPublishLoading}
-              handlePublish={handlePublishStep}
-              handleSchedule={handleScheduleStep}
-              publication={publication.selection}
-              onPublicationChange={publication.change}
-              publicationPending={publication.pending}
-              publicationError={
-                isError
-                  ? 'Could not load this draft. Refresh to try again.'
-                  : publication.error
-              }
-              intendedGroupSlug={publication.groupSlug}
-              onRetryGroup={publication.retry}
-            />
-          </div>
+            }
+            publishAction={
+              <PublishBlogDrawer
+                topics={blogTopics}
+                setTopics={setBlogTopics}
+                data={data}
+                setData={setData}
+                isPublishing={blogPublishLoading}
+                handlePublish={handlePublishStep}
+                handleSchedule={handleScheduleStep}
+                publication={publication.selection}
+                onPublicationChange={publication.change}
+                publicationPending={publication.pending}
+                publicationError={
+                  isError
+                    ? 'Could not load this draft. Refresh to try again.'
+                    : publication.error
+                }
+                intendedGroupSlug={publication.groupSlug}
+                onRetryGroup={publication.retry}
+              />
+            }
+          />
 
           <div className='py-3'>
             <Suspense
@@ -656,18 +602,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               )}
             </Suspense>
           </div>
-
-          {isSaving && (
-            <div className='fixed left-1/2 -translate-x-1/2 bottom-[30px] p-2 z-50'>
-              <div className='px-3 py-1 border-1 border-yellow-500/80 bg-yellow-500/50 rounded-full shadow-sm flex items-center gap-1'>
-                <div
-                  className={`inline-block size-2 rounded-full bg-yellow-500`}
-                />
-
-                <p className='text-xs sm:text-sm'>Saving...</p>
-              </div>
-            </div>
-          )}
         </div>
       )}
     </>
