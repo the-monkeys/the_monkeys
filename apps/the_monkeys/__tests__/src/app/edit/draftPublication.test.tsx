@@ -204,6 +204,38 @@ describe('group draft publication', () => {
     vi.unstubAllGlobals();
   });
 
+  it.each(['Submit post', 'Submit schedule'])(
+    'retains Hindi text and the existing article ID when using %s',
+    async (action) => {
+      const document = {
+        ...content,
+        blocks: content.blocks.map((block, index) =>
+          index === 0
+            ? { ...block, data: { ...block.data, text: 'भारत में तकनीक' } }
+            : block
+        ),
+      };
+      const original = JSON.stringify(document);
+      state.draft = {
+        blog: { blog: document, tags: [], audience: 'public' },
+        isLoading: false,
+        isError: false,
+      };
+      mount();
+      await openSocket();
+      fireEvent.click(screen.getByText(action));
+      const submit = action === 'Submit post' ? state.publish : state.schedule;
+      await waitFor(() =>
+        expect(submit).toHaveBeenCalledWith(
+          'draft1',
+          expect.objectContaining({ slug: 'भारत-में-तकनीक-draft1', tags: [] })
+        )
+      );
+      expect(submit.mock.calls.at(-1)![1].group_slug).toBeUndefined();
+      expect(JSON.stringify(document)).toBe(original);
+    }
+  );
+
   it('opens and closes readiness without recreating the editor or saving/publishing the draft', async () => {
     state.draft = {
       blog: { blog: content, tags: [], audience: 'public' },

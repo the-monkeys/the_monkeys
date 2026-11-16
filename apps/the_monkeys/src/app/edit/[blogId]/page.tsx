@@ -5,7 +5,6 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
 import { isDocumentTitleBlock } from '@/components/blog/getBlogContent';
 import BlogPreview from '@/components/editor/BlogPreview';
@@ -21,6 +20,7 @@ import useGetDraftBlogDetail, {
   DRAFT_BLOG_DETAIL_QUERY_KEY,
 } from '@/hooks/blog/useGetDraftBlogDetail';
 import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import { publicationPostSlug } from '@/lib/postUrl';
 import { queryKeys } from '@/lib/queryKeys';
 import { useIsImageUploading } from '@/lib/store/useFileUpload';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -161,9 +161,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Format data
   const formatData = useCallback(
     (data: OutputData, accountId: string | undefined, blogTopics: string[]) => {
-      const title = data?.blocks[0]?.data.text || 'No Title';
-      const slug = generateSlug(title);
-      const blogSlug = `${slug}-${blogId}`;
+      const blogSlug = publicationPostSlug(data, blogId);
 
       return {
         owner_account_id: accountId,
