@@ -1,5 +1,6 @@
-import { Component, type ReactNode, useEffect, useState } from 'react';
+import { Component, type ReactNode, useEffect, useRef, useState } from 'react';
 
+import { usePostCanvasShortcuts } from '@/components/editor/postCanvas/usePostCanvasShortcuts';
 import {
   act,
   cleanup,
@@ -140,6 +141,53 @@ afterEach(() => {
 });
 
 describe('ReadinessPanelLoader failure isolation', () => {
+  it('does not undo or redo the draft when a portaled retry control has focus', async () => {
+    const undo = { undo: vi.fn(), redo: vi.fn() };
+    function LocalEditor() {
+      const canvasRef = useRef<HTMLDivElement>(null);
+      usePostCanvasShortcuts({ canvasRef, undo });
+      return (
+        <>
+          <div ref={canvasRef}>Unsaved document</div>
+          <Host loadPanel={() => Promise.reject(new Error('offline'))} />
+        </>
+      );
+    }
+    render(<LocalEditor />);
+    const retry = await screen.findByRole('button', {
+      name: 'Retry readiness report',
+    });
+    retry.focus();
+    fireEvent.keyDown(retry, { key: 'z', ctrlKey: true });
+    fireEvent.keyDown(retry, { key: 'z', metaKey: true, shiftKey: true });
+    expect(undo.undo).not.toHaveBeenCalled();
+    expect(undo.redo).not.toHaveBeenCalled();
+  });
+
+  it('keeps loading and failure notices out of the authoring toolbar layout', async () => {
+    const pending = deferred();
+    const view = render(
+      <header aria-label='Editor toolbar'>
+        <ReadinessPanelLoader
+          open
+          state='pending'
+          report={null}
+          onOpenChange={() => {}}
+          onCheckAgain={() => {}}
+          loadPanel={() => pending.promise}
+        />
+      </header>
+    );
+    expect(
+      screen.getByRole('region', { name: 'Readiness report' }).closest('header')
+    ).toBeNull();
+    await fail(pending);
+    expect(
+      screen.getByRole('region', { name: 'Readiness report' }).closest('header')
+    ).toBeNull();
+    expect(view.container.querySelector('header')?.textContent).toBe('');
+  });
+
   it('contains the first offline chunk rejection and preserves the editor and unsaved state', async () => {
     const pending = deferred();
     const loadPanel = vi.fn(() => pending.promise);

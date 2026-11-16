@@ -46,6 +46,20 @@ const props = {
 };
 
 describe('creator readiness entry', () => {
+  it('offers an opt-in editor tool with an explicit dialog state while keeping the document intact', async () => {
+    const before = JSON.stringify(document);
+    render(<PostReadiness {...props} presentation='toolbar' />);
+    const trigger = screen.getByRole('button', { name: 'SEO & AI' });
+    expect(trigger.getAttribute('aria-haspopup')).toBe('dialog');
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    fireEvent.click(trigger);
+    await screen.findByRole('dialog');
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    fireEvent.click(screen.getByRole('button', { name: 'Close readiness' }));
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(JSON.stringify(document)).toBe(before);
+  });
+
   it('keeps the document untouched when a creator opens and closes a report', async () => {
     const before = JSON.stringify(document);
     render(<PostReadiness {...props} />);

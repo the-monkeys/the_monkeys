@@ -41,12 +41,12 @@ describe('chrome shortcut scope', () => {
     );
   });
 
-  it('marks the edit Online/Edit/Preview row as chrome', () => {
-    const edit = readFileSync(
-      join(appRoot, 'app/edit/[blogId]/page.tsx'),
+  it('marks the extracted editor Online/Edit/Preview toolbar as chrome', () => {
+    const toolbar = readFileSync(
+      join(appRoot, 'components/editor/EditorToolbar.tsx'),
       'utf8'
     );
-    expect(edit).toMatch(/data-shortcut-scope=["']chrome["']/);
+    expect(toolbar).toMatch(/data-shortcut-scope=["']chrome["']/);
   });
 
   it('does not rewrite first-block type on draft load', () => {
