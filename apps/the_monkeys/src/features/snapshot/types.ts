@@ -13,12 +13,19 @@
  *   - Web-safe fonts; pass fonts in at render time when on the server.
  */
 
-export type SnapshotSource = 'blog' | 'meta-blog' | 'url' | 'tweet' | 'manual';
+export type SnapshotSource =
+  | 'blog'
+  | 'meta-blog'
+  | 'url'
+  | 'tweet'
+  | 'manual'
+  | 'discussion';
 
 export interface SnapshotAuthor {
   username: string;
   displayName: string;
   avatarUrl?: string; // remote URL (image proxy handled by export pipeline)
+  isVerified?: boolean;
 }
 
 export interface SnapshotInput {
@@ -101,6 +108,9 @@ export interface SnapshotRenderProps {
   input: SnapshotInput;
   theme: SnapshotTheme;
   accent: string;
+  /** Optional server-rendered social preview dimensions and inlined assets. */
+  renderSize?: { width: number; height: number };
+  assetUrls?: { logo: string; verifiedBadge: string };
 }
 
 export interface SnapshotTemplate extends SnapshotTemplateMeta {

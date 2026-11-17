@@ -1,9 +1,14 @@
 import { canonicalPostTitleSlug, legacyPostTitleSlug } from '@/lib/postUrl';
 import { SITE_URL, normalizeSeoText } from '@/lib/seo';
 import { fetchRecentPublicPosts } from '@/lib/seoCatalog';
-import { buildRssXml, rssResponse } from '@/lib/seoFeed';
+import {
+  buildRssXml,
+  rssResponse,
+  rssUnavailableResponse,
+} from '@/lib/seoFeed';
 
-export const revalidate = 300;
+// Fetch at request time: an unavailable API must not prevent deployment.
+export const dynamic = 'force-dynamic';
 
 function publicationDate(value: string): Date | null {
   const date = new Date(value);
@@ -11,7 +16,8 @@ function publicationDate(value: string): Date | null {
 }
 
 export async function GET() {
-  const posts = await fetchRecentPublicPosts();
+  const posts = await fetchRecentPublicPosts().catch(() => null);
+  if (!posts) return rssUnavailableResponse();
   const xml = buildRssXml({
     title: 'Latest Posts on Monkeys',
     description:

@@ -59,7 +59,7 @@ export const OptionsPanel = ({ input, onChange }: OptionsPanelProps) => {
         <TextArea
           id='snap-quote'
           value={input.quote ?? ''}
-          maxLength={280}
+          maxLength={input.source === 'discussion' ? 1200 : 280}
           rows={2}
           onChange={(e) => onChange({ quote: e.target.value })}
         />

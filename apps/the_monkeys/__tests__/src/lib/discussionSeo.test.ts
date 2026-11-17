@@ -62,6 +62,9 @@ describe('discussionSeo', () => {
     expect(pub.description).toBe(discussionDescription(post.body));
     expect(JSON.stringify(pub.robots)).toContain('"index":true');
     expect(JSON.stringify(priv.robots)).toContain('"index":false');
+    expect(JSON.stringify(pub.openGraph)).toContain('/discussions/abc/image');
+    expect(JSON.stringify(pub.twitter)).toContain('/discussions/abc/image');
+    expect(priv.openGraph).toBeUndefined();
   });
 
   it('lists discussion ids as encoded sitemap urls', () => {

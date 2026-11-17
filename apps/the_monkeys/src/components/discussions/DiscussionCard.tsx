@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { BlogAudienceBadge } from '@/components/blog/BlogAudienceBadge';
 import { DiscussionAvatar } from '@/components/discussions/DiscussionAvatar';
 import { DiscussionBody } from '@/components/discussions/DiscussionBody';
+import { DiscussionCardMenu } from '@/components/discussions/DiscussionCardMenu';
 import { DiscussionGroupLine } from '@/components/discussions/DiscussionGroupLine';
 import { DiscussionLinkPreview } from '@/components/discussions/DiscussionLinkPreview';
 import {
@@ -51,7 +52,12 @@ export function DiscussionCard({
       ) : null}
       <DiscussionAvatar username={discussionHandle(post)} />
       <div className='min-w-0 flex-1'>
-        <DiscussionIdentity author={post} createdAt={post.created_at} />
+        <div className='flex min-w-0 items-start justify-between gap-2'>
+          <div className='min-w-0 flex-1'>
+            <DiscussionIdentity author={post} createdAt={post.created_at} />
+          </div>
+          <DiscussionCardMenu post={post} />
+        </div>
         {embedded ? (
           post.audience === 'group_only' ? (
             <div className='mt-1'>
