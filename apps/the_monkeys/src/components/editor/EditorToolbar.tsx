@@ -35,11 +35,11 @@ export function EditorToolbar({
     >
       <div className='min-w-0 text-xs text-gray-500 dark:text-gray-400'>
         <span
-          className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 ${connected ? 'border-border-light dark:border-border-dark' : 'border-brand-orange/40 text-text-light dark:text-text-dark'}`}
+          className={`inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 ${connected ? 'border-alert-green/80 bg-alert-green/20' : 'border-alert-red/80 bg-alert-red/20'}`}
         >
           <span
             aria-hidden='true'
-            className={`size-1.5 rounded-full ${connected ? 'bg-gray-500 dark:bg-gray-400' : 'bg-brand-orange'}`}
+            className={`size-1.5 rounded-full ${connected ? 'bg-alert-green' : 'bg-alert-red'}`}
           />
           {connected ? 'Online' : 'Offline'}
         </span>
