@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 
 import {
+  buildBlogJsonLd,
   buildBlogMetadata,
   getBlogIdFromSlug,
 } from '@/app/blog/[slug]/blogSeo';
@@ -9,7 +10,11 @@ import { buildMainSitemap } from '@/app/sitemap';
 import { buildTopicJsonLd } from '@/app/topics/[topic]/topicSeo';
 import { FeatureCard } from '@/components/editorial/FeatureCard';
 import { Blog, MetaBlog } from '@/services/blog/blogTypes';
-import { fromBlog, fromMetaBlog } from '@/utils/blogCardAdapters';
+import {
+  fromBlog,
+  fromFollowingFeed,
+  fromMetaBlog,
+} from '@/utils/blogCardAdapters';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -66,6 +71,10 @@ describe('post discovery canonical consistency', () => {
     'A <b>Bold</b>World',
     'Community<br>Research',
     'A public title with a verylongword'.repeat(8),
+    'भारत में तकनीक',
+    'Über moderne Städte',
+    '日本語の記事',
+    'العِلْم اليوم',
   ])(
     'uses the existing page canonical in sitemap, RSS, topics and cards for %s',
     async (title) => {
@@ -82,6 +91,9 @@ describe('post discovery canonical consistency', () => {
       expect(
         buildTopicJsonLd('Technology', 'technology', [summary]).mainEntity
           .itemListElement[0].url
+      ).toBe(canonical);
+      expect(
+        buildBlogJsonLd(post, 'legacy-alias-post123')?.mainEntityOfPage['@id']
       ).toBe(canonical);
       const card = fromMetaBlog(summary);
       const fullCard = fromBlog(post);
@@ -104,6 +116,36 @@ describe('post discovery canonical consistency', () => {
       );
     }
   );
+
+  it.each([
+    ['भारत में तकनीक', '-post123'],
+    ['Über moderne Städte', 'ber-moderne-st-dte-post123'],
+    ['Cafe\u0301', 'cafe-post123'],
+  ])(
+    'keeps the previous RSS item identity for %s',
+    async (title, legacySlug) => {
+      const { summary } = records(title);
+      catalog.mockResolvedValue([summary]);
+      const xml = await (await postFeed()).text();
+      expect(xml).toContain(
+        `<guid isPermaLink="true">https://monkeys.com.co/blog/${legacySlug}</guid>`
+      );
+    }
+  );
+
+  it('uses the legacy document title, not its first body paragraph, in following-feed fallback links', () => {
+    const { post } = records('भारत में तकनीक');
+    post.blog.blocks[0].type = 'title';
+    post.blog.blocks.push({
+      id: 'body',
+      type: 'paragraph',
+      data: { text: 'Body content that is not the title.' },
+      author: [],
+      time: 1,
+    });
+    const card = fromFollowingFeed(post as any);
+    expect(card.slug).toBe(fromBlog(post).slug);
+  });
 
   it('retains the whole visible headline when its destination uses the existing shorter canonical', () => {
     const title =

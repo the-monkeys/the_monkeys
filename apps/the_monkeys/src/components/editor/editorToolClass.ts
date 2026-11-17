@@ -1,0 +1,3 @@
+// Shared by the editor tabs and the optional SEO & AI tool.
+export const editorToolClass =
+  'relative inline-flex min-h-11 min-w-11 flex-row items-center justify-center gap-1.5 rounded-none bg-transparent px-2 py-2 font-dm_sans text-sm font-medium text-gray-500 transition-colors hover:bg-transparent hover:text-text-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange disabled:opacity-40 dark:text-gray-400 dark:hover:bg-transparent dark:hover:text-text-dark data-[state=active]:text-text-light dark:data-[state=active]:text-text-dark after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-transparent data-[state=active]:after:bg-brand-orange [&[data-state=active]_svg]:text-brand-orange';

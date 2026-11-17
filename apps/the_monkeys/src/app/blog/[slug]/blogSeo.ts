@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { getPostSeoContent } from '@/lib/postSeoContent';
+import { canonicalPostDocumentTitleSlug } from '@/lib/postUrl';
 import {
   MONKEYS_WEBSITE_ID,
   absoluteUrl,
@@ -24,7 +24,7 @@ function blogContent(blog: Blog) {
 }
 
 export function canonicalBlogSlug(blog: Blog): string {
-  const titleSlug = generateSlug(blogContent(blog).title);
+  const titleSlug = canonicalPostDocumentTitleSlug(blog.blog);
   return `${titleSlug}-${blog.blog_id}`;
 }
 

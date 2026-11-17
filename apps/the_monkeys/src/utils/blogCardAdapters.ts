@@ -1,7 +1,9 @@
 import { getCardContent } from '@/components/blog/getBlogContent';
+import { getPostSeoContent } from '@/lib/postSeoContent';
 import {
   canonicalPostDocumentTitleSlug,
   canonicalPostTitleSlug,
+  postLinkTitleSlug,
 } from '@/lib/postUrl';
 import {
   Block,
@@ -39,7 +41,11 @@ export const fromFollowingFeed = (blog: FollowingFeed): BlogCardData => {
     blogId: blog.blog_id,
     authorId: blog.owner_account_id,
     date: blog.published_time,
-    slug: blog.slug || canonicalPostDocumentTitleSlug(blog.blog),
+    slug: postLinkTitleSlug(
+      getPostSeoContent(blog.blog).title,
+      blog.blog_id,
+      blog.slug
+    ),
     tags: blog.tags ?? [],
     title,
     description: purifyHTMLString(descriptionBlock?.data?.text || ''),

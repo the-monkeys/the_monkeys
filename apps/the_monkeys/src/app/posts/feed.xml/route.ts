@@ -1,4 +1,4 @@
-import { canonicalPostTitleSlug } from '@/lib/postUrl';
+import { canonicalPostTitleSlug, legacyPostTitleSlug } from '@/lib/postUrl';
 import { SITE_URL, normalizeSeoText } from '@/lib/seo';
 import { fetchRecentPublicPosts } from '@/lib/seoCatalog';
 import { buildRssXml, rssResponse } from '@/lib/seoFeed';
@@ -22,7 +22,7 @@ export async function GET() {
       return {
         title: post.title,
         link,
-        guid: link,
+        guid: `${SITE_URL}/blog/${legacyPostTitleSlug(post.title)}-${post.blog_id}`,
         pubDate: publicationDate(post.published_time),
         description: normalizeSeoText(post.first_paragraph, 280),
       };

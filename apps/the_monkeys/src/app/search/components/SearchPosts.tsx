@@ -13,7 +13,7 @@ import { FeedBlogCardListSkeleton } from '@/components/skeletons/blogSkeleton';
 import { SEARCH_POSTS_PER_PAGE } from '@/constants/posts';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { useSearchBlogsV2 } from '@/hooks/search/useSearchV2';
-import { canonicalPostTitleSlug } from '@/lib/postUrl';
+import { postLinkTitleSlug } from '@/lib/postUrl';
 import { SearchBlogHit } from '@/services/search/searchTypes';
 import { sanitizeHighlight } from '@/utils/searchHighlight';
 
@@ -33,7 +33,7 @@ import { sanitizeHighlight } from '@/utils/searchHighlight';
 const SearchHitCard = ({ hit }: { hit: SearchBlogHit }) => {
   const title = hit.title ?? '';
   const summary = hit.summary ?? '';
-  const slug = hit.slug || canonicalPostTitleSlug(title);
+  const slug = postLinkTitleSlug(title, hit.blog_id, hit.slug);
   const safeTitle = sanitizeHighlight(hit.highlight?.title, title);
   const safeSummary = sanitizeHighlight(hit.highlight?.summary, summary);
   const author = hit.author_display_name || hit.author_username || '';
