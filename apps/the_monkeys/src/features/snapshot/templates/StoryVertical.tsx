@@ -1,4 +1,5 @@
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
+import { DiscussionByline, DiscussionSource } from './DiscussionAttribution';
 import {
   AccentBar,
   BRAND_URL,
@@ -92,11 +93,16 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
           Swipe Up to Read
         </div>
         <div style={{ display: 'flex', color: theme.muted, fontSize: 26 }}>
-          {input.author?.username
-            ? `@${input.author.username} · ${BRAND_URL}`
-            : BRAND_URL}
+          {input.source === 'discussion' ? (
+            <DiscussionByline input={input} />
+          ) : input.author?.username ? (
+            `@${input.author.username} · ${BRAND_URL}`
+          ) : (
+            BRAND_URL
+          )}
         </div>
       </Col>
+      <DiscussionSource input={input} theme={theme} />
     </div>
   );
 };

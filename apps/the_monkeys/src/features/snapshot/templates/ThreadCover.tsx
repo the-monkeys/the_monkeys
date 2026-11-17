@@ -1,4 +1,5 @@
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
+import { DiscussionByline, DiscussionSource } from './DiscussionAttribution';
 import {
   AccentBar,
   Col,
@@ -85,7 +86,13 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
 
       <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', color: theme.muted, fontSize: 22 }}>
-          {input.author?.username ? `@${input.author.username}` : 'the_monkeys'}
+          {input.source === 'discussion' ? (
+            <DiscussionByline input={input} />
+          ) : input.author?.username ? (
+            `@${input.author.username}`
+          ) : (
+            'the_monkeys'
+          )}
         </div>
         <div
           style={{
@@ -98,6 +105,7 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
           Swipe →
         </div>
       </Row>
+      <DiscussionSource input={input} theme={theme} />
     </div>
   );
 };

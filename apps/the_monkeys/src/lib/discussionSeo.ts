@@ -62,6 +62,7 @@ export function buildDiscussionMetadata(
     description,
     path: discussionPath(post.public_id),
     type: 'article',
+    image: `${discussionPath(post.public_id)}/image`,
   });
 }
 

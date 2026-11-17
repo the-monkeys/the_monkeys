@@ -12,7 +12,9 @@ import {
   discussionHandle,
 } from '@/components/discussions/discussionChrome';
 import Icon from '@/components/icon';
+import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { DISCUSSIONS_ROUTE } from '@/constants/routeConstants';
+import { canSnapshotDiscussion } from '@/features/snapshot/adapters/fromDiscussion';
 import { useGroupDetail } from '@/hooks/groups/useGroupQueries';
 import {
   type ReplyNode,
@@ -164,6 +166,12 @@ export function DiscussionThread({ post }: { post: Discussion }) {
         linked={false}
         post={post}
       />
+
+      {canSnapshotDiscussion(post) ? (
+        <div className='mt-4'>
+          <SocialSnapshotCard discussionId={post.public_id} />
+        </div>
+      ) : null}
 
       <section
         aria-labelledby='replies-heading'

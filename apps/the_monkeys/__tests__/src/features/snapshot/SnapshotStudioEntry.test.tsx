@@ -25,6 +25,25 @@ afterEach(() => {
 });
 
 describe('Studio URL entry order and controls', () => {
+  it('blocks image exports while source attribution is loading', () => {
+    render(
+      <SnapshotStudio
+        input={{ source: 'discussion', title: 'Discussion' }}
+        isSourceLoading
+      />
+    );
+    expect(
+      screen
+        .getAllByRole('button', { name: 'Download PNG' })
+        .every((button) => (button as HTMLButtonElement).disabled)
+    ).toBe(true);
+    expect(
+      screen
+        .getAllByRole('button', { name: 'Download JPEG' })
+        .every((button) => (button as HTMLButtonElement).disabled)
+    ).toBe(true);
+    expect(screen.getByRole('status').textContent).toContain('author');
+  });
   it('offers exactly one URL field before the X preview, preserving paste, validation and clear', () => {
     render(
       <SnapshotStudio
