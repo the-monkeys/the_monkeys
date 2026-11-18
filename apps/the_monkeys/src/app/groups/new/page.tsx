@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef, useState } from 'react';
+
 import { useRouter } from 'next/navigation';
 
 import { BackButton } from '@/components/buttons/backButton';
@@ -20,6 +22,8 @@ export default function NewGroupPage() {
   const router = useRouter();
   const { toast } = useToast();
   const create = useCreateGroup();
+  const submitting = useRef(false);
+  const [saving, setSaving] = useState(false);
 
   if (!isLoading && !session) {
     router.replace(LOGIN_ROUTE);
@@ -30,8 +34,13 @@ export default function NewGroupPage() {
     body: GroupBody,
     images?: { logo?: File; cover?: File }
   ) => {
+    if (submitting.current) return;
+    submitting.current = true;
+    setSaving(true);
+    let created = false;
     try {
       const res = await create.mutateAsync(body);
+      created = true;
       const slug = res.group?.slug;
       // Images picked before the group existed are uploaded now and persisted.
       // A failure here must not discard the created group, so it is non-fatal.
@@ -59,6 +68,10 @@ export default function NewGroupPage() {
       toast({ title: 'Draft created' });
       router.push(slug ? `${GROUPS_ROUTE}/${slug}/manage` : GROUPS_ROUTE);
     } catch (err) {
+      if (!created) {
+        submitting.current = false;
+        setSaving(false);
+      }
       toast({ title: 'Could not create group', description: groupError(err) });
     }
   };
@@ -76,7 +89,7 @@ export default function NewGroupPage() {
       </p>
       <GroupForm
         submitLabel='Create draft'
-        saving={create.isPending}
+        saving={saving}
         onSubmit={onSubmit}
       />
     </main>

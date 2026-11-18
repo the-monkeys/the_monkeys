@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -10,6 +10,7 @@ import { EventCalendarDialog } from '@/components/events/detail/EventCalendarDia
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
+import { useCreationAttempt } from '@/hooks/useCreationAttempt';
 import {
   fromLocalInput,
   isEventEnded,
@@ -45,6 +46,10 @@ export function EventActions({
   const [reason, setReason] = useState('');
   const [cloneOpen, setCloneOpen] = useState(false);
   const [cloneBusy, setCloneBusy] = useState(false);
+  const cloneSubmitting = useRef(false);
+  const cloneAttempt = useCreationAttempt(
+    `clone:${event.slug}:${session?.account_id || session?.username || ''}`
+  );
   const [cloneTimezone, setCloneTimezone] = useState(event.timezone || 'UTC');
   const ended = isEventEnded(event);
   const showClone = canManage && ended && !event.series_id;
@@ -112,6 +117,7 @@ export function EventActions({
   };
 
   const onClone = async () => {
+    if (cloneSubmitting.current) return;
     let start: string, end: string;
     try {
       if (!isValidTimezone(cloneTimezone))
@@ -132,24 +138,33 @@ export function EventActions({
       return;
     }
     if (!start || !end) return;
+    cloneSubmitting.current = true;
     setCloneBusy(true);
+    let created = false;
     try {
-      const res = await cloneEvent(event.slug, {
+      const body = {
         start_time: start,
         end_time: end,
         timezone: cloneTimezone,
+      };
+      await cloneAttempt.run(body, async (key) => {
+        const res = await cloneEvent(event.slug, body, key);
+        created = true;
+        const slug = res.event?.slug;
+        toast({ title: 'Draft created' });
+        await refresh();
+        router.push(slug ? `${EVENTS_ROUTE}/${slug}/edit` : EVENTS_ROUTE);
       });
-      const slug = res.event?.slug;
-      toast({ title: 'Draft created' });
-      await refresh();
-      router.push(slug ? `${EVENTS_ROUTE}/${slug}/edit` : EVENTS_ROUTE);
     } catch (err) {
+      // A created draft stays latched while App Router finishes navigation.
+      if (!created) {
+        cloneSubmitting.current = false;
+        setCloneBusy(false);
+      }
       toast({
         title: 'Could not schedule again',
         description: eventError(err),
       });
-    } finally {
-      setCloneBusy(false);
     }
   };
 
@@ -176,7 +191,9 @@ export function EventActions({
               variant='outline'
               size='sm'
               className='min-h-11'
-              onClick={() => setCloneOpen((v) => !v)}
+              onClick={() => {
+                setCloneOpen((v) => !v);
+              }}
             >
               Schedule again
             </Button>

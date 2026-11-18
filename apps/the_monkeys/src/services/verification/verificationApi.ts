@@ -1,3 +1,4 @@
+import { creationErrorMessage, creationHeaders } from '@/lib/creationAttempt';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import axios, { AxiosProgressEvent } from 'axios';
@@ -43,11 +44,13 @@ export async function uploadVerificationAsset(
 }
 
 export async function submitVerification(
-  payload: SubmitVerificationPayload
+  payload: SubmitVerificationPayload,
+  idempotencyKey?: string
 ): Promise<VerificationRequest> {
   const res = await axiosInstance.post<VerificationRequest>(
     '/user/verification',
-    payload
+    payload,
+    creationHeaders(idempotencyKey)
   );
   return res.data;
 }
@@ -81,6 +84,8 @@ export async function getVerificationAssetUrl(
 /** Human message from an axios error, preferring the API's own detail. */
 export function verificationErrorMessage(err: unknown): string {
   if (axios.isAxiosError(err)) {
+    const creationMessage = creationErrorMessage(err.response?.data);
+    if (creationMessage) return creationMessage;
     const msg = err.response?.data?.message;
     if (typeof msg === 'string' && msg.length > 0) return msg;
     if (err.response?.status === 409)

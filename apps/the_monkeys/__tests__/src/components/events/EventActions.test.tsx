@@ -2,6 +2,7 @@ import { EventActions } from '@/components/events/EventActions';
 import { EventItem } from '@/services/events/eventTypes';
 import { cloneEvent, downloadCalendar } from '@/services/events/eventsApi';
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -164,11 +165,15 @@ it('requires a valid choice for a legacy timezone and applies it only to the new
   await user.click(screen.getByRole('button', { name: 'Create draft' }));
 
   await waitFor(() =>
-    expect(cloneEvent).toHaveBeenCalledWith('legacy-meetup', {
-      timezone: 'Asia/Kolkata',
-      start_time: '2099-11-12T13:30:00.000Z',
-      end_time: '2099-11-12T15:00:00.000Z',
-    })
+    expect(cloneEvent).toHaveBeenCalledWith(
+      'legacy-meetup',
+      {
+        timezone: 'Asia/Kolkata',
+        start_time: '2099-11-12T13:30:00.000Z',
+        end_time: '2099-11-12T15:00:00.000Z',
+      },
+      expect.any(String)
+    )
   );
   expect(push).toHaveBeenCalledWith('/events/new-draft/edit');
   expect(source.timezone).toBe('India');
@@ -196,12 +201,79 @@ it('keeps a valid inherited event timezone when scheduling again', async () => {
   });
   await user.click(screen.getByRole('button', { name: 'Create draft' }));
   await waitFor(() =>
-    expect(cloneEvent).toHaveBeenCalledWith('legacy-meetup', {
-      timezone: 'Europe/Berlin',
-      start_time: '2099-11-12T18:00:00.000Z',
-      end_time: '2099-11-12T19:30:00.000Z',
+    expect(cloneEvent).toHaveBeenCalledWith(
+      'legacy-meetup',
+      {
+        timezone: 'Europe/Berlin',
+        start_time: '2099-11-12T18:00:00.000Z',
+        end_time: '2099-11-12T19:30:00.000Z',
+      },
+      expect.any(String)
+    )
+  );
+});
+
+it('single-flights clone creation and keeps its key after a lost response', async () => {
+  const user = userEvent.setup();
+  let reject!: (reason: unknown) => void;
+  vi.mocked(cloneEvent).mockImplementationOnce(
+    () =>
+      new Promise((_yes, no) => {
+        reject = no;
+      })
+  );
+  render(<EventActions event={{ ...source, timezone: 'UTC' }} canManage />);
+  await user.click(screen.getByRole('button', { name: 'Schedule again' }));
+  const button = screen.getByRole('button', { name: 'Create draft' });
+  act(() => {
+    fireEvent.click(button);
+    fireEvent.click(button);
+  });
+  expect(cloneEvent).toHaveBeenCalledTimes(1);
+  const firstKey = vi.mocked(cloneEvent).mock.calls[0][2];
+  expect(firstKey).toEqual(expect.any(String));
+  reject(new Error('Response lost'));
+  await waitFor(() =>
+    expect(
+      (
+        screen.getByRole('button', {
+          name: 'Create draft',
+        }) as HTMLButtonElement
+      ).disabled
+    ).toBe(false)
+  );
+  await user.click(screen.getByRole('button', { name: 'Schedule again' }));
+  await user.click(screen.getByRole('button', { name: 'Schedule again' }));
+  await user.click(screen.getByRole('button', { name: 'Create draft' }));
+  await waitFor(() => expect(push).toHaveBeenCalled());
+  expect(vi.mocked(cloneEvent).mock.calls[1][2]).toBe(firstKey);
+});
+
+it('keeps successful clone creation locked while navigation holds the component mounted', async () => {
+  const user = userEvent.setup();
+  let finishNavigation!: () => void;
+  push.mockReturnValueOnce(
+    new Promise<void>((resolve) => {
+      finishNavigation = resolve;
     })
   );
+  render(<EventActions event={{ ...source, timezone: 'UTC' }} canManage />);
+  await user.click(screen.getByRole('button', { name: 'Schedule again' }));
+  await user.click(screen.getByRole('button', { name: 'Create draft' }));
+  await waitFor(() => expect(push).toHaveBeenCalled());
+  await act(async () => {
+    await Promise.resolve();
+  });
+  const submit = screen.getByRole('button', {
+    name: 'Creating…',
+  }) as HTMLButtonElement;
+  expect(submit.disabled).toBe(true);
+  fireEvent.click(submit);
+  await act(async () => {
+    finishNavigation();
+  });
+  expect(submit.disabled).toBe(true);
+  expect(cloneEvent).toHaveBeenCalledTimes(1);
 });
 
 it('does not create a draft for an ambiguous new local time', async () => {

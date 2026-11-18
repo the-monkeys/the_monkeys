@@ -1,5 +1,7 @@
 'use client';
 
+import useAuth from '@/hooks/auth/useAuth';
+import { useCreationMutation } from '@/hooks/useCreationMutation';
 import {
   cancelVerification,
   getMyVerification,
@@ -23,12 +25,16 @@ export const MY_VERIFICATION_KEY = ['verification', 'me'];
  */
 export const useMyVerification = () => {
   const qc = useQueryClient();
+  const { data: session } = useAuth();
+  const identity = session?.account_id || session?.username;
+  const queryKey = [...MY_VERIFICATION_KEY, identity];
   const invalidate = () =>
     qc.invalidateQueries({ queryKey: MY_VERIFICATION_KEY });
 
   const query = useQuery({
-    queryKey: MY_VERIFICATION_KEY,
+    queryKey,
     queryFn: getMyVerification,
+    enabled: !!identity,
     staleTime: 60 * 1000,
   });
 
@@ -53,10 +59,10 @@ export const useMyVerification = () => {
     onError: (err) => verificationErrorMessage(err),
   });
 
-  const submit = useMutation({
-    mutationFn: (payload: SubmitVerificationPayload) =>
-      submitVerification(payload),
-    onSuccess: () => qc.refetchQueries({ queryKey: MY_VERIFICATION_KEY }),
+  const submit = useCreationMutation(`verification:${identity || ''}`, {
+    mutationFn: (payload: SubmitVerificationPayload, key) =>
+      submitVerification(payload, key),
+    onSuccess: () => qc.refetchQueries({ queryKey }),
   });
 
   const cancel = useMutation({
@@ -65,9 +71,13 @@ export const useMyVerification = () => {
   });
 
   return {
+    accountIdentity: identity,
     request,
     none,
     isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
     uploadDoc,
     submit,
     cancel,

@@ -1,3 +1,4 @@
+import { creationErrorMessage, creationHeaders } from '@/lib/creationAttempt';
 import type { CalendarScope } from '@/lib/eventCalendar';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
@@ -27,7 +28,9 @@ export function eventError(err: unknown): string {
   if (axios.isAxiosError(err)) {
     const data = (err as AxiosError<{ error?: string; message?: string }>)
       .response?.data;
-    return data?.error || data?.message || err.message;
+    return (
+      creationErrorMessage(data) || data?.error || data?.message || err.message
+    );
   }
   return 'Something went wrong';
 }
@@ -83,18 +86,27 @@ export const getEvent = (slug: string) =>
     .get<EventResp>(`${root}/${encodeURIComponent(slug)}`)
     .then((r) => r.data);
 
-export const createEvent = (body: EventBody) =>
-  axiosInstance.post<EventResp>(root, body).then((r) => r.data);
+export const createEvent = (body: EventBody, idempotencyKey?: string) =>
+  axiosInstance
+    .post<EventResp>(root, body, creationHeaders(idempotencyKey))
+    .then((r) => r.data);
 
-export const createSeries = (body: EventBody) =>
-  axiosInstance.post<EventResp>(`${root}/series`, body).then((r) => r.data);
+export const createSeries = (body: EventBody, idempotencyKey?: string) =>
+  axiosInstance
+    .post<EventResp>(`${root}/series`, body, creationHeaders(idempotencyKey))
+    .then((r) => r.data);
 
 export const cloneEvent = (
   slug: string,
-  body: { start_time: string; end_time: string; timezone?: string }
+  body: { start_time: string; end_time: string; timezone?: string },
+  idempotencyKey?: string
 ) =>
   axiosInstance
-    .post<EventResp>(`${root}/${encodeURIComponent(slug)}/clone`, body)
+    .post<EventResp>(
+      `${root}/${encodeURIComponent(slug)}/clone`,
+      body,
+      creationHeaders(idempotencyKey)
+    )
     .then((r) => r.data);
 
 export const updateEvent = (slug: string, body: EventBody) =>
