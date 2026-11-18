@@ -4,7 +4,7 @@
 
 **User refinement:** Keep the existing fonts and readable control sizes; reduce oversized imagery, padding and unused column space instead.
 
-**Layout:** A horizontal lead story and featured event share the first desktop row; discussions and public groups share the second; the existing article feed and discovery widgets share the third. On phones the lead uses a full-width landscape image above its full-width headline and summary. The same single instances flow as lead story, discussions, groups, featured event, articles and discovery. Full article headlines remain readable; only discussion/description previews are shortened. Existing public readers, routes, filters, timezone conversion, identity, verification and actions stay unchanged.
+**Layout:** A horizontal lead story and featured event share the first desktop row. Below them, the post column stacks discussions, filters and articles independently of the right column's public groups and discovery widgets. On phones the lead uses a full-width landscape image above its full-width headline and summary. The same single instances visually flow as lead story, discussions, groups, featured event, articles and discovery. Full article headlines remain readable; only discussion/description previews are shortened. Existing public readers, routes, filters, timezone conversion, identity, verification and actions stay unchanged.
 
 - [x] Add failing tests for independent community slots, one featured event, mobile reading order, existing links/actions and compact-only whitespace handling.
 - [x] Split community presentation into reusable discussion/group sections while retaining the existing combined component contract.
@@ -39,3 +39,11 @@
 - Phones use a full-width 16:9 lead image followed by the label, full headline and summary, preserving the existing fonts, colors, byline, links and actions. From 640px the image sits beside the text; on wide desktops it grows proportionally and fills the content height. Only the normal 12px footer gutter remains below the image.
 - Actual local browser checks at 320, 390, 430, 640, 820 and 1440px confirmed loaded images, complete wrapping headlines, exactly two discussion previews and no horizontal overflow. At 390px the image is 317x179px instead of 80x80px. The normal browser viewport was restored afterwards.
 - Fresh verification: 33 tests across six suites passed, including public-only filtering, legacy records, anonymous transport, server-rendered links, latest-two ordering, component cap and existing lead actions. Both new behavior assertions failed before their fix. TypeScript and scoped lint passed. The earlier full build belongs to the initial density correction; this refinement was checked through the local dev compilation and focused regressions.
+
+## Desktop column flow correction
+
+- After reducing the preview list to two discussions, the taller group cards held the next shared desktop row down, leaving a measured 105px gap before the article filters.
+- Independent body stacks now keep discussion/filter/article content together in the post region and group/discovery content in the complementary region. The existing first-row lead/event alignment is retained. No duplicated sections, viewport JavaScript or measured negative margins are used.
+- Below 1280px the body wrappers use `display: contents`; responsive ordering retains the exact visible mobile sequence. At 390px every measured section's position and height matched the previous layout. Source order follows the two semantic regions; visual mobile positioning remains unchanged.
+- At 1280, 1440 and 1944px both the discussion-to-filter and group-to-discovery gaps measure 16px. No horizontal overflow was found at 320, 820 or these desktop widths. The lead summary remains exactly two lines instead of stretching within its grid row.
+- The column containment regression failed before the fix. Nineteen focused component, integration and server-rendering tests passed after the correction; TypeScript and scoped source lint passed. Routes, public selection, auth, security and backend code were not changed.

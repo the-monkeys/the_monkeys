@@ -54,8 +54,6 @@ export function LandingHero({
     secondaryContent ||
     communityContent ||
     groupsContent;
-  const contentRow =
-    communityContent || groupsContent ? 'xl:row-start-3' : 'xl:row-start-2';
 
   return (
     <section>
@@ -108,7 +106,7 @@ export function LandingHero({
                   </div>
                   {description && (
                     <p
-                      className='row-start-4 min-w-0 line-clamp-2 font-inter text-sm leading-5 text-gray-600 dark:text-gray-400 sm:col-start-2 sm:row-start-3'
+                      className='row-start-4 min-w-0 line-clamp-2 font-inter text-sm leading-5 text-gray-600 dark:text-gray-400 sm:col-start-2 sm:row-start-3 sm:self-start'
                       dangerouslySetInnerHTML={{ __html: description }}
                     />
                   )}
@@ -144,9 +142,14 @@ export function LandingHero({
                 </div>
               </article>
             )}
-            {communityContent && (
-              <div className='min-w-0 xl:col-start-1 xl:row-start-2'>
-                {communityContent}
+            {(communityContent || primaryContent) && (
+              <div className='contents min-w-0 xl:col-start-1 xl:row-start-2 xl:flex xl:flex-col xl:gap-4'>
+                {communityContent && (
+                  <div className='min-w-0'>{communityContent}</div>
+                )}
+                {primaryContent && (
+                  <div className='order-1 min-w-0'>{primaryContent}</div>
+                )}
               </div>
             )}
           </section>
@@ -155,9 +158,14 @@ export function LandingHero({
             aria-label='Featured events and discovery'
             className='contents'
           >
-            {groupsContent && (
-              <div className='min-w-0 xl:col-start-2 xl:row-start-2'>
-                {groupsContent}
+            {(groupsContent || secondaryContent) && (
+              <div className='contents min-w-0 xl:col-start-2 xl:row-start-2 xl:flex xl:flex-col xl:gap-4'>
+                {groupsContent && (
+                  <div className='min-w-0'>{groupsContent}</div>
+                )}
+                {secondaryContent && (
+                  <div className='order-2 min-w-0'>{secondaryContent}</div>
+                )}
               </div>
             )}
             {featuredEvent && (
@@ -169,16 +177,6 @@ export function LandingHero({
               </div>
             )}
           </section>
-          {primaryContent && (
-            <div className={`min-w-0 xl:col-start-1 ${contentRow}`}>
-              {primaryContent}
-            </div>
-          )}
-          {secondaryContent && (
-            <div className={`min-w-0 xl:col-start-2 ${contentRow}`}>
-              {secondaryContent}
-            </div>
-          )}
         </div>
       )}
     </section>

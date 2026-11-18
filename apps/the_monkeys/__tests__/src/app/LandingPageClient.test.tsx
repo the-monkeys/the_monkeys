@@ -191,10 +191,18 @@ describe('LandingPageClient', () => {
       community.compareDocumentPosition(groupSection) &
         Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
+    // Feed controls now belong to the independent post column. Mobile visual
+    // order is preserved by responsive CSS and checked in the browser.
     expect(
-      groupSection.compareDocumentPosition(navigation) &
-        Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
+      screen
+        .getByRole('region', { name: 'Featured posts and feed' })
+        .contains(navigation)
+    ).toBe(true);
+    expect(
+      screen
+        .getByRole('region', { name: 'Featured events and discovery' })
+        .contains(groupSection)
+    ).toBe(true);
     expect(screen.getByText('A real public discussion preview')).toBeDefined();
     expect(screen.getByText('A real public group')).toBeDefined();
   });

@@ -147,7 +147,7 @@ describe('LandingHero', () => {
     ).toBeDefined();
   });
 
-  it('uses single-instance community/event slots in logical mobile reading order', () => {
+  it('keeps each desktop feed with its own column without duplicating content', () => {
     renderWithProviders(
       <LandingHero
         lead={lead}
@@ -179,17 +179,11 @@ describe('LandingHero', () => {
       postArticle.compareDocumentPosition(discussions) &
         Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
-    expect(
-      discussions.compareDocumentPosition(groups) &
-        Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
-    expect(
-      groups.compareDocumentPosition(event!) & Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
-    expect(
-      event!.compareDocumentPosition(primaryContent) &
-        Node.DOCUMENT_POSITION_FOLLOWING
-    ).toBeTruthy();
+    const postColumn = screen.getByRole('region', {
+      name: 'Featured posts and feed',
+    });
+    expect(postColumn.contains(discussions)).toBe(true);
+    expect(postColumn.contains(primaryContent)).toBe(true);
     expect(
       screen.getAllByRole('article', { name: 'Featured event' })
     ).toHaveLength(1);
@@ -198,9 +192,14 @@ describe('LandingHero', () => {
     });
     expect(secondaryColumn.contains(event)).toBe(true);
     expect(secondaryColumn.contains(groups)).toBe(true);
+    const discovery = screen.getByRole('complementary', {
+      name: 'Discover more',
+    });
+    expect(secondaryColumn.contains(discovery)).toBe(true);
+    expect(screen.getAllByText('Primary landing content')).toHaveLength(1);
     expect(
-      screen.getByRole('complementary', { name: 'Discover more' })
-    ).toBeDefined();
+      screen.getAllByRole('region', { name: 'Group previews' })
+    ).toHaveLength(1);
   });
 
   it('keeps an accessible page heading without restoring removed hero copy', () => {
