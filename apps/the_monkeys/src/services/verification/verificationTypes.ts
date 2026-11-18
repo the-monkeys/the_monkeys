@@ -1,5 +1,6 @@
 // DTOs mirroring documents/apis/user_service.yaml §8 (Account Verification).
 // Field names stay snake_case so responses pass through untouched.
+import type { ProtoTime } from '@/services/events/eventTypes';
 
 export type VerificationType = 'social_proof' | 'id_document';
 
@@ -15,13 +16,14 @@ export type IDDocumentType =
   | 'passport'
   | 'national_id'
   | 'drivers_license'
-  | 'residence_permit';
+  | 'residence_permit'
+  | 'government_id';
 
 /** One submitted verification request (owner or admin view). */
 export interface VerificationRequest {
   id: string;
   username: string;
-  verification_type: VerificationType;
+  verification_type: VerificationType | 'professional';
   country?: string;
   id_document_type?: string;
   status: VerificationStatus;
@@ -31,9 +33,9 @@ export interface VerificationRequest {
   additional_info?: string;
   reviewer_username?: string;
   rejection_reason?: string;
-  created_at?: string;
-  updated_at?: string;
-  reviewed_at?: string;
+  created_at?: ProtoTime;
+  updated_at?: ProtoTime;
+  reviewed_at?: ProtoTime;
 }
 
 /** GET /user/verification/me returns this when nothing was ever submitted. */

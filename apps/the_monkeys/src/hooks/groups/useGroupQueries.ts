@@ -1,4 +1,5 @@
 import useAuth from '@/hooks/auth/useAuth';
+import { useCreationMutation } from '@/hooks/useCreationMutation';
 import {
   LIVE_LIST_STALE_MS,
   invalidateAfterGroupEventWrite,
@@ -162,10 +163,14 @@ export function useRefreshGroups(slug?: string) {
 
 export function useCreateGroup() {
   const refresh = useRefreshGroups();
-  return useMutation({
-    mutationFn: (body: GroupBody) => createGroup(body),
-    onSuccess: refresh,
-  });
+  const { data: session } = useAuth();
+  return useCreationMutation(
+    `groups:${session?.account_id || session?.username || ''}`,
+    {
+      mutationFn: (body: GroupBody, key) => createGroup(body, key),
+      onSuccess: refresh,
+    }
+  );
 }
 
 export function useUpdateGroup(slug: string) {
@@ -346,8 +351,13 @@ export function useDeleteGroupRule(slug: string) {
 
 export function useCreateGroupEvent(slug: string) {
   const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (body: GroupEventBody) => createGroupEvent(slug, body),
-    onSuccess: () => invalidateAfterGroupEventWrite(qc, slug),
-  });
+  const { data: session } = useAuth();
+  return useCreationMutation(
+    `group-event:${slug}:${session?.account_id || session?.username || ''}`,
+    {
+      mutationFn: (body: GroupEventBody, key) =>
+        createGroupEvent(slug, body, key),
+      onSuccess: () => invalidateAfterGroupEventWrite(qc, slug),
+    }
+  );
 }

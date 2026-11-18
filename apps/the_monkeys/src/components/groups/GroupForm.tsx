@@ -30,7 +30,10 @@ type Props = {
   group?: GroupItem;
   saving?: boolean;
   submitLabel: string;
-  onSubmit: (body: GroupBody, images?: { logo?: File; cover?: File }) => void;
+  onSubmit: (
+    body: GroupBody,
+    images?: { logo?: File; cover?: File }
+  ) => void | Promise<unknown>;
 };
 
 const VISIBILITIES: { value: GroupVisibility; label: string; hint: string }[] =
@@ -52,6 +55,7 @@ function splitList(value: string): string[] {
 }
 
 export function GroupForm({ group, saving, submitLabel, onSubmit }: Props) {
+  const submitting = useRef(false);
   const [visibility, setVisibility] = useState<GroupVisibility>(
     group?.visibility || 'public'
   );
@@ -134,33 +138,39 @@ export function GroupForm({ group, saving, submitLabel, onSubmit }: Props) {
     }
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const body: GroupBody = {
-      name: String(form.get('name') || '').trim(),
-      description: String(form.get('description') || '').trim(),
-      visibility,
-      city: String(form.get('city') || '').trim(),
-      region: String(form.get('region') || '').trim(),
-      country: String(form.get('country') || '').trim(),
-      timezone: String(form.get('timezone') || defaultTimezone()),
-      cover_image: coverImage.trim(),
-      logo_image: logoImage.trim(),
-      topics: mergeCategoryTags(
-        selectedTopics,
-        splitList(String(form.get('topics') || ''))
-      ),
-    };
-    if (pin) {
-      body.latitude = pin.latitude;
-      body.longitude = pin.longitude;
+    if (saving || submitting.current) return;
+    submitting.current = true;
+    try {
+      const form = new FormData(e.currentTarget);
+      const body: GroupBody = {
+        name: String(form.get('name') || '').trim(),
+        description: String(form.get('description') || '').trim(),
+        visibility,
+        city: String(form.get('city') || '').trim(),
+        region: String(form.get('region') || '').trim(),
+        country: String(form.get('country') || '').trim(),
+        timezone: String(form.get('timezone') || defaultTimezone()),
+        cover_image: coverImage.trim(),
+        logo_image: logoImage.trim(),
+        topics: mergeCategoryTags(
+          selectedTopics,
+          splitList(String(form.get('topics') || ''))
+        ),
+      };
+      if (pin) {
+        body.latitude = pin.latitude;
+        body.longitude = pin.longitude;
+      }
+      if (!body.name) return;
+      await onSubmit(body, {
+        logo: logoFile ?? undefined,
+        cover: coverFile ?? undefined,
+      });
+    } finally {
+      submitting.current = false;
     }
-    if (!body.name) return;
-    onSubmit(body, {
-      logo: logoFile ?? undefined,
-      cover: coverFile ?? undefined,
-    });
   };
 
   return (

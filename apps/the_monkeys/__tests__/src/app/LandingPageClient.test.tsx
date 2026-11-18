@@ -2,6 +2,7 @@ import LandingPageClient from '@/app/LandingPageClient';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
 import { useEventList } from '@/hooks/events/useEventQueries';
+import { useLandingCommunity } from '@/hooks/landing/useLandingCommunity';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
 import { act, cleanup, screen, within } from '@testing-library/react';
@@ -17,6 +18,9 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/hooks/blog/useGetMetaFeedBlogs');
 vi.mock('@/hooks/blog/useGetTrendingBlogs');
 vi.mock('@/hooks/events/useEventQueries', () => ({ useEventList: vi.fn() }));
+vi.mock('@/hooks/landing/useLandingCommunity', () => ({
+  useLandingCommunity: vi.fn(),
+}));
 vi.mock('@/services/fetcher', () => ({
   fetcher: vi.fn().mockResolvedValue(null),
   authFetcher: vi.fn().mockResolvedValue(null),
@@ -116,6 +120,32 @@ const thirdEvent: EventItem = {
 
 describe('LandingPageClient', () => {
   beforeEach(() => {
+    vi.mocked(useLandingCommunity, { partial: true }).mockReturnValue({
+      discussions: {
+        data: [
+          {
+            public_id: 'landing-discussion',
+            body: 'A real public discussion preview',
+            status: 'visible',
+          },
+        ],
+        isPending: false,
+        isError: false,
+      },
+      groups: {
+        data: [
+          {
+            id: 1,
+            name: 'A real public group',
+            slug: 'public-group',
+            status: 'published',
+            visibility: 'public',
+          },
+        ],
+        isPending: false,
+        isError: false,
+      },
+    } as ReturnType<typeof useLandingCommunity>);
     vi.mocked(useGetTrendingBlogs).mockReturnValue({
       blogs: [
         {
@@ -150,6 +180,31 @@ describe('LandingPageClient', () => {
     renderWithProviders(<LandingPageClient />);
 
     expect(useGetMetaFeedBlogs).toHaveBeenCalledWith({ limit: 12 });
+    const community = screen.getByRole('region', { name: 'Top discussions' });
+    const groupSection = screen.getByRole('region', {
+      name: 'Discover groups',
+    });
+    const navigation = screen.getByRole('navigation', {
+      name: 'Explore Monkeys',
+    });
+    expect(
+      community.compareDocumentPosition(groupSection) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    // Feed controls now belong to the independent post column. Mobile visual
+    // order is preserved by responsive CSS and checked in the browser.
+    expect(
+      screen
+        .getByRole('region', { name: 'Featured posts and feed' })
+        .contains(navigation)
+    ).toBe(true);
+    expect(
+      screen
+        .getByRole('region', { name: 'Featured events and discovery' })
+        .contains(groupSection)
+    ).toBe(true);
+    expect(screen.getByText('A real public discussion preview')).toBeDefined();
+    expect(screen.getByText('A real public group')).toBeDefined();
   });
 
   it('keeps events and the dispatch signup discoverable when posts fail', () => {
@@ -213,7 +268,7 @@ describe('LandingPageClient', () => {
     ).toBeDefined();
     expect(
       screen.getAllByRole('article', { name: 'Featured event' })
-    ).toHaveLength(2);
+    ).toHaveLength(1);
     expect(
       screen.getByRole('complementary', { name: 'Discover more' })
     ).toBeDefined();
@@ -226,15 +281,15 @@ describe('LandingPageClient', () => {
     });
     expect(
       eventColumn.contains(
-        document.querySelector('[data-layout="desktop-featured-event"]')
+        document.querySelector('[data-layout="featured-event"]')
       )
     ).toBe(true);
     expect(
       eventColumn.contains(
-        screen.getByRole('complementary', { name: 'Discover more' })
+        screen.getByRole('region', { name: 'Discover groups' })
       )
     ).toBe(true);
-    expect(screen.getAllByText('Community design session')).toHaveLength(2);
+    expect(screen.getAllByText('Community design session')).toHaveLength(1);
     expect(document.body.textContent).not.toMatch(/\bblogs?\b/i);
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.queryByRole('main')).toBeNull();

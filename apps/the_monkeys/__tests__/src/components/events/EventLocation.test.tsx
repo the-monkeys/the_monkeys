@@ -74,6 +74,97 @@ describe.each([
     };
   }
 
+  it('ignores same-turn duplicate submissions before address validation completes', async () => {
+    let finish!: (value: typeof newPin) => void;
+    const { onSubmit, place, form } = setup();
+    fireEvent.change(place, { target: { value: newPlace } });
+    vi.mocked(geocodeAddress).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          finish = resolve;
+        })
+    );
+    act(() => {
+      fireEvent.submit(form);
+      fireEvent.submit(form);
+    });
+    expect(geocodeAddress).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      finish(newPin);
+    });
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('waits for an async submit callback and still supports existing void callbacks', async () => {
+    const { form, place, onSubmit } = setup();
+    let finish!: () => void;
+    onSubmit.mockImplementationOnce(
+      () =>
+        new Promise<void>((resolve) => {
+          finish = resolve;
+        })
+    );
+    act(() => {
+      fireEvent.submit(form);
+      fireEvent.submit(form);
+    });
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+    await act(async () => {
+      finish();
+    });
+    fireEvent.change(place, { target: { value: '' } });
+    fireEvent.submit(form);
+    expect(onSubmit).toHaveBeenCalledTimes(2);
+  });
+
+  it('keeps optional geocoding stable for an unchanged retry rather than silently changing the creation payload', async () => {
+    const { onSubmit, place, form } = setup();
+    fireEvent.change(place, { target: { value: newPlace } });
+    vi.mocked(geocodeAddress)
+      .mockResolvedValueOnce(null)
+      .mockResolvedValue(newPin);
+    fireEvent.submit(form);
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+    fireEvent.submit(form);
+    await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(2));
+    expect(onSubmit.mock.calls[1][0]).toEqual(onSubmit.mock.calls[0][0]);
+    expect(geocodeAddress).toHaveBeenCalledTimes(1);
+  });
+
+  it.each(['type', 'visibility'])(
+    'still invalidates a pending lookup when the %s actually changes',
+    async (control) => {
+      const { onSubmit, place, form } = setup();
+      if (_name === 'standalone' && control === 'visibility')
+        fireEvent.click(screen.getByText('More event options'));
+      fireEvent.change(place, { target: { value: newPlace } });
+      let finish!: (value: typeof newPin) => void;
+      vi.mocked(geocodeAddress).mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            finish = resolve;
+          })
+      );
+      fireEvent.submit(form);
+      fireEvent.click(
+        screen.getByRole('button', {
+          name: control === 'type' ? 'Hybrid' : /^Private/,
+        })
+      );
+      await act(async () => {
+        finish(newPin);
+      });
+      expect(onSubmit).not.toHaveBeenCalled();
+      fireEvent.submit(form);
+      await waitFor(() => expect(onSubmit).toHaveBeenCalledTimes(1));
+      expect(onSubmit.mock.calls[0][0]).toMatchObject(
+        control === 'type'
+          ? { event_type: 'hybrid' }
+          : { visibility: 'private' }
+      );
+    }
+  );
+
   it('discards the old pin when the place changes and submits the new coordinates', async () => {
     const { onSubmit, place, form } = setup();
     fireEvent.change(place, { target: { value: newPlace } });

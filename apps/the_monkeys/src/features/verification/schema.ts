@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { MAX_ADDITIONAL_INFO, MAX_DOC_BYTES } from './constants';
+import { COUNTRY_CODES, MAX_ADDITIONAL_INFO, MAX_DOC_BYTES } from './constants';
 
 const CHECKSUM_RE = /^[a-f0-9]{64}$/;
 
@@ -18,7 +18,7 @@ export type UploadedDoc = z.infer<typeof uploadedDocSchema>;
 
 export const verificationSchema = z
   .object({
-    verification_type: z.enum(['social_proof', 'id_document']),
+    verification_type: z.literal('id_document'),
     country: z
       .string()
       .trim()
@@ -27,11 +27,17 @@ export const verificationSchema = z
       .optional()
       .or(z.literal('')),
     id_document_type: z
-      .enum(['passport', 'national_id', 'drivers_license', 'residence_permit'])
+      .enum([
+        'passport',
+        'national_id',
+        'drivers_license',
+        'residence_permit',
+        'government_id',
+      ])
       .optional(),
-    docs: z.record(
+    docs: z.partialRecord(
       z.enum(['selfie', 'id_front', 'id_back']),
-      uploadedDocSchema
+      uploadedDocSchema.optional()
     ),
     additional_info: z
       .string()
@@ -43,23 +49,11 @@ export const verificationSchema = z
       .or(z.literal('')),
   })
   .superRefine((val, ctx) => {
-    if (val.verification_type !== 'id_document') {
-      // Social proof needs at least a note to review.
-      if (!val.additional_info || val.additional_info.trim().length === 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          path: ['additional_info'],
-          message: 'Add links or context for reviewers',
-        });
-      }
-      return;
-    }
-
-    if (!val.country) {
+    if (!val.country || !COUNTRY_CODES.includes(val.country)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ['country'],
-        message: 'Country is required',
+        message: 'Choose the country that issued your ID',
       });
     }
     if (!val.id_document_type) {

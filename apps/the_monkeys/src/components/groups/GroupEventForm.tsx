@@ -32,7 +32,7 @@ type Props = {
   event?: EventItem;
   saving?: boolean;
   submitLabel: string;
-  onSubmit: (body: GroupEventBody) => void;
+  onSubmit: (body: GroupEventBody) => void | Promise<unknown>;
 };
 
 const TYPES: { value: EventType; label: string }[] = [
@@ -82,8 +82,16 @@ export function GroupEventForm({
   );
   const [location, setLocation] = useState(event?.location || '');
   const submissionId = useRef(0);
+  const validatedPlace = useRef<{
+    pin: ReturnType<typeof pinFromCoords>;
+  } | null>(null);
+  const activeSubmission = useRef<{
+    revision: number;
+    submitted: boolean;
+  } | null>(null);
   const invalidateSubmission = () => {
     submissionId.current++;
+    validatedPlace.current = null;
   };
   useEffect(() => {
     const pending = submissionId;
@@ -91,6 +99,10 @@ export function GroupEventForm({
       pending.current++;
     };
   }, []);
+  useEffect(() => {
+    submissionId.current++;
+    validatedPlace.current = null;
+  }, [accountKey]);
   const [selectedTags, setSelectedTags] = useState(
     () => partitionTags(event?.tags).selected
   );
@@ -133,70 +145,91 @@ export function GroupEventForm({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const element = e.currentTarget;
-    const submission = ++submissionId.current;
-    const form = new FormData(element);
-    let start: string, end: string;
+    const active = activeSubmission.current;
+    if (
+      saving ||
+      (active && (active.submitted || active.revision === submissionId.current))
+    )
+      return;
+    const attempt = { revision: submissionId.current + 1, submitted: false };
+    activeSubmission.current = attempt;
     try {
-      start = fromLocalInput(startVal, timezone);
-      end = fromLocalInput(endVal, timezone);
-    } catch (error) {
-      setDateError(
-        error instanceof Error
-          ? error.message
-          : 'Check the event date and timezone.'
-      );
-      return;
-    }
-    if (!start || !end) return;
-
-    // Guard against past or inverted ranges; the browser `min` is advisory only.
-    const startMs = new Date(start).getTime();
-    const endMs = new Date(end).getTime();
-    if (startMs < Date.now() - 60_000) {
-      setDateError('Start time cannot be in the past.');
-      return;
-    }
-    if (endMs <= startMs) {
-      setDateError('End time must be after the start time.');
-      return;
-    }
-    setDateError('');
-
-    const body: GroupEventBody = {
-      title: String(form.get('title') || '').trim(),
-      description: String(form.get('description') || '').trim(),
-      start_time: start,
-      end_time: end,
-      timezone,
-      event_type: eventType,
-      location: String(form.get('location') || '').trim(),
-      meeting_link: String(form.get('meeting_link') || '').trim(),
-      capacity: Number(form.get('capacity') || 0) || 0,
-      cover_image: String(form.get('cover_image') || '').trim(),
-      tags: mergeCategoryTags(
-        selectedTags,
-        splitList(String(form.get('tags') || ''))
-      ),
-      visibility,
-      requires_host_review: requiresHostReview,
-    };
-    if (eventType !== 'virtual') {
-      let resolved = pin;
-      if (!resolved && body.location) {
-        // A map lookup is optional; the backend can resolve the address too.
-        resolved = await geocodeAddress(body.location, ipLocation.city).catch(
-          () => null
+      const element = e.currentTarget;
+      const submission = ++submissionId.current;
+      const form = new FormData(element);
+      let start: string, end: string;
+      try {
+        start = fromLocalInput(startVal, timezone);
+        end = fromLocalInput(endVal, timezone);
+      } catch (error) {
+        setDateError(
+          error instanceof Error
+            ? error.message
+            : 'Check the event date and timezone.'
         );
+        return;
       }
-      if (resolved) {
-        body.latitude = resolved.latitude;
-        body.longitude = resolved.longitude;
+      if (!start || !end) return;
+
+      // Guard against past or inverted ranges; the browser `min` is advisory only.
+      const startMs = new Date(start).getTime();
+      const endMs = new Date(end).getTime();
+      if (startMs < Date.now() - 60_000) {
+        setDateError('Start time cannot be in the past.');
+        return;
       }
+      if (endMs <= startMs) {
+        setDateError('End time must be after the start time.');
+        return;
+      }
+      setDateError('');
+
+      const body: GroupEventBody = {
+        title: String(form.get('title') || '').trim(),
+        description: String(form.get('description') || '').trim(),
+        start_time: start,
+        end_time: end,
+        timezone,
+        event_type: eventType,
+        location: String(form.get('location') || '').trim(),
+        meeting_link: String(form.get('meeting_link') || '').trim(),
+        capacity: Number(form.get('capacity') || 0) || 0,
+        cover_image: String(form.get('cover_image') || '').trim(),
+        tags: mergeCategoryTags(
+          selectedTags,
+          splitList(String(form.get('tags') || ''))
+        ),
+        visibility,
+        requires_host_review: requiresHostReview,
+      };
+      if (eventType !== 'virtual') {
+        let resolved = pin;
+        if (!resolved && body.location) {
+          // A map lookup is optional; the backend can resolve the address too.
+          // Reuse even an empty result until input changes, so an unchanged
+          // retry cannot silently send a different creation payload/key.
+          if (validatedPlace.current) resolved = validatedPlace.current.pin;
+          else {
+            resolved = await geocodeAddress(
+              body.location,
+              ipLocation.city
+            ).catch(() => null);
+            if (submission === submissionId.current)
+              validatedPlace.current = { pin: resolved };
+          }
+        }
+        if (resolved) {
+          body.latitude = resolved.latitude;
+          body.longitude = resolved.longitude;
+        }
+      }
+      if (!body.title) return;
+      if (submission !== submissionId.current || !element.isConnected) return;
+      attempt.submitted = true;
+      await onSubmit(body);
+    } finally {
+      if (activeSubmission.current === attempt) activeSubmission.current = null;
     }
-    if (!body.title) return;
-    if (submission !== submissionId.current || !element.isConnected) return;
-    onSubmit(body);
   };
 
   const showPlace = eventType !== 'virtual';
@@ -207,12 +240,6 @@ export function GroupEventForm({
       ref={formRef}
       onSubmit={handleSubmit}
       onChangeCapture={invalidateSubmission}
-      onClickCapture={(e) => {
-        // Custom controls change state via buttons, not native change events.
-        if (e.target instanceof Element && e.target.closest('button')) {
-          invalidateSubmission();
-        }
-      }}
       className='space-y-5'
     >
       <Field label='Title'>
@@ -283,7 +310,12 @@ export function GroupEventForm({
             <button
               key={t.value}
               type='button'
-              onClick={() => setEventType(t.value)}
+              onClick={() => {
+                if (eventType !== t.value) {
+                  invalidateSubmission();
+                  setEventType(t.value);
+                }
+              }}
               className={`rounded-full border-2 px-3 py-1.5 font-inter text-sm transition-colors ${
                 eventType === t.value
                   ? 'border-brand-orange bg-brand-orange text-white'
@@ -315,7 +347,11 @@ export function GroupEventForm({
           <PlacePin
             value={pin}
             onChange={(next) => {
-              invalidateSubmission();
+              if (
+                next?.latitude !== pin?.latitude ||
+                next?.longitude !== pin?.longitude
+              )
+                invalidateSubmission();
               setPin(next);
             }}
             address={location}
@@ -354,13 +390,14 @@ export function GroupEventForm({
       <Field label='Topics'>
         <CategoryChips
           selected={selectedTags}
-          onToggle={(tag) =>
+          onToggle={(tag) => {
+            invalidateSubmission();
             setSelectedTags((prev) =>
               prev.includes(tag)
                 ? prev.filter((t) => t !== tag)
                 : [...prev, tag]
-            )
-          }
+            );
+          }}
         />
         <Input
           name='tags'
@@ -379,7 +416,12 @@ export function GroupEventForm({
             <button
               key={v.value}
               type='button'
-              onClick={() => setVisibility(v.value)}
+              onClick={() => {
+                if (visibility !== v.value) {
+                  invalidateSubmission();
+                  setVisibility(v.value);
+                }
+              }}
               className={`rounded-lg border-2 px-3 py-2 font-inter text-sm transition-colors ${
                 visibility === v.value
                   ? 'border-brand-orange bg-brand-orange/5'

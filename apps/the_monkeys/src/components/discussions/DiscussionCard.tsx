@@ -26,14 +26,24 @@ export function DiscussionCard({
   linked,
   footer,
   embedded = false,
+  compact = false,
 }: {
   post: Discussion;
   linked: boolean;
   footer?: ReactNode;
   /** Sit inside a parent feed row instead of drawing its own divider. */
   embedded?: boolean;
+  /** Short landing preview; full feeds and threads keep their existing layout. */
+  compact?: boolean;
 }) {
-  const preview = firstInternalLink(post.body);
+  const preview = compact ? undefined : firstInternalLink(post.body);
+  const textClass = cn(
+    bodyClass,
+    !linked && 'mt-3 text-base leading-7',
+    embedded && 'text-base',
+    compact &&
+      'line-clamp-2 pr-10 text-sm [overflow-wrap:anywhere] lg:line-clamp-1'
+  );
   return (
     <article
       className={cn(
@@ -52,11 +62,22 @@ export function DiscussionCard({
       ) : null}
       <DiscussionAvatar username={discussionHandle(post)} />
       <div className='min-w-0 flex-1'>
-        <div className='flex min-w-0 items-start justify-between gap-2'>
-          <div className='min-w-0 flex-1'>
+        <div
+          className={cn(
+            'flex min-w-0 items-start justify-between gap-2',
+            compact && 'relative min-h-6'
+          )}
+        >
+          <div className={cn('min-w-0 flex-1', compact && 'pr-11')}>
             <DiscussionIdentity author={post} createdAt={post.created_at} />
           </div>
-          <DiscussionCardMenu post={post} />
+          {compact ? (
+            <div className='absolute right-0 -top-1'>
+              <DiscussionCardMenu post={post} />
+            </div>
+          ) : (
+            <DiscussionCardMenu post={post} />
+          )}
         </div>
         {embedded ? (
           post.audience === 'group_only' ? (
@@ -67,15 +88,12 @@ export function DiscussionCard({
         ) : (
           <DiscussionGroupLine post={post} />
         )}
-        <DiscussionBody
-          body={post.body}
-          className={cn(
-            bodyClass,
-            !linked && 'mt-3 text-base leading-7',
-            embedded && 'text-base'
-          )}
-        />
-        {preview ? (
+        {compact ? (
+          <p className={textClass}>{post.body.replace(/\s+/g, ' ').trim()}</p>
+        ) : (
+          <DiscussionBody body={post.body} className={textClass} />
+        )}
+        {preview && !compact ? (
           <DiscussionLinkPreview href={preview.href} target={preview.target} />
         ) : null}
         {!footer ? (

@@ -8,6 +8,7 @@ import { EventBody } from '@/services/events/eventTypes';
 import { getQueryClient } from '@/utils/get-query-client';
 import { QueryClientProvider } from '@tanstack/react-query';
 import {
+  act,
   cleanup,
   fireEvent,
   render,
@@ -33,11 +34,14 @@ const apis = [
 const adapters = apis.map((api) => api.defaults.adapter);
 const client = getQueryClient();
 const defaultOptions = client.getDefaultOptions();
-let posts: { path: string; body: EventBody }[];
+let posts: { path: string; body: EventBody; key: unknown }[];
+let failCreate = false;
 
 beforeEach(() => {
   vi.clearAllMocks();
   posts = [];
+  failCreate = false;
+  push.mockReset();
   client.clear();
   client.setDefaultOptions({
     queries: { retry: false, gcTime: Infinity, staleTime: 60_000 },
@@ -100,7 +104,12 @@ beforeEach(() => {
       config.method === 'post' &&
       ['/events', '/events/series'].includes(config.url || '')
     ) {
-      posts.push({ path: config.url!, body: JSON.parse(config.data) });
+      posts.push({
+        path: config.url!,
+        body: JSON.parse(config.data),
+        key: config.headers.get('Idempotency-Key'),
+      });
+      if (failCreate) throw new Error('Response lost');
       data = {
         event: {
           id: 1,
@@ -172,10 +181,105 @@ it.each([
     );
     expect(posts).toHaveLength(1);
     expect(posts[0].path).toBe(path);
+    expect(posts[0].key).toEqual(expect.any(String));
     expect(posts[0].body.co_host_usernames).toEqual(['cohost1']);
     if (repeat === 'Weekly')
       expect(posts[0].body.recurrence?.freq).toBe('weekly');
     else expect(posts[0].body.recurrence).toBeUndefined();
     expect(replace).not.toHaveBeenCalled();
+  }
+);
+
+it.each(['Weekly', 'One-time'])(
+  'guards same-turn %s creation and reuses the key after a lost response',
+  async (repeat) => {
+    const user = userEvent.setup();
+    render(
+      <QueryClientProvider client={client}>
+        <NewEventPage />
+      </QueryClientProvider>
+    );
+    for (const [name, value] of [
+      ['title', 'Retry meetup'],
+      ['start', '2099-11-12T19:00'],
+      ['end', '2099-11-12T20:00'],
+    ]) {
+      fireEvent.change(document.querySelector(`[name="${name}"]`)!, {
+        target: { value },
+      });
+    }
+    if (repeat === 'Weekly') {
+      await user.click(screen.getByText('More event options'));
+      await user.click(screen.getByRole('radio', { name: repeat }));
+    }
+    const form = screen
+      .getByRole('button', { name: 'Save draft' })
+      .closest('form')!;
+    failCreate = true;
+    fireEvent.submit(form);
+    fireEvent.submit(form);
+    await waitFor(() => expect(posts).toHaveLength(1));
+    await waitFor(() =>
+      expect(
+        (form.querySelector('[type="submit"]') as HTMLButtonElement).disabled
+      ).toBe(false)
+    );
+    failCreate = false;
+    fireEvent.submit(form);
+    await waitFor(() => expect(push).toHaveBeenCalled());
+    expect(posts).toHaveLength(2);
+    expect(posts[0].key).toEqual(expect.any(String));
+    expect(posts[1].key).toBe(posts[0].key);
+  }
+);
+
+it.each(['Weekly', 'One-time'])(
+  'keeps successful %s creation latched until navigation unmounts the page',
+  async (repeat) => {
+    const user = userEvent.setup();
+    let finishNavigation!: () => void;
+    push.mockReturnValueOnce(
+      new Promise<void>((resolve) => {
+        finishNavigation = resolve;
+      })
+    );
+    render(
+      <QueryClientProvider client={client}>
+        <NewEventPage />
+      </QueryClientProvider>
+    );
+    for (const [name, value] of [
+      ['title', 'Navigation meetup'],
+      ['start', '2099-11-12T19:00'],
+      ['end', '2099-11-12T20:00'],
+    ]) {
+      fireEvent.change(document.querySelector(`[name="${name}"]`)!, {
+        target: { value },
+      });
+    }
+    if (repeat === 'Weekly') {
+      await user.click(screen.getByText('More event options'));
+      await user.click(screen.getByRole('radio', { name: repeat }));
+    }
+    const form = screen
+      .getByRole('button', { name: 'Save draft' })
+      .closest('form')!;
+    fireEvent.submit(form);
+    await waitFor(() => expect(push).toHaveBeenCalled());
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(
+      (form.querySelector('[type="submit"]') as HTMLButtonElement).disabled
+    ).toBe(true);
+    fireEvent.submit(form);
+    await act(async () => {
+      finishNavigation();
+    });
+    fireEvent.submit(form);
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(posts).toHaveLength(1);
   }
 );

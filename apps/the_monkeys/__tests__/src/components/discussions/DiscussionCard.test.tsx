@@ -48,6 +48,54 @@ const post: Discussion = {
 };
 
 describe('DiscussionCard', () => {
+  it('does not leave invisible inline links focusable inside a clamped preview', () => {
+    const linkedPost = {
+      ...post,
+      body: `${'A long public thought. '.repeat(20)} @ada https://example.com/read`,
+    };
+    const { rerender } = render(
+      <DiscussionCard linked post={linkedPost} compact />
+    );
+    expect(screen.queryByRole('link', { name: '@ada' })).toBeNull();
+    expect(
+      screen.queryByRole('link', {
+        name: 'https://example.com/read',
+      })
+    ).toBeNull();
+    expect(document.querySelector('a[href="/discussions/abc"]')).not.toBeNull();
+    rerender(<DiscussionCard linked post={linkedPost} />);
+    expect(screen.getByRole('link', { name: '@ada' })).toBeDefined();
+    expect(
+      screen.getByRole('link', {
+        name: 'https://example.com/read',
+      })
+    ).toBeDefined();
+  });
+  it('limits only compact landing previews while preserving full-card rich previews', () => {
+    const linkedPost = {
+      ...post,
+      body: 'Read https://monkeys.com.co/groups/gophers',
+    };
+    const { rerender } = render(
+      <DiscussionCard linked post={linkedPost} compact />
+    );
+    expect(screen.queryByText(/preview group/)).toBeNull();
+    expect(screen.getByText(/Read/).className).toContain('line-clamp-2');
+    rerender(<DiscussionCard linked post={linkedPost} />);
+    expect(screen.getByText('preview group /groups/gophers')).toBeDefined();
+    expect(screen.getByText(/Read/).className).not.toContain('line-clamp-2');
+  });
+  it('collapses blank lines only in compact excerpts without changing full discussion text', () => {
+    const body = 'First paragraph\n\n\nsecond paragraph';
+    const { rerender } = render(
+      <DiscussionCard linked compact post={{ ...post, body }} />
+    );
+    expect(
+      screen.getByText('First paragraph second paragraph').textContent
+    ).toBe('First paragraph second paragraph');
+    rerender(<DiscussionCard linked post={{ ...post, body }} />);
+    expect(screen.getByText(/First paragraph/).textContent).toBe(body);
+  });
   it('links the body and shows like and reply counts', () => {
     render(<DiscussionCard post={post} linked />);
     expect(

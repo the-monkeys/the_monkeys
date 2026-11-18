@@ -28,11 +28,15 @@ export function LandingHero({
   featuredEvent,
   primaryContent,
   secondaryContent,
+  communityContent,
+  groupsContent,
 }: {
   lead?: MetaBlog;
   featuredEvent?: EventItem;
   primaryContent?: ReactNode;
   secondaryContent?: ReactNode;
+  communityContent?: ReactNode;
+  groupsContent?: ReactNode;
 }) {
   const title = lead ? purifyHTMLString(lead.title) : '';
   const description = lead ? purifyHTMLString(lead.first_paragraph) : '';
@@ -44,7 +48,12 @@ export function LandingHero({
     ? getRelativeTime(lead.published_time)
     : '';
   const hasLandingContent =
-    lead || featuredEvent || primaryContent || secondaryContent;
+    lead ||
+    featuredEvent ||
+    primaryContent ||
+    secondaryContent ||
+    communityContent ||
+    groupsContent;
 
   return (
     <section>
@@ -52,61 +61,61 @@ export function LandingHero({
       <FeaturedAuthorsStrip title='Live & hosts' variant='compact' />
 
       {hasLandingContent && (
-        <div className='flex flex-col gap-4 pb-8 pt-4 lg:grid lg:grid-cols-[minmax(0,1.65fr)_minmax(19rem,1fr)] lg:items-start lg:gap-4'>
-          <section
-            aria-label='Featured posts and feed'
-            className='contents lg:flex lg:min-w-0 lg:flex-col lg:gap-4'
-          >
+        <div className='flex flex-col gap-4 pb-8 pt-4 xl:grid xl:grid-cols-[minmax(0,1.65fr)_minmax(19rem,1fr)] xl:items-start xl:gap-4'>
+          <section aria-label='Featured posts and feed' className='contents'>
             {lead && (
               <article
                 aria-label='Featured post'
-                className='group order-1 flex min-h-full min-w-0 flex-col overflow-hidden rounded-xl border border-border-light/70 bg-background-light shadow-sm dark:border-border-dark/40 dark:bg-background-dark lg:order-none'
+                className='group flex min-w-0 flex-col overflow-hidden rounded-xl border border-border-light/70 bg-background-light shadow-sm dark:border-border-dark/40 dark:bg-background-dark xl:col-start-1 xl:row-start-1 xl:h-full'
               >
                 <Link
                   href={postHref}
-                  className={`relative block aspect-[16/9] min-h-72 overflow-hidden bg-gray-900 sm:min-h-80 ${focusRing}`}
+                  aria-labelledby={`landing-lead-${lead.blog_id}`}
+                  className={`grid min-w-0 flex-1 grid-cols-1 items-start gap-x-3 gap-y-2 p-3 pb-0 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-stretch sm:gap-x-4 sm:p-4 sm:pb-0 xl:grid-cols-[minmax(10rem,0.8fr)_minmax(0,1.6fr)] ${focusRing}`}
                 >
-                  {isNonValidBannerImage(lead.first_image) ? (
-                    <BlogPlaceholderImage
-                      title={title}
-                      className='transition-transform duration-700 ease-out group-hover:scale-[1.025]'
-                    />
-                  ) : (
-                    <BlogImage
-                      title={title}
-                      image={lead.first_image}
-                      className='object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]'
-                    />
-                  )}
-                  <div className='absolute inset-0 bg-gradient-to-t from-black via-black/30 to-black/10' />
-                  <div className='absolute inset-x-0 top-0 flex items-center p-4 sm:p-5'>
-                    <span className='rounded-md bg-brand-orange px-3 py-1 font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-white shadow-sm'>
+                  <div className='row-start-2 min-w-0 sm:col-start-2 sm:row-start-1'>
+                    <span className='font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-brand-orange'>
                       Lead post
                     </span>
-                  </div>
-                  <div className='absolute inset-x-0 bottom-0 p-5 text-white sm:p-6'>
                     {topic && (
-                      <span className='font-inter text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff8b7d]'>
+                      <span className='ml-2 font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-gray-500 dark:text-gray-400'>
                         {topic}
                       </span>
                     )}
-                    <h1
-                      className='mt-2 max-w-3xl font-newsreader text-[1.8rem] font-semibold leading-[1.06] tracking-[-0.025em] text-white sm:text-[2.25rem]'
-                      dangerouslySetInnerHTML={{ __html: title }}
-                    />
                   </div>
-                </Link>
-                <div className='flex flex-1 flex-col p-4 sm:p-5'>
+                  <h1
+                    id={`landing-lead-${lead.blog_id}`}
+                    className='row-start-3 min-w-0 break-words font-newsreader text-2xl font-semibold leading-[1.12] tracking-[-0.025em] text-text-light [overflow-wrap:anywhere] dark:text-text-dark sm:col-start-2 sm:row-start-2 sm:text-3xl'
+                    dangerouslySetInnerHTML={{ __html: title }}
+                  />
+                  <div className='relative col-start-1 row-start-1 aspect-video overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-900 sm:row-span-3 sm:aspect-auto sm:min-h-40'>
+                    {isNonValidBannerImage(lead.first_image) ? (
+                      <BlogPlaceholderImage
+                        title={title}
+                        className='absolute inset-0 object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]'
+                        sizes='(min-width: 1280px) 25vw, (min-width: 640px) 160px, calc(100vw - 4rem)'
+                      />
+                    ) : (
+                      <BlogImage
+                        title={title}
+                        image={lead.first_image}
+                        className='absolute inset-0 object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]'
+                        sizes='(min-width: 1280px) 25vw, (min-width: 640px) 160px, calc(100vw - 4rem)'
+                      />
+                    )}
+                  </div>
                   {description && (
                     <p
-                      className='line-clamp-2 font-inter text-sm leading-6 text-gray-600 dark:text-gray-400'
+                      className='row-start-4 min-w-0 line-clamp-2 font-inter text-sm leading-5 text-gray-600 dark:text-gray-400 sm:col-start-2 sm:row-start-3 sm:self-start'
                       dangerouslySetInnerHTML={{ __html: description }}
                     />
                   )}
+                </Link>
+                <div className='mt-auto p-3 sm:px-4'>
                   <div
                     role='group'
                     aria-label='Featured post byline and actions'
-                    className='mt-auto flex min-h-12 flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-border-light/70 pt-3 dark:border-border-dark/40'
+                    className='flex min-h-11 flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-border-light/70 pt-2 dark:border-border-dark/40'
                   >
                     <div className='min-w-0 text-gray-500 dark:text-gray-400'>
                       <UserInfoCardShowcase
@@ -133,36 +142,38 @@ export function LandingHero({
                 </div>
               </article>
             )}
-            {featuredEvent && (
-              <div
-                data-layout='mobile-featured-event'
-                className='order-2 min-w-0 lg:hidden'
-              >
-                <LandingFeaturedEvent event={featuredEvent} />
-              </div>
-            )}
-            {primaryContent && (
-              <div className='order-3 min-w-0 lg:order-none'>
-                {primaryContent}
+            {(communityContent || primaryContent) && (
+              <div className='contents min-w-0 xl:col-start-1 xl:row-start-2 xl:flex xl:flex-col xl:gap-4'>
+                {communityContent && (
+                  <div className='min-w-0'>{communityContent}</div>
+                )}
+                {primaryContent && (
+                  <div className='order-1 min-w-0'>{primaryContent}</div>
+                )}
               </div>
             )}
           </section>
 
           <section
             aria-label='Featured events and discovery'
-            className='contents lg:flex lg:min-w-0 lg:flex-col lg:gap-4'
+            className='contents'
           >
-            {featuredEvent && (
-              <div
-                data-layout='desktop-featured-event'
-                className='hidden min-w-0 lg:block'
-              >
-                <LandingFeaturedEvent event={featuredEvent} />
+            {(groupsContent || secondaryContent) && (
+              <div className='contents min-w-0 xl:col-start-2 xl:row-start-2 xl:flex xl:flex-col xl:gap-4'>
+                {groupsContent && (
+                  <div className='min-w-0'>{groupsContent}</div>
+                )}
+                {secondaryContent && (
+                  <div className='order-2 min-w-0'>{secondaryContent}</div>
+                )}
               </div>
             )}
-            {secondaryContent && (
-              <div className='order-4 min-w-0 lg:order-none'>
-                {secondaryContent}
+            {featuredEvent && (
+              <div
+                data-layout='featured-event'
+                className='min-w-0 xl:col-start-2 xl:row-start-1'
+              >
+                <LandingFeaturedEvent event={featuredEvent} />
               </div>
             )}
           </section>

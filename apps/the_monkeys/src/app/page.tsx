@@ -7,6 +7,10 @@ import { landingEntityGraph, landingMetadata } from '@/lib/landingPageSeo';
 import { queryKeys } from '@/lib/queryKeys';
 import { listEvents } from '@/services/events/eventsApi';
 import { fetcherV2 } from '@/services/fetcher';
+import {
+  landingDiscussionQuery,
+  landingGroupQuery,
+} from '@/services/landing/communityApi';
 import { getQueryClient } from '@/utils/get-query-client';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
@@ -19,6 +23,8 @@ export default async function LandingPage() {
   const limit = LANDING_POST_LIMIT;
 
   await Promise.all([
+    queryClient.prefetchQuery(landingDiscussionQuery),
+    queryClient.prefetchQuery(landingGroupQuery),
     queryClient.prefetchQuery({
       queryKey: [META_FEED_QUERY_KEY, limit],
       queryFn: () => fetcherV2(`/blog/meta-feed?limit=${limit}`),
