@@ -3,7 +3,10 @@
 import { useState } from 'react';
 
 import { LandingCapabilityNav } from '@/components/landing/LandingCapabilityNav';
-import { LandingCommunity } from '@/components/landing/LandingCommunity';
+import {
+  LandingDiscussions,
+  LandingGroups,
+} from '@/components/landing/LandingCommunity';
 import { LandingDiscoveryRail } from '@/components/landing/LandingDiscoveryRail';
 import { LandingEditorialFeed } from '@/components/landing/LandingEditorialFeed';
 import { LandingHero } from '@/components/landing/LandingHero';
@@ -88,12 +91,12 @@ const LandingPageClient = () => {
             ? eventSlots.featured
             : undefined
         }
+        communityContent={
+          <LandingDiscussions discussions={community.discussions} />
+        }
+        groupsContent={<LandingGroups groups={community.groups} rail />}
         primaryContent={
           <>
-            <LandingCommunity
-              discussions={community.discussions}
-              groups={community.groups}
-            />
             <LandingCapabilityNav
               upcomingCount={eventQuery.data?.total}
               activeFeedFilter={feedFilter}

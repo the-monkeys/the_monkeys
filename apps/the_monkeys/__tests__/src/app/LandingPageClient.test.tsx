@@ -260,7 +260,7 @@ describe('LandingPageClient', () => {
     ).toBeDefined();
     expect(
       screen.getAllByRole('article', { name: 'Featured event' })
-    ).toHaveLength(2);
+    ).toHaveLength(1);
     expect(
       screen.getByRole('complementary', { name: 'Discover more' })
     ).toBeDefined();
@@ -273,15 +273,15 @@ describe('LandingPageClient', () => {
     });
     expect(
       eventColumn.contains(
-        document.querySelector('[data-layout="desktop-featured-event"]')
+        document.querySelector('[data-layout="featured-event"]')
       )
     ).toBe(true);
     expect(
       eventColumn.contains(
-        screen.getByRole('complementary', { name: 'Discover more' })
+        screen.getByRole('region', { name: 'Discover groups' })
       )
     ).toBe(true);
-    expect(screen.getAllByText('Community design session')).toHaveLength(2);
+    expect(screen.getAllByText('Community design session')).toHaveLength(1);
     expect(document.body.textContent).not.toMatch(/\bblogs?\b/i);
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
     expect(screen.queryByRole('main')).toBeNull();

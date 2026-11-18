@@ -54,6 +54,10 @@ describe('landing community presentation', () => {
       />
     );
     const image = document.querySelector('img')!;
+    expect(new URL(image.src, window.location.origin).pathname).toBe(
+      '/local-logo.png'
+    );
+    expect(image.className).toContain('object-contain');
     expect(image.className).toContain('opacity-0');
     fireEvent.load(image);
     await waitFor(() => expect(image.className).toContain('opacity-100'));

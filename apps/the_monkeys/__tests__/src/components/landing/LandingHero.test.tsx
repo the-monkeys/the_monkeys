@@ -96,7 +96,7 @@ describe('LandingHero', () => {
     expect(screen.getByRole('region', { name: 'Live & hosts' })).toBeDefined();
   });
 
-  it('places the crawlable lead-story heading over its image', () => {
+  it('keeps the complete crawlable headline and image linked in the compact lead story', () => {
     renderWithProviders(<LandingHero lead={lead} />);
 
     const feature = screen.getByRole('article', { name: 'Featured post' });
@@ -112,6 +112,20 @@ describe('LandingHero', () => {
     );
     expect(visualLink?.querySelector('img')).not.toBeNull();
     expect(screen.getByRole('link', { name: 'Read post' })).toBeDefined();
+  });
+
+  it('names the lead link from its rendered headline, including encoded punctuation', () => {
+    renderWithProviders(
+      <LandingHero lead={{ ...lead, title: 'Research &amp; Development' }} />
+    );
+
+    const headline = screen.getByRole('heading', {
+      level: 1,
+      name: 'Research & Development',
+    });
+    const link = screen.getByRole('link', { name: 'Research & Development' });
+    expect(link.getAttribute('aria-labelledby')).toBe(headline.id);
+    expect(headline.closest('a')).toBe(link);
   });
 
   it('restores the author, like count, and bookmark controls in the lead footer', () => {
@@ -133,11 +147,17 @@ describe('LandingHero', () => {
     ).toBeDefined();
   });
 
-  it('keeps the featured post before the featured event in mobile reading order', () => {
+  it('uses single-instance community/event slots in logical mobile reading order', () => {
     renderWithProviders(
       <LandingHero
         lead={lead}
         featuredEvent={featuredEvent}
+        communityContent={
+          <section aria-label='Discussion previews'>Discussions here</section>
+        }
+        groupsContent={
+          <section aria-label='Group previews'>Groups here</section>
+        }
         primaryContent={<main>Primary landing content</main>}
         secondaryContent={
           <aside aria-label='Discover more'>Secondary landing content</aside>
@@ -148,31 +168,39 @@ describe('LandingHero', () => {
     const postArticle = screen.getByRole('article', {
       name: 'Featured post',
     });
-    const mobileEvent = document.querySelector(
-      '[data-layout="mobile-featured-event"]'
-    );
-    const desktopEvent = document.querySelector(
-      '[data-layout="desktop-featured-event"]'
-    );
+    const event = document.querySelector('[data-layout="featured-event"]');
+    const discussions = screen.getByRole('region', {
+      name: 'Discussion previews',
+    });
+    const groups = screen.getByRole('region', { name: 'Group previews' });
     const primaryContent = screen.getByText('Primary landing content');
 
     expect(
-      postArticle.compareDocumentPosition(mobileEvent!) &
+      postArticle.compareDocumentPosition(discussions) &
         Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
     expect(
-      mobileEvent!.compareDocumentPosition(primaryContent) &
+      discussions.compareDocumentPosition(groups) &
         Node.DOCUMENT_POSITION_FOLLOWING
     ).toBeTruthy();
+    expect(
+      groups.compareDocumentPosition(event!) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      event!.compareDocumentPosition(primaryContent) &
+        Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      screen.getAllByRole('article', { name: 'Featured event' })
+    ).toHaveLength(1);
     const secondaryColumn = screen.getByRole('region', {
       name: 'Featured events and discovery',
     });
-    expect(secondaryColumn.contains(desktopEvent)).toBe(true);
+    expect(secondaryColumn.contains(event)).toBe(true);
+    expect(secondaryColumn.contains(groups)).toBe(true);
     expect(
-      secondaryColumn.contains(
-        screen.getByRole('complementary', { name: 'Discover more' })
-      )
-    ).toBe(true);
+      screen.getByRole('complementary', { name: 'Discover more' })
+    ).toBeDefined();
   });
 
   it('keeps an accessible page heading without restoring removed hero copy', () => {

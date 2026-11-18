@@ -80,10 +80,21 @@ describe('DiscussionCard', () => {
       <DiscussionCard linked post={linkedPost} compact />
     );
     expect(screen.queryByText(/preview group/)).toBeNull();
-    expect(screen.getByText(/Read/).className).toContain('line-clamp-3');
+    expect(screen.getByText(/Read/).className).toContain('line-clamp-2');
     rerender(<DiscussionCard linked post={linkedPost} />);
     expect(screen.getByText('preview group /groups/gophers')).toBeDefined();
-    expect(screen.getByText(/Read/).className).not.toContain('line-clamp-3');
+    expect(screen.getByText(/Read/).className).not.toContain('line-clamp-2');
+  });
+  it('collapses blank lines only in compact excerpts without changing full discussion text', () => {
+    const body = 'First paragraph\n\n\nsecond paragraph';
+    const { rerender } = render(
+      <DiscussionCard linked compact post={{ ...post, body }} />
+    );
+    expect(
+      screen.getByText('First paragraph second paragraph').textContent
+    ).toBe('First paragraph second paragraph');
+    rerender(<DiscussionCard linked post={{ ...post, body }} />);
+    expect(screen.getByText(/First paragraph/).textContent).toBe(body);
   });
   it('links the body and shows like and reply counts', () => {
     render(<DiscussionCard post={post} linked />);

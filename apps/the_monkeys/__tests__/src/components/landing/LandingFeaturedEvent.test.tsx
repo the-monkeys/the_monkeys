@@ -57,9 +57,7 @@ describe('LandingFeaturedEvent', () => {
     ).toBe('/events/community-design-session');
     expect(screen.getByText('Online')).toBeDefined();
     expect(
-      screen
-        .getByRole('link', { name: /Hosted by @host/ })
-        .getAttribute('href')
+      screen.getByRole('link', { name: /Hosted by @host/ }).getAttribute('href')
     ).toBe('/host');
     const attendance = screen.getByRole('group', {
       name: 'Event host and attendance',
@@ -69,7 +67,9 @@ describe('LandingFeaturedEvent', () => {
         .getByRole('link', { name: 'View event host profile' })
         .getAttribute('href')
     ).toBe('/host');
-    expect(attendance.querySelector('img')).toBeDefined();
+    expect(attendance.querySelector('img')?.getAttribute('src')).toBe(
+      '/profiles/host.jpg'
+    );
     expect(within(attendance).getByText('+12 attending')).toBeDefined();
     expect(screen.queryByRole('link', { name: /RSVP/i })).toBeNull();
   });
@@ -97,7 +97,9 @@ describe('LandingFeaturedEvent', () => {
         .getByRole('link', { name: 'View event host profile' })
         .getAttribute('href')
     ).toBe('/account-host');
-    expect(attendance.querySelector('img')).toBeDefined();
+    expect(attendance.querySelector('img')?.getAttribute('src')).toBe(
+      '/profiles/host.jpg'
+    );
     expect(within(attendance).queryByText(internalUsername)).toBeNull();
   });
 
