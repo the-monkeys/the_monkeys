@@ -3,6 +3,7 @@
 import { useState } from 'react';
 
 import { LandingCapabilityNav } from '@/components/landing/LandingCapabilityNav';
+import { LandingCommunity } from '@/components/landing/LandingCommunity';
 import { LandingDiscoveryRail } from '@/components/landing/LandingDiscoveryRail';
 import { LandingEditorialFeed } from '@/components/landing/LandingEditorialFeed';
 import { LandingHero } from '@/components/landing/LandingHero';
@@ -10,6 +11,7 @@ import { LandingMorePosts } from '@/components/landing/LandingMorePosts';
 import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
 import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
 import { useEventList } from '@/hooks/events/useEventQueries';
+import { useLandingCommunity } from '@/hooks/landing/useLandingCommunity';
 import {
   LANDING_EVENT_FILTERS,
   LANDING_POST_LIMIT,
@@ -50,6 +52,7 @@ function PostErrorState() {
 const LandingPageClient = () => {
   const [feedFilter, setFeedFilter] = useState<'all' | 'articles'>('all');
   const postQuery = useGetMetaFeedBlogs({ limit: LANDING_POST_LIMIT });
+  const community = useLandingCommunity();
   const trendingQuery = useGetTrendingBlogs();
   const eventQuery = useEventList(LANDING_EVENT_FILTERS);
   const weeklyEventQuery = useEventList(LANDING_THIS_WEEK_EVENT_FILTERS);
@@ -87,6 +90,10 @@ const LandingPageClient = () => {
         }
         primaryContent={
           <>
+            <LandingCommunity
+              discussions={community.discussions}
+              groups={community.groups}
+            />
             <LandingCapabilityNav
               upcomingCount={eventQuery.data?.total}
               activeFeedFilter={feedFilter}

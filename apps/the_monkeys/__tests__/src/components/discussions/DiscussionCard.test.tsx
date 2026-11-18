@@ -48,6 +48,49 @@ const post: Discussion = {
 };
 
 describe('DiscussionCard', () => {
+  it('does not leave invisible inline links focusable inside a clamped preview', () => {
+    const linkedPost = {
+      ...post,
+      body: `${'A long public thought. '.repeat(20)} @ada https://example.com/read`,
+    };
+    const { rerender } = render(
+      <DiscussionCard linked post={linkedPost} compact />
+    );
+    expect(
+      screen.queryByRole('link', { name: '@ada', exact: true })
+    ).toBeNull();
+    expect(
+      screen.queryByRole('link', {
+        name: 'https://example.com/read',
+        exact: true,
+      })
+    ).toBeNull();
+    expect(document.querySelector('a[href="/discussions/abc"]')).toBeDefined();
+    rerender(<DiscussionCard linked post={linkedPost} />);
+    expect(
+      screen.getByRole('link', { name: '@ada', exact: true })
+    ).toBeDefined();
+    expect(
+      screen.getByRole('link', {
+        name: 'https://example.com/read',
+        exact: true,
+      })
+    ).toBeDefined();
+  });
+  it('limits only compact landing previews while preserving full-card rich previews', () => {
+    const linkedPost = {
+      ...post,
+      body: 'Read https://monkeys.com.co/groups/gophers',
+    };
+    const { rerender } = render(
+      <DiscussionCard linked post={linkedPost} compact />
+    );
+    expect(screen.queryByText(/preview group/)).toBeNull();
+    expect(screen.getByText(/Read/).className).toContain('line-clamp-3');
+    rerender(<DiscussionCard linked post={linkedPost} />);
+    expect(screen.getByText('preview group /groups/gophers')).toBeDefined();
+    expect(screen.getByText(/Read/).className).not.toContain('line-clamp-3');
+  });
   it('links the body and shows like and reply counts', () => {
     render(<DiscussionCard post={post} linked />);
     expect(

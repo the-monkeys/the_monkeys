@@ -26,14 +26,23 @@ export function DiscussionCard({
   linked,
   footer,
   embedded = false,
+  compact = false,
 }: {
   post: Discussion;
   linked: boolean;
   footer?: ReactNode;
   /** Sit inside a parent feed row instead of drawing its own divider. */
   embedded?: boolean;
+  /** Short landing preview; full feeds and threads keep their existing layout. */
+  compact?: boolean;
 }) {
-  const preview = firstInternalLink(post.body);
+  const preview = compact ? undefined : firstInternalLink(post.body);
+  const textClass = cn(
+    bodyClass,
+    !linked && 'mt-3 text-base leading-7',
+    embedded && 'text-base',
+    compact && 'line-clamp-3 text-sm [overflow-wrap:anywhere]'
+  );
   return (
     <article
       className={cn(
@@ -67,15 +76,12 @@ export function DiscussionCard({
         ) : (
           <DiscussionGroupLine post={post} />
         )}
-        <DiscussionBody
-          body={post.body}
-          className={cn(
-            bodyClass,
-            !linked && 'mt-3 text-base leading-7',
-            embedded && 'text-base'
-          )}
-        />
-        {preview ? (
+        {compact ? (
+          <p className={textClass}>{post.body}</p>
+        ) : (
+          <DiscussionBody body={post.body} className={textClass} />
+        )}
+        {preview && !compact ? (
           <DiscussionLinkPreview href={preview.href} target={preview.target} />
         ) : null}
         {!footer ? (
