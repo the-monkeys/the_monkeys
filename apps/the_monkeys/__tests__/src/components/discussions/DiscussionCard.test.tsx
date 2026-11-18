@@ -56,24 +56,18 @@ describe('DiscussionCard', () => {
     const { rerender } = render(
       <DiscussionCard linked post={linkedPost} compact />
     );
-    expect(
-      screen.queryByRole('link', { name: '@ada', exact: true })
-    ).toBeNull();
+    expect(screen.queryByRole('link', { name: '@ada' })).toBeNull();
     expect(
       screen.queryByRole('link', {
         name: 'https://example.com/read',
-        exact: true,
       })
     ).toBeNull();
-    expect(document.querySelector('a[href="/discussions/abc"]')).toBeDefined();
+    expect(document.querySelector('a[href="/discussions/abc"]')).not.toBeNull();
     rerender(<DiscussionCard linked post={linkedPost} />);
-    expect(
-      screen.getByRole('link', { name: '@ada', exact: true })
-    ).toBeDefined();
+    expect(screen.getByRole('link', { name: '@ada' })).toBeDefined();
     expect(
       screen.getByRole('link', {
         name: 'https://example.com/read',
-        exact: true,
       })
     ).toBeDefined();
   });

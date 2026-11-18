@@ -67,9 +67,9 @@ const Nav = () => {
         className='sticky top-0 left-0  bg-white dark:bg-background-dark backdrop-blur-md z-40'
       >
         <Container className='w-full  pt-2.5 flex flex-col gap-1'>
-          <div className='flex items-center justify-between gap-4 w-full'>
+          <div className='flex items-center justify-between gap-1 min-[375px]:gap-4 w-full'>
             {/* Left: Hamburger & Logo */}
-            <div className='flex items-center shrink-0 gap-3'>
+            <div className='flex items-center shrink-0 gap-0 min-[375px]:gap-3'>
               <button
                 onClick={() => setMobileMenuOpen(true)}
                 className={cn(STYLES.iconButton, 'lg:hidden')}
@@ -97,12 +97,12 @@ const Nav = () => {
             </div>
 
             {/* Right: Search & Actions */}
-            <div className='flex items-center justify-end gap-4 shrink-0'>
-              <div className='max-w-[240px]'>
+            <div className='flex items-center justify-end gap-0 min-[375px]:gap-4 shrink-0'>
+              <div className='hidden max-w-[240px] lg:block'>
                 <SearchInput className='hidden lg:block' />
               </div>
 
-              <div className='flex items-center gap-3'>
+              <div className='flex items-center gap-0 min-[375px]:gap-3'>
                 <div className='block lg:hidden'>
                   <SearchInputLink />
                 </div>
@@ -115,7 +115,7 @@ const Nav = () => {
                 <div className={STYLES.divider} />
 
                 {session ? (
-                  <div className='flex items-center gap-3'>
+                  <div className='flex items-center gap-0 min-[375px]:gap-3'>
                     {!isAuthLoading && <CreateButton />}
                     <ProfileDropdown session={session} />
                   </div>

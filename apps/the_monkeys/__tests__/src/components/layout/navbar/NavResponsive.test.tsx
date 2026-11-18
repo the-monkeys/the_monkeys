@@ -106,7 +106,7 @@ function visibleAt(element: Element, width: number, css: Root): boolean {
   return true;
 }
 
-it('keeps compact search beside signed-in actions through tablet widths, then restores desktop search', async () => {
+it('keeps mobile header controls available from 320px without reserving the desktop search slot', async () => {
   render(
     <QueryClientProvider client={client}>
       <ThemeProvider
@@ -120,6 +120,9 @@ it('keeps compact search beside signed-in actions through tablet widths, then re
   );
   const input = screen.getByPlaceholderText('Search stories...');
   const compactSearch = screen.getByRole('link', { name: 'Search on Monkeys' });
+  const desktopSearchSlot = input.closest(
+    '[data-shortcut-scope="chrome"]'
+  )!.parentElement!;
   const profile = screen.getByRole('button', { name: 'Open profile menu' });
   const create = screen.getByRole('button', { name: 'Create' });
   const notifications = screen.getByRole('button', {
@@ -132,7 +135,11 @@ it('keeps compact search beside signed-in actions through tablet widths, then re
     }),
   ]).process('@tailwind utilities;', { from: undefined });
 
-  for (const width of [390, 640, 768, 1023]) {
+  for (const width of [320, 360, 374, 375, 390, 640, 768, 1023]) {
+    expect(
+      visibleAt(desktopSearchSlot, width, stylesheet.root),
+      `empty desktop search slot at ${width}`
+    ).toBe(false);
     expect(
       visibleAt(input, width, stylesheet.root),
       `full search at ${width}`
@@ -145,6 +152,7 @@ it('keeps compact search beside signed-in actions through tablet widths, then re
       expect(visibleAt(action, width, stylesheet.root)).toBe(true);
   }
   for (const width of [1024, 1440]) {
+    expect(visibleAt(desktopSearchSlot, width, stylesheet.root)).toBe(true);
     expect(
       visibleAt(input, width, stylesheet.root),
       `full search at ${width}`
