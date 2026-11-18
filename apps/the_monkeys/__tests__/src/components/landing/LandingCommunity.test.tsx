@@ -44,6 +44,37 @@ const groups = {
 };
 
 describe('landing community presentation', () => {
+  it('limits discussion previews to two while keeping the link to all discussions', () => {
+    render(
+      <LandingCommunity
+        discussions={{
+          data: [
+            discussions.data[0],
+            {
+              ...discussions.data[0],
+              public_id: 'public-two',
+              body: 'Second public thought',
+            },
+            {
+              ...discussions.data[0],
+              public_id: 'public-three',
+              body: 'Third public thought',
+            },
+          ],
+        }}
+        groups={groups}
+      />
+    );
+    const section = screen.getByRole('region', { name: 'Top discussions' });
+    expect(within(section).getAllByRole('listitem')).toHaveLength(2);
+    expect(within(section).queryByText('Third public thought')).toBeNull();
+    expect(
+      within(section)
+        .getByRole('link', { name: 'View all discussions' })
+        .getAttribute('href')
+    ).toBe('/discussions');
+  });
+
   it('keeps the themed group fallback visible until an image loads and after a failed image', async () => {
     render(
       <LandingCommunity

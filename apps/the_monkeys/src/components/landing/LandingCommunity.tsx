@@ -116,7 +116,7 @@ export function LandingDiscussions({
         <ul
           className={`${border} divide-y divide-border-light/70 dark:divide-border-dark/40`}
         >
-          {discussions.data.slice(0, 3).map((post) => (
+          {discussions.data.slice(0, 2).map((post) => (
             <li key={post.public_id} className='min-w-0 p-3 sm:p-4'>
               <DiscussionCard post={post} linked embedded compact />
             </li>

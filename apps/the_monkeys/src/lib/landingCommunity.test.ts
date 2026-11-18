@@ -29,17 +29,17 @@ describe('landing public selection', () => {
     });
     expect(result.created_at).toBeUndefined();
   });
-  it('ranks recent discussions by genuine activity, then date, and bounds at three', () => {
+  it('shows the two newest public discussions rather than older highly active posts', () => {
     const rows = [
       post('older', { like_count: 2, created_at: '2026-11-01' }),
       post('newer', { reply_count: 2, created_at: { seconds: 1794873600 } }),
-      post('busy', { like_count: 3, reply_count: 2 }),
+      post('busy', { like_count: 300, reply_count: 200 }),
       post('quiet'),
     ];
     const copy = JSON.stringify(rows);
     expect(
       selectLandingDiscussions({ discussions: rows }).map((p) => p.public_id)
-    ).toEqual(['busy', 'newer', 'older']);
+    ).toEqual(['newer', 'older']);
     expect(JSON.stringify(rows)).toBe(copy);
   });
 

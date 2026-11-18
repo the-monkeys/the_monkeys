@@ -16,7 +16,7 @@ function count(value: unknown): number {
     : 0;
 }
 
-/** Active discussions within the API's bounded recent public page, not all-time rankings. */
+/** The two newest eligible discussions within the API's bounded public page. */
 export function selectLandingDiscussions(value: unknown): Discussion[] {
   const seen = new Set<string>();
   const posts: Discussion[] = [];
@@ -53,13 +53,10 @@ export function selectLandingDiscussions(value: unknown): Discussion[] {
   return posts
     .sort(
       (a, b) =>
-        (b.like_count ?? 0) +
-          (b.reply_count ?? 0) -
-          ((a.like_count ?? 0) + (a.reply_count ?? 0)) ||
         (discussionInstantMs(b.created_at) || 0) -
-          (discussionInstantMs(a.created_at) || 0)
+        (discussionInstantMs(a.created_at) || 0)
     )
-    .slice(0, 3);
+    .slice(0, 2);
 }
 
 export function selectLandingGroups(value: unknown): GroupItem[] {
