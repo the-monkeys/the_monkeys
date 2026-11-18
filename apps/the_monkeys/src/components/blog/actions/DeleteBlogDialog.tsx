@@ -7,6 +7,7 @@ import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
 import { ALL_DRAFT_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetAllDraftBlogs';
 import { BLOGS_BY_USERNAME_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogByUsername';
+import { invalidateAfterArticleWrite } from '@/lib/queryFreshness';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -38,6 +39,7 @@ export const DeleteBlogDialog = ({
   const deleteBlogMutation = useMutation({
     mutationFn: (blogId?: string) => axiosInstance.delete(`/blog/${blogId}`),
     onSuccess: () => {
+      void invalidateAfterArticleWrite(queryClient);
       toast({
         variant: 'success',
         title: 'Success',

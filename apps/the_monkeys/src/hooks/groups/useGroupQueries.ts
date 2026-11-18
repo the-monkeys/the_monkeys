@@ -2,6 +2,7 @@ import useAuth from '@/hooks/auth/useAuth';
 import { useCreationMutation } from '@/hooks/useCreationMutation';
 import {
   LIVE_LIST_STALE_MS,
+  invalidateAfterArticleWrite,
   invalidateAfterGroupEventWrite,
   invalidateAfterGroupWrite,
 } from '@/lib/queryFreshness';
@@ -174,10 +175,14 @@ export function useCreateGroup() {
 }
 
 export function useUpdateGroup(slug: string) {
+  const qc = useQueryClient();
   const refresh = useRefreshGroups(slug);
   return useMutation({
     mutationFn: (body: GroupBody) => updateGroup(slug, body),
-    onSuccess: refresh,
+    onSuccess: (_data, body) => {
+      if (body.visibility !== undefined) void invalidateAfterArticleWrite(qc);
+      return refresh();
+    },
   });
 }
 

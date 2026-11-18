@@ -529,3 +529,39 @@ describe('ReadinessPanel', () => {
     }
   });
 });
+
+it('shows unscored Homepage placement in the existing report and leaves its automated total intact', () => {
+  show({
+    report: report({
+      checks: [
+        ...report().checks,
+        {
+          id: 'homepage.body',
+          section: 'homepage',
+          scored: false,
+          status: 'improve',
+          label: 'Readable article body',
+          finding:
+            '249 readable body words; at least 250 are needed for homepage placement.',
+          reason: 'Homepage placement only.',
+        },
+      ],
+    }),
+  });
+  const section = screen.getByRole('region', { name: 'Homepage placement' });
+  expect(section.textContent).toContain('Unscored guidance');
+  expect(within(section).getByText('Readable article body')).toBeDefined();
+  expect(screen.getByText('4 of 4 automated checks passed')).toBeDefined();
+  expect(
+    screen
+      .getByRole('button', { name: 'Back to writing' })
+      .hasAttribute('disabled')
+  ).toBe(false);
+});
+
+it('keeps Homepage placement absent from Event readiness', () => {
+  show({ report: report({ kind: 'event' }) });
+  expect(
+    screen.queryByRole('region', { name: 'Homepage placement' })
+  ).toBeNull();
+});

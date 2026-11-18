@@ -26,6 +26,13 @@ export function ScoreExplanation({
         </p>
       )}
       <p>For example, 4 of 6 means four passed and two are marked Improve.</p>
+      {report?.kind === 'post' && (
+        <p>
+          Homepage placement checks are unscored. Their 250 readable body-word
+          minimum applies only to homepage articles; saving and publishing
+          remain available below it.
+        </p>
+      )}
       <ul className='flex list-disc flex-col gap-2 pl-5'>
         <li>
           Unknown, Human review and Not applicable items are excluded from the

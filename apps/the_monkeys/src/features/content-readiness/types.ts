@@ -23,7 +23,7 @@ export interface SearchPreview {
 }
 export interface ReadinessCheck {
   id: string;
-  section: 'seo' | 'answers' | 'sources';
+  section: 'seo' | 'answers' | 'sources' | 'homepage';
   status: CheckStatus;
   scored: boolean;
   label: string;
@@ -32,6 +32,12 @@ export interface ReadinessCheck {
   fieldKey?: string;
 }
 export interface ReadinessSnapshot extends ReadinessIdentity {
+  homepage?: {
+    title: string;
+    wordCount: number;
+    cover: string;
+    partial: boolean;
+  };
   kind: ContentKind;
   publicationState: PublicationState;
   visibility: VisibilityAssessment;
