@@ -9,6 +9,7 @@ type TrendingBlogsResponse = {
   total_blogs: number;
 };
 
+/** No longer used by the homepage (use useGetHomepageBlogs with sort: 'trending'). Still used by discussion discovery and shared TrendingWidget. */
 const useGetTrendingBlogs = () => {
   const { data, isLoading, isError } = useQuery<TrendingBlogsResponse, Error>({
     queryKey: [TRENDING_BLOGS_QUERY_KEY],
