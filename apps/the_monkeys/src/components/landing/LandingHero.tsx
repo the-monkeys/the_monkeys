@@ -30,6 +30,7 @@ export function LandingHero({
   secondaryContent,
   communityContent,
   groupsContent,
+  continuationContent,
 }: {
   lead?: MetaBlog;
   featuredEvent?: EventItem;
@@ -37,6 +38,7 @@ export function LandingHero({
   secondaryContent?: ReactNode;
   communityContent?: ReactNode;
   groupsContent?: ReactNode;
+  continuationContent?: ReactNode;
 }) {
   const title = lead ? purifyHTMLString(lead.title) : '';
   const description = lead ? purifyHTMLString(lead.first_paragraph) : '';
@@ -53,7 +55,8 @@ export function LandingHero({
     primaryContent ||
     secondaryContent ||
     communityContent ||
-    groupsContent;
+    groupsContent ||
+    continuationContent;
 
   return (
     <section>
@@ -142,13 +145,18 @@ export function LandingHero({
                 </div>
               </article>
             )}
-            {(communityContent || primaryContent) && (
+            {(communityContent || primaryContent || continuationContent) && (
               <div className='contents min-w-0 xl:col-start-1 xl:row-start-2 xl:flex xl:flex-col xl:gap-4'>
                 {communityContent && (
                   <div className='min-w-0'>{communityContent}</div>
                 )}
                 {primaryContent && (
                   <div className='order-1 min-w-0'>{primaryContent}</div>
+                )}
+                {continuationContent && (
+                  <div className='order-3 min-w-0 pt-4 xl:pt-0'>
+                    {continuationContent}
+                  </div>
                 )}
               </div>
             )}

@@ -52,7 +52,7 @@ function PostImage({
   const imageClass =
     'object-cover transition-transform duration-500 ease-out group-hover:scale-[1.035]';
   const sizes = prominent
-    ? '(min-width: 1024px) 42vw, (min-width: 768px) 50vw, 100vw'
+    ? '(min-width: 1280px) 21vw, (min-width: 768px) 50vw, 100vw'
     : '(min-width: 1280px) 21vw, (min-width: 640px) 50vw, 100vw';
 
   return isNonValidBannerImage(post.first_image) ? (
@@ -259,7 +259,7 @@ export function LandingMorePosts({ posts }: { posts: MetaBlog[] }) {
       ) : null}
 
       {compactPosts.length ? (
-        <div className='mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4'>
+        <div className='mt-4 grid gap-4 sm:grid-cols-2'>
           {compactPosts.map((post) => (
             <MorePostCard key={post.blog_id} post={post} />
           ))}

@@ -121,6 +121,13 @@ const LandingPageClient = () => {
             </div>
           </>
         }
+        continuationContent={
+          !postQuery.isLoading && !postQuery.isError ? (
+            <LandingMorePosts
+              posts={[...postSlots.latest, ...postSlots.community]}
+            />
+          ) : null
+        }
         secondaryContent={
           <LandingDiscoveryRail
             events={discoveryEvents}
@@ -133,11 +140,6 @@ const LandingPageClient = () => {
           />
         }
       />
-      {!postQuery.isLoading && !postQuery.isError ? (
-        <LandingMorePosts
-          posts={[...postSlots.latest, ...postSlots.community]}
-        />
-      ) : null}
     </div>
   );
 };

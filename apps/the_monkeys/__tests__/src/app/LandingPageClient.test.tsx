@@ -322,6 +322,13 @@ describe('LandingPageClient', () => {
     const morePosts = screen.getByRole('region', {
       name: 'More from the community',
     });
+    // More posts must continue in the independent article column, so a tall
+    // discovery rail cannot push the next articles below both columns.
+    expect(
+      screen
+        .getByRole('region', { name: 'Featured posts and feed' })
+        .contains(morePosts)
+    ).toBe(true);
     const morePostCards = within(morePosts).getAllByRole('article');
     expect(morePostCards).toHaveLength(6);
     expect(
@@ -380,7 +387,7 @@ describe('LandingPageClient', () => {
     const firstMoreImage = within(morePostCards[0]).getByRole('img');
     expect(firstMoreImage.getAttribute('fetchpriority')).not.toBe('high');
     expect(firstMoreImage.getAttribute('sizes')).toBe(
-      '(min-width: 1024px) 42vw, (min-width: 768px) 50vw, 100vw'
+      '(min-width: 1280px) 21vw, (min-width: 768px) 50vw, 100vw'
     );
   });
 
@@ -472,16 +479,14 @@ describe('homepage eligibility without a lead', () => {
   it('keeps qualified text-only articles visible without creating a featured lead', () => {
     latestBlogs.mockReturnValue({
       blogs: {
-        blogs: posts
-          .slice(0, 3)
-          .map((post) => ({
-            ...post,
-            first_image: '',
-            homepage_eligibility: {
-              ...post.homepage_eligibility,
-              lead_eligible: false,
-            },
-          })),
+        blogs: posts.slice(0, 3).map((post) => ({
+          ...post,
+          first_image: '',
+          homepage_eligibility: {
+            ...post.homepage_eligibility,
+            lead_eligible: false,
+          },
+        })),
       },
       isLoading: false,
       isError: false,
