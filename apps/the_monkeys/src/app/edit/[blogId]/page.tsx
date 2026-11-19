@@ -21,6 +21,7 @@ import useGetDraftBlogDetail, {
 } from '@/hooks/blog/useGetDraftBlogDetail';
 import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { publicationPostSlug } from '@/lib/postUrl';
+import { invalidateAfterArticleWrite } from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
 import { useIsImageUploading } from '@/lib/store/useFileUpload';
 import axiosInstance from '@/services/api/axiosInstance';
@@ -221,9 +222,16 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         }
       };
 
-      ws.onmessage = () => {
+      ws.onmessage = (event) => {
         setIsSaving(false);
-        // Optional: Handle any incoming messages from server
+        try {
+          // The gateway acknowledges persisted content/scope saves with type=success.
+          if (JSON.parse(event.data)?.type === 'success') {
+            void invalidateAfterArticleWrite(queryClient);
+          }
+        } catch {
+          // Connection, control and unrecognised messages are not write acknowledgements.
+        }
       };
 
       ws.onclose = (event) => {
@@ -284,7 +292,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [token, blogId, formatData]);
+  }, [token, blogId, formatData, queryClient]);
 
   // Auto-save when data changes
   useEffect(() => {
@@ -357,6 +365,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         slug: formatted.slug,
         ...scope,
       });
+
+      void invalidateAfterArticleWrite(queryClient);
 
       let successDescription = 'Your post was published.';
       try {
@@ -488,6 +498,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         };
 
         await scheduleBlog(blogId, payload);
+        void invalidateAfterArticleWrite(queryClient);
 
         toast({
           variant: 'success',

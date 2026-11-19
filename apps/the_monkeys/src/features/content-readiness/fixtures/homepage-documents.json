@@ -1,0 +1,211 @@
+[
+  {
+    "name": "custom title and methodology",
+    "document": {
+      "is_draft": false,
+      "tags": [
+        "science"
+      ],
+      "blocks": [
+        {
+          "type": "title",
+          "data": {
+            "text": "Scientific observations"
+          }
+        },
+        {
+          "type": "methodology",
+          "data": {
+            "studyDesign": "knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge "
+          }
+        }
+      ]
+    },
+    "title": "Scientific observations",
+    "count": 250,
+    "eligible": true
+  },
+  {
+    "name": "placeholder title cannot borrow section heading",
+    "document": {
+      "is_draft": false,
+      "tags": [
+        "science"
+      ],
+      "title": "Untitled Post",
+      "blocks": [
+        {
+          "type": "header",
+          "data": {
+            "text": "Introduction",
+            "level": 2
+          }
+        },
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge "
+          }
+        }
+      ]
+    },
+    "title": "Untitled Post",
+    "count": 251,
+    "eligible": false
+  },
+  {
+    "name": "numbered markdown is prose only",
+    "document": {
+      "is_draft": false,
+      "tags": [
+        "science"
+      ],
+      "title": "Scientific observations",
+      "blocks": [
+        {
+          "type": "markdown",
+          "data": {
+            "markdown": "1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n1. knowledge\n"
+          }
+        }
+      ]
+    },
+    "title": "Scientific observations",
+    "count": 125,
+    "eligible": false
+  },
+  {
+    "name": "unused markdown definitions",
+    "document": {
+      "is_draft": false,
+      "tags": [
+        "science"
+      ],
+      "title": "Scientific observations",
+      "blocks": [
+        {
+          "type": "markdown",
+          "data": {
+            "markdown": "[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n[unused]: https://example.test/image \"some words\"\n"
+          }
+        }
+      ]
+    },
+    "title": "Scientific observations",
+    "count": 0,
+    "eligible": false
+  },
+  {
+    "name": "list item placeholders excluded",
+    "document": {
+      "is_draft": false,
+      "tags": [
+        "science"
+      ],
+      "title": "Scientific observations",
+      "blocks": [
+        {
+          "type": "paragraph",
+          "data": {
+            "text": "knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge knowledge "
+          }
+        },
+        {
+          "type": "list",
+          "data": {
+            "items": [
+              "TODO",
+              "knowledge"
+            ]
+          }
+        }
+      ]
+    },
+    "title": "Scientific observations",
+    "count": 249,
+    "eligible": false
+  },
+  {
+    "name": "legacy body placeholders excluded",
+    "document": {
+      "is_draft": false,
+      "tags": [
+        "science"
+      ],
+      "title": "Scientific observations",
+      "body": "Start writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\nStart writing here\n"
+    },
+    "title": "Scientific observations",
+    "count": 0,
+    "eligible": false
+  },
+  {
+    "name": "supported scientific visible fields",
+    "document": {
+      "is_draft": false,
+      "tags": [
+        "science"
+      ],
+      "blocks": [
+        {
+          "type": "title",
+          "data": {
+            "text": "Scientific observations"
+          }
+        },
+        {
+          "type": "citation",
+          "data": {
+            "title": "Paper title",
+            "authors": "Author name",
+            "year": "2025",
+            "source": "Journal",
+            "identifier": "ABC",
+            "citationText": "Research findings"
+          }
+        },
+        {
+          "type": "methodology",
+          "data": {
+            "studyDesign": "Controlled experiment"
+          }
+        },
+        {
+          "type": "dataset",
+          "data": {
+            "notes": "Clean data"
+          }
+        },
+        {
+          "type": "formula",
+          "data": {
+            "description": "Useful formula",
+            "expression": "x y"
+          }
+        },
+        {
+          "type": "trend",
+          "data": {
+            "summary": "Rising interest"
+          }
+        },
+        {
+          "type": "chart",
+          "data": {
+            "title": "Observed changes"
+          }
+        },
+        {
+          "type": "quote",
+          "data": {
+            "text": "Clear observations",
+            "caption": "Research team"
+          }
+        }
+      ]
+    },
+    "title": "Scientific observations",
+    "count": 25,
+    "eligible": false
+  }
+]

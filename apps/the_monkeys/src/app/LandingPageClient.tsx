@@ -11,8 +11,7 @@ import { LandingDiscoveryRail } from '@/components/landing/LandingDiscoveryRail'
 import { LandingEditorialFeed } from '@/components/landing/LandingEditorialFeed';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { LandingMorePosts } from '@/components/landing/LandingMorePosts';
-import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
-import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
+import useGetHomepageBlogs from '@/hooks/blog/useGetHomepageBlogs';
 import { useEventList } from '@/hooks/events/useEventQueries';
 import { useLandingCommunity } from '@/hooks/landing/useLandingCommunity';
 import {
@@ -54,9 +53,12 @@ function PostErrorState() {
 
 const LandingPageClient = () => {
   const [feedFilter, setFeedFilter] = useState<'all' | 'articles'>('all');
-  const postQuery = useGetMetaFeedBlogs({ limit: LANDING_POST_LIMIT });
+  const postQuery = useGetHomepageBlogs({ limit: LANDING_POST_LIMIT });
   const community = useLandingCommunity();
-  const trendingQuery = useGetTrendingBlogs();
+  const trendingQuery = useGetHomepageBlogs({
+    limit: LANDING_POST_LIMIT,
+    sort: 'trending',
+  });
   const eventQuery = useEventList(LANDING_EVENT_FILTERS);
   const weeklyEventQuery = useEventList(LANDING_THIS_WEEK_EVENT_FILTERS);
   const postSlots = selectLandingPosts(postQuery.blogs?.blogs ?? []);
@@ -123,7 +125,7 @@ const LandingPageClient = () => {
           <LandingDiscoveryRail
             events={discoveryEvents}
             eventsTitle={discoveryEventsTitle}
-            trending={trendingQuery.blogs}
+            trending={trendingQuery.blogs?.blogs ?? []}
             eventsLoading={weeklyEventQuery.isLoading}
             eventsError={weeklyEventQuery.isError}
             trendingLoading={trendingQuery.isLoading}

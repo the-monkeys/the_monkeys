@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import EditPage from '@/app/edit/[blogId]/page';
+import { homepageBlogQuery } from '@/services/blog/homepageApi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
   act,
@@ -161,10 +162,11 @@ const content = {
     { type: 'paragraph', data: { text: 'Two' } },
   ],
 };
-function mount() {
-  const client = new QueryClient({
+function mount(
+  client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
-  });
+  })
+) {
   return render(
     <QueryClientProvider client={client}>
       <EditPage params={{ blogId: 'draft1' }} />
@@ -488,5 +490,64 @@ describe('group draft publication', () => {
     mount();
     const socket = await openSocket();
     expect(socket.messages).toEqual([]);
+  });
+
+  it.each(['Submit post', 'Submit schedule'])(
+    'refreshes homepage queries only after successful %s',
+    async (action) => {
+      const qc = new QueryClient();
+      const key = homepageBlogQuery().queryKey;
+      qc.setQueryData(key, { blogs: [] });
+      qc.setQueryData(['meta-feed-blogs', 12], { blogs: ['ordinary'] });
+      state.draft = {
+        blog: { blog: content, tags: [], audience: 'public' },
+        isLoading: false,
+        isError: false,
+      };
+      mount(qc);
+      await openSocket();
+      expect(qc.getQueryState(key)?.isInvalidated).toBe(false);
+      fireEvent.click(screen.getByText(action));
+      await waitFor(() =>
+        expect(qc.getQueryState(key)?.isInvalidated).toBe(true)
+      );
+      expect(qc.getQueryState(['meta-feed-blogs', 12])?.isInvalidated).toBe(
+        false
+      );
+    }
+  );
+
+  it('refreshes homepage eligibility after confirmed content/scope saves, but not sends or error messages', async () => {
+    const qc = new QueryClient();
+    const key = homepageBlogQuery().queryKey;
+    qc.setQueryData(key, { blogs: [] });
+    state.draft = {
+      blog: {
+        blog: content,
+        tags: [],
+        group_slug: 'secret',
+        audience: 'group_only',
+      },
+      isLoading: false,
+      isError: false,
+    };
+    mount(qc);
+    const socket = await openSocket();
+    fireEvent.click(screen.getByText('Remove group'));
+    await waitFor(() =>
+      expect(socket.messages.at(-1)).toMatchObject({
+        audience: 'public',
+        group_slug: '',
+      })
+    );
+    expect(qc.getQueryState(key)?.isInvalidated).toBe(false);
+    act(() => socket.onmessage?.({ data: JSON.stringify({ type: 'error' }) }));
+    expect(qc.getQueryState(key)?.isInvalidated).toBe(false);
+    act(() =>
+      socket.onmessage?.({ data: JSON.stringify({ type: 'success' }) })
+    );
+    await waitFor(() =>
+      expect(qc.getQueryState(key)?.isInvalidated).toBe(true)
+    );
   });
 });

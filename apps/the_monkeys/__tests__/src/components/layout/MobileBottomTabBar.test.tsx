@@ -63,3 +63,58 @@ describe('mobile Events navigation', () => {
     }
   );
 });
+
+describe('mobile Discussions navigation', () => {
+  it('adds a public Discussions link while retaining all personal destinations', () => {
+    renderTabs('/', true);
+    expect(screen.getAllByRole('link')).toHaveLength(6);
+    expect(
+      screen.getByRole('link', { name: 'Discussions' }).getAttribute('href')
+    ).toBe('/discussions');
+    expect(
+      screen.getByRole('link', { name: 'Create' }).getAttribute('href')
+    ).toBe('/create');
+    expect(
+      screen.getByRole('link', { name: 'Saved' }).getAttribute('href')
+    ).toBe('/library?source=bookmarks');
+    expect(
+      screen.getByRole('link', { name: 'Profile' }).getAttribute('href')
+    ).toBe('/alex');
+  });
+
+  it('lets guests open discussions without bypassing personal-tab login', () => {
+    renderTabs('/discussions');
+    expect(
+      screen.getByRole('link', { name: 'Discussions' }).getAttribute('href')
+    ).toBe('/discussions');
+    for (const name of ['Create', 'Saved', 'Profile']) {
+      expect(screen.getByRole('link', { name }).getAttribute('href')).toBe(
+        '/auth/login'
+      );
+    }
+  });
+
+  it.each(['/discussions', '/discussions/', '/discussions/local-discussion'])(
+    'highlights Discussions on %s',
+    (path) => {
+      renderTabs(path);
+      expect(
+        screen
+          .getByRole('link', { name: 'Discussions' })
+          .getAttribute('aria-current')
+      ).toBe('page');
+    }
+  );
+
+  it.each(['/discussions-other', '/events', '/'])(
+    'does not falsely highlight Discussions on %s',
+    (path) => {
+      renderTabs(path);
+      expect(
+        screen
+          .getByRole('link', { name: 'Discussions' })
+          .getAttribute('aria-current')
+      ).toBeNull();
+    }
+  );
+});

@@ -1,6 +1,11 @@
 // @vitest-environment node
 import { fromLocalInput, toLocalInput } from '@/lib/eventTime';
 import * as publicSeo from '@/lib/postSeoContent';
+import {
+  decodeEntities,
+  plainText,
+  tokenizeMarkup,
+} from '@/lib/readableMarkup';
 import { absoluteUrl, pageMetadata, truncateMeta } from '@/lib/seo';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -611,5 +616,23 @@ describe('event snapshots', () => {
     ).not.toThrow();
     expect(fetch).not.toHaveBeenCalled();
     expect(typeof window).toBe('undefined');
+  });
+});
+
+describe('moved tokenizer default compatibility', () => {
+  it('preserves legacy inline spacing, HTML fields and numeric entity decoding by default', () => {
+    const html =
+      'Hel<b>lo</b><p>body &amp; text</p><a href="/source">Read</a><img src="/cover.jpg" alt="A &amp; B"><script>hidden</script>';
+    expect(tokenizeMarkup(html)).toEqual({
+      text: 'Hel lo body & text Read',
+      links: [{ href: '/source', label: 'Read' }],
+      images: [{ source: '/cover.jpg', description: 'A & B' }],
+      malformed: false,
+    });
+    expect(plainText(html)).toBe('Hel lo body & text Read');
+    expect(decodeEntities('&#x73;afe&nbsp;&amp;')).toBe('safe &');
+    expect(tokenizeMarkup('Hel<!-- hidden -->lo').text).toBe('Hel lo');
+    expect(tokenizeMarkup('Hel<!-- hidden -->lo', true).text).toBe('Hello');
+    expect(tokenizeMarkup('<a href="/source">unclosed').malformed).toBe(true);
   });
 });

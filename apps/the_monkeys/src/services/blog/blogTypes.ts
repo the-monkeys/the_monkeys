@@ -1,3 +1,5 @@
+import type { HomepageEligibility } from '@/lib/homepageEligibility';
+
 export type BlogAudience = 'public' | 'group_only';
 
 export interface Blog {
@@ -19,6 +21,7 @@ export interface Blog {
 }
 
 export interface MetaBlog {
+  homepage_eligibility?: HomepageEligibility;
   blog_id: string;
   title: string;
   first_image: string;

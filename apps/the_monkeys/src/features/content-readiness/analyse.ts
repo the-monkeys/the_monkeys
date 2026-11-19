@@ -1,3 +1,4 @@
+import { homepagePlacementChecks } from './homepagePlacement';
 import { eventChecks, postChecks, visibilityCheck } from './rules';
 import type {
   ReadinessCheck,
@@ -30,6 +31,7 @@ export function analyseReadiness(snapshot: ReadinessSnapshot): ReadinessReport {
       ? postChecks(snapshot)
       : eventChecks(snapshot)),
     visibilityCheck(snapshot),
+    ...(snapshot.kind === 'post' ? homepagePlacementChecks(snapshot) : []),
   ];
   const coverageReasons = [...snapshot.extraction.reasons];
   if (snapshot.visibility === 'unknown')

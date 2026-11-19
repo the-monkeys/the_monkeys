@@ -54,6 +54,12 @@ const sections = [
     description:
       'Review attribution and supporting information. A source link does not prove accuracy or authority.',
   },
+  {
+    key: 'homepage',
+    label: 'Homepage placement',
+    description:
+      'Unscored guidance for homepage articles only. Saving and publishing remain available; placement is evaluated after public publication.',
+  },
 ] as const;
 
 function publicPreviewUrl(value?: string) {
@@ -213,112 +219,122 @@ export function ReadinessPanel({
                   decide whether to index a public page.
                 </p>
               </div>
-              {sections.map((section) => (
-                <section
-                  key={section.key}
-                  aria-label={section.label}
-                  className='mb-6'
-                >
-                  <h3 className='text-base font-semibold'>{section.label}</h3>
-                  <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
-                    {section.description}
-                  </p>
-                  {section.key === 'seo' && (
-                    <div className='my-3 rounded-lg border border-border-light bg-foreground-light/40 p-4 dark:border-border-dark dark:bg-foreground-dark/40'>
-                      <p className='font-medium'>Automated checklist</p>
-                      <p className='mt-2 font-newsreader text-3xl font-semibold'>
-                        {report.applicableKnownCount === 0
-                          ? 'No automated result available'
-                          : `${report.passedCount} of ${report.applicableKnownCount} automated checks passed`}
-                      </p>
-                      {report.applicableKnownCount === 0 && (
-                        <p className='mt-1 text-sm'>
-                          {report.passedCount} of {report.applicableKnownCount}{' '}
-                          automated checks passed
-                        </p>
-                      )}
-                      {partial && (
-                        <p className='mt-2 font-medium'>Partial check</p>
-                      )}
-                      <p className='mt-2 text-sm'>
-                        This checklist covers known applicable checks only.
-                        Unknown, human review and not applicable items are
-                        excluded.
-                      </p>
-                      <p className='mt-2 text-sm'>
-                        {manualCount} {manualCount === 1 ? 'item' : 'items'}{' '}
-                        marked for human review. {unknownCount}{' '}
-                        {unknownCount === 1 ? 'item' : 'items'} could not be
-                        checked.
-                      </p>
-                      <p className='mt-2 text-sm'>
-                        It does not predict search ranking, indexing, traffic,
-                        registrations or AI citations.
-                      </p>
-                      {report.coverageReasons.length > 0 && (
-                        <ul className='mt-2 list-disc space-y-1 pl-5 text-sm'>
-                          {report.coverageReasons.map((reason, index) => (
-                            <li key={index}>{reason}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  )}
-                  <ul className='mt-3 divide-y divide-border-light dark:divide-border-dark'>
-                    {report.checks
-                      .filter((check) => check.section === section.key)
-                      .map((check) => (
-                        <li key={check.id} className='py-4'>
-                          <div className='flex flex-wrap items-baseline justify-between gap-2'>
-                            <h4 className='font-medium'>{check.label}</h4>
-                            <span
-                              className={`inline-flex items-center gap-1.5 text-sm font-medium ${check.status === 'improve' ? 'text-text-light dark:text-text-dark' : 'text-gray-500 dark:text-gray-400'}`}
-                            >
-                              {check.status === 'improve' && (
-                                <span
-                                  aria-hidden='true'
-                                  className='size-1.5 rounded-full bg-brand-orange'
-                                />
-                              )}
-                              {statusLabels[check.status]}
-                            </span>
-                          </div>
-                          <p className='mt-2 text-sm whitespace-pre-wrap'>
-                            {check.finding}
-                          </p>
-                          <p className='mt-1 text-sm whitespace-pre-wrap text-gray-500 dark:text-gray-400'>
-                            {check.reason}
-                          </p>
-                          {onGoToField &&
-                            check.fieldKey &&
-                            check.status !== 'pass' &&
-                            check.status !== 'not-applicable' && (
-                              <Button
-                                type='button'
-                                variant='outline'
-                                className={`${buttonClass} mt-3`}
-                                aria-label={`Go to field: ${check.label}`}
-                                onClick={() => {
-                                  goToField.current = check.fieldKey!;
-                                  onOpenChange(false);
-                                }}
-                              >
-                                Go to field
-                              </Button>
-                            )}
-                        </li>
-                      ))}
-                  </ul>
-                  {!report.checks.some(
-                    (check) => check.section === section.key
-                  ) && (
-                    <p className='mt-3 text-sm'>
-                      No findings available for this section. Review the content
-                      yourself.
+              {sections
+                .filter(
+                  (section) =>
+                    section.key !== 'homepage' ||
+                    (report.kind === 'post' &&
+                      report.checks.some(
+                        (check) => check.section === 'homepage'
+                      ))
+                )
+                .map((section) => (
+                  <section
+                    key={section.key}
+                    aria-label={section.label}
+                    className='mb-6'
+                  >
+                    <h3 className='text-base font-semibold'>{section.label}</h3>
+                    <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                      {section.description}
                     </p>
-                  )}
-                </section>
-              ))}
+                    {section.key === 'seo' && (
+                      <div className='my-3 rounded-lg border border-border-light bg-foreground-light/40 p-4 dark:border-border-dark dark:bg-foreground-dark/40'>
+                        <p className='font-medium'>Automated checklist</p>
+                        <p className='mt-2 font-newsreader text-3xl font-semibold'>
+                          {report.applicableKnownCount === 0
+                            ? 'No automated result available'
+                            : `${report.passedCount} of ${report.applicableKnownCount} automated checks passed`}
+                        </p>
+                        {report.applicableKnownCount === 0 && (
+                          <p className='mt-1 text-sm'>
+                            {report.passedCount} of{' '}
+                            {report.applicableKnownCount} automated checks
+                            passed
+                          </p>
+                        )}
+                        {partial && (
+                          <p className='mt-2 font-medium'>Partial check</p>
+                        )}
+                        <p className='mt-2 text-sm'>
+                          This checklist covers known applicable checks only.
+                          Unknown, human review and not applicable items are
+                          excluded.
+                        </p>
+                        <p className='mt-2 text-sm'>
+                          {manualCount} {manualCount === 1 ? 'item' : 'items'}{' '}
+                          marked for human review. {unknownCount}{' '}
+                          {unknownCount === 1 ? 'item' : 'items'} could not be
+                          checked.
+                        </p>
+                        <p className='mt-2 text-sm'>
+                          It does not predict search ranking, indexing, traffic,
+                          registrations or AI citations.
+                        </p>
+                        {report.coverageReasons.length > 0 && (
+                          <ul className='mt-2 list-disc space-y-1 pl-5 text-sm'>
+                            {report.coverageReasons.map((reason, index) => (
+                              <li key={index}>{reason}</li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    )}
+                    <ul className='mt-3 divide-y divide-border-light dark:divide-border-dark'>
+                      {report.checks
+                        .filter((check) => check.section === section.key)
+                        .map((check) => (
+                          <li key={check.id} className='py-4'>
+                            <div className='flex flex-wrap items-baseline justify-between gap-2'>
+                              <h4 className='font-medium'>{check.label}</h4>
+                              <span
+                                className={`inline-flex items-center gap-1.5 text-sm font-medium ${check.status === 'improve' ? 'text-text-light dark:text-text-dark' : 'text-gray-500 dark:text-gray-400'}`}
+                              >
+                                {check.status === 'improve' && (
+                                  <span
+                                    aria-hidden='true'
+                                    className='size-1.5 rounded-full bg-brand-orange'
+                                  />
+                                )}
+                                {statusLabels[check.status]}
+                              </span>
+                            </div>
+                            <p className='mt-2 text-sm whitespace-pre-wrap'>
+                              {check.finding}
+                            </p>
+                            <p className='mt-1 text-sm whitespace-pre-wrap text-gray-500 dark:text-gray-400'>
+                              {check.reason}
+                            </p>
+                            {onGoToField &&
+                              check.fieldKey &&
+                              check.status !== 'pass' &&
+                              check.status !== 'not-applicable' && (
+                                <Button
+                                  type='button'
+                                  variant='outline'
+                                  className={`${buttonClass} mt-3`}
+                                  aria-label={`Go to field: ${check.label}`}
+                                  onClick={() => {
+                                    goToField.current = check.fieldKey!;
+                                    onOpenChange(false);
+                                  }}
+                                >
+                                  Go to field
+                                </Button>
+                              )}
+                          </li>
+                        ))}
+                    </ul>
+                    {!report.checks.some(
+                      (check) => check.section === section.key
+                    ) && (
+                      <p className='mt-3 text-sm'>
+                        No findings available for this section. Review the
+                        content yourself.
+                      </p>
+                    )}
+                  </section>
+                ))}
               <section aria-label='Search-result preview' className='mb-4'>
                 <h3 className='text-base font-semibold'>
                   Search-result preview

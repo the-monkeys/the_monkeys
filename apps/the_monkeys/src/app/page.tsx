@@ -1,12 +1,11 @@
 import type { Metadata } from 'next';
 
 import { JsonLd } from '@/components/seo/JsonLd';
-import { META_FEED_QUERY_KEY } from '@/hooks/blog/useGetMetaFeedBlogs';
 import { LANDING_EVENT_FILTERS, LANDING_POST_LIMIT } from '@/lib/landingPage';
 import { landingEntityGraph, landingMetadata } from '@/lib/landingPageSeo';
 import { queryKeys } from '@/lib/queryKeys';
+import { homepageBlogQuery } from '@/services/blog/homepageApi';
 import { listEvents } from '@/services/events/eventsApi';
-import { fetcherV2 } from '@/services/fetcher';
 import {
   landingDiscussionQuery,
   landingGroupQuery,
@@ -25,10 +24,8 @@ export default async function LandingPage() {
   await Promise.all([
     queryClient.prefetchQuery(landingDiscussionQuery),
     queryClient.prefetchQuery(landingGroupQuery),
-    queryClient.prefetchQuery({
-      queryKey: [META_FEED_QUERY_KEY, limit],
-      queryFn: () => fetcherV2(`/blog/meta-feed?limit=${limit}`),
-    }),
+    queryClient.prefetchQuery(homepageBlogQuery({ limit })),
+    queryClient.prefetchQuery(homepageBlogQuery({ limit, sort: 'trending' })),
     queryClient.prefetchQuery({
       queryKey: queryKeys.events.list(LANDING_EVENT_FILTERS),
       queryFn: () => listEvents(LANDING_EVENT_FILTERS),

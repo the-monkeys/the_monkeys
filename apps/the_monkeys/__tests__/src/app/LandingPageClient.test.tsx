@@ -1,6 +1,5 @@
 import LandingPageClient from '@/app/LandingPageClient';
-import useGetMetaFeedBlogs from '@/hooks/blog/useGetMetaFeedBlogs';
-import useGetTrendingBlogs from '@/hooks/blog/useGetTrendingBlogs';
+import useGetHomepageBlogs from '@/hooks/blog/useGetHomepageBlogs';
 import { useEventList } from '@/hooks/events/useEventQueries';
 import { useLandingCommunity } from '@/hooks/landing/useLandingCommunity';
 import { MetaBlog } from '@/services/blog/blogTypes';
@@ -11,12 +10,22 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../utils';
 
+vi.mock('../../../public/image-placeholder.png', () => ({
+  default: { src: '/image-placeholder.png' },
+}));
 vi.mock('next/navigation', () => ({
   usePathname: () => '/',
   useSearchParams: () => ({ toString: () => '' }),
 }));
-vi.mock('@/hooks/blog/useGetMetaFeedBlogs');
-vi.mock('@/hooks/blog/useGetTrendingBlogs');
+const { latestBlogs, trendingBlogs } = vi.hoisted(() => ({
+  latestBlogs: vi.fn(),
+  trendingBlogs: vi.fn(),
+}));
+vi.mock('@/hooks/blog/useGetHomepageBlogs', () => ({
+  default: vi.fn((params: any) =>
+    (params?.sort === 'trending' ? trendingBlogs : latestBlogs)(params)
+  ),
+}));
 vi.mock('@/hooks/events/useEventQueries', () => ({ useEventList: vi.fn() }));
 vi.mock('@/hooks/landing/useLandingCommunity', () => ({
   useLandingCommunity: vi.fn(),
@@ -89,6 +98,14 @@ const posts: MetaBlog[] = Array.from({ length: 18 }, (_, index) => ({
   published_time: '2026-09-11T09:00:00.000Z',
   tags: ['Community'],
   like_count: index,
+  homepage_eligibility: {
+    eligible: true,
+    lead_eligible: true,
+    word_count: 250,
+    minimum_words: 250,
+    reasons: [],
+    version: 'homepage-v1',
+  },
 }));
 
 const upcomingEvent: EventItem = {
@@ -146,14 +163,18 @@ describe('LandingPageClient', () => {
         isError: false,
       },
     } as ReturnType<typeof useLandingCommunity>);
-    vi.mocked(useGetTrendingBlogs).mockReturnValue({
-      blogs: [
-        {
-          ...posts[0],
-          blog_id: 'trending-1',
-          title: 'Endpoint trending post',
-        },
-      ],
+    trendingBlogs.mockReturnValue({
+      blogs: {
+        blogs: [
+          {
+            ...posts[0],
+            blog_id: 'trending-1',
+            title: 'Endpoint trending post',
+          },
+        ],
+        has_more: false,
+        homepage_policy_version: 'homepage-v1',
+      },
       isLoading: false,
       isError: false,
     });
@@ -166,7 +187,7 @@ describe('LandingPageClient', () => {
   });
 
   it('requests only the posts used by the landing layout', () => {
-    vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
+    latestBlogs.mockReturnValue({
       blogs: { blogs: [] },
       isLoading: false,
       isError: false,
@@ -179,7 +200,11 @@ describe('LandingPageClient', () => {
 
     renderWithProviders(<LandingPageClient />);
 
-    expect(useGetMetaFeedBlogs).toHaveBeenCalledWith({ limit: 12 });
+    expect(latestBlogs).toHaveBeenCalledWith({ limit: 12 });
+    expect(useGetHomepageBlogs).toHaveBeenCalledWith({
+      limit: 12,
+      sort: 'trending',
+    });
     const community = screen.getByRole('region', { name: 'Top discussions' });
     const groupSection = screen.getByRole('region', {
       name: 'Discover groups',
@@ -208,7 +233,7 @@ describe('LandingPageClient', () => {
   });
 
   it('keeps events and the dispatch signup discoverable when posts fail', () => {
-    vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
+    latestBlogs.mockReturnValue({
       blogs: undefined,
       isLoading: false,
       isError: true,
@@ -239,7 +264,7 @@ describe('LandingPageClient', () => {
   });
 
   it('uses post language throughout the successful landing experience', () => {
-    vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
+    latestBlogs.mockReturnValue({
       blogs: { blogs: posts, total_blogs: posts.length },
       isLoading: false,
       isError: false,
@@ -381,7 +406,7 @@ describe('LandingPageClient', () => {
         unobserve() {}
       }
     );
-    vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
+    latestBlogs.mockReturnValue({
       blogs: { blogs: posts, total_blogs: posts.length },
       isLoading: false,
       isError: false,
@@ -413,7 +438,7 @@ describe('LandingPageClient', () => {
 
   it('keeps the mixed feed directly after the filter navigation', async () => {
     const user = userEvent.setup();
-    vi.mocked(useGetMetaFeedBlogs).mockReturnValue({
+    latestBlogs.mockReturnValue({
       blogs: { blogs: posts, total_blogs: posts.length },
       isLoading: false,
       isError: false,
@@ -436,5 +461,53 @@ describe('LandingPageClient', () => {
     await user.click(screen.getByRole('link', { name: 'Articles & analysis' }));
     expect(feed.querySelectorAll('[aria-label="Feed post"]')).toHaveLength(3);
     expect(feed.querySelectorAll('[aria-label="Feed event"]')).toHaveLength(0);
+  });
+});
+
+describe('homepage eligibility without a lead', () => {
+  afterEach(() => {
+    cleanup();
+    vi.clearAllMocks();
+  });
+  it('keeps qualified text-only articles visible without creating a featured lead', () => {
+    latestBlogs.mockReturnValue({
+      blogs: {
+        blogs: posts
+          .slice(0, 3)
+          .map((post) => ({
+            ...post,
+            first_image: '',
+            homepage_eligibility: {
+              ...post.homepage_eligibility,
+              lead_eligible: false,
+            },
+          })),
+      },
+      isLoading: false,
+      isError: false,
+    });
+    trendingBlogs.mockReturnValue({
+      blogs: { blogs: [] },
+      isLoading: false,
+      isError: false,
+    });
+    vi.mocked(useLandingCommunity, { partial: true }).mockReturnValue({
+      discussions: { data: [], isPending: false, isError: false },
+      groups: { data: [], isPending: false, isError: false },
+    } as any);
+    vi.mocked(useEventList).mockReturnValue({
+      data: { events: [] },
+      isLoading: false,
+      isError: false,
+    } as any);
+    renderWithProviders(<LandingPageClient />);
+    expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
+    expect(screen.getAllByRole('article', { name: 'Feed post' })).toHaveLength(
+      3
+    );
+    expect(screen.getByText('Useful community idea 1')).toBeDefined();
+    expect(
+      screen.getByText('No trending posts are available yet.')
+    ).toBeDefined();
   });
 });

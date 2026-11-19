@@ -1,8 +1,10 @@
+import { homepageBlogQuery } from '@/services/blog/homepageApi';
 import { QueryClient } from '@tanstack/react-query';
 import { describe, expect, it } from 'vitest';
 
 import {
   LIVE_LIST_STALE_MS,
+  invalidateAfterArticleWrite,
   invalidateAfterEventWrite,
   invalidateAfterGroupEventWrite,
   invalidateAfterGroupWrite,
@@ -93,4 +95,29 @@ describe('invalidateAfterGroupEventWrite', () => {
       qc.getQueryState(queryKeys.groups.list({ limit: 8 }))?.isInvalidated
     ).toBe(true);
   });
+});
+
+it('article writes invalidate every homepage sort/page without invalidating ordinary feeds', async () => {
+  const qc = new QueryClient();
+  const home = [
+    homepageBlogQuery(),
+    homepageBlogQuery({ sort: 'trending' }),
+    homepageBlogQuery({ offset: 12 }),
+    homepageBlogQuery({ limit: 4 }),
+  ];
+  const unrelated = [
+    ['meta-feed-blogs', 12],
+    ['trending-blogs'],
+    ['blog'],
+    ['following-feed'],
+    ['events'],
+    ['groups'],
+  ];
+  for (const q of home) qc.setQueryData(q.queryKey, { blogs: [] });
+  for (const key of unrelated) qc.setQueryData(key, { keep: true });
+  await invalidateAfterArticleWrite(qc);
+  for (const q of home)
+    expect(qc.getQueryState(q.queryKey)?.isInvalidated).toBe(true);
+  for (const key of unrelated)
+    expect(qc.getQueryState(key)?.isInvalidated).toBe(false);
 });

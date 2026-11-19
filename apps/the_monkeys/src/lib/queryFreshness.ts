@@ -5,6 +5,16 @@ import { queryKeys } from './queryKeys';
 /** Discover lists are user-generated and must refetch on mount/focus. */
 export const LIVE_LIST_STALE_MS = 0;
 
+/** Narrow branch: article writes must not invalidate ordinary feed caches. */
+export const HOMEPAGE_BLOG_QUERY_ROOT = [
+  'meta-feed-blogs',
+  'homepage',
+] as const;
+
+export function invalidateAfterArticleWrite(qc: QueryClient) {
+  return qc.invalidateQueries({ queryKey: HOMEPAGE_BLOG_QUERY_ROOT });
+}
+
 export async function invalidateAfterEventWrite(
   qc: QueryClient,
   slug?: string
