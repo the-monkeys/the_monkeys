@@ -51,7 +51,7 @@ export default async function BlogPage({ params }: Props) {
   const fullSlug = params.slug;
   const blogId = getBlogIdFromSlug(fullSlug);
 
-  if (!blogId) return null;
+  if (!blogId) notFound();
 
   const blog = await loadBlogForViewer(blogId);
   if (blog === null || blog?.is_draft) notFound();
