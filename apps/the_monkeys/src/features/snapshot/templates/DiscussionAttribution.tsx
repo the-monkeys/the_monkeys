@@ -4,9 +4,13 @@ import type { SnapshotInput, SnapshotTheme } from '../types';
 export function DiscussionByline({
   input,
   badgeSrc = '/snapshot-verified.svg',
+  badgeSize = 24,
+  maxWidth,
 }: {
   input: SnapshotInput;
   badgeSrc?: string;
+  badgeSize?: number;
+  maxWidth?: number;
 }) {
   return (
     <span
@@ -16,9 +20,24 @@ export function DiscussionByline({
         gap: 8,
         minWidth: 0,
         overflowWrap: 'anywhere',
+        ...(maxWidth !== undefined ? { maxWidth } : {}),
       }}
     >
-      <span style={{ display: 'flex' }}>
+      <span
+        style={{
+          display: 'flex',
+          ...(maxWidth !== undefined
+            ? {
+                minWidth: 0,
+                wordBreak: 'break-word',
+                maxWidth:
+                  maxWidth -
+                  (input.author?.isVerified === true ? badgeSize + 8 : 0),
+                flexShrink: 1,
+              }
+            : {}),
+        }}
+      >
         {input.author?.username
           ? `@${input.author.username}`
           : 'Deleted account'}
@@ -28,9 +47,14 @@ export function DiscussionByline({
         <img
           src={badgeSrc}
           alt='Verified account'
-          width={24}
-          height={24}
-          style={{ display: 'flex', flexShrink: 0, width: 24, height: 24 }}
+          width={badgeSize}
+          height={badgeSize}
+          style={{
+            display: 'flex',
+            flexShrink: 0,
+            width: badgeSize,
+            height: badgeSize,
+          }}
         />
       ) : null}
     </span>

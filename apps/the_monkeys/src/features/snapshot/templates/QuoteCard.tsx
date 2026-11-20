@@ -1,6 +1,6 @@
 import { discussionQuoteFontSize } from '../lib/discussionTextFit';
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
-import { DiscussionByline, DiscussionSource } from './DiscussionAttribution';
+import { DiscussionByline } from './DiscussionAttribution';
 import { DiscussionQuoteMark } from './DiscussionQuoteMark';
 import {
   AccentBar,
@@ -29,6 +29,8 @@ const Render = ({
   const height = renderSize?.height ?? HEIGHT;
   const compact = Boolean(renderSize && height < 800);
   const padding = compact ? 48 : 80;
+  const discussion = input.source === 'discussion';
+  const bylineSize = compact ? 28 : 36;
   return (
     <div
       style={{
@@ -56,7 +58,12 @@ const Render = ({
         </div>
       </Row>
 
-      <Col style={{ gap: compact ? 18 : 36 }}>
+      <Col
+        style={{
+          gap: compact ? 18 : 36,
+          ...(discussion ? { width: '100%', minWidth: 0, flexShrink: 0 } : {}),
+        }}
+      >
         <div
           style={{
             display: 'flex',
@@ -91,28 +98,72 @@ const Render = ({
             letterSpacing: -0.8,
             color: theme.foreground,
             ...(input.source === 'discussion'
-              ? ({ overflowWrap: 'anywhere' } as const)
+              ? ({
+                  width: '100%',
+                  minWidth: 0,
+                  wordBreak: 'break-word',
+                  flexWrap: 'wrap',
+                  alignContent: 'flex-start',
+                  overflowWrap: 'anywhere',
+                } as const)
               : {}),
           }}
         >
-          {input.source === 'discussion' ? text : clip(text, 280)}
+          {/* Word boxes preserve natural wrapping; Satori otherwise refuses a break before #/@. */}
+          {discussion
+            ? (text.match(/\S+\s*|\s+/g) ?? []).map((word, index) => (
+                <span
+                  key={index}
+                  style={{
+                    display: 'flex',
+                    minWidth: 0,
+                    maxWidth: '100%',
+                    whiteSpace: 'normal',
+                    wordBreak: 'break-word',
+                    marginRight: /\s$/.test(word) ? '0.25em' : 0,
+                  }}
+                >
+                  {word}
+                </span>
+              ))
+            : clip(text, 280)}
         </div>
       </Col>
 
-      <Row style={{ alignItems: 'center', justifyContent: 'space-between' }}>
+      <Row
+        style={{
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          ...(discussion ? { gap: 32, flexShrink: 0 } : {}),
+        }}
+      >
         <AccentBar color={accent} width={72} height={6} />
-        <div style={{ display: 'flex', color: theme.muted, fontSize: 22 }}>
+        <div
+          style={{
+            display: 'flex',
+            color: theme.muted,
+            fontSize: discussion ? bylineSize : 22,
+            ...(discussion
+              ? {
+                  minWidth: 0,
+                  maxWidth: width - padding * 2 - 104,
+                  lineHeight: 1.2,
+                }
+              : {}),
+          }}
+        >
           {input.source === 'discussion' ? (
             <DiscussionByline
               input={input}
               badgeSrc={assetUrls?.verifiedBadge}
+              badgeSize={bylineSize}
+              maxWidth={width - padding * 2 - 104}
             />
           ) : (
             input.author?.displayName ?? 'the_monkeys'
           )}
         </div>
       </Row>
-      <DiscussionSource input={input} theme={theme} />
     </div>
   );
 };
