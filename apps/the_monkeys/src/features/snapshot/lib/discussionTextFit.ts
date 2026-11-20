@@ -32,7 +32,8 @@ export function estimateDiscussionLines(
     }
     if (size > width) {
       lines += Math.ceil(size / width) - 1;
-      used = size % width || width;
+      // A wrapped word is one full-width flex item; following words start a new row.
+      used = width;
     } else {
       used += (used ? space : 0) + size;
     }
@@ -46,9 +47,9 @@ export function discussionQuoteFontSize(
   height: number,
   max = 68
 ): number {
-  for (let font = max; font >= 18; font--) {
+  for (let font = max; font >= 12; font--) {
     if (estimateDiscussionLines(text, font, width) * font * 1.2 <= height)
       return font;
   }
-  return 18;
+  return 12;
 }

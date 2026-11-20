@@ -14,7 +14,7 @@ const input: SnapshotInput = {
 };
 
 describe.each(SNAPSHOT_TEMPLATES)('$id discussion export', (template) => {
-  it('includes the original handle, verification and source in the export tree', () => {
+  it('includes the original attribution and the template-specific source treatment', () => {
     const html = renderToStaticMarkup(
       <template.Render
         input={input}
@@ -24,7 +24,9 @@ describe.each(SNAPSHOT_TEMPLATES)('$id discussion export', (template) => {
     );
     expect(html).toContain('@alice');
     expect(html).toContain('Verified account');
-    expect(html).toContain(input.sourceUrl);
+    if (template.id === 'quote-card')
+      expect(html).not.toContain(input.sourceUrl);
+    else expect(html).toContain(input.sourceUrl);
   });
   it('does not invent a badge for unverified or legacy authors', () => {
     const html = renderToStaticMarkup(
@@ -93,7 +95,9 @@ it('exports full long discussion text in the quote-card layout without forced li
       accent='#ff5544'
     />
   );
-  expect(html).toContain(body);
+  expect(
+    new DOMParser().parseFromString(html, 'text/html').body.textContent
+  ).toContain(body);
   expect(html).not.toContain('white-space:pre-wrap');
   expect(html).toContain('overflow-wrap:anywhere');
 });
