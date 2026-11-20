@@ -1,4 +1,4 @@
-import { toIsoTime } from '@/lib/eventTime';
+import { parseEventTime, toIsoTime } from '@/lib/eventTime';
 import {
   MONKEYS_WEBSITE_ID,
   OG_IMAGE,
@@ -10,6 +10,7 @@ import {
 } from '@/lib/seo';
 import { EventItem } from '@/services/events/eventTypes';
 import { GroupItem } from '@/services/groups/groupsTypes';
+import { parseISO } from 'date-fns';
 
 export function eventsHubGraph(faqs: { question: string; answer: string }[]) {
   const url = absoluteUrl('/events');
@@ -199,6 +200,16 @@ export function eventJsonLd(event: EventItem) {
     (tier && tier.capacity > 0 && (tier.booked || 0) >= tier.capacity)
       ? 'https://schema.org/SoldOut'
       : 'https://schema.org/InStock';
+  // Only the host-configured registration window is evidence of when booking opens.
+  // Legacy or malformed values must not become invented dates or break rendering.
+  const registrationOpens =
+    typeof event.rsvp_opens_at === 'string'
+      ? parseISO(event.rsvp_opens_at)
+      : parseEventTime(event.rsvp_opens_at);
+  const validFrom =
+    registrationOpens && Number.isFinite(registrationOpens.getTime())
+      ? registrationOpens.toISOString()
+      : undefined;
   if (paid.length) {
     jsonLd.offers = tiers.map((t) => ({
       '@type': 'Offer',
@@ -207,7 +218,7 @@ export function eventJsonLd(event: EventItem) {
       priceCurrency: (t.currency || 'INR').toUpperCase(),
       url,
       availability: availability(t),
-      validFrom: toIsoTime(event.rsvp_opens_at),
+      validFrom,
     }));
   } else {
     jsonLd.isAccessibleForFree = true;
@@ -215,6 +226,7 @@ export function eventJsonLd(event: EventItem) {
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'INR',
+      ...(validFrom ? { validFrom } : {}),
       url,
       availability: tiers.length
         ? tiers.every(
