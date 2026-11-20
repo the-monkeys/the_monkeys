@@ -1,6 +1,7 @@
 // @vitest-environment node
 import LandingPage from '@/app/page';
 import { useLandingCommunity } from '@/hooks/landing/useLandingCommunity';
+import { listEvents } from '@/services/events/eventsApi';
 import { fetcherV2 } from '@/services/fetcher';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderToStaticMarkup } from 'react-dom/server';
@@ -21,10 +22,10 @@ vi.mock('@/services/fetcher', () => ({
   })),
 }));
 vi.mock('@/services/events/eventsApi', () => ({
-  listEvents: async () => ({ events: [] }),
+  listEvents: vi.fn(async () => ({ events: [] })),
 }));
 vi.mock('@/app/LandingPageClient', () => ({
-  default: () => {
+  default: function MockLandingPageClient() {
     const { discussions, groups } = useLandingCommunity();
     return (
       <main>
@@ -106,4 +107,29 @@ it('does not fail the landing page when a community endpoint is unavailable', as
     vi.fn().mockRejectedValue(new Error('Local API outage'))
   );
   await expect(LandingPage()).resolves.toBeDefined();
+});
+
+it('does not serialize attendee-only meeting access in public event hydration', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async () => Response.json({ discussions: [], groups: [] }))
+  );
+  vi.mocked(listEvents).mockResolvedValueOnce({
+    events: [
+      {
+        id: 11,
+        title: 'Public workshop',
+        slug: 'public-workshop',
+        event_type: 'virtual',
+        status: 'published',
+        visibility: 'public',
+        meeting_link: 'https://meeting.example.test/private-homepage-sentinel',
+      },
+    ],
+    total: 1,
+  });
+  const page = await LandingPage();
+  const serialized = JSON.stringify(page);
+  expect(serialized).toContain('Public workshop');
+  expect(serialized).not.toContain('private-homepage-sentinel');
 });
