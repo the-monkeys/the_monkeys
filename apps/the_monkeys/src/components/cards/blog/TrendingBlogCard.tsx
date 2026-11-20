@@ -93,10 +93,18 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   );
 };
 
-export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
+export const TrendingBlogCardSmall = ({
+  blog,
+  dateLabel,
+}: {
+  blog: MetaBlog;
+  dateLabel?: string;
+}) => {
   const authorId = blog?.owner_account_id;
   const blogId = blog?.blog_id;
-  const date = blog?.published_time ? getRelativeTime(blog.published_time) : '';
+  const date =
+    dateLabel ??
+    (blog?.published_time ? getRelativeTime(blog.published_time) : '');
 
   const titleContent = purifyHTMLString(blog?.title);
   const descriptionContent = purifyHTMLString(blog?.first_paragraph);
@@ -113,11 +121,17 @@ export const TrendingBlogCardSmall = ({ blog }: { blog: MetaBlog }) => {
             {isNonValidBannerImage(imageContent) ? (
               <BlogPlaceholderImage
                 title={titleContent}
+                priority={false}
+                quality={80}
+                sizes='(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw'
                 className='group-hover:scale-105 transition-transform duration-500 ease-out'
               />
             ) : (
               <BlogImage
                 title={titleContent}
+                priority={false}
+                quality={80}
+                sizes='(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 33vw'
                 image={imageContent}
                 className='group-hover:scale-105 transition-transform duration-500 ease-out'
               />

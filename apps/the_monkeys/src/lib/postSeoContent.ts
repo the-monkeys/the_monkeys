@@ -9,6 +9,40 @@ function textFromBlock(block?: Block): string {
   return '';
 }
 
+// Published title extraction above is intentionally unchanged: it also defines legacy URLs.
+function listText(value: unknown, depth = 0): string {
+  if (depth > 8) return '';
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value))
+    return value
+      .map((item) => listText(item, depth + 1))
+      .filter(Boolean)
+      .join(' ');
+  if (!value || typeof value !== 'object') return '';
+  const item = value as { content?: unknown; items?: unknown };
+  return [
+    typeof item.content === 'string' ? item.content : '',
+    listText(item.items, depth + 1),
+  ]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function bodyTextFromBlock(block: Block): string {
+  if (block.type === 'list') return listText(block.data?.items);
+  if (block.type === 'table') {
+    const rows: unknown = block.data?.content;
+    return Array.isArray(rows)
+      ? rows
+          .filter(Array.isArray)
+          .flat()
+          .filter((cell): cell is string => typeof cell === 'string')
+          .join(' ')
+      : '';
+  }
+  return textFromBlock(block);
+}
+
 /** Preserve published metadata semantics. Never apply editor normalization here. */
 export function getPostSeoContent(document: unknown) {
   const data = document as { blocks?: Block[] } | null | undefined;
@@ -18,9 +52,9 @@ export function getPostSeoContent(document: unknown) {
     blocks.find((block) => textFromBlock(block));
   const textBlocks = blocks
     .filter((block) =>
-      ['paragraph', 'quote', 'list', 'header'].includes(block.type)
+      ['paragraph', 'quote', 'list', 'header', 'table'].includes(block.type)
     )
-    .map((block) => normalizeSeoText(textFromBlock(block), 500))
+    .map((block) => normalizeSeoText(bodyTextFromBlock(block), 500))
     .filter(Boolean);
   const meaningfulDescription =
     textBlocks.find(
