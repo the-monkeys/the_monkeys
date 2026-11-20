@@ -29,6 +29,18 @@ export function discussionAuthorName(
   return name;
 }
 
+function discussionAuthor(username?: string, gone?: boolean) {
+  const handle = (username ?? '').trim();
+  return {
+    '@type': 'Person',
+    name: discussionAuthorName(username, gone),
+    // A deleted account must not retain a profile link to its former identity.
+    ...(!gone && handle
+      ? { url: absoluteUrl(`/${encodeURIComponent(handle)}`) }
+      : {}),
+  };
+}
+
 export function discussionPath(id: string): string {
   return `/discussions/${encodeURIComponent(id)}`;
 }
@@ -78,10 +90,7 @@ export function buildDiscussionJsonLd(
         '@type': 'Comment',
         text: reply.body,
         url: `${url}#reply-${reply.public_id}`,
-        author: {
-          '@type': 'Person',
-          name: discussionAuthorName(reply.author_username, reply.author_gone),
-        },
+        author: discussionAuthor(reply.author_username, reply.author_gone),
         ...(dateCreated ? { dateCreated } : {}),
       };
     });
@@ -95,10 +104,7 @@ export function buildDiscussionJsonLd(
     url,
     mainEntityOfPage: url,
     ...(datePublished ? { datePublished } : {}),
-    author: {
-      '@type': 'Person',
-      name: discussionAuthorName(post.author_username, post.author_gone),
-    },
+    author: discussionAuthor(post.author_username, post.author_gone),
     publisher: publisherOrg(),
     isPartOf: post.group_slug
       ? {
