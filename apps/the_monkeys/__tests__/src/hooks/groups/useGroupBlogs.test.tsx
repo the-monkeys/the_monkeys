@@ -16,7 +16,11 @@ const state = vi.hoisted(() => ({
   list: vi.fn(),
 }));
 vi.mock('@/hooks/auth/useAuth', () => ({
-  default: () => ({ data: state.session, isPending: state.pending }),
+  default: () => ({
+    data: state.session,
+    isPending: state.pending,
+    status: state.pending ? 'pending' : 'success',
+  }),
 }));
 vi.mock('@/services/groups/groupsApi', () => ({
   listGroupBlogs: (...args: any[]) => state.list(...args),

@@ -16,10 +16,7 @@ import { WSS_URL_V2 } from '@/constants/api';
 import { PostReadiness } from '@/features/content-readiness/PostReadiness';
 import useAuth from '@/hooks/auth/useAuth';
 import { useDraftPublication } from '@/hooks/blog/useDraftPublication';
-import useGetDraftBlogDetail, {
-  DRAFT_BLOG_DETAIL_QUERY_KEY,
-} from '@/hooks/blog/useGetDraftBlogDetail';
-import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
+import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
 import { publicationPostSlug } from '@/lib/postUrl';
 import { invalidateAfterArticleWrite } from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
@@ -371,7 +368,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       let successDescription = 'Your post was published.';
       try {
         const actual = await getPublishedBlog(blogId);
-        queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], actual);
+        queryClient.setQueryData(queryKeys.blog.detail(blogId), actual);
         if (actual.group_slug) {
           queryClient.invalidateQueries({
             queryKey: queryKeys.groups.blogs(actual.group_slug),
@@ -392,7 +389,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
       // Invalidate cache and redirect
       queryClient.invalidateQueries({
-        queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+        queryKey: queryKeys.blog.drafts.detail(blogId),
       });
       router.push(`/${username}`);
     } catch (error) {
@@ -436,7 +433,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Fetch draft blog data on mount
   useEffect(() => {
     queryClient.invalidateQueries({
-      queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+      queryKey: queryKeys.blog.drafts.detail(blogId),
     });
   }, [blogId, queryClient]);
 
@@ -508,7 +505,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
         // Invalidate cache and redirect
         queryClient.invalidateQueries({
-          queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+          queryKey: queryKeys.blog.drafts.detail(blogId),
         });
         router.push(`/library?source=scheduled`);
       } catch (error) {

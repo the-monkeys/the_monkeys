@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Icon from '@/components/icon';
-import { ALL_NOTIFICATIONS_QUERY_KEY } from '@/hooks/notification/useGetAllNotifications';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -21,7 +21,7 @@ export const MarkReadButton = () => {
         description: 'Notifications marked as read.',
       });
       queryClient.invalidateQueries({
-        queryKey: [ALL_NOTIFICATIONS_QUERY_KEY],
+        queryKey: queryKeys.notifications.list(),
       });
     } catch {
       toast({

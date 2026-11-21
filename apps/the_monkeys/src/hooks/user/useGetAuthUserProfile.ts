@@ -1,3 +1,5 @@
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { GetAuthUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { useQuery } from '@tanstack/react-query';
@@ -11,6 +13,8 @@ async function getAuthUserProfile(username: string) {
 }
 
 const useGetAuthUserProfile = (username?: string) => {
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || null;
   return useQuery({
     queryFn: async () => {
       if (username) {
@@ -19,8 +23,8 @@ const useGetAuthUserProfile = (username?: string) => {
 
       return null;
     },
-    queryKey: ['user', username],
-    enabled: !!username,
+    queryKey: queryKeys.profile.authenticated(username, viewer),
+    enabled: !!viewer && !!username,
   });
 };
 

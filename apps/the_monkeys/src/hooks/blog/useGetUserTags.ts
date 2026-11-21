@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { GetUserTagsResponse } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +10,7 @@ const useGetUserTags = ({ username }: { username: string }) => {
     GetUserTagsResponse,
     Error
   >({
-    queryKey: [USER_TAGS_QUERY_KEY, username],
+    queryKey: queryKeys.blog.tags(username),
     queryFn: () => fetcherV2(`blog/user-tags/${username}`),
     enabled: !!username,
     staleTime: 60 * 1000,

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { isActiveGroupMember } from '@/lib/groupPerms';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   BlogPublicationScope,
   BlogPublicationSelection,
@@ -37,7 +38,7 @@ export function useDraftPublication({
   const slug = scope?.group_slug ?? '';
   const groupQuery = useQuery({
     // A public/anonymous detail cache must never stand in for viewer standing.
-    queryKey: ['draft-publication-group', username, slug],
+    queryKey: queryKeys.blog.drafts.publicationGroup(username, slug),
     queryFn: () => getGroup(slug),
     enabled: !!username && !!slug,
     retry: false,

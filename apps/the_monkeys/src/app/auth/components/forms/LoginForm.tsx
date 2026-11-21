@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
+import { replaceAuthSession } from '@/lib/authQuerySession';
 import { loginSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
 import { login } from '@/services/auth/auth';
@@ -28,9 +29,8 @@ export default function LoginForm({ isLoading }: { isLoading: boolean }) {
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: (user) => {
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
-      queryClient.setQueryData(['auth'], user);
+    onSuccess: async (user) => {
+      await replaceAuthSession(queryClient, user);
 
       toast({
         variant: 'success',

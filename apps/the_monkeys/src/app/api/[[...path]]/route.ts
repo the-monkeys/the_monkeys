@@ -33,13 +33,19 @@ async function proxyRequest(req: Request) {
   headers.delete('host');
   headers.delete('connection');
 
+  const publicProfileImagePath =
+    /^\/api\/v2\/storage\/profiles\/[^/]+\/profile$/.test(clientUrl.pathname);
+  // Preserve the proxy's GET-based HEAD compatibility across existing routes.
+  // Public image HEAD may be auth-gated upstream even though GET is public.
+  const upstreamMethod = req.method === 'HEAD' ? 'GET' : req.method;
+
   const targetUrl = `${apiOrigin}${clientUrl.pathname}${clientUrl.search}`;
   const hasBody =
     req.method !== 'GET' && req.method !== 'HEAD' && req.body !== null;
 
   try {
     const response = await fetch(targetUrl, {
-      method: req.method,
+      method: upstreamMethod,
       headers,
       body: hasBody ? req.body : undefined,
       cache: 'no-store',
@@ -57,17 +63,32 @@ async function proxyRequest(req: Request) {
       if (sc) responseHeaders.set('Set-Cookie', sc);
     }
 
-    // Prevent Netlify Edge CDN and browser from caching mutable storage assets (profiles, etc.)
+    // Only the public, mutable profile image may be stored and revalidated.
+    // Never relax an upstream privacy directive or cache storage errors/writes.
+    const publicProfileImageRead =
+      (req.method === 'GET' || req.method === 'HEAD') &&
+      publicProfileImagePath &&
+      (response.status === 200 || response.status === 304) &&
+      !/(?:^|,)\s*(?:private|no-store)\b/i.test(
+        responseHeaders.get('Cache-Control') || ''
+      );
+
+    // Keep all other storage responses out of HTTP caches.
     if (clientUrl.pathname.includes('/storage/')) {
       responseHeaders.set(
         'Cache-Control',
-        'no-cache, no-store, must-revalidate'
+        publicProfileImageRead
+          ? 'public, no-cache, max-age=0, must-revalidate'
+          : 'no-cache, no-store, must-revalidate'
       );
       responseHeaders.set('Expires', '0');
       responseHeaders.set('Netlify-Vary', 'query');
     }
 
-    return new Response(response.body, {
+    const discardBody = req.method === 'HEAD' || response.status === 304;
+    if (discardBody) await response.body?.cancel();
+    const body = discardBody ? null : response.body;
+    return new Response(body, {
       status: response.status,
       headers: responseHeaders,
     });
@@ -81,6 +102,7 @@ async function proxyRequest(req: Request) {
 }
 
 export const GET = proxyRequest;
+export const HEAD = proxyRequest;
 export const POST = proxyRequest;
 export const PUT = proxyRequest;
 export const DELETE = proxyRequest;

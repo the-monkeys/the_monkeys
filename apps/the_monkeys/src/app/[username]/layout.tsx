@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 
 import Container from '@/components/layout/Container';
-import { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import { queryKeys } from '@/lib/queryKeys';
 import { noIndexFollowRobots } from '@/lib/seo';
 import { getQueryClient } from '@/utils/get-query-client';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
@@ -67,7 +67,7 @@ export default async function ProfilePageLayout({
   const queryClient = getQueryClient();
   if (profile) {
     // Allow only fields from the public profile contract into the initial page.
-    queryClient.setQueryData([USER_QUERY_KEY, username], {
+    queryClient.setQueryData(queryKeys.profile.byUsername(username), {
       username: profile.username,
       first_name: profile.first_name,
       last_name: profile.last_name,

@@ -2,6 +2,7 @@
 
 import useAuth from '@/hooks/auth/useAuth';
 import { useCreationMutation } from '@/hooks/useCreationMutation';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   cancelVerification,
   getMyVerification,
@@ -27,9 +28,9 @@ export const useMyVerification = () => {
   const qc = useQueryClient();
   const { data: session } = useAuth();
   const identity = session?.account_id || session?.username;
-  const queryKey = [...MY_VERIFICATION_KEY, identity];
+  const queryKey = queryKeys.profile.verification(identity ?? null);
   const invalidate = () =>
-    qc.invalidateQueries({ queryKey: MY_VERIFICATION_KEY });
+    qc.invalidateQueries({ queryKey: queryKeys.profile.verification() });
 
   const query = useQuery({
     queryKey,

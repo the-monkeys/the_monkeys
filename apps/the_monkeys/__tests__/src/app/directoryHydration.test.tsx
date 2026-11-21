@@ -23,12 +23,11 @@ const control = vi.hoisted(() => ({
     longitude: 0,
     isLoading: true,
   },
-  session: undefined as { username: string } | undefined,
+  session: undefined as
+    | { username: string; account_id: string; email: string }
+    | undefined,
   params: new URLSearchParams(),
   push: vi.fn(),
-}));
-vi.mock('@/hooks/auth/useAuth', () => ({
-  default: () => ({ data: control.session }),
 }));
 vi.mock('@/hooks/useIPLocation', () => ({
   useIPLocation: () => control.location,
@@ -88,6 +87,8 @@ function client() {
   const qc = new QueryClient({
     defaultOptions: { queries: { retry: false, gcTime: 0 } },
   });
+  qc.setQueryDefaults(queryKeys.auth.session(), { staleTime: Infinity });
+  qc.setQueryData(queryKeys.auth.session(), control.session ?? null);
   qc.setQueryData(
     queryKeys.events.list({ limit: 12, offset: 0, date: 'upcoming' }),
     {
@@ -226,7 +227,11 @@ describe('directory seeds and existing browser behavior', () => {
   });
 
   it('loads authenticated group membership with its own query instead of the public seed', async () => {
-    control.session = { username: 'member' };
+    control.session = {
+      username: 'member',
+      account_id: 'member-account',
+      email: 'member@example.test',
+    };
     render(view(<GroupsPageClient />, client()));
     fireEvent.click(screen.getByRole('button', { name: 'Your groups' }));
     await screen.findAllByRole('link', { name: 'Private member group' });

@@ -3,10 +3,8 @@ import {
   hasHomepageAssessment,
   isHomepageEligible,
 } from '@/lib/homepageEligibility';
-import {
-  HOMEPAGE_BLOG_QUERY_ROOT,
-  LIVE_LIST_STALE_MS,
-} from '@/lib/queryFreshness';
+import { LIVE_LIST_STALE_MS } from '@/lib/queryFreshness';
+import { queryKeys } from '@/lib/queryKeys';
 import { fetcherV2 } from '@/services/fetcher';
 
 import type { MetaBlog } from './blogTypes';
@@ -48,16 +46,20 @@ export function homepageBlogQuery({
   sort = 'latest',
 }: HomepageBlogParams = {}) {
   return {
-    queryKey: [
-      ...HOMEPAGE_BLOG_QUERY_ROOT,
-      'public',
-      HOMEPAGE_POLICY_VERSION,
+    queryKey: queryKeys.blog.homepage(
       sort,
       limit,
       offset,
-    ] as const,
+      HOMEPAGE_POLICY_VERSION
+    ),
     queryFn: () => readHomepageBlogs({ limit, offset, sort }),
     staleTime: LIVE_LIST_STALE_MS,
     retry: false,
+    // Keep mutation invalidation immediate; coalesce rapid focus-only checks.
+    refetchOnWindowFocus: (query: {
+      state: { isInvalidated: boolean; dataUpdatedAt: number };
+    }) =>
+      query.state.isInvalidated ||
+      Date.now() - query.state.dataUpdatedAt >= 30_000,
   };
 }

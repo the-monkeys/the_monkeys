@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { fetcherV2 } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
@@ -12,7 +13,7 @@ type TrendingBlogsResponse = {
 /** No longer used by the homepage (use useGetHomepageBlogs with sort: 'trending'). Still used by discussion discovery and shared TrendingWidget. */
 const useGetTrendingBlogs = () => {
   const { data, isLoading, isError } = useQuery<TrendingBlogsResponse, Error>({
-    queryKey: [TRENDING_BLOGS_QUERY_KEY],
+    queryKey: queryKeys.blog.trending(),
     queryFn: () => fetcherV2('/blog/trending'),
     staleTime: 5 * 60 * 1000,
   });

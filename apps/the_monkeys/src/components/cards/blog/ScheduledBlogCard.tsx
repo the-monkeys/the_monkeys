@@ -8,8 +8,8 @@ import {
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
 import { ScheduledBlog } from '@/hooks/blog/schedule/useGetScheduledBlogs';
-import { ALL_SCHEDULED_BLOGS_QUERY_KEY } from '@/hooks/blog/schedule/useGetScheduledBlogs';
 import { invalidateAfterArticleWrite } from '@/lib/queryFreshness';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { useQueryClient } from '@tanstack/react-query';
@@ -43,9 +43,9 @@ const ScheduledBlogCard = ({ blog }: { blog: ScheduledBlog }) => {
         description: 'Blog is now in your drafts.',
       });
       queryClient.invalidateQueries({
-        queryKey: [ALL_SCHEDULED_BLOGS_QUERY_KEY],
+        queryKey: queryKeys.blog.scheduled.all(),
       });
-      queryClient.invalidateQueries({ queryKey: ['all-draft-blogs'] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.blog.drafts.all() });
     } catch (error) {
       console.error(error);
       toast({

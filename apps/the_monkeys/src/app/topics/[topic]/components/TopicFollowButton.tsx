@@ -4,9 +4,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import useAuth from '@/hooks/auth/useAuth';
-import { ALL_TOPICS_QUERY_KEY } from '@/hooks/user/useGetAllTopics';
-import { PROFILE_TOPICS_QUERY_KEY } from '@/hooks/user/useGetProfileTopics';
-import useUser, { USER_QUERY_KEY } from '@/hooks/user/useUser';
+import useUser from '@/hooks/user/useUser';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import { followTopicApi, unfollowTopicApi } from '@/services/user/user';
 import { useQueryClient } from '@tanstack/react-query';
@@ -52,10 +51,10 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
         title: 'Topic followed',
         description: `You have successfully followed ${topic}`,
       });
-      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
-      queryClient.invalidateQueries({ queryKey: [PROFILE_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.topics.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.topics() });
       queryClient.invalidateQueries({
-        queryKey: [USER_QUERY_KEY, username],
+        queryKey: queryKeys.profile.byUsername(username),
       });
     } catch (error: any) {
       toast({
@@ -81,10 +80,10 @@ const TopicFollowButton = ({ topic }: TopicFollowButtonProps) => {
         title: 'Topic Unfollowed',
         description: `You have successfully unfollowed ${topic}`,
       });
-      queryClient.invalidateQueries({ queryKey: [ALL_TOPICS_QUERY_KEY] });
-      queryClient.invalidateQueries({ queryKey: [PROFILE_TOPICS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.topics.all() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.profile.topics() });
       queryClient.invalidateQueries({
-        queryKey: [USER_QUERY_KEY, username],
+        queryKey: queryKeys.profile.byUsername(username),
       });
     } catch (error: any) {
       toast({

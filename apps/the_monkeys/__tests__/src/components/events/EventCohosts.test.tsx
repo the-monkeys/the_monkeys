@@ -50,6 +50,7 @@ beforeEach(() => {
   client = new QueryClient({
     defaultOptions: { queries: { retry: false, gcTime: Infinity } },
   });
+  client.setQueryDefaults(queryKeys.auth.session(), { staleTime: Infinity });
   vi.mocked(listAttendees).mockResolvedValue({ attendees: [], total: 0 });
   vi.mocked(listCoupons).mockResolvedValue({ coupons: [] });
   vi.mocked(addCoHost).mockResolvedValue({});
@@ -61,6 +62,11 @@ afterEach(() => {
 });
 
 async function renderManage(username = 'viewer', currentEvent = event) {
+  client.setQueryData(queryKeys.auth.session(), {
+    username,
+    account_id: 'local-viewer',
+    email: 'viewer@example.test',
+  });
   render(
     <QueryClientProvider client={client}>
       <EventManage
@@ -141,17 +147,18 @@ describe('co-host management', () => {
     client.setDefaultOptions({
       queries: { retry: false, gcTime: Infinity, staleTime: 60_000 },
     });
-    const detailKey = queryKeys.events.detail(event.slug);
-    const attendeeKey = queryKeys.events.attendeePage(event.slug, {
-      limit: 50,
-      offset: 0,
-    });
-    const previewKey = queryKeys.events.attendeePage(event.slug, {
-      limit: 18,
-      offset: 0,
-      status: 'confirmed',
-    });
-    const couponKey = queryKeys.events.coupons(event.slug);
+    const detailKey = queryKeys.events.detail(event.slug, 'local-viewer');
+    const attendeeKey = queryKeys.events.attendeePage(
+      event.slug,
+      { limit: 50, offset: 0 },
+      'local-viewer'
+    );
+    const previewKey = queryKeys.events.attendeePage(
+      event.slug,
+      { limit: 18, offset: 0, status: 'confirmed' },
+      'local-viewer'
+    );
+    const couponKey = queryKeys.events.coupons(event.slug, 'local-viewer');
     const hostDetail = { event };
     const attendees = { attendees: [], total: 0 };
     const coupons = { coupons: [] };

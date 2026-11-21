@@ -1,4 +1,6 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
 
 import Image from 'next/image';
 
@@ -45,9 +47,10 @@ export const ProfileImage = ({
   alt?: string;
 }) => {
   const { imageUrl, isLoading, isError } = useProfileImage(username);
+  const [failedImageUrl, setFailedImageUrl] = useState('');
   const imageLabel = alt || `Author: ${username}`;
 
-  if (isLoading || isError || imageUrl === '')
+  if (isLoading || isError || imageUrl === '' || imageUrl === failedImageUrl)
     return (
       <Image
         src='/default-profile.svg'
@@ -63,6 +66,7 @@ export const ProfileImage = ({
   return (
     <Image
       src={imageUrl}
+      onError={() => setFailedImageUrl(imageUrl)}
       alt={imageLabel}
       title={imageLabel}
       width={50}
