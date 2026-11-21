@@ -174,6 +174,43 @@ describe('loadEventForMetadata', () => {
     expect(metadata.robots).toMatchObject({ index: false, follow: false });
   });
 
+  it('renders the real registration opening timestamp in public free-event JSON-LD', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue({
+        event: {
+          id: 21,
+          title: 'Local dated event',
+          slug: 'local-dated-event',
+          event_type: 'virtual',
+          status: 'published',
+          visibility: 'public',
+          rsvp_opens_at: '2026-11-20T14:30:00+05:30',
+          meeting_link: 'https://meet.example.test/attendees-only',
+        },
+      }),
+    } as unknown as Response);
+    const markup = renderToStaticMarkup(
+      createElement(
+        QueryClientProvider,
+        { client: new QueryClient() },
+        await EventDetailPage({ params: { slug: 'local-dated-event' } })
+      )
+    );
+    const doc = new DOMParser().parseFromString(markup, 'text/html');
+    const event = Array.from(
+      doc.querySelectorAll('script[type="application/ld+json"]')
+    )
+      .map((script) => JSON.parse(script.textContent || '{}'))
+      .find((item) => item['@type'] === 'Event');
+    expect(event.offers.validFrom).toBe('2026-11-20T09:00:00.000Z');
+    expect(event.offers.price).toBe('0');
+    expect(event.location.url).toBe(
+      'https://monkeys.example.test/events/local-dated-event'
+    );
+    expect(markup).not.toContain('attendees-only');
+  });
+
   it('escapes user-controlled closing script tags in event JSON-LD', async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: true,

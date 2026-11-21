@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { LANDING_EVENT_FILTERS, LANDING_POST_LIMIT } from '@/lib/landingPage';
 import { landingEntityGraph, landingMetadata } from '@/lib/landingPageSeo';
+import { publicEvent } from '@/lib/publicEvent';
 import { queryKeys } from '@/lib/queryKeys';
 import { homepageBlogQuery } from '@/services/blog/homepageApi';
 import { listEvents } from '@/services/events/eventsApi';
@@ -28,7 +29,10 @@ export default async function LandingPage() {
     queryClient.prefetchQuery(homepageBlogQuery({ limit, sort: 'trending' })),
     queryClient.prefetchQuery({
       queryKey: queryKeys.events.list(LANDING_EVENT_FILTERS),
-      queryFn: () => listEvents(LANDING_EVENT_FILTERS),
+      queryFn: async () => {
+        const response = await listEvents(LANDING_EVENT_FILTERS);
+        return { ...response, events: response.events?.map(publicEvent) };
+      },
     }),
   ]);
 

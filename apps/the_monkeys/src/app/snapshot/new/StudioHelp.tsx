@@ -29,6 +29,16 @@ export const STUDIO_HELP = {
         answer:
           'Use a link containing /status/ and the post ID. Private, deleted or unavailable posts cannot be loaded. If a public post fails, check that it still opens on X and try again later.',
       },
+      {
+        question: 'Can I use both Twitter and X links?',
+        answer:
+          'Yes. Public post links from x.com or twitter.com work, including their mobile versions. A post link contains /status/ followed by the numeric post ID. Profile links are not post links.',
+      },
+      {
+        question: 'Can I save a tweet image on my phone?',
+        answer:
+          'Yes. Open the tool in your mobile browser, paste a public post link and use Download to save the PNG. Copy image depends on browser clipboard support; use Download if copying is unavailable.',
+      },
     ],
   },
   template: {

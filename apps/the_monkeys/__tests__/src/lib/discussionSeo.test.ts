@@ -85,3 +85,73 @@ describe('discussionSeo', () => {
     expect(data.url).toContain('/discussions/abc');
   });
 });
+
+describe('discussion author profile URLs', () => {
+  it('identifies the original author and each visible reply author by their public profile', () => {
+    const data = buildDiscussionJsonLd(post) as any;
+    expect(data.author).toEqual({
+      '@type': 'Person',
+      name: 'dave',
+      url: 'https://monkeys.com.co/dave',
+    });
+    expect(data.comment[0].author).toEqual({
+      '@type': 'Person',
+      name: 'lee',
+      url: 'https://monkeys.com.co/lee',
+    });
+    expect(data.url).toBe('https://monkeys.com.co/discussions/abc');
+    expect(data.comment[0].url).toBe(
+      'https://monkeys.com.co/discussions/abc#reply-r1'
+    );
+  });
+
+  it('uses the trimmed case-preserving handle and URL-encodes profile path segments', () => {
+    const data = buildDiscussionJsonLd({
+      ...post,
+      author_username: ' Gautam ',
+      replies: [{ ...post.replies![0], author_username: 'नवीन' }],
+    }) as any;
+    expect(data.author.url).toBe('https://monkeys.com.co/Gautam');
+    expect(data.comment[0].author.url).toBe(
+      `https://monkeys.com.co/${encodeURIComponent('नवीन')}`
+    );
+  });
+
+  it.each([
+    { author_username: undefined, author_gone: undefined },
+    { author_username: '', author_gone: false },
+    { author_username: '  ', author_gone: false },
+    { author_username: 'private_old_handle', author_gone: true },
+  ])('keeps missing and deleted identities unlinked: %j', (identity) => {
+    const data = buildDiscussionJsonLd({
+      ...post,
+      ...identity,
+      replies: [{ ...post.replies![0], ...identity }],
+    }) as any;
+    expect(data.author).toEqual({ '@type': 'Person', name: 'Deleted account' });
+    expect(data.comment[0].author).toEqual({
+      '@type': 'Person',
+      name: 'Deleted account',
+    });
+    expect(JSON.stringify(data)).not.toContain('private_old_handle');
+  });
+
+  it('does not add hidden reply text or author identities to the public markup', () => {
+    const data = buildDiscussionJsonLd({
+      ...post,
+      replies: [
+        post.replies![0],
+        {
+          ...post.replies![0],
+          public_id: 'hidden',
+          status: 'hidden',
+          author_username: 'hidden_person',
+          body: 'Hidden reply text',
+        },
+      ],
+    }) as any;
+    expect(data.comment).toHaveLength(1);
+    expect(JSON.stringify(data)).not.toContain('hidden_person');
+    expect(JSON.stringify(data)).not.toContain('Hidden reply text');
+  });
+});

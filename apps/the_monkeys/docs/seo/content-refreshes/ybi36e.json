@@ -1,0 +1,61 @@
+{
+  "status": "editorial-draft-not-published",
+  "blogId": "ybi36e",
+  "expectedTitle": "Golang Backend Roadmap: From Zero to Pro 2026 Edition",
+  "expectedIntroduction": "Becoming a professional <a href=\"https://go.dev/\">Golang</a> developer a <b>Gopher&nbsp;</b>requires moving beyond basic syntax toward architectural mastery, focusing intensely on performance, concurrency management, and cloud-native deployment. Go was <a href=\"https://go.dev/talks/2012/splash.article\">engineered for efficiency</a>, fast compilation, and high scalability, positioning it as the leading choice for modern, high-scale backend microservices.",
+  "introduction": "Follow a Golang backend roadmap from Go fundamentals to HTTP APIs, SQL, testing, concurrency, profiling and deployment, with practical milestones.",
+  "additions": [
+    {
+      "id": "search-refresh-ybi36e-heading-0",
+      "type": "header",
+      "data": {
+        "text": "What should I build while following a Golang backend roadmap?",
+        "level": 2
+      }
+    },
+    {
+      "id": "search-refresh-ybi36e-answer-0",
+      "type": "paragraph",
+      "data": {
+        "text": "Build one small API that you can explain and test. Start with request routing and JSON responses, add input validation and consistent errors, then persist records in a relational database. Add tests for successful requests, invalid input and missing records before introducing caches or splitting the application into services. The Go project’s REST API and database tutorials provide concrete exercises for these stages."
+      }
+    },
+    {
+      "id": "search-refresh-ybi36e-heading-1",
+      "type": "header",
+      "data": {
+        "text": "How do I know when I am ready for the next stage?",
+        "level": 2
+      }
+    },
+    {
+      "id": "search-refresh-ybi36e-answer-1",
+      "type": "paragraph",
+      "data": {
+        "text": "Use working milestones instead of a fixed deadline. You should be able to run the API locally, explain its data model, test important failures, cancel slow operations and diagnose a problem from logs or profiling. Add concurrency only where the work benefits from it; start with the simplest deployment that meets your needs. A production system also needs an application-specific security review and operational checks."
+      }
+    },
+    {
+      "id": "search-refresh-ybi36e-sources",
+      "type": "paragraph",
+      "data": {
+        "text": "Further reading: <a href=\"https://go.dev/doc/tutorial/web-service-gin\">Official Go tutorial 1</a> · <a href=\"https://go.dev/doc/tutorial/database-access\">Official Go tutorial 2</a>"
+      }
+    },
+    {
+      "id": "search-refresh-ybi36e-related",
+      "type": "paragraph",
+      "data": {
+        "text": "Continue on Monkeys: <a href=\"/blog/monitoring-docker-containers-with-prometheus-grafana-and-cadvisor-2n5mg\">Monitor Docker containers with Prometheus, Grafana and cAdvisor</a> · <a href=\"/topics/golang\">Golang articles</a>"
+      }
+    }
+  ],
+  "sources": [
+    "https://go.dev/doc/tutorial/web-service-gin",
+    "https://go.dev/doc/tutorial/database-access"
+  ],
+  "reviewNotes": [
+    "Keep the original 2026 title and URL. Do not change published_time to simulate freshness.",
+    "Review the original 2025 conclusion and absolute framework, microservices and authentication claims before public publication; the new practice guidance does not justify leaving contradictory statements unreviewed."
+  ]
+}

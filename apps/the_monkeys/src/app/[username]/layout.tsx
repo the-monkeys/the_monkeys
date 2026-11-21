@@ -85,9 +85,8 @@ export default async function ProfilePageLayout({
 
   return (
     <Container className='px-4 py-6 min-h-[800px] space-y-10'>
-      <article itemScope itemType='https://schema.org/ProfilePage'>
+      <article>
         <h1 className='text-2xl hidden font-bold'>{`Profile of @${username}`}</h1>
-        <meta itemProp='name' content={`@${username}`} />
         <HydrationBoundary state={dehydrate(queryClient)}>
           {children}
         </HydrationBoundary>

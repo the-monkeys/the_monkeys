@@ -1,0 +1,61 @@
+{
+  "status": "editorial-draft-not-published",
+  "blogId": "10rsmd",
+  "expectedTitle": "SpiderMonkey: Inside Mozilla's JavaScript Engine That Powers the Web",
+  "expectedIntroduction": "JavaScript is everywhere. It runs in web browsers, powers server-side applications, handles embedded devices, and even shows up in desktop software. At the core of this reach are JavaScript engines. These engines parse, compile, optimize, and execute JavaScript code behind the scenes.",
+  "introduction": "SpiderMonkey is Mozilla’s JavaScript and WebAssembly engine for Firefox. Explore its execution pipeline, memory management and uses beyond the browser.",
+  "additions": [
+    {
+      "id": "search-refresh-10rsmd-heading-0",
+      "type": "header",
+      "data": {
+        "text": "Which JavaScript engine does Firefox use?",
+        "level": 2
+      }
+    },
+    {
+      "id": "search-refresh-10rsmd-answer-0",
+      "type": "paragraph",
+      "data": {
+        "text": "Firefox uses SpiderMonkey. It executes JavaScript and WebAssembly; it is one component of the browser, rather than the whole browser. Its official project page also documents uses outside Firefox."
+      }
+    },
+    {
+      "id": "search-refresh-10rsmd-heading-1",
+      "type": "header",
+      "data": {
+        "text": "Can SpiderMonkey run outside a web browser?",
+        "level": 2
+      }
+    },
+    {
+      "id": "search-refresh-10rsmd-answer-1",
+      "type": "paragraph",
+      "data": {
+        "text": "Yes. SpiderMonkey can run as a stand-alone shell or be embedded in another application. For a practical next step, follow Mozilla’s build and embedding documentation, run a small script in the shell, and compare that environment with the browser APIs available in Firefox."
+      }
+    },
+    {
+      "id": "search-refresh-10rsmd-sources",
+      "type": "paragraph",
+      "data": {
+        "text": "Further reading: <a href=\"https://spidermonkey.dev/\">Mozilla documentation 1</a> · <a href=\"https://firefox-source-docs.mozilla.org/js/index.html\">Mozilla documentation 2</a>"
+      }
+    },
+    {
+      "id": "search-refresh-10rsmd-related",
+      "type": "paragraph",
+      "data": {
+        "text": "Continue on Monkeys: <a href=\"/topics/javascript-engine\">JavaScript engines</a> · <a href=\"/topics/webassembly\">WebAssembly</a>"
+      }
+    }
+  ],
+  "sources": [
+    "https://spidermonkey.dev/",
+    "https://firefox-source-docs.mozilla.org/js/index.html"
+  ],
+  "reviewNotes": [
+    "Keep the original title and publication date. The direct opening answer also becomes the generated search description.",
+    "Review the original IonMonkey/Warp wording and unsupported benchmark comparisons with Mozilla documentation before a public editorial update."
+  ]
+}
