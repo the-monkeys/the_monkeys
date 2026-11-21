@@ -1,9 +1,6 @@
-import { useState } from 'react';
-
 import Icon from '@/components/icon';
-import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
-import axiosInstance from '@/services/api/axiosInstance';
-import { useQueryClient } from '@tanstack/react-query';
+import useAuth from '@/hooks/auth/useAuth';
+import { usePostInteraction } from '@/hooks/user/usePostInteraction';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const RemoveBookmarkButton = ({
@@ -13,44 +10,26 @@ export const RemoveBookmarkButton = ({
   blogId?: string;
   size?: number;
 }) => {
-  const queryClient = useQueryClient();
-  const [loading, setLoading] = useState<boolean>(false);
-
+  const { data: session } = useAuth();
+  const viewer = session?.username;
+  const { change, loading } = usePostInteraction('bookmark', blogId, viewer);
   const onPostRemoveBookmark = async () => {
-    setLoading(true);
-
     try {
-      const response = await axiosInstance.post(
-        `/user/remove-bookmark/${blogId}`
-      );
-
-      if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Removed bookmark successfully.',
-        });
-
-        queryClient.invalidateQueries({
-          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
-        });
-      }
+      if (!(await change(false))) return;
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: 'Removed bookmark successfully.',
+      });
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to remove post bookmark.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description:
+          err instanceof Error
+            ? err.message || 'Failed to remove post bookmark.'
+            : 'An unknown error occurred.',
+      });
     }
   };
 
@@ -60,7 +39,7 @@ export const RemoveBookmarkButton = ({
         loading ? 'cursor-default opacity-50' : 'cursor-pointer'
       }`}
       onClick={onPostRemoveBookmark}
-      disabled={loading}
+      disabled={loading || !viewer || !blogId}
       title='Remove Bookmark'
     >
       <Icon name='RiBookmark2' size={size} className='text-alert-red' />

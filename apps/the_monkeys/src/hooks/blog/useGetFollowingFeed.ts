@@ -1,4 +1,5 @@
 import { FOLLOWING_FEED_QUERY_KEY } from '@/lib/followingFeedKeys';
+import { queryKeys } from '@/lib/queryKeys';
 import { FollowingFeed } from '@/services/blog/blogTypes';
 import { authFetcherV2 } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
@@ -25,12 +26,11 @@ const useGetFollowingFeed = ({
     FollowingFeedType,
     Error
   >({
-    queryKey: [
-      FOLLOWING_FEED_QUERY_KEY,
+    queryKey: queryKeys.blog.followingFeed(
       viewerAccountId ?? viewerUsername,
       limit,
-      offset,
-    ],
+      offset
+    ),
     enabled: Boolean(viewerUsername && viewerAccountId),
     queryFn: () =>
       authFetcherV2(`/blog/following-feed?limit=${limit}&offset=${offset}`),

@@ -1,3 +1,5 @@
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstance from '@/services/api/axiosInstance';
 import {
   FRNNotification,
@@ -17,11 +19,14 @@ const fetchFRNNotifications = async (): Promise<FRNNotification[]> => {
 };
 
 export const useGetAllNotifications = () => {
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || null;
   const { data, error, isLoading, isError } = useQuery<
     FRNNotification[],
     Error
   >({
-    queryKey: [ALL_NOTIFICATIONS_QUERY_KEY],
+    queryKey: queryKeys.notifications.list(viewer),
+    enabled: !!viewer,
     queryFn: fetchFRNNotifications,
     staleTime: 5 * 60 * 1000,
   });

@@ -7,9 +7,8 @@ import { useRouter } from 'next/navigation';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
-import { ALL_DRAFT_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetAllDraftBlogs';
-import { BLOGS_BY_USERNAME_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogByUsername';
 import { invalidateAfterArticleWrite } from '@/lib/queryFreshness';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -77,9 +76,9 @@ export const EditBlogDialog = ({
       }
 
       queryClient.invalidateQueries({
-        queryKey: [BLOGS_BY_USERNAME_QUERY_KEY, username],
+        queryKey: queryKeys.blog.byUsername(username),
       });
-      queryClient.invalidateQueries({ queryKey: [ALL_DRAFT_BLOGS_QUERY_KEY] });
+      queryClient.invalidateQueries({ queryKey: queryKeys.blog.drafts.all() });
 
       if (edit) {
         handleEdit(blogId);

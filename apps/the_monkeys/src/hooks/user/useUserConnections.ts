@@ -1,7 +1,5 @@
-import {
-  FOLLOWING_DISCUSSIONS_QUERY_KEY,
-  FOLLOWING_FEED_QUERY_KEY,
-} from '@/lib/followingFeedKeys';
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import { authFetcher } from '@/services/fetcher';
 import {
   ConnectionCountResponse,
@@ -27,7 +25,7 @@ export const useGetConnectionCount = (username: string | undefined) => {
     ConnectionCountResponse,
     Error
   >({
-    queryKey: [CONNECTION_COUNT_QUERY_KEY, username],
+    queryKey: queryKeys.profile.connectionCount(username),
     queryFn: () => authFetcher(`/user/connection-count/${username}`),
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
@@ -41,11 +39,14 @@ export const useGetConnectionCount = (username: string | undefined) => {
 };
 
 export const useGetFollowers = () => {
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || null;
   const { data, error, isLoading, isError } = useQuery<
     FollowDataResponse,
     Error
   >({
-    queryKey: [FOLLOWERS_QUERY_KEY],
+    queryKey: queryKeys.profile.followers(viewer),
+    enabled: !!viewer,
     queryFn: () => authFetcher(`/user/followers`),
     staleTime: 60 * 1000,
   });
@@ -58,11 +59,14 @@ export const useGetFollowers = () => {
 };
 
 export const useGetFollowing = () => {
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || null;
   const { data, error, isLoading, isError } = useQuery<
     FollowDataResponse,
     Error
   >({
-    queryKey: [FOLLOWING_QUERY_KEY],
+    queryKey: queryKeys.profile.following(viewer),
+    enabled: !!viewer,
     queryFn: () => authFetcher(`/user/following`),
     staleTime: 60 * 1000,
   });
@@ -75,11 +79,14 @@ export const useGetFollowing = () => {
 };
 
 export const useIsFollowingUser = (username: string) => {
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || null;
   const { data, error, isLoading, isError } = useQuery<
     IsFollowedResponse,
     Error
   >({
-    queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+    queryKey: queryKeys.profile.followStatus(username, viewer),
+    enabled: !!viewer,
     queryFn: () => getFollowStatusApi(username),
     staleTime: 60 * 1000,
   });
@@ -117,13 +124,13 @@ export const useFollowUser = (
 
   const invalidateConnectionQueries = () =>
     Promise.all([
-      queryClient.resetQueries({ queryKey: [FOLLOWING_DISCUSSIONS_QUERY_KEY] }),
-      queryClient.resetQueries({ queryKey: [FOLLOWING_FEED_QUERY_KEY] }),
+      queryClient.resetQueries({ queryKey: queryKeys.discussions.following() }),
+      queryClient.resetQueries({ queryKey: queryKeys.blog.followingFeed() }),
       queryClient.invalidateQueries({
-        queryKey: [IS_FOLLOWING_USER_QUERY_KEY, username],
+        queryKey: queryKeys.profile.followStatus(username),
       }),
       queryClient.invalidateQueries({
-        queryKey: [CONNECTION_COUNT_QUERY_KEY],
+        queryKey: queryKeys.profile.connectionCount(),
       }),
     ]);
 

@@ -133,3 +133,59 @@ it('does not serialize attendee-only meeting access in public event hydration', 
   expect(serialized).toContain('Public workshop');
   expect(serialized).not.toContain('private-homepage-sentinel');
 });
+
+it('prefetches this-week events and deduplicated safe public author cards for existing homepage slots', async () => {
+  vi.mocked(fetcherV2).mockResolvedValueOnce({
+    blogs: [
+      {
+        blog_id: 'eligible',
+        title: 'Public article',
+        first_image: '',
+        first_paragraph: 'Summary',
+        owner_account_id: 'author',
+        published_time: '2026-01-01',
+        tags: [],
+        homepage_eligibility: {
+          eligible: true,
+          lead_eligible: true,
+          word_count: 250,
+          minimum_words: 250,
+          reasons: [],
+          version: 'homepage-v1',
+        },
+      },
+    ],
+    has_more: false,
+    homepage_policy_version: 'homepage-v1',
+  });
+  const fetch = vi.fn(async (url: string) =>
+    Response.json(
+      url.includes('/public/account/')
+        ? {
+            user: {
+              account_id: 'author',
+              username: 'writer',
+              first_name: 'Public writer',
+              email: 'private-sentinel',
+            },
+          }
+        : { discussions: [], groups: [], user_details: [] }
+    )
+  );
+  vi.stubGlobal('fetch', fetch);
+  const page = await LandingPage();
+  expect(listEvents).toHaveBeenCalledWith({
+    limit: 4,
+    status: 'published',
+    date: 'this-week',
+    sort: 'soonest',
+  });
+  const serialized = JSON.stringify(page);
+  expect(serialized).toContain('Public writer');
+  expect(serialized).not.toContain('private-sentinel');
+  expect(
+    fetch.mock.calls.filter(([url]) =>
+      url.endsWith('/user/public/account/author')
+    )
+  ).toHaveLength(1);
+});

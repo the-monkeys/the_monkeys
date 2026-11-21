@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { DiscussionFeed } from '@/components/discussions/DiscussionListClient';
-import { FOLLOWING_DISCUSSIONS_QUERY_KEY } from '@/lib/followingFeedKeys';
+import { queryKeys } from '@/lib/queryKeys';
 import { listFollowingDiscussions } from '@/services/discussions/discussionsApi';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -14,7 +14,7 @@ export function FollowingDiscussions({
   viewerAccountId: string;
 }) {
   const query = useInfiniteQuery({
-    queryKey: [FOLLOWING_DISCUSSIONS_QUERY_KEY, viewerAccountId],
+    queryKey: queryKeys.discussions.following(viewerAccountId),
     enabled: Boolean(viewerAccountId),
     initialPageParam: undefined as string | undefined,
     queryFn: ({ pageParam, signal }) =>

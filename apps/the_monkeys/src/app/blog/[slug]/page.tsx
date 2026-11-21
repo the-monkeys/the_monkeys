@@ -3,6 +3,10 @@ import { notFound } from 'next/navigation';
 
 import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { USER_PROFILE_QUERY_KEY } from '@/hooks/user/useGetProfileInfoByUserId';
+import {
+  prefetchPublicPageMetadata,
+  publicAuthorCard,
+} from '@/lib/publicPagePrefetch';
 import { loadPublicRelatedPosts } from '@/lib/relatedPosts';
 import { noIndexFollowRobots } from '@/lib/seo';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
@@ -63,7 +67,7 @@ export default async function BlogPage({ params }: Props) {
     if (authorData) {
       queryClient.setQueryData(
         [USER_PROFILE_QUERY_KEY, blog.owner_account_id],
-        authorData
+        publicAuthorCard(authorData)
       );
     }
   }
@@ -90,6 +94,10 @@ export default async function BlogPage({ params }: Props) {
     : publicBlog === null
       ? []
       : undefined;
+
+  await prefetchPublicPageMetadata(queryClient, {
+    authorIds: (initialRelatedPosts || []).map((post) => post.owner_account_id),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

@@ -1,5 +1,7 @@
 'use client';
 
+import useAuth from '@/hooks/auth/useAuth';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   createAddress,
   deleteAddress,
@@ -17,12 +19,15 @@ export const USER_ADDRESSES_KEY = ['user-addresses'];
  */
 export const useUserAddresses = () => {
   const qc = useQueryClient();
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || null;
   const invalidate = () =>
-    qc.invalidateQueries({ queryKey: USER_ADDRESSES_KEY });
+    qc.invalidateQueries({ queryKey: queryKeys.profile.addresses(viewer) });
 
   const query = useQuery({
-    queryKey: USER_ADDRESSES_KEY,
+    queryKey: queryKeys.profile.addresses(viewer),
     queryFn: listAddresses,
+    enabled: !!viewer,
     staleTime: 5 * 60 * 1000,
   });
 

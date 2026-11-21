@@ -1,5 +1,6 @@
 'use client';
 
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQuery } from '@tanstack/react-query';
 
@@ -32,7 +33,7 @@ interface ActiveUsersResponse {
  */
 export const useActiveUsers = (timeRange: string = '24h') => {
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['active-users', timeRange],
+    queryKey: queryKeys.profile.activeUsers(timeRange),
     queryFn: async () => {
       const res = await axiosInstanceV2.get<ActiveUsersResponse>(
         `/user/active-users`,
@@ -42,8 +43,6 @@ export const useActiveUsers = (timeRange: string = '24h') => {
     },
     // Cache for 5 minutes — this is decorative data, not a hot path.
     staleTime: 5 * 60 * 1000,
-    // Fail silently; the consumer falls back to a static list.
-    retry: 1,
   });
 
   const details: ActiveUserDetail[] = data?.user_details ?? [];

@@ -135,7 +135,7 @@ describe('homepage SSR and hydration freshness', () => {
     });
   });
 
-  it('matches the first hydration snapshot, then hides both cached sections during deferred browser revalidation', async () => {
+  it('matches hydration and keeps both validated sections visible during routine browser revalidation', async () => {
     const serverClient = client();
     await prefetch(serverClient);
     const serverSnapshots: Snapshot[] = [];
@@ -166,9 +166,10 @@ describe('homepage SSR and hydration freshness', () => {
     expect(snapshots[0].trending).toBe('trending server article');
     expect(recoverable).not.toHaveBeenCalled();
     await waitFor(() => {
-      expect(container!.textContent).toContain('Loading latest');
-      expect(container!.textContent).toContain('Loading trending');
-      expect(container!.querySelectorAll('a')).toHaveLength(0);
+      expect(container!.textContent).toContain('latest server article');
+      expect(container!.textContent).toContain('trending server article');
+      expect(container!.textContent).not.toContain('Loading');
+      expect(container!.querySelectorAll('a')).toHaveLength(2);
     });
     expect(
       browserClient.getQueryState(

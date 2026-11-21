@@ -1,3 +1,4 @@
+import { queryRetryDelay, shouldRetryQuery } from '@/lib/queryPolicy';
 import {
   QueryClient,
   defaultShouldDehydrateQuery,
@@ -9,6 +10,8 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
+        retry: shouldRetryQuery,
+        retryDelay: queryRetryDelay,
       },
       dehydrate: {
         // include pending queries in dehydration

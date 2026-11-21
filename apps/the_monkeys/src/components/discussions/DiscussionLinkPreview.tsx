@@ -13,6 +13,7 @@ import {
   profilePreview,
 } from '@/lib/discussionLinkPreview';
 import type { InternalTarget } from '@/lib/discussionLinks';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import axiosInstanceNoAuthV2 from '@/services/api/axiosInstanceNoAuthV2';
 import type { Blog } from '@/services/blog/blogTypes';
@@ -80,7 +81,7 @@ export function DiscussionLinkPreview({
   const viewingTimezone = useViewerTimezone();
   const eventTimezone = target.kind === 'event' ? viewingTimezone : undefined;
   const { data, isPending } = useQuery({
-    queryKey: ['discussion-link-preview', target, eventTimezone],
+    queryKey: queryKeys.discussions.preview(target, eventTimezone),
     queryFn: () => loadPreview(target, eventTimezone),
     staleTime: 5 * 60 * 1000,
     retry: false,

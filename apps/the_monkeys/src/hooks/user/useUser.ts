@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { fetcher } from '@/services/fetcher';
 import { GetPublicUserProfileApiResponse } from '@/services/profile/userApiTypes';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +10,7 @@ const useUser = (username: string | undefined) => {
     GetPublicUserProfileApiResponse,
     Error
   >({
-    queryKey: [USER_QUERY_KEY, username],
+    queryKey: queryKeys.profile.byUsername(username),
     queryFn: () => fetcher(`/user/public/${username}`),
     enabled: !!username,
     staleTime: 60 * 1000,

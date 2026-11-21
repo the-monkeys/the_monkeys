@@ -3,6 +3,7 @@ import {
   selectLandingDiscussions,
   selectLandingGroups,
 } from '@/lib/landingCommunity';
+import { queryKeys } from '@/lib/queryKeys';
 
 async function readPublicList(
   path: string,
@@ -60,14 +61,14 @@ export async function readLandingGroups(signal?: AbortSignal) {
 
 // Shared by server prefetch and the client. Never reuse personalized feed or membership keys.
 export const landingDiscussionQuery = {
-  queryKey: ['discussions', 'landing', 'public'] as const,
+  queryKey: queryKeys.landing.discussions(),
   queryFn: ({ signal }: { signal?: AbortSignal }) =>
     readLandingDiscussions(signal),
   staleTime: 0,
   retry: false,
 };
 export const landingGroupQuery = {
-  queryKey: ['groups', 'landing', 'public'] as const,
+  queryKey: queryKeys.landing.groups(),
   queryFn: ({ signal }: { signal?: AbortSignal }) => readLandingGroups(signal),
   staleTime: 0,
   retry: false,
