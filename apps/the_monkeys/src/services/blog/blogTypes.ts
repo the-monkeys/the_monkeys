@@ -2,7 +2,14 @@ import type { HomepageEligibility } from '@/lib/homepageEligibility';
 
 export type BlogAudience = 'public' | 'group_only';
 
-export interface Blog {
+export interface PublishedEditorialMetadata {
+  rss_guid?: string;
+  canonical_slug?: string;
+  seo_description?: string;
+  content_modified_at?: string;
+}
+
+export interface Blog extends PublishedEditorialMetadata {
   blog_id: string;
   owner_account_id: string;
   blog: {
@@ -20,7 +27,7 @@ export interface Blog {
   group_slug?: string;
 }
 
-export interface MetaBlog {
+export interface MetaBlog extends PublishedEditorialMetadata {
   homepage_eligibility?: HomepageEligibility;
   blog_id: string;
   title: string;
@@ -106,7 +113,7 @@ export interface GetUserTagsResponse {
   tags: Record<string, number>;
 }
 
-export interface FollowingFeed {
+export interface FollowingFeed extends PublishedEditorialMetadata {
   BookmarkCount: number;
   IsBookmarkedByMe: boolean;
   IsLikedByMe: boolean;

@@ -43,7 +43,7 @@ export default async function LearnPage() {
               position: index + 1,
               name: normalizeSeoText(post.title, post.title.length),
               url: absoluteUrl(
-                `/blog/${canonicalPostTitleSlug(post.title)}-${encodeURIComponent(post.blog_id)}`
+                `/blog/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${encodeURIComponent(post.blog_id)}`
               ),
             })),
           },
@@ -123,7 +123,7 @@ export default async function LearnPage() {
                 <article className='flex h-full flex-col gap-3'>
                   <h3 className='break-words font-newsreader text-xl'>
                     <Link
-                      href={`/blog/${canonicalPostTitleSlug(post.title)}-${encodeURIComponent(post.blog_id)}`}
+                      href={`/blog/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${encodeURIComponent(post.blog_id)}`}
                       className='underline decoration-brand-orange/40 underline-offset-4 hover:text-brand-orange'
                     >
                       {normalizeSeoText(post.title, post.title.length)}

@@ -83,7 +83,7 @@ export function buildTopicJsonLd(
         position: index + 1,
         name: post.title,
         url: absoluteUrl(
-          `/blog/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`
+          `/blog/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`
         ),
       })),
     },

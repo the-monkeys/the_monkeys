@@ -41,7 +41,7 @@ export function LandingHero({
   const title = lead ? purifyHTMLString(lead.title) : '';
   const description = lead ? purifyHTMLString(lead.first_paragraph) : '';
   const postHref = lead
-    ? `${BLOG_ROUTE}/${canonicalPostTitleSlug(lead.title)}-${lead.blog_id}`
+    ? `${BLOG_ROUTE}/${canonicalPostTitleSlug(lead.title, lead.canonical_slug, lead.blog_id)}-${lead.blog_id}`
     : '';
   const topic = lead?.tags?.[0];
   const published = lead?.published_time

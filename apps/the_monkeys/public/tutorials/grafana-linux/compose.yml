@@ -1,0 +1,41 @@
+# Standalone Linux article fixture; not an application deployment.
+services:
+  grafana:
+    image: grafana/grafana:12.3.0
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT:-3000}:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set GRAFANA_ADMIN_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./datasource.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
+      - ./dashboards.yml:/etc/grafana/provisioning/dashboards/linux.yml:ro
+      - ./linux-dashboard.json:/var/lib/grafana/dashboards/linux-dashboard.json:ro
+    depends_on:
+      - prometheus
+  prometheus:
+    image: prom/prometheus:v3.7.3
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT:-9090}:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+  node-exporter:
+    image: prom/node-exporter:v1.10.2
+    pid: host
+    command:
+      - --path.rootfs=/host
+      - --path.procfs=/host/proc
+      - --path.sysfs=/host/sys
+      - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+|var/lib/kubelet/.+)($$|/)
+    volumes:
+      - /:/host:ro
+    # No published port: only Prometheus on this Compose network scrapes 9100.
+volumes:
+  grafana-data:
+  prometheus-data:

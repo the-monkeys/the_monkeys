@@ -27,7 +27,11 @@ export const EditorialHero = ({
   badge?: string;
 }) => {
   const title = purifyHTMLString(blog?.title);
-  const blogSlug = canonicalPostTitleSlug(blog?.title);
+  const blogSlug = canonicalPostTitleSlug(
+    blog?.title,
+    blog?.canonical_slug,
+    blog?.blog_id
+  );
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blog?.blog_id}`;
   const category = (badge ?? blog?.tags?.[0] ?? 'Editorial').toUpperCase();
   const image = blog?.first_image;

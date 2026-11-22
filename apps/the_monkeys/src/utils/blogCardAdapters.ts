@@ -18,7 +18,7 @@ export const fromMetaBlog = (blog: MetaBlog): BlogCardData => ({
   blogId: blog.blog_id,
   authorId: blog.owner_account_id,
   date: blog.published_time,
-  slug: canonicalPostTitleSlug(blog.title),
+  slug: canonicalPostTitleSlug(blog.title, blog.canonical_slug, blog.blog_id),
   tags: blog.tags ?? [],
   title: purifyHTMLString(blog.title),
   description: purifyHTMLString(blog.first_paragraph),
@@ -44,7 +44,8 @@ export const fromFollowingFeed = (blog: FollowingFeed): BlogCardData => {
     slug: postLinkTitleSlug(
       getPostSeoContent(blog.blog).title,
       blog.blog_id,
-      blog.slug
+      blog.slug,
+      blog.canonical_slug
     ),
     tags: blog.tags ?? [],
     title,
@@ -65,7 +66,11 @@ export const fromBlog = (post: Blog): BlogCardData => {
     blogId: post.blog_id,
     authorId: post.owner_account_id,
     date: post.published_time,
-    slug: canonicalPostDocumentTitleSlug(post.blog),
+    slug: canonicalPostDocumentTitleSlug(
+      post.blog,
+      post.canonical_slug,
+      post.blog_id
+    ),
     tags: post.tags ?? [],
     title: titleContent,
     description: descriptionContent,

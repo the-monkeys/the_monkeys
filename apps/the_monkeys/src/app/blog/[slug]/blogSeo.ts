@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 
+import { postModificationTime } from '@/lib/postModificationTime';
 import { getPostSeoContent } from '@/lib/postSeoContent';
 import { canonicalPostDocumentTitleSlug } from '@/lib/postUrl';
 import {
@@ -8,6 +9,7 @@ import {
   indexRobots,
   noIndexFollowRobots,
   noIndexRobots,
+  normalizeSeoText,
   pageMetadata,
   publisherOrg,
 } from '@/lib/seo';
@@ -20,11 +22,23 @@ export function getBlogIdFromSlug(slug: string): string {
 }
 
 function blogContent(blog: Blog) {
-  return getPostSeoContent(blog.blog);
+  const content = getPostSeoContent(blog.blog);
+  return {
+    ...content,
+    description:
+      normalizeSeoText(
+        typeof blog.seo_description === 'string' ? blog.seo_description : '',
+        160
+      ) || content.description,
+  };
 }
 
 export function canonicalBlogSlug(blog: Blog): string {
-  const titleSlug = canonicalPostDocumentTitleSlug(blog.blog);
+  const titleSlug = canonicalPostDocumentTitleSlug(
+    blog.blog,
+    blog.canonical_slug,
+    blog.blog_id
+  );
   return `${titleSlug}-${blog.blog_id}`;
 }
 
@@ -77,7 +91,7 @@ export function buildBlogMetadata(
       ...metadata.openGraph,
       type: 'article',
       publishedTime: blog.published_time,
-      modifiedTime: blog.published_time,
+      modifiedTime: postModificationTime(blog),
       authors: [authorName],
       tags: blog.tags,
     },
@@ -110,7 +124,7 @@ export function buildBlogJsonLd(
     publisher: publisherOrg(),
     isPartOf: { '@id': MONKEYS_WEBSITE_ID },
     datePublished: blog.published_time,
-    dateModified: blog.published_time,
+    dateModified: postModificationTime(blog),
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     keywords: blog.tags?.join(', '),
     articleBody: content.articleBody,

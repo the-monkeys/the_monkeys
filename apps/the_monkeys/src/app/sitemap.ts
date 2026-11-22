@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 
+import { postModificationTime } from '@/lib/postModificationTime';
 import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { SITE_URL } from '@/lib/seo';
 import { fetchPublicPosts } from '@/lib/seoCatalog';
@@ -41,10 +42,10 @@ export function buildMainSitemap(posts: MetaBlog[]): MetadataRoute.Sitemap {
     priority: entry.priority,
   }));
   const postEntries = posts.map((post) => ({
-    url: `${SITE_URL}/blog/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`,
+    url: `${SITE_URL}/blog/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
-    lastModified: validDate(post.published_time),
+    lastModified: validDate(postModificationTime(post)),
   }));
   return [...staticEntries, ...postEntries];
 }

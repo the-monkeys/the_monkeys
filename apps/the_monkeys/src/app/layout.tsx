@@ -161,7 +161,6 @@ const RootLayout = async ({
       <body
         className={`${dm_sans.variable} ${inter.variable} ${newsreader.variable} ${poppins.variable} ${playfair.variable} ${montserrat.variable} ${raleway.variable} ${robotoSlab.variable} ${jetbrainsMono.variable} bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark`}
       >
-        <DonationPopup />
         <Toaster />
         <GrowthbookClientProvider>
           <QueryClientMount>
@@ -173,6 +172,7 @@ const RootLayout = async ({
                 </main>
                 {/* <Separator /> */}
                 <Footer />
+                <DonationPopup />
               </TooltipProvider>
             </ThemeProviders>
           </QueryClientMount>

@@ -33,7 +33,12 @@ import { sanitizeHighlight } from '@/utils/searchHighlight';
 const SearchHitCard = ({ hit }: { hit: SearchBlogHit }) => {
   const title = hit.title ?? '';
   const summary = hit.summary ?? '';
-  const slug = postLinkTitleSlug(title, hit.blog_id, hit.slug);
+  const slug = postLinkTitleSlug(
+    title,
+    hit.blog_id,
+    hit.slug,
+    hit.canonical_slug
+  );
   const safeTitle = sanitizeHighlight(hit.highlight?.title, title);
   const safeSummary = sanitizeHighlight(hit.highlight?.summary, summary);
   const author = hit.author_display_name || hit.author_username || '';

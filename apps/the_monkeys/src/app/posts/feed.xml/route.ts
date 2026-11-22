@@ -1,4 +1,4 @@
-import { canonicalPostTitleSlug, legacyPostTitleSlug } from '@/lib/postUrl';
+import { canonicalPostTitleSlug, postRssGuid } from '@/lib/postUrl';
 import { SITE_URL, normalizeSeoText } from '@/lib/seo';
 import { fetchRecentPublicPosts } from '@/lib/seoCatalog';
 import {
@@ -24,11 +24,11 @@ export async function GET() {
       'Recent public posts from authors and communities across Monkeys.',
     path: '/',
     items: posts.map((post) => {
-      const link = `${SITE_URL}/blog/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`;
+      const link = `${SITE_URL}/blog/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`;
       return {
         title: post.title,
         link,
-        guid: `${SITE_URL}/blog/${legacyPostTitleSlug(post.title)}-${post.blog_id}`,
+        guid: postRssGuid(post),
         pubDate: publicationDate(post.published_time),
         description: normalizeSeoText(post.first_paragraph, 280),
       };

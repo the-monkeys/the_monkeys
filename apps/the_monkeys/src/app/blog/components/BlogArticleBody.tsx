@@ -4,6 +4,7 @@ import { createContext, createElement, useContext } from 'react';
 
 import dynamic from 'next/dynamic';
 
+import { articleAnchor, articleImageAlt } from '@/lib/articleAnnotations';
 import type { OutputData } from '@themonkeys/monkeys-editor';
 import DOMPurify from 'isomorphic-dompurify';
 
@@ -78,6 +79,10 @@ function blockContent(type: string, data: Record<string, unknown>) {
         Number.isInteger(level) && level >= 1 && level <= 6 ? level : 2;
       return createElement(`h${heading}`, {
         className: 'ce-header',
+        id: articleAnchor(data.anchor),
+        style: articleAnchor(data.anchor)
+          ? { scrollMarginTop: '8rem' }
+          : undefined,
         dangerouslySetInnerHTML: inline(data.text),
       });
     }
@@ -138,7 +143,7 @@ function blockContent(type: string, data: Record<string, unknown>) {
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={url}
-              alt=''
+              alt={articleImageAlt(data)}
               className='image-tool__image-picture max-w-full'
             />
           )}
