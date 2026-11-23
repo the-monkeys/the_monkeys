@@ -16,7 +16,11 @@ import { purifyHTMLString } from '@/utils/purifyHTML';
  */
 export const FeatureCard = ({ blog }: { blog: MetaBlog }) => {
   const title = purifyHTMLString(blog?.title);
-  const slug = canonicalPostTitleSlug(blog?.title);
+  const slug = canonicalPostTitleSlug(
+    blog?.title,
+    blog?.canonical_slug,
+    blog?.blog_id
+  );
   const url = `${BLOG_ROUTE}/${slug}-${blog?.blog_id}`;
   const image = blog?.first_image;
 

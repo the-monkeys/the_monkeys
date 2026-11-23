@@ -1,5 +1,7 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
+
 import { useDailyDonationPopup } from '@/hooks/donationPopup/useDailyDonationPopup';
 import { paymentGatewayRedirectLink } from '@/utils/donationHook';
 import { RiCloseLine } from 'react-icons/ri';
@@ -7,9 +9,42 @@ import { RiCloseLine } from 'react-icons/ri';
 import DonationHeartVisual from './DonationHeartVisual';
 
 const DonationPopup = () => {
+  const pathname = usePathname();
   const { shouldShowPopup, handleClosePopup } = useDailyDonationPopup();
 
   if (!shouldShowPopup) return null;
+
+  if (pathname?.startsWith('/blog/')) {
+    return (
+      <aside
+        aria-label='Support Monkeys'
+        className='mx-auto my-6 max-w-3xl rounded-xl border border-border-light dark:border-border-dark p-4 sm:p-6 flex flex-wrap items-center gap-4'
+      >
+        <div className='min-w-0 flex-1'>
+          <p className='font-semibold'>Fuel research. Empower engineers.</p>
+          <p className='text-sm opacity-80'>
+            Support research, education and open-source engineering on Monkeys.
+          </p>
+        </div>
+        <a
+          href={paymentGatewayRedirectLink}
+          target='_blank'
+          rel='noopener noreferrer'
+          onClick={handleClosePopup}
+          className='rounded-md bg-brand-orange px-4 py-2 font-semibold text-white'
+        >
+          Donate Now
+        </a>
+        <button
+          aria-label='Close support prompt'
+          onClick={handleClosePopup}
+          className='p-2'
+        >
+          <RiCloseLine size={20} />
+        </button>
+      </aside>
+    );
+  }
 
   return (
     <div

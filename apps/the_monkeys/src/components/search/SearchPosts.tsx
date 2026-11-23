@@ -19,7 +19,12 @@ const SearchBlogTitle = ({
   onClose?: () => void;
 }) => {
   const title = hit.title ?? '';
-  const slug = postLinkTitleSlug(title, hit.blog_id, hit.slug);
+  const slug = postLinkTitleSlug(
+    title,
+    hit.blog_id,
+    hit.slug,
+    hit.canonical_slug
+  );
   const safeTitle = sanitizeHighlight(hit.highlight?.title, title);
 
   return (

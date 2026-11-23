@@ -36,7 +36,7 @@ function postDetails(post: MetaBlog) {
   return {
     title,
     description: purifyHTMLString(post.first_paragraph),
-    href: `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`,
+    href: `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`,
     topic: post.tags?.[0],
     time: post.published_time ? getRelativeTime(post.published_time) : '',
   };

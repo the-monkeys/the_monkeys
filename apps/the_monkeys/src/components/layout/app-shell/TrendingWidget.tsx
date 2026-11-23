@@ -67,7 +67,11 @@ export function TrendingWidget() {
       <div className='divide-y divide-gray-50 dark:divide-border-dark'>
         {blogs.slice(0, MAX_TRENDING_ITEMS).map((blog, index) => {
           const title = purifyHTMLString(blog.title);
-          const slug = canonicalPostTitleSlug(blog.title);
+          const slug = canonicalPostTitleSlug(
+            blog.title,
+            blog.canonical_slug,
+            blog.blog_id
+          );
           const url = `${BLOG_ROUTE}/${slug}-${blog.blog_id}`;
           const tag = blog.tags?.[0];
           const publish_time = getRelativeTime(blog.published_time);

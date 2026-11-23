@@ -73,7 +73,7 @@ export function TrendingPosts({
           {posts.slice(0, 4).map((post, index) => {
             const title = purifyHTMLString(post.title);
             const topic = post.tags?.[0];
-            const href = `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title)}-${post.blog_id}`;
+            const href = `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`;
             const time = post.published_time
               ? getRelativeTime(post.published_time)
               : '';

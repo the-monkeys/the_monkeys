@@ -35,6 +35,7 @@ export type SearchHighlightMap = Partial<
 >;
 
 export interface SearchBlogHit {
+  canonical_slug?: string;
   blog_id: string;
   title?: string;
   summary?: string;

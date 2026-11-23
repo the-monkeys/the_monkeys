@@ -21,7 +21,11 @@ export const MinimalBlogCard = ({
   label?: string;
 }) => {
   const title = purifyHTMLString(blog?.title);
-  const slug = canonicalPostTitleSlug(blog?.title);
+  const slug = canonicalPostTitleSlug(
+    blog?.title,
+    blog?.canonical_slug,
+    blog?.blog_id
+  );
   const url = `${BLOG_ROUTE}/${slug}-${blog?.blog_id}`;
   const tag = blog?.tags?.[0];
   const display = (label ?? tag ?? 'Research').toUpperCase();

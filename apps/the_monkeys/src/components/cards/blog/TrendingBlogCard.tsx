@@ -26,7 +26,11 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const descriptionContent = blog?.first_paragraph;
   const imageContent = blog?.first_image;
 
-  const blogSlug = canonicalPostTitleSlug(blog?.title);
+  const blogSlug = canonicalPostTitleSlug(
+    blog?.title,
+    blog?.canonical_slug,
+    blog?.blog_id
+  );
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
@@ -110,7 +114,11 @@ export const TrendingBlogCardSmall = ({
   const descriptionContent = purifyHTMLString(blog?.first_paragraph);
   const imageContent = blog?.first_image;
 
-  const blogSlug = canonicalPostTitleSlug(blog?.title);
+  const blogSlug = canonicalPostTitleSlug(
+    blog?.title,
+    blog?.canonical_slug,
+    blog?.blog_id
+  );
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (

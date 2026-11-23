@@ -21,7 +21,11 @@ import { UserInfoCardShowcase } from '../user/userInfo';
  */
 export const FeedListItem = ({ blog }: { blog: MetaBlog }) => {
   const title = purifyHTMLString(blog?.title);
-  const slug = canonicalPostTitleSlug(blog?.title);
+  const slug = canonicalPostTitleSlug(
+    blog?.title,
+    blog?.canonical_slug,
+    blog?.blog_id
+  );
   const url = `${BLOG_ROUTE}/${slug}-${blog?.blog_id}`;
   const tag = blog?.tags?.[0];
   const time = blog?.published_time ? getRelativeTime(blog.published_time) : '';

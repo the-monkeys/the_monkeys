@@ -33,6 +33,18 @@ export function normalizePublicPosts(value: unknown): MetaBlog[] {
       {
         blog_id: post.blog_id,
         title: post.title.trim(),
+        ...(typeof post.rss_guid === 'string'
+          ? { rss_guid: post.rss_guid }
+          : {}),
+        ...(typeof post.canonical_slug === 'string'
+          ? { canonical_slug: post.canonical_slug }
+          : {}),
+        ...(typeof post.seo_description === 'string'
+          ? { seo_description: post.seo_description }
+          : {}),
+        ...(typeof post.content_modified_at === 'string'
+          ? { content_modified_at: post.content_modified_at }
+          : {}),
         first_image:
           typeof post.first_image === 'string' ? post.first_image : '',
         first_paragraph:
