@@ -2,10 +2,13 @@
 
 import Link from 'next/link';
 
+import { EventContentOptions } from '@/components/events/EventContentOptions';
 import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import {
   eventStatusLabel,
   eventTypeLabel,
@@ -19,7 +22,7 @@ function Cover({ event }: { event: EventItem }) {
   if (event.cover_image) {
     return (
       <img
-        src={event.cover_image}
+        src={authenticatedArticleImageUrl(event.cover_image)}
         alt=''
         className='h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out'
         loading='lazy'
@@ -34,7 +37,7 @@ function Cover({ event }: { event: EventItem }) {
   );
 }
 
-export function EventCard({ event }: { event: EventItem }) {
+function EventCardContent({ event }: { event: EventItem }) {
   const timezone = useViewerTimezone();
   const href = `${EVENTS_ROUTE}/${event.slug}`;
   const tag = event.tags?.[0];
@@ -44,7 +47,7 @@ export function EventCard({ event }: { event: EventItem }) {
   }, undefined);
 
   return (
-    <article className='group flex items-start gap-4 sm:gap-6 py-5 border-b border-border-light dark:border-border-dark/40 last:border-b-0'>
+    <article className='group flex items-start gap-4 sm:gap-6 py-5 border-b border-border-light dark:border-border-dark/40'>
       <div className='flex-1 min-w-0'>
         <div className='flex flex-wrap items-center gap-2'>
           {tag ? (
@@ -114,7 +117,7 @@ export function EventCard({ event }: { event: EventItem }) {
   );
 }
 
-export function EventHeroCard({ event }: { event: EventItem }) {
+function EventHeroCardContent({ event }: { event: EventItem }) {
   const timezone = useViewerTimezone();
   const href = `${EVENTS_ROUTE}/${event.slug}`;
 
@@ -126,7 +129,7 @@ export function EventHeroCard({ event }: { event: EventItem }) {
       <div className='relative w-full aspect-[16/9] sm:aspect-[2/1] bg-gray-900'>
         {event.cover_image ? (
           <img
-            src={event.cover_image}
+            src={authenticatedArticleImageUrl(event.cover_image)}
             alt=''
             className='absolute inset-0 h-full w-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-[1.02] transition-all duration-700 ease-out'
           />
@@ -168,6 +171,44 @@ export function EventEmpty({
           {hint}
         </p>
       )}
+    </div>
+  );
+}
+
+export function EventCard({ event }: { event: EventItem }) {
+  return (
+    <div className='relative h-full min-w-0 [&:last-child>article]:border-b-0'>
+      <EventContentOptions
+        event={event}
+        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={event}
+        target={{ kind: 'event', id: event.slug }}
+        compact
+        href={`/events/${event.slug}`}
+      >
+        <EventCardContent event={event} />
+      </ContentGate>
+    </div>
+  );
+}
+
+export function EventHeroCard({ event }: { event: EventItem }) {
+  return (
+    <div className='relative h-full min-w-0 [&:last-child>article]:border-b-0'>
+      <EventContentOptions
+        event={event}
+        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={event}
+        target={{ kind: 'event', id: event.slug }}
+        compact
+        href={`/events/${event.slug}`}
+      >
+        <EventHeroCardContent event={event} />
+      </ContentGate>
     </div>
   );
 }

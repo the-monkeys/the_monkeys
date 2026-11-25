@@ -11,7 +11,7 @@ export const fetchTopicPosts = requestCache(
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ tags: [topic] }),
-      next: { revalidate: 300 },
+      cache: 'no-store',
     });
     if (!response.ok)
       throw new Error(

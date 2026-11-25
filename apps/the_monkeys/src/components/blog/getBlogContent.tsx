@@ -1,6 +1,11 @@
 import Image from 'next/image';
 
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import { Blog } from '@/services/blog/blogTypes';
+import {
+  type RatedContent,
+  isSensitive,
+} from '@/services/moderation/moderationTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
@@ -129,6 +134,7 @@ export const BlogImage = ({
   priority = true,
   quality = 100,
   sizes,
+  content,
 }: {
   title: string;
   image: string;
@@ -136,10 +142,13 @@ export const BlogImage = ({
   priority?: boolean;
   quality?: number;
   sizes?: string;
+  content?: RatedContent;
 }) => {
+  const sensitive = isSensitive(content);
   return (
     <Image
-      src={image}
+      src={sensitive ? authenticatedArticleImageUrl(image) : image}
+      unoptimized={sensitive}
       alt={title}
       height='500'
       width='800'

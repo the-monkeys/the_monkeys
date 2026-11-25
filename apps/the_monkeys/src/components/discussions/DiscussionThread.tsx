@@ -6,12 +6,14 @@ import { DiscussionActions } from '@/components/discussions/DiscussionActions';
 import { DiscussionAvatar } from '@/components/discussions/DiscussionAvatar';
 import { DiscussionBody } from '@/components/discussions/DiscussionBody';
 import { DiscussionCard } from '@/components/discussions/DiscussionCard';
+import { DiscussionCardMenu } from '@/components/discussions/DiscussionCardMenu';
 import { ReplyForm, ReplyToggle } from '@/components/discussions/ReplyForm';
 import {
   DiscussionIdentity,
   discussionHandle,
 } from '@/components/discussions/discussionChrome';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { DISCUSSIONS_ROUTE } from '@/constants/routeConstants';
 import { canSnapshotDiscussion } from '@/features/snapshot/adapters/fromDiscussion';
@@ -145,7 +147,7 @@ function ReplyBranch({
   );
 }
 
-export function DiscussionThread({ post }: { post: Discussion }) {
+function DiscussionThreadContent({ post }: { post: Discussion }) {
   const tree = buildReplyTree(post.replies ?? []);
   const shown = countVisibleReplies(tree);
   const slug = post.group_slug?.trim() ?? '';
@@ -162,6 +164,7 @@ export function DiscussionThread({ post }: { post: Discussion }) {
       </Link>
 
       <DiscussionCard
+        showMenu={false}
         footer={<DiscussionActions post={post} />}
         linked={false}
         post={post}
@@ -215,6 +218,23 @@ export function DiscussionThread({ post }: { post: Discussion }) {
           </ul>
         ) : null}
       </section>
+    </div>
+  );
+}
+
+export function DiscussionThread({ post }: { post: Discussion }) {
+  return (
+    <div className='relative mx-auto w-full min-w-0 max-w-3xl'>
+      <div className='absolute right-4 top-3 z-20'>
+        <DiscussionCardMenu post={post} />
+      </div>
+      <ContentGate
+        content={post}
+        target={{ kind: 'discussion', id: post.public_id }}
+        href={`/discussions/${encodeURIComponent(post.public_id)}`}
+      >
+        <DiscussionThreadContent post={post} />
+      </ContentGate>
     </div>
   );
 }

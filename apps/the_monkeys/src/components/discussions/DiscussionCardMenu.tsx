@@ -1,14 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import Link from 'next/link';
 
 import Icon from '@/components/icon';
+import { ContentLabelToggle } from '@/components/moderation/ContentLabelToggle';
 import { canSnapshotDiscussion } from '@/features/snapshot/adapters/fromDiscussion';
 import { copyDiscussionSnap } from '@/features/snapshot/lib/discussionClipboard';
+import useAuth from '@/hooks/auth/useAuth';
 import { discussionPath } from '@/lib/discussionSeo';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
+import { isSensitive } from '@/services/moderation/moderationTypes';
+import { QueryClientContext } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Dialog,
@@ -28,13 +32,23 @@ import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 import { DiscussionReportDialog } from './DiscussionReportDialog';
 
-export function DiscussionCardMenu({ post }: { post: Discussion }) {
+function DiscussionCardMenuContent({
+  post,
+  canLabel = false,
+}: {
+  post: Discussion;
+  canLabel?: boolean;
+}) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [fallback, setFallback] = useState<Blob>();
   const [previewUrl, setPreviewUrl] = useState('');
   const [reportOpen, setReportOpen] = useState(false);
-  const available = canSnapshotDiscussion(post);
+  const [labelOpen, setLabelOpen] = useState(false);
+  const available =
+    !isSensitive(post) &&
+    !post.content_unavailable &&
+    canSnapshotDiscussion(post);
   const path = discussionPath(post.public_id);
   const studioPath = `/snapshot/discussion/${encodeURIComponent(post.public_id)}`;
 
@@ -146,6 +160,18 @@ export function DiscussionCardMenu({ post }: { post: Discussion }) {
               className='shrink-0 opacity-50'
             />
           </DropdownMenuItem>
+          {canLabel ? (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onSelect={() => setLabelOpen(true)}
+                className='flex min-h-11 w-full items-center gap-3 rounded-lg px-3 font-dm_sans text-sm sm:text-base'
+              >
+                <Icon name='RiErrorWarning' size={18} className='shrink-0' />
+                <span>Content rating</span>
+              </DropdownMenuItem>
+            </>
+          ) : null}
         </DropdownMenuContent>
       </DropdownMenu>
       {message ? (
@@ -202,7 +228,56 @@ export function DiscussionCardMenu({ post }: { post: Discussion }) {
           </div>
         </DialogContent>
       </Dialog>
-      <DiscussionReportDialog open={reportOpen} onOpenChange={setReportOpen} />
+      <Dialog open={labelOpen} onOpenChange={setLabelOpen}>
+        <DialogContent className='w-[calc(100vw_-_2rem)] max-w-lg rounded-2xl'>
+          <DialogHeader>
+            <DialogTitle>Content rating</DialogTitle>
+            <DialogDescription>
+              Set the rating for content you own.
+            </DialogDescription>
+          </DialogHeader>
+          {labelOpen && canLabel ? (
+            <ContentLabelToggle
+              target={{ kind: 'discussion', id: post.public_id }}
+              initialMarked={isSensitive(post)}
+            />
+          ) : null}
+        </DialogContent>
+      </Dialog>
+      <DiscussionReportDialog
+        target={{ kind: 'discussion', id: post.public_id }}
+        open={reportOpen}
+        onOpenChange={setReportOpen}
+      />
     </div>
   );
+}
+
+export function DiscussionCardMenu({ post }: { post: Discussion }) {
+  const client = useContext(QueryClientContext);
+  return client ? (
+    <ViewerDiscussionCardMenu post={post} />
+  ) : (
+    <DiscussionCardMenuContent key={menuContentKey(post)} post={post} />
+  );
+}
+
+function ViewerDiscussionCardMenu({ post }: { post: Discussion }) {
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || 'anonymous';
+  const author =
+    !!session?.username &&
+    session.username === post.author_username &&
+    !post.author_gone;
+  return (
+    <DiscussionCardMenuContent
+      key={`${viewer}:${menuContentKey(post)}`}
+      post={post}
+      canLabel={author}
+    />
+  );
+}
+
+function menuContentKey(post: Discussion) {
+  return `${post.public_id}:${isSensitive(post)}:${!!post.content_unavailable}:${post.content_rating?.revision ?? 0}`;
 }

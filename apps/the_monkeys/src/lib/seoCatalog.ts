@@ -1,4 +1,5 @@
 import { API_URL, API_URL_V2 } from '@/constants/api';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { normalizePublicPosts } from '@/lib/publicPostMetadata';
 import { fetchTopicCatalogStrict } from '@/lib/topicCatalog';
 import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
@@ -22,7 +23,7 @@ async function getJson<T>(origin: string, path: string): Promise<T | null> {
   const url = `${origin}${path}`;
   const res = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
-    next: { revalidate: 300 },
+    cache: 'no-store',
   });
   if (res.status === 404) return null;
   if (!res.ok) {
@@ -131,6 +132,7 @@ export function normalizePublicEvents(value: unknown): EventItem[] {
     if (!raw || typeof raw !== 'object') return false;
     const event = raw as Partial<EventItem>;
     return (
+      isPublicContentSafe(event) &&
       typeof event.id === 'number' &&
       typeof event.title === 'string' &&
       Boolean(event.title.trim()) &&
@@ -181,6 +183,7 @@ export function normalizePublicGroups(value: unknown): GroupItem[] {
     if (!raw || typeof raw !== 'object') return false;
     const group = raw as Partial<GroupItem>;
     return (
+      isPublicContentSafe(group) &&
       typeof group.id === 'number' &&
       typeof group.name === 'string' &&
       Boolean(group.name.trim()) &&

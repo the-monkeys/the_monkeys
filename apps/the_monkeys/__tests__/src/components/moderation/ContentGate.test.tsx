@@ -1,0 +1,215 @@
+import React from 'react';
+
+import { ContentGate } from '@/components/moderation/ContentGate';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+const mocks = vi.hoisted(() => ({
+  auth: { data: undefined as any, isLoading: false },
+  get: vi.fn(),
+  reveal: vi.fn(),
+  push: vi.fn(),
+  refresh: vi.fn(),
+}));
+vi.mock('@/hooks/auth/useAuth', () => ({ default: () => mocks.auth }));
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: mocks.push, refresh: mocks.refresh }),
+  usePathname: () => '/discussions/post',
+}));
+vi.mock('@/services/moderation/moderationApi', () => ({
+  getContentAccess: mocks.get,
+  revealContent: mocks.reveal,
+}));
+
+const target = { kind: 'discussion' as const, id: 'post' };
+const restricted = {
+  is_nsfw: true,
+  content_rating: {
+    is_nsfw: true,
+    revision: 1,
+    revealed: false,
+    reason: 'login_required',
+  },
+};
+function mount(content: any = restricted) {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={client}>
+      <ContentGate target={target} content={content}>
+        <img src='/secret.jpg' alt='secret image' />
+        <p>secret body</p>
+      </ContentGate>
+    </QueryClientProvider>
+  );
+}
+afterEach(() => cleanup());
+beforeEach(() => {
+  vi.clearAllMocks();
+  mocks.auth = { data: undefined, isLoading: false };
+  mocks.get.mockResolvedValue({
+    is_nsfw: true,
+    can_reveal: false,
+    reason: 'dob_required',
+  });
+  mocks.reveal.mockResolvedValue({ access: { is_nsfw: true, revealed: true } });
+});
+describe('ContentGate', () => {
+  it('preserves old safe responses without a query provider', () => {
+    render(
+      <ContentGate target={target} content={{}}>
+        <p>ordinary article</p>
+      </ContentGate>
+    );
+    expect(screen.getByText('ordinary article')).toBeTruthy();
+    expect(mocks.get).not.toHaveBeenCalled();
+  });
+  it('never mounts restricted text or images for anonymous visitors', () => {
+    mount();
+    expect(screen.queryByText('secret body')).toBeNull();
+    expect(screen.queryByAltText('secret image')).toBeNull();
+    expect(
+      screen.getByRole('link', { name: /log in/i }).getAttribute('href')
+    ).toContain('callbackURL');
+  });
+  it('asks for a missing birthday and preserves a safe return path', async () => {
+    mocks.auth.data = { account_id: 'adult' };
+    mount();
+    const link = await screen.findByRole('link', {
+      name: /add your birthday/i,
+    });
+    expect(link.getAttribute('href')).toContain('returnTo=');
+    expect(screen.queryByText('secret body')).toBeNull();
+  });
+  it('does not give an underage account a reveal button', async () => {
+    mocks.auth.data = { account_id: 'young' };
+    mocks.get.mockResolvedValue({
+      is_nsfw: true,
+      reason: 'underage',
+      can_reveal: false,
+    });
+    mount();
+    await screen.findByText(/18 or older/i);
+    expect(screen.queryByRole('button', { name: /show content/i })).toBeNull();
+    expect(screen.queryByText('secret body')).toBeNull();
+  });
+  it('requires fresh account policy even if cached props say revealed', async () => {
+    mocks.auth.data = { account_id: 'other' };
+    mocks.get.mockResolvedValue({
+      is_nsfw: true,
+      can_reveal: false,
+      reason: 'underage',
+    });
+    mount({
+      ...restricted,
+      content_rating: { ...restricted.content_rating, revealed: true },
+    });
+    await waitFor(() => expect(mocks.get).toHaveBeenCalled());
+    expect(screen.queryByText('secret body')).toBeNull();
+  });
+  it('reveals only after explicit consent and prevents rapid duplicate clicks', async () => {
+    mocks.auth.data = { account_id: 'adult' };
+    mocks.get.mockResolvedValue({
+      is_nsfw: true,
+      can_reveal: true,
+      reason: 'reveal_required',
+    });
+    let finish: (v: any) => void = () => {};
+    mocks.reveal.mockReturnValue(
+      new Promise((r) => {
+        finish = r;
+      })
+    );
+    mount();
+    const button = await screen.findByRole('button', { name: /show content/i });
+    fireEvent.click(button);
+    fireEvent.click(button);
+    expect(mocks.reveal).toHaveBeenCalledTimes(1);
+    finish({ access: { is_nsfw: true, revealed: true } });
+    await waitFor(() => expect(mocks.refresh).toHaveBeenCalled());
+  });
+  it('allows a freshly authorised account and hides again on logout', async () => {
+    mocks.auth.data = { account_id: 'adult' };
+    mocks.get.mockResolvedValue({
+      is_nsfw: true,
+      revealed: true,
+      can_reveal: true,
+    });
+    const view = mount({
+      ...restricted,
+      content_rating: { ...restricted.content_rating, revealed: true },
+    });
+    await screen.findByText('secret body');
+    mocks.auth.data = undefined;
+    view.rerender(
+      <QueryClientProvider client={new QueryClient()}>
+        <ContentGate
+          target={target}
+          content={{
+            ...restricted,
+            content_rating: { revealed: true, is_nsfw: true },
+          }}
+        >
+          <p>secret body</p>
+        </ContentGate>
+      </QueryClientProvider>
+    );
+    expect(screen.queryByText('secret body')).toBeNull();
+  });
+  it('keeps content hidden if the policy service fails', async () => {
+    mocks.auth.data = { account_id: 'adult' };
+    mocks.get.mockRejectedValue(new Error('unavailable'));
+    mount({ ...restricted, content_rating: { revealed: true, is_nsfw: true } });
+    await screen.findByText(/temporarily unavailable/i);
+    expect(screen.queryByText('secret body')).toBeNull();
+  });
+});
+
+it('blurs a safe cached card immediately after a confirmed staff flag, even if its list is held locally', async () => {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const older = { is_nsfw: false, content_rating: { target, revision: 1 } };
+  function view(content: any) {
+    return (
+      <QueryClientProvider client={client}>
+        <ContentGate target={target} content={content}>
+          <p>cached body</p>
+        </ContentGate>
+      </QueryClientProvider>
+    );
+  }
+  const rendered = render(view(older));
+  expect(screen.getByText('cached body')).toBeTruthy();
+  window.dispatchEvent(
+    new CustomEvent('monkeys:content-rating-changed', {
+      detail: {
+        target,
+        access: {
+          target,
+          is_nsfw: true,
+          revision: 2,
+          revealed: false,
+          reason: 'login_required',
+        },
+      },
+    })
+  );
+  await waitFor(() => expect(screen.queryByText('cached body')).toBeNull());
+  rendered.rerender(
+    view({ ...older, content_rating: { ...older.content_rating } })
+  );
+  expect(screen.queryByText('cached body')).toBeNull();
+  rendered.rerender(
+    view({ is_nsfw: false, content_rating: { target, revision: 3 } })
+  );
+  await screen.findByText('cached body');
+});

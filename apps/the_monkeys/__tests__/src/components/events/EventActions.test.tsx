@@ -12,6 +12,24 @@ import {
 import userEvent from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
 
+vi.mock('@/components/moderation/ContentOptions', () => ({
+  ContentOptions: ({
+    target,
+    canLabel,
+  }: {
+    target: { kind: string; id: string };
+    canLabel?: boolean;
+  }) => (
+    <button
+      aria-label='Event options'
+      data-target={`${target.kind}:${target.id}`}
+      data-label={!!canLabel}
+    >
+      Options
+    </button>
+  ),
+}));
+
 const { push, toast } = vi.hoisted(() => ({ push: vi.fn(), toast: vi.fn() }));
 vi.mock('next/navigation', () => ({ useRouter: () => ({ push }) }));
 vi.mock('@/hooks/events/useRefreshEvents', () => ({
@@ -295,4 +313,22 @@ it('does not create a draft for an ambiguous new local time', async () => {
       description: expect.stringMatching(/occurs twice/),
     })
   );
+});
+
+it('uses one shared event options menu for signed-out reporting and author labelling', () => {
+  const { rerender } = render(<EventActions event={source} />);
+  const options = screen.getAllByRole('button', { name: 'Event options' });
+  expect(options).toHaveLength(1);
+  expect(options[0].getAttribute('data-target')).toBe('event:legacy-meetup');
+  expect(options[0].getAttribute('data-label')).toBe('false');
+  rerender(<EventActions event={source} canManage />);
+  expect(
+    screen
+      .getByRole('button', { name: 'Event options' })
+      .getAttribute('data-label')
+  ).toBe('true');
+  rerender(
+    <EventActions event={source} canManage showContentOptions={false} />
+  );
+  expect(screen.queryByRole('button', { name: 'Event options' })).toBeNull();
 });

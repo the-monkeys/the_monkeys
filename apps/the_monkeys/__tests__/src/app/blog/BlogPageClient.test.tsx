@@ -7,6 +7,19 @@ import { cleanup, render, screen } from '@testing-library/react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+vi.mock('@/components/moderation/ContentGate', () => ({
+  ContentGate: ({ content, children }: any) =>
+    content.is_nsfw ||
+    content.content_rating?.is_nsfw ||
+    content.content_unavailable ? (
+      <div>Sensitive content</div>
+    ) : (
+      <>{children}</>
+    ),
+}));
+vi.mock('@/components/moderation/ContentOptions', () => ({
+  ContentOptions: () => null,
+}));
 vi.mock('next/dynamic', () => ({
   default: (_loader: unknown, options: { loading?: () => React.ReactNode }) =>
     options?.loading ?? (() => null),
@@ -109,6 +122,21 @@ const mockedArticleHook = vi.mocked(useGetPublishedBlogDetailByBlogId);
 const mockedGroupDetail = vi.mocked(useGroupDetail);
 
 describe('BlogPageClient', () => {
+  it('does not mount article content or snapshot controls while the shared gate is locked', () => {
+    mockedArticleHook.mockReturnValue({
+      blog: { ...publicBlog, is_nsfw: true },
+      isLoading: false,
+      isError: false,
+    });
+    const { container } = render(
+      <BlogPageClient urlBlogId='123' fullSlug='post-123' />
+    );
+    expect(screen.getByText('Sensitive content')).toBeTruthy();
+    expect(container.querySelector('h1')).toBeNull();
+    expect(container.querySelector('a[href*=snapshot]')).toBeNull();
+    expect(container.querySelector('.monkeys-editor')).toBeNull();
+  });
+
   it('includes readable article blocks in anonymous server HTML before the editor mounts', () => {
     vi.mocked(useAuth).mockReturnValue({
       data: null,

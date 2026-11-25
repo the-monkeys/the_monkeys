@@ -13,11 +13,13 @@ import {
   BlogPlaceholderImage,
   BlogTitle,
 } from '@/components/blog/getBlogContent';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { getRelativeTime } from '@/lib/utils';
 import { BlogCardData } from '@/services/blog/blogTypes';
+import type { RatedContent } from '@/services/moderation/moderationTypes';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { topicToSlug } from '@/utils/topicUtils';
 
@@ -29,17 +31,24 @@ interface CardProps {
 
 const BlogCardImage = ({
   title,
+  content,
   image,
   className,
 }: {
   title: string;
+  content?: RatedContent;
   image: string;
   className?: string;
 }) =>
   isNonValidBannerImage(image) ? (
     <BlogPlaceholderImage title={title} className={className} />
   ) : (
-    <BlogImage title={title} image={image} className={className} />
+    <BlogImage
+      content={content}
+      title={title}
+      image={image}
+      className={className}
+    />
   );
 
 const ArticleTag = ({
@@ -149,6 +158,7 @@ const HorizontalCard = ({
         <div className='md:w-[40%] aspect-[3/2] md:aspect-auto relative bg-gray-50 dark:bg-gray-800 overflow-hidden'>
           <Link href={blogURL} className='block h-full w-full'>
             <BlogCardImage
+              content={blog}
               title={title}
               image={image}
               className='group-hover:scale-105 transition-transform duration-1000 ease-out h-full w-full object-cover'
@@ -228,6 +238,7 @@ const ListCard = ({
         <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[210px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
           <Link href={blogURL} className='group block h-full w-full'>
             <BlogCardImage
+              content={blog}
               title={title || 'Untitled Post'}
               image={image}
               className='h-full w-full object-cover object-center'
@@ -309,6 +320,7 @@ const VerticalCard = ({
         <div className='aspect-[16/9] w-full bg-gray-50 dark:bg-gray-800 overflow-hidden relative'>
           <Link href={blogURL}>
             <BlogCardImage
+              content={blog}
               title={title}
               image={image}
               className='group-hover:scale-105 transition-transform duration-700 ease-out'
@@ -388,6 +400,7 @@ const CompactCard = ({
       <div className='h-20 w-28 shrink-0 overflow-hidden rounded-lg bg-foreground-light/60 sm:h-24 sm:w-36 dark:bg-foreground-dark/60'>
         <Link href={blogURL} className='block h-full w-full'>
           <BlogCardImage
+            content={blog}
             title={title || 'Untitled Post'}
             image={image}
             className='h-full w-full object-cover object-center'
@@ -453,5 +466,14 @@ export const FeedBlogCard = ({
   variant = 'vertical',
 }: CardProps & { variant?: keyof typeof CARD_VARIANTS }) => {
   const Card = CARD_VARIANTS[variant];
-  return <Card blog={blog} showBookmark={showBookmark} showShare={showShare} />;
+  return (
+    <ContentGate
+      content={blog}
+      target={{ kind: 'blog', id: blog.blogId }}
+      compact
+      href={`${BLOG_ROUTE}/${blog.slug}-${blog.blogId}`}
+    >
+      <Card blog={blog} showBookmark={showBookmark} showShare={showShare} />
+    </ContentGate>
+  );
 };

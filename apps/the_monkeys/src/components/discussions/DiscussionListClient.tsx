@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { DiscussionCard } from '@/components/discussions/DiscussionCard';
 import { DiscussionComposer } from '@/components/discussions/DiscussionComposer';
@@ -13,27 +13,83 @@ import { Button } from '@the-monkeys/ui/atoms/button';
 const PAGE_SIZE = 20;
 
 export function DiscussionListClient({ initial }: { initial: Discussion[] }) {
-  const session = useAuth().data as { username?: string } | null | undefined;
-  const signedIn = Boolean(session?.username);
-  const [posts, setPosts] = useState<Discussion[]>(initial);
-  const [hasMore, setHasMore] = useState(initial.length >= PAGE_SIZE);
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || null;
+  const [owner, setOwner] = useState(viewer);
+  const [useInitial, setUseInitial] = useState(true);
+  // Reset during render so an account change never commits the old list.
+  if (owner !== viewer) {
+    setOwner(viewer);
+    setUseInitial(false);
+  }
+  return (
+    <ViewerDiscussionList
+      key={viewer || 'anonymous'}
+      initial={useInitial ? initial : undefined}
+      refreshToken={initial}
+      signedIn={Boolean(session?.username)}
+    />
+  );
+}
+
+function ViewerDiscussionList({
+  initial,
+  refreshToken,
+  signedIn,
+}: {
+  initial?: Discussion[];
+  refreshToken: Discussion[];
+  signedIn: boolean;
+}) {
+  const [posts, setPosts] = useState<Discussion[]>(initial ?? []);
+  const [hasMore, setHasMore] = useState((initial?.length ?? 0) >= PAGE_SIZE);
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
+  const request = useRef(0);
+  useEffect(() => {
+    const version = ++request.current;
+    if (initial) {
+      setPosts(initial);
+      setHasMore(initial.length >= PAGE_SIZE);
+    } else {
+      setBusy(true);
+      void listDiscussions({ kind: 'site' })
+        .then((page) => {
+          if (request.current !== version) return;
+          const fresh = Array.isArray(page?.discussions)
+            ? page.discussions
+            : [];
+          setPosts(fresh);
+          setHasMore(fresh.length >= PAGE_SIZE);
+        })
+        .catch(() => {
+          if (request.current === version) setFailed(true);
+        })
+        .finally(() => {
+          if (request.current === version) setBusy(false);
+        });
+    }
+    return () => {
+      ++request.current;
+    };
+  }, [initial, refreshToken]);
 
   async function loadOlder() {
     const last = posts[posts.length - 1];
     if (busy || !last) return;
+    const version = request.current;
     setBusy(true);
     setFailed(false);
     try {
       const page = await listDiscussions({ kind: 'site' }, last.public_id);
+      if (request.current !== version) return;
       const older = Array.isArray(page?.discussions) ? page.discussions : [];
       setPosts((current) => [...current, ...older]);
       setHasMore(older.length >= PAGE_SIZE);
     } catch {
-      setFailed(true);
+      if (request.current === version) setFailed(true);
     } finally {
-      setBusy(false);
+      if (request.current === version) setBusy(false);
     }
   }
 

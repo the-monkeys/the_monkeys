@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 
 import { postModificationTime } from '@/lib/postModificationTime';
 import { getPostSeoContent } from '@/lib/postSeoContent';
-import { canonicalPostDocumentTitleSlug } from '@/lib/postUrl';
+import {
+  canonicalPostDocumentTitleSlug,
+  postLinkTitleSlug,
+} from '@/lib/postUrl';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import {
   MONKEYS_WEBSITE_ID,
   absoluteUrl,
@@ -34,11 +38,13 @@ function blogContent(blog: Blog) {
 }
 
 export function canonicalBlogSlug(blog: Blog): string {
-  const titleSlug = canonicalPostDocumentTitleSlug(
-    blog.blog,
-    blog.canonical_slug,
-    blog.blog_id
-  );
+  const titleSlug = !isPublicContentSafe(blog)
+    ? postLinkTitleSlug('Post', blog.blog_id, blog.slug, blog.canonical_slug)
+    : canonicalPostDocumentTitleSlug(
+        blog.blog,
+        blog.canonical_slug,
+        blog.blog_id
+      );
   return `${titleSlug}-${blog.blog_id}`;
 }
 
@@ -57,6 +63,12 @@ export function buildBlogMetadata(
   _requestedSlug: string,
   authorName = 'Monkeys Author'
 ): Metadata {
+  if (!isPublicContentSafe(blog)) {
+    return {
+      title: { absolute: 'Sensitive post | Monkeys' },
+      robots: noIndexRobots,
+    };
+  }
   if (blog.audience === 'group_only') {
     return {
       title: { absolute: 'Members-only post | Monkeys' },
@@ -104,7 +116,12 @@ export function buildBlogJsonLd(
   authorName = 'Monkeys Author',
   authorUsername?: string
 ) {
-  if (blog.audience === 'group_only') return null;
+  if (
+    !isPublicContentSafe(blog) ||
+    blog.is_draft ||
+    blog.audience === 'group_only'
+  )
+    return null;
 
   const content = blogContent(blog);
   const slug = canonicalBlogSlug(blog);

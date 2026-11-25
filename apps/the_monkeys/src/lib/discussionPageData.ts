@@ -1,4 +1,5 @@
 import { API_URL } from '@/constants/api';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { fetchPublicGroups } from '@/lib/seoCatalog';
 import {
   Discussion,
@@ -46,7 +47,9 @@ export async function loadDiscussion(
       return {
         state: 'ok',
         discussion: publicDiscussion,
-        indexable: publicDiscussion.status === 'visible',
+        indexable:
+          publicDiscussion.status === 'visible' &&
+          isPublicContentSafe(publicDiscussion),
         publicDiscussion,
       };
     }
@@ -55,6 +58,8 @@ export async function loadDiscussion(
     const member = await readDiscussion(id, cookieHeader);
     if (member.status === 200 && member.discussion) {
       const indexable =
+        isPublicContentSafe(publicDiscussion) &&
+        isPublicContentSafe(member.discussion) &&
         publicDiscussion?.status === 'visible' &&
         member.discussion.status === 'visible' &&
         member.discussion.audience !== 'group_only';
@@ -92,12 +97,15 @@ export async function loadSiteDiscussions(
 
 async function readVisibleIds(url: string): Promise<string[]> {
   try {
-    const res = await fetch(url, { next: { revalidate: 300 } });
+    const res = await fetch(url, { cache: 'no-store' });
     if (res.status !== 200) return [];
     const data = (await res.json()) as Partial<DiscussionList> | null;
     if (!data || !Array.isArray(data.discussions)) return [];
     return data.discussions.flatMap((item) =>
-      item && item.status === 'visible' && typeof item.public_id === 'string'
+      item &&
+      isPublicContentSafe(item) &&
+      item.status === 'visible' &&
+      typeof item.public_id === 'string'
         ? [item.public_id]
         : []
     );

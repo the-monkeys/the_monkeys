@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 import { TimezoneSelect } from '@/components/events/TimezoneSelect';
 import { EventCalendarDialog } from '@/components/events/detail/EventCalendarDialog';
 import Icon from '@/components/icon';
+import { ContentOptions } from '@/components/moderation/ContentOptions';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
 import { useCreationAttempt } from '@/hooks/useCreationAttempt';
@@ -23,7 +24,6 @@ import {
   cloneEvent,
   eventError,
   getShareMeta,
-  reportEvent,
 } from '@/services/events/eventsApi';
 import { IUser } from '@/services/models/user';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -34,16 +34,16 @@ export function EventActions({
   event,
   session,
   canManage,
+  showContentOptions = true,
 }: {
   event: EventItem;
   session?: IUser | null;
   canManage?: boolean;
+  showContentOptions?: boolean;
 }) {
   const { toast } = useToast();
   const router = useRouter();
   const refresh = useRefreshEvents(event.slug);
-  const [reportOpen, setReportOpen] = useState(false);
-  const [reason, setReason] = useState('');
   const [cloneOpen, setCloneOpen] = useState(false);
   const [cloneBusy, setCloneBusy] = useState(false);
   const cloneSubmitting = useRef(false);
@@ -100,19 +100,6 @@ export function EventActions({
       await copyLink();
     } catch {
       copyLink();
-    }
-  };
-
-  const onReport = async () => {
-    if (!reason.trim()) return;
-    try {
-      await reportEvent(event.slug, reason.trim());
-      toast({ title: 'Report sent' });
-      setReportOpen(false);
-      setReason('');
-      refresh();
-    } catch (err) {
-      toast({ title: 'Could not report', description: eventError(err) });
     }
   };
 
@@ -200,15 +187,12 @@ export function EventActions({
           )}
         </>
       )}
-      {session && (
-        <Button
-          variant='ghost'
-          size='sm'
-          className='min-h-11'
-          onClick={() => setReportOpen((v) => !v)}
-        >
-          Report
-        </Button>
+      {showContentOptions && (
+        <ContentOptions
+          target={{ kind: 'event', id: event.slug }}
+          canLabel={!!canManage}
+          initialMarked={event.is_nsfw || event.content_rating?.is_nsfw}
+        />
       )}
       {cloneOpen && showClone && (
         <div className='grid w-full gap-3 rounded-lg border border-border-light p-3 dark:border-border-dark/60 sm:grid-cols-2'>
@@ -249,19 +233,6 @@ export function EventActions({
             onClick={onClone}
           >
             {cloneBusy ? 'Creating…' : 'Create draft'}
-          </Button>
-        </div>
-      )}
-      {reportOpen && (
-        <div className='flex w-full gap-2'>
-          <input
-            value={reason}
-            onChange={(e) => setReason(e.target.value)}
-            placeholder='Why are you reporting this?'
-            className='h-9 flex-1 rounded-md border border-border-light bg-transparent px-3 text-sm dark:border-border-dark'
-          />
-          <Button size='sm' variant='destructive' onClick={onReport}>
-            Send
           </Button>
         </div>
       )}

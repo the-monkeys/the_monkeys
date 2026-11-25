@@ -35,6 +35,60 @@ vi.mock('@/hooks/blog/schedule/useScheduleState', () => ({
       callback('2026-12-01T10:00:00Z', 'Asia/Calcutta'),
   }),
 }));
+vi.mock('@/components/moderation/ContentLabelToggle', () => ({
+  ContentLabelToggle: ({
+    target,
+    initialMarked,
+    onDirtyChange,
+    onPendingChange,
+    onChange,
+  }: any) => (
+    <div data-testid='author-label'>
+      <span data-testid='label-value'>
+        {target.kind}:{target.id}:{String(initialMarked)}
+      </span>
+      <button type='button' onClick={() => onDirtyChange?.(true)}>
+        Change rating
+      </button>
+      <button type='button' onClick={() => onPendingChange?.(true)}>
+        Start saving rating
+      </button>
+      <button
+        type='button'
+        onClick={() => {
+          onPendingChange?.(false);
+          onDirtyChange?.(true);
+        }}
+      >
+        Fail saving rating
+      </button>
+      <button
+        type='button'
+        onClick={() => {
+          onPendingChange?.(false);
+          onChange?.(true);
+          onDirtyChange?.(false);
+        }}
+      >
+        Save rating successfully
+      </button>
+      <button type='button' onClick={() => onDirtyChange?.(false)}>
+        Revert rating
+      </button>
+      <button
+        type='button'
+        onClick={() => {
+          onDirtyChange?.(true);
+          Array.from(document.querySelectorAll('button'))
+            .find((button) => button.textContent === 'Publish Now')
+            ?.click();
+        }}
+      >
+        Change and immediately publish
+      </button>
+    </div>
+  ),
+}));
 vi.mock('@/components/icon', () => ({ default: () => null }));
 beforeEach(() => {
   vi.stubGlobal(
@@ -73,6 +127,69 @@ function props() {
   };
 }
 describe('PublishBlogDrawer publication boundary', () => {
+  it.each(['Publish Now', 'Schedule'])(
+    'blocks %s for unsaved, saving and failed rating changes until save/revert',
+    (action) => {
+      const input = {
+        ...props(),
+        publication: { group: null, audience: 'public' as const },
+        publicationPending: false,
+      };
+      render(<PublishBlogDrawer {...input} blogId='draft-123' />);
+      fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
+      if (action === 'Schedule')
+        fireEvent.click(
+          screen.getByRole('switch', { name: 'Schedule this post' })
+        );
+      const submit = screen.getByRole('button', { name: action });
+      fireEvent.click(screen.getByRole('button', { name: 'Change rating' }));
+      expect(submit.hasAttribute('disabled')).toBe(true);
+      fireEvent.click(submit);
+      expect(input.handlePublish).not.toHaveBeenCalled();
+      expect(input.handleSchedule).not.toHaveBeenCalled();
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Start saving rating' })
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Revert rating' }));
+      expect(submit.hasAttribute('disabled')).toBe(true);
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Fail saving rating' })
+      );
+      expect(submit.hasAttribute('disabled')).toBe(true);
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Save rating successfully' })
+      );
+      expect(submit.hasAttribute('disabled')).toBe(false);
+      fireEvent.click(submit);
+      expect(
+        action === 'Schedule' ? input.handleSchedule : input.handlePublish
+      ).toHaveBeenCalledOnce();
+    }
+  );
+  it('guards the same event tick between changing a rating and clicking Publish', () => {
+    const input = {
+      ...props(),
+      publication: { group: null, audience: 'public' as const },
+      publicationPending: false,
+    };
+    render(<PublishBlogDrawer {...input} blogId='draft-123' />);
+    fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Change and immediately publish' })
+    );
+    expect(input.handlePublish).not.toHaveBeenCalled();
+  });
+
+  it('offers the author label for an existing draft without changing publication scope', () => {
+    render(
+      <PublishBlogDrawer {...props()} blogId='draft-123' initialMarked={true} />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Publish' }));
+    expect(screen.getByTestId('label-value').textContent).toBe(
+      'blog:draft-123:true'
+    );
+  });
+
   it('disables publishing while group verification is pending', async () => {
     const input = props();
     render(<PublishBlogDrawer {...input} />);

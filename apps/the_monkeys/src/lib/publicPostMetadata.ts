@@ -1,3 +1,4 @@
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import type { MetaBlog } from '@/services/blog/blogTypes';
 
 export function normalizePublicPosts(value: unknown): MetaBlog[] {
@@ -15,6 +16,7 @@ export function normalizePublicPosts(value: unknown): MetaBlog[] {
       is_scheduled?: unknown;
     };
     if (
+      !isPublicContentSafe(post) ||
       (post.audience && post.audience !== 'public') ||
       post.is_draft === true ||
       post.is_archived === true ||

@@ -28,6 +28,30 @@ function clientProps(tree: any): any {
   return children.find((child: any) => child?.props?.urlBlogId)?.props;
 }
 describe('article server recommendation integration', () => {
+  it('uses the anonymous DTO for JSON-LD even when the viewer revealed a raw article', async () => {
+    const viewer = {
+      blog_id: '123',
+      owner_account_id: '',
+      is_draft: false,
+      tags: [],
+      blog: {
+        time: 1,
+        blocks: [{ type: 'header', data: { text: 'Private headline' } }],
+      },
+      content_rating: { is_nsfw: true, revealed: true },
+    };
+    vi.mocked(loadBlogForViewer).mockResolvedValue(viewer as never);
+    vi.mocked(loadPublicBlogForSeo).mockResolvedValue({
+      ...viewer,
+      blog: { time: 1, blocks: [] },
+      content_rating: { is_nsfw: true, revealed: false },
+    } as never);
+    const tree = await BlogPage({ params: { slug: 'original-123' } });
+    const children = tree.props.children as any[];
+    expect(children.some((child) => child?.type === 'script')).toBe(false);
+    expect(loadPublicBlogForSeo).toHaveBeenCalledWith('123');
+  });
+
   it('retains the client retry when the viewer article is temporarily unavailable', async () => {
     vi.mocked(loadBlogForViewer).mockResolvedValue(undefined);
     const tree = await BlogPage({ params: { slug: 'existing-id' } });

@@ -40,7 +40,7 @@ export const loadPublicBlogForSeo = requestCache(
         `${API_URL_V2}/blog/${encodeURIComponent(id)}`,
         {
           headers: { 'Content-Type': 'application/json' },
-          next: { revalidate: 300 },
+          cache: 'no-store',
         }
       );
       if (response.status === 404) return null;

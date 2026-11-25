@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 
 import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
@@ -56,7 +57,7 @@ export default function SnapshotPicker() {
     );
   }
 
-  const list = blogs?.blogs ?? [];
+  const list = (blogs?.blogs ?? []).filter(isPublicContentSafe);
 
   return (
     <div className='mx-auto w-full max-w-5xl px-4 py-8'>

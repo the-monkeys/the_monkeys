@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
 
+import { useRouter } from 'next/navigation';
+
 import { Loader } from '@/components/loader';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { DeleteProfileDialog } from '@/components/user/dialogs/deleteProfileDialog';
 import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDialog';
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
+import { birthdayReturnPath } from '@/lib/moderationNavigation';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import {
@@ -39,6 +43,9 @@ export const Profile = ({ data }: { data?: IUser }) => {
   const { imageUrl } = useProfileImage(data?.username);
   const [loading, setLoading] = useState<boolean>(false);
   const hasProfileImage = imageUrl !== '';
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const [birthdayNotice, setBirthdayNotice] = useState(false);
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -62,7 +69,11 @@ export const Profile = ({ data }: { data?: IUser }) => {
       .put(`/user/${data?.username}`, {
         values,
       })
-      .then((res) => {
+      .then(() => {
+        // Eligibility must be checked again after any profile birthday update.
+        queryClient.removeQueries({ queryKey: ['content-access'] });
+        const returnTo = birthdayReturnPath(window.location.search);
+        if (returnTo && values.date_of_birth) router.push(returnTo);
         toast({
           variant: 'success',
           title: 'Success',
@@ -98,9 +109,26 @@ export const Profile = ({ data }: { data?: IUser }) => {
     }
   }, [user, form]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('focus') === 'birthday') {
+      setBirthdayNotice(true);
+      window.requestAnimationFrame(() => form.setFocus('date_of_birth'));
+    }
+  }, [form]);
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        {birthdayNotice ? (
+          <p
+            role='status'
+            className='rounded-lg border border-border-light p-3 text-sm dark:border-border-dark'
+          >
+            Add your birthday, then save to return to the content. Your age is
+            checked from this profile birthday.
+          </p>
+        ) : null}
         <Section sectionTitle='Basic Information'>
           <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
@@ -214,18 +242,24 @@ export const Profile = ({ data }: { data?: IUser }) => {
               name='date_of_birth'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-sm'>Birth Date</FormLabel>
+                  <FormLabel htmlFor='profile-birthday' className='text-sm'>
+                    Birth Date
+                  </FormLabel>
                   <FormControl>
                     <Popover>
                       <PopoverTrigger asChild>
                         <div>
                           <Input
+                            id='profile-birthday'
+                            name={field.name}
+                            ref={field.ref}
+                            aria-label='Birth Date'
                             readOnly
                             onChange={field.onChange}
                             value={
                               field.value
                                 ? moment(field.value).format('YYYY-MM-DD')
-                                : 'Pick a date'
+                                : ''
                             }
                             className='w-full'
                             type='date'
@@ -248,7 +282,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
                             }
                           }}
                           captionLayout='dropdown'
-                          startMonth={new Date(1960, 0)}
+                          startMonth={new Date(1900, 0)}
                           endMonth={new Date(new Date().getFullYear(), 11)}
                           disabled={{ after: new Date() }}
                         />

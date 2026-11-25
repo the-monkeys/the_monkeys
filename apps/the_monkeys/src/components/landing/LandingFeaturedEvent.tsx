@@ -2,12 +2,15 @@
 
 import Link from 'next/link';
 
+import { EventContentOptions } from '@/components/events/EventContentOptions';
 import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import {
   eventDateParts,
   eventTypeLabel,
@@ -37,7 +40,7 @@ function normalizeOrganizer(username?: string): string | undefined {
   return username?.trim() || undefined;
 }
 
-export function LandingFeaturedEvent({ event }: { event: EventItem }) {
+function LandingFeaturedEventContent({ event }: { event: EventItem }) {
   const href = `${EVENTS_ROUTE}/${event.slug}`;
   const title = purifyHTMLString(event.title);
   const description = purifyHTMLString(event.description || '');
@@ -72,7 +75,7 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
       {event.cover_image ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={event.cover_image}
+          src={authenticatedArticleImageUrl(event.cover_image)}
           alt=''
           loading='eager'
           decoding='async'
@@ -84,7 +87,7 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
       <div className='absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20' />
 
       <div className='relative z-10 flex w-full flex-col p-4'>
-        <div className='flex items-start justify-between gap-4'>
+        <div className='flex items-start justify-between gap-4 pr-11'>
           <div className='flex min-w-0 flex-wrap items-center gap-2'>
             <span className='rounded-full border border-brand-orange/50 bg-brand-orange/10 px-2.5 py-1 font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-[#ff9688]'>
               Featured event
@@ -194,5 +197,25 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
         </div>
       </div>
     </article>
+  );
+}
+
+export function LandingFeaturedEvent({ event }: { event: EventItem }) {
+  const href = `${EVENTS_ROUTE}/${event.slug}`;
+  return (
+    <div className='relative min-w-0'>
+      <EventContentOptions
+        event={event}
+        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={event}
+        target={{ kind: 'event', id: event.slug }}
+        compact
+        href={href}
+      >
+        <LandingFeaturedEventContent event={event} />
+      </ContentGate>
+    </div>
   );
 }

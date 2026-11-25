@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 
+import { GroupContentOptions } from '@/components/groups/GroupContentOptions';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { GROUPS_ROUTE } from '@/constants/routeConstants';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import { GroupItem } from '@/services/groups/groupsTypes';
 
 function memberLabel(count?: number): string {
@@ -14,7 +19,7 @@ function Cover({ group }: { group: GroupItem }) {
   if (src) {
     return (
       <img
-        src={src}
+        src={authenticatedArticleImageUrl(src)}
         alt=''
         loading='lazy'
         className='absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105'
@@ -30,7 +35,7 @@ function Cover({ group }: { group: GroupItem }) {
 
 // Vertical, cover-forward community card for grid layouts (distinct from the
 // horizontal GroupCard used in the editorial /groups list).
-export function GroupGridCard({ group }: { group: GroupItem }) {
+function GroupGridCardContent({ group }: { group: GroupItem }) {
   const href = `${GROUPS_ROUTE}/${group.slug}`;
   const topic = group.topics?.[0];
   const place = [group.city, group.region].filter(Boolean).join(', ');
@@ -74,5 +79,24 @@ export function GroupGridCard({ group }: { group: GroupItem }) {
         </div>
       </div>
     </article>
+  );
+}
+
+export function GroupGridCard({ group }: { group: GroupItem }) {
+  return (
+    <div className='relative h-full min-w-0'>
+      <GroupContentOptions
+        group={group}
+        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={group}
+        target={{ kind: 'group', id: group.slug }}
+        compact
+        href={`/groups/${group.slug}`}
+      >
+        <GroupGridCardContent group={group} />
+      </ContentGate>
+    </div>
   );
 }

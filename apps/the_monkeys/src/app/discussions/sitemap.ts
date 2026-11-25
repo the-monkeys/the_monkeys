@@ -4,7 +4,7 @@ import { loadPublicDiscussionIds } from '@/lib/discussionPageData';
 import { discussionsSitemap } from '@/lib/discussionSeo';
 import { SITE_URL } from '@/lib/seo';
 
-export const revalidate = 300;
+export const revalidate = 0;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   try {

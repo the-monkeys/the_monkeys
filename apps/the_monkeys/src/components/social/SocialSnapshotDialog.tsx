@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import Image from 'next/image';
 
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { Blog } from '@/services/blog/blogTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
@@ -17,7 +18,15 @@ import { twMerge } from 'tailwind-merge';
 import { getCardContent } from '../blog/getBlogContent';
 import { SnapshotCanvas } from './SnapshotCanvas';
 
-export const SocialSnapshotDialog = ({
+// Export controls never accept flagged content, even for a revealed viewer.
+export const SocialSnapshotDialog = (props: {
+  blog: Blog;
+  size?: 'default' | 'sm' | 'lg';
+}) => {
+  if (!isPublicContentSafe(props.blog)) return null;
+  return <SafeSocialSnapshotDialog {...props} />;
+};
+const SafeSocialSnapshotDialog = ({
   blog,
   size = 'default',
 }: {

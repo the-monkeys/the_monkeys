@@ -7,6 +7,7 @@ import {
   BlogImage,
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { ScheduledBlog } from '@/hooks/blog/schedule/useGetScheduledBlogs';
 import { invalidateAfterArticleWrite } from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
@@ -59,70 +60,78 @@ const ScheduledBlogCard = ({ blog }: { blog: ScheduledBlog }) => {
   };
 
   return (
-    <div className='pb-4 border-b-1 border-border-light/60 dark:border-border-dark/60'>
-      <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
-        <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden relative'>
-          <Link href={''} className='group'>
-            {isNonValidBannerImage(blog.first_image) ? (
-              <BlogPlaceholderImage
-                title={blog.title}
-                className='group-hover:scale-105 transition-transform duration-200'
-              />
-            ) : (
-              <BlogImage
-                title={blog.title}
-                image={blog.first_image}
-                className='group-hover:scale-105 transition-transform duration-200'
-              />
-            )}
-          </Link>
-        </div>
+    <ContentGate
+      content={blog}
+      target={{ kind: 'blog', id: blog.blog_id }}
+      compact
+      href={`/edit/${blog.blog_id}`}
+    >
+      <div className='pb-4 border-b-1 border-border-light/60 dark:border-border-dark/60'>
+        <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
+          <div className='shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden relative'>
+            <Link href={''} className='group'>
+              {isNonValidBannerImage(blog.first_image) ? (
+                <BlogPlaceholderImage
+                  title={blog.title}
+                  className='group-hover:scale-105 transition-transform duration-200'
+                />
+              ) : (
+                <BlogImage
+                  content={blog}
+                  title={blog.title}
+                  image={blog.first_image}
+                  className='group-hover:scale-105 transition-transform duration-200'
+                />
+              )}
+            </Link>
+          </div>
 
-        <div className='w-full flex flex-col justify-between gap-[10px]'>
-          <div>
-            <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2 flex-wrap'>
-              <span className='bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full text-xs font-medium'>
-                Scheduled
-              </span>
-              {scheduledTime && (
-                <>
-                  <span>{format(scheduledTime, 'PPp')}</span>
-                  {blog.timezone && (
-                    <span className='text-xs opacity-70'>
-                      ({blog.timezone})
-                    </span>
-                  )}
-                </>
+          <div className='w-full flex flex-col justify-between gap-[10px]'>
+            <div>
+              <div className='flex items-center gap-2 text-sm text-muted-foreground mb-2 flex-wrap'>
+                <span className='bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full text-xs font-medium'>
+                  Scheduled
+                </span>
+                {scheduledTime && (
+                  <>
+                    <span>{format(scheduledTime, 'PPp')}</span>
+                    {blog.timezone && (
+                      <span className='text-xs opacity-70'>
+                        ({blog.timezone})
+                      </span>
+                    )}
+                  </>
+                )}
+              </div>
+
+              <h3 className='font-semibold text-lg line-clamp-2 mb-2'>
+                {blog.title || 'Untitled Blog'}
+              </h3>
+
+              {blog.first_paragraph && (
+                <p className='text-sm line-clamp-2 opacity-90'>
+                  {blog.first_paragraph}
+                </p>
               )}
             </div>
 
-            <h3 className='font-semibold text-lg line-clamp-2 mb-2'>
-              {blog.title || 'Untitled Blog'}
-            </h3>
+            <div className='flex gap-2 w-full sm:w-auto mt-2 sm:mt-0'>
+              <Button
+                variant='secondary'
+                size='sm'
+                onClick={onCancel}
+                disabled={loading}
+                className='flex-1 sm:flex-none'
+              >
+                To Drafts
+              </Button>
 
-            {blog.first_paragraph && (
-              <p className='text-sm line-clamp-2 opacity-90'>
-                {blog.first_paragraph}
-              </p>
-            )}
+              <DeleteBlogDialog blogId={`${blog.blog_id}`} />
+            </div>
           </div>
-
-          <div className='flex gap-2 w-full sm:w-auto mt-2 sm:mt-0'>
-            <Button
-              variant='secondary'
-              size='sm'
-              onClick={onCancel}
-              disabled={loading}
-              className='flex-1 sm:flex-none'
-            >
-              To Drafts
-            </Button>
-
-            <DeleteBlogDialog blogId={`${blog.blog_id}`} />
-          </div>
-        </div>
-      </article>
-    </div>
+        </article>
+      </div>
+    </ContentGate>
   );
 };
 

@@ -5,6 +5,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { renderWithProviders } from '../../../utils';
 
+vi.mock('@/hooks/auth/useAuth', () => ({
+  default: () => ({ data: undefined }),
+}));
+
 vi.mock('@/services/fetcher', () => ({
   fetcher: vi.fn().mockResolvedValue(null),
   authFetcher: vi.fn().mockResolvedValue(null),

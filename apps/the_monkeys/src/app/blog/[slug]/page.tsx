@@ -72,11 +72,19 @@ export default async function BlogPage({ params }: Props) {
     }
   }
 
+  const publicSeoBlog =
+    blog && blog.audience !== 'group_only'
+      ? await loadPublicBlogForSeo(blogId)
+      : blog === undefined
+        ? undefined
+        : null;
+
+  // Public schema always uses the anonymous DTO.
   // Prepare JSON-LD
   let jsonLd = null;
-  if (blog && !blog.is_draft) {
+  if (publicSeoBlog && !publicSeoBlog.is_draft) {
     jsonLd = buildBlogJsonLd(
-      blog,
+      publicSeoBlog,
       fullSlug,
       authorDisplayName(authorData),
       authorData?.user?.username
@@ -87,7 +95,7 @@ export default async function BlogPage({ params }: Props) {
     blog === undefined
       ? undefined
       : blog.audience !== 'group_only'
-        ? await loadPublicBlogForSeo(blogId)
+        ? publicSeoBlog
         : null;
   const initialRelatedPosts = publicBlog
     ? await loadPublicRelatedPosts(publicBlog)

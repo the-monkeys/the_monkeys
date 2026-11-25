@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { Blog } from '@/services/blog/blogTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
@@ -12,6 +13,7 @@ export const SocialSnapshotCard = ({
   blog,
   discussionId,
 }: SocialSnapshotCardProps) => {
+  if (blog && !isPublicContentSafe(blog)) return null;
   const href = discussionId
     ? `/snapshot/discussion/${encodeURIComponent(discussionId)}`
     : `/snapshot/${encodeURIComponent(blog!.blog_id)}`;

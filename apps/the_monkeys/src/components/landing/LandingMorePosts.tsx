@@ -10,6 +10,7 @@ import {
 } from '@/components/blog/getBlogContent';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import {
   BLOG_ROUTE,
@@ -18,9 +19,9 @@ import {
   GROUPS_ROUTE,
   TOPIC_ROUTE,
 } from '@/constants/routeConstants';
-import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { topicToSlug } from '@/utils/topicUtils';
@@ -34,7 +35,7 @@ function getPostDetails(post: MetaBlog) {
   return {
     title,
     description: purifyHTMLString(post.first_paragraph),
-    href: `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`,
+    href: `${BLOG_ROUTE}/${fromMetaBlog(post).slug}-${post.blog_id}`,
     topic: post.tags?.[0],
     published: post.published_time ? getRelativeTime(post.published_time) : '',
   };
@@ -64,6 +65,7 @@ function PostImage({
     />
   ) : (
     <BlogImage
+      content={post}
       title={title}
       image={post.first_image}
       className={imageClass}
@@ -97,51 +99,58 @@ function MorePostCard({
   const titleId = `more-post-title-${post.blog_id}`;
 
   return (
-    <article
-      aria-labelledby={titleId}
-      data-card-variant={prominent ? 'prominent' : 'compact'}
-      className='group flex min-w-0 flex-col overflow-hidden rounded-xl border border-border-light/70 bg-background-light transition-shadow hover:shadow-md dark:border-border-dark/40 dark:bg-background-dark'
+    <ContentGate
+      content={post}
+      target={{ kind: 'blog', id: post.blog_id }}
+      compact
+      href={href}
     >
-      <Link
-        href={href}
-        aria-label={`Open post: ${title}`}
-        className={`relative block overflow-hidden bg-gray-100 dark:bg-gray-900 ${
-          prominent ? 'aspect-[16/9]' : 'aspect-[16/10]'
-        } ${focusRing}`}
+      <article
+        aria-labelledby={titleId}
+        data-card-variant={prominent ? 'prominent' : 'compact'}
+        className='group flex min-w-0 flex-col overflow-hidden rounded-xl border border-border-light/70 bg-background-light transition-shadow hover:shadow-md dark:border-border-dark/40 dark:bg-background-dark'
       >
-        <PostImage post={post} title={title} prominent={prominent} />
-      </Link>
-
-      <div className={`flex flex-1 flex-col ${prominent ? 'p-5' : 'p-4'}`}>
-        <TopicLink topic={topic} />
-        <Link href={href} className={`mt-2 block ${focusRing}`}>
-          <h3
-            id={titleId}
-            className={`line-clamp-3 font-newsreader font-semibold text-text-light transition-colors group-hover:text-brand-orange dark:text-text-dark ${
-              prominent
-                ? 'text-2xl leading-[1.12] sm:text-[1.7rem]'
-                : 'text-xl leading-[1.15]'
-            }`}
-            dangerouslySetInnerHTML={{ __html: title }}
-          />
-        </Link>
-        {description ? (
-          <p
-            className={`mt-3 font-inter text-sm leading-5 text-gray-500 dark:text-gray-400 ${
-              prominent ? 'line-clamp-3' : 'line-clamp-2'
-            }`}
-            dangerouslySetInnerHTML={{ __html: description }}
-          />
-        ) : null}
-
-        <DeferredPostMeta
-          post={post}
+        <Link
           href={href}
-          published={published}
-          prominent={prominent}
-        />
-      </div>
-    </article>
+          aria-label={`Open post: ${title}`}
+          className={`relative block overflow-hidden bg-gray-100 dark:bg-gray-900 ${
+            prominent ? 'aspect-[16/9]' : 'aspect-[16/10]'
+          } ${focusRing}`}
+        >
+          <PostImage post={post} title={title} prominent={prominent} />
+        </Link>
+
+        <div className={`flex flex-1 flex-col ${prominent ? 'p-5' : 'p-4'}`}>
+          <TopicLink topic={topic} />
+          <Link href={href} className={`mt-2 block ${focusRing}`}>
+            <h3
+              id={titleId}
+              className={`line-clamp-3 font-newsreader font-semibold text-text-light transition-colors group-hover:text-brand-orange dark:text-text-dark ${
+                prominent
+                  ? 'text-2xl leading-[1.12] sm:text-[1.7rem]'
+                  : 'text-xl leading-[1.15]'
+              }`}
+              dangerouslySetInnerHTML={{ __html: title }}
+            />
+          </Link>
+          {description ? (
+            <p
+              className={`mt-3 font-inter text-sm leading-5 text-gray-500 dark:text-gray-400 ${
+                prominent ? 'line-clamp-3' : 'line-clamp-2'
+              }`}
+              dangerouslySetInnerHTML={{ __html: description }}
+            />
+          ) : null}
+
+          <DeferredPostMeta
+            post={post}
+            href={href}
+            published={published}
+            prominent={prominent}
+          />
+        </div>
+      </article>
+    </ContentGate>
   );
 }
 

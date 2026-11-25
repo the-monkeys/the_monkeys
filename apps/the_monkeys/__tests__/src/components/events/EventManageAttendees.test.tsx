@@ -39,6 +39,13 @@ beforeEach(() => {
   client = new QueryClient({
     defaultOptions: { queries: { retry: false, gcTime: Infinity } },
   });
+  // Pagination is exercised as a known viewer; auth validation is a separate boundary.
+  client.setQueryDefaults(queryKeys.auth.session(), { staleTime: Infinity });
+  client.setQueryData(queryKeys.auth.session(), {
+    account_id: 'event-host',
+    username: 'host',
+    email: 'host@example.test',
+  });
   vi.mocked(listCoupons).mockResolvedValue({ coupons: [] });
   vi.mocked(listAttendees).mockImplementation(async (_slug, params) => ({
     attendees: roster.slice(

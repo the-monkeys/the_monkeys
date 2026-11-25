@@ -13,6 +13,7 @@ import {
   DiscussionStats,
   discussionHandle,
 } from '@/components/discussions/discussionChrome';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { firstInternalLink } from '@/lib/discussionLinks';
 import { discussionHeadline, discussionPath } from '@/lib/discussionSeo';
 import { cn } from '@/lib/utils';
@@ -21,7 +22,7 @@ import type { Discussion } from '@/services/discussions/discussionsTypes';
 const bodyClass =
   'mt-1 block whitespace-pre-wrap break-words font-inter text-[15px] leading-relaxed';
 
-export function DiscussionCard({
+function DiscussionCardContent({
   post,
   linked,
   footer,
@@ -71,13 +72,6 @@ export function DiscussionCard({
           <div className={cn('min-w-0 flex-1', compact && 'pr-11')}>
             <DiscussionIdentity author={post} createdAt={post.created_at} />
           </div>
-          {compact ? (
-            <div className='absolute right-0 -top-1'>
-              <DiscussionCardMenu post={post} />
-            </div>
-          ) : (
-            <DiscussionCardMenu post={post} />
-          )}
         </div>
         {embedded ? (
           post.audience === 'group_only' ? (
@@ -105,5 +99,33 @@ export function DiscussionCard({
       </div>
       {footer ? <div className='relative z-10 col-span-2'>{footer}</div> : null}
     </article>
+  );
+}
+
+export function DiscussionCard(
+  props: Parameters<typeof DiscussionCardContent>[0] & { showMenu?: boolean }
+) {
+  const { post, embedded, compact, showMenu = true } = props;
+  return (
+    <div className='relative min-w-0'>
+      {showMenu ? (
+        <div
+          className={cn(
+            'absolute right-4 top-3 z-20 sm:right-5 sm:top-4',
+            embedded && 'right-0 top-0 sm:right-0 sm:top-0'
+          )}
+        >
+          <DiscussionCardMenu post={post} />
+        </div>
+      ) : null}
+      <ContentGate
+        content={post}
+        target={{ kind: 'discussion', id: post.public_id }}
+        compact={compact || props.linked}
+        href={discussionPath(post.public_id)}
+      >
+        <DiscussionCardContent {...props} />
+      </ContentGate>
+    </div>
   );
 }

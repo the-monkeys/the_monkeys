@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 
+import { GroupContentOptions } from '@/components/groups/GroupContentOptions';
 import Icon, { IconName } from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { GROUPS_ROUTE } from '@/constants/routeConstants';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import { cn } from '@/lib/utils';
 import { GroupItem, GroupVisibility } from '@/services/groups/groupsTypes';
 
@@ -35,7 +40,7 @@ function Thumb({ group }: { group: GroupItem }) {
   if (src) {
     return (
       <img
-        src={src}
+        src={authenticatedArticleImageUrl(src)}
         alt=''
         className='h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out'
         loading='lazy'
@@ -49,7 +54,7 @@ function Thumb({ group }: { group: GroupItem }) {
   );
 }
 
-export function GroupCard({ group }: { group: GroupItem }) {
+function GroupCardContent({ group }: { group: GroupItem }) {
   const href = `${GROUPS_ROUTE}/${group.slug}`;
   const topic = group.topics?.[0];
   const visibility =
@@ -58,7 +63,7 @@ export function GroupCard({ group }: { group: GroupItem }) {
   const place = [group.city, group.region].filter(Boolean).join(', ');
 
   return (
-    <article className='group flex items-start gap-4 sm:gap-6 py-5 border-b border-border-light dark:border-border-dark/40 last:border-b-0'>
+    <article className='group flex items-start gap-4 sm:gap-6 py-5 border-b border-border-light dark:border-border-dark/40'>
       <div className='flex-1 min-w-0'>
         <div className='flex flex-wrap items-center gap-2'>
           <span className='font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.15em]'>
@@ -143,6 +148,25 @@ export function GroupEmpty({
           {hint}
         </p>
       )}
+    </div>
+  );
+}
+
+export function GroupCard({ group }: { group: GroupItem }) {
+  return (
+    <div className='relative h-full min-w-0 [&:last-child>article]:border-b-0'>
+      <GroupContentOptions
+        group={group}
+        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={group}
+        target={{ kind: 'group', id: group.slug }}
+        compact
+        href={`/groups/${group.slug}`}
+      >
+        <GroupCardContent group={group} />
+      </ContentGate>
     </div>
   );
 }
