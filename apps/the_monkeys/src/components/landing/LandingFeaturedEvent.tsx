@@ -6,6 +6,7 @@ import { EventContentOptions } from '@/components/events/EventContentOptions';
 import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
 import { ContentGate } from '@/components/moderation/ContentGate';
+import { contentOptionsImageClass } from '@/components/moderation/menuStyles';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
@@ -206,7 +207,7 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
     <div className='relative min-w-0'>
       <EventContentOptions
         event={event}
-        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+        className={`absolute right-0 top-0 z-20 ${contentOptionsImageClass}`}
       />
       <ContentGate
         content={event}

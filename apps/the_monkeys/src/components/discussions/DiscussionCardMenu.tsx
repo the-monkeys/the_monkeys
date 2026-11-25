@@ -6,6 +6,7 @@ import Link from 'next/link';
 
 import Icon from '@/components/icon';
 import { ContentLabelToggle } from '@/components/moderation/ContentLabelToggle';
+import { contentOptionsTriggerClass } from '@/components/moderation/menuStyles';
 import { canSnapshotDiscussion } from '@/features/snapshot/adapters/fromDiscussion';
 import { copyDiscussionSnap } from '@/features/snapshot/lib/discussionClipboard';
 import useAuth from '@/hooks/auth/useAuth';
@@ -107,7 +108,7 @@ function DiscussionCardMenuContent({
             type='button'
             aria-label='Discussion options'
             disabled={busy}
-            className='inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-gray-500 hover:bg-brand-orange/5 hover:text-brand-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange disabled:opacity-50'
+            className={contentOptionsTriggerClass}
           >
             <Icon
               name={busy ? 'RiLoader5' : 'RiMore'}
@@ -119,6 +120,7 @@ function DiscussionCardMenuContent({
         <DropdownMenuContent
           align='end'
           sideOffset={8}
+          collisionPadding={12}
           className='mr-1 w-72 max-w-[calc(100vw_-_1.5rem)] rounded-2xl p-2'
         >
           <DropdownMenuItem

@@ -112,7 +112,7 @@ export function DiscussionCard(
         <div
           className={cn(
             'absolute right-4 top-3 z-20 sm:right-5 sm:top-4',
-            embedded && 'right-0 top-0 sm:right-0 sm:top-0'
+            embedded && '-right-3 -top-3 sm:-right-3 sm:-top-3'
           )}
         >
           <DiscussionCardMenu post={post} />

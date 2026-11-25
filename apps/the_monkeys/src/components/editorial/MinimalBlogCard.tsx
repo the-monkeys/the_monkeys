@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { fromMetaBlog } from '@/utils/blogCardAdapters';
@@ -28,13 +28,13 @@ export const MinimalBlogCard = ({
   const display = (label ?? tag ?? 'Research').toUpperCase();
 
   return (
-    <ContentGate
+    <PostCardGate
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
       href={url}
     >
-      <article className='h-full group p-4 sm:p-5 rounded-md  transition-colors bg-background-light dark:bg-background-dark'>
+      <article className='h-full group p-4 pr-14 sm:p-5 sm:pr-14 rounded-md  transition-colors bg-background-light dark:bg-background-dark'>
         {tag ? (
           <Link
             href={`${TOPIC_ROUTE}/${topicToSlug(tag)}`}
@@ -64,7 +64,7 @@ export const MinimalBlogCard = ({
           />
         </div>
       </article>
-    </ContentGate>
+    </PostCardGate>
   );
 };
 

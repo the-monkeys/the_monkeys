@@ -22,17 +22,20 @@ import {
 
 import { ContentLabelToggle } from './ContentLabelToggle';
 import { ContentReportDialog } from './ContentReportDialog';
+import { contentOptionsTriggerClass } from './menuStyles';
 
 export function ContentOptions({
   target,
   canLabel = false,
   initialMarked = false,
   className,
+  ariaLabel = 'Content options',
 }: {
   target: ContentTarget;
   canLabel?: boolean;
   initialMarked?: boolean;
   className?: string;
+  ariaLabel?: string;
 }) {
   const [reportOpen, setReportOpen] = useState(false);
   const [labelOpen, setLabelOpen] = useState(false);
@@ -45,8 +48,8 @@ export function ContentOptions({
         <DropdownMenuTrigger asChild>
           <button
             type='button'
-            aria-label='Content options'
-            className='inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-gray-500 hover:bg-brand-orange/5 hover:text-brand-orange focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand-orange'
+            aria-label={ariaLabel}
+            className={contentOptionsTriggerClass}
           >
             <Icon name='RiMore' size={20} />
           </button>

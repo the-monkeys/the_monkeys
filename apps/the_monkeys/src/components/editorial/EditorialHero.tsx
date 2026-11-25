@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import {
   BlogDescription,
   BlogImage,
@@ -7,7 +8,6 @@ import {
   BlogTitle,
 } from '@/components/blog/getBlogContent';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { fromMetaBlog } from '@/utils/blogCardAdapters';
@@ -35,7 +35,8 @@ export const EditorialHero = ({
   const description = purifyHTMLString(blog?.first_paragraph);
 
   return (
-    <ContentGate
+    <PostCardGate
+      imageMenu='always'
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
@@ -110,7 +111,7 @@ export const EditorialHero = ({
           </div>
         </div>
       </article>
-    </ContentGate>
+    </PostCardGate>
   );
 };
 

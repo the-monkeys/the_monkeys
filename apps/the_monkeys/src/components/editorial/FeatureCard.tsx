@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import {
   BlogImage,
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { fromMetaBlog } from '@/utils/blogCardAdapters';
@@ -22,7 +22,8 @@ export const FeatureCard = ({ blog }: { blog: MetaBlog }) => {
   const image = blog?.first_image;
 
   return (
-    <ContentGate
+    <PostCardGate
+      imageMenu='always'
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
@@ -58,7 +59,7 @@ export const FeatureCard = ({ blog }: { blog: MetaBlog }) => {
           </div>
         </div>
       </Link>
-    </ContentGate>
+    </PostCardGate>
   );
 };
 

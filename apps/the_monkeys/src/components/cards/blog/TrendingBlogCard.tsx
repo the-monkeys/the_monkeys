@@ -1,5 +1,6 @@
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import {
   BlogDescription,
@@ -7,7 +8,6 @@ import {
   BlogPlaceholderImage,
   BlogTitle,
 } from '@/components/blog/getBlogContent';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
@@ -31,7 +31,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
-    <ContentGate
+    <PostCardGate
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
@@ -98,7 +98,7 @@ export const TrendingBlogCardLarge = ({ blog }: { blog: MetaBlog }) => {
           </div>
         </article>
       </div>
-    </ContentGate>
+    </PostCardGate>
   );
 };
 
@@ -123,7 +123,7 @@ export const TrendingBlogCardSmall = ({
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   return (
-    <ContentGate
+    <PostCardGate
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
@@ -198,6 +198,6 @@ export const TrendingBlogCardSmall = ({
           </div>
         </article>
       </div>
-    </ContentGate>
+    </PostCardGate>
   );
 };

@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import {
   BlogImage,
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
@@ -29,14 +29,14 @@ export const FeedListItem = ({ blog }: { blog: MetaBlog }) => {
   const image = blog?.first_image;
 
   return (
-    <ContentGate
+    <PostCardGate
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
       href={url}
     >
       <article className='group flex items-start gap-4 sm:gap-6 py-5 border-b border-border-light dark:border-border-dark/40 last:border-b-0'>
-        <div className='flex-1 min-w-0'>
+        <div className='flex-1 min-w-0 pr-10'>
           {tag ? (
             <Link
               href={`${TOPIC_ROUTE}/${topicToSlug(tag)}`}
@@ -85,7 +85,7 @@ export const FeedListItem = ({ blog }: { blog: MetaBlog }) => {
           )}
         </Link>
       </article>
-    </ContentGate>
+    </PostCardGate>
   );
 };
 

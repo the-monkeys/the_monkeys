@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { BlogAudienceBadge } from '@/components/blog/BlogAudienceBadge';
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { DeleteBlogDialog } from '@/components/blog/actions/DeleteBlogDialog';
 import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
@@ -12,7 +13,6 @@ import {
   BlogTitle,
 } from '@/components/blog/getBlogContent';
 import Icon from '@/components/icon';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import {
@@ -57,7 +57,7 @@ export const ProfileBlogCard = ({
   };
 
   return (
-    <ContentGate
+    <PostCardGate
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
@@ -180,6 +180,6 @@ export const ProfileBlogCard = ({
           </div>
         </article>
       </div>
-    </ContentGate>
+    </PostCardGate>
   );
 };

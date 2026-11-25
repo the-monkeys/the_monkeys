@@ -43,7 +43,14 @@ vi.mock('@/components/moderation/ContentGate', () => ({
     ),
 }));
 vi.mock('@/components/moderation/ContentOptions', () => ({
-  ContentOptions: () => null,
+  ContentOptions: ({ target }: any) => (
+    <button
+      aria-label='Post options'
+      data-target={`${target.kind}:${target.id}`}
+    >
+      Options
+    </button>
+  ),
 }));
 vi.mock('@/components/editorial/BlogActionBar', () => ({
   default: () => null,
@@ -142,6 +149,21 @@ describe.each(renderers)(
         expectedHref
       );
     });
+    it('keeps one report menu outside the article link and visible on restricted cards', () => {
+      const { rerender } = render(article(meta));
+      const menu = screen.getByRole('button', { name: 'Post options' });
+      expect(menu.getAttribute('data-target')).toBe('blog:123');
+      expect(menu.closest('a')).toBeNull();
+      rerender(article({ ...meta, is_nsfw: true }));
+      expect(
+        screen.getAllByRole('button', { name: 'Post options' })
+      ).toHaveLength(1);
+      expect(
+        screen
+          .getByRole('button', { name: 'Post options' })
+          .getAttribute('data-target')
+      ).toBe('blog:123');
+    });
     it('preserves legacy unflagged headline and canonical link', () => {
       const { container } = render(article(meta));
       expect(container.textContent).toContain('Private headline');
@@ -151,5 +173,30 @@ describe.each(renderers)(
         ).toBeTruthy();
       expect(screen.queryByRole('status')).toBeNull();
     });
+  }
+);
+
+it.each(['landing feed', 'community grid'])(
+  'gives each %s article its own stable report target',
+  (variant) => {
+    const posts = [
+      meta,
+      { ...meta, blog_id: '124' },
+      { ...meta, blog_id: '125' },
+    ];
+    render(
+      variant === 'landing feed' ? (
+        <LandingEditorialFeed posts={posts} events={[]} />
+      ) : (
+        <LandingMorePosts posts={posts} />
+      )
+    );
+    const menus = screen.getAllByRole('button', { name: 'Post options' });
+    expect(menus.map((menu) => menu.getAttribute('data-target'))).toEqual([
+      'blog:123',
+      'blog:124',
+      'blog:125',
+    ]);
+    expect(menus.every((menu) => menu.closest('a') === null)).toBe(true);
   }
 );

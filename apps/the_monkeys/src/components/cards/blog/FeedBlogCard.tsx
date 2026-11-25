@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 import { BlogAudienceBadge } from '@/components/blog/BlogAudienceBadge';
 import { LikesCount } from '@/components/blog/LikesCount';
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { BookmarkButton } from '@/components/blog/buttons/BookmarkButton';
 import { LikeButton } from '@/components/blog/buttons/LikeButton';
@@ -13,7 +14,6 @@ import {
   BlogPlaceholderImage,
   BlogTitle,
 } from '@/components/blog/getBlogContent';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
@@ -467,13 +467,13 @@ export const FeedBlogCard = ({
 }: CardProps & { variant?: keyof typeof CARD_VARIANTS }) => {
   const Card = CARD_VARIANTS[variant];
   return (
-    <ContentGate
+    <PostCardGate
       content={blog}
       target={{ kind: 'blog', id: blog.blogId }}
       compact
       href={`${BLOG_ROUTE}/${blog.slug}-${blog.blogId}`}
     >
       <Card blog={blog} showBookmark={showBookmark} showShare={showShare} />
-    </ContentGate>
+    </PostCardGate>
   );
 };

@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import { DeleteBlogDialog } from '@/components/blog/actions/DeleteBlogDialog';
 import {
   BlogImage,
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { ScheduledBlog } from '@/hooks/blog/schedule/useGetScheduledBlogs';
 import { invalidateAfterArticleWrite } from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
@@ -60,7 +60,7 @@ const ScheduledBlogCard = ({ blog }: { blog: ScheduledBlog }) => {
   };
 
   return (
-    <ContentGate
+    <PostCardGate
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
@@ -131,7 +131,7 @@ const ScheduledBlogCard = ({ blog }: { blog: ScheduledBlog }) => {
           </div>
         </article>
       </div>
-    </ContentGate>
+    </PostCardGate>
   );
 };
 

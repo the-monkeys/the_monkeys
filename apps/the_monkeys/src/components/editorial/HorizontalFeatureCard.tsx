@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import {
   BlogImage,
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
 import { getRelativeTime } from '@/lib/utils';
@@ -29,7 +29,7 @@ export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
   const time = blog?.published_time ? getRelativeTime(blog.published_time) : '';
 
   return (
-    <ContentGate
+    <PostCardGate
       content={blog}
       target={{ kind: 'blog', id: blog.blog_id }}
       compact
@@ -108,7 +108,7 @@ export const HorizontalFeatureCard = ({ blog }: { blog: MetaBlog }) => {
           </div>
         </div>
       </article>
-    </ContentGate>
+    </PostCardGate>
   );
 };
 

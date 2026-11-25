@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import {
   BlogImage,
   BlogPlaceholderImage,
 } from '@/components/blog/getBlogContent';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
 import Icon from '@/components/icon';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import {
   BLOG_ROUTE,
@@ -99,7 +99,8 @@ function MorePostCard({
   const titleId = `more-post-title-${post.blog_id}`;
 
   return (
-    <ContentGate
+    <PostCardGate
+      imageMenu='always'
       content={post}
       target={{ kind: 'blog', id: post.blog_id }}
       compact
@@ -150,7 +151,7 @@ function MorePostCard({
           />
         </div>
       </article>
-    </ContentGate>
+    </PostCardGate>
   );
 }
 

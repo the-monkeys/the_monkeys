@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import {
   BlogImage,
   BlogPlaceholderImage,
@@ -9,7 +10,6 @@ import {
 import BlogActionBar from '@/components/editorial/BlogActionBar';
 import Icon from '@/components/icon';
 import { LandingFeedEvent as FeedEvent } from '@/components/landing/LandingFeedEvent';
-import { ContentGate } from '@/components/moderation/ContentGate';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import {
   BLOG_ROUTE,
@@ -76,7 +76,8 @@ function PrimaryFeedPost({ post }: { post: MetaBlog }) {
   const { title, description, href, topic, time } = postDetails(post);
 
   return (
-    <ContentGate
+    <PostCardGate
+      imageMenu='always'
       content={post}
       target={{ kind: 'blog', id: post.blog_id }}
       compact
@@ -123,7 +124,7 @@ function PrimaryFeedPost({ post }: { post: MetaBlog }) {
           </div>
         </div>
       </article>
-    </ContentGate>
+    </PostCardGate>
   );
 }
 
@@ -131,7 +132,8 @@ function FeedPostCard({ post }: { post: MetaBlog }) {
   const { title, description, href, topic, time } = postDetails(post);
 
   return (
-    <ContentGate
+    <PostCardGate
+      imageMenu='always'
       content={post}
       target={{ kind: 'blog', id: post.blog_id }}
       compact
@@ -169,7 +171,7 @@ function FeedPostCard({ post }: { post: MetaBlog }) {
           ) : null}
         </div>
       </article>
-    </ContentGate>
+    </PostCardGate>
   );
 }
 
