@@ -37,9 +37,9 @@ describe('groupFeedEmptyCopy', () => {
   });
 
   it('treats only active membership as a member', () => {
-    expect(isActiveGroupMember({ viewer_member_status: 'active' } as never)).toBe(
-      true
-    );
+    expect(
+      isActiveGroupMember({ viewer_member_status: 'active' } as never)
+    ).toBe(true);
     expect(
       isActiveGroupMember({ viewer_member_status: 'pending' } as never)
     ).toBe(false);

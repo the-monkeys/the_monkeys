@@ -6,9 +6,7 @@ afterEach(cleanup);
 
 describe('AuthorName verification badge', () => {
   it('shows an icon-only verified badge beside the name when isVerified is true', () => {
-    render(
-      <AuthorName firstName='Dave' lastName='Augustus' isVerified />
-    );
+    render(<AuthorName firstName='Dave' lastName='Augustus' isVerified />);
 
     expect(screen.getByText('Dave Augustus')).toBeTruthy();
     expect(screen.getByTitle('Verified account')).toBeTruthy();
@@ -18,7 +16,11 @@ describe('AuthorName verification badge', () => {
     'keeps unverified and stale authors badge-free when isVerified is %s',
     (isVerified) => {
       render(
-        <AuthorName firstName='Dave' lastName='Augustus' isVerified={isVerified} />
+        <AuthorName
+          firstName='Dave'
+          lastName='Augustus'
+          isVerified={isVerified}
+        />
       );
 
       expect(screen.getByText('Dave Augustus')).toBeTruthy();

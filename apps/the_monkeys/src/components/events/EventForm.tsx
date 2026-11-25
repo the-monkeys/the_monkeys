@@ -13,8 +13,15 @@ import { CategoryChips } from '@/components/geo/CategoryChips';
 import { PlacePin } from '@/components/geo/PlacePin';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
+import {
+  MAX_EVENT_PHOTOS,
+  MAX_EVENT_PHOTO_BYTES,
+} from '@/constants/eventGallery';
 import useAuth from '@/hooks/auth/useAuth';
-import { useUploadEventCover } from '@/hooks/events/useEventQueries';
+import {
+  useEventPhotos,
+  useUploadEventCover,
+} from '@/hooks/events/useEventQueries';
 import { useUserGroups } from '@/hooks/groups/useGroupQueries';
 import { useSearchPeopleV2 } from '@/hooks/search/useSearchV2';
 import { useIPLocation } from '@/hooks/useIPLocation';
@@ -43,8 +50,10 @@ import { TextArea } from '@the-monkeys/ui/atoms/text-area';
 type Props = {
   event?: EventItem;
   saving?: boolean;
+  previewOnly?: boolean;
   submitLabel: string;
-  onSubmit: (body: EventBody, coverFile?: File) => void;
+  onGalleryFilesChange?: (files: File[]) => void;
+  onSubmit: (body: EventBody, coverFile?: File, galleryFiles?: File[]) => void;
 };
 
 const TYPES: { value: EventType; label: string }[] = [
@@ -103,7 +112,14 @@ function localNowInput(): string {
   return local.toISOString().slice(0, 16);
 }
 
-export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
+export function EventForm({
+  event,
+  saving,
+  previewOnly,
+  submitLabel,
+  onGalleryFilesChange,
+  onSubmit,
+}: Props) {
   const { data: session } = useAuth();
   const ipLocation = useIPLocation();
   const myGroups = useUserGroups(
@@ -142,6 +158,8 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   // creation. In edit mode uploads happen immediately, so these stay unset.
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState('');
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const eventPhotos = useEventPhotos(event?.slug);
   const [cohosts, setCohosts] = useState<string[]>(
     event?.co_host_usernames || []
   );
@@ -170,6 +188,11 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   // Recomputed once on mount; a stale minute is harmless and the browser plus
   // the submit guard both re-validate against the real clock.
   const minStart = useMemo(() => localNowInput(), []);
+
+  const updateGalleryFiles = (files: File[]) => {
+    setGalleryFiles(files);
+    onGalleryFilesChange?.(files);
+  };
 
   // Release the object URL when the pending file changes or the form unmounts.
   useEffect(
@@ -337,7 +360,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
     }
 
-    onSubmit(body, coverFile ?? undefined);
+    onSubmit(body, coverFile ?? undefined, galleryFiles);
   };
 
   const showPlace = eventType !== 'virtual';
@@ -385,6 +408,13 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         onChange={handleCoverUrl}
         onFileSelected={handleCoverFile}
         pendingPreview={coverPreview}
+      />
+
+      <EventGalleryUploadField
+        files={galleryFiles}
+        onChange={updateGalleryFiles}
+        currentCount={eventPhotos.data?.length ?? 0}
+        loadingExisting={!!event && eventPhotos.isLoading}
       />
 
       <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
@@ -804,10 +834,10 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       <Button
         type='submit'
         variant='brand'
-        disabled={saving}
+        disabled={saving || previewOnly}
         className='w-full sm:w-auto'
       >
-        {saving ? 'Saving…' : submitLabel}
+        {saving ? 'Saving…' : previewOnly ? 'Preview only' : submitLabel}
       </Button>
     </form>
   );
@@ -832,6 +862,138 @@ function Field({
       {children}
     </div>
   );
+}
+
+function EventGalleryUploadField({
+  files,
+  onChange,
+  currentCount,
+  loadingExisting,
+}: {
+  files: File[];
+  onChange: (files: File[]) => void;
+  currentCount: number;
+  loadingExisting: boolean;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState('');
+  const remaining = Math.max(0, MAX_EVENT_PHOTOS - currentCount);
+  const available = Math.max(0, remaining - files.length);
+  const canAdd = available > 0 && !loadingExisting;
+
+  const onPick = (e: ChangeEvent<HTMLInputElement>) => {
+    const selected = Array.from(e.target.files ?? []);
+    e.target.value = '';
+    if (!selected.length) return;
+
+    const accepted: File[] = [];
+    let message = '';
+    for (const file of selected) {
+      if (!file.type.startsWith('image/')) {
+        message = 'Choose image files only.';
+      } else if (file.size > MAX_EVENT_PHOTO_BYTES) {
+        message = 'Each image must be 10 MB or smaller.';
+      } else if (accepted.length >= available) {
+        message = `You can add up to ${available} more photo${available === 1 ? '' : 's'} to this event.`;
+      } else {
+        accepted.push(file);
+      }
+    }
+
+    if (accepted.length) onChange([...files, ...accepted]);
+    setError(message);
+  };
+
+  return (
+    <section className='space-y-3 rounded-xl border border-border-light/70 p-4 dark:border-border-dark/60'>
+      <div className='flex flex-wrap items-start justify-between gap-3'>
+        <div className='space-y-1'>
+          <h2 className='font-inter text-sm font-semibold'>Gallery photos</h2>
+          <p className='font-inter text-xs leading-5 text-gray-500 dark:text-gray-400'>
+            Add up to {MAX_EVENT_PHOTOS} photos for attendees. Images can be up
+            to 10 MB each.
+          </p>
+        </div>
+        <span className='rounded-full bg-foreground-light/60 px-3 py-1 font-inter text-xs font-medium dark:bg-foreground-dark/50'>
+          {currentCount + files.length}/{MAX_EVENT_PHOTOS} photos
+        </span>
+      </div>
+
+      <input
+        ref={inputRef}
+        type='file'
+        accept='image/*'
+        multiple
+        className='hidden'
+        onChange={onPick}
+      />
+
+      {files.length > 0 && (
+        <div className='grid grid-cols-2 gap-3 sm:grid-cols-4'>
+          {files.map((file, index) => (
+            <div
+              key={`${file.name}-${file.lastModified}-${index}`}
+              className='space-y-1'
+            >
+              <div className='relative aspect-[4/3] overflow-hidden rounded-lg bg-foreground-light/50 dark:bg-foreground-dark/40'>
+                <GalleryPhotoPreview file={file} />
+                <button
+                  type='button'
+                  aria-label={`Remove ${file.name}`}
+                  onClick={() => {
+                    onChange(
+                      files.filter((_, fileIndex) => fileIndex !== index)
+                    );
+                    setError('');
+                  }}
+                  className='absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full bg-black/65 text-white hover:bg-black/80'
+                >
+                  <Icon name='RiClose' size={16} />
+                </button>
+              </div>
+              <p className='truncate font-inter text-xs text-gray-500 dark:text-gray-400'>
+                {file.name}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <Button
+        type='button'
+        variant='secondary'
+        disabled={!canAdd}
+        onClick={() => inputRef.current?.click()}
+        className='min-h-[44px] gap-2'
+      >
+        <Icon name='RiUpload2' size={18} />
+        {loadingExisting
+          ? 'Loading current photos…'
+          : available > 0
+            ? files.length > 0
+              ? 'Add more photos'
+              : 'Choose photos'
+            : 'Gallery full'}
+      </Button>
+
+      {error && <p className='font-inter text-xs text-brand-orange'>{error}</p>}
+    </section>
+  );
+}
+
+function GalleryPhotoPreview({ file }: { file: File }) {
+  const [src, setSrc] = useState('');
+
+  useEffect(() => {
+    const url = URL.createObjectURL(file);
+    setSrc(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  return src ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={file.name} className='h-full w-full object-cover' />
+  ) : null;
 }
 
 // EventCoverField uploads a cover to storage once the event exists (and so has

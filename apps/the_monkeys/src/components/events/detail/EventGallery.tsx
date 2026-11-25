@@ -4,6 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 
 import Icon from '@/components/icon';
 import {
+  MAX_EVENT_PHOTOS,
+  MAX_EVENT_PHOTO_BYTES,
+} from '@/constants/eventGallery';
+import {
   useDeleteEventPhoto,
   useEventPhotos,
   useUploadEventPhoto,
@@ -12,11 +16,9 @@ import { eventError } from '@/services/events/eventsApi';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 
-const MAX_PHOTOS = 4;
 // Mirror the storage service's practical ceiling. Larger files upload fine but
 // skip server-side blurhash/dimension extraction, so we reject early to keep
 // the gallery snappy and give the host immediate feedback.
-const MAX_BYTES = 10 * 1024 * 1024;
 
 export function EventGallery({
   slug,
@@ -37,7 +39,7 @@ export function EventGallery({
   const [isHovered, setIsHovered] = useState(false);
 
   const count = photos.length;
-  const atCap = count >= MAX_PHOTOS;
+  const atCap = count >= MAX_EVENT_PHOTOS;
 
   // Auto-slide every 15 seconds
   useEffect(() => {
@@ -85,12 +87,12 @@ export function EventGallery({
       toast({ title: 'Please choose an image file' });
       return;
     }
-    if (file.size > MAX_BYTES) {
+    if (file.size > MAX_EVENT_PHOTO_BYTES) {
       toast({ title: 'Image is too large', description: 'Max size is 10 MB.' });
       return;
     }
     if (atCap) {
-      toast({ title: `You can add up to ${MAX_PHOTOS} photos` });
+      toast({ title: `You can add up to ${MAX_EVENT_PHOTOS} photos` });
       return;
     }
 
@@ -254,4 +256,59 @@ export function EventGallery({
       )}
     </section>
   );
+}
+
+export function EventGalleryPreview({ files }: { files: File[] }) {
+  return (
+    <section aria-labelledby='event-gallery-preview-heading'>
+      <h2
+        id='event-gallery-preview-heading'
+        className='font-newsreader text-2xl font-bold md:text-3xl'
+      >
+        Photos
+      </h2>
+
+      {files.length ? (
+        <div className='mt-4 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2'>
+          {files.map((file, index) => (
+            <div
+              key={`${file.name}-${file.lastModified}-${index}`}
+              className='relative aspect-[3/4] w-full min-w-[280px] flex-shrink-0 snap-start overflow-hidden rounded-2xl bg-foreground-light/40 sm:min-w-[calc(50%-8px)] md:min-w-[calc(33.333%-10.66px)] dark:bg-foreground-dark/30'
+            >
+              <GalleryPreviewImage file={file} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className='mt-4 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-light py-12 text-center dark:border-border-dark/60'>
+          <div className='mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-brand-orange/10 text-brand-orange'>
+            <Icon name='RiCameraLens' size={26} />
+          </div>
+          <p className='font-dm_sans font-medium'>No photos for now!</p>
+          <p className='mt-1 font-inter text-sm text-gray-500 dark:text-gray-400'>
+            Photos shared by the hosts will appear here.
+          </p>
+        </div>
+      )}
+    </section>
+  );
+}
+
+function GalleryPreviewImage({ file }: { file: File }) {
+  const [src, setSrc] = useState('');
+
+  useEffect(() => {
+    const url = URL.createObjectURL(file);
+    setSrc(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  return src ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt='Event gallery photo preview'
+      className='h-full w-full object-cover'
+    />
+  ) : null;
 }

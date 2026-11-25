@@ -14,7 +14,11 @@ import { useEventDetail } from '@/hooks/events/useEventQueries';
 import { isHost } from '@/lib/eventTime';
 import { invalidateAfterEventWrite } from '@/lib/queryFreshness';
 import { EventBody } from '@/services/events/eventTypes';
-import { eventError, updateEvent } from '@/services/events/eventsApi';
+import {
+  eventError,
+  updateEvent,
+  uploadEventPhoto,
+} from '@/services/events/eventsApi';
 import { getQueryClient } from '@/utils/get-query-client';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
 
@@ -48,11 +52,29 @@ export default function EditEventPage({
     return <EventEmpty title='You cannot edit this event' />;
   }
 
-  const onSubmit = async (body: EventBody) => {
+  const onSubmit = async (
+    body: EventBody,
+    _coverFile?: File,
+    galleryFiles: File[] = []
+  ) => {
     setSaving(true);
     try {
       await updateEvent(event.slug, body);
+      let failedPhotoUploads = 0;
+      for (const file of galleryFiles) {
+        try {
+          await uploadEventPhoto(event.slug, file);
+        } catch {
+          failedPhotoUploads += 1;
+        }
+      }
       toast({ title: 'Saved' });
+      if (failedPhotoUploads) {
+        toast({
+          title: 'Some gallery photos did not upload',
+          description: 'You can add them from the event page.',
+        });
+      }
       await invalidateAfterEventWrite(getQueryClient(), event.slug);
       router.push(`${EVENTS_ROUTE}/${event.slug}`);
     } catch (err) {

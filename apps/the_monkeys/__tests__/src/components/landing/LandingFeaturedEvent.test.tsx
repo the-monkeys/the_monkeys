@@ -57,9 +57,7 @@ describe('LandingFeaturedEvent', () => {
     ).toBe('/events/community-design-session');
     expect(screen.getByText('Online')).toBeDefined();
     expect(
-      screen
-        .getByRole('link', { name: /Hosted by @host/ })
-        .getAttribute('href')
+      screen.getByRole('link', { name: /Hosted by @host/ }).getAttribute('href')
     ).toBe('/host');
     const attendance = screen.getByRole('group', {
       name: 'Event host and attendance',
