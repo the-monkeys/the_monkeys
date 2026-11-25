@@ -23,7 +23,12 @@ export type ReportReason =
   | 'other';
 export type ContentReport = {
   id: number;
-  status: 'pending' | 'action_taken' | 'dismissed' | 'reversed';
+  status:
+    | 'pending'
+    | 'confirmed_nsfw'
+    | 'action_taken'
+    | 'dismissed'
+    | 'reversed';
 };
 export type ModerationActionResponse = {
   report?: ContentReport;

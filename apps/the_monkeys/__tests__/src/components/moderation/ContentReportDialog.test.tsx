@@ -16,12 +16,16 @@ const mock = vi.hoisted(() => ({
   report: vi.fn(),
   toast: vi.fn(),
   refresh: vi.fn(),
+  notify: vi.fn(),
 }));
 vi.mock('@/hooks/auth/useAuth', () => ({ default: () => mock.auth }));
 vi.mock('@/services/moderation/moderationApi', () => ({
   reportContent: mock.report,
 }));
 vi.mock('@the-monkeys/ui/hooks/use-toast', () => ({ toast: mock.toast }));
+vi.mock('@/lib/contentRatingEvents', () => ({
+  notifyContentRating: mock.notify,
+}));
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ refresh: mock.refresh }),
 }));
@@ -69,6 +73,21 @@ describe('ContentReportDialog', () => {
     submit();
     await waitFor(() => expect(mock.refresh).toHaveBeenCalled());
     expect(mock.toast.mock.calls[0][0].description).toMatch(/marked NSFW/i);
+  });
+  it('recognizes the persisted confirmed_nsfw status returned by the backend', async () => {
+    const access = { is_nsfw: true, revision: 2 };
+    mock.report.mockResolvedValue({
+      report: { id: 3, status: 'confirmed_nsfw' },
+      access,
+    });
+    mount();
+    submit();
+    await waitFor(() => expect(close).toHaveBeenCalledWith(false));
+    expect(mock.toast.mock.calls[0][0].description).toMatch(/marked NSFW/i);
+    expect(mock.notify).toHaveBeenCalledWith(
+      { kind: 'discussion', id: 'post' },
+      access
+    );
   });
   it('prevents duplicate clicks before the first render finishes', async () => {
     mock.report.mockReturnValue(new Promise(() => {}));

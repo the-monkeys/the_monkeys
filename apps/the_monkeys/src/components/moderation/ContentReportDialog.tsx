@@ -57,10 +57,14 @@ function ReportForm({ target, open, onOpenChange }: Props) {
         reason,
         details: details.trim(),
       });
-      if (response.report?.status === 'action_taken')
+      if (
+        response.report?.status === 'confirmed_nsfw' ||
+        response.report?.status === 'action_taken'
+      )
         notifyContentRating(target, response.access);
       const descriptions = {
         pending: 'Your report has been saved for review by the Monkeys team.',
+        confirmed_nsfw: 'The content has been marked NSFW.',
         action_taken: 'The content has been marked NSFW.',
         dismissed:
           'Your earlier report has already been reviewed and dismissed.',
