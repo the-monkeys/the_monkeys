@@ -115,12 +115,12 @@ describe('private birthday persistence', () => {
       (screen.getByLabelText('Birth Date') as HTMLInputElement).value
     ).toBe('');
   });
-  it('allows native date input and refreshes the private profile before reopening settings', async () => {
+  it('accepts a written birthday and refreshes the private profile before reopening settings', async () => {
     const ui = mount();
     await loaded();
     const input = screen.getByLabelText('Birth Date') as HTMLInputElement;
     expect(input.readOnly).toBe(false);
-    fireEvent.input(input, { target: { value: '1990-06-15' } });
+    fireEvent.change(input, { target: { value: '15 JUN 1990' } });
     fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
     await waitFor(() =>
       expect(mock.put).toHaveBeenCalledWith(
@@ -140,7 +140,7 @@ describe('private birthday persistence', () => {
     await loaded();
     expect(
       (screen.getByLabelText('Birth Date') as HTMLInputElement).value
-    ).toBe('1990-06-15');
+    ).toBe('15 JUN 1990');
   });
   it.each([
     '1990-06-15 00:00:00 +0000 UTC',
@@ -154,7 +154,7 @@ describe('private birthday persistence', () => {
       await loaded();
       expect(
         (screen.getByLabelText('Birth Date') as HTMLInputElement).value
-      ).toBe('1990-06-15');
+      ).toBe('15 JUN 1990');
       fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
       await waitFor(() =>
         expect(mock.put).toHaveBeenCalledWith(
@@ -183,15 +183,40 @@ describe('private birthday persistence', () => {
   });
 });
 
-it('opens only the native date picker when the birthday field is clicked', async () => {
+it('uses one calendar and displays a saved birthday as DD MMM YYYY', async () => {
+  mock.birthday = '1997-01-28 00:00:00 +0000 UTC';
   mount();
   await loaded();
-  fireEvent.click(screen.getByLabelText('Birth Date'));
-  expect((screen.getByLabelText('Birth Date') as HTMLInputElement).type).toBe(
-    'date'
+  expect((screen.getByLabelText('Birth Date') as HTMLInputElement).value).toBe(
+    '28 JAN 1997'
   );
-  expect(screen.queryAllByRole('combobox')).toHaveLength(0);
+  expect((screen.getByLabelText('Birth Date') as HTMLInputElement).type).toBe(
+    'text'
+  );
+  expect(document.querySelectorAll('input[type="date"]')).toHaveLength(0);
+  fireEvent.click(screen.getByRole('button', { name: 'Choose birth date' }));
+  expect(screen.getAllByRole('grid')).toHaveLength(1);
+  fireEvent.click(
+    screen.getByRole('button', { name: /Wednesday, January 29th, 1997/ })
+  );
+  expect((screen.getByLabelText('Birth Date') as HTMLInputElement).value).toBe(
+    '29 JAN 1997'
+  );
+  expect(screen.queryByRole('grid')).toBeNull();
 });
+it.each(['31 FEB 1997', '28 XYZ 1997', '01 JAN 2999', '31 DEC 1899'])(
+  'rejects invalid or out-of-range written birthday %s before saving',
+  async (value) => {
+    mount();
+    await loaded();
+    fireEvent.change(screen.getByLabelText('Birth Date'), {
+      target: { value },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    await screen.findByText('Enter a valid birth date, such as 28 JAN 1997.');
+    expect(mock.put).not.toHaveBeenCalled();
+  }
+);
 it('refreshes an already-mounted age gate after a successful birthday save', async () => {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false, staleTime: Infinity } },

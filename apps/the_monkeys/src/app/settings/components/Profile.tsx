@@ -30,6 +30,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Section } from './Section';
+import { BirthdayInput, parseBirthdayInput } from './profile/BirthdayInput';
 import { profileBirthdayDate } from './profile/parseDate';
 
 export const Profile = ({ data }: { data?: IUser }) => {
@@ -64,6 +65,18 @@ export const Profile = ({ data }: { data?: IUser }) => {
   });
 
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
+    const birthday = values.date_of_birth
+      ? parseBirthdayInput(values.date_of_birth)
+      : '';
+    if (
+      values.date_of_birth &&
+      (!birthday || birthday < '1900-01-01' || birthday > latestBirthday)
+    ) {
+      form.setError('date_of_birth', {
+        message: 'Enter a valid birth date, such as 28 JAN 1997.',
+      });
+      return;
+    }
     if (birthdayCompletion && !values.date_of_birth) {
       form.setError('date_of_birth', {
         message: 'Add your birthday before returning to the content.',
@@ -250,13 +263,12 @@ export const Profile = ({ data }: { data?: IUser }) => {
                     Birth Date
                   </FormLabel>
                   <FormControl>
-                    <Input
+                    <BirthdayInput
                       {...field}
                       id='profile-birthday'
                       aria-label='Birth Date'
                       value={field.value || ''}
                       className='w-full'
-                      type='date'
                       min='1900-01-01'
                       max={latestBirthday}
                     />
