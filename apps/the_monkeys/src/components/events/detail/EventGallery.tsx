@@ -141,7 +141,7 @@ export function EventGallery({
             disabled={atCap || upload.isPending}
           >
             <Icon name='RiAdd' size={18} />
-            {atCap ? 'Gallery full' : `Add (${count}/${MAX_PHOTOS})`}
+            {atCap ? 'Gallery full' : `Add (${count}/${MAX_EVENT_PHOTOS})`}
           </Button>
         )}
       </div>

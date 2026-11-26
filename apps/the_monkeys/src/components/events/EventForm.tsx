@@ -9,7 +9,6 @@ import {
   useState,
 } from 'react';
 
-import { TimezoneSelect } from '@/components/events/TimezoneSelect';
 import { CategoryChips } from '@/components/geo/CategoryChips';
 import { PlacePin } from '@/components/geo/PlacePin';
 import Icon from '@/components/icon';
@@ -18,7 +17,6 @@ import {
   MAX_EVENT_PHOTOS,
   MAX_EVENT_PHOTO_BYTES,
 } from '@/constants/eventGallery';
-import { EventReadiness } from '@/features/content-readiness/EventReadiness';
 import useAuth from '@/hooks/auth/useAuth';
 import {
   useEventPhotos,
@@ -32,22 +30,15 @@ import {
   defaultTimezone,
   fromLocalInput,
   isEventEnded,
-  isValidTimezone,
   rsvpCloseHoursFromEvent,
-  toIsoTime,
   toLocalInput,
 } from '@/lib/eventTime';
-import {
-  geocodeAddress,
-  normalizePlaceText,
-  pinFromCoords,
-} from '@/lib/geoSearch';
+import { geocodeAddress, pinFromCoords } from '@/lib/geoSearch';
 import {
   EventBody,
   EventItem,
   EventType,
   EventVisibility,
-  ProtoTime,
   RecurrenceFreq,
 } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -60,11 +51,7 @@ type Props = {
   event?: EventItem;
   saving?: boolean;
   submitLabel: string;
-  onSubmit: (
-    body: EventBody,
-    coverFile?: File,
-    galleryFiles?: File[]
-  ) => void | Promise<unknown>;
+  onSubmit: (body: EventBody, coverFile?: File, galleryFiles?: File[]) => void;
 };
 
 const TYPES: { value: EventType; label: string }[] = [
@@ -114,8 +101,16 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
+// localNowInput returns the current instant formatted for a datetime-local
+// input (YYYY-MM-DDTHH:mm) in the viewer's own timezone, so it can be used as a
+// `min` to block selecting a past moment.
+function localNowInput(): string {
+  const d = new Date();
+  const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+  return local.toISOString().slice(0, 16);
+}
+
 export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
-  const formRef = useRef<HTMLFormElement>(null);
   const { data: session } = useAuth();
   const ipLocation = useIPLocation();
   const myGroups = useUserGroups(
@@ -137,29 +132,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [pin, setPin] = useState(() =>
     pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
   );
-  const [location, setLocation] = useState(event?.location || '');
-  const submissionId = useRef(0);
-  const validatedPlace = useRef<{
-    pin: ReturnType<typeof pinFromCoords>;
-  } | null>(null);
-  const activeSubmission = useRef<{
-    revision: number;
-    submitted: boolean;
-  } | null>(null);
-  const invalidateSubmission = () => {
-    submissionId.current++;
-    validatedPlace.current = null;
-  };
-  useEffect(() => {
-    const pending = submissionId;
-    return () => {
-      pending.current++;
-    };
-  }, []);
-  useEffect(() => {
-    submissionId.current++;
-    validatedPlace.current = null;
-  }, [session?.account_id, session?.username]);
   const [selectedTags, setSelectedTags] = useState(
     () => partitionTags(event?.tags).selected
   );
@@ -169,8 +141,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [visibility, setVisibility] = useState<EventVisibility>(
     (event?.visibility as EventVisibility) || 'public'
   );
-  const [visibilityChosen, setVisibilityChosen] = useState(false);
-  const [coverUploadPending, setCoverUploadPending] = useState(false);
   // Cover image and co-hosts are controlled so the upload picker and the
   // username search can drive them; both fall back to the event's saved values.
   const [coverImage, setCoverImage] = useState(event?.cover_image || '');
@@ -185,16 +155,8 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     event?.co_host_usernames || []
   );
   // Track the chosen start so the end picker can forbid an earlier moment.
-  const [timezone, setTimezone] = useState(event?.timezone || 'UTC');
-  useEffect(() => {
-    if (!event) setTimezone(defaultTimezone());
-  }, [event]);
-  const [startVal, setStartVal] = useState(
-    toLocalInput(event?.start_time, event?.timezone || 'UTC')
-  );
-  const [endVal, setEndVal] = useState(
-    toLocalInput(event?.end_time, event?.timezone || 'UTC')
-  );
+  const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
+  const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
   const [dateError, setDateError] = useState('');
   const [repeatFreq, setRepeatFreq] = useState<RecurrenceFreq | 'off'>('off');
   const [repeatInterval, setRepeatInterval] = useState(1);
@@ -205,7 +167,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   const [repeatUntil, setRepeatUntil] = useState('');
   const [repeatCount, setRepeatCount] = useState(12);
   const [rsvpClosesVal, setRsvpClosesVal] = useState(
-    toLocalInput(event?.rsvp_closes_at, event?.timezone || 'UTC')
+    toLocalInput(event?.rsvp_closes_at)
   );
   const [rsvpCloseHours, setRsvpCloseHours] = useState(
     rsvpCloseHoursFromEvent(event)
@@ -214,16 +176,13 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     !!event?.requires_host_review
   );
   const ended = isEventEnded(event);
-  const preservesSavedInstant = (value: string, original: ProtoTime) =>
-    !!event &&
-    (ended ||
-      (timezone === (event.timezone || 'UTC') &&
-        value === toLocalInput(original, timezone)));
-  // The picker minimum uses the event zone; submit also checks the actual instant.
-  const minStart = useMemo(
-    () => toLocalInput(new Date().toISOString(), timezone),
-    [timezone]
-  );
+  // Recomputed once on mount; a stale minute is harmless and the browser plus
+  // the submit guard both re-validate against the real clock.
+  const minStart = useMemo(() => localNowInput(), []);
+
+  const updateGalleryFiles = (files: File[]) => {
+    setGalleryFiles(files);
+  };
 
   // Release the object URL when the pending file changes or the form unmounts.
   useEffect(
@@ -235,7 +194,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
 
   // Pick a local cover before the event exists: preview it and defer the upload.
   const handleCoverFile = (file: File) => {
-    if (file !== coverFile) invalidateSubmission();
     setCoverImage('');
     setCoverFile(file);
     setCoverPreview((prev) => {
@@ -246,7 +204,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
 
   // Typing a URL supersedes any locally-picked file.
   const handleCoverUrl = (v: string) => {
-    if (v !== coverImage) invalidateSubmission();
     setCoverImage(v);
     if (v && coverFile) {
       setCoverFile(null);
@@ -263,6 +220,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
     () => ({
       title: event?.title || '',
       description: event?.description || '',
+      timezone: event?.timezone || defaultTimezone(),
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
@@ -278,172 +236,121 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const active = activeSubmission.current;
-    if (
-      saving ||
-      (active && (active.submitted || active.revision === submissionId.current))
-    )
+    const form = new FormData(e.currentTarget);
+    const start = fromLocalInput(startVal);
+    const end = fromLocalInput(endVal);
+    if (!start || !end) return;
+
+    // Block past starts and inverted ranges at the boundary. The browser's
+    // `min` handles the common case, but a crafted value or a stale tab could
+    // still submit one, and the backend also rejects it. Ended events keep
+    // their original window, so skip the past-start check there.
+    const startMs = new Date(start).getTime();
+    const endMs = new Date(end).getTime();
+    const nowMs = Date.now();
+    if (!ended && startMs < nowMs - 60_000) {
+      setDateError('Start time cannot be in the past.');
       return;
-    const attempt = { revision: submissionId.current + 1, submitted: false };
-    activeSubmission.current = attempt;
-    try {
-      const element = e.currentTarget;
-      const submission = ++submissionId.current;
-      const form = new FormData(element);
-      let start: string,
-        end: string,
-        closes = '',
-        recurrenceUntil: string | undefined;
-      try {
-        if (!isValidTimezone(timezone))
-          throw new Error('Choose a valid event timezone.');
-        // An unchanged edit must preserve seconds and the original occurrence of
-        // a repeated DST hour; only new/changed wall times need disambiguation.
-        const convert = (value: string, original: ProtoTime): string => {
-          if (preservesSavedInstant(value, original)) {
-            return toIsoTime(original) || '';
-          }
-          return fromLocalInput(value, timezone);
-        };
-        start = convert(startVal, event?.start_time);
-        end = convert(endVal, event?.end_time);
-        if (rsvpClosesVal)
-          closes = convert(rsvpClosesVal, event?.rsvp_closes_at);
-        if (repeatFreq !== 'off' && repeatEnd === 'until' && repeatUntil)
-          recurrenceUntil = fromLocalInput(`${repeatUntil}T23:59:59`, timezone);
-      } catch (error) {
-        setDateError(
-          error instanceof Error
-            ? error.message
-            : 'Check the event date and timezone.'
-        );
-        return;
-      }
-      if (!start || !end) return;
-
-      // Block past starts and inverted ranges at the boundary. The browser's
-      // `min` handles the common case, but a crafted value or a stale tab could
-      // still submit one, and the backend also rejects it. Ended events keep
-      // their original window, so skip the past-start check there.
-      const startMs = new Date(start).getTime();
-      const endMs = new Date(end).getTime();
-      const nowMs = Date.now();
-      if (!ended && startMs < nowMs - 60_000) {
-        setDateError('Start time cannot be in the past.');
-        return;
-      }
-      if (endMs <= startMs) {
-        setDateError('End time must be after the start time.');
-        return;
-      }
-      setDateError('');
-
-      const isSeries = !!event?.series_id || repeatFreq !== 'off';
-      if (!isSeries && rsvpClosesVal) {
-        const closeMs = new Date(closes).getTime();
-        if (!ended && closeMs < nowMs - 60_000) {
-          setDateError('Last day to RSVP cannot be in the past.');
-          return;
-        }
-        if (closeMs >= startMs) {
-          setDateError('Last day to RSVP must be before the meetup starts.');
-          return;
-        }
-      }
-
-      const body: EventBody = {
-        title: String(form.get('title') || '').trim(),
-        description: String(form.get('description') || '').trim(),
-        start_time: start,
-        end_time: end,
-        timezone,
-        event_type: eventType,
-        location: String(form.get('location') || '').trim(),
-        meeting_link: String(form.get('meeting_link') || '').trim(),
-        capacity: Number(form.get('capacity') || 0) || 0,
-        cover_image: coverImage.trim(),
-        tags: mergeCategoryTags(
-          selectedTags,
-          splitList(String(form.get('tags') || ''))
-        ),
-        requires_host_review: requiresHostReview,
-      };
-
-      if (eventType !== 'virtual') {
-        let resolved = pin;
-        if (!resolved && body.location) {
-          // A map lookup is optional; the backend can resolve the address too.
-          // Reuse even an empty result until input changes, so an unchanged
-          // retry cannot silently send a different creation payload/key.
-          if (validatedPlace.current) resolved = validatedPlace.current.pin;
-          else {
-            resolved = await geocodeAddress(
-              body.location,
-              ipLocation.city
-            ).catch(() => null);
-            if (submission === submissionId.current)
-              validatedPlace.current = { pin: resolved };
-          }
-        }
-        if (resolved) {
-          body.latitude = resolved.latitude;
-          body.longitude = resolved.longitude;
-        }
-      }
-
-      // 'group_members' visibility is only valid for a group-attached event; the
-      // backend rejects the mismatch, so guard it here for a clean UX.
-      const linked = event ? !!event.group_slug : !!groupSlug;
-      body.visibility =
-        visibility === 'group_members' && !linked ? 'public' : visibility;
-
-      if (!event) {
-        if (groupSlug) body.group_slug = groupSlug;
-        body.co_host_usernames = cohosts;
-        if (includeTier) {
-          body.ticket_tiers = [
-            {
-              name:
-                String(form.get('tierName') || 'General').trim() || 'General',
-              // Paid ticket pricing is temporarily disabled. Keep the former
-              // form read nearby, but submit every new ticket tier as free.
-              // price: Number(form.get('tierPrice') || 0) || 0,
-              price: 0,
-              capacity: Number(form.get('tierCapacity') || 0) || 0,
-              currency: 'INR',
-              sort_order: 0,
-            },
-          ];
-        }
-        if (repeatFreq !== 'off') {
-          body.recurrence = {
-            freq: repeatFreq,
-            interval: Math.max(1, repeatInterval || 1),
-            by_day:
-              repeatFreq === 'weekly'
-                ? repeatDays.length
-                  ? repeatDays
-                  : [weekdayFromLocal(startVal)]
-                : undefined,
-            count: repeatEnd === 'count' ? Math.max(1, repeatCount) : undefined,
-            until: recurrenceUntil,
-            rsvp_close_hours_before: rsvpCloseHours || undefined,
-          };
-        } else if (rsvpClosesVal) {
-          body.rsvp_closes_at = closes;
-        }
-      } else if (event.series_id) {
-        body.rsvp_close_hours_before = rsvpCloseHours;
-      } else if (rsvpClosesVal) {
-        body.rsvp_closes_at = closes;
-      }
-
-      if (submission !== submissionId.current || !element.isConnected) return;
-      attempt.submitted = true;
-      await onSubmit(body, coverFile ?? undefined, galleryFiles);
-    } finally {
-      if (activeSubmission.current === attempt) activeSubmission.current = null;
     }
+    if (endMs < startMs) {
+      setDateError('End time must be after the start time.');
+      return;
+    }
+    setDateError('');
+
+    const isSeries = !!event?.series_id || repeatFreq !== 'off';
+    if (!isSeries && rsvpClosesVal) {
+      const closes = fromLocalInput(rsvpClosesVal);
+      const closeMs = new Date(closes).getTime();
+      if (!ended && closeMs < nowMs - 60_000) {
+        setDateError('Last day to RSVP cannot be in the past.');
+        return;
+      }
+      if (closeMs >= startMs) {
+        setDateError('Last day to RSVP must be before the meetup starts.');
+        return;
+      }
+    }
+
+    const body: EventBody = {
+      title: String(form.get('title') || '').trim(),
+      description: String(form.get('description') || '').trim(),
+      start_time: start,
+      end_time: end,
+      timezone: String(form.get('timezone') || defaultTimezone()),
+      event_type: eventType,
+      location: String(form.get('location') || '').trim(),
+      meeting_link: String(form.get('meeting_link') || '').trim(),
+      capacity: Number(form.get('capacity') || 0) || 0,
+      cover_image: coverImage.trim(),
+      tags: mergeCategoryTags(
+        selectedTags,
+        splitList(String(form.get('tags') || ''))
+      ),
+      requires_host_review: requiresHostReview,
+    };
+
+    if (eventType !== 'virtual') {
+      let resolved = pin;
+      if (!resolved && body.location) {
+        resolved = await geocodeAddress(body.location, ipLocation.city);
+      }
+      if (resolved) {
+        body.latitude = resolved.latitude;
+        body.longitude = resolved.longitude;
+      }
+    }
+
+    // 'group_members' visibility is only valid for a group-attached event; the
+    // backend rejects the mismatch, so guard it here for a clean UX.
+    const linked = event ? !!event.group_slug : !!groupSlug;
+    body.visibility =
+      visibility === 'group_members' && !linked ? 'public' : visibility;
+
+    if (!event) {
+      if (groupSlug) body.group_slug = groupSlug;
+      body.co_host_usernames = cohosts;
+      if (includeTier) {
+        body.ticket_tiers = [
+          {
+            name: String(form.get('tierName') || 'General').trim() || 'General',
+            // Paid ticket pricing is temporarily disabled. Keep the former
+            // form read nearby, but submit every new ticket tier as free.
+            // price: Number(form.get('tierPrice') || 0) || 0,
+            price: 0,
+            capacity: Number(form.get('tierCapacity') || 0) || 0,
+            currency: 'INR',
+            sort_order: 0,
+          },
+        ];
+      }
+      if (repeatFreq !== 'off') {
+        body.recurrence = {
+          freq: repeatFreq,
+          interval: Math.max(1, repeatInterval || 1),
+          by_day:
+            repeatFreq === 'weekly'
+              ? repeatDays.length
+                ? repeatDays
+                : [weekdayFromLocal(startVal)]
+              : undefined,
+          count: repeatEnd === 'count' ? Math.max(1, repeatCount) : undefined,
+          until:
+            repeatEnd === 'until' && repeatUntil
+              ? new Date(`${repeatUntil}T23:59:59`).toISOString()
+              : undefined,
+          rsvp_close_hours_before: rsvpCloseHours || undefined,
+        };
+      } else if (rsvpClosesVal) {
+        body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
+      }
+    } else if (event.series_id) {
+      body.rsvp_close_hours_before = rsvpCloseHours;
+    } else if (rsvpClosesVal) {
+      body.rsvp_closes_at = fromLocalInput(rsvpClosesVal);
+    }
+
+    onSubmit(body, coverFile ?? undefined, galleryFiles);
   };
 
   const showPlace = eventType !== 'virtual';
@@ -460,19 +367,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
   ] as const;
 
   return (
-    <form
-      ref={formRef}
-      onSubmit={handleSubmit}
-      onChangeCapture={(e) => {
-        if (
-          e.target instanceof Element &&
-          e.target.closest('[data-submission-neutral]')
-        )
-          return;
-        invalidateSubmission();
-      }}
-      className='space-y-5'
-    >
+    <form onSubmit={handleSubmit} className='space-y-5'>
       {ended && (
         <p className='rounded-md border border-border-light bg-foreground-light/40 px-3 py-2 font-inter text-sm text-gray-600 dark:border-border-dark/60 dark:bg-foreground-dark/30 dark:text-gray-400'>
           This meetup has ended. You can still update the writeup, cover, and
@@ -498,7 +393,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       </Field>
 
       <EventCoverField
-        onPendingChange={setCoverUploadPending}
         slug={event?.slug}
         value={coverImage}
         onChange={handleCoverUrl}
@@ -508,36 +402,18 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
 
       <EventGalleryUploadField
         files={galleryFiles}
-        onChange={setGalleryFiles}
+        onChange={updateGalleryFiles}
         currentCount={eventPhotos.data?.length ?? 0}
         loadingExisting={!!event && eventPhotos.isLoading}
       />
 
-      <TimezoneSelect
-        value={timezone}
-        onChange={(zone) => {
-          setTimezone(zone);
-          setDateError('');
-          if (ended) {
-            setStartVal(toLocalInput(event?.start_time, zone));
-            setEndVal(toLocalInput(event?.end_time, zone));
-            setRsvpClosesVal(toLocalInput(event?.rsvp_closes_at, zone));
-          }
-        }}
-      />
       <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
         <Field label='Starts'>
           <Input
             name='start'
             type='datetime-local'
             required
-            // A saved second-fold instant can be in the future even when its
-            // wall time precedes now. The submit guard compares actual instants.
-            min={
-              preservesSavedInstant(startVal, event?.start_time)
-                ? undefined
-                : minStart
-            }
+            min={ended ? undefined : minStart}
             readOnly={ended}
             value={startVal}
             onChange={(e) => {
@@ -555,13 +431,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             name='end'
             type='datetime-local'
             required
-            // A valid saved range can cross a repeated hour backwards on the
-            // wall clock. Do not let native validation reject that unchanged end.
-            min={
-              preservesSavedInstant(endVal, event?.end_time)
-                ? undefined
-                : startVal || minStart
-            }
+            min={ended ? undefined : startVal || minStart}
             readOnly={ended}
             value={endVal}
             onChange={(e) => {
@@ -586,10 +456,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
               key={t.value}
               type='button'
               onClick={() => {
-                if (!ended && eventType !== t.value) {
-                  invalidateSubmission();
-                  setEventType(t.value);
-                }
+                if (!ended) setEventType(t.value);
               }}
               className={`rounded-full px-3 py-1.5 text-sm font-inter border-2 transition-colors ${
                 eventType === t.value
@@ -608,31 +475,12 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           <Field label='Place'>
             <Input
               name='location'
-              value={location}
-              onChange={(e) => {
-                const next = e.target.value;
-                if (normalizePlaceText(next) !== normalizePlaceText(location)) {
-                  setPin(null);
-                }
-                setLocation(next);
-              }}
+              defaultValue={initial.location}
               placeholder='City or venue'
               readOnly={ended}
             />
           </Field>
-          <PlacePin
-            value={pin}
-            onChange={(next) => {
-              if (
-                next?.latitude !== pin?.latitude ||
-                next?.longitude !== pin?.longitude
-              )
-                invalidateSubmission();
-              setPin(next);
-            }}
-            disabled={ended}
-            address={location}
-          />
+          <PlacePin value={pin} onChange={setPin} disabled={ended} />
         </>
       )}
       {showLink && (
@@ -650,14 +498,13 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
       <Field label='Topics'>
         <CategoryChips
           selected={selectedTags}
-          onToggle={(tag) => {
-            invalidateSubmission();
+          onToggle={(tag) =>
             setSelectedTags((prev) =>
               prev.includes(tag)
                 ? prev.filter((t) => t !== tag)
                 : [...prev, tag]
-            );
-          }}
+            )
+          }
         />
         <Input
           name='tags'
@@ -691,18 +538,23 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
           More event options
         </summary>
         <div className='mt-4 space-y-5'>
+          <Field label='Timezone'>
+            <Input
+              name='timezone'
+              defaultValue={initial.timezone}
+              readOnly={ended}
+            />
+          </Field>
+
           {!event && (
             <div className='rounded-lg border border-border-light p-4 space-y-3 dark:border-border-dark/60'>
               <Field label='Repeat'>
                 <RadioGroup
                   aria-label='Repeat'
                   value={repeatFreq}
-                  onValueChange={(value) => {
-                    if (value !== repeatFreq) {
-                      invalidateSubmission();
-                      setRepeatFreq(value as RecurrenceFreq | 'off');
-                    }
-                  }}
+                  onValueChange={(value) =>
+                    setRepeatFreq(value as RecurrenceFreq | 'off')
+                  }
                   className='grid grid-cols-2 gap-2 sm:grid-cols-3'
                 >
                   {REPEAT_OPTIONS.map((option) => (
@@ -756,14 +608,13 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                           <button
                             key={d.id}
                             type='button'
-                            onClick={() => {
-                              invalidateSubmission();
+                            onClick={() =>
                               setRepeatDays((prev) =>
                                 on
                                   ? prev.filter((x) => x !== d.id)
                                   : [...prev, d.id]
-                              );
-                            }}
+                              )
+                            }
                             className={`rounded-full px-3 py-1.5 text-sm font-inter border-2 ${
                               on
                                 ? 'border-brand-orange bg-brand-orange text-white'
@@ -782,26 +633,11 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                       onChange={(e) =>
                         setRepeatEnd(e.target.value as typeof repeatEnd)
                       }
-                      className='w-full rounded-md border-2 border-border-light bg-card-light text-text-light px-3 py-2 font-inter text-sm dark:border-border-dark dark:bg-card-dark dark:text-text-dark'
+                      className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
                     >
-                      <option
-                        value='never'
-                        className='bg-card-light text-text-light dark:bg-card-dark dark:text-text-dark'
-                      >
-                        Never (next 12 dates)
-                      </option>
-                      <option
-                        value='until'
-                        className='bg-card-light text-text-light dark:bg-card-dark dark:text-text-dark'
-                      >
-                        On a date
-                      </option>
-                      <option
-                        value='count'
-                        className='bg-card-light text-text-light dark:bg-card-dark dark:text-text-dark'
-                      >
-                        After a number of events
-                      </option>
+                      <option value='never'>Never (next 12 dates)</option>
+                      <option value='until'>On a date</option>
+                      <option value='count'>After a number of events</option>
                     </select>
                   </Field>
                   {repeatEnd === 'until' && (
@@ -826,19 +662,16 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
               )}
             </div>
           )}
+
           {!ended && (!!event?.series_id || repeatFreq !== 'off') ? (
             <Field label='Close RSVP'>
               <select
                 value={rsvpCloseHours}
                 onChange={(e) => setRsvpCloseHours(Number(e.target.value) || 0)}
-                className='w-full rounded-md border-2 border-border-light bg-card-light text-text-light px-3 py-2 font-inter text-sm dark:border-border-dark dark:bg-card-dark dark:text-text-dark'
+                className='w-full rounded-md border-2 border-border-light bg-transparent px-3 py-2 font-inter text-sm dark:border-border-dark'
               >
                 {RSVP_CLOSE_OPTIONS.map((opt) => (
-                  <option
-                    key={opt.value}
-                    value={opt.value}
-                    className='bg-card-light text-text-light dark:bg-card-dark dark:text-text-dark'
-                  >
+                  <option key={opt.value} value={opt.value}>
                     {opt.label}
                   </option>
                 ))}
@@ -848,16 +681,8 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             <Field label='Last day to RSVP'>
               <Input
                 type='datetime-local'
-                min={
-                  preservesSavedInstant(rsvpClosesVal, event?.rsvp_closes_at)
-                    ? undefined
-                    : minStart
-                }
-                max={
-                  preservesSavedInstant(rsvpClosesVal, event?.rsvp_closes_at)
-                    ? undefined
-                    : startVal || undefined
-                }
+                min={minStart}
+                max={startVal || undefined}
                 value={rsvpClosesVal}
                 onChange={(e) => {
                   setRsvpClosesVal(e.target.value);
@@ -924,13 +749,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
                   type='button'
                   aria-pressed={visibility === option.value}
                   disabled={ended}
-                  onClick={() => {
-                    setVisibilityChosen(true);
-                    if (visibility !== option.value) {
-                      invalidateSubmission();
-                      setVisibility(option.value);
-                    }
-                  }}
+                  onClick={() => setVisibility(option.value)}
                   className={`rounded-lg border-2 px-3 py-2 text-left font-inter transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                     visibility === option.value
                       ? 'border-brand-orange bg-brand-orange/5'
@@ -952,11 +771,7 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
             <Field label='Co-hosts'>
               <CohostPicker
                 value={cohosts}
-                onChange={(next) => {
-                  if (JSON.stringify(next) !== JSON.stringify(cohosts))
-                    invalidateSubmission();
-                  setCohosts(next);
-                }}
+                onChange={setCohosts}
                 exclude={session?.username}
               />
             </Field>
@@ -1006,61 +821,6 @@ export function EventForm({ event, saving, submitLabel, onSubmit }: Props) {
         </div>
       </details>
 
-      <EventReadiness
-        formRef={formRef}
-        readValues={() => {
-          const value = (name: string) => {
-            const control = formRef.current?.elements.namedItem(name) as
-              | HTMLInputElement
-              | HTMLTextAreaElement
-              | null;
-            return control && typeof control.value === 'string'
-              ? control.value
-              : '';
-          };
-          return {
-            title: value('title'),
-            description: value('description'),
-            topics: mergeCategoryTags(selectedTags, splitList(value('tags'))),
-            coverImage,
-            coverPending: coverUploadPending || !!coverFile,
-            eventType,
-            startLocal: startVal,
-            endLocal: endVal,
-            timezone,
-            location,
-            visibility:
-              !event || event.visibility || visibilityChosen
-                ? visibility
-                : undefined,
-            recurrence:
-              repeatFreq !== 'off'
-                ? `Every ${repeatInterval} ${repeatFreq} interval`
-                : event?.recurrence_text,
-          };
-        }}
-        context={{
-          resourceKey: event?.slug || `event:new:${groupSlug}`,
-          accountKey:
-            session?.account_id || session?.username || 'unknown-account',
-          publicationState:
-            !event || event.status === 'draft' ? 'draft' : 'published',
-          authorName: session?.username,
-          groupSlug,
-          groupLinked: !!(groupSlug || event?.group_id),
-          groupName: organizerGroups.find((group) => group.slug === groupSlug)
-            ?.name,
-          groupVisibility: organizerGroups.find(
-            (group) => group.slug === groupSlug
-          )?.visibility,
-          slug: event?.slug,
-          isExistingEvent: !!event,
-          eventEnded: ended,
-          savedTimezone: event?.timezone,
-          savedStart: event?.start_time,
-          savedEnd: event?.end_time,
-        }}
-      />
       <Button
         type='submit'
         variant='brand'
@@ -1316,19 +1076,18 @@ function GalleryPhotoPreview({ file }: { file: File }) {
     <img src={src} alt={file.name} className='h-full w-full object-cover' />
   ) : null;
 }
+
 // EventCoverField uploads a cover to storage once the event exists (and so has
 // a slug) and writes the returned path back into the controlled value. Before
 // the event exists it captures the file locally (previewed via pendingPreview)
 // and defers the upload to the parent, which runs it right after creation.
 function EventCoverField({
-  onPendingChange,
   slug,
   value,
   onChange,
   onFileSelected,
   pendingPreview,
 }: {
-  onPendingChange?: (pending: boolean) => void;
   slug?: string;
   value: string;
   onChange: (v: string) => void;
@@ -1338,10 +1097,6 @@ function EventCoverField({
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
   const upload = useUploadEventCover(slug || '');
-  useEffect(() => {
-    onPendingChange?.(upload.isPending);
-  }, [upload.isPending, onPendingChange]);
-  useEffect(() => () => onPendingChange?.(false), [onPendingChange]);
 
   const onPick = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -1493,7 +1248,6 @@ function CohostPicker({
       <div className='relative'>
         <Input
           value={term}
-          data-submission-neutral
           onChange={(e) => {
             setTerm(e.target.value);
             setOpen(true);
@@ -1504,13 +1258,13 @@ function CohostPicker({
         />
 
         {open && debounced.length > 0 && (
-          <div className='absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-border-light bg-white text-gray-900 shadow-xl dark:border-border-dark dark:bg-zinc-900 dark:text-zinc-100'>
+          <div className='absolute z-20 mt-1 w-full overflow-hidden rounded-lg border border-border-light bg-white shadow-lg dark:border-border-dark dark:bg-primary-monkeyBlack'>
             {isLoading ? (
-              <p className='px-3 py-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
+              <p className='px-3 py-2 font-inter text-sm text-gray-500'>
                 Searching…
               </p>
             ) : results.length === 0 ? (
-              <p className='px-3 py-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
+              <p className='px-3 py-2 font-inter text-sm text-gray-500'>
                 No matches
               </p>
             ) : (
@@ -1520,17 +1274,17 @@ function CohostPicker({
                     <button
                       type='button'
                       onClick={() => add(u.username)}
-                      className='flex min-h-[44px] w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-zinc-800'
+                      className='flex min-h-[44px] w-full items-center gap-2 px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-800'
                     >
                       <ProfileFrame className='h-8 w-8'>
                         <ProfileImage username={u.username} />
                       </ProfileFrame>
                       <span className='min-w-0'>
-                        <span className='block truncate font-dm_sans text-sm font-medium text-gray-900 dark:text-zinc-100'>
+                        <span className='block truncate font-dm_sans text-sm font-medium'>
                           @{u.username}
                         </span>
                         {(u.first_name || u.last_name) && (
-                          <span className='block truncate font-inter text-xs text-gray-500 dark:text-gray-400'>
+                          <span className='block truncate font-inter text-xs text-gray-500'>
                             {`${u.first_name} ${u.last_name}`.trim()}
                           </span>
                         )}
