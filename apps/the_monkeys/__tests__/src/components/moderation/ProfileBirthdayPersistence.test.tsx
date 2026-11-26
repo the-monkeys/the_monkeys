@@ -1,0 +1,172 @@
+import React from 'react';
+
+import { Profile } from '@/app/settings/components/Profile';
+import { queryKeys } from '@/lib/queryKeys';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+
+const mock = vi.hoisted(() => ({
+  get: vi.fn(),
+  put: vi.fn(),
+  push: vi.fn(),
+  toast: vi.fn(),
+  birthday: '',
+}));
+vi.mock('next/navigation', () => ({ useRouter: () => ({ push: mock.push }) }));
+vi.mock('@/hooks/auth/useAuth', () => ({
+  default: () => ({
+    data: { account_id: 'owner', username: 'birthday-fixture' },
+  }),
+}));
+vi.mock('@/hooks/profile/useProfileImage', () => ({
+  default: () => ({ imageUrl: '' }),
+}));
+vi.mock('@/components/profileImage', () => ({
+  default: () => null,
+  ProfileFrame: ({ children }: any) => <div>{children}</div>,
+}));
+vi.mock('@/components/user/dialogs/deleteProfileDialog', () => ({
+  DeleteProfileDialog: () => null,
+}));
+vi.mock('@/components/user/dialogs/updateProfileDialog', () => ({
+  UpdateProfileDialog: () => null,
+}));
+vi.mock('@/services/api/axiosInstance', () => ({
+  default: { get: mock.get, put: mock.put },
+}));
+vi.mock('@the-monkeys/ui/hooks/use-toast', () => ({ toast: mock.toast }));
+
+const profile = () => ({
+  account_id: 'owner',
+  username: 'birthday-fixture',
+  first_name: 'Local',
+  last_name: '',
+  address: '',
+  bio: '',
+  date_of_birth: mock.birthday,
+  contact_number: '',
+  twitter: '',
+  linkedin: '',
+  instagram: '',
+  github: '',
+});
+const key = queryKeys.profile.authenticated('birthday-fixture', 'owner');
+afterEach(cleanup);
+beforeEach(() => {
+  vi.clearAllMocks();
+  mock.birthday = '0001-01-01 00:00:00 +0000 UTC';
+  mock.get.mockImplementation(async () => ({ data: profile() }));
+  mock.put.mockImplementation(async (_path, body) => {
+    mock.birthday = body.values.date_of_birth + ' 00:00:00 +0000 UTC';
+    return { data: { username: 'birthday-fixture' } };
+  });
+  window.history.replaceState({}, '', '/settings');
+});
+function mount(
+  client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  })
+) {
+  const ui = render(
+    <QueryClientProvider client={client}>
+      <Profile
+        data={{
+          account_id: 'owner',
+          username: 'birthday-fixture',
+          email: 'local@example.invalid',
+        }}
+      />
+    </QueryClientProvider>
+  );
+  return { ...ui, client };
+}
+async function loaded() {
+  await waitFor(() =>
+    expect(
+      (screen.getByLabelText('First Name') as HTMLInputElement).value
+    ).toBe('Local')
+  );
+}
+
+describe('private birthday persistence', () => {
+  it('shows the legacy missing-birthday sentinel as empty', async () => {
+    mount();
+    await loaded();
+    expect(
+      (screen.getByLabelText('Birth Date') as HTMLInputElement).value
+    ).toBe('');
+  });
+  it('allows native date input and refreshes the private profile before reopening settings', async () => {
+    const ui = mount();
+    await loaded();
+    const input = screen.getByLabelText('Birth Date') as HTMLInputElement;
+    expect(input.readOnly).toBe(false);
+    fireEvent.input(input, { target: { value: '1990-06-15' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    await waitFor(() =>
+      expect(mock.put).toHaveBeenCalledWith(
+        '/user/birthday-fixture',
+        expect.objectContaining({
+          values: expect.objectContaining({ date_of_birth: '1990-06-15' }),
+        })
+      )
+    );
+    await waitFor(() =>
+      expect(ui.client.getQueryData<any>(key)?.date_of_birth).toBe(
+        '1990-06-15 00:00:00 +0000 UTC'
+      )
+    );
+    ui.unmount();
+    mount(ui.client);
+    await loaded();
+    expect(
+      (screen.getByLabelText('Birth Date') as HTMLInputElement).value
+    ).toBe('1990-06-15');
+  });
+  it.each([
+    '1990-06-15 00:00:00 +0000 UTC',
+    '1990-06-15',
+    '1990-06-15T00:00:00+14:00',
+  ])(
+    'round-trips a saved birthday without changing its calendar day: %s',
+    async (birthday) => {
+      mock.birthday = birthday;
+      mount();
+      await loaded();
+      expect(
+        (screen.getByLabelText('Birth Date') as HTMLInputElement).value
+      ).toBe('1990-06-15');
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+      await waitFor(() =>
+        expect(mock.put).toHaveBeenCalledWith(
+          '/user/birthday-fixture',
+          expect.objectContaining({
+            values: expect.objectContaining({ date_of_birth: '1990-06-15' }),
+          })
+        )
+      );
+    }
+  );
+  it('does not report completion or return to sensitive content without a birthday', async () => {
+    window.history.replaceState(
+      {},
+      '',
+      '/settings?focus=birthday&returnTo=%2Fblog%2Ffixture'
+    );
+    mount();
+    await loaded();
+    fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+    await screen.findByText(
+      'Add your birthday before returning to the content.'
+    );
+    expect(mock.put).not.toHaveBeenCalled();
+    expect(mock.push).not.toHaveBeenCalled();
+  });
+});

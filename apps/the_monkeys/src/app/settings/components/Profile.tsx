@@ -9,6 +9,7 @@ import { UpdateProfileDialog } from '@/components/user/dialogs/updateProfileDial
 import useProfileImage from '@/hooks/profile/useProfileImage';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 import { birthdayReturnPath } from '@/lib/moderationNavigation';
+import { queryKeys } from '@/lib/queryKeys';
 import { updateProfileSchema } from '@/lib/schema/settings';
 import axiosInstance from '@/services/api/axiosInstance';
 import { IUser } from '@/services/models/user';
@@ -36,7 +37,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Section } from './Section';
-import { parseDateTime } from './profile/parseDate';
+import { profileBirthdayDate } from './profile/parseDate';
 
 export const Profile = ({ data }: { data?: IUser }) => {
   const { data: user } = useGetAuthUserProfile(data?.username);
@@ -53,7 +54,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
       first_name: '',
       last_name: '',
       address: '',
-      contact_number: undefined,
+      contact_number: '',
       bio: '',
       date_of_birth: '',
       twitter: '',
@@ -64,12 +65,25 @@ export const Profile = ({ data }: { data?: IUser }) => {
   });
 
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
+    if (birthdayNotice && !values.date_of_birth) {
+      form.setError('date_of_birth', {
+        message: 'Add your birthday before returning to the content.',
+      });
+      return;
+    }
     setLoading(true);
     axiosInstance
       .put(`/user/${data?.username}`, {
         values,
       })
-      .then(() => {
+      .then(async () => {
+        await queryClient.invalidateQueries({
+          queryKey: queryKeys.profile.authenticated(
+            data?.username,
+            data?.account_id
+          ),
+          exact: true,
+        });
         // Eligibility must be checked again after any profile birthday update.
         queryClient.removeQueries({ queryKey: ['content-access'] });
         const returnTo = birthdayReturnPath(window.location.search);
@@ -95,16 +109,16 @@ export const Profile = ({ data }: { data?: IUser }) => {
   useEffect(() => {
     if (user) {
       form.reset({
-        first_name: user.first_name,
-        last_name: user.last_name,
-        address: user.address,
-        contact_number: user.contact_number,
-        bio: user.bio,
-        date_of_birth: user.date_of_birth,
-        twitter: user.twitter,
-        linkedin: user.linkedin,
-        instagram: user.instagram,
-        github: user.github,
+        first_name: user.first_name ?? '',
+        last_name: user.last_name ?? '',
+        address: user.address ?? '',
+        contact_number: user.contact_number ?? '',
+        bio: user.bio ?? '',
+        date_of_birth: profileBirthdayDate(user.date_of_birth),
+        twitter: user.twitter ?? '',
+        linkedin: user.linkedin ?? '',
+        instagram: user.instagram ?? '',
+        github: user.github ?? '',
       });
     }
   }, [user, form]);
@@ -254,13 +268,9 @@ export const Profile = ({ data }: { data?: IUser }) => {
                             name={field.name}
                             ref={field.ref}
                             aria-label='Birth Date'
-                            readOnly
+                            onBlur={field.onBlur}
                             onChange={field.onChange}
-                            value={
-                              field.value
-                                ? moment(field.value).format('YYYY-MM-DD')
-                                : ''
-                            }
+                            value={field.value || ''}
                             className='w-full'
                             type='date'
                           />
@@ -271,13 +281,14 @@ export const Profile = ({ data }: { data?: IUser }) => {
                         <Calendar
                           mode='single'
                           selected={
-                            field.value ? new Date(field.value) : undefined
+                            field.value
+                              ? new Date(`${field.value}T00:00:00`)
+                              : undefined
                           }
                           onSelect={(date) => {
                             if (date) {
-                              const formattedDate = parseDateTime(
-                                moment(date).format('YYYY-MM-DD')
-                              );
+                              const formattedDate =
+                                moment(date).format('YYYY-MM-DD');
                               field.onChange(formattedDate);
                             }
                           }}
