@@ -51,8 +51,6 @@ it('keeps the styled trigger, topic destinations and close action working', asyn
       .getByRole('link', { name: /Technology/i })
       .getAttribute('href')
   ).toBe('/topics/technology');
-  fireEvent.click(
-    within(dialog).getByRole('button', { name: 'Close', exact: true })
-  );
+  fireEvent.click(within(dialog).getByRole('button', { name: 'Close' }));
   await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
 });

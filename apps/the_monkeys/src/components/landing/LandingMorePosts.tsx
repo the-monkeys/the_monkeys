@@ -100,6 +100,7 @@ function MorePostCard({
 
   return (
     <PostCardGate
+      layout={prominent ? 'prominent-post' : 'compact-post'}
       imageMenu='always'
       content={post}
       target={{ kind: 'blog', id: post.blog_id }}
@@ -194,11 +195,11 @@ function DeferredPostMeta({
   return (
     <div
       ref={containerRef}
-      className='mt-auto flex min-h-11 flex-wrap items-center justify-between gap-3 border-t border-border-light/70 pt-4 dark:border-border-dark/40'
+      className='mt-auto grid min-h-11 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-t border-border-light/70 pt-4 dark:border-border-dark/40'
     >
       {isReady ? (
         <>
-          <div className='min-w-0 text-gray-500 dark:text-gray-400'>
+          <div className='min-w-0 overflow-hidden text-gray-500 dark:text-gray-400 [&>div]:flex-nowrap [&>div]:whitespace-nowrap [&>div>p.italic]:min-w-0 [&>div>p.italic]:shrink [&>div>p.italic]:truncate'>
             <UserInfoCardShowcase
               authorID={post.owner_account_id}
               date={published}

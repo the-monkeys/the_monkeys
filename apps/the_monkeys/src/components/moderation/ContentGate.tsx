@@ -5,6 +5,7 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
+import '@/components/landing/content-slots.css';
 import useAuth from '@/hooks/auth/useAuth';
 import { loginHref } from '@/lib/authRedirect';
 import {
@@ -32,6 +33,8 @@ import {
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
+import { useLandingContentAccess } from './LandingContentAccess';
+
 export type ContentGateProps = {
   content?: RatedContent | null;
   target: ContentTarget;
@@ -41,6 +44,17 @@ export type ContentGateProps = {
   loadingClassName?: string;
   // Keep a caller's protected-card footprint through loading and age gates.
   gateClassName?: string;
+  layout?:
+    | 'lead'
+    | 'primary-post'
+    | 'post'
+    | 'prominent-post'
+    | 'compact-post'
+    | 'feed-event'
+    | 'featured-event'
+    | 'discussion'
+    | 'group'
+    | 'event-row';
   href?: string;
 };
 export function ContentGate(props: ContentGateProps) {
@@ -84,7 +98,17 @@ export function ContentGate(props: ContentGateProps) {
     );
   // Safe responses keep their original render tree and make no policy request.
   if (!isSensitive(content)) return <>{props.children}</>;
-  return <SensitiveGate {...props} content={content} />;
+  const gate = <SensitiveGate {...props} content={content} />;
+  return props.layout ? (
+    <div
+      data-content-slot={props.layout}
+      className={`content-slot content-slot-${props.layout}`}
+    >
+      {gate}
+    </div>
+  ) : (
+    gate
+  );
 }
 function SensitiveGate({
   content,
@@ -94,6 +118,7 @@ function SensitiveGate({
   className,
   loadingClassName,
   gateClassName,
+  layout,
   href,
 }: ContentGateProps) {
   const label =
@@ -111,11 +136,28 @@ function SensitiveGate({
   const [error, setError] = useState('');
   const inFlight = useRef(false);
   const materialized = useRef<string>();
+  const lifetime = useRef({ account });
+  const mounted = useRef(true);
+  if (lifetime.current.account !== account) lifetime.current = { account };
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
+  useEffect(() => {
+    inFlight.current = false;
+    materialized.current = undefined;
+    setBusy(false);
+    setError('');
+  }, [account]);
   const rating = content?.content_rating;
   const binding = useRef({ rating, account });
   if (binding.current.rating !== rating) binding.current = { rating, account };
   const boundToViewer = binding.current.account === account;
-  const access = useQuery({
+  const sourceAccess = useLandingContentAccess(content, target);
+  const managed = sourceAccess?.viewer === account ? sourceAccess : undefined;
+  const accessQuery = useQuery({
     queryKey: [
       'content-access',
       target.kind,
@@ -124,13 +166,23 @@ function SensitiveGate({
       rating?.revision ?? 0,
     ],
     queryFn: ({ signal }) => getContentAccess(target, signal),
-    enabled: !!account,
+    enabled: !!account && !managed,
     staleTime: 0,
     retry: false,
     refetchOnWindowFocus: 'always',
   });
+  const access = managed
+    ? {
+        data: managed.rating,
+        isPending: managed.pending,
+        isSuccess: !managed.pending && !managed.failed && !!managed.rating,
+        isError: !!managed.failed,
+        refetch: managed.retry,
+      }
+    : accessQuery;
   useEffect(() => {
     if (
+      !!managed ||
       error ||
       !account ||
       !access.data?.revealed ||
@@ -154,6 +206,7 @@ function SensitiveGate({
         setError('Unable to load this content. Please try again.');
       });
   }, [
+    managed,
     account,
     error,
     boundToViewer,
@@ -173,8 +226,15 @@ function SensitiveGate({
     boundToViewer &&
     rating?.revealed === true &&
     access.isSuccess &&
-    access.data.revealed === true;
-  if (shown) return <>{children}</>;
+    access.data?.revealed === true;
+  if (shown)
+    return layout ? (
+      <div data-content-gate-state='revealed' className='content-slot-revealed'>
+        {children}
+      </div>
+    ) : (
+      <>{children}</>
+    );
   const loading =
     auth.isPending ||
     auth.isLoading ||
@@ -188,6 +248,7 @@ function SensitiveGate({
     return (
       <section
         aria-label={label}
+        data-content-gate-state='pending'
         className={cn(
           'relative min-w-0 overflow-hidden rounded-xl border border-border-light bg-white dark:border-border-dark/60 dark:bg-background-dark',
           compact ? 'min-h-20' : 'min-h-[240px] sm:min-h-[280px]',
@@ -292,11 +353,14 @@ function SensitiveGate({
   }
   async function reveal() {
     if (inFlight.current) return;
+    const origin = lifetime.current;
+    const current = () => mounted.current && lifetime.current === origin;
     inFlight.current = true;
     setBusy(true);
     setError('');
     try {
       const confirmed = await revealContent(target);
+      if (!current()) return;
       notifyContentRating(target, confirmed.access);
       materialized.current = `${account}:${target.kind}:${target.id}:${confirmed.access?.revision ?? 0}`;
       client.setQueryData(
@@ -310,20 +374,27 @@ function SensitiveGate({
         confirmed.access
       );
       await refreshContentQueries(client, target, { afterWrite: true });
-      await access.refetch();
+      if (!current()) return;
+      // A managed source already carries the post-write backend policy result.
+      if (!managed) await access.refetch();
+      if (!current()) return;
       const destination = safeModerationReturn(href) || contentHref(target);
       if (destination === pathname) router.refresh();
     } catch {
+      if (!current()) return;
       setError('Unable to reveal this content. Please try again.');
       await access.refetch();
     } finally {
-      inFlight.current = false;
-      setBusy(false);
+      if (current()) {
+        inFlight.current = false;
+        setBusy(false);
+      }
     }
   }
   return (
     <section
       aria-label={label}
+      data-content-gate-state='restricted'
       className={cn(
         'relative isolate flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border border-border-light bg-white px-4 py-5 text-center dark:border-border-dark/60 dark:bg-background-dark',
         compact ? 'min-h-[150px]' : 'min-h-[240px] sm:min-h-[280px]',

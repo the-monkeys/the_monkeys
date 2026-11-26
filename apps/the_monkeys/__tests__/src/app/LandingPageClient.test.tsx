@@ -302,7 +302,9 @@ describe('LandingPageClient', () => {
     ).toBeDefined();
     expect(screen.getByText('Endpoint trending post')).toBeDefined();
     expect(useEventList).toHaveBeenCalledWith(
-      expect.objectContaining({ date: 'this-week' })
+      expect.objectContaining({ date: 'this-week' }),
+      true,
+      true
     );
     const eventColumn = screen.getByRole('region', {
       name: 'Featured events and discovery',

@@ -11,6 +11,7 @@ import { LandingDiscoveryRail } from '@/components/landing/LandingDiscoveryRail'
 import { LandingEditorialFeed } from '@/components/landing/LandingEditorialFeed';
 import { LandingHero } from '@/components/landing/LandingHero';
 import { LandingMorePosts } from '@/components/landing/LandingMorePosts';
+import { LandingContentAccess } from '@/components/moderation/LandingContentAccess';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetHomepageBlogs from '@/hooks/blog/useGetHomepageBlogs';
 import { useEventList } from '@/hooks/events/useEventQueries';
@@ -93,8 +94,12 @@ const LandingPageClient = () => {
     },
     catalog
   );
-  const eventQuery = useEventList(LANDING_EVENT_FILTERS);
-  const weeklyEventQuery = useEventList(LANDING_THIS_WEEK_EVENT_FILTERS);
+  const eventQuery = useEventList(LANDING_EVENT_FILTERS, true, true);
+  const weeklyEventQuery = useEventList(
+    LANDING_THIS_WEEK_EVENT_FILTERS,
+    true,
+    true
+  );
   const postSlots = selectLandingPosts(postQuery.blogs?.blogs ?? []);
   const eventSlots = selectLandingEvents(eventQuery.data?.events ?? []);
   const weeklyEvents = (weeklyEventQuery.data?.events ?? [])
@@ -106,78 +111,90 @@ const LandingPageClient = () => {
   const discoveryEventsTitle = weeklyEvents.length
     ? "This week's events"
     : 'Upcoming events';
+  const policySources = [
+    postQuery.policySource,
+    trendingQuery.policySource,
+    eventQuery.policySource,
+    weeklyEventQuery.policySource,
+    community.discussions.policySource,
+    community.groups.policySource,
+  ].filter((source): source is NonNullable<typeof source> => !!source);
   const devTest = useFeatureIsOn('gb-test');
 
   return (
-    <div className='min-h-screen'>
-      {devTest && (
-        <div className='mb-3 rounded-md bg-alert-green/15 py-1 text-center font-inter text-xs text-alert-green'>
-          GrowthBook Feature Testing Enabled
-        </div>
-      )}
+    <LandingContentAccess viewer={catalog.viewer} sources={policySources}>
+      <div className='min-h-screen'>
+        {devTest && (
+          <div className='mb-3 rounded-md bg-alert-green/15 py-1 text-center font-inter text-xs text-alert-green'>
+            GrowthBook Feature Testing Enabled
+          </div>
+        )}
 
-      <LandingHero
-        leadFallback={
-          postQuery.isLoading || postQuery.isError ? (
-            <LeadLoadingState failed={postQuery.isError} />
-          ) : undefined
-        }
-        lead={
-          !postQuery.isLoading && !postQuery.isError
-            ? postSlots.lead
-            : undefined
-        }
-        featuredEvent={
-          !eventQuery.isLoading && !eventQuery.isError
-            ? eventSlots.featured
-            : undefined
-        }
-        communityContent={
-          <LandingDiscussions discussions={community.discussions} />
-        }
-        groupsContent={<LandingGroups groups={community.groups} rail />}
-        primaryContent={
-          <>
-            <LandingCapabilityNav
-              upcomingCount={eventQuery.data?.total}
-              activeFeedFilter={feedFilter}
-              onFeedFilterChange={setFeedFilter}
+        <LandingHero
+          leadFallback={
+            postQuery.isLoading || postQuery.isError ? (
+              <LeadLoadingState failed={postQuery.isError} />
+            ) : undefined
+          }
+          lead={
+            !postQuery.isLoading && !postQuery.isError
+              ? postSlots.lead
+              : undefined
+          }
+          featuredEvent={
+            !eventQuery.isLoading && !eventQuery.isError
+              ? eventSlots.featured
+              : undefined
+          }
+          communityContent={
+            <LandingDiscussions discussions={community.discussions} />
+          }
+          groupsContent={<LandingGroups groups={community.groups} rail />}
+          primaryContent={
+            <>
+              <LandingCapabilityNav
+                upcomingCount={eventQuery.data?.total}
+                activeFeedFilter={feedFilter}
+                onFeedFilterChange={setFeedFilter}
+              />
+              <div className='min-w-0'>
+                {postQuery.isLoading ? (
+                  <PostLoadingState />
+                ) : postQuery.isError ? (
+                  <PostErrorState />
+                ) : (
+                  <LandingEditorialFeed
+                    posts={[
+                      ...postSlots.supporting,
+                      ...(postSlots.feature ? [postSlots.feature] : []),
+                    ]}
+                    events={
+                      feedFilter === 'articles' ? [] : eventSlots.upcoming
+                    }
+                  />
+                )}
+              </div>
+            </>
+          }
+          secondaryContent={
+            <LandingDiscoveryRail
+              events={discoveryEvents}
+              eventsTitle={discoveryEventsTitle}
+              trending={trendingQuery.blogs?.blogs ?? []}
+              eventsLoading={weeklyEventQuery.isLoading}
+              eventsError={weeklyEventQuery.isError}
+              trendingLoading={trendingQuery.isLoading}
+              trendingError={trendingQuery.isError}
             />
-            <div className='min-w-0'>
-              {postQuery.isLoading ? (
-                <PostLoadingState />
-              ) : postQuery.isError ? (
-                <PostErrorState />
-              ) : (
-                <LandingEditorialFeed
-                  posts={[
-                    ...postSlots.supporting,
-                    ...(postSlots.feature ? [postSlots.feature] : []),
-                  ]}
-                  events={feedFilter === 'articles' ? [] : eventSlots.upcoming}
-                />
-              )}
-            </div>
-          </>
-        }
-        secondaryContent={
-          <LandingDiscoveryRail
-            events={discoveryEvents}
-            eventsTitle={discoveryEventsTitle}
-            trending={trendingQuery.blogs?.blogs ?? []}
-            eventsLoading={weeklyEventQuery.isLoading}
-            eventsError={weeklyEventQuery.isError}
-            trendingLoading={trendingQuery.isLoading}
-            trendingError={trendingQuery.isError}
-          />
-        }
-      />
-      {!postQuery.isLoading && !postQuery.isError ? (
-        <LandingMorePosts
-          posts={[...postSlots.latest, ...postSlots.community]}
+          }
         />
-      ) : null}
-    </div>
+        {!postQuery.isLoading && !postQuery.isError ? (
+          <LandingMorePosts
+            posts={[...postSlots.latest, ...postSlots.community]}
+          />
+        ) : null}
+      </div>
+    </LandingContentAccess>
   );
 };
 

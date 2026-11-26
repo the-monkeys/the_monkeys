@@ -41,12 +41,13 @@ it('retains public hydration while waiting for identity without starting a redun
   const wrapper = ({ children }: PropsWithChildren) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
   );
-  const { result } = renderHook(
+  const { result, unmount } = renderHook(
     () => useGetHomepageBlogs({}, { enabled: false }),
     { wrapper }
   );
   expect(result.current.blogs?.blogs[0].title).toBe('Sensitive content');
   expect(fetcherV2).not.toHaveBeenCalled();
+  unmount();
   client.clear();
 });
 it('loads a signed-in homepage once without writing revealed content into public hydration', async () => {
@@ -59,7 +60,7 @@ it('loads a signed-in homepage once without writing revealed content into public
   const wrapper = ({ children }: PropsWithChildren) => (
     <QueryClientProvider client={client}>{children}</QueryClientProvider>
   );
-  const { result } = renderHook(
+  const { result, unmount } = renderHook(
     () => useGetHomepageBlogs({}, { viewer: 'adult' }),
     { wrapper }
   );
@@ -68,5 +69,6 @@ it('loads a signed-in homepage once without writing revealed content into public
   );
   expect(client.getQueryData(publicKey)).toEqual(response(false));
   expect(fetcherV2).toHaveBeenCalledTimes(1);
+  unmount();
   client.clear();
 });

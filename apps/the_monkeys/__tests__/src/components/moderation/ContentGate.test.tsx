@@ -371,3 +371,88 @@ it('does not apply gate-only geometry to an ordinary article', () => {
     screen.queryByRole('region', { name: 'Sensitive content' })
   ).toBeNull();
 });
+
+it('retains the same sensitive layout shell from pending to authorised content', async () => {
+  mocks.auth = { data: { account_id: 'adult' }, isLoading: false };
+  let finish: (v: any) => void = () => {};
+  mocks.get.mockReturnValue(
+    new Promise((resolve) => {
+      finish = resolve;
+    })
+  );
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const view = render(
+    <QueryClientProvider client={client}>
+      <ContentGate
+        target={target}
+        layout='feed-event'
+        content={{
+          ...restricted,
+          content_rating: { ...restricted.content_rating, revealed: true },
+        }}
+      >
+        <article>authorised event</article>
+      </ContentGate>
+    </QueryClientProvider>
+  );
+  const slot = view.container.querySelector('[data-content-slot="feed-event"]');
+  expect(slot).toBeTruthy();
+  expect(
+    slot?.querySelector('[data-content-gate-state="pending"]')
+  ).toBeTruthy();
+  expect(screen.queryByText('authorised event')).toBeNull();
+  finish({ is_nsfw: true, revealed: true });
+  await screen.findByText('authorised event');
+  expect(view.container.querySelector('[data-content-slot="feed-event"]')).toBe(
+    slot
+  );
+  expect(
+    slot?.querySelector('[data-content-gate-state="revealed"]')
+  ).toBeTruthy();
+});
+
+it('ignores a reveal response that finishes after switching accounts', async () => {
+  mocks.auth.data = { account_id: 'adult' };
+  mocks.get.mockResolvedValue({
+    is_nsfw: true,
+    can_reveal: true,
+    reason: 'reveal_required',
+  });
+  let finish: (v: any) => void = () => {};
+  mocks.reveal.mockReturnValue(
+    new Promise((resolve) => {
+      finish = resolve;
+    })
+  );
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const changed = vi.fn();
+  window.addEventListener('monkeys:content-rating-changed', changed);
+  const tree = () => (
+    <QueryClientProvider client={client}>
+      <ContentGate target={target} content={restricted}>
+        <p>private adult body</p>
+      </ContentGate>
+    </QueryClientProvider>
+  );
+  const view = render(tree());
+  fireEvent.click(await screen.findByRole('button', { name: 'Show content' }));
+  mocks.auth.data = { account_id: 'child' };
+  mocks.get.mockResolvedValue({
+    is_nsfw: true,
+    can_reveal: false,
+    reason: 'underage',
+  });
+  view.rerender(tree());
+  await screen.findByText(/available only to people aged 18/i);
+  finish({ access: { target, is_nsfw: true, revealed: true, revision: 1 } });
+  await waitFor(() => expect(mocks.reveal).toHaveResolved());
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  expect(changed).not.toHaveBeenCalled();
+  expect(mocks.refresh).not.toHaveBeenCalled();
+  expect(screen.queryByText('private adult body')).toBeNull();
+  window.removeEventListener('monkeys:content-rating-changed', changed);
+});

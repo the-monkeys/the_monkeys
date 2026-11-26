@@ -82,6 +82,7 @@ export function LandingFeedEvent({ event }: { event: EventItem }) {
         className='absolute right-1 top-1 z-20'
       />
       <ContentGate
+        layout='feed-event'
         content={event}
         target={{ kind: 'event', id: event.slug }}
         compact

@@ -16,6 +16,7 @@ import {
   discussionHandle,
 } from '@/components/discussions/discussionChrome';
 import { ContentGate } from '@/components/moderation/ContentGate';
+import { useLandingContentAccess } from '@/components/moderation/LandingContentAccess';
 import useAuth from '@/hooks/auth/useAuth';
 import { firstInternalLink } from '@/lib/discussionLinks';
 import { discussionHeadline, discussionPath } from '@/lib/discussionSeo';
@@ -76,7 +77,11 @@ function DiscussionCardContent({
           )}
         >
           <div className={cn('min-w-0 flex-1', compact && 'pr-11')}>
-            <DiscussionIdentity author={post} createdAt={post.created_at} />
+            <DiscussionIdentity
+              author={post}
+              createdAt={post.created_at}
+              compact={compact}
+            />
           </div>
         </div>
         {embedded ? (
@@ -128,9 +133,7 @@ function DiscussionCardLayout(
         content={post}
         target={{ kind: 'discussion', id: post.public_id }}
         compact={compact || props.linked}
-        loadingClassName={
-          compact ? 'min-h-[108px] sm:min-h-[94px] lg:min-h-[74px]' : undefined
-        }
+        layout={compact ? 'discussion' : undefined}
         href={discussionPath(post.public_id)}
       >
         <DiscussionCardContent {...props} />
@@ -174,7 +177,11 @@ function SensitiveDiscussionCard(props: DiscussionCardProps) {
 }
 
 export function DiscussionCard(props: DiscussionCardProps) {
-  return isSensitive(props.post) ? (
+  const managed = useLandingContentAccess(props.post, {
+    kind: 'discussion',
+    id: props.post.public_id,
+  });
+  return isSensitive(props.post) && !managed ? (
     <SensitiveDiscussionCard {...props} />
   ) : (
     <DiscussionCardLayout {...props} />

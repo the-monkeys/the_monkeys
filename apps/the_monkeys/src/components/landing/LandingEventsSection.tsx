@@ -100,6 +100,7 @@ export function LandingEventsSection({
                     className='absolute right-0 top-2 z-20'
                   />
                   <ContentGate
+                    layout='event-row'
                     content={event}
                     target={{ kind: 'event', id: event.slug }}
                     compact

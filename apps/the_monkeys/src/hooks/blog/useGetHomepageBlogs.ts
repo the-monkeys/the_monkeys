@@ -5,9 +5,14 @@ import {
   hasHomepageAssessment,
 } from '@/lib/homepageEligibility';
 import {
+  readLandingPolicy,
+  useLandingPolicySource,
+} from '@/lib/landingPolicyRead';
+import {
   type HomepageBlogParams,
   homepageBlogQuery,
 } from '@/services/blog/homepageApi';
+import { isSensitive } from '@/services/moderation/moderationTypes';
 import { hashKey, useQuery, useQueryClient } from '@tanstack/react-query';
 
 const subscribe = () => () => {};
@@ -20,9 +25,18 @@ export default function useGetHomepageBlogs(
 ) {
   const client = useQueryClient();
   const options = homepageBlogQuery(params, viewer);
-  const { data, isLoading, isFetching, isError } = useQuery({
+  const query = useQuery({
     ...options,
     enabled,
+    queryFn: ({ signal }) =>
+      readLandingPolicy(client, viewer, signal, () =>
+        options.queryFn({ signal })
+      ),
+    structuralSharing: false,
+    refetchOnWindowFocus: (query) =>
+      query.state.data?.blogs.some(isSensitive)
+        ? 'always'
+        : options.refetchOnWindowFocus(query),
     // Public redacted HTML remains stable while the viewer's own catalog loads.
     // Authorised responses must never overwrite the anonymous hydration key.
     initialData: viewer
@@ -33,6 +47,15 @@ export default function useGetHomepageBlogs(
       : undefined,
     initialDataUpdatedAt: viewer ? 0 : undefined,
   });
+  const { data, isLoading, isFetching, isError } = query;
+  const policySource = useLandingPolicySource(
+    client,
+    viewer,
+    options.queryKey,
+    query,
+    data?.blogs ?? [],
+    enabled
+  );
   const serverOrHydrating = useSyncExternalStore(
     subscribe,
     browserSnapshot,
@@ -64,6 +87,7 @@ export default function useGetHomepageBlogs(
     isLoading ||
     (!serverOrHydrating && (invalidated || (isFetching && !validated)));
   return {
+    policySource,
     blogs: checking || isError ? undefined : data,
     isLoading: checking,
     isError,

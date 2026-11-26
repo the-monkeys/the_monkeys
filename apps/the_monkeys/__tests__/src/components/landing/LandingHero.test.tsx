@@ -233,7 +233,7 @@ it('keeps a lead slot ahead of discussions when the initial article request is s
   expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
 });
 
-it('keeps the redacted lead at its existing article loading footprint', () => {
+it('reserves the sensitive lead profile without mounting the headline', () => {
   renderWithProviders(
     <LandingHero
       lead={{
@@ -244,8 +244,9 @@ it('keeps the redacted lead at its existing article loading footprint', () => {
     />
   );
   const gate = screen.getByRole('region', { name: 'Sensitive content' });
-  expect(gate.classList.contains('min-h-[calc(56.25vw+13.5rem)]')).toBe(true);
-  expect(gate.classList.contains('sm:min-h-[254px]')).toBe(true);
+  expect(
+    gate.closest('[data-content-slot]')?.getAttribute('data-content-slot')
+  ).toBe('lead');
   expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
   expect(screen.queryByRole('heading', { name: lead.title })).toBeNull();
 });

@@ -161,6 +161,7 @@ export function LandingGroups({
                 className='absolute right-1 top-1 z-20'
               />
               <ContentGate
+                layout='group'
                 content={group}
                 target={{ kind: 'group', id: group.slug }}
                 compact

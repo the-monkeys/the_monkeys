@@ -74,7 +74,7 @@ export function LandingHero({
             ) : null}
             {lead && (
               <PostCardGate
-                gateClassName='min-h-[calc(56.25vw+13.5rem)] sm:min-h-[254px]'
+                layout='lead'
                 imageMenu='mobile'
                 content={lead}
                 target={{ kind: 'blog', id: lead.blog_id }}

@@ -224,6 +224,7 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
         className={`absolute right-0 top-0 z-20 ${contentOptionsImageClass}`}
       />
       <ContentGate
+        layout='featured-event'
         content={event}
         target={{ kind: 'event', id: event.slug }}
         compact

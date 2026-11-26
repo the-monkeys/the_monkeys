@@ -77,6 +77,7 @@ function PrimaryFeedPost({ post }: { post: MetaBlog }) {
 
   return (
     <PostCardGate
+      layout='primary-post'
       imageMenu='always'
       content={post}
       target={{ kind: 'blog', id: post.blog_id }}
@@ -133,6 +134,7 @@ function FeedPostCard({ post }: { post: MetaBlog }) {
 
   return (
     <PostCardGate
+      layout='post'
       imageMenu='always'
       content={post}
       target={{ kind: 'blog', id: post.blog_id }}
