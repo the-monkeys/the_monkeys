@@ -13,7 +13,7 @@ export default function TopicListDialog({ topics }: { topics: string[] }) {
   return (
     <>
       <Dialog>
-        <DialogTrigger>
+        <DialogTrigger asChild>
           <Button variant='link' size='sm'>
             show all...
           </Button>

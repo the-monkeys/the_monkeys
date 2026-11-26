@@ -8,6 +8,7 @@ import { renderWithProviders } from '../../../utils';
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/',
+  useRouter: () => ({ refresh: vi.fn(), push: vi.fn() }),
   useSearchParams: () => ({ toString: () => '' }),
 }));
 
@@ -230,4 +231,21 @@ it('keeps a lead slot ahead of discussions when the initial article request is s
     lead.compareDocumentPosition(discussion) & Node.DOCUMENT_POSITION_FOLLOWING
   ).toBeTruthy();
   expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
+});
+
+it('keeps the redacted lead at its existing article loading footprint', () => {
+  renderWithProviders(
+    <LandingHero
+      lead={{
+        ...lead,
+        is_nsfw: true,
+        content_rating: { is_nsfw: true, revision: 1, revealed: false },
+      }}
+    />
+  );
+  const gate = screen.getByRole('region', { name: 'Sensitive content' });
+  expect(gate.classList.contains('min-h-[calc(56.25vw+13.5rem)]')).toBe(true);
+  expect(gate.classList.contains('sm:min-h-[254px]')).toBe(true);
+  expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
+  expect(screen.queryByRole('heading', { name: lead.title })).toBeNull();
 });

@@ -39,6 +39,8 @@ export type ContentGateProps = {
   compact?: boolean;
   className?: string;
   loadingClassName?: string;
+  // Keep a caller's protected-card footprint through loading and age gates.
+  gateClassName?: string;
   href?: string;
 };
 export function ContentGate(props: ContentGateProps) {
@@ -91,6 +93,7 @@ function SensitiveGate({
   compact,
   className,
   loadingClassName,
+  gateClassName,
   href,
 }: ContentGateProps) {
   const label =
@@ -189,7 +192,8 @@ function SensitiveGate({
           'relative min-w-0 overflow-hidden rounded-xl border border-border-light bg-white dark:border-border-dark/60 dark:bg-background-dark',
           compact ? 'min-h-20' : 'min-h-[240px] sm:min-h-[280px]',
           loadingClassName,
-          className
+          className,
+          gateClassName
         )}
       >
         <div
@@ -323,7 +327,8 @@ function SensitiveGate({
       className={cn(
         'relative isolate flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border border-border-light bg-white px-4 py-5 text-center dark:border-border-dark/60 dark:bg-background-dark',
         compact ? 'min-h-[150px]' : 'min-h-[240px] sm:min-h-[280px]',
-        className
+        className,
+        gateClassName
       )}
     >
       <div

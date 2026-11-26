@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element -- Native test images verify protected children never mount. */
 import React from 'react';
 
 import { ContentGate } from '@/components/moderation/ContentGate';
@@ -321,4 +322,52 @@ it('does not refresh the whole homepage when the signed-in viewer becomes known'
   await waitFor(() => expect(mocks.get).toHaveBeenCalled());
   expect(mocks.refresh).not.toHaveBeenCalled();
   expect(screen.queryByText('secret body')).toBeNull();
+});
+
+it.each([true, false])(
+  'preserves a caller gate footprint while session loading is %s without mounting private content',
+  (isLoading) => {
+    mocks.auth = { data: undefined, isLoading };
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <ContentGate
+          target={target}
+          content={restricted}
+          gateClassName='min-h-[calc(56.25vw+13.5rem)] sm:min-h-[254px]'
+        >
+          <img src='/secret.jpg' alt='secret image' />
+          <p>secret body</p>
+        </ContentGate>
+      </QueryClientProvider>
+    );
+    const gate = screen.getByRole('region', { name: 'Sensitive content' });
+    expect(gate.classList.contains('min-h-[calc(56.25vw+13.5rem)]')).toBe(true);
+    expect(gate.classList.contains('sm:min-h-[254px]')).toBe(true);
+    expect(screen.queryByText('secret body')).toBeNull();
+    expect(screen.queryByAltText('secret image')).toBeNull();
+    if (isLoading) {
+      expect(
+        screen.getByRole('status', { name: 'Loading sensitive content' })
+      ).toBeTruthy();
+      expect(screen.queryByRole('link', { name: /log in/i })).toBeNull();
+    } else {
+      expect(screen.getByRole('link', { name: /log in/i })).toBeTruthy();
+    }
+  }
+);
+
+it('does not apply gate-only geometry to an ordinary article', () => {
+  const view = render(
+    <ContentGate
+      target={target}
+      content={{}}
+      gateClassName='min-h-[calc(56.25vw+13.5rem)]'
+    >
+      <article>ordinary article</article>
+    </ContentGate>
+  );
+  expect(view.container.firstElementChild?.tagName).toBe('ARTICLE');
+  expect(
+    screen.queryByRole('region', { name: 'Sensitive content' })
+  ).toBeNull();
 });
