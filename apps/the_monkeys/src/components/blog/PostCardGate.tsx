@@ -7,6 +7,7 @@ import {
 import { ContentOptions } from '@/components/moderation/ContentOptions';
 import { contentOptionsImageClass } from '@/components/moderation/menuStyles';
 import { cn } from '@/lib/utils';
+import { isSensitive } from '@/services/moderation/moderationTypes';
 
 /** Keep report actions outside links and available even when the post is gated. */
 export function PostCardGate({
@@ -28,7 +29,12 @@ export function PostCardGate({
         ariaLabel='Post options'
         className={cn(
           'absolute right-0 top-0 z-20',
-          imageMenu && contentOptionsImageClass,
+          imageMenu &&
+            !(
+              isSensitive(props.content) &&
+              !props.content?.content_rating?.revealed
+            ) &&
+            contentOptionsImageClass,
           imageMenu === 'mobile' &&
             'sm:[&>button]:text-gray-500 sm:[&>button]:drop-shadow-none'
         )}
