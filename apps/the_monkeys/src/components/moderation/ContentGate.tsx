@@ -127,6 +127,8 @@ function SensitiveGate({
       : target.kind === 'group'
         ? 'Sensitive group'
         : 'Sensitive content';
+  const compactNotice =
+    layout === 'discussion' || layout === 'event-row' || layout === 'group';
   const auth = useAuth();
   const account = auth.data?.account_id;
   const router = useRouter();
@@ -278,10 +280,14 @@ function SensitiveGate({
     safeModerationReturn(href) ||
     safeModerationReturn(pathname) ||
     contentHref(target);
-  let message = 'Log in and confirm you are 18 or older to view this content.';
+  let message = compactNotice
+    ? 'Log in to view.'
+    : 'Log in and confirm you are 18 or older to view this content.';
   let action: ReactNode = (
     <Button asChild size='sm'>
-      <Link href={loginHref(returnTo)}>Log in to continue</Link>
+      <Link href={loginHref(returnTo)} aria-label='Log in to continue'>
+        {compactNotice ? 'Log in' : 'Log in to continue'}
+      </Link>
     </Button>
   );
   if (account) {
@@ -289,7 +295,9 @@ function SensitiveGate({
       message = 'Checking whether you can view this content.';
       action = null;
     } else if (access.isError) {
-      message = 'Content checks are temporarily unavailable.';
+      message = compactNotice
+        ? 'Checks unavailable.'
+        : 'Content checks are temporarily unavailable.';
       action = (
         <Button
           size='sm'
@@ -300,21 +308,33 @@ function SensitiveGate({
         </Button>
       );
     } else if (result?.reason === 'underage') {
-      message = 'This content is available only to people aged 18 or older.';
+      message = compactNotice
+        ? 'Available to people aged 18+.'
+        : 'This content is available only to people aged 18 or older.';
       action = null;
     } else if (result?.reason === 'dob_required') {
-      message =
-        'Add your birthday to your profile before viewing this content.';
+      message = compactNotice
+        ? 'Add your birthday.'
+        : 'Add your birthday to your profile before viewing this content.';
       action = (
         <Button asChild size='sm'>
-          <Link href={birthdaySettingsHref(returnTo)}>Add your birthday</Link>
+          <Link
+            href={birthdaySettingsHref(returnTo)}
+            aria-label='Add your birthday'
+          >
+            {compactNotice ? 'Add birthday' : 'Add your birthday'}
+          </Link>
         </Button>
       );
     } else if (result?.reason === 'not_found') {
-      message = 'This content is not available to your account.';
+      message = compactNotice
+        ? 'Not available to your account.'
+        : 'This content is not available to your account.';
       action = null;
     } else if (result?.revealed) {
-      message = 'Opening content you have already chosen to view.';
+      message = compactNotice
+        ? 'Opening your content.'
+        : 'Opening content you have already chosen to view.';
       action = error ? (
         <Button
           size='sm'
@@ -339,8 +359,9 @@ function SensitiveGate({
         </Button>
       ) : null;
     } else if (result?.can_reveal) {
-      message =
-        'This content may contain explicit material. Choose whether to view it.';
+      message = compactNotice
+        ? 'Explicit material.'
+        : 'This content may contain explicit material. Choose whether to view it.';
       action = (
         <Button size='sm' disabled={busy} onClick={() => void reveal()}>
           {busy ? 'Opening\u2026' : 'Show content'}
@@ -391,10 +412,12 @@ function SensitiveGate({
       }
     }
   }
+  const noticeError = !!error && !!action;
   return (
     <section
       aria-label={label}
       data-content-gate-state='restricted'
+      data-content-gate-has-action={action ? true : undefined}
       className={cn(
         'relative isolate flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border border-border-light bg-white px-4 py-5 text-center dark:border-border-dark/60 dark:bg-background-dark',
         compact ? 'min-h-[150px]' : 'min-h-[240px] sm:min-h-[280px]',
@@ -410,21 +433,47 @@ function SensitiveGate({
         <div className='h-3 w-4/5 rounded bg-gray-300 dark:bg-gray-700' />
         <div className='h-3 w-3/5 rounded bg-gray-300 dark:bg-gray-700' />
       </div>
-      <span className='rounded-full bg-brand-orange/10 px-3 py-1 text-xs font-medium text-brand-orange'>
-        NSFW &middot; 18+
-      </span>
-      <p className='mt-3 font-dm_sans text-base font-semibold'>{label}</p>
-      <p className='mt-2 max-w-sm text-sm leading-6 text-gray-600 dark:text-gray-300'>
-        {message}
-      </p>
-      {action ? (
-        <div className='mt-4 flex max-w-full justify-center'>{action}</div>
-      ) : null}
-      {error ? (
-        <p role='alert' className='mt-3 text-sm text-red-600'>
-          {error}
-        </p>
-      ) : null}
+      {compactNotice ? (
+        <>
+          <div className='content-gate-heading'>
+            <span className='rounded-full bg-brand-orange/10 font-medium text-brand-orange'>
+              NSFW &middot; 18+
+            </span>
+            <p className='font-dm_sans font-semibold'>{label}</p>
+          </div>
+          <div className='content-gate-body'>
+            <p
+              role={noticeError ? 'alert' : undefined}
+              className={
+                noticeError
+                  ? 'text-red-600'
+                  : 'text-gray-600 dark:text-gray-300'
+              }
+            >
+              {noticeError ? 'Unable to open.' : message}
+            </p>
+            {action ? (
+              <div className='content-gate-action'>{action}</div>
+            ) : null}
+          </div>
+        </>
+      ) : (
+        <>
+          <span className='rounded-full bg-brand-orange/10 px-3 py-1 text-xs font-medium text-brand-orange'>
+            NSFW &middot; 18+
+          </span>
+          <p className='mt-3 font-dm_sans text-base font-semibold'>{label}</p>
+          <p
+            role={noticeError ? 'alert' : undefined}
+            className={`mt-2 max-w-sm text-sm leading-6 ${noticeError ? 'text-red-600' : 'text-gray-600 dark:text-gray-300'}`}
+          >
+            {noticeError ? error : message}
+          </p>
+          {action ? (
+            <div className='mt-4 flex max-w-full justify-center'>{action}</div>
+          ) : null}
+        </>
+      )}
     </section>
   );
 }

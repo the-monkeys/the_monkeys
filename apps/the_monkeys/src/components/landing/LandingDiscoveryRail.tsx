@@ -98,15 +98,21 @@ export function TrendingPosts({
                   <div
                     className={`mt-1 flex flex-wrap items-center gap-1.5 font-inter text-[10px] uppercase tracking-[0.08em] text-gray-400 ${sensitive ? 'h-[15px] flex-nowrap overflow-hidden' : ''}`}
                   >
-                    {topic && (
+                    {sensitive ? (
+                      <span className='shrink-0 rounded-full bg-brand-orange/10 px-1.5 font-medium text-brand-orange'>
+                        NSFW &middot; 18+
+                      </span>
+                    ) : topic ? (
                       <Link
                         href={`${TOPIC_ROUTE}/${topicToSlug(topic)}`}
                         className='hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange'
                       >
                         {topic}
                       </Link>
+                    ) : null}
+                    {(sensitive || topic) && time && (
+                      <span aria-hidden='true'>•</span>
                     )}
-                    {topic && time && <span aria-hidden='true'>•</span>}
                     {time && <span>{time}</span>}
                   </div>
                 </div>

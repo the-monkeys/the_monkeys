@@ -456,3 +456,93 @@ it('ignores a reveal response that finishes after switching accounts', async () 
   expect(screen.queryByText('private adult body')).toBeNull();
   window.removeEventListener('monkeys:content-rating-changed', changed);
 });
+
+describe.each(['discussion', 'event-row', 'group'] as const)(
+  '%s compact sensitive notice',
+  (layout) => {
+    it('keeps the underage explanation concise and never offers reveal', async () => {
+      mocks.auth.data = { account_id: 'young' };
+      mocks.get.mockResolvedValue({
+        is_nsfw: true,
+        reason: 'underage',
+        can_reveal: false,
+      });
+      render(
+        <QueryClientProvider
+          client={
+            new QueryClient({ defaultOptions: { queries: { retry: false } } })
+          }
+        >
+          <ContentGate target={target} content={restricted} layout={layout}>
+            <p>secret body</p>
+          </ContentGate>
+        </QueryClientProvider>
+      );
+      await waitFor(() =>
+        expect(
+          document.querySelector('[data-content-gate-state="restricted"]')
+        ).toBeTruthy()
+      );
+      expect(screen.getByText('Available to people aged 18+.')).toBeTruthy();
+      expect(
+        screen.queryByRole('button', { name: /show content/i })
+      ).toBeNull();
+      expect(screen.queryByText('secret body')).toBeNull();
+    });
+    it('retains the birthday settings action with concise guidance', async () => {
+      mocks.auth.data = { account_id: 'missing-birthday' };
+      render(
+        <QueryClientProvider
+          client={
+            new QueryClient({ defaultOptions: { queries: { retry: false } } })
+          }
+        >
+          <ContentGate target={target} content={restricted} layout={layout}>
+            <p>secret body</p>
+          </ContentGate>
+        </QueryClientProvider>
+      );
+      const action = await screen.findByRole('link', {
+        name: 'Add your birthday',
+      });
+      expect(action.getAttribute('href')).toContain('focus=birthday');
+      expect(screen.getByText('Add your birthday.')).toBeTruthy();
+      expect(screen.queryByText('secret body')).toBeNull();
+    });
+  }
+);
+
+it('keeps the current compact policy denial after a failed reveal', async () => {
+  mocks.auth.data = { account_id: 'changed-age' };
+  mocks.get
+    .mockResolvedValueOnce({
+      is_nsfw: true,
+      can_reveal: true,
+      reason: 'reveal_required',
+    })
+    .mockResolvedValue({
+      is_nsfw: true,
+      can_reveal: false,
+      reason: 'underage',
+    });
+  mocks.reveal.mockRejectedValue(new Error('policy changed'));
+  render(
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
+    >
+      <ContentGate target={target} content={restricted} layout='event-row'>
+        <p>secret body</p>
+      </ContentGate>
+    </QueryClientProvider>
+  );
+  fireEvent.click(await screen.findByRole('button', { name: 'Show content' }));
+  await waitFor(() => expect(mocks.get).toHaveBeenCalledTimes(2));
+  await waitFor(() =>
+    expect(screen.queryByRole('button', { name: 'Show content' })).toBeNull()
+  );
+  expect(screen.getByText('Available to people aged 18+.')).toBeTruthy();
+  expect(screen.queryByText(/try again/i)).toBeNull();
+  expect(screen.queryByText('secret body')).toBeNull();
+});
