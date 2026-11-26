@@ -1,14 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
 import { BackButton } from '@/components/buttons/backButton';
 import { EventForm } from '@/components/events/EventForm';
-import { EventGalleryPreview } from '@/components/events/detail/EventGallery';
 import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
+import { useCreationAttempt } from '@/hooks/useCreationAttempt';
 import { invalidateAfterEventWrite } from '@/lib/queryFreshness';
 import { EventBody } from '@/services/events/eventTypes';
 import {
@@ -27,10 +27,12 @@ export default function NewEventPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
-  const [galleryPreviewFiles, setGalleryPreviewFiles] = useState<File[]>([]);
-  const previewOnly = process.env.NODE_ENV === 'development' && !session;
+  const submitting = useRef(false);
+  const attempt = useCreationAttempt(
+    `events:${session?.account_id || session?.username || ''}`
+  );
 
-  if (!isLoading && !session && !previewOnly) {
+  if (!isLoading && !session) {
     router.replace(LOGIN_ROUTE);
     return null;
   }
@@ -40,52 +42,62 @@ export default function NewEventPage() {
     coverFile?: File,
     galleryFiles: File[] = []
   ) => {
+    if (submitting.current) return;
+    submitting.current = true;
     setSaving(true);
+    let created = false;
     try {
-      const res = body.recurrence
-        ? await createSeries(body)
-        : await createEvent(body);
-      const slug = res.event?.slug;
-      // One v2 upload. For a series the backend maps that URL onto every
-      // occurrence — do not upload once per date.
-      if (slug && coverFile) {
-        try {
-          const up = await uploadEventCover(slug, coverFile);
-          if (up?.url)
-            await updateEvent(slug, { ...body, cover_image: up.url });
-        } catch {
-          toast({
-            title: 'Event saved, but the cover upload failed',
-            description: 'You can add it from the edit page.',
-          });
-        }
-      }
-      let failedPhotoUploads = 0;
-      if (slug) {
-        for (const file of galleryFiles) {
+      await attempt.run(body, async (key) => {
+        const res = body.recurrence
+          ? await createSeries(body, key)
+          : await createEvent(body, key);
+        created = true;
+        const slug = res.event?.slug;
+        // One v2 upload. For a series the backend maps that URL onto every
+        // occurrence — do not upload once per date.
+        if (slug && coverFile) {
           try {
-            await uploadEventPhoto(slug, file);
+            const up = await uploadEventCover(slug, coverFile);
+            if (up?.url)
+              await updateEvent(slug, { ...body, cover_image: up.url });
           } catch {
-            failedPhotoUploads += 1;
+            toast({
+              title: 'Event saved, but the cover upload failed',
+              description: 'You can add it from the edit page.',
+            });
           }
         }
-      }
-      toast({
-        title: 'Draft saved',
-        description: 'It is not on Discover yet. Publish when you are ready.',
-      });
-      if (failedPhotoUploads) {
+        let failedPhotoUploads = 0;
+        if (slug) {
+          for (const file of galleryFiles) {
+            try {
+              await uploadEventPhoto(slug, file);
+            } catch {
+              failedPhotoUploads += 1;
+            }
+          }
+        }
         toast({
-          title: 'Some gallery photos did not upload',
-          description: 'You can add them from the event page.',
+          title: 'Draft saved',
+          description: 'It is not on Discover yet. Publish when you are ready.',
         });
-      }
-      await invalidateAfterEventWrite(getQueryClient(), slug);
-      router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
+        if (failedPhotoUploads) {
+          toast({
+            title: 'Some gallery photos did not upload',
+            description: 'You can add them from the event page.',
+          });
+        }
+        await invalidateAfterEventWrite(getQueryClient(), slug);
+        router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
+      });
     } catch (err) {
+      // App Router push returns before the old page unmounts. Keep a saved
+      // creation locked even if a later refresh/navigation step fails.
+      if (!created) {
+        submitting.current = false;
+        setSaving(false);
+      }
       toast({ title: 'Could not create event', description: eventError(err) });
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -101,35 +113,7 @@ export default function NewEventPage() {
         Share the essentials. This stays a draft until you publish — people will
         not find it on Discover yet.
       </p>
-      {previewOnly && (
-        <p className='mb-5 rounded-lg border border-brand-orange/30 bg-brand-orange/5 px-4 py-3 font-inter text-sm text-text-light dark:text-text-dark'>
-          Local UI preview. Sign in to save an event.
-        </p>
-      )}
-      <EventForm
-        submitLabel='Save draft'
-        saving={saving}
-        onSubmit={onSubmit}
-        previewOnly={previewOnly}
-        onGalleryFilesChange={setGalleryPreviewFiles}
-      />
-      {previewOnly && (
-        <div className='mt-10 space-y-8'>
-          <p className='font-inter text-sm font-semibold text-gray-500 dark:text-gray-400'>
-            Attendee view preview
-          </p>
-          <section
-            aria-label='Attendees preview'
-            className='rounded-xl border border-border-light/70 p-4 dark:border-border-dark/60'
-          >
-            <h2 className='font-newsreader text-2xl font-bold'>Attendees</h2>
-            <p className='mt-2 font-inter text-sm text-gray-500 dark:text-gray-400'>
-              Attendee information will appear here.
-            </p>
-          </section>
-          <EventGalleryPreview files={galleryPreviewFiles} />
-        </div>
-      )}
+      <EventForm submitLabel='Save draft' saving={saving} onSubmit={onSubmit} />
     </main>
   );
 }
