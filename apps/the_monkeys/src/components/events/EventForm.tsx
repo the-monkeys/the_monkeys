@@ -877,6 +877,8 @@ function EventGalleryUploadField({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [isImportingUrl, setIsImportingUrl] = useState(false);
   const remaining = Math.max(0, MAX_EVENT_PHOTOS - currentCount);
   const available = Math.max(0, remaining - files.length);
   const canAdd = available > 0 && !loadingExisting;
@@ -904,6 +906,56 @@ function EventGalleryUploadField({
     setError(message);
   };
 
+  const onAddImageUrl = async () => {
+    if (!canAdd || !imageUrl.trim()) return;
+
+    let parsedUrl: URL;
+    try {
+      parsedUrl = new URL(imageUrl.trim());
+      if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+        throw new Error('invalid protocol');
+      }
+    } catch {
+      setError('Enter a valid image link starting with http:// or https://.');
+      return;
+    }
+
+    setIsImportingUrl(true);
+    setError('');
+    try {
+      const response = await fetch(parsedUrl.toString());
+      if (!response.ok) throw new Error('Image link could not be loaded.');
+
+      const blob = await response.blob();
+      const contentType = blob.type.startsWith('image/')
+        ? blob.type
+        : imageTypeFromPath(parsedUrl.pathname);
+      if (!contentType.startsWith('image/')) {
+        throw new Error('That link does not point to an image.');
+      }
+      if (blob.size > MAX_EVENT_PHOTO_BYTES) {
+        throw new Error('Each image must be 10 MB or smaller.');
+      }
+
+      const extension = contentType.split('/')[1]?.split('+')[0] || 'img';
+      const file = new File([blob], `event-photo-${Date.now()}.${extension}`, {
+        type: contentType,
+      });
+      onChange([...files, file]);
+      setImageUrl('');
+    } catch (err) {
+      setError(
+        err instanceof TypeError
+          ? 'Could not fetch that image. Use a direct image link that allows access.'
+          : err instanceof Error
+            ? err.message
+            : 'Could not add that image link.'
+      );
+    } finally {
+      setIsImportingUrl(false);
+    }
+  };
+
   return (
     <section className='space-y-3 rounded-xl border border-border-light/70 p-4 dark:border-border-dark/60'>
       <div className='flex flex-wrap items-start justify-between gap-3'>
@@ -929,7 +981,7 @@ function EventGalleryUploadField({
       />
 
       {files.length > 0 && (
-        <div className='grid grid-cols-2 gap-3 sm:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-3'>
           {files.map((file, index) => (
             <div
               key={`${file.name}-${file.lastModified}-${index}`}
@@ -976,9 +1028,48 @@ function EventGalleryUploadField({
             : 'Gallery full'}
       </Button>
 
+      <div className='flex flex-col gap-2 sm:flex-row'>
+        <Input
+          type='url'
+          value={imageUrl}
+          onChange={(e) => setImageUrl(e.target.value)}
+          placeholder='Paste a direct image link'
+          aria-label='Paste an event gallery image link'
+          disabled={!canAdd || isImportingUrl}
+          className='min-h-[44px]'
+        />
+        <Button
+          type='button'
+          variant='outline'
+          onClick={onAddImageUrl}
+          disabled={!canAdd || isImportingUrl || !imageUrl.trim()}
+          className='min-h-[44px] shrink-0'
+        >
+          {isImportingUrl ? 'Adding image…' : 'Add image link'}
+        </Button>
+      </div>
+      <p className='-mt-2 font-inter text-xs text-gray-500 dark:text-gray-400'>
+        Use a public direct image link that allows fetching. It will be copied
+        into this event’s gallery.
+      </p>
+
       {error && <p className='font-inter text-xs text-brand-orange'>{error}</p>}
     </section>
   );
+}
+
+function imageTypeFromPath(pathname: string): string {
+  const extension = pathname.split('.').pop()?.toLowerCase();
+  const types: Record<string, string> = {
+    avif: 'image/avif',
+    gif: 'image/gif',
+    jpeg: 'image/jpeg',
+    jpg: 'image/jpeg',
+    png: 'image/png',
+    svg: 'image/svg+xml',
+    webp: 'image/webp',
+  };
+  return types[extension || ''] || '';
 }
 
 function GalleryPhotoPreview({ file }: { file: File }) {

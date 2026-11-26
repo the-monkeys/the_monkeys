@@ -269,11 +269,11 @@ export function EventGalleryPreview({ files }: { files: File[] }) {
       </h2>
 
       {files.length ? (
-        <div className='mt-4 flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2'>
+        <div className='mt-4 grid grid-cols-2 gap-3 sm:gap-4'>
           {files.map((file, index) => (
             <div
               key={`${file.name}-${file.lastModified}-${index}`}
-              className='relative aspect-[3/4] w-full min-w-[280px] flex-shrink-0 snap-start overflow-hidden rounded-2xl bg-foreground-light/40 sm:min-w-[calc(50%-8px)] md:min-w-[calc(33.333%-10.66px)] dark:bg-foreground-dark/30'
+              className='relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'
             >
               <GalleryPreviewImage file={file} />
             </div>
