@@ -17,11 +17,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@the-monkeys/ui/atoms/popover';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import {
   Form,
@@ -31,8 +26,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@the-monkeys/ui/molecules/form';
-import { Calendar } from '@the-monkeys/ui/organism/calendar';
-import moment from 'moment';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -46,7 +39,13 @@ export const Profile = ({ data }: { data?: IUser }) => {
   const hasProfileImage = imageUrl !== '';
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [birthdayNotice, setBirthdayNotice] = useState(false);
+  const [birthdayCompletion, setBirthdayCompletion] = useState(false);
+  const today = new Date();
+  const latestBirthday = [
+    today.getFullYear(),
+    String(today.getMonth() + 1).padStart(2, '0'),
+    String(today.getDate()).padStart(2, '0'),
+  ].join('-');
 
   const form = useForm<z.infer<typeof updateProfileSchema>>({
     resolver: zodResolver(updateProfileSchema),
@@ -65,7 +64,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
   });
 
   function onSubmit(values: z.infer<typeof updateProfileSchema>) {
-    if (birthdayNotice && !values.date_of_birth) {
+    if (birthdayCompletion && !values.date_of_birth) {
       form.setError('date_of_birth', {
         message: 'Add your birthday before returning to the content.',
       });
@@ -85,7 +84,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
           exact: true,
         });
         // Eligibility must be checked again after any profile birthday update.
-        queryClient.removeQueries({ queryKey: ['content-access'] });
+        await queryClient.invalidateQueries({ queryKey: ['content-access'] });
         const returnTo = birthdayReturnPath(window.location.search);
         if (returnTo && values.date_of_birth) router.push(returnTo);
         toast({
@@ -126,7 +125,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get('focus') === 'birthday') {
-      setBirthdayNotice(true);
+      setBirthdayCompletion(true);
       window.requestAnimationFrame(() => form.setFocus('date_of_birth'));
     }
   }, [form]);
@@ -134,15 +133,6 @@ export const Profile = ({ data }: { data?: IUser }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        {birthdayNotice ? (
-          <p
-            role='status'
-            className='rounded-lg border border-border-light p-3 text-sm dark:border-border-dark'
-          >
-            Add your birthday, then save to return to the content. Your age is
-            checked from this profile birthday.
-          </p>
-        ) : null}
         <Section sectionTitle='Basic Information'>
           <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
             <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
@@ -260,45 +250,16 @@ export const Profile = ({ data }: { data?: IUser }) => {
                     Birth Date
                   </FormLabel>
                   <FormControl>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <div>
-                          <Input
-                            id='profile-birthday'
-                            name={field.name}
-                            ref={field.ref}
-                            aria-label='Birth Date'
-                            onBlur={field.onBlur}
-                            onChange={field.onChange}
-                            value={field.value || ''}
-                            className='w-full'
-                            type='date'
-                          />
-                        </div>
-                      </PopoverTrigger>
-
-                      <PopoverContent className='w-auto p-0'>
-                        <Calendar
-                          mode='single'
-                          selected={
-                            field.value
-                              ? new Date(`${field.value}T00:00:00`)
-                              : undefined
-                          }
-                          onSelect={(date) => {
-                            if (date) {
-                              const formattedDate =
-                                moment(date).format('YYYY-MM-DD');
-                              field.onChange(formattedDate);
-                            }
-                          }}
-                          captionLayout='dropdown'
-                          startMonth={new Date(1900, 0)}
-                          endMonth={new Date(new Date().getFullYear(), 11)}
-                          disabled={{ after: new Date() }}
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <Input
+                      {...field}
+                      id='profile-birthday'
+                      aria-label='Birth Date'
+                      value={field.value || ''}
+                      className='w-full'
+                      type='date'
+                      min='1900-01-01'
+                      max={latestBirthday}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

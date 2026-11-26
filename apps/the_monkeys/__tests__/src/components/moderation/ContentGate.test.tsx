@@ -213,3 +213,24 @@ it('blurs a safe cached card immediately after a confirmed staff flag, even if i
   );
   await screen.findByText('cached body');
 });
+
+it.each([
+  ['blog', 'Sensitive content'],
+  ['discussion', 'Sensitive content'],
+  ['event', 'Sensitive event'],
+  ['group', 'Sensitive group'],
+] as const)(
+  'identifies concealed %s with the right accessible label',
+  (kind, label) => {
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <ContentGate target={{ kind, id: 'fixture' }} content={restricted}>
+          <p>secret body</p>
+        </ContentGate>
+      </QueryClientProvider>
+    );
+    expect(screen.getByRole('region', { name: label })).toBeTruthy();
+    expect(screen.getByText(label)).toBeTruthy();
+    expect(screen.queryByText('secret body')).toBeNull();
+  }
+);

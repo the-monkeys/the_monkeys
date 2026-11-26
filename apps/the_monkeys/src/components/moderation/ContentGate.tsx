@@ -89,6 +89,12 @@ function SensitiveGate({
   className,
   href,
 }: ContentGateProps) {
+  const label =
+    target.kind === 'event'
+      ? 'Sensitive event'
+      : target.kind === 'group'
+        ? 'Sensitive group'
+        : 'Sensitive content';
   const auth = useAuth();
   const account = auth.data?.account_id;
   const router = useRouter();
@@ -204,7 +210,7 @@ function SensitiveGate({
   }
   return (
     <section
-      aria-label='Sensitive content'
+      aria-label={label}
       className={cn(
         'relative isolate flex min-w-0 flex-col items-center justify-center overflow-hidden rounded-xl border border-border-light bg-white px-4 py-5 text-center dark:border-border-dark/60 dark:bg-background-dark',
         compact ? 'min-h-[150px]' : 'min-h-[240px] sm:min-h-[280px]',
@@ -222,9 +228,7 @@ function SensitiveGate({
       <span className='rounded-full bg-brand-orange/10 px-3 py-1 text-xs font-medium text-brand-orange'>
         NSFW &middot; 18+
       </span>
-      <p className='mt-3 font-dm_sans text-base font-semibold'>
-        Sensitive content
-      </p>
+      <p className='mt-3 font-dm_sans text-base font-semibold'>{label}</p>
       <p className='mt-2 max-w-sm text-sm leading-6 text-gray-600 dark:text-gray-300'>
         {message}
       </p>

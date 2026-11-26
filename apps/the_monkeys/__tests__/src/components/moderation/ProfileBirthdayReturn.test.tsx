@@ -47,16 +47,6 @@ vi.mock('@/components/user/dialogs/updateProfileDialog', () => ({
 }));
 vi.mock('@/services/api/axiosInstance', () => ({ default: { put: mock.put } }));
 vi.mock('@the-monkeys/ui/hooks/use-toast', () => ({ toast: mock.toast }));
-vi.mock('@the-monkeys/ui/organism/calendar', () => ({
-  Calendar: ({ onSelect }: any) => (
-    <button
-      type='button'
-      onClick={() => onSelect(new Date('1990-01-01T12:00:00Z'))}
-    >
-      Choose birthday
-    </button>
-  ),
-}));
 
 afterEach(() => cleanup());
 beforeEach(() => {
@@ -89,10 +79,9 @@ function mount() {
 describe('birthday return flow', () => {
   it('saves the birthday through the existing profile API then returns to the content', async () => {
     mount();
-    fireEvent.click(screen.getByLabelText('Birth Date'));
-    fireEvent.click(
-      await screen.findByRole('button', { name: 'Choose birthday' })
-    );
+    fireEvent.input(screen.getByLabelText('Birth Date'), {
+      target: { value: '1990-01-01' },
+    });
     fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
     await waitFor(() =>
       expect(mock.push).toHaveBeenCalledWith('/discussions/post')

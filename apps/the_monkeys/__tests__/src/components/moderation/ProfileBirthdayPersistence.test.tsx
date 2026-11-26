@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Profile } from '@/app/settings/components/Profile';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { queryKeys } from '@/lib/queryKeys';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import {
@@ -19,7 +20,10 @@ const mock = vi.hoisted(() => ({
   toast: vi.fn(),
   birthday: '',
 }));
-vi.mock('next/navigation', () => ({ useRouter: () => ({ push: mock.push }) }));
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: mock.push, refresh: vi.fn() }),
+  usePathname: () => '/settings',
+}));
 vi.mock('@/hooks/auth/useAuth', () => ({
   default: () => ({
     data: { account_id: 'owner', username: 'birthday-fixture' },
@@ -42,6 +46,14 @@ vi.mock('@/services/api/axiosInstance', () => ({
   default: { get: mock.get, put: mock.put },
 }));
 vi.mock('@the-monkeys/ui/hooks/use-toast', () => ({ toast: mock.toast }));
+vi.mock('@/services/moderation/moderationApi', () => ({
+  getContentAccess: vi.fn(async () =>
+    mock.birthday.startsWith('1990-')
+      ? { is_nsfw: true, can_reveal: true, reason: 'reveal_required' }
+      : { is_nsfw: true, can_reveal: false, reason: 'dob_required' }
+  ),
+  revealContent: vi.fn(),
+}));
 
 const profile = () => ({
   account_id: 'owner',
@@ -169,4 +181,48 @@ describe('private birthday persistence', () => {
     expect(mock.put).not.toHaveBeenCalled();
     expect(mock.push).not.toHaveBeenCalled();
   });
+});
+
+it('opens only the native date picker when the birthday field is clicked', async () => {
+  mount();
+  await loaded();
+  fireEvent.click(screen.getByLabelText('Birth Date'));
+  expect((screen.getByLabelText('Birth Date') as HTMLInputElement).type).toBe(
+    'date'
+  );
+  expect(screen.queryAllByRole('combobox')).toHaveLength(0);
+});
+it('refreshes an already-mounted age gate after a successful birthday save', async () => {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false, staleTime: Infinity } },
+  });
+  render(
+    <QueryClientProvider client={client}>
+      <Profile
+        data={{
+          account_id: 'owner',
+          username: 'birthday-fixture',
+          email: 'local@example.invalid',
+        }}
+      />
+      <ContentGate
+        target={{ kind: 'blog', id: 'fixture' }}
+        content={{
+          is_nsfw: true,
+          content_rating: { is_nsfw: true, revision: 1 },
+        }}
+      >
+        <p>secret body</p>
+      </ContentGate>
+    </QueryClientProvider>
+  );
+  await loaded();
+  await screen.findByRole('link', { name: 'Add your birthday' });
+  fireEvent.input(screen.getByLabelText('Birth Date'), {
+    target: { value: '1990-06-15' },
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+  await screen.findByRole('button', { name: 'Show content' });
+  expect(screen.queryByRole('link', { name: 'Add your birthday' })).toBeNull();
+  expect(screen.queryByText('secret body')).toBeNull();
 });
