@@ -40,17 +40,17 @@ export async function readHomepageBlogs({
 }
 
 /** Writes refresh this homepage-only branch; ordinary and personalized caches stay separate. */
-export function homepageBlogQuery({
-  limit = 12,
-  offset = 0,
-  sort = 'latest',
-}: HomepageBlogParams = {}) {
+export function homepageBlogQuery(
+  { limit = 12, offset = 0, sort = 'latest' }: HomepageBlogParams = {},
+  viewer?: string
+) {
   return {
     queryKey: queryKeys.blog.homepage(
       sort,
       limit,
       offset,
-      HOMEPAGE_POLICY_VERSION
+      HOMEPAGE_POLICY_VERSION,
+      viewer
     ),
     queryFn: () => readHomepageBlogs({ limit, offset, sort }),
     staleTime: LIVE_LIST_STALE_MS,

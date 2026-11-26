@@ -111,7 +111,7 @@ describe('anonymous landing community reads', () => {
       )
     );
     const pending = expect(readLandingGroups()).rejects.toThrow('aborted');
-    await vi.advanceTimersByTimeAsync(5000);
+    await vi.advanceTimersByTimeAsync(15000);
     await pending;
     expect(vi.getTimerCount()).toBe(0);
   });
@@ -126,4 +126,54 @@ describe('anonymous landing community reads', () => {
     expect(landingDiscussionQuery.staleTime).toBe(0);
     expect(landingGroupQuery.retry).toBe(false);
   });
+});
+
+it('allows browser reads to finish after a slow gateway check without an early cancellation', async () => {
+  vi.useFakeTimers();
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      (_url, options) =>
+        new Promise((resolve, reject) => {
+          const completed = setTimeout(
+            () => resolve(Response.json({ groups: [] })),
+            6000
+          );
+          options.signal.addEventListener(
+            'abort',
+            () => {
+              clearTimeout(completed);
+              reject(new Error('premature cancellation'));
+            },
+            { once: true }
+          );
+        })
+    )
+  );
+  const result = readLandingGroups().catch((error) => error);
+  await vi.advanceTimersByTimeAsync(6000);
+  expect(await result).toEqual([]);
+  expect(vi.getTimerCount()).toBe(0);
+});
+
+it('keeps server prefetch bounded independently of the longer browser deadline', async () => {
+  vi.useFakeTimers();
+  vi.stubGlobal('window', undefined);
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(
+      (_url, options) =>
+        new Promise((_resolve, reject) => {
+          options.signal.addEventListener(
+            'abort',
+            () => reject(new Error('server deadline')),
+            { once: true }
+          );
+        })
+    )
+  );
+  const result = expect(readLandingGroups()).rejects.toThrow('server deadline');
+  await vi.advanceTimersByTimeAsync(5000);
+  await result;
+  expect(vi.getTimerCount()).toBe(0);
 });

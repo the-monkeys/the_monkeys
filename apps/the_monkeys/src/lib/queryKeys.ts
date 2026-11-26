@@ -92,17 +92,21 @@ export const queryKeys = {
       sort: 'latest' | 'trending',
       limit: number,
       offset: number,
-      version: string
+      version: string,
+      viewer?: string
     ) =>
-      [
-        'meta-feed-blogs',
-        'homepage',
-        'public',
-        version,
-        sort,
-        limit,
-        offset,
-      ] as const,
+      scoped(
+        [
+          'meta-feed-blogs',
+          'homepage',
+          'public',
+          version,
+          sort,
+          limit,
+          offset,
+        ] as const,
+        viewer
+      ),
     byId: blogById,
     detail: (blogId: QueryId) => ['blog-detail', blogId] as const,
     published: (account: QueryId, blogId: QueryId) =>

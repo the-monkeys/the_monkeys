@@ -14,10 +14,25 @@ const subscribe = () => () => {};
 const browserSnapshot = () => false;
 const serverSnapshot = () => true;
 
-export default function useGetHomepageBlogs(params: HomepageBlogParams = {}) {
+export default function useGetHomepageBlogs(
+  params: HomepageBlogParams = {},
+  { viewer, enabled = true }: { viewer?: string; enabled?: boolean } = {}
+) {
   const client = useQueryClient();
-  const options = homepageBlogQuery(params);
-  const { data, isLoading, isFetching, isError } = useQuery(options);
+  const options = homepageBlogQuery(params, viewer);
+  const { data, isLoading, isFetching, isError } = useQuery({
+    ...options,
+    enabled,
+    // Public redacted HTML remains stable while the viewer's own catalog loads.
+    // Authorised responses must never overwrite the anonymous hydration key.
+    initialData: viewer
+      ? () =>
+          client.getQueryData<Awaited<ReturnType<typeof options.queryFn>>>(
+            homepageBlogQuery(params).queryKey
+          )
+      : undefined,
+    initialDataUpdatedAt: viewer ? 0 : undefined,
+  });
   const serverOrHydrating = useSyncExternalStore(
     subscribe,
     browserSnapshot,

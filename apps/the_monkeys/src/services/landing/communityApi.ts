@@ -18,7 +18,12 @@ async function readCommunityList(
   const abort = () => controller.abort();
   if (signal?.aborted) abort();
   else signal?.addEventListener('abort', abort, { once: true });
-  const timeout = setTimeout(abort, 5000);
+  // The gateway may spend five seconds checking content after the list read.
+  // Keep SSR bounded, but do not race that check from the browser.
+  const timeout = setTimeout(
+    abort,
+    typeof window === 'undefined' ? 5000 : 15000
+  );
   try {
     const res = await fetch(`${origin}${path}`, {
       credentials:

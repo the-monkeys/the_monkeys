@@ -128,6 +128,9 @@ function DiscussionCardLayout(
         content={post}
         target={{ kind: 'discussion', id: post.public_id }}
         compact={compact || props.linked}
+        loadingClassName={
+          compact ? 'min-h-[108px] sm:min-h-[94px] lg:min-h-[74px]' : undefined
+        }
         href={discussionPath(post.public_id)}
       >
         <DiscussionCardContent {...props} />

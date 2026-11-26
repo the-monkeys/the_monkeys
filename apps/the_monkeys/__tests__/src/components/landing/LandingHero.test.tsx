@@ -216,3 +216,18 @@ describe('LandingHero', () => {
     expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
   });
 });
+
+it('keeps a lead slot ahead of discussions when the initial article request is still pending', () => {
+  renderWithProviders(
+    <LandingHero
+      leadFallback={<div role='status'>Loading featured post</div>}
+      communityContent={<p>Discussion previews</p>}
+    />
+  );
+  const lead = screen.getByRole('status');
+  const discussion = screen.getByText('Discussion previews');
+  expect(
+    lead.compareDocumentPosition(discussion) & Node.DOCUMENT_POSITION_FOLLOWING
+  ).toBeTruthy();
+  expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
+});

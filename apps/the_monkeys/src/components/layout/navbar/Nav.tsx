@@ -114,7 +114,15 @@ const Nav = () => {
 
                 <div className={STYLES.divider} />
 
-                {session ? (
+                {isAuthLoading ? (
+                  <div
+                    role='status'
+                    aria-label='Loading account'
+                    className='h-9 w-20 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800 sm:w-40'
+                  >
+                    <span className='sr-only'>Loading account</span>
+                  </div>
+                ) : session ? (
                   <div className='flex items-center gap-0 min-[375px]:gap-3'>
                     {!isAuthLoading && <CreateButton />}
                     <ProfileDropdown session={session} />

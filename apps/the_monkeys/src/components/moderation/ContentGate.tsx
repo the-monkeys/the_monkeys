@@ -38,6 +38,7 @@ export type ContentGateProps = {
   children: ReactNode;
   compact?: boolean;
   className?: string;
+  loadingClassName?: string;
   href?: string;
 };
 export function ContentGate(props: ContentGateProps) {
@@ -89,6 +90,7 @@ function SensitiveGate({
   children,
   compact,
   className,
+  loadingClassName,
   href,
 }: ContentGateProps) {
   const label =
@@ -110,7 +112,6 @@ function SensitiveGate({
   const binding = useRef({ rating, account });
   if (binding.current.rating !== rating) binding.current = { rating, account };
   const boundToViewer = binding.current.account === account;
-  const requestedRefresh = useRef<string>();
   const access = useQuery({
     queryKey: [
       'content-access',
@@ -126,18 +127,11 @@ function SensitiveGate({
     refetchOnWindowFocus: 'always',
   });
   useEffect(() => {
-    if (account && !boundToViewer && requestedRefresh.current !== account) {
-      requestedRefresh.current = account;
-      router.refresh();
-    }
-  }, [account, boundToViewer, router]);
-  useEffect(() => {
     if (
       error ||
       !account ||
-      !boundToViewer ||
       !access.data?.revealed ||
-      rating?.revealed
+      (rating?.revealed && boundToViewer)
     )
       return;
     const key = `${account}:${target.kind}:${target.id}:${access.data.revision ?? 0}`;
@@ -178,6 +172,42 @@ function SensitiveGate({
     access.isSuccess &&
     access.data.revealed === true;
   if (shown) return <>{children}</>;
+  const loading =
+    auth.isPending ||
+    auth.isLoading ||
+    (!!account &&
+      (access.isPending ||
+        (access.isSuccess &&
+          access.data?.revealed &&
+          (!rating?.revealed || !boundToViewer) &&
+          !error)));
+  if (loading)
+    return (
+      <section
+        aria-label={label}
+        className={cn(
+          'relative min-w-0 overflow-hidden rounded-xl border border-border-light bg-white dark:border-border-dark/60 dark:bg-background-dark',
+          compact ? 'min-h-20' : 'min-h-[240px] sm:min-h-[280px]',
+          loadingClassName,
+          className
+        )}
+      >
+        <div
+          role='status'
+          aria-label='Loading sensitive content'
+          className='absolute inset-0 flex items-center justify-center p-4'
+        >
+          <span className='sr-only'>Loading sensitive content</span>
+          <div
+            aria-hidden='true'
+            className='w-full space-y-3 motion-safe:animate-pulse'
+          >
+            <div className='h-3 w-3/4 rounded bg-gray-100 dark:bg-gray-800' />
+            <div className='h-3 w-1/2 rounded bg-gray-100 dark:bg-gray-800' />
+          </div>
+        </div>
+      </section>
+    );
   const result = access.data;
   const returnTo =
     safeModerationReturn(href) ||
@@ -275,7 +305,7 @@ function SensitiveGate({
         ],
         confirmed.access
       );
-      await refreshContentQueries(client, target);
+      await refreshContentQueries(client, target, { afterWrite: true });
       await access.refetch();
       const destination = safeModerationReturn(href) || contentHref(target);
       if (destination === pathname) router.refresh();

@@ -88,3 +88,77 @@ it('keeps validated feed data steady while an authorised replacement is loading'
     client.clear();
   }
 });
+
+it('coalesces remembered reveals for sibling cards into one family refresh', async () => {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const key = ['meta-feed-blogs', 'homepage'];
+  client.setQueryData(key, ['redacted']);
+  let complete!: (value: string[]) => void;
+  const read = vi.fn(
+    () =>
+      new Promise<string[]>((resolve) => {
+        complete = resolve;
+      })
+  );
+  const observer = new QueryObserver(client, {
+    queryKey: key,
+    queryFn: read,
+    staleTime: Infinity,
+  });
+  const off = observer.subscribe(() => {});
+  try {
+    const first = refreshContentQueries(client, { kind: 'blog', id: 'first' });
+    const second = refreshContentQueries(client, {
+      kind: 'blog',
+      id: 'second',
+    });
+    expect(read).toHaveBeenCalledTimes(1);
+    complete(['revealed']);
+    await Promise.all([first, second]);
+    expect(client.getQueryData(key)).toEqual(['revealed']);
+  } finally {
+    off();
+    client.clear();
+  }
+});
+
+it('reads again after explicit consent if an earlier source read was already in flight', async () => {
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const key = ['meta-feed-blogs', 'homepage'];
+  client.setQueryData(key, ['redacted']);
+  let complete!: (value: string[]) => void;
+  const read = vi
+    .fn()
+    .mockImplementationOnce(
+      () =>
+        new Promise<string[]>((resolve) => {
+          complete = resolve;
+        })
+    )
+    .mockResolvedValue(['authorised after consent']);
+  const observer = new QueryObserver(client, {
+    queryKey: key,
+    queryFn: read,
+    staleTime: Infinity,
+  });
+  const off = observer.subscribe(() => {});
+  try {
+    const initial = refreshContentQueries(client, { kind: 'blog', id: 'post' });
+    const afterConsent = refreshContentQueries(
+      client,
+      { kind: 'blog', id: 'post' },
+      { afterWrite: true }
+    );
+    complete(['redacted']);
+    await Promise.all([initial, afterConsent]);
+    expect(client.getQueryData(key)).toEqual(['authorised after consent']);
+    expect(read).toHaveBeenCalledTimes(2);
+  } finally {
+    off();
+    client.clear();
+  }
+});

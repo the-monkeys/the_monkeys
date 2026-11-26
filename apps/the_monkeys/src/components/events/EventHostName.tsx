@@ -29,9 +29,7 @@ export function EventHostName({
     : username?.trim() || undefined;
 
   const { user: byUsername } = useUser(publicUsername);
-  const { user: byAccount } = useGetProfileInfoById(
-    publicUsername ? undefined : accountId
-  );
+  const { user: byAccount } = useGetProfileInfoById(accountId);
 
   const firstName = byUsername?.first_name || byAccount?.user?.first_name;
   const lastName = byUsername?.last_name || byAccount?.user?.last_name;

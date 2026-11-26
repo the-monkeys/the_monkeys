@@ -285,3 +285,40 @@ it('honours a remembered reveal while waiting for the authorised card, without a
   expect(screen.queryByText('secret body')).toBeNull();
   view.unmount();
 });
+
+it('keeps a neutral protected placeholder until the session is known', () => {
+  mocks.auth = { data: undefined, isLoading: true };
+  mount();
+  expect(screen.queryByRole('link', { name: /log in/i })).toBeNull();
+  expect(
+    screen.getByRole('status', { name: 'Loading sensitive content' })
+  ).toBeTruthy();
+  expect(screen.queryByText('secret body')).toBeNull();
+  expect(screen.queryByAltText('secret image')).toBeNull();
+});
+it('does not refresh the whole homepage when the signed-in viewer becomes known', async () => {
+  mocks.pathname = '/';
+  mocks.auth = { data: undefined, isLoading: true };
+  const view = mount();
+  mocks.auth = { data: { account_id: 'adult' }, isLoading: false };
+  mocks.get.mockResolvedValue({
+    is_nsfw: true,
+    can_reveal: true,
+    revealed: true,
+    revision: 1,
+  });
+  view.rerender(
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
+    >
+      <ContentGate target={target} content={restricted}>
+        <p>secret body</p>
+      </ContentGate>
+    </QueryClientProvider>
+  );
+  await waitFor(() => expect(mocks.get).toHaveBeenCalled());
+  expect(mocks.refresh).not.toHaveBeenCalled();
+  expect(screen.queryByText('secret body')).toBeNull();
+});

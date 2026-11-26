@@ -1,4 +1,5 @@
 import { EventHostName } from '@/components/events/EventHostName';
+import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import useUser from '@/hooks/user/useUser';
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -8,7 +9,7 @@ vi.mock('@/hooks/user/useUser', () => ({
 }));
 
 vi.mock('@/hooks/user/useGetProfileInfoByUserId', () => ({
-  default: () => ({ user: undefined, isLoading: false, isError: false }),
+  default: vi.fn(() => ({ user: undefined, isLoading: false, isError: false })),
 }));
 
 vi.mock('next/link', () => ({
@@ -84,4 +85,46 @@ describe('EventHostName', () => {
     expect(screen.getByText('@chimp')).toBeTruthy();
     expect(screen.queryByTitle('Verified account')).toBeNull();
   });
+});
+
+it('uses the hydrated account card while a username profile is still loading', () => {
+  mockedUseUser.mockReturnValue({
+    user: undefined,
+    isLoading: true,
+    isError: null,
+    mutate: vi.fn(),
+  });
+  vi.mocked(useGetProfileInfoById).mockImplementation((id) => ({
+    user:
+      id === 'host-account'
+        ? {
+            user: {
+              account_id: 'host-account',
+              username: 'chimp',
+              first_name: 'Dave',
+              last_name: 'Augustus',
+              bio: '',
+              location: '',
+              created_at: { seconds: 0, nanos: 0 },
+            },
+            followers: 0,
+            following: 0,
+          }
+        : undefined,
+    isLoading: false,
+    isError: false,
+  }));
+  render(
+    <EventHostName
+      username='chimp'
+      accountId='host-account'
+      prefix='Hosted by '
+    />
+  );
+  expect(
+    screen
+      .getByRole('link', { name: 'Hosted by Dave Augustus' })
+      .getAttribute('href')
+  ).toBe('/chimp');
+  expect(screen.queryByText('@chimp')).toBeNull();
 });

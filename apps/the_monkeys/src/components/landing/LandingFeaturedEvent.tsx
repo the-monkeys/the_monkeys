@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import Link from 'next/link';
 
 import { EventContentOptions } from '@/components/events/EventContentOptions';
@@ -47,6 +49,8 @@ function LandingFeaturedEventContent({ event }: { event: EventItem }) {
   const description = purifyHTMLString(event.description || '');
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
   const timezone = useViewerTimezone();
+  const [timeReady, setTimeReady] = useState(false);
+  useEffect(() => setTimeReady(true), []);
   const date = eventDateParts(event.start_time, timezone);
   const rawOrganizer = normalizeOrganizer(event.organizer_username);
   const directOrganizer = displayOrganizer(rawOrganizer);
@@ -98,12 +102,17 @@ function LandingFeaturedEventContent({ event }: { event: EventItem }) {
             </span>
           </div>
           {date && (
-            <span className='flex min-w-11 flex-col rounded-lg border border-white/15 bg-white/10 px-2 py-1 text-center backdrop-blur-sm'>
+            <span
+              aria-busy={!timeReady}
+              className='flex min-w-11 flex-col rounded-lg border border-white/15 bg-white/10 px-2 py-1 text-center backdrop-blur-sm'
+            >
               <span className='font-inter text-[10px] font-bold uppercase tracking-wider text-[#ff9688]'>
-                {date.month}
+                <span className={timeReady ? '' : 'invisible'}>
+                  {date.month}
+                </span>
               </span>
               <span className='font-newsreader text-xl font-semibold leading-none'>
-                {date.day}
+                <span className={timeReady ? '' : 'invisible'}>{date.day}</span>
               </span>
             </span>
           )}
@@ -126,7 +135,12 @@ function LandingFeaturedEventContent({ event }: { event: EventItem }) {
           <div className='mt-2 space-y-1.5 font-inter text-xs text-white/80'>
             <p className='flex items-center gap-2'>
               <Icon name='RiCalendar' size={15} className='text-[#ff9688]' />
-              {formatEventCardWhen(event.start_time, timezone)}
+              <span
+                aria-busy={!timeReady}
+                className={timeReady ? '' : 'invisible'}
+              >
+                {formatEventCardWhen(event.start_time, timezone)}
+              </span>
             </p>
             <p className='flex items-center gap-2'>
               <Icon

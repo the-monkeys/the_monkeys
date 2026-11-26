@@ -1,4 +1,5 @@
 import useAuth from '@/hooks/auth/useAuth';
+import { hasKnownViewer } from '@/lib/authQuerySession';
 import { queryKeys } from '@/lib/queryKeys';
 import {
   landingDiscussionQuery,
@@ -9,11 +10,13 @@ import {
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export function useLandingCommunity() {
-  const { data: session } = useAuth();
+  const auth = useAuth();
+  const session = auth.data;
   const viewer = session?.account_id || session?.username || undefined;
   const client = useQueryClient();
   const discussions = useQuery({
     ...landingDiscussionQuery,
+    enabled: hasKnownViewer(auth),
     queryKey: queryKeys.landing.discussions(viewer),
     queryFn: ({ signal }) => readLandingDiscussions(signal, !!viewer),
     // Public hydration is safe to seed; personalised results never enter that key.
@@ -27,6 +30,7 @@ export function useLandingCommunity() {
   });
   const groups = useQuery({
     ...landingGroupQuery,
+    enabled: hasKnownViewer(auth),
     queryKey: queryKeys.landing.groups(viewer),
     queryFn: ({ signal }) => readLandingGroups(signal, !!viewer),
     initialData: () =>

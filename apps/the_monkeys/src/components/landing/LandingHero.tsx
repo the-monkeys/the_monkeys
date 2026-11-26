@@ -26,6 +26,7 @@ const focusRing =
 
 export function LandingHero({
   lead,
+  leadFallback,
   featuredEvent,
   primaryContent,
   secondaryContent,
@@ -33,6 +34,7 @@ export function LandingHero({
   groupsContent,
 }: {
   lead?: MetaBlog;
+  leadFallback?: ReactNode;
   featuredEvent?: EventItem;
   primaryContent?: ReactNode;
   secondaryContent?: ReactNode;
@@ -50,6 +52,7 @@ export function LandingHero({
     : '';
   const hasLandingContent =
     lead ||
+    leadFallback ||
     featuredEvent ||
     primaryContent ||
     secondaryContent ||
@@ -64,8 +67,14 @@ export function LandingHero({
       {hasLandingContent && (
         <div className='flex flex-col gap-4 pb-8 pt-4 xl:grid xl:grid-cols-[minmax(0,1.65fr)_minmax(19rem,1fr)] xl:items-start xl:gap-4'>
           <section aria-label='Featured posts and feed' className='contents'>
+            {!lead && leadFallback ? (
+              <div className='min-w-0 xl:col-start-1 xl:row-start-1 xl:h-full'>
+                {leadFallback}
+              </div>
+            ) : null}
             {lead && (
               <PostCardGate
+                loadingClassName='min-h-[calc(56.25vw+13.5rem)] sm:min-h-[254px]'
                 imageMenu='mobile'
                 content={lead}
                 target={{ kind: 'blog', id: lead.blog_id }}

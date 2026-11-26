@@ -201,10 +201,13 @@ describe('LandingPageClient', () => {
     renderWithProviders(<LandingPageClient />);
 
     expect(latestBlogs).toHaveBeenCalledWith({ limit: 12 });
-    expect(useGetHomepageBlogs).toHaveBeenCalledWith({
-      limit: 12,
-      sort: 'trending',
-    });
+    expect(useGetHomepageBlogs).toHaveBeenCalledWith(
+      {
+        limit: 12,
+        sort: 'trending',
+      },
+      { viewer: 'viewer', enabled: true }
+    );
     const community = screen.getByRole('region', { name: 'Top discussions' });
     const groupSection = screen.getByRole('region', {
       name: 'Discover groups',
@@ -472,16 +475,14 @@ describe('homepage eligibility without a lead', () => {
   it('keeps qualified text-only articles visible without creating a featured lead', () => {
     latestBlogs.mockReturnValue({
       blogs: {
-        blogs: posts
-          .slice(0, 3)
-          .map((post) => ({
-            ...post,
-            first_image: '',
-            homepage_eligibility: {
-              ...post.homepage_eligibility,
-              lead_eligible: false,
-            },
-          })),
+        blogs: posts.slice(0, 3).map((post) => ({
+          ...post,
+          first_image: '',
+          homepage_eligibility: {
+            ...post.homepage_eligibility,
+            lead_eligible: false,
+          },
+        })),
       },
       isLoading: false,
       isError: false,
