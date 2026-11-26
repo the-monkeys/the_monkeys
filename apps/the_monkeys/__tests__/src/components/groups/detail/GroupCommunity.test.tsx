@@ -14,8 +14,8 @@ vi.mock('@/hooks/auth/useAuth', () => ({
   default: () => authMock(),
 }));
 
-vi.mock('@/components/groups/detail/GroupBlogsPanel', () => ({
-  GroupBlogsPanel: () => <div>posts-panel</div>,
+vi.mock('@/components/groups/detail/GroupPostsFeed', () => ({
+  GroupPostsFeed: () => <div>posts-panel</div>,
 }));
 
 vi.mock('@/hooks/events/useEventQueries', () => ({

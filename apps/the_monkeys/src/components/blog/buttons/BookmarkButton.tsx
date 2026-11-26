@@ -5,12 +5,9 @@ import { useState } from 'react';
 import { AuthPromptDialog } from '@/components/auth/AuthPromptDialog';
 import Icon from '@/components/icon';
 import useAuth from '@/hooks/auth/useAuth';
-import { BOOKMARKED_BLOGS_QUERY_KEY } from '@/hooks/blog/useGetBookmarkedBlogs';
 import { useIsPostBookmarked } from '@/hooks/user/useBookmarkStatus';
-import { queryKeys } from '@/lib/queryKeys';
-import axiosInstance from '@/services/api/axiosInstance';
+import { usePostInteraction } from '@/hooks/user/usePostInteraction';
 import { isAuthError } from '@/utils/errorUtils';
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
 export const BookmarkButton = ({
@@ -24,15 +21,16 @@ export const BookmarkButton = ({
   isDisable?: boolean;
   initialIsBookmarked?: boolean;
 }) => {
-  const queryClient = useQueryClient();
-  const { isSuccess: isAuthenticated } = useAuth();
+  const { data: session } = useAuth();
+  const viewer = session?.username;
+  const isAuthenticated = !!viewer;
+  const { change, loading } = usePostInteraction('bookmark', blogId, viewer);
   const { bookmarkStatus, isLoading, isError } = useIsPostBookmarked(
     blogId,
     isAuthenticated,
     initialIsBookmarked
   );
 
-  const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
 
   if (isLoading) {
@@ -66,96 +64,28 @@ export const BookmarkButton = ({
     );
   }
 
-  const onPostBookmark = async () => {
-    setLoading(true);
-
+  const toggleBookmark = async (shouldBookmark: boolean) => {
+    if (loading || isDisable) return;
     try {
-      const response = await axiosInstance.post(`/user/bookmark/${blogId}`);
-
-      if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Blog bookmarked successfully.',
-        });
-
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.status(blogId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.count(blogId),
-        });
-      }
+      if (!(await change(shouldBookmark))) return;
+      toast({
+        variant: 'success',
+        title: 'Success',
+        description: shouldBookmark
+          ? 'Blog bookmarked successfully.'
+          : 'Removed bookmark successfully.',
+      });
     } catch (err: unknown) {
       if (isAuthError(err)) {
         setAuthPromptOpen(true);
         return;
       }
-
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to bookmark post.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onPostRemoveBookmark = async () => {
-    setLoading(true);
-
-    try {
-      const response = await axiosInstance.post(
-        `/user/remove-bookmark/${blogId}`
-      );
-
-      if (response.status === 200) {
-        toast({
-          variant: 'success',
-          title: 'Success',
-          description: 'Removed bookmark successfully.',
-        });
-
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.status(blogId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: queryKeys.blog.bookmarks.count(blogId),
-        });
-        queryClient.invalidateQueries({
-          queryKey: [BOOKMARKED_BLOGS_QUERY_KEY],
-        });
-      }
-    } catch (err: unknown) {
-      if (isAuthError(err)) {
-        setAuthPromptOpen(true);
-        return;
-      }
-
-      if (err instanceof Error) {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: err.message || 'Failed to remove post bookmark.',
-        });
-      } else {
-        toast({
-          variant: 'error',
-          title: 'Error',
-          description: 'An unknown error occurred.',
-        });
-      }
-    } finally {
-      setLoading(false);
+      toast({
+        variant: 'error',
+        title: 'Error',
+        description:
+          err instanceof Error ? err.message : 'An unknown error occurred.',
+      });
     }
   };
 
@@ -176,7 +106,7 @@ export const BookmarkButton = ({
               ? 'cursor-default opacity-80'
               : 'cursor-pointer'
           }`}
-          onClick={onPostRemoveBookmark}
+          onClick={() => toggleBookmark(false)}
           disabled={loading || isDisable}
           title='Remove Bookmark'
         >
@@ -189,7 +119,7 @@ export const BookmarkButton = ({
               ? 'cursor-default opacity-80'
               : 'cursor-pointer'
           }`}
-          onClick={onPostBookmark}
+          onClick={() => toggleBookmark(true)}
           disabled={loading || isDisable}
           title='Add Bookmark'
         >

@@ -1,12 +1,15 @@
 import BlogPageClient from '@/app/blog/[slug]/BlogPageClient';
+import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { useGroupDetail } from '@/hooks/groups/useGroupQueries';
 import { Blog } from '@/services/blog/blogTypes';
 import { cleanup, render, screen } from '@testing-library/react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 vi.mock('next/dynamic', () => ({
-  default: () => () => <div>Article body</div>,
+  default: (_loader: unknown, options: { loading?: () => React.ReactNode }) =>
+    options?.loading ?? (() => null),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -19,7 +22,7 @@ vi.mock('@/components/blog/actions/BlogReportDialog', () => ({
 }));
 
 vi.mock('@/components/blog/actions/BlogShareDialog', () => ({
-  BlogShareDialog: () => <button data-testid='blog-share'>Share</button>,
+  BlogShareDialog: () => <button>Share Blog</button>,
 }));
 
 vi.mock('@/components/blog/actions/EditBlogDialog', () => ({
@@ -38,18 +41,8 @@ vi.mock('@/components/blog/LikesCount', () => ({
   LikesCount: () => <span>0 likes</span>,
 }));
 
-vi.mock('@/components/blog/getBlogContent', () => ({
-  BlogHeading: ({ title }: { title: string }) => <h1>{title}</h1>,
-  getCardContent: vi.fn(),
-  withoutPostTitle: (data: { blocks?: unknown[] } | undefined) => data,
-}));
-
 vi.mock('@/components/buttons/backButton', () => ({
   BackButton: () => <button>Back</button>,
-}));
-
-vi.mock('@/components/social/SocialSnapshot', () => ({
-  SocialSnapshotCard: () => <div data-testid='social-snapshot'>Snapshot</div>,
 }));
 
 vi.mock('@/components/topics/topicsContainer', () => ({
@@ -61,11 +54,11 @@ vi.mock('@/components/user/userInfo', () => ({
 }));
 
 vi.mock('@/hooks/auth/useAuth', () => ({
-  default: () => ({
+  default: vi.fn(() => ({
     data: { account_id: 'viewer-1' },
     isSuccess: true,
     isError: false,
-  }),
+  })),
 }));
 
 vi.mock('@/hooks/blog/useGetPublishedBlogDetailByBlogId', () => ({
@@ -116,8 +109,79 @@ const mockedArticleHook = vi.mocked(useGetPublishedBlogDetailByBlogId);
 const mockedGroupDetail = vi.mocked(useGroupDetail);
 
 describe('BlogPageClient', () => {
+  it('includes readable article blocks in anonymous server HTML before the editor mounts', () => {
+    vi.mocked(useAuth).mockReturnValue({
+      data: null,
+      isSuccess: false,
+      isError: false,
+    } as never);
+    mockedArticleHook.mockReturnValue({
+      blog: {
+        ...publicBlog,
+        blog: {
+          ...publicBlog.blog,
+          blocks: [
+            ...publicBlog.blog.blocks,
+            {
+              type: 'paragraph',
+              data: { text: 'Learn Go with <b>confidence</b>. नमस्ते 世界' },
+            },
+            { type: 'header', data: { text: 'Build a backend', level: 2 } },
+            {
+              type: 'list',
+              data: {
+                style: 'ordered',
+                items: [
+                  'Install Go',
+                  {
+                    content: 'Write an API',
+                    items: [{ content: 'Test it', items: [] }],
+                  },
+                ],
+              },
+            },
+            {
+              type: 'code',
+              data: { code: 'if x < 2 { return }', language: 'go' },
+            },
+          ],
+        },
+      } as Blog,
+      isLoading: false,
+      isError: false,
+    });
+
+    const html = renderToStaticMarkup(
+      <BlogPageClient urlBlogId='123' fullSlug='post-123' />
+    );
+    const document = new DOMParser().parseFromString(html, 'text/html');
+    document.querySelectorAll('script').forEach((script) => script.remove());
+
+    expect(document.body.textContent).toContain(
+      'Learn Go with confidence. नमस्ते 世界'
+    );
+    expect(document.querySelector('h2')?.textContent).toBe('Build a backend');
+    expect(document.querySelector('ol li')?.textContent).toContain(
+      'Install Go'
+    );
+    expect(document.querySelector('ol ol li')?.textContent).toBe('Test it');
+    expect(document.querySelector('pre code')?.textContent).toBe(
+      'if x < 2 { return }'
+    );
+    expect(document.querySelector('b')?.textContent).toBe('confidence');
+    expect(document.querySelectorAll('h1')).toHaveLength(1);
+    expect(
+      document.querySelector('[data-article-body]')?.textContent
+    ).not.toContain('Post');
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(useAuth).mockReturnValue({
+      data: { account_id: 'viewer-1' },
+      isSuccess: true,
+      isError: false,
+    } as never);
     vi.useFakeTimers();
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }));
     mockedGroupDetail.mockReturnValue({
@@ -133,6 +197,51 @@ describe('BlogPageClient', () => {
     vi.unstubAllGlobals();
   });
 
+  it.each([
+    { isError: true, isLoading: false },
+    { isError: false, isLoading: true },
+  ])(
+    'withholds stale article body HTML when access failed or is loading: %j',
+    (state) => {
+      mockedArticleHook.mockReturnValue({
+        blog: {
+          ...publicBlog,
+          blog: {
+            ...publicBlog.blog,
+            blocks: [
+              {
+                type: 'paragraph',
+                data: { text: 'Sensitive stale article body' },
+              },
+            ],
+          },
+        } as Blog,
+        ...state,
+      });
+
+      const html = renderToStaticMarkup(
+        <BlogPageClient urlBlogId='123' fullSlug='post-123' />
+      );
+      expect(html).not.toContain('Sensitive stale article body');
+      expect(html).not.toContain('data-article-body');
+      expect(fetch).not.toHaveBeenCalled();
+    }
+  );
+
+  it('keeps the owner edit interaction available', () => {
+    vi.mocked(useAuth).mockReturnValue({
+      data: { account_id: 'author-1' },
+      isSuccess: true,
+      isError: false,
+    } as never);
+    mockedArticleHook.mockReturnValue({
+      blog: publicBlog,
+      isLoading: false,
+      isError: false,
+    });
+    render(<BlogPageClient urlBlogId='123' fullSlug='post-123' />);
+    expect(screen.getByRole('button', { name: 'Edit' })).toBeTruthy();
+  });
   it('does not record activity or render interactions when the article failed', () => {
     mockedArticleHook.mockReturnValue({
       blog: undefined,
@@ -149,6 +258,7 @@ describe('BlogPageClient', () => {
     expect(fetch).not.toHaveBeenCalled();
     expect(screen.queryByText('Members only')).toBeNull();
     expect(screen.queryByTestId('blog-reactions')).toBeNull();
+    expect(document.querySelector('[data-article-body]')).toBeNull();
   });
 
   it('hides public sharing and snapshots for members-only articles', () => {
@@ -169,8 +279,8 @@ describe('BlogPageClient', () => {
       screen.getByRole('link', { name: 'Writers Guild' }).getAttribute('href')
     ).toBe('/groups/writers');
     expect(screen.getByTestId('blog-reactions')).toBeTruthy();
-    expect(screen.queryByTestId('blog-share')).toBeNull();
-    expect(screen.queryByTestId('social-snapshot')).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Share Blog' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'Open Studio →' })).toBeNull();
   });
 
   it('keeps sharing and snapshots available for public articles', () => {
@@ -182,8 +292,10 @@ describe('BlogPageClient', () => {
 
     render(<BlogPageClient urlBlogId='123' fullSlug='post-123' />);
 
-    expect(screen.getByTestId('blog-share')).toBeTruthy();
-    expect(screen.getByTestId('social-snapshot')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Share Blog' })).toBeTruthy();
+    expect(
+      screen.getByRole('link', { name: 'Open Studio →' }).getAttribute('href')
+    ).toBe('/snapshot/123');
     expect(screen.queryByText('Members only')).toBeNull();
   });
 });

@@ -39,6 +39,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Verify font URL compatibility
+        run: pnpm --filter the_monkeys test __tests__/src/config/nextFontLoader.test.ts
+
       - name: Build
         env: 
           NEXT_PUBLIC_GROWTHBOOK_CLIENT_KEY: test

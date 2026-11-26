@@ -1,9 +1,14 @@
-import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { canonicalPostTitleSlug, postRssGuid } from '@/lib/postUrl';
 import { SITE_URL, normalizeSeoText } from '@/lib/seo';
-import { fetchPublicPosts } from '@/lib/seoCatalog';
-import { buildRssXml, rssResponse } from '@/lib/seoFeed';
+import { fetchRecentPublicPosts } from '@/lib/seoCatalog';
+import {
+  buildRssXml,
+  rssResponse,
+  rssUnavailableResponse,
+} from '@/lib/seoFeed';
 
-export const revalidate = 300;
+// Fetch at request time: an unavailable API must not prevent deployment.
+export const dynamic = 'force-dynamic';
 
 function publicationDate(value: string): Date | null {
   const date = new Date(value);
@@ -11,18 +16,19 @@ function publicationDate(value: string): Date | null {
 }
 
 export async function GET() {
-  const posts = await fetchPublicPosts(100);
+  const posts = await fetchRecentPublicPosts().catch(() => null);
+  if (!posts) return rssUnavailableResponse();
   const xml = buildRssXml({
     title: 'Latest Posts on Monkeys',
     description:
       'Recent public posts from authors and communities across Monkeys.',
-    path: '/feed',
+    path: '/',
     items: posts.map((post) => {
-      const link = `${SITE_URL}/blog/${generateSlug(post.title)}-${post.blog_id}`;
+      const link = `${SITE_URL}/blog/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`;
       return {
         title: post.title,
         link,
-        guid: link,
+        guid: postRssGuid(post),
         pubDate: publicationDate(post.published_time),
         description: normalizeSeoText(post.first_paragraph, 280),
       };

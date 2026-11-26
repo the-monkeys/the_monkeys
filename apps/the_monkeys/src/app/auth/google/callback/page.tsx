@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { replaceAuthSession } from '@/lib/authQuerySession';
 import { peekAuthCallback, rememberAuthCallback } from '@/lib/authRedirect';
 import { googleSSOCallback } from '@/services/auth/auth';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -31,8 +32,8 @@ export default function GoogleCallback() {
 
   const mutation = useMutation({
     mutationFn: googleSSOCallback,
-    onSuccess: (user) => {
-      queryClient.setQueryData(['auth'], user);
+    onSuccess: async (user) => {
+      await replaceAuthSession(queryClient, user);
 
       toast({
         variant: 'success',

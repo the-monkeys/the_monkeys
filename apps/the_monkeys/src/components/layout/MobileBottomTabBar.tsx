@@ -7,21 +7,24 @@ import Icon, { IconName } from '@/components/icon';
 import {
   BOOKMARK_ROUTE,
   CREATE_ROUTE,
-  EXPLORE_TOPICS_ROUTE,
+  DISCUSSIONS_ROUTE,
+  EVENTS_ROUTE,
   HOME_ROUTE,
 } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { cn } from '@/lib/utils';
+import { IUser } from '@/services/models/user';
 
-type Tab = {
+export type MobileTab = {
   href: string;
   label: string;
   icon: IconName;
+  accessibleLabel?: string;
   match: (pathname: string) => boolean;
   requiresAuth?: boolean;
 };
 
-const tabs: Tab[] = [
+export const getMobileBottomTabs = (session?: IUser | null): MobileTab[] => [
   {
     href: HOME_ROUTE,
     label: 'Home',
@@ -29,10 +32,18 @@ const tabs: Tab[] = [
     match: (p) => p === '/' || p === '/feed',
   },
   {
-    href: EXPLORE_TOPICS_ROUTE,
-    label: 'Explore',
-    icon: 'RiCompass',
-    match: (p) => p.startsWith('/topics'),
+    href: EVENTS_ROUTE,
+    label: 'Events',
+    icon: 'RiCalendar',
+    match: (p) => p === EVENTS_ROUTE || p.startsWith(`${EVENTS_ROUTE}/`),
+  },
+  {
+    href: DISCUSSIONS_ROUTE,
+    label: 'Discuss',
+    accessibleLabel: 'Discussions',
+    icon: 'RiChat1',
+    match: (p) =>
+      p === DISCUSSIONS_ROUTE || p.startsWith(`${DISCUSSIONS_ROUTE}/`),
   },
   {
     href: CREATE_ROUTE,
@@ -49,10 +60,19 @@ const tabs: Tab[] = [
     requiresAuth: true,
   },
   {
-    href: '/settings',
+    href: session?.username ? `/${session.username}` : '/auth/login',
     label: 'Profile',
     icon: 'RiUser',
-    match: (p) => p.startsWith('/settings'),
+    match: (p) => {
+      if (!session?.username) return false;
+      const cleanPath = p.replace(/\/$/, '');
+      return (
+        cleanPath === `/${session.username}` ||
+        cleanPath === `/@${session.username}` ||
+        p.startsWith(`/${session.username}/`) ||
+        p.startsWith(`/@${session.username}/`)
+      );
+    },
     requiresAuth: true,
   },
 ];
@@ -76,27 +96,30 @@ export function MobileBottomTabBar() {
     return null;
   }
 
+  const tabs = getMobileBottomTabs(session);
+
   return (
     <nav
       className='lg:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border-light dark:border-border-dark/60 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur supports-[backdrop-filter]:bg-background-light/80'
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       aria-label='Primary'
     >
-      <ul className='grid grid-cols-5'>
+      <ul className='grid grid-cols-6'>
         {tabs.map((tab) => {
           const active = tab.match(pathname);
           const href = tab.requiresAuth && !session ? '/auth/login' : tab.href;
 
           return (
-            <li key={tab.label} className='flex'>
+            <li key={tab.label} className='min-w-0 flex'>
               <Link
                 href={href}
                 className={cn(
-                  'flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-inter font-semibold uppercase tracking-[0.12em] transition-colors',
+                  'min-w-0 min-h-14 flex-1 flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-inter font-semibold uppercase tracking-[0.06em] sm:tracking-[0.12em] transition-colors',
                   active
                     ? 'text-brand-orange'
                     : 'text-gray-500 dark:text-gray-400 hover:text-text-light dark:hover:text-text-dark'
                 )}
+                aria-label={tab.accessibleLabel}
                 aria-current={active ? 'page' : undefined}
               >
                 <Icon name={tab.icon} size={22} />

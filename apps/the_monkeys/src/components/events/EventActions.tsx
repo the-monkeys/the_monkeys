@@ -1,23 +1,26 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
+import { TimezoneSelect } from '@/components/events/TimezoneSelect';
+import { EventCalendarDialog } from '@/components/events/detail/EventCalendarDialog';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
+import { useCreationAttempt } from '@/hooks/useCreationAttempt';
 import {
   fromLocalInput,
   isEventEnded,
+  isValidTimezone,
   parseEventTime,
   toLocalInput,
 } from '@/lib/eventTime';
 import { EventItem } from '@/services/events/eventTypes';
 import {
   cloneEvent,
-  downloadCalendar,
   eventError,
   getShareMeta,
   reportEvent,
@@ -43,6 +46,11 @@ export function EventActions({
   const [reason, setReason] = useState('');
   const [cloneOpen, setCloneOpen] = useState(false);
   const [cloneBusy, setCloneBusy] = useState(false);
+  const cloneSubmitting = useRef(false);
+  const cloneAttempt = useCreationAttempt(
+    `clone:${event.slug}:${session?.account_id || session?.username || ''}`
+  );
+  const [cloneTimezone, setCloneTimezone] = useState(event.timezone || 'UTC');
   const ended = isEventEnded(event);
   const showClone = canManage && ended && !event.series_id;
 
@@ -56,10 +64,13 @@ export function EventActions({
     const next = new Date(Date.now() + 24 * 60 * 60 * 1000);
     next.setMinutes(0, 0, 0);
     return {
-      start: toLocalInput(next.toISOString()),
-      end: toLocalInput(new Date(next.getTime() + duration).toISOString()),
+      start: toLocalInput(next.toISOString(), event.timezone || 'UTC'),
+      end: toLocalInput(
+        new Date(next.getTime() + duration).toISOString(),
+        event.timezone || 'UTC'
+      ),
     };
-  }, [event.start_time, event.end_time]);
+  }, [event.start_time, event.end_time, event.timezone]);
 
   const [cloneStart, setCloneStart] = useState(cloneDefaults.start);
   const [cloneEnd, setCloneEnd] = useState(cloneDefaults.end);
@@ -106,66 +117,83 @@ export function EventActions({
   };
 
   const onClone = async () => {
-    const start = fromLocalInput(cloneStart);
-    const end = fromLocalInput(cloneEnd);
-    if (!start || !end) return;
-    setCloneBusy(true);
+    if (cloneSubmitting.current) return;
+    let start: string, end: string;
     try {
-      const res = await cloneEvent(event.slug, {
+      if (!isValidTimezone(cloneTimezone))
+        throw new Error('Choose a valid event timezone.');
+      start = fromLocalInput(cloneStart, cloneTimezone);
+      end = fromLocalInput(cloneEnd, cloneTimezone);
+      if (!start || !end) return;
+      if (end <= start)
+        throw new Error('End time must be after the start time.');
+    } catch (error) {
+      toast({
+        title: 'Check the event schedule',
+        description:
+          error instanceof Error
+            ? error.message
+            : 'Check the timezone in the event editor.',
+      });
+      return;
+    }
+    if (!start || !end) return;
+    cloneSubmitting.current = true;
+    setCloneBusy(true);
+    let created = false;
+    try {
+      const body = {
         start_time: start,
         end_time: end,
+        timezone: cloneTimezone,
+      };
+      await cloneAttempt.run(body, async (key) => {
+        const res = await cloneEvent(event.slug, body, key);
+        created = true;
+        const slug = res.event?.slug;
+        toast({ title: 'Draft created' });
+        await refresh();
+        router.push(slug ? `${EVENTS_ROUTE}/${slug}/edit` : EVENTS_ROUTE);
       });
-      const slug = res.event?.slug;
-      toast({ title: 'Draft created' });
-      await refresh();
-      router.push(slug ? `${EVENTS_ROUTE}/${slug}/edit` : EVENTS_ROUTE);
     } catch (err) {
+      // A created draft stays latched while App Router finishes navigation.
+      if (!created) {
+        cloneSubmitting.current = false;
+        setCloneBusy(false);
+      }
       toast({
         title: 'Could not schedule again',
         description: eventError(err),
       });
-    } finally {
-      setCloneBusy(false);
     }
   };
 
   return (
     <div className='flex flex-wrap items-center gap-2'>
-      <Button variant='outline' size='sm' onClick={share}>
+      <Button variant='outline' size='sm' className='min-h-11' onClick={share}>
         <Icon name='RiShare' size={16} className='mr-1' />
         Share
       </Button>
-      <Button
-        variant='outline'
-        size='sm'
-        onClick={() =>
-          downloadCalendar(event.slug).catch((err) =>
-            toast({
-              title: 'Could not download calendar',
-              description: eventError(err),
-            })
-          )
-        }
-      >
-        <Icon name='RiDownload2' size={16} className='mr-1' />
-        Calendar
-      </Button>
+      <EventCalendarDialog key={event.slug} event={event} />
       {canManage && (
         <>
-          <Button asChild variant='outline' size='sm'>
+          <Button asChild variant='outline' size='sm' className='min-h-11'>
             <Link href={`${EVENTS_ROUTE}/${event.slug}/edit`}>
               <Icon name='RiPencil' size={16} className='mr-1' />
-              {ended ? 'Edit writeup' : 'Edit'}
+              Edit
             </Link>
           </Button>
-          <Button asChild variant='brand' size='sm'>
+          <Button asChild variant='brand' size='sm' className='min-h-11'>
             <Link href={`${EVENTS_ROUTE}/${event.slug}/manage`}>Manage</Link>
           </Button>
           {showClone && (
             <Button
               variant='outline'
               size='sm'
-              onClick={() => setCloneOpen((v) => !v)}
+              className='min-h-11'
+              onClick={() => {
+                setCloneOpen((v) => !v);
+              }}
             >
               Schedule again
             </Button>
@@ -176,15 +204,27 @@ export function EventActions({
         <Button
           variant='ghost'
           size='sm'
+          className='min-h-11'
           onClick={() => setReportOpen((v) => !v)}
         >
           Report
         </Button>
       )}
       {cloneOpen && showClone && (
-        <div className='flex w-full flex-col gap-2 rounded-lg border border-border-light p-3 dark:border-border-dark/60 sm:flex-row sm:items-end'>
+        <div className='grid w-full gap-3 rounded-lg border border-border-light p-3 dark:border-border-dark/60 sm:grid-cols-2'>
+          <div className='sm:col-span-2'>
+            <TimezoneSelect
+              value={cloneTimezone}
+              onChange={setCloneTimezone}
+              disabled={cloneBusy}
+            />
+            <p className='mt-1 font-inter text-xs text-gray-500'>
+              This timezone applies to the new draft only. The original event
+              will not change.
+            </p>
+          </div>
           <label className='min-w-0 flex-1 font-inter text-xs text-gray-500'>
-            Starts
+            Starts ({cloneTimezone})
             <Input
               type='datetime-local'
               value={cloneStart}
@@ -193,7 +233,7 @@ export function EventActions({
             />
           </label>
           <label className='min-w-0 flex-1 font-inter text-xs text-gray-500'>
-            Ends
+            Ends ({cloneTimezone})
             <Input
               type='datetime-local'
               value={cloneEnd}
@@ -202,6 +242,7 @@ export function EventActions({
             />
           </label>
           <Button
+            className='sm:col-span-2 sm:justify-self-end'
             size='sm'
             variant='brand'
             disabled={cloneBusy}

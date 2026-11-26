@@ -89,6 +89,21 @@ describe('BlogPublicationScopeFields', () => {
     expect(screen.queryByText('Pending Writers')).toBeNull();
   });
 
+  it('shows a directly resolved selection outside the first membership page', () => {
+    render(
+      <BlogPublicationScopeFields
+        username='ada'
+        value={{
+          group: group('later', 'Later Writers', 'private'),
+          audience: 'group_only',
+        }}
+        onChange={vi.fn()}
+      />
+    );
+    expect(screen.getByText('Later Writers')).toBeTruthy();
+    expect(screen.queryByText('No group')).toBeNull();
+  });
+
   it('forces members only for private groups', async () => {
     const onChange = vi.fn();
     render(<Harness onChange={onChange} />);

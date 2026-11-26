@@ -1,5 +1,10 @@
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { getCardContent } from '@/components/blog/getBlogContent';
+import { getPostSeoContent } from '@/lib/postSeoContent';
+import {
+  canonicalPostDocumentTitleSlug,
+  canonicalPostTitleSlug,
+  postLinkTitleSlug,
+} from '@/lib/postUrl';
 import {
   Block,
   Blog,
@@ -13,7 +18,7 @@ export const fromMetaBlog = (blog: MetaBlog): BlogCardData => ({
   blogId: blog.blog_id,
   authorId: blog.owner_account_id,
   date: blog.published_time,
-  slug: generateSlug(purifyHTMLString(blog.title)),
+  slug: canonicalPostTitleSlug(blog.title, blog.canonical_slug, blog.blog_id),
   tags: blog.tags ?? [],
   title: purifyHTMLString(blog.title),
   description: purifyHTMLString(blog.first_paragraph),
@@ -36,7 +41,12 @@ export const fromFollowingFeed = (blog: FollowingFeed): BlogCardData => {
     blogId: blog.blog_id,
     authorId: blog.owner_account_id,
     date: blog.published_time,
-    slug: blog.slug || generateSlug(title),
+    slug: postLinkTitleSlug(
+      getPostSeoContent(blog.blog).title,
+      blog.blog_id,
+      blog.slug,
+      blog.canonical_slug
+    ),
     tags: blog.tags ?? [],
     title,
     description: purifyHTMLString(descriptionBlock?.data?.text || ''),
@@ -56,7 +66,11 @@ export const fromBlog = (post: Blog): BlogCardData => {
     blogId: post.blog_id,
     authorId: post.owner_account_id,
     date: post.published_time,
-    slug: generateSlug(titleContent),
+    slug: canonicalPostDocumentTitleSlug(
+      post.blog,
+      post.canonical_slug,
+      post.blog_id
+    ),
     tags: post.tags ?? [],
     title: titleContent,
     description: descriptionContent,

@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
+import { queryKeys } from '@/lib/queryKeys';
 import fetcher from '@/services/fileFetcher';
 import { uploadProfileImage } from '@/services/user/user';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
+import { isAxiosError } from 'axios';
 import { z } from 'zod';
 
 export const PROFILE_IMAGE_QUERY_KEY = 'profile-image';
@@ -44,11 +46,13 @@ export const useUploadProfileImage = ({
 
   return useMutation({
     mutationFn: (file: File) => uploadProfileImage(username, file),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-      });
-
+    onSuccess: async (_data, file) => {
+      // Stop an older in-flight read before publishing the uploaded file to
+      // every mounted avatar. Keep this successful result fresh; an immediate
+      // refetch can replace it with an older HTTP response.
+      const queryKey = queryKeys.profile.image(username);
+      await queryClient.cancelQueries({ queryKey });
+      queryClient.setQueryData(queryKey, file);
       toast({
         variant: 'success',
         title: 'Success',
@@ -72,9 +76,20 @@ export const useUploadProfileImage = ({
 const useProfileImage = (username: string | undefined) => {
   const [imageUrl, setImageUrl] = useState<string>('');
 
-  const { data, error, isLoading, isError } = useQuery<Blob, Error>({
-    queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
-    queryFn: () => fetcher(`/storage/profiles/${username}/profile`),
+  const { data, error, isLoading, isError } = useQuery<Blob | null, Error>({
+    queryKey: queryKeys.profile.image(username),
+    queryFn: async ({ signal }) => {
+      try {
+        return await fetcher(`/storage/profiles/${username}/profile`, {
+          signal,
+        });
+      } catch (error) {
+        // Only absence is an empty success. Authentication and transport
+        // failures must remain errors rather than poisoning the empty cache.
+        if (isAxiosError(error) && error.response?.status === 404) return null;
+        throw error;
+      }
+    },
     enabled: !!username,
     staleTime: 5 * 60 * 1000,
     retry: false,

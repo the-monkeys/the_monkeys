@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -12,13 +12,8 @@ import {
 } from '@/hooks/events/useEventQueries';
 import { useRefreshEvents } from '@/hooks/events/useRefreshEvents';
 import { formatPrice, isOrganizer } from '@/lib/eventTime';
+import { EventItem, TicketTierInput } from '@/services/events/eventTypes';
 import {
-  Attendee,
-  EventItem,
-  TicketTierInput,
-} from '@/services/events/eventTypes';
-import {
-  addCoHost,
   cancelEvent,
   createCoupon,
   createTier,
@@ -28,7 +23,6 @@ import {
   eventError,
   exportAttendeesCsv,
   publishEvent,
-  removeCoHost,
   reviewRsvp,
   updateAttendance,
   updateTier,
@@ -37,6 +31,8 @@ import { IUser } from '@/services/models/user';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
+
+import { EventCohosts } from './EventCohosts';
 
 export function EventManage({
   event,
@@ -50,7 +46,6 @@ export function EventManage({
   const router = useRouter();
   const owner = isOrganizer(event, session?.username);
   const couponsQ = useEventCoupons(event.slug, true);
-  const attendeesQ = useEventAttendees(event.slug, true);
 
   const act = async (fn: () => Promise<unknown>, ok: string) => {
     try {
@@ -112,11 +107,15 @@ export function EventManage({
         coupons={couponsQ.data?.coupons || []}
         onChange={refresh}
       />
-      <CohostsBlock event={event} onChange={refresh} />
+      <EventCohosts
+        key={`cohosts-${event.slug}`}
+        event={event}
+        session={session}
+        onChange={refresh}
+      />
       <AttendeesBlock
+        key={event.slug}
         slug={event.slug}
-        attendees={attendeesQ.data?.attendees || []}
-        total={attendeesQ.data?.total || 0}
         requiresHostReview={!!event.requires_host_review}
         onChange={refresh}
       />
@@ -349,82 +348,38 @@ function CouponsBlock({
   );
 }
 
-function CohostsBlock({
-  event,
-  onChange,
-}: {
-  event: EventItem;
-  onChange: () => void;
-}) {
-  const { toast } = useToast();
-
-  const onAdd = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const username = String(form.get('username') || '').trim();
-    if (!username) return;
-    try {
-      await addCoHost(event.slug, username);
-      toast({ title: 'Co-host added' });
-      e.currentTarget.reset();
-      onChange();
-    } catch (err) {
-      toast({ title: 'Could not add co-host', description: eventError(err) });
-    }
-  };
-
-  return (
-    <section className='space-y-3'>
-      <h2 className='font-dm_sans font-semibold text-xl'>Co-hosts</h2>
-      <form onSubmit={onAdd} className='flex gap-2'>
-        <Input name='username' placeholder='username' />
-        <Button type='submit' size='sm'>
-          Add
-        </Button>
-      </form>
-      <ul className='space-y-2'>
-        {(event.co_host_usernames || []).map((name) => (
-          <li key={name} className='flex items-center justify-between text-sm'>
-            @{name}
-            <Button
-              size='sm'
-              variant='ghost'
-              onClick={() =>
-                removeCoHost(event.slug, name)
-                  .then(onChange)
-                  .catch((err) =>
-                    toast({
-                      title: 'Could not remove',
-                      description: eventError(err),
-                    })
-                  )
-              }
-            >
-              Remove
-            </Button>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
-
 function AttendeesBlock({
   slug,
-  attendees,
-  total,
   requiresHostReview,
   onChange,
 }: {
   slug: string;
-  attendees: Attendee[];
-  total: number;
   requiresHostReview?: boolean;
   onChange: () => void;
 }) {
   const { toast } = useToast();
   const [busyId, setBusyId] = useState<number | null>(null);
   const [notes, setNotes] = useState<Record<number, string>>({});
+  const [offset, setOffset] = useState(0);
+  const pageSize = 50;
+  const attendeesQ = useEventAttendees(slug, true, { limit: pageSize, offset });
+  const attendees = attendeesQ.data?.attendees || [];
+  const total = attendeesQ.data?.total ?? 0;
+  const formatCount = (count: number) => count.toLocaleString('en-US');
+  const pageBusy = attendeesQ.isFetching || busyId !== null;
+
+  // A cancellation or review can shrink the last page. Never strand hosts on
+  // an empty offset after the roster refreshes.
+  useEffect(() => {
+    if (
+      attendeesQ.data &&
+      !attendeesQ.isFetching &&
+      offset > 0 &&
+      offset >= total
+    ) {
+      setOffset(Math.max(0, Math.ceil(total / pageSize) - 1) * pageSize);
+    }
+  }, [attendeesQ.data, attendeesQ.isFetching, offset, total]);
   const pending = attendees.filter((a) => a.status === 'pending_host_review');
   const rest = attendees.filter((a) => a.status !== 'pending_host_review');
   const checkedInCount = attendees.filter((a) => a.checked_in).length;
@@ -465,87 +420,101 @@ function AttendeesBlock({
   };
 
   return (
-    <section className='space-y-6'>
-      {(pending.length > 0 || requiresHostReview) && (
-        <div className='space-y-3'>
-          <h2 className='font-dm_sans font-semibold text-xl'>
-            Applications ({pending.length})
-          </h2>
-          <p className='font-inter text-sm text-gray-500'>
-            Approve to confirm a free seat, or to let a paid guest check out.
-            Pending people do not hold a spot.
-          </p>
-          {pending.length === 0 ? (
+    <section
+      id='manage-attendees'
+      aria-labelledby='manage-attendees-heading'
+      className='min-w-0 scroll-mt-24 space-y-6'
+    >
+      {!attendeesQ.isError &&
+        !attendeesQ.isPending &&
+        (pending.length > 0 || requiresHostReview) && (
+          <div className='space-y-3'>
+            <h2 className='font-dm_sans font-semibold text-xl'>
+              Applications ({pending.length} on this page)
+            </h2>
             <p className='font-inter text-sm text-gray-500'>
-              No applications waiting.
+              Approve to confirm a free seat, or to let a paid guest check out.
+              Pending people do not hold a spot.
             </p>
-          ) : (
-            <ul className='space-y-3'>
-              {pending.map((a) => (
-                <li
-                  key={a.id}
-                  className='rounded-lg border border-border-light p-3 space-y-2 dark:border-border-dark/60'
-                >
-                  <div className='flex flex-wrap items-start justify-between gap-2'>
-                    <div>
-                      <p className='font-dm_sans font-medium'>@{a.user_name}</p>
-                      <p className='text-xs text-gray-500'>{a.user_email}</p>
-                      {a.ticket_tier_name && (
-                        <p className='text-xs text-gray-500'>
-                          {a.ticket_tier_name}
+            {pending.length === 0 ? (
+              <p className='font-inter text-sm text-gray-500'>
+                No applications on this page.
+              </p>
+            ) : (
+              <ul className='space-y-3'>
+                {pending.map((a) => (
+                  <li
+                    key={a.id}
+                    className='rounded-lg border border-border-light p-3 space-y-2 dark:border-border-dark/60'
+                  >
+                    <div className='flex flex-wrap items-start justify-between gap-2'>
+                      <div>
+                        <p className='font-dm_sans font-medium'>
+                          @{a.user_name}
                         </p>
+                        <p className='text-xs text-gray-500'>{a.user_email}</p>
+                        {a.ticket_tier_name && (
+                          <p className='text-xs text-gray-500'>
+                            {a.ticket_tier_name}
+                          </p>
+                        )}
+                      </div>
+                      {a.social_proof_url && (
+                        <a
+                          href={a.social_proof_url}
+                          target='_blank'
+                          rel='noreferrer'
+                          className='font-inter text-sm text-brand-orange hover:underline break-all'
+                        >
+                          View profile
+                        </a>
                       )}
                     </div>
-                    {a.social_proof_url && (
-                      <a
-                        href={a.social_proof_url}
-                        target='_blank'
-                        rel='noreferrer'
-                        className='font-inter text-sm text-brand-orange hover:underline break-all'
+                    <Input
+                      value={notes[a.id] || ''}
+                      onChange={(e) =>
+                        setNotes((prev) => ({
+                          ...prev,
+                          [a.id]: e.target.value,
+                        }))
+                      }
+                      placeholder='Optional note if you decline'
+                    />
+                    <div className='flex flex-wrap gap-2'>
+                      <Button
+                        size='sm'
+                        variant='brand'
+                        disabled={pageBusy}
+                        onClick={() => decide(a.id, 'approve')}
                       >
-                        View profile
-                      </a>
-                    )}
-                  </div>
-                  <Input
-                    value={notes[a.id] || ''}
-                    onChange={(e) =>
-                      setNotes((prev) => ({ ...prev, [a.id]: e.target.value }))
-                    }
-                    placeholder='Optional note if you decline'
-                  />
-                  <div className='flex flex-wrap gap-2'>
-                    <Button
-                      size='sm'
-                      variant='brand'
-                      disabled={busyId === a.id}
-                      onClick={() => decide(a.id, 'approve')}
-                    >
-                      Approve
-                    </Button>
-                    <Button
-                      size='sm'
-                      variant='outline'
-                      disabled={busyId === a.id}
-                      onClick={() => decide(a.id, 'reject')}
-                    >
-                      Decline
-                    </Button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+                        Approve
+                      </Button>
+                      <Button
+                        size='sm'
+                        variant='outline'
+                        disabled={pageBusy}
+                        onClick={() => decide(a.id, 'reject')}
+                      >
+                        Decline
+                      </Button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
 
       <div className='space-y-3'>
-        <div className='flex items-center justify-between'>
-          <h2 className='font-dm_sans font-semibold text-xl'>
-            People ({total})
+        <div className='flex flex-wrap items-center justify-between gap-3'>
+          <h2
+            id='manage-attendees-heading'
+            className='font-dm_sans font-semibold text-xl'
+          >
+            People{attendeesQ.data ? ` (${formatCount(total)})` : ''}
             {checkedInCount > 0 && (
               <span className='ml-2 text-sm font-normal text-gray-500'>
-                {checkedInCount} checked in
+                {checkedInCount} checked in on this page
               </span>
             )}
           </h2>
@@ -564,42 +533,108 @@ function AttendeesBlock({
             Export CSV
           </Button>
         </div>
-        <div className='overflow-x-auto'>
-          <table className='w-full text-sm font-inter'>
-            <thead>
-              <tr className='text-left text-gray-500'>
-                <th className='py-2 pr-3'>User</th>
-                <th className='py-2 pr-3'>Email</th>
-                <th className='py-2 pr-3'>Ticket</th>
-                <th className='py-2 pr-3'>Status</th>
-                <th className='py-2 text-right'>Check-in</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rest.map((a) => (
-                <tr
-                  key={a.id}
-                  className='border-t border-border-light/60 dark:border-border-dark/40'
-                >
-                  <td className='py-2 pr-3'>@{a.user_name}</td>
-                  <td className='py-2 pr-3'>{a.user_email}</td>
-                  <td className='py-2 pr-3'>{a.ticket_tier_name}</td>
-                  <td className='py-2 pr-3'>{a.status?.replace(/_/g, ' ')}</td>
-                  <td className='py-2 text-right'>
-                    <Button
-                      size='sm'
-                      variant={a.checked_in ? 'constructive' : 'outline'}
-                      disabled={busyId === a.id}
-                      onClick={() => setCheckedIn(a.id, !a.checked_in)}
-                    >
-                      {a.checked_in ? 'Checked in' : 'Check in'}
-                    </Button>
-                  </td>
+        {attendeesQ.isError ? (
+          <div
+            role='alert'
+            className='space-y-2 rounded-lg border border-border-light p-4 dark:border-border-dark'
+          >
+            <p>Could not load attendees. Please try again.</p>
+            <Button
+              variant='outline'
+              onClick={() => attendeesQ.refetch()}
+              disabled={attendeesQ.isFetching}
+            >
+              Retry attendees
+            </Button>
+          </div>
+        ) : attendeesQ.isPending ? (
+          <p role='status' className='text-sm text-gray-500'>
+            Loading attendees...
+          </p>
+        ) : (
+          <div
+            className='max-w-full overflow-x-auto'
+            aria-busy={attendeesQ.isFetching}
+          >
+            <table className='w-full text-sm font-inter'>
+              <thead>
+                <tr className='text-left text-gray-500'>
+                  <th className='py-2 pr-3'>User</th>
+                  <th className='py-2 pr-3'>Email</th>
+                  <th className='py-2 pr-3'>Ticket</th>
+                  <th className='py-2 pr-3'>Status</th>
+                  <th className='py-2 text-right'>Check-in</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {rest.map((a) => (
+                  <tr
+                    key={a.id}
+                    className='border-t border-border-light/60 dark:border-border-dark/40'
+                  >
+                    <td className='py-2 pr-3'>@{a.user_name}</td>
+                    <td className='py-2 pr-3'>{a.user_email}</td>
+                    <td className='py-2 pr-3'>{a.ticket_tier_name}</td>
+                    <td className='py-2 pr-3'>
+                      {a.status?.replace(/_/g, ' ')}
+                    </td>
+                    <td className='py-2 text-right'>
+                      <Button
+                        size='sm'
+                        variant={a.checked_in ? 'constructive' : 'outline'}
+                        disabled={pageBusy}
+                        onClick={() => setCheckedIn(a.id, !a.checked_in)}
+                      >
+                        {a.checked_in ? 'Checked in' : 'Check in'}
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        {!attendeesQ.isPending && !attendeesQ.isError && total === 0 && (
+          <p className='text-sm text-gray-500'>No attendees yet.</p>
+        )}
+        <nav
+          aria-label='Attendee pages'
+          className='flex flex-wrap items-center justify-between gap-3 border-t border-border-light pt-4 dark:border-border-dark/40'
+        >
+          <p
+            role='status'
+            className='font-inter text-sm text-gray-500 dark:text-gray-400'
+          >
+            {!attendeesQ.isError && attendees.length > 0 && offset < total
+              ? `Showing ${formatCount(offset + 1)} to ${formatCount(Math.min(offset + attendees.length, total))} of ${formatCount(total)}`
+              : '50 people per page'}
+          </p>
+          <div className='flex flex-wrap gap-2'>
+            <Button
+              variant='outline'
+              className='min-h-11'
+              disabled={offset === 0 || pageBusy}
+              onClick={() =>
+                setOffset((value) => Math.max(0, value - pageSize))
+              }
+            >
+              Previous page
+            </Button>
+            <Button
+              variant='outline'
+              className='min-h-11'
+              disabled={
+                pageBusy ||
+                !attendeesQ.data ||
+                attendeesQ.isError ||
+                offset + pageSize >= total
+              }
+              onClick={() => setOffset((value) => value + pageSize)}
+            >
+              Next page
+            </Button>
+          </div>
+        </nav>
       </div>
     </section>
   );

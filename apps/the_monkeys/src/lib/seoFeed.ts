@@ -61,3 +61,17 @@ export function rssResponse(xml: string) {
     },
   });
 }
+
+export function rssUnavailableResponse() {
+  return new Response(
+    'This feed is temporarily unavailable. Please retry shortly.',
+    {
+      status: 503,
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Cache-Control': 'no-store',
+        'Retry-After': '60',
+      },
+    }
+  );
+}

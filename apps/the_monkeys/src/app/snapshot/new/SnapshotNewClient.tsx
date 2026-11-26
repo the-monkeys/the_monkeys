@@ -11,6 +11,8 @@ import { SnapshotInput } from '@/features/snapshot/types';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetAuthUserProfile from '@/hooks/user/useGetAuthUserProfile';
 
+import { STUDIO_HELP, StudioHelp } from './StudioHelp';
+
 type StudioView = 'template' | 'x';
 
 const VIEW_STORAGE_KEY = 'monkeys_studio_view';
@@ -18,7 +20,9 @@ const VIEW_STORAGE_KEY = 'monkeys_studio_view';
 const isStudioView = (v: unknown): v is StudioView =>
   v === 'template' || v === 'x';
 
-export default function SnapshotNewClient() {
+export default function SnapshotNewClient({
+  initialView = 'template',
+}: { initialView?: StudioView } = {}) {
   const { data: session } = useAuth();
   const username = session?.username;
   const isLoggedIn = !!username;
@@ -41,7 +45,7 @@ export default function SnapshotNewClient() {
   // Only pass a username when signed in, so the profile/avatar API is never
   // called for anonymous users (the hook is a no-op without a username).
   const { author } = useSnapshotAuthor(username, displayName);
-  const [view, setView] = useState<StudioView>('template');
+  const [view, setView] = useState<StudioView>(initialView);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -56,7 +60,7 @@ export default function SnapshotNewClient() {
     }
     const saved = localStorage.getItem(VIEW_STORAGE_KEY);
     if (isStudioView(saved)) setView(saved);
-  }, []);
+  }, [initialView]);
 
   const selectView = useCallback(
     (next: StudioView) => {
@@ -93,7 +97,16 @@ export default function SnapshotNewClient() {
   return (
     <div className='mx-auto w-full max-w-6xl px-4 py-6'>
       <StudioTabs active={view} onSelect={selectView} />
+      <header className='mb-5'>
+        <h1 className='text-xl font-semibold tracking-tight text-foreground sm:text-2xl'>
+          {STUDIO_HELP[view].title}
+        </h1>
+        <p className='mt-1 max-w-2xl text-sm leading-relaxed text-foreground/70'>
+          {STUDIO_HELP[view].description}
+        </p>
+      </header>
       <SnapshotStudio input={input} previewMode={view} />
+      <StudioHelp mode={view} />
     </div>
   );
 }

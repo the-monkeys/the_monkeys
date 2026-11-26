@@ -1,8 +1,11 @@
+'use client';
+
 import Link from 'next/link';
 
 import { EventGridCard } from '@/components/events/EventGridCard';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import { eventDateParts, formatEventCardWhen } from '@/lib/eventTime';
 import { EventItem } from '@/services/events/eventTypes';
 
@@ -34,6 +37,7 @@ export function LandingEventsSection({
   title = 'Upcoming events',
 }: LandingEventsSectionProps) {
   const events = eventItems.slice(0, 3);
+  const timezone = useViewerTimezone();
 
   if (variant === 'compact') {
     return (
@@ -86,7 +90,7 @@ export function LandingEventsSection({
         {!isLoading && !isError && events.length > 0 && (
           <div className='mt-2 divide-y divide-border-light/70 dark:divide-border-dark/40'>
             {events.map((event) => {
-              const date = eventDateParts(event.start_time, event.timezone);
+              const date = eventDateParts(event.start_time, timezone);
               return (
                 <article
                   key={event.id || event.slug}
@@ -108,7 +112,7 @@ export function LandingEventsSection({
                       {event.title}
                     </Link>
                     <p className='mt-1 font-inter text-[11px] text-gray-500 dark:text-gray-400'>
-                      {formatEventCardWhen(event.start_time, event.timezone)}
+                      {formatEventCardWhen(event.start_time, timezone)}
                     </p>
                   </div>
                 </article>

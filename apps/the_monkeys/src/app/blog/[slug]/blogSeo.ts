@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { postModificationTime } from '@/lib/postModificationTime';
+import { getPostSeoContent } from '@/lib/postSeoContent';
+import { canonicalPostDocumentTitleSlug } from '@/lib/postUrl';
 import {
   MONKEYS_WEBSITE_ID,
-  OG_IMAGE,
   absoluteUrl,
   indexRobots,
   noIndexFollowRobots,
@@ -12,7 +13,7 @@ import {
   pageMetadata,
   publisherOrg,
 } from '@/lib/seo';
-import { Block, Blog } from '@/services/blog/blogTypes';
+import { Blog } from '@/services/blog/blogTypes';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 
 export function getBlogIdFromSlug(slug: string): string {
@@ -20,54 +21,24 @@ export function getBlogIdFromSlug(slug: string): string {
   return slug.split('-').pop() || '';
 }
 
-function textFromBlock(block?: Block): string {
-  if (!block?.data) return '';
-  if (typeof block.data.text === 'string') return block.data.text;
-  if (Array.isArray(block.data.items)) return block.data.items.join(', ');
-  if (typeof block.data.caption === 'string') return block.data.caption;
-  return '';
-}
-
 function blogContent(blog: Blog) {
-  const blocks = Array.isArray(blog.blog?.blocks) ? blog.blog.blocks : [];
-  const titleBlock =
-    blocks.find((block) => block.type === 'header' && textFromBlock(block)) ||
-    blocks.find((block) => textFromBlock(block));
-  const textBlocks = blocks
-    .filter((block) =>
-      ['paragraph', 'quote', 'list', 'header'].includes(block.type)
-    )
-    .map((block) => normalizeSeoText(textFromBlock(block), 500))
-    .filter(Boolean);
-  const meaningfulDescription =
-    textBlocks.find(
-      (text) =>
-        text !== normalizeSeoText(textFromBlock(titleBlock), 500) &&
-        text.length >= 40
-    ) ||
-    textBlocks.find(
-      (text) => text !== normalizeSeoText(textFromBlock(titleBlock), 500)
-    );
-  const imageBlock = blocks.find(
-    (block) =>
-      block.type === 'image' && typeof block.data?.file?.url === 'string'
-  );
-
+  const content = getPostSeoContent(blog.blog);
   return {
-    title: normalizeSeoText(textFromBlock(titleBlock), 100) || 'Published Post',
+    ...content,
     description:
-      normalizeSeoText(meaningfulDescription || '', 160) ||
-      'Read this community post on Monkeys.',
-    image:
-      typeof imageBlock?.data?.file?.url === 'string'
-        ? imageBlock.data.file.url
-        : OG_IMAGE,
-    articleBody: normalizeSeoText(textBlocks.join(' '), 5000),
+      normalizeSeoText(
+        typeof blog.seo_description === 'string' ? blog.seo_description : '',
+        160
+      ) || content.description,
   };
 }
 
 export function canonicalBlogSlug(blog: Blog): string {
-  const titleSlug = generateSlug(blogContent(blog).title);
+  const titleSlug = canonicalPostDocumentTitleSlug(
+    blog.blog,
+    blog.canonical_slug,
+    blog.blog_id
+  );
   return `${titleSlug}-${blog.blog_id}`;
 }
 
@@ -120,7 +91,7 @@ export function buildBlogMetadata(
       ...metadata.openGraph,
       type: 'article',
       publishedTime: blog.published_time,
-      modifiedTime: blog.published_time,
+      modifiedTime: postModificationTime(blog),
       authors: [authorName],
       tags: blog.tags,
     },
@@ -153,7 +124,7 @@ export function buildBlogJsonLd(
     publisher: publisherOrg(),
     isPartOf: { '@id': MONKEYS_WEBSITE_ID },
     datePublished: blog.published_time,
-    dateModified: blog.published_time,
+    dateModified: postModificationTime(blog),
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     keywords: blog.tags?.join(', '),
     articleBody: content.articleBody,

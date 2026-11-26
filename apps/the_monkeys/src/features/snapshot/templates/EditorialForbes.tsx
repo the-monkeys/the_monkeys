@@ -1,4 +1,5 @@
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
+import { DiscussionByline, DiscussionSource } from './DiscussionAttribution';
 import {
   FONT_STACK,
   Logo,
@@ -111,7 +112,14 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
         ) : null}
       </div>
 
-      <div style={{ height: 48 }} />
+      {input.source === 'discussion' ? (
+        <div style={{ display: 'flex', fontSize: 26 }}>
+          <DiscussionByline input={input} />
+        </div>
+      ) : (
+        <div style={{ height: 48 }} />
+      )}
+      <DiscussionSource input={input} theme={theme} />
     </div>
   );
 };

@@ -1,8 +1,8 @@
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { getCardContent } from '@/components/blog/getBlogContent';
 import { BLOG_ROUTE } from '@/constants/routeConstants';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { postTitle } from '@/lib/notificationPresentation';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 
 export function useNotificationPost(data?: Record<string, unknown>) {
   const stored = postTitle(data);
@@ -17,7 +17,7 @@ export function useNotificationPost(data?: Record<string, unknown>) {
 
   const href = blogId
     ? title
-      ? `${BLOG_ROUTE}/${generateSlug(title)}-${blogId}`
+      ? `${BLOG_ROUTE}/${canonicalPostTitleSlug(title)}-${blogId}`
       : `${BLOG_ROUTE}/${blogId}`
     : undefined;
 

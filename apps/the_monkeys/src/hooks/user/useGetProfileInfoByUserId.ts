@@ -1,4 +1,5 @@
-import { authFetcher } from '@/services/fetcher';
+import { queryKeys } from '@/lib/queryKeys';
+import { fetcher } from '@/services/fetcher';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 import { useQuery } from '@tanstack/react-query';
 
@@ -9,8 +10,9 @@ const useGetProfileInfoById = (userId: string | undefined) => {
     GetProfileInfoByIdResponse,
     Error
   >({
-    queryKey: [USER_PROFILE_QUERY_KEY, userId],
-    queryFn: () => authFetcher(`/user/public/account/${userId}`),
+    queryKey: queryKeys.profile.byAccount(userId),
+    queryFn: () =>
+      fetcher(`/user/public/account/${encodeURIComponent(userId!)}`),
     enabled: !!userId,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });

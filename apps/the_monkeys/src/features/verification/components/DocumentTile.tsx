@@ -15,156 +15,187 @@ import {
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 import { ACCEPTED_DOC_MIME, MAX_DOC_BYTES } from '../constants';
-import { UploadedDoc } from '../schema';
+import type { UploadedDoc } from '../schema';
 import { cameraSupported } from './CameraCapture';
 
-// Code-split: the getUserMedia dialog ships only when a tile can use it.
 const CameraCapture = dynamic(
   () => import('./CameraCapture').then((m) => m.CameraCapture),
   { ssr: false }
 );
 
-/**
- * One document slot (selfie / id_front / id_back). Two capture modes feed the
- * SAME pipeline (`onFile` -> panel mutation -> checksum): file picking and
- * live camera. Presentational + capture only — uploading is owned by the
- * panel's mutation so progress and errors stay in one place.
- */
+/** Capture and feedback only. The panel owns the private upload pipeline. */
 export const DocumentTile = ({
   kind,
   label,
   doc,
+  progress,
   error,
   disabled,
   onFile,
+  onInvalidFile,
 }: {
   kind: DocKind;
   label: string;
   doc?: UploadedDoc;
+  progress?: number;
   error?: string;
   disabled?: boolean;
   onFile: (kind: DocKind, file: File) => void;
+  onInvalidFile?: (kind: DocKind, message: string) => void;
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  // Mount-gated: camera APIs exist only in-browser, keeps SSR markup stable.
   const [camOk, setCamOk] = useState(false);
   const [camOpen, setCamOpen] = useState(false);
+  const [validationError, setValidationError] = useState<string>();
   useEffect(() => setCamOk(cameraSupported()), []);
 
-  // Selfie uses the front camera; ID sides are photographed with the rear.
-  const initialFacing: 'user' | 'environment' =
-    kind === 'selfie' ? 'user' : 'environment';
+  const uploadProgress = progress ?? doc?.progress;
+  const uploading =
+    progress !== undefined ||
+    (uploadProgress !== undefined && uploadProgress < 100);
+  const feedback = validationError || error;
+  const ready = !!doc?.checksum;
+  const blocked = disabled || uploading;
+  const errorId = `doc-error-${kind}`;
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    // Reset so re-selecting the same file fires change again.
-    e.target.value = '';
-    if (!file || disabled) return;
-
+  const acceptFile = (file: File) => {
+    if (blocked) return;
     if (!ACCEPTED_DOC_MIME.includes(file.type)) {
-      return; // surfaced via accept attr; server double-checks magic bytes
-    }
-    if (file.size > MAX_DOC_BYTES) {
+      const message = 'Choose a JPEG, PNG or WebP image.';
+      setValidationError(message);
+      onInvalidFile?.(kind, message);
       return;
     }
+    if (file.size > MAX_DOC_BYTES) {
+      const message = 'Choose an image smaller than 10 MB.';
+      setValidationError(message);
+      onInvalidFile?.(kind, message);
+      return;
+    }
+    setValidationError(undefined);
     onFile(kind, file);
   };
 
-  const state = error
-    ? 'error'
-    : doc?.progress !== undefined && doc.progress < 100
-      ? 'uploading'
-      : doc
-        ? 'ready'
-        : 'empty';
-
   return (
-    <div
-      className={`rounded-md border-1 p-3 flex flex-col gap-1 items-center justify-center min-h-[120px] text-center ${
-        state === 'ready'
-          ? 'border-brand-orange/60 bg-brand-orange/5'
-          : 'border-border-light dark:border-border-dark border-dashed'
-      }`}
-    >
+    <div className='flex h-full min-w-0 flex-col gap-3 rounded-xl border-1 border-border-light p-4 dark:border-border-dark'>
+      <div className='flex items-start gap-2'>
+        {uploading ? (
+          <RiLoader4Line
+            size={20}
+            className='shrink-0 animate-spin'
+            aria-hidden
+          />
+        ) : feedback ? (
+          <RiErrorWarningLine
+            size={20}
+            className='shrink-0 text-alert-red'
+            aria-hidden
+          />
+        ) : ready ? (
+          <RiCheckboxCircleFill
+            size={20}
+            className='shrink-0 text-brand-orange'
+            aria-hidden
+          />
+        ) : (
+          <RiFileAddLine
+            size={20}
+            className='shrink-0 opacity-70'
+            aria-hidden
+          />
+        )}
+        <p className='text-sm font-medium leading-5'>{label}</p>
+      </div>
+
       <input
         ref={inputRef}
         type='file'
         accept={ACCEPTED_DOC_MIME.join(',')}
-        onChange={handleFile}
-        disabled={disabled}
+        aria-label={`Choose file for ${label}`}
+        aria-invalid={!!feedback}
+        aria-describedby={feedback ? errorId : undefined}
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          event.target.value = '';
+          if (file) acceptFile(file);
+        }}
+        disabled={blocked}
         className='hidden'
         data-testid={`doc-input-${kind}`}
       />
 
-      {state === 'uploading' ? (
-        <>
-          <RiLoader4Line size={20} className='animate-spin opacity-70' />
-          <p className='text-sm opacity-80'>{doc?.progress ?? 0}%</p>
-        </>
-      ) : state === 'ready' ? (
-        <>
-          <RiCheckboxCircleFill size={20} className='text-brand-orange' />
-          <p className='text-sm font-medium leading-tight'>{label}</p>
-          <button
-            type='button'
-            onClick={() => inputRef.current?.click()}
-            disabled={disabled}
-            className='text-xs underline underline-offset-2 opacity-80 hover:opacity-100'
-          >
-            Replace
-          </button>
-        </>
+      {uploading ? (
+        <div className='flex flex-col gap-2'>
+          <p className='text-sm' aria-live='polite'>
+            {uploadProgress === 100
+              ? 'Finishing upload…'
+              : `Uploading… ${uploadProgress ?? 0}%`}
+          </p>
+          <progress
+            aria-label={`Uploading ${label}`}
+            aria-valuenow={uploadProgress ?? 0}
+            max={100}
+            value={uploadProgress ?? 0}
+            className='h-2 w-full accent-brand-orange'
+          />
+        </div>
       ) : (
-        <>
-          {state === 'error' ? (
-            <RiErrorWarningLine size={20} className='text-alert-red' />
-          ) : (
-            <RiFileAddLine size={20} className='opacity-60' />
-          )}
-          <div className='flex items-center gap-2'>
-            <Button
-              type='button'
-              variant='outline'
-              className='h-7 px-2 text-xs'
-              disabled={disabled}
-              onClick={() => inputRef.current?.click()}
-            >
-              {state === 'error' ? 'Retry upload' : label}
-            </Button>
-            {camOk && (
-              <Button
-                type='button'
-                variant='outline'
-                className='h-7 w-7 !p-0'
-                disabled={disabled}
-                title='Use camera'
-                aria-label={'Use camera for ' + kind}
-                onClick={() => setCamOpen(true)}
-              >
-                <RiCameraLine size={14} />
-              </Button>
-            )}
-          </div>
-          {error && <p className='text-xs text-alert-red px-1'>{error}</p>}
-        </>
-      )}
-
-      {doc?.checksum && (
-        <p
-          className='text-[10px] opacity-50 font-mono truncate max-w-full px-1'
-          title={doc.checksum}
-        >
-          {doc.checksum.slice(0, 10)}…
+        <p className='text-sm opacity-75' aria-live='polite'>
+          {feedback
+            ? 'Choose an image to try again.'
+            : ready
+              ? 'Uploaded'
+              : kind === 'selfie'
+                ? 'Keep your face and ID clearly visible.'
+                : 'Make sure all details are readable.'}
         </p>
       )}
+
+      {feedback && (
+        <p
+          id={errorId}
+          role='alert'
+          className='break-words text-sm text-alert-red'
+        >
+          {feedback}
+        </p>
+      )}
+
+      <div className='mt-auto flex flex-wrap gap-2'>
+        <Button
+          type='button'
+          variant='outline'
+          size='sm'
+          className='h-auto min-h-9 whitespace-normal'
+          aria-label={`${feedback ? 'Retry upload' : ready ? 'Replace' : 'Upload'} ${label}`}
+          aria-describedby={feedback ? errorId : undefined}
+          disabled={blocked}
+          onClick={() => inputRef.current?.click()}
+        >
+          {feedback ? 'Retry upload' : ready ? 'Replace image' : 'Upload image'}
+        </Button>
+        {camOk && (
+          <Button
+            type='button'
+            variant='outline'
+            size='icon'
+            disabled={blocked}
+            title='Use camera'
+            aria-label={`Use camera for ${label}`}
+            onClick={() => setCamOpen(true)}
+          >
+            <RiCameraLine size={18} aria-hidden />
+          </Button>
+        )}
+      </div>
 
       {camOk && camOpen && (
         <CameraCapture
           kind={kind}
           open={camOpen}
           onOpenChange={setCamOpen}
-          initialFacing={initialFacing}
-          onCapture={onFile}
+          initialFacing={kind === 'selfie' ? 'user' : 'environment'}
+          onCapture={(_, file) => acceptFile(file)}
         />
       )}
     </div>

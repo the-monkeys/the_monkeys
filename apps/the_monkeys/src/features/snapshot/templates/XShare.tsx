@@ -1,4 +1,5 @@
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
+import { DiscussionByline, DiscussionSource } from './DiscussionAttribution';
 import {
   Avatar,
   BRAND_URL,
@@ -97,9 +98,13 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
                 color: theme.foreground,
               }}
             >
-              {input.author?.displayName ?? 'the_monkeys'}
+              {input.source === 'discussion' ? (
+                <DiscussionByline input={input} />
+              ) : (
+                input.author?.displayName ?? 'the_monkeys'
+              )}
             </div>
-            {input.author?.username ? (
+            {input.source !== 'discussion' && input.author?.username ? (
               <div
                 style={{ display: 'flex', fontSize: 18, color: theme.muted }}
               >
@@ -112,6 +117,7 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
           themonkeys.live
         </div>
       </Row>
+      <DiscussionSource input={input} theme={theme} />
     </div>
   );
 };

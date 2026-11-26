@@ -6,6 +6,7 @@ import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
 import { ProfileFrame, ProfileImage } from '@/components/profileImage';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
 import {
   eventDateParts,
@@ -41,7 +42,8 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
   const title = purifyHTMLString(event.title);
   const description = purifyHTMLString(event.description || '');
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
-  const date = eventDateParts(event.start_time, event.timezone);
+  const timezone = useViewerTimezone();
+  const date = eventDateParts(event.start_time, timezone);
   const rawOrganizer = normalizeOrganizer(event.organizer_username);
   const directOrganizer = displayOrganizer(rawOrganizer);
   const { user: organizerProfile } = useGetProfileInfoById(
@@ -74,20 +76,25 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
           alt=''
           loading='eager'
           decoding='async'
-          className='absolute inset-0 h-full w-full object-cover opacity-35 transition duration-700 group-hover:scale-[1.025] group-hover:opacity-40'
+          className='absolute inset-0 h-full w-full object-cover opacity-10 transition duration-700 group-hover:scale-[1.025]'
         />
       ) : (
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,87,67,0.3),transparent_42%),linear-gradient(145deg,#251918_0%,#100e0e_70%)]' />
       )}
       <div className='absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/20' />
 
-      <div className='relative z-10 flex w-full flex-col p-5 sm:p-6'>
+      <div className='relative z-10 flex w-full flex-col p-4'>
         <div className='flex items-start justify-between gap-4'>
-          <span className='rounded-full border border-brand-orange/50 bg-brand-orange/10 px-2.5 py-1 font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-[#ff9688]'>
-            Featured event
-          </span>
+          <div className='flex min-w-0 flex-wrap items-center gap-2'>
+            <span className='rounded-full border border-brand-orange/50 bg-brand-orange/10 px-2.5 py-1 font-inter text-[10px] font-bold uppercase tracking-[0.16em] text-[#ff9688]'>
+              Featured event
+            </span>
+            <span className='font-inter text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff9688]'>
+              {category}
+            </span>
+          </div>
           {date && (
-            <span className='flex min-w-12 flex-col rounded-lg border border-white/15 bg-white/10 px-2 py-1.5 text-center backdrop-blur-sm'>
+            <span className='flex min-w-11 flex-col rounded-lg border border-white/15 bg-white/10 px-2 py-1 text-center backdrop-blur-sm'>
               <span className='font-inter text-[10px] font-bold uppercase tracking-wider text-[#ff9688]'>
                 {date.month}
               </span>
@@ -98,15 +105,8 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
           )}
         </div>
 
-        <div className='mt-5'>
-          <p className='font-inter text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff9688]'>
-            {category}
-          </p>
-          <Link
-            href={href}
-            aria-label={title}
-            className={`mt-2 block ${focusRing}`}
-          >
+        <div className='mt-2'>
+          <Link href={href} aria-label={title} className={`block ${focusRing}`}>
             <h2
               className='font-newsreader text-[1.65rem] font-semibold leading-[1.08] tracking-[-0.025em] sm:text-3xl'
               dangerouslySetInnerHTML={{ __html: title }}
@@ -114,15 +114,15 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
           </Link>
           {description && (
             <p
-              className='mt-3 line-clamp-3 font-inter text-sm leading-5 text-white/70'
+              className='mt-2 line-clamp-2 font-inter text-sm leading-5 text-white/70'
               dangerouslySetInnerHTML={{ __html: description }}
             />
           )}
 
-          <div className='mt-5 space-y-2 rounded-xl border border-white/10 bg-white/[0.055] p-3.5 font-inter text-xs text-white/80 backdrop-blur-sm'>
+          <div className='mt-2 space-y-1.5 font-inter text-xs text-white/80'>
             <p className='flex items-center gap-2'>
               <Icon name='RiCalendar' size={15} className='text-[#ff9688]' />
-              {formatEventCardWhen(event.start_time, event.timezone)}
+              {formatEventCardWhen(event.start_time, timezone)}
             </p>
             <p className='flex items-center gap-2'>
               <Icon
@@ -152,7 +152,7 @@ export function LandingFeaturedEvent({ event }: { event: EventItem }) {
           </div>
         </div>
 
-        <div className='mt-4 flex min-h-11 items-center justify-between gap-3 border-t border-white/10 pt-4'>
+        <div className='mt-2 flex min-h-11 items-center justify-between gap-3 border-t border-white/10 pt-3'>
           <div
             role='group'
             aria-label='Event host and attendance'

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -40,8 +40,8 @@ export function EventReactions({
   const { toast } = useToast();
   const router = useRouter();
 
-  // Seed counts from the server once; from then on the client owns them so the
-  // UI updates instantly (optimistically) without waiting for the network.
+  // Start with server data and reconcile viewer refreshes without overwriting
+  // an optimistic change whose request is still in flight.
   const [counts, setCounts] = useState<Record<string, number>>(() => {
     const seed: Record<string, number> = {};
     for (const r of event.reactions || []) seed[r.reaction_type] = r.count;
@@ -55,15 +55,57 @@ export function EventReactions({
   // Per-type in-flight guard: prevents a second request racing the first while
   // still keeping the other reactions fully interactive.
   const [pending, setPending] = useState<Record<string, boolean>>({});
+  const pendingRef = useRef<Record<string, boolean>>({});
+  const identity = `${event.slug}:${session?.username || ''}`;
+  const identityRef = useRef(identity);
+  const identityGeneration = useRef(0);
+  const requestTokens = useRef<Record<string, symbol>>({});
   // Drives the one-shot pop animation; cleared on animationend so it retriggers.
   const [pop, setPop] = useState<string>('');
+
+  useEffect(() => {
+    if (identityRef.current !== identity) {
+      identityRef.current = identity;
+      identityGeneration.current += 1;
+      requestTokens.current = {};
+      pendingRef.current = {};
+      setPending({});
+    }
+    const nextCounts: Record<string, number> = {};
+    for (const reaction of event.reactions || []) {
+      nextCounts[reaction.reaction_type] = reaction.count;
+    }
+    const nextMine: Record<string, boolean> = {};
+    for (const type of event.viewer_reactions || []) nextMine[type] = true;
+    const pendingAtRefresh = { ...pendingRef.current };
+    setCounts((previous) => {
+      for (const type of REACTION_TYPES) {
+        if (pendingAtRefresh[type]) nextCounts[type] = previous[type] || 0;
+      }
+      return nextCounts;
+    });
+    setMine((previous) => {
+      for (const type of REACTION_TYPES) {
+        if (pendingAtRefresh[type]) nextMine[type] = !!previous[type];
+      }
+      return nextMine;
+    });
+  }, [event.reactions, event.viewer_reactions, identity]);
 
   const onToggle = async (type: ReactionType) => {
     if (!session) {
       router.push(loginHref(`${EVENTS_ROUTE}/${event.slug}`));
       return;
     }
-    if (pending[type]) return;
+    if (pendingRef.current[type]) return;
+    const requestIdentity = identity;
+    const requestGeneration = identityGeneration.current;
+    const requestToken = Symbol(type);
+    requestTokens.current[type] = requestToken;
+    const isCurrentRequest = () =>
+      identityRef.current === requestIdentity &&
+      identityGeneration.current === requestGeneration &&
+      requestTokens.current[type] === requestToken;
 
     const wasOn = !!mine[type];
     const delta = wasOn ? -1 : 1;
@@ -72,6 +114,7 @@ export function EventReactions({
     setMine((p) => ({ ...p, [type]: !wasOn }));
     setCounts((p) => ({ ...p, [type]: Math.max(0, (p[type] || 0) + delta) }));
     setPop(type);
+    pendingRef.current[type] = true;
     setPending((p) => ({ ...p, [type]: true }));
 
     try {
@@ -80,12 +123,17 @@ export function EventReactions({
       if (wasOn) await removeReaction(event.slug, type);
       else await addReaction(event.slug, type);
     } catch (err) {
+      if (!isCurrentRequest()) return;
       // Roll the optimistic change back only if the network genuinely failed.
       setMine((p) => ({ ...p, [type]: wasOn }));
       setCounts((p) => ({ ...p, [type]: Math.max(0, (p[type] || 0) - delta) }));
       toast({ title: 'Could not react', description: eventError(err) });
     } finally {
-      setPending((p) => ({ ...p, [type]: false }));
+      if (isCurrentRequest()) {
+        delete requestTokens.current[type];
+        pendingRef.current[type] = false;
+        setPending((p) => ({ ...p, [type]: false }));
+      }
     }
   };
 
@@ -95,6 +143,8 @@ export function EventReactions({
       <div className='group relative flex items-center'>
         <button
           type='button'
+          aria-pressed={!!mine.like}
+          aria-busy={!!pending.like}
           onClick={() => onToggle('like')}
           className={`inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-4 py-1.5 text-sm font-inter transition-colors ${
             mine['like']

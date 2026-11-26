@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { queryKeys } from '@/lib/queryKeys';
 import {
   breadcrumb,
   indexRobots,
@@ -9,6 +10,8 @@ import {
   truncateMeta,
 } from '@/lib/seo';
 import { eventJsonLd } from '@/lib/seoSchema';
+import { getQueryClient } from '@/utils/get-query-client';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import EventDetailClient from './EventDetailClient';
 import { loadEventForMetadata } from './eventMetadata';
@@ -66,6 +69,15 @@ export default async function EventDetailPage({
   if (data === null) notFound();
   const event = data?.event;
 
+  const queryClient = getQueryClient();
+  if (event && isIndexable(event.status, event.visibility)) {
+    // Public first-paint content never carries attendee-only meeting access.
+    const { meeting_link: _meetingLink, ...publicEvent } = event;
+    queryClient.setQueryData(queryKeys.events.detail(params.slug), {
+      event: publicEvent,
+    });
+  }
+
   return (
     <>
       {event && isIndexable(event.status, event.visibility) && (
@@ -90,7 +102,9 @@ export default async function EventDetailPage({
           />
         </>
       )}
-      <EventDetailClient slug={params.slug} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <EventDetailClient slug={params.slug} />
+      </HydrationBoundary>
     </>
   );
 }

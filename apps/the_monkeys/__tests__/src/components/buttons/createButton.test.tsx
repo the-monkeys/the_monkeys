@@ -7,7 +7,7 @@ import { renderWithProviders } from '../../../utils';
 
 afterEach(cleanup);
 
-it('opens a menu containing post, event, and group creation menu items', async () => {
+it('opens a menu containing discussion, post, event, and group creation menu items', async () => {
   const user = userEvent.setup();
 
   renderWithProviders(<CreateButton />);
@@ -16,6 +16,11 @@ it('opens a menu containing post, event, and group creation menu items', async (
   await user.click(trigger);
 
   expect(screen.getByRole('menu')).toBeTruthy();
+  expect(
+    screen
+      .getByRole('menuitem', { name: 'Create Discussion' })
+      .getAttribute('href')
+  ).toBe('/discussions');
   expect(
     screen.getByRole('menuitem', { name: 'Create Post' }).getAttribute('href')
   ).toBe('/create');
@@ -35,13 +40,21 @@ it('opens from the keyboard and moves focus through menu items with arrow keys',
   await user.keyboard('{Enter}');
 
   const postItem = screen.getByRole('menuitem', { name: 'Create Post' });
+  const discussionItem = screen.getByRole('menuitem', {
+    name: 'Create Discussion',
+  });
   const eventItem = screen.getByRole('menuitem', { name: 'Create Event' });
   const groupItem = screen.getByRole('menuitem', { name: 'Create Group' });
 
-  expect(document.activeElement).toBe(postItem);
-  expect(postItem.tabIndex).toBe(0);
+  expect(document.activeElement).toBe(discussionItem);
+  expect(discussionItem.tabIndex).toBe(0);
+  expect(postItem.tabIndex).toBe(-1);
   expect(eventItem.tabIndex).toBe(-1);
   expect(groupItem.tabIndex).toBe(-1);
+  await user.keyboard('{ArrowDown}');
+  expect(document.activeElement).toBe(postItem);
+  expect(discussionItem.tabIndex).toBe(-1);
+  expect(postItem.tabIndex).toBe(0);
   await user.keyboard('{ArrowDown}');
   expect(document.activeElement).toBe(eventItem);
   expect(postItem.tabIndex).toBe(-1);
@@ -70,8 +83,12 @@ it('supports arrow navigation plus Home and End without wrapping past the last i
   expect(document.activeElement).toBe(groupItem);
   expect(groupItem.tabIndex).toBe(0);
   await user.keyboard('{Home}');
-  expect(document.activeElement).toBe(postItem);
-  expect(postItem.tabIndex).toBe(0);
+  const discussionItem = screen.getByRole('menuitem', {
+    name: 'Create Discussion',
+  });
+  expect(document.activeElement).toBe(discussionItem);
+  expect(discussionItem.tabIndex).toBe(0);
+  expect(postItem.tabIndex).toBe(-1);
   await user.keyboard('{End}');
   expect(document.activeElement).toBe(groupItem);
   expect(groupItem.tabIndex).toBe(0);

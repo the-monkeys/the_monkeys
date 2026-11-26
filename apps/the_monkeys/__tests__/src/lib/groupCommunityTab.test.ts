@@ -24,6 +24,7 @@ describe('groupCommunityTab', () => {
     expect(parseGroupCommunityTab('#', false)).toBe('posts');
     expect(parseGroupCommunityTab('#blogs', false)).toBe('posts');
     expect(parseGroupCommunityTab('#events', false)).toBe('events');
+    expect(parseGroupCommunityTab('#discussions', false)).toBe('posts');
     expect(parseGroupCommunityTab('#about', true)).toBe('about');
   });
 

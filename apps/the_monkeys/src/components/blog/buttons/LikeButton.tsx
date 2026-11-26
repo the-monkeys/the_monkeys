@@ -7,11 +7,8 @@ import { HeartBurst } from '@/components/blog/effects/HeartBurst';
 import Icon from '@/components/icon';
 import useAuth from '@/hooks/auth/useAuth';
 import { useIsPostLiked } from '@/hooks/user/useLikeStatus';
-import { queryKeys } from '@/lib/queryKeys';
-import axiosInstance from '@/services/api/axiosInstance';
-import { IsLikedResponse, likesCountResponse } from '@/services/blog/blogTypes';
+import { usePostInteraction } from '@/hooks/user/usePostInteraction';
 import { isAuthError } from '@/utils/errorUtils';
-import { useQueryClient } from '@tanstack/react-query';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 
@@ -26,15 +23,15 @@ export const LikeButton = ({
   isDisable?: boolean;
   initialIsLiked?: boolean;
 }) => {
-  const queryClient = useQueryClient();
-
-  const [loading, setLoading] = useState<boolean>(false);
   const [authPromptOpen, setAuthPromptOpen] = useState(false);
   const [burstKey, setBurstKey] = useState(0);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { isSuccess: isAuthenticated } = useAuth();
+  const { data: session } = useAuth();
+  const viewer = session?.username;
+  const isAuthenticated = !!viewer;
+  const { change, loading } = usePostInteraction('like', blogId, viewer);
 
   const { likeStatus, isLoading, isError } = useIsPostLiked(
     blogId,
@@ -47,34 +44,6 @@ export const LikeButton = ({
   const buttonSize = size + 8;
 
   if (!blogId) return null;
-
-  const setLikeState = (isLiked: boolean) => {
-    queryClient.setQueryData<IsLikedResponse>(
-      queryKeys.blog.likes.status(blogId),
-      {
-        status: 'success',
-        isLiked,
-      }
-    );
-  };
-
-  const updateLikesCount = (delta: 1 | -1) => {
-    queryClient.setQueryData<likesCountResponse>(
-      queryKeys.blog.likes.count(blogId),
-      (previous) => ({
-        count: Math.max(0, (previous?.count ?? 0) + delta),
-      })
-    );
-  };
-
-  const refetchLikeQueries = () => {
-    queryClient.invalidateQueries({
-      queryKey: queryKeys.blog.likes.status(blogId),
-    });
-    queryClient.invalidateQueries({
-      queryKey: queryKeys.blog.likes.count(blogId),
-    });
-  };
 
   if (isLoading) {
     return (
@@ -120,57 +89,25 @@ export const LikeButton = ({
   }
 
   const toggleLike = async (shouldLike: boolean) => {
-    if (loading) return;
-
-    const previousLikeState = likeStatus;
-    const countKey = queryKeys.blog.likes.count(blogId);
-    const previousCountData =
-      queryClient.getQueryData<likesCountResponse>(countKey);
-    const previousCount = previousCountData?.count;
-
-    setLoading(true);
-    setLikeState(shouldLike);
-    if (shouldLike) {
-      setBurstKey((k) => k + 1);
-    }
-    updateLikesCount(shouldLike ? 1 : -1);
-
+    if (loading || isDisable) return;
+    if (shouldLike) setBurstKey((key) => key + 1);
     try {
-      await axiosInstance.post(
-        shouldLike ? `/user/like/${blogId}` : `/user/unlike/${blogId}`
-      );
-      refetchLikeQueries();
+      await change(shouldLike);
     } catch (err: unknown) {
-      setLikeState(previousLikeState ?? false);
-
-      if (previousCount === undefined) {
-        queryClient.removeQueries({
-          queryKey: countKey,
-          exact: true,
-        });
-      } else {
-        queryClient.setQueryData(countKey, previousCountData);
-      }
-
       if (isAuthError(err)) {
         setAuthPromptOpen(true);
         return;
       }
-
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : shouldLike
-            ? 'Failed to like post.'
-            : 'Failed to remove post reaction.';
-
       toast({
         variant: 'error',
         title: 'Error',
-        description: errorMessage,
+        description:
+          err instanceof Error
+            ? err.message
+            : shouldLike
+              ? 'Failed to like post.'
+              : 'Failed to remove post reaction.',
       });
-    } finally {
-      setLoading(false);
     }
   };
 

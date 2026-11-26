@@ -1,129 +1,82 @@
-'use client';
-
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
-import useAuth from '@/hooks/auth/useAuth';
-import useGetPublishedBlogByUsername from '@/hooks/blog/useGetPublishedBlogByUsername';
 import { Button } from '@the-monkeys/ui/atoms/button';
-import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
-export default function SnapshotPickerPage() {
-  const router = useRouter();
-  const { data: authUser, isLoading: authLoading } = useAuth();
-  const username = authUser?.username;
+import SnapshotPicker from './SnapshotPicker';
 
-  const { blogs, isLoading, isError } = useGetPublishedBlogByUsername({
-    username,
-    limit: 30,
-    offset: 0,
-  });
-
-  if (authLoading || isLoading) {
-    return (
-      <div className='mx-auto w-full max-w-5xl px-4 py-8'>
-        <h1 className='mb-2 font-newsreader text-3xl'>Snapshot</h1>
-        <p className='mb-6 text-foreground/60'>
-          Generate share-ready social images from your published posts.
-        </p>
-        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className='h-40 w-full rounded-xl' />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (!username) {
-    return (
-      <div className='mx-auto w-full max-w-md px-4 py-16 text-center'>
-        <h1 className='mb-2 font-newsreader text-3xl'>Snapshot</h1>
-        <p className='mb-6 text-foreground/70'>
-          Sign in to generate social images from your posts, or start from a
-          blank canvas.
-        </p>
-        <div className='flex flex-col items-center gap-3'>
-          <Button onClick={() => router.push('/auth/login')}>Sign in</Button>
-          <Link
-            href='/snapshot/new'
-            className='text-sm text-brand-orange underline'
-          >
-            Start from scratch
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const list = blogs?.blogs ?? [];
-
+export default function SnapshotPage() {
   return (
-    <div className='mx-auto w-full max-w-5xl px-4 py-8'>
-      <header className='mb-6'>
-        <h1 className='font-newsreader text-3xl'>
-          Snapshot
-          <span className='text-brand-orange'>.</span>
-        </h1>
-        <p className='text-foreground/60'>
-          Pick a published post to turn into a social-ready image, or start from
-          a blank canvas.
+    <div className='mx-auto w-full min-w-0 max-w-5xl'>
+      <header className='flex flex-col gap-4 px-4 py-8'>
+        <p className='text-sm font-semibold text-brand-orange'>
+          Monkeys Studio
         </p>
+        <h1 className='font-newsreader text-3xl sm:text-4xl'>
+          Snapshot Studio: turn your writing into social images
+        </h1>
+        <p className='max-w-2xl text-foreground/70'>
+          Create a quote card, an Instagram carousel or a portrait from a
+          headline and a short description. Choose a template, edit the text and
+          download a PNG or JPEG to share yourself.
+        </p>
+        <p className='max-w-2xl text-sm text-foreground/60'>
+          Start with a blank canvas without signing in. To use one of your
+          published Monkeys posts, sign in and choose it below.
+        </p>
+        <div className='flex flex-col gap-3 sm:flex-row sm:flex-wrap'>
+          <Button asChild className='min-h-11'>
+            <Link href='/snapshot/new'>Open image Studio</Link>
+          </Button>
+          <Button asChild variant='outline' className='min-h-11'>
+            <Link href='/snapshot/new?view=x'>Create an X screenshot</Link>
+          </Button>
+        </div>
       </header>
 
-      {isError ? (
-        <p role='alert' className='text-sm text-alert-red'>
-          Could not load your posts. Please try again.
-        </p>
-      ) : null}
+      <SnapshotPicker />
 
-      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-        <Link
-          href='/snapshot/new'
-          className='group flex h-full min-h-[14rem] flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-brand-orange/40 bg-brand-orange/5 p-4 text-center transition-colors hover:border-brand-orange hover:bg-brand-orange/10'
-        >
-          <span className='font-newsreader text-2xl text-brand-orange'>
-            Start from scratch
-          </span>
-          <span className='text-xs text-foreground/60'>
-            Type your own headline, description and quote. No post required.
-          </span>
-        </Link>
-
-        {list.length === 0 ? (
-          <div className='col-span-full rounded-xl border border-dashed p-8 text-center text-foreground/60 sm:col-span-1 lg:col-span-2'>
-            You have no published posts yet.
-          </div>
-        ) : (
-          list.map((meta) => (
-            <Link
-              key={meta.blog_id}
-              href={`/snapshot/${encodeURIComponent(meta.blog_id)}`}
-              className='group flex flex-col gap-2 overflow-hidden rounded-xl border bg-foreground-light/30 p-3 transition-colors hover:border-brand-orange/60 dark:bg-foreground-dark/20'
-            >
-              {meta.first_image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={meta.first_image}
-                  alt=''
-                  className='h-32 w-full rounded-lg object-cover'
-                  loading='lazy'
-                />
-              ) : (
-                <div className='flex h-32 w-full items-center justify-center rounded-lg bg-foreground-light/50 text-foreground/40 dark:bg-foreground-dark/40'>
-                  No cover
-                </div>
-              )}
-              <h2 className='line-clamp-2 font-newsreader text-base capitalize'>
-                {meta.title || 'Untitled'}
-              </h2>
-              <p className='line-clamp-2 text-xs text-foreground/60'>
-                {meta.first_paragraph}
-              </p>
-            </Link>
-          ))
-        )}
-      </div>
+      <section
+        aria-labelledby='snapshot-workflow'
+        className='flex flex-col gap-5 border-t px-4 py-8'
+      >
+        <h2 id='snapshot-workflow' className='font-newsreader text-2xl'>
+          Make a clear image from one idea
+        </h2>
+        <ol className='grid gap-4 sm:grid-cols-3'>
+          <li className='flex flex-col gap-2 rounded-xl border p-4'>
+            <h3 className='font-semibold'>1. Pick the message</h3>
+            <p className='text-sm text-foreground/70'>
+              Use a published post or type your own headline, description and
+              quote. Keep one main point so the card is easy to read.
+            </p>
+          </li>
+          <li className='flex flex-col gap-2 rounded-xl border p-4'>
+            <h3 className='font-semibold'>2. Choose the format</h3>
+            <p className='text-sm text-foreground/70'>
+              Try a quote card for a short excerpt, a portrait for a headline or
+              a carousel for several points. Adjust the theme and accent in the
+              preview.
+            </p>
+          </li>
+          <li className='flex flex-col gap-2 rounded-xl border p-4'>
+            <h3 className='font-semibold'>3. Review and download</h3>
+            <p className='text-sm text-foreground/70'>
+              Check the wording, attribution and readability before exporting as
+              PNG or JPEG. Add a link to the full post when you share it.
+            </p>
+          </li>
+        </ol>
+        <div className='flex flex-col gap-2'>
+          <h3 className='font-newsreader text-xl'>
+            Working with a public X post?
+          </h3>
+          <p className='max-w-2xl text-sm text-foreground/70'>
+            Open the X screenshot tab and paste the public post URL to create a
+            screenshot card. Review the preview and keep the original source
+            with your share. Loading a post depends on its availability on X.
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

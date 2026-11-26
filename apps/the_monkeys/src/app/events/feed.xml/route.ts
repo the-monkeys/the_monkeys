@@ -1,12 +1,18 @@
 import { parseEventTime } from '@/lib/eventTime';
 import { EVENTS_SEO, SITE_URL, truncateMeta } from '@/lib/seo';
 import { fetchPublicEvents } from '@/lib/seoCatalog';
-import { buildRssXml, rssResponse } from '@/lib/seoFeed';
+import {
+  buildRssXml,
+  rssResponse,
+  rssUnavailableResponse,
+} from '@/lib/seoFeed';
 
-export const revalidate = 300;
+// Fetch at request time: an unavailable API must not prevent deployment.
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const events = await fetchPublicEvents(50);
+  const events = await fetchPublicEvents(50).catch(() => null);
+  if (!events) return rssUnavailableResponse();
   const xml = buildRssXml({
     title: EVENTS_SEO.title,
     description: EVENTS_SEO.description,

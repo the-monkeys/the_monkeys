@@ -1,5 +1,9 @@
+import useAuth from '@/hooks/auth/useAuth';
+import { useCreationMutation } from '@/hooks/useCreationMutation';
+import { hasKnownViewer, keepPreviousViewerData } from '@/lib/authQuerySession';
 import {
   LIVE_LIST_STALE_MS,
+  invalidateAfterArticleWrite,
   invalidateAfterGroupEventWrite,
   invalidateAfterGroupWrite,
 } from '@/lib/queryFreshness';
@@ -40,6 +44,7 @@ import {
   GroupBody,
   GroupEventBody,
   GroupImageKind,
+  GroupItem,
   GroupListFilters,
   GroupRuleBody,
   JoinBody,
@@ -47,7 +52,6 @@ import {
   MemberRoleBody,
 } from '@/services/groups/groupsTypes';
 import {
-  keepPreviousData,
   useInfiniteQuery,
   useMutation,
   useQuery,
@@ -59,12 +63,23 @@ import {
 // -----------------------------------------------------------------------------
 
 export function useGroupList(filters: GroupListFilters = {}, enabled = true) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
+  const qc = useQueryClient();
   return useQuery({
-    queryKey: queryKeys.groups.list(filters),
+    queryKey: queryKeys.groups.list(filters, viewer),
+    initialData: () =>
+      qc.getQueryData<Awaited<ReturnType<typeof listGroups>>>(
+        queryKeys.groups.list(filters)
+      ),
+    initialDataUpdatedAt: () =>
+      viewer
+        ? 1
+        : qc.getQueryState(queryKeys.groups.list(filters))?.dataUpdatedAt,
     queryFn: () => listGroups(filters),
-    enabled,
+    enabled: enabled && hasKnownViewer(auth),
     staleTime: LIVE_LIST_STALE_MS,
-    placeholderData: keepPreviousData,
+    placeholderData: keepPreviousViewerData(viewer),
   });
 }
 
@@ -73,19 +88,34 @@ export function useUserGroups(
   filters: GroupListFilters = {},
   enabled = true
 ) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.groups.user(username, filters),
+    queryKey: queryKeys.groups.user(username, filters, viewer),
     queryFn: () => listUserGroups(username!, filters),
-    enabled: enabled && !!username,
+    enabled: hasKnownViewer(auth) && enabled && !!username,
     staleTime: LIVE_LIST_STALE_MS,
   });
 }
 
 export function useGroupDetail(slug: string | undefined) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
+  const qc = useQueryClient();
   return useQuery({
-    queryKey: queryKeys.groups.detail(slug),
+    queryKey: queryKeys.groups.detail(slug, viewer),
+    initialData: () =>
+      qc.getQueryData<Awaited<ReturnType<typeof getGroup>>>(
+        queryKeys.groups.detail(slug)
+      ),
+    initialDataUpdatedAt: () =>
+      viewer
+        ? 1
+        : qc.getQueryState(queryKeys.groups.detail(slug))?.dataUpdatedAt,
     queryFn: () => getGroup(slug!),
-    enabled: !!slug,
+    enabled: hasKnownViewer(auth) && !!slug,
+    // Reconcile request-scoped membership/permissions after hydration.
+    staleTime: 0,
   });
 }
 
@@ -94,20 +124,37 @@ export function useGroupMembers(
   params?: MemberListParams,
   enabled = true
 ) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.groups.members(slug, params as Record<string, unknown>),
+    queryKey: queryKeys.groups.members(
+      slug,
+      params as Record<string, unknown>,
+      viewer
+    ),
     queryFn: () => listMembers(slug!, params),
-    enabled: enabled && !!slug,
+    enabled: hasKnownViewer(auth) && enabled && !!slug,
   });
 }
 
 export function useGroupBlogs(
   slug: string | undefined,
   limit = 20,
-  enabled = true
+  enabled = true,
+  group?: Pick<GroupItem, 'visibility' | 'status' | 'viewer_member_status'>
 ) {
+  const auth = useAuth();
   return useInfiniteQuery({
-    queryKey: queryKeys.groups.blogs(slug, { limit }),
+    // Keep the existing invalidation prefix, but never share viewer-only pages.
+    queryKey: [
+      ...queryKeys.groups.blogs(slug, { limit }),
+      {
+        viewer: auth.data?.account_id ?? auth.data?.username ?? null,
+        memberStatus: group?.viewer_member_status ?? '',
+        visibility: group?.visibility ?? '',
+        status: group?.status ?? '',
+      },
+    ],
     queryFn: ({ pageParam }) =>
       listGroupBlogs(slug!, { limit, offset: pageParam }),
     initialPageParam: 0,
@@ -115,7 +162,7 @@ export function useGroupBlogs(
       lastPage.blogs.length === limit
         ? pages.reduce((count, page) => count + page.blogs.length, 0)
         : undefined,
-    enabled: enabled && !!slug,
+    enabled: enabled && !!slug && hasKnownViewer(auth),
     staleTime: LIVE_LIST_STALE_MS,
   });
 }
@@ -123,10 +170,12 @@ export function useGroupBlogs(
 // Invite links are staff-only; gate the query with `enabled` so a non-staff
 // viewer never fires the request the gateway would reject.
 export function useGroupInvites(slug: string | undefined, enabled = true) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.groups.invites(slug),
+    queryKey: queryKeys.groups.invites(slug, viewer),
     queryFn: () => listInvites(slug!),
-    enabled: enabled && !!slug,
+    enabled: !!viewer && hasKnownViewer(auth) && enabled && !!slug,
   });
 }
 
@@ -147,17 +196,25 @@ export function useRefreshGroups(slug?: string) {
 
 export function useCreateGroup() {
   const refresh = useRefreshGroups();
-  return useMutation({
-    mutationFn: (body: GroupBody) => createGroup(body),
-    onSuccess: refresh,
-  });
+  const { data: session } = useAuth();
+  return useCreationMutation(
+    `groups:${session?.account_id || session?.username || ''}`,
+    {
+      mutationFn: (body: GroupBody, key) => createGroup(body, key),
+      onSuccess: refresh,
+    }
+  );
 }
 
 export function useUpdateGroup(slug: string) {
+  const qc = useQueryClient();
   const refresh = useRefreshGroups(slug);
   return useMutation({
     mutationFn: (body: GroupBody) => updateGroup(slug, body),
-    onSuccess: refresh,
+    onSuccess: (_data, body) => {
+      if (body.visibility !== undefined) void invalidateAfterArticleWrite(qc);
+      return refresh();
+    },
   });
 }
 
@@ -279,10 +336,12 @@ export function useAcceptInvite() {
 
 // Previews an invite by token on the public accept page.
 export function useInvitePreview(token: string | undefined) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.groups.invites(token),
+    queryKey: queryKeys.groups.invites(token, viewer),
     queryFn: () => getInvite(token!),
-    enabled: !!token,
+    enabled: hasKnownViewer(auth) && !!token,
   });
 }
 
@@ -331,8 +390,13 @@ export function useDeleteGroupRule(slug: string) {
 
 export function useCreateGroupEvent(slug: string) {
   const qc = useQueryClient();
-  return useMutation({
-    mutationFn: (body: GroupEventBody) => createGroupEvent(slug, body),
-    onSuccess: () => invalidateAfterGroupEventWrite(qc, slug),
-  });
+  const { data: session } = useAuth();
+  return useCreationMutation(
+    `group-event:${slug}:${session?.account_id || session?.username || ''}`,
+    {
+      mutationFn: (body: GroupEventBody, key) =>
+        createGroupEvent(slug, body, key),
+      onSuccess: () => invalidateAfterGroupEventWrite(qc, slug),
+    }
+  );
 }

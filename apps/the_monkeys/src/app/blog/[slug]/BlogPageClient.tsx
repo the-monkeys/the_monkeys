@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 // import AdUnit from '@/components/AdSense/AdUnit';
@@ -17,36 +16,35 @@ import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
 import { PostArticleCanvas } from '@/components/editor/postCanvas/PostArticleCanvas';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import {
-  BlogPageSkeleton,
-  EditorBlockSkeleton,
-} from '@/components/skeletons/blogSkeleton';
+import { BlogPageSkeleton } from '@/components/skeletons/blogSkeleton';
 import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import type { MetaBlog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import moment from 'moment';
 import { RiPencilFill } from 'react-icons/ri';
 
+import { BlogArticleBody } from '../components/BlogArticleBody';
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
 import { BlogScopeLine } from '../components/BlogScopeLine';
 
-const Editor = dynamic(() => import('@/components/editor/preview'), {
-  ssr: false,
-  loading: () => <EditorBlockSkeleton />,
-});
-
 interface BlogPageClientProps {
   urlBlogId: string;
   fullSlug: string;
+  initialRelatedPosts?: MetaBlog[];
 }
 
-const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
+const BlogPageClient = ({
+  urlBlogId,
+  fullSlug,
+  initialRelatedPosts,
+}: BlogPageClientProps) => {
   const router = useRouter();
   const { data: session } = useAuth();
   const { blog, isError, isLoading } =
@@ -178,7 +176,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
       <div className='p-4'>
         <Container className='max-w-3xl'>
           <PostArticleCanvas className='px-1 pb-4 overflow-hidden'>
-            <Editor key={blogId} data={blogDataWithoutHeading()} />
+            <BlogArticleBody key={blogId} data={blogDataWithoutHeading()} />
           </PostArticleCanvas>
           <BlogReactionsContainer
             blogURL={fullSlug}
@@ -208,7 +206,11 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
               Explore similar content
             </h6>
 
-            <BlogRecommendations blogId={blogId} topics={tags} />
+            <BlogRecommendations
+              blogId={blogId}
+              topics={tags}
+              initialBlogs={initialRelatedPosts}
+            />
           </div>
         </Container>
       </div>

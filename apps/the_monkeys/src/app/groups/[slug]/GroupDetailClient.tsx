@@ -1,18 +1,21 @@
 'use client';
 
+import { useState } from 'react';
+
 import Link from 'next/link';
 
 import { GroupEmpty } from '@/components/groups/GroupCard';
 import { GroupCommunity } from '@/components/groups/detail/GroupCommunity';
+import { GroupCreateMenu } from '@/components/groups/detail/GroupCreateMenu';
 import { GroupJoinButton } from '@/components/groups/detail/GroupJoinButton';
 import { GroupRules } from '@/components/groups/detail/GroupRules';
 import Icon, { IconName } from '@/components/icon';
 import { Loader } from '@/components/loader';
 import { GROUPS_ROUTE } from '@/constants/routeConstants';
 import { useGroupDetail } from '@/hooks/groups/useGroupQueries';
-import { canManageGroup } from '@/lib/groupPerms';
+import { canManageGroup, isActiveGroupMember } from '@/lib/groupPerms';
+import { normalizeSeoText } from '@/lib/seo';
 import { GroupVisibility } from '@/services/groups/groupsTypes';
-import { Button } from '@the-monkeys/ui/atoms/button';
 
 const VISIBILITY: Record<
   GroupVisibility,
@@ -25,6 +28,8 @@ const VISIBILITY: Record<
 
 export default function GroupDetailClient({ slug }: { slug: string }) {
   const { data, isLoading, isError } = useGroupDetail(slug);
+  const [forcePostsToken, setForcePostsToken] = useState(0);
+  const [focusDiscussionToken, setFocusDiscussionToken] = useState(0);
   const group = data?.group;
 
   if (isLoading) {
@@ -147,6 +152,12 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
               )}
             </p>
 
+            {group.description && (
+              <p className='mt-3 max-w-3xl break-words font-inter text-sm leading-6 text-gray-600 dark:text-gray-400'>
+                {normalizeSeoText(group.description, 280)}
+              </p>
+            )}
+
             {group.topics && group.topics.length > 0 && (
               <div className='mt-3 flex flex-wrap gap-2'>
                 {group.topics.map((topic) => (
@@ -162,12 +173,15 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
           </div>
 
           <div className='flex shrink-0 items-center gap-2'>
-            {manage && (
-              <Button asChild variant='outline'>
-                <Link href={`${GROUPS_ROUTE}/${group.slug}/events/new`}>
-                  Create event
-                </Link>
-              </Button>
+            {(isActiveGroupMember(group) || manage) && (
+              <GroupCreateMenu
+                includeEvent={manage}
+                onCreateDiscussion={() => {
+                  setForcePostsToken((n) => n + 1);
+                  setFocusDiscussionToken((n) => n + 1);
+                }}
+                slug={group.slug}
+              />
             )}
             <GroupJoinButton group={group} />
           </div>
@@ -177,7 +191,11 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
         <div className='mt-8'>
           <div className='min-w-0'>
             {/* Events / About / Members / Join requests / Invites tabs */}
-            <GroupCommunity group={group} />
+            <GroupCommunity
+              focusDiscussionToken={focusDiscussionToken}
+              forcePostsToken={forcePostsToken}
+              group={group}
+            />
           </div>
         </div>
       </div>

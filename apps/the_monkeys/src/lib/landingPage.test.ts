@@ -2,6 +2,7 @@ import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
 import { describe, expect, it } from 'vitest';
 
+import { usableHomepageCover } from './homepageEligibility';
 import {
   LANDING_EVENT_FILTERS,
   selectLandingEvents,
@@ -16,6 +17,14 @@ const post = (blogId: string, overrides: Partial<MetaBlog> = {}): MetaBlog => ({
   owner_account_id: `author-${blogId}`,
   published_time: '2026-09-11T09:00:00.000Z',
   tags: ['Community'],
+  homepage_eligibility: {
+    eligible: true,
+    lead_eligible: true,
+    word_count: 250,
+    minimum_words: 250,
+    reasons: [],
+    version: 'homepage-v1',
+  },
   ...overrides,
 });
 
@@ -123,7 +132,79 @@ describe('landing page content selection', () => {
       { ...event(3), slug: null },
     ] as unknown as EventItem[];
 
-    expect(selectLandingPosts(malformedPosts).lead?.blog_id).toBe('valid');
+    expect(selectLandingPosts(malformedPosts).supporting[0]?.blog_id).toBe(
+      'valid'
+    );
     expect(selectLandingEvents(malformedEvents).featured?.id).toBe(1);
+  });
+});
+
+describe('homepage policy placement', () => {
+  it('does not promote a text-only article when no usable lead exists', () => {
+    const slots = selectLandingPosts([post('text-only')]);
+    expect(slots.lead).toBeUndefined();
+    expect(slots.supporting.map((item) => item.blog_id)).toEqual(['text-only']);
+  });
+
+  it('requires explicit current-version eligibility in every homepage slot', () => {
+    const unmarked = post('old', { homepage_eligibility: undefined });
+    const rejected = post('rejected');
+    rejected.homepage_eligibility!.eligible = false;
+    const old = post('old-policy');
+    old.homepage_eligibility!.version = 'homepage-v0' as any;
+    const slots = selectLandingPosts([
+      unmarked,
+      rejected,
+      old,
+      post('qualified'),
+    ]);
+    expect(slots.lead).toBeUndefined();
+    expect(slots.supporting.map((item) => item.blog_id)).toEqual(['qualified']);
+  });
+
+  it('does not use an invalid or placeholder cover even with a lead marker', () => {
+    for (const first_image of [
+      'blob:pending',
+      'data:image/png;base64,a',
+      '/image-placeholder.png',
+      '//cdn.test/photo.jpg',
+      'bad',
+    ]) {
+      expect(
+        selectLandingPosts([post('bad-cover', { first_image })]).lead
+      ).toBeUndefined();
+    }
+    const marked = post('no-lead', { first_image: '/real.jpg' });
+    marked.homepage_eligibility!.lead_eligible = false;
+    expect(selectLandingPosts([marked]).lead).toBeUndefined();
+  });
+});
+
+describe('server-compatible persisted cover structure', () => {
+  it.each([
+    '/placeholder.png',
+    '/a-guide-to-placeholders.jpg',
+    '/opengraph-image.png',
+    '/default-image.jpg',
+    'https://images.example.org/placeholder-design.jpg',
+    ' /authored-cover.jpg ',
+  ])('allows the authored cover %s', (cover) => {
+    expect(usableHomepageCover(cover)).toBe(true);
+  });
+  it.each([
+    '/image-placeholder.png',
+    '/placeholder-image.jpg',
+    'https://example.org/image-placeholder.png',
+    'blob:pending',
+    'data:image/png;base64,a',
+    'javascript:alert(1)',
+    '//example.org/photo.jpg',
+    '/',
+    'https://example.org/',
+    '/bad\\path.jpg',
+    '/bad<image>.jpg',
+    '/bad\timage.jpg',
+  ])('rejects the unusable cover %s', (cover) => {
+    expect(usableHomepageCover(cover)).toBe(false);
   });
 });

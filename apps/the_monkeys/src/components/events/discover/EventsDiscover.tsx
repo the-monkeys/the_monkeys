@@ -9,6 +9,7 @@ import { CategoryChips } from '@/components/geo/CategoryChips';
 import { RadiusChips, RadiusChoice } from '@/components/geo/RadiusChips';
 import { GroupGridCard } from '@/components/groups/GroupGridCard';
 import Icon from '@/components/icon';
+import { JsonLd } from '@/components/seo/JsonLd';
 import {
   EVENTS_ROUTE,
   GROUPS_ROUTE,
@@ -23,6 +24,7 @@ import {
   geoRadiusSteps,
   nearMeQuery,
 } from '@/lib/geoSearch';
+import { absoluteUrl, faqPage } from '@/lib/seo';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -245,6 +247,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     nationwide,
     pinActive,
     currentRadius,
+    ipLocation.city,
     ipLocation.latitude,
     ipLocation.longitude,
   ]);
@@ -268,6 +271,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
     nationwide,
     location,
     currentRadius,
+    ipLocation.city,
     ipLocation.latitude,
     ipLocation.longitude,
     ipLocation.countryName,
@@ -552,7 +556,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
             </div>
           }
         />
-        {!geoReady || popular.isLoading ? (
+        {(!geoReady && !popular.data) || popular.isLoading ? (
           <GridSkeleton count={8} />
         ) : popular.isError ? (
           <p className='py-10 text-center font-inter text-sm text-gray-500'>
@@ -678,7 +682,7 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
             </Link>
           }
         />
-        {!geoReady || communities.isLoading ? (
+        {(!geoReady && !communities.data) || communities.isLoading ? (
           <GridSkeleton count={4} />
         ) : groups.length === 0 ? (
           <p className='rounded-xl border border-dashed border-border-light py-12 text-center font-inter text-sm text-gray-500 dark:border-border-dark/40'>
@@ -693,6 +697,12 @@ export function EventsDiscover({ signedIn }: { signedIn: boolean }) {
         )}
       </section>
 
+      <JsonLd
+        data={faqPage(
+          absoluteUrl('/events'),
+          FAQS.map(({ q, a }) => ({ question: q, answer: a }))
+        )}
+      />
       {/* ---- FAQ accordion (native details/summary) ---- */}
       <section>
         <SectionHeader eyebrow='Good to know' title='Community FAQ' />

@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Icon from '@/components/icon';
 import PasswordInput from '@/components/input/PasswordInput';
 import { Loader } from '@/components/loader';
+import { replaceAuthSession } from '@/lib/authQuerySession';
 import { safeCallbackPath } from '@/lib/authRedirect';
 import { otpVerificationSchema, registerUserSchema } from '@/lib/schema/auth';
 import { cn } from '@/lib/utils';
@@ -131,8 +132,7 @@ export default function RegisterUserForm() {
       });
 
       // Update auth cache so useAuth picks up the new session immediately (no hard refresh)
-      queryClient.setQueryData(['auth'], user);
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
+      await replaceAuthSession(queryClient, user);
 
       toast({
         variant: 'success',

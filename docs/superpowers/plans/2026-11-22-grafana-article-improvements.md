@@ -1,0 +1,11 @@
+# Grafana article improvements
+
+Approved scope: improve the existing Grafana article and its search presentation; preserve ID 1uvwek, indexed URL, design, authorization and all legacy article behavior. No production writes or PRs.
+
+Implementation: optional published editorial metadata separates canonical URL from title; absent/invalid metadata retains legacy extraction. Carry canonical through SEO, feeds, sitemap and cards. Version-controlled offline revision package in backend, locally applied only with backup and CAS. Preserve publication date, ownership, audience and interactions. Match anchors/alt text before and after editor hydration. Donation prompt stays non-blocking in article footer, existing design elsewhere.
+
+Verification: demonstrate failing regression before fix; legacy/Hindi/invalid canonical/private/draft tests; feed and schema contracts; offline migration rejection/idempotence tests; actual isolated Grafana/Prometheus/Node Exporter smoke test and authentic screenshot; local article desktop/tablet/mobile checks; scoped lint/typecheck/build; independent final review. Protect staged-mobile fingerprint and inspect relevant diffs before explicit commits/push.
+
+Ruling: the prior investigation and user approval are the implementation specification; no extra approval gate. Existing isolated worktrees are reused. Frontend deploy must precede any separately authorized publication of the content revision.
+
+Verification completed: 100 targeted frontend regressions passed; TypeScript, scoped lint and final production build passed. Browser checks covered 320/390/820/desktop widths, canonical path, one H1, authentic JPEG and matching anchors. Jump targets have an 8rem fixed-header offset in SSR and hydrated output. Backend four-package Go suite passed with vet enabled. Real isolated monitoring stack produced CPU/memory and selected ext4 /var/lib filesystem data on Docker Desktop's Linux VM. Native Ubuntu and optional remote server were not executed. Local article backup/CAS and immutable-field comparisons passed. Staged-mobile fingerprint remained 3adf9af88183cce349877ad19cfa2b87088544a5e5224bf4ad60201a6147666d. Production publication remains separate from code deployment.

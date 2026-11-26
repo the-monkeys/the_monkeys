@@ -198,7 +198,8 @@ export const Logo: React.FC<{
   color: string;
   accent: string;
   size?: number;
-}> = ({ color, accent, size = 26 }) => {
+  src?: string;
+}> = ({ color, accent, size = 26, src = LOGO_ASSET_PATH }) => {
   const iconSize = Math.round(size * 1.6);
   return (
     <div
@@ -210,7 +211,7 @@ export const Logo: React.FC<{
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={LOGO_ASSET_PATH}
+        src={src}
         alt=''
         width={iconSize}
         height={iconSize}

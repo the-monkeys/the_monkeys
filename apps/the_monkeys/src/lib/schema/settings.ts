@@ -51,7 +51,10 @@ export const updateProfileDetailsSchema = z.object({
 
 export const updateEmailSchema = z.object({
   email: z
-    .string({ required_error: 'Email is required' })
+    .string({
+      error: (issue) =>
+        issue.input === undefined ? 'Email is required' : undefined,
+    })
     .min(1, 'Email is required')
     .email('Invalid email'),
 });

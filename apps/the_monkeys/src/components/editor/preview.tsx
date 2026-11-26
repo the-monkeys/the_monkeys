@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef } from 'react';
 
 import { editorConfig } from '@/config/editor/monkeys_editor_readonly.config';
+import { applyArticleAnnotations } from '@/lib/articleAnnotations';
 import MonkeysEditor, { OutputData } from '@themonkeys/monkeys-editor';
 
 export type EditorProps = {
@@ -15,6 +16,11 @@ const Editor: FC<EditorProps> = ({ data }) => {
       editorInstance.current = new MonkeysEditor({
         ...editorConfig,
         data: data,
+        onReady: () => {
+          const holder = document.getElementById(editorConfig.holder as string);
+          if (holder && data?.blocks)
+            applyArticleAnnotations(holder, data.blocks);
+        },
       });
     }
 

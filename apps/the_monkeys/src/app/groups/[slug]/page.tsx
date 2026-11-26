@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { JsonLd } from '@/components/seo/JsonLd';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   breadcrumb,
   indexRobots,
@@ -11,6 +12,8 @@ import {
 } from '@/lib/seo';
 import { groupJsonLd } from '@/lib/seoSchema';
 import { GroupResp } from '@/services/groups/groupsTypes';
+import { getQueryClient } from '@/utils/get-query-client';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import GroupDetailClient from './GroupDetailClient';
 import { loadGroupForMetadata } from './groupMetadata';
@@ -62,6 +65,11 @@ export default async function GroupDetailPage({
   if (data === null) notFound();
   const group = data?.group;
 
+  const queryClient = getQueryClient();
+  if (group && isIndexable(group)) {
+    queryClient.setQueryData(queryKeys.groups.detail(params.slug), { group });
+  }
+
   return (
     <>
       {group && isIndexable(group) && (
@@ -76,7 +84,9 @@ export default async function GroupDetailPage({
           />
         </>
       )}
-      <GroupDetailClient slug={params.slug} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <GroupDetailClient slug={params.slug} />
+      </HydrationBoundary>
     </>
   );
 }

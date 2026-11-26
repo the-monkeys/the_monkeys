@@ -5,7 +5,7 @@ import { useState } from 'react';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
 import useAuth from '@/hooks/auth/useAuth';
-import { PROFILE_IMAGE_QUERY_KEY } from '@/hooks/profile/useProfileImage';
+import { queryKeys } from '@/lib/queryKeys';
 import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@the-monkeys/ui/atoms/button';
@@ -37,9 +37,9 @@ export const DeleteProfilePhotoConfirmation = ({
       );
 
       if (response.status === 200) {
-        queryClient.setQueryData([PROFILE_IMAGE_QUERY_KEY, username], null);
+        queryClient.setQueryData(queryKeys.profile.image(username), null);
         queryClient.invalidateQueries({
-          queryKey: [PROFILE_IMAGE_QUERY_KEY, username],
+          queryKey: queryKeys.profile.image(username),
         });
         toast({
           variant: 'success',
@@ -52,18 +52,30 @@ export const DeleteProfilePhotoConfirmation = ({
       const isMissingProfileImage =
         axios.isAxiosError(err) && err.response?.status === 404;
 
-      let description = 'An unknown error occurred.';
       if (isMissingProfileImage) {
-        description = 'No profile photo found.';
-      } else if (err instanceof Error) {
-        description = err.message || 'Failed to delete profile photo.';
-      }
+        // If the server has no photo (404), ensure the client cache is also cleared
+        queryClient.setQueryData(queryKeys.profile.image(username), null);
+        queryClient.invalidateQueries({
+          queryKey: queryKeys.profile.image(username),
+        });
+        toast({
+          variant: 'success',
+          title: 'Profile photo removed',
+          description: 'Your profile photo has been removed.',
+        });
+        onSuccess();
+      } else {
+        const description =
+          err instanceof Error
+            ? err.message || 'Failed to delete profile photo.'
+            : 'An unknown error occurred.';
 
-      toast({
-        variant: 'error',
-        title: 'Error',
-        description,
-      });
+        toast({
+          variant: 'error',
+          title: 'Error',
+          description,
+        });
+      }
     } finally {
       setLoading(false);
     }

@@ -1,3 +1,4 @@
+import { parentCompany } from '@/constants/footer';
 import { describe, expect, it } from 'vitest';
 
 import {
@@ -13,6 +14,9 @@ import {
 } from './seo';
 
 describe('SEO primitives', () => {
+  it('uses the same exact legal publisher in visible ownership and structured identity', () => {
+    expect(parentCompany.name).toBe(LEGAL_PUBLISHER_NAME);
+  });
   it('connects the Monkeys brand and website to the legal publisher', () => {
     expect(LEGAL_PUBLISHER_NAME).toBe('Buddhicintaka (OPC) Pvt. Ltd.');
     expect(LEGAL_PUBLISHER_ID).toBe('https://buddhicintaka.com/#organization');

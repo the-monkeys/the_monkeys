@@ -3,6 +3,11 @@ import { notFound } from 'next/navigation';
 
 import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { USER_PROFILE_QUERY_KEY } from '@/hooks/user/useGetProfileInfoByUserId';
+import {
+  prefetchPublicPageMetadata,
+  publicAuthorCard,
+} from '@/lib/publicPagePrefetch';
+import { loadPublicRelatedPosts } from '@/lib/relatedPosts';
 import { noIndexFollowRobots } from '@/lib/seo';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 import { getQueryClient } from '@/utils/get-query-client';
@@ -50,7 +55,7 @@ export default async function BlogPage({ params }: Props) {
   const fullSlug = params.slug;
   const blogId = getBlogIdFromSlug(fullSlug);
 
-  if (!blogId) return null;
+  if (!blogId) notFound();
 
   const blog = await loadBlogForViewer(blogId);
   if (blog === null || blog?.is_draft) notFound();
@@ -62,7 +67,7 @@ export default async function BlogPage({ params }: Props) {
     if (authorData) {
       queryClient.setQueryData(
         [USER_PROFILE_QUERY_KEY, blog.owner_account_id],
-        authorData
+        publicAuthorCard(authorData)
       );
     }
   }
@@ -78,6 +83,22 @@ export default async function BlogPage({ params }: Props) {
     );
   }
 
+  const publicBlog =
+    blog === undefined
+      ? undefined
+      : blog.audience !== 'group_only'
+        ? await loadPublicBlogForSeo(blogId)
+        : null;
+  const initialRelatedPosts = publicBlog
+    ? await loadPublicRelatedPosts(publicBlog)
+    : publicBlog === null
+      ? []
+      : undefined;
+
+  await prefetchPublicPageMetadata(queryClient, {
+    authorIds: (initialRelatedPosts || []).map((post) => post.owner_account_id),
+  });
+
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       {jsonLd && (
@@ -88,7 +109,11 @@ export default async function BlogPage({ params }: Props) {
           }}
         />
       )}
-      <BlogPageClient urlBlogId={blogId} fullSlug={fullSlug} />
+      <BlogPageClient
+        urlBlogId={blogId}
+        fullSlug={fullSlug}
+        initialRelatedPosts={initialRelatedPosts}
+      />
     </HydrationBoundary>
   );
 }

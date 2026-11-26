@@ -80,6 +80,7 @@ export default function GroupsPageClient() {
     typedCity,
     nationwide,
     currentRadius,
+    ipLocation.city,
     ipLocation.latitude,
     ipLocation.longitude,
   ]);
@@ -202,7 +203,7 @@ export default function GroupsPageClient() {
         />
       )}
 
-      {(waitingGeo || active.isLoading) && (
+      {((waitingGeo && !active.data) || active.isLoading) && (
         <div className='flex justify-center py-16'>
           <Loader size={28} />
         </div>
@@ -215,7 +216,7 @@ export default function GroupsPageClient() {
         />
       )}
 
-      {!waitingGeo &&
+      {(!waitingGeo || !!active.data) &&
         !active.isLoading &&
         !active.isError &&
         groups.length === 0 &&
@@ -227,7 +228,7 @@ export default function GroupsPageClient() {
           />
         )}
 
-      {!waitingGeo &&
+      {(!waitingGeo || !!active.data) &&
         !active.isLoading &&
         !active.isError &&
         groups.length === 0 &&

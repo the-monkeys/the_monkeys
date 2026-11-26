@@ -26,17 +26,20 @@ import { Loader } from '@/components/loader';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useEventDetail } from '@/hooks/events/useEventQueries';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   eventStatusLabel,
   eventTypeLabel,
   formatEventWhen,
   isEventEnded,
   isHost,
+  isValidTimezone,
 } from '@/lib/eventTime';
 import { getShareMeta } from '@/services/events/eventsApi';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 export default function EventDetailClient({ slug }: { slug: string }) {
+  const timezone = useViewerTimezone();
   const { data: session } = useAuth();
   const { data, isLoading, isError } = useEventDetail(slug);
   const event = data?.event;
@@ -137,12 +140,21 @@ export default function EventDetailClient({ slug }: { slug: string }) {
             </h1>
 
             <p className='mt-3 font-inter text-sm text-gray-600 dark:text-gray-400 sm:text-base'>
-              {formatEventWhen(
-                event.start_time,
-                event.end_time,
-                event.timezone
-              )}
-              {event.timezone ? ` · ${event.timezone}` : ''}
+              {formatEventWhen(event.start_time, event.end_time, timezone)}
+              {` · Your timezone: ${timezone}`}
+              {event.timezone &&
+                isValidTimezone(event.timezone) &&
+                event.timezone !== timezone && (
+                  <span className='mt-1 block text-xs'>
+                    Event timezone:{' '}
+                    {formatEventWhen(
+                      event.start_time,
+                      event.end_time,
+                      event.timezone
+                    )}{' '}
+                    · {event.timezone}
+                  </span>
+                )}
             </p>
 
             <div className='mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500'>

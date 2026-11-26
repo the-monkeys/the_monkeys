@@ -24,7 +24,12 @@ const FooterSocialLink = ({
       className='group !border-1 rounded-full'
       asChild
     >
-      <Link target='_blank' href={social.link}>
+      <Link
+        target='_blank'
+        href={social.link}
+        aria-label={`Monkeys on ${social.account}`}
+        rel='noopener noreferrer'
+      >
         <Icon
           name={social.icon}
           type='Fill'
@@ -118,7 +123,7 @@ const Footer = () => {
           <div className='w-full mx-auto'>
             <p className='py-6 font-medium text-xs text-center'>
               <span className='font-normal'>© {new Date().getFullYear()}</span>
-              &nbsp;BUDDHICINTAKA PVT. LTD.&nbsp;
+              &nbsp;{parentCompany.name}&nbsp;
               <span className='font-normal'>All rights reserved.</span>
             </p>
           </div>

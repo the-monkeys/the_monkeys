@@ -1,6 +1,8 @@
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
 
+import { isHomepageEligible, usableHomepageCover } from './homepageEligibility';
+
 export const LANDING_POST_LIMIT = 12;
 
 export const LANDING_EVENT_FILTERS = {
@@ -37,7 +39,8 @@ function dedupeValidPosts(posts: MetaBlog[]): MetaBlog[] {
   return posts.filter((post) => {
     const id = typeof post?.blog_id === 'string' ? post.blog_id.trim() : '';
     const title = typeof post?.title === 'string' ? post.title.trim() : '';
-    if (!id || !title || seen.has(id)) return false;
+    if (!id || !title || !isHomepageEligible(post) || seen.has(id))
+      return false;
     seen.add(id);
     return true;
   });
@@ -45,10 +48,11 @@ function dedupeValidPosts(posts: MetaBlog[]): MetaBlog[] {
 
 export function selectLandingPosts(posts: MetaBlog[]): LandingPostSlots {
   const eligible = dedupeValidPosts(posts);
-  const lead =
-    eligible.find(
-      (post) => Boolean(post.first_image) && Boolean(post.tags?.length)
-    ) ?? eligible[0];
+  const lead = eligible.find(
+    (post) =>
+      post.homepage_eligibility?.lead_eligible === true &&
+      usableHomepageCover(post.first_image)
+  );
   const remaining = eligible.filter((post) => post.blog_id !== lead?.blog_id);
 
   return {

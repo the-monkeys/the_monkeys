@@ -1,4 +1,4 @@
-import { toIsoTime } from '@/lib/eventTime';
+import { parseEventTime, toIsoTime } from '@/lib/eventTime';
 import {
   MONKEYS_WEBSITE_ID,
   OG_IMAGE,
@@ -10,6 +10,7 @@ import {
 } from '@/lib/seo';
 import { EventItem } from '@/services/events/eventTypes';
 import { GroupItem } from '@/services/groups/groupsTypes';
+import { parseISO } from 'date-fns';
 
 export function eventsHubGraph(faqs: { question: string; answer: string }[]) {
   const url = absoluteUrl('/events');
@@ -191,15 +192,33 @@ export function eventJsonLd(event: EventItem) {
 
   const tiers = event.ticket_tiers || [];
   const paid = tiers.filter((t) => Number(t.price) > 0);
+  const eventFull =
+    Number(event.capacity) > 0 &&
+    Number(event.attendee_count || 0) >= Number(event.capacity);
+  const availability = (tier?: { capacity: number; booked?: number }) =>
+    eventFull ||
+    (tier && tier.capacity > 0 && (tier.booked || 0) >= tier.capacity)
+      ? 'https://schema.org/SoldOut'
+      : 'https://schema.org/InStock';
+  // Only the host-configured registration window is evidence of when booking opens.
+  // Legacy or malformed values must not become invented dates or break rendering.
+  const registrationOpens =
+    typeof event.rsvp_opens_at === 'string'
+      ? parseISO(event.rsvp_opens_at)
+      : parseEventTime(event.rsvp_opens_at);
+  const validFrom =
+    registrationOpens && Number.isFinite(registrationOpens.getTime())
+      ? registrationOpens.toISOString()
+      : undefined;
   if (paid.length) {
-    jsonLd.offers = paid.map((t) => ({
+    jsonLd.offers = tiers.map((t) => ({
       '@type': 'Offer',
       name: t.name,
       price: Number(t.price).toFixed(2),
       priceCurrency: (t.currency || 'INR').toUpperCase(),
       url,
-      availability: 'https://schema.org/InStock',
-      validFrom: toIsoTime(event.rsvp_opens_at),
+      availability: availability(t),
+      validFrom,
     }));
   } else {
     jsonLd.isAccessibleForFree = true;
@@ -207,8 +226,15 @@ export function eventJsonLd(event: EventItem) {
       '@type': 'Offer',
       price: '0',
       priceCurrency: 'INR',
+      ...(validFrom ? { validFrom } : {}),
       url,
-      availability: 'https://schema.org/InStock',
+      availability: tiers.length
+        ? tiers.every(
+            (tier) => availability(tier) === 'https://schema.org/SoldOut'
+          )
+          ? 'https://schema.org/SoldOut'
+          : 'https://schema.org/InStock'
+        : availability(),
     };
   }
 

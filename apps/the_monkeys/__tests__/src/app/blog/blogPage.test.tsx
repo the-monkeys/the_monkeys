@@ -28,6 +28,12 @@ vi.mock('@/utils/get-query-client', () => ({
 }));
 
 describe('BlogPage viewer privacy', () => {
+  it('returns not-found instead of an empty successful page when no article ID exists', async () => {
+    await expect(BlogPage({ params: { slug: 'invalid-' } })).rejects.toThrow(
+      'NEXT_NOT_FOUND'
+    );
+    expect(loadBlogForViewer).not.toHaveBeenCalled();
+  });
   beforeEach(() => vi.clearAllMocks());
 
   it('invokes notFound before rendering the client for a denied article', async () => {

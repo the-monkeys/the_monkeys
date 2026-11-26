@@ -1,4 +1,5 @@
 import { IconName } from '@/components/icon';
+import { LEGAL_PUBLISHER_NAME } from '@/lib/seo';
 import { createTopicUrl } from '@/utils/topicUtils';
 
 import {
@@ -14,7 +15,7 @@ export const parentCompany: {
   name: string;
   website: string;
 } = {
-  name: 'BUDDHICINTAKA PVT. LTD.',
+  name: LEGAL_PUBLISHER_NAME,
   website: 'https://buddhicintaka.com/',
 };
 
@@ -75,6 +76,14 @@ export const footerLinksList = [
       {
         text: 'Events',
         link: '/events',
+      },
+      {
+        text: 'Learning resources',
+        link: '/learn',
+      },
+      {
+        text: 'Studio',
+        link: '/snapshot',
       },
       {
         text: 'About Us',

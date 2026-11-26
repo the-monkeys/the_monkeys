@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { Blog } from '@/services/blog/blogTypes';
 import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +10,7 @@ const useGetPublishedBlogDetail = (
   blogId: string | undefined
 ) => {
   const { data, error, isLoading, isError } = useQuery<Blog, Error>({
-    queryKey: [PUBLISHED_BLOG_DETAIL_QUERY_KEY, accountId, blogId],
+    queryKey: queryKeys.blog.published(accountId, blogId),
     queryFn: () => authFetcher(`/blog/published/${accountId}/${blogId}`),
     enabled: !!accountId && !!blogId,
     staleTime: 60 * 1000,

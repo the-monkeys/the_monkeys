@@ -1,4 +1,5 @@
 import { act, cleanup } from '@testing-library/react';
+import type { API } from '@themonkeys/monkeys-editor';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { createBlock } from './createBlock';
@@ -18,7 +19,8 @@ describe('createBlock', () => {
       sanitize: {},
       Component: Boom,
     });
-    const tool = new Tool({ data: {}, api: {}, readOnly: false });
+    // The throwing block never calls the editor API in this boundary test.
+    const tool = new Tool({ data: {}, api: {} as API, readOnly: false });
     const el = tool.render();
     await act(async () => {});
     expect(el.textContent).toMatch(/could not be rendered/i);

@@ -1,5 +1,7 @@
 'use client';
 
+import { useRef, useState } from 'react';
+
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -33,6 +35,8 @@ export default function NewGroupEventPage({
   const router = useRouter();
   const { toast } = useToast();
   const create = useCreateGroupEvent(params.slug);
+  const submitting = useRef(false);
+  const [saving, setSaving] = useState(false);
 
   if (!authLoading && !session) {
     router.replace(LOGIN_ROUTE);
@@ -54,12 +58,21 @@ export default function NewGroupEventPage({
   }
 
   const onSubmit = async (body: GroupEventBody) => {
+    if (submitting.current) return;
+    submitting.current = true;
+    setSaving(true);
+    let created = false;
     try {
       const res = await create.mutateAsync(body);
+      created = true;
       const slug = res.event?.slug;
       toast({ title: 'Event created' });
       router.push(slug ? `${EVENTS_ROUTE}/${slug}` : EVENTS_ROUTE);
     } catch (err) {
+      if (!created) {
+        submitting.current = false;
+        setSaving(false);
+      }
       toast({ title: 'Could not create event', description: groupError(err) });
     }
   };
@@ -80,8 +93,11 @@ export default function NewGroupEventPage({
       </p>
 
       <GroupEventForm
+        group={group}
+        accountKey={session?.account_id || session?.username}
+        organizerName={session?.username}
         submitLabel='Create event'
-        saving={create.isPending}
+        saving={saving}
         onSubmit={onSubmit}
       />
     </div>

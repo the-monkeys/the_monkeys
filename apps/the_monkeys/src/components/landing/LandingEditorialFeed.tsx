@@ -1,6 +1,7 @@
+'use client';
+
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import {
   BlogImage,
   BlogPlaceholderImage,
@@ -13,11 +14,13 @@ import {
   EVENTS_ROUTE,
   TOPIC_ROUTE,
 } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   eventDateParts,
   eventTypeLabel,
   formatEventCardWhen,
 } from '@/lib/eventTime';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
@@ -33,7 +36,7 @@ function postDetails(post: MetaBlog) {
   return {
     title,
     description: purifyHTMLString(post.first_paragraph),
-    href: `${BLOG_ROUTE}/${generateSlug(title)}-${post.blog_id}`,
+    href: `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`,
     topic: post.tags?.[0],
     time: post.published_time ? getRelativeTime(post.published_time) : '',
   };
@@ -154,7 +157,8 @@ function FeedPostCard({ post }: { post: MetaBlog }) {
 }
 
 function FeedEvent({ event }: { event: EventItem }) {
-  const date = eventDateParts(event.start_time, event.timezone);
+  const timezone = useViewerTimezone();
+  const date = eventDateParts(event.start_time, timezone);
   const href = `${EVENTS_ROUTE}/${event.slug}`;
   const description = purifyHTMLString(event.description || '');
   const label = event.tags?.[0] || eventTypeLabel(event.event_type);
@@ -182,7 +186,7 @@ function FeedEvent({ event }: { event: EventItem }) {
           </h2>
         </Link>
         <p className='mt-1 font-inter text-xs text-gray-500 dark:text-gray-400'>
-          {formatEventCardWhen(event.start_time, event.timezone)}
+          {formatEventCardWhen(event.start_time, timezone)}
         </p>
         {description ? (
           <p

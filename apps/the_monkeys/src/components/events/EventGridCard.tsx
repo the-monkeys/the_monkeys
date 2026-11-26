@@ -6,6 +6,7 @@ import { EventHostName } from '@/components/events/EventHostName';
 import { EventSeriesNote } from '@/components/events/detail/EventSeriesNote';
 import Icon from '@/components/icon';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   eventDateParts,
   eventTypeLabel,
@@ -52,14 +53,15 @@ export const EventGridCard = memo(function EventGridCard({
   event: EventItem;
 }) {
   const href = `${EVENTS_ROUTE}/${event.slug}`;
-  const date = eventDateParts(event.start_time, event.timezone);
+  const timezone = useViewerTimezone();
+  const date = eventDateParts(event.start_time, timezone);
   const price = formatPrice(
     lowestTierPrice(event),
     event.ticket_tiers?.[0]?.currency
   );
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
   const ended = isEventEnded(event);
-  const extraDates = formatUpcomingDates(event.upcoming_dates, event.timezone);
+  const extraDates = formatUpcomingDates(event.upcoming_dates, timezone);
 
   return (
     <article className='group flex h-full flex-col overflow-hidden rounded-xl border border-border-light bg-background-light shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-border-dark/40 dark:bg-background-dark'>
@@ -98,7 +100,7 @@ export const EventGridCard = memo(function EventGridCard({
           </h3>
         </Link>
         <p className='mt-1.5 font-inter text-sm text-gray-500 dark:text-gray-400'>
-          {formatEventCardWhen(event.start_time, event.timezone)}
+          {formatEventCardWhen(event.start_time, timezone)}
         </p>
         <EventSeriesNote
           event={event}

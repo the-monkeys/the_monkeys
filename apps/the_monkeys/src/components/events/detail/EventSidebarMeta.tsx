@@ -1,4 +1,7 @@
+'use client';
+
 import Icon from '@/components/icon';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import {
   eventDateParts,
   eventLocationLabel,
@@ -12,7 +15,8 @@ import { EventItem } from '@/services/events/eventTypes';
  * Sticky right-rail metadata for date, time, venue, and directions.
  */
 export function EventSidebarMeta({ event }: { event: EventItem }) {
-  const parts = eventDateParts(event.start_time, event.timezone);
+  const timezone = useViewerTimezone();
+  const parts = eventDateParts(event.start_time, timezone);
   const address = formatVenueAddress(event.venue);
   const locationLabel = eventLocationLabel(event);
   const query = mapQuery(event);
@@ -39,7 +43,7 @@ export function EventSidebarMeta({ event }: { event: EventItem }) {
             {parts ? parts.weekday : 'Date to be announced'}
           </p>
           <p className='mt-0.5 font-inter text-sm text-gray-500 dark:text-gray-400'>
-            {formatEventWhen(event.start_time, event.end_time, event.timezone)}
+            {formatEventWhen(event.start_time, event.end_time, timezone)}
           </p>
           {event.recurrence_text && (
             <p className='mt-1 inline-flex items-center gap-1 font-inter text-xs text-gray-500'>

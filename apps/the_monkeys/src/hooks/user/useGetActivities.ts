@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { GetAllActivityAPIResponse } from '@/services/activity/activityApiTypes';
 import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +10,7 @@ const useGetActivities = (username: string | undefined) => {
     GetAllActivityAPIResponse,
     Error
   >({
-    queryKey: [USER_ACTIVITIES_QUERY_KEY, username],
+    queryKey: queryKeys.profile.activities(username),
     queryFn: () => authFetcher(`/user/activities/${username}`),
     enabled: !!username,
     staleTime: 60 * 1000,

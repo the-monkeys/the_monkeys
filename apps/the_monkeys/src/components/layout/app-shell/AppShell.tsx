@@ -47,6 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       {/* Spotlight announcement strip — sits above the authors row. */}
+      {/*
       {ANNOUNCEMENT && (
         <AnnouncementBanner
           label={ANNOUNCEMENT.label}
@@ -55,6 +56,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ctaLabel={ANNOUNCEMENT.ctaLabel}
         />
       )}
+      */}
       <Container className='mx-auto flex w-full flex-col'>
         <Navbar />
         <div className='flex min-w-0 flex-1 '>

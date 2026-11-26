@@ -1,4 +1,5 @@
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
+import { DiscussionByline, DiscussionSource } from './DiscussionAttribution';
 import {
   AccentBar,
   Avatar,
@@ -84,9 +85,16 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
               color: theme.muted,
               fontWeight: 400,
               letterSpacing: -0.3,
+              ...(input.source === 'discussion'
+                ? ({
+                    overflowWrap: 'anywhere',
+                  } as const)
+                : {}),
             }}
           >
-            {clip(input.description, 520)}
+            {input.source === 'discussion'
+              ? input.description
+              : clip(input.description, 520)}
           </div>
         ) : null}
 
@@ -128,9 +136,13 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
                 color: theme.foreground,
               }}
             >
-              {input.author?.displayName ?? 'the_monkeys'}
+              {input.source === 'discussion' ? (
+                <DiscussionByline input={input} />
+              ) : (
+                input.author?.displayName ?? 'the_monkeys'
+              )}
             </div>
-            {input.author?.username ? (
+            {input.source !== 'discussion' && input.author?.username ? (
               <div
                 style={{ display: 'flex', fontSize: 22, color: theme.muted }}
               >
@@ -153,6 +165,7 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
           </div>
         ) : null}
       </Row>
+      <DiscussionSource input={input} theme={theme} />
     </div>
   );
 };
