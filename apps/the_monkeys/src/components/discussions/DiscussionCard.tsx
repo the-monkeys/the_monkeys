@@ -1,3 +1,5 @@
+'use client';
+
 import type { ReactNode } from 'react';
 
 import Link from 'next/link';
@@ -14,10 +16,14 @@ import {
   discussionHandle,
 } from '@/components/discussions/discussionChrome';
 import { ContentGate } from '@/components/moderation/ContentGate';
+import useAuth from '@/hooks/auth/useAuth';
 import { firstInternalLink } from '@/lib/discussionLinks';
 import { discussionHeadline, discussionPath } from '@/lib/discussionSeo';
 import { cn } from '@/lib/utils';
+import { getDiscussion } from '@/services/discussions/discussionsApi';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
+import { isSensitive } from '@/services/moderation/moderationTypes';
+import { useQuery } from '@tanstack/react-query';
 
 const bodyClass =
   'mt-1 block whitespace-pre-wrap break-words font-inter text-[15px] leading-relaxed';
@@ -102,7 +108,7 @@ function DiscussionCardContent({
   );
 }
 
-export function DiscussionCard(
+function DiscussionCardLayout(
   props: Parameters<typeof DiscussionCardContent>[0] & { showMenu?: boolean }
 ) {
   const { post, embedded, compact, showMenu = true } = props;
@@ -127,5 +133,47 @@ export function DiscussionCard(
         <DiscussionCardContent {...props} />
       </ContentGate>
     </div>
+  );
+}
+
+type DiscussionCardProps = Parameters<typeof DiscussionCardLayout>[0];
+
+/** Local/paginated feeds keep their row order; only this authorised row reloads. */
+function SensitiveDiscussionCard(props: DiscussionCardProps) {
+  const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || null;
+  const source = useQuery({
+    queryKey: [
+      'discussions',
+      'revealed-card',
+      props.post.public_id,
+      { viewer },
+    ],
+    queryFn: () => getDiscussion(props.post.public_id),
+    enabled: !!viewer,
+    staleTime: 0,
+    retry: false,
+  });
+  const incomingRevision = props.post.content_rating?.revision ?? 0;
+  const sourceRevision = source.data?.content_rating?.revision ?? 0;
+  // A cached or failed read cannot weaken a newer incoming restriction.
+  const authoritative =
+    !!viewer &&
+    !props.post.content_unavailable &&
+    source.isSuccess &&
+    source.isFetchedAfterMount &&
+    source.data.public_id === props.post.public_id &&
+    (source.data.content_unavailable ||
+      (sourceRevision >= incomingRevision &&
+        (sourceRevision > incomingRevision || isSensitive(source.data))));
+  const post = authoritative ? source.data : props.post;
+  return <DiscussionCardLayout {...props} post={post} />;
+}
+
+export function DiscussionCard(props: DiscussionCardProps) {
+  return isSensitive(props.post) ? (
+    <SensitiveDiscussionCard {...props} />
+  ) : (
+    <DiscussionCardLayout {...props} />
   );
 }

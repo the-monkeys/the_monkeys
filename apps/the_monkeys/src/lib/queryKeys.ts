@@ -72,8 +72,10 @@ export const queryKeys = {
       ['search-suggest-v2', q, limit] as const,
   },
   landing: {
-    discussions: () => ['discussions', 'landing', 'public'] as const,
-    groups: () => ['groups', 'landing', 'public'] as const,
+    discussions: (viewer?: Viewer) =>
+      scoped(['discussions', 'landing', 'public'] as const, viewer),
+    groups: (viewer?: Viewer) =>
+      scoped(['groups', 'landing', 'public'] as const, viewer),
   },
   discussions: {
     preview: (target: unknown, timezone?: string) =>

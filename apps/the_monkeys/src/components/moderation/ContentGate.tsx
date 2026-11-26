@@ -10,11 +10,13 @@ import { loginHref } from '@/lib/authRedirect';
 import {
   CONTENT_RATING_EVENT,
   type ContentRatingEvent,
+  notifyContentRating,
 } from '@/lib/contentRatingEvents';
 import {
   birthdaySettingsHref,
   safeModerationReturn,
 } from '@/lib/moderationNavigation';
+import { refreshContentQueries } from '@/lib/moderationQueries';
 import { cn } from '@/lib/utils';
 import {
   getContentAccess,
@@ -103,6 +105,7 @@ function SensitiveGate({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const inFlight = useRef(false);
+  const materialized = useRef<string>();
   const rating = content?.content_rating;
   const binding = useRef({ rating, account });
   if (binding.current.rating !== rating) binding.current = { rating, account };
@@ -128,6 +131,45 @@ function SensitiveGate({
       router.refresh();
     }
   }, [account, boundToViewer, router]);
+  useEffect(() => {
+    if (
+      error ||
+      !account ||
+      !boundToViewer ||
+      !access.data?.revealed ||
+      rating?.revealed
+    )
+      return;
+    const key = `${account}:${target.kind}:${target.id}:${access.data.revision ?? 0}`;
+    if (materialized.current === key) return;
+    materialized.current = key;
+    const currentTarget = { kind: target.kind, id: target.id };
+    void refreshContentQueries(client, currentTarget)
+      .then(() => {
+        if (
+          (safeModerationReturn(href) || contentHref(currentTarget)) ===
+          pathname
+        )
+          router.refresh();
+      })
+      .catch(() => {
+        materialized.current = undefined;
+        setError('Unable to load this content. Please try again.');
+      });
+  }, [
+    account,
+    error,
+    boundToViewer,
+    access.data?.revealed,
+    access.data?.revision,
+    rating?.revealed,
+    target.kind,
+    target.id,
+    client,
+    href,
+    pathname,
+    router,
+  ]);
   // Never trust a revealed DTO from a previous account or stale server render.
   const shown =
     !!account &&
@@ -176,6 +218,31 @@ function SensitiveGate({
     } else if (result?.reason === 'not_found') {
       message = 'This content is not available to your account.';
       action = null;
+    } else if (result?.revealed) {
+      message = 'Opening content you have already chosen to view.';
+      action = error ? (
+        <Button
+          size='sm'
+          onClick={() => {
+            setError('');
+            materialized.current = `${account}:${target.kind}:${target.id}:${result.revision ?? 0}`;
+            void refreshContentQueries(client, target)
+              .then(() => {
+                if (
+                  (safeModerationReturn(href) || contentHref(target)) ===
+                  pathname
+                )
+                  router.refresh();
+              })
+              .catch(() => {
+                materialized.current = undefined;
+                setError('Unable to load this content. Please try again.');
+              });
+          }}
+        >
+          Try again
+        </Button>
+      ) : null;
     } else if (result?.can_reveal) {
       message =
         'This content may contain explicit material. Choose whether to view it.';
@@ -195,11 +262,23 @@ function SensitiveGate({
     setBusy(true);
     setError('');
     try {
-      await revealContent(target);
-      await client.invalidateQueries();
+      const confirmed = await revealContent(target);
+      notifyContentRating(target, confirmed.access);
+      materialized.current = `${account}:${target.kind}:${target.id}:${confirmed.access?.revision ?? 0}`;
+      client.setQueryData(
+        [
+          'content-access',
+          target.kind,
+          target.id,
+          account ?? null,
+          rating?.revision ?? 0,
+        ],
+        confirmed.access
+      );
+      await refreshContentQueries(client, target);
+      await access.refetch();
       const destination = safeModerationReturn(href) || contentHref(target);
-      if (destination !== pathname) router.push(destination);
-      else router.refresh();
+      if (destination === pathname) router.refresh();
     } catch {
       setError('Unable to reveal this content. Please try again.');
       await access.refetch();

@@ -120,6 +120,9 @@ vi.mock('@/components/groups/detail/GroupJoinButton', () => ({
 vi.mock('@/components/groups/detail/GroupCreateMenu', () => ({
   GroupCreateMenu: () => null,
 }));
+vi.mock('@/services/discussions/discussionsApi', () => ({
+  getDiscussion: vi.fn(async () => ({ ...discussion, is_nsfw: true })),
+}));
 vi.mock('@/components/discussions/DiscussionAvatar', () => ({
   DiscussionAvatar: () => null,
 }));
@@ -273,11 +276,17 @@ it('does not mount group community fetches or media behind a blocked detail gate
 
 it('does not mount discussion link previews, body, or footer behind the card gate', () => {
   render(
-    <DiscussionCard
-      post={{ ...discussion, is_nsfw: true }}
-      linked
-      footer={<p>Private footer</p>}
-    />
+    <QueryClientProvider
+      client={
+        new QueryClient({ defaultOptions: { queries: { retry: false } } })
+      }
+    >
+      <DiscussionCard
+        post={{ ...discussion, is_nsfw: true }}
+        linked
+        footer={<p>Private footer</p>}
+      />
+    </QueryClientProvider>
   );
   expect(screen.getByText('Restricted content')).toBeTruthy();
   expect(screen.queryByText(/Private discussion text/)).toBeNull();

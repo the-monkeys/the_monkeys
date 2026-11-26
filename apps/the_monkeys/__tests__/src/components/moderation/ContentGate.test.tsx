@@ -17,11 +17,12 @@ const mocks = vi.hoisted(() => ({
   reveal: vi.fn(),
   push: vi.fn(),
   refresh: vi.fn(),
+  pathname: '/discussions/post',
 }));
 vi.mock('@/hooks/auth/useAuth', () => ({ default: () => mocks.auth }));
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mocks.push, refresh: mocks.refresh }),
-  usePathname: () => '/discussions/post',
+  usePathname: () => mocks.pathname,
 }));
 vi.mock('@/services/moderation/moderationApi', () => ({
   getContentAccess: mocks.get,
@@ -55,6 +56,7 @@ afterEach(() => cleanup());
 beforeEach(() => {
   vi.clearAllMocks();
   mocks.auth = { data: undefined, isLoading: false };
+  mocks.pathname = '/discussions/post';
   mocks.get.mockResolvedValue({
     is_nsfw: true,
     can_reveal: false,
@@ -234,3 +236,52 @@ it.each([
     expect(screen.queryByText('secret body')).toBeNull();
   }
 );
+
+it('reveals a homepage card without navigating away or refreshing unrelated data', async () => {
+  mocks.pathname = '/';
+  mocks.auth.data = { account_id: 'adult' };
+  mocks.get.mockResolvedValue({
+    is_nsfw: true,
+    can_reveal: true,
+    reason: 'reveal_required',
+  });
+  const client = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  const unrelated = vi.fn(async () => 'unchanged');
+  await client.fetchQuery({ queryKey: ['user', 'adult'], queryFn: unrelated });
+  const view = render(
+    <QueryClientProvider client={client}>
+      <ContentGate
+        target={target}
+        content={restricted}
+        href='/discussions/post'
+      >
+        <p>secret body</p>
+      </ContentGate>
+    </QueryClientProvider>
+  );
+  fireEvent.click(await screen.findByRole('button', { name: 'Show content' }));
+  await waitFor(() => expect(mocks.reveal).toHaveBeenCalledTimes(1));
+  await waitFor(() => expect(mocks.get).toHaveBeenCalledTimes(2));
+  expect(mocks.push).not.toHaveBeenCalled();
+  expect(mocks.refresh).not.toHaveBeenCalled();
+  expect(unrelated).toHaveBeenCalledTimes(1);
+  view.unmount();
+});
+it('honours a remembered reveal while waiting for the authorised card, without asking again', async () => {
+  mocks.pathname = '/';
+  mocks.auth.data = { account_id: 'adult' };
+  mocks.get.mockResolvedValue({
+    is_nsfw: true,
+    can_reveal: true,
+    revealed: true,
+    revision: 1,
+  });
+  const view = mount();
+  await waitFor(() => expect(mocks.get).toHaveBeenCalled());
+  expect(screen.queryByRole('button', { name: 'Show content' })).toBeNull();
+  expect(mocks.reveal).not.toHaveBeenCalled();
+  expect(screen.queryByText('secret body')).toBeNull();
+  view.unmount();
+});
