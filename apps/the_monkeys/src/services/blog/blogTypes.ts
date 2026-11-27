@@ -12,6 +12,8 @@ export interface PublishedEditorialMetadata extends RatedContent {
 }
 
 export interface Blog extends PublishedEditorialMetadata {
+  seo_indexable?: boolean;
+  seo_crawler?: boolean;
   blog_id: string;
   owner_account_id: string;
   blog: {

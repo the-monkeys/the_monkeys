@@ -8,14 +8,17 @@ import {
   publicAuthorCard,
 } from '@/lib/publicPagePrefetch';
 import { loadPublicRelatedPosts } from '@/lib/relatedPosts';
+import { nsfwSeoEnabled } from '@/lib/searchCrawler';
 import { noIndexFollowRobots } from '@/lib/seo';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 import { getQueryClient } from '@/utils/get-query-client';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import BlogPageClient from './BlogPageClient';
+import CrawlerArticle from './CrawlerArticle';
 import {
   loadBlogForViewer,
+  loadCrawlerBlogForSeo,
   loadPublicAuthorForSeo,
   loadPublicBlogForSeo,
 } from './blogData';
@@ -32,6 +35,14 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const blogId = getBlogIdFromSlug(params.slug);
+  const crawler = nsfwSeoEnabled() ? await loadCrawlerBlogForSeo(blogId) : null;
+  if (crawler) {
+    const author = await loadPublicAuthorForSeo(crawler.owner_account_id);
+    return buildBlogMetadata(crawler, params.slug, authorDisplayName(author), {
+      indexRestricted: true,
+      crawler: true,
+    });
+  }
   const blog = await loadPublicBlogForSeo(blogId);
   if (blog === undefined) {
     return {
@@ -47,7 +58,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const author = await loadPublicAuthorForSeo(blog.owner_account_id);
-  return buildBlogMetadata(blog, params.slug, authorDisplayName(author));
+  return buildBlogMetadata(blog, params.slug, authorDisplayName(author), {
+    indexRestricted: nsfwSeoEnabled(),
+  });
 }
 
 export default async function BlogPage({ params }: Props) {
@@ -57,6 +70,30 @@ export default async function BlogPage({ params }: Props) {
 
   if (!blogId) notFound();
 
+  const crawler = nsfwSeoEnabled() ? await loadCrawlerBlogForSeo(blogId) : null;
+  if (crawler) {
+    const author = await loadPublicAuthorForSeo(crawler.owner_account_id);
+    const schema = buildBlogJsonLd(
+      crawler,
+      fullSlug,
+      authorDisplayName(author),
+      author?.user?.username,
+      { indexRestricted: true, crawler: true }
+    );
+    return (
+      <>
+        {schema && (
+          <script
+            type='application/ld+json'
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(schema).replace(/</g, '\\u003c'),
+            }}
+          />
+        )}
+        <CrawlerArticle blog={crawler} />
+      </>
+    );
+  }
   const blog = await loadBlogForViewer(blogId);
   if (blog === null || blog?.is_draft) notFound();
   if (blog) queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], blog);

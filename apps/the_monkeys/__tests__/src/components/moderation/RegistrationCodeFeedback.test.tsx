@@ -60,9 +60,7 @@ async function submitCode(error: unknown) {
     target: { value: 'LocalTest9' },
   });
   fireEvent.click(screen.getByRole('checkbox'));
-  fireEvent.click(
-    screen.getByRole('button', { name: 'Register', exact: true })
-  );
+  fireEvent.click(screen.getByRole('button', { name: 'Register' }));
   const otp = await screen.findByPlaceholderText('Enter 6-digit code');
   fireEvent.change(otp, { target: { value: '000000' } });
   await waitFor(() => expect(mock.verify).toHaveBeenCalled());

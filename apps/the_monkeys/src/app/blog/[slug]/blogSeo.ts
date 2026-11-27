@@ -20,6 +20,13 @@ import {
 import { Blog } from '@/services/blog/blogTypes';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 
+import {
+  type BlogSeoOptions,
+  canIndexRestricted,
+  restrictedJsonLd,
+  restrictedMetadata,
+} from './restrictedSeo';
+
 export function getBlogIdFromSlug(slug: string): string {
   if (!slug || typeof slug !== 'string') return '';
   return slug.split('-').pop() || '';
@@ -61,9 +68,12 @@ export function authorDisplayName(
 export function buildBlogMetadata(
   blog: Blog,
   _requestedSlug: string,
-  authorName = 'Monkeys Author'
+  authorName = 'Monkeys Author',
+  options?: BlogSeoOptions
 ): Metadata {
   if (!isPublicContentSafe(blog)) {
+    if (canIndexRestricted(blog, options))
+      return restrictedMetadata(blog, canonicalBlogSlug(blog), options);
     return {
       title: { absolute: 'Sensitive post | Monkeys' },
       robots: noIndexRobots,
@@ -114,8 +124,22 @@ export function buildBlogJsonLd(
   blog: Blog,
   _requestedSlug: string,
   authorName = 'Monkeys Author',
-  authorUsername?: string
+  authorUsername?: string,
+  options?: BlogSeoOptions
 ) {
+  if (
+    !isPublicContentSafe(blog) &&
+    options?.crawler &&
+    blog.seo_crawler &&
+    canIndexRestricted(blog, options)
+  ) {
+    return restrictedJsonLd(
+      blog,
+      canonicalBlogSlug(blog),
+      authorName,
+      authorUsername
+    );
+  }
   if (
     !isPublicContentSafe(blog) ||
     blog.is_draft ||
