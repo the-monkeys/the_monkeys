@@ -33,14 +33,26 @@ import { Section } from './Section';
 import { BirthdayInput, parseBirthdayInput } from './profile/BirthdayInput';
 import { profileBirthdayDate } from './profile/parseDate';
 
-export const Profile = ({ data }: { data?: IUser }) => {
-  const { data: user } = useGetAuthUserProfile(data?.username);
+export const Profile = ({ data }: { data?: IUser }) => (
+  <ProfileForm
+    key={data?.account_id || data?.username || 'anonymous'}
+    data={data}
+  />
+);
+
+const ProfileForm = ({ data }: { data?: IUser }) => {
+  const {
+    data: user,
+    isError: profileError,
+    refetch,
+  } = useGetAuthUserProfile(data?.username);
   const { imageUrl } = useProfileImage(data?.username);
   const [loading, setLoading] = useState<boolean>(false);
   const hasProfileImage = imageUrl !== '';
   const router = useRouter();
   const queryClient = useQueryClient();
   const [birthdayCompletion, setBirthdayCompletion] = useState(false);
+  const hasProfile = !!user;
   const today = new Date();
   const latestBirthday = [
     today.getFullYear(),
@@ -89,6 +101,7 @@ export const Profile = ({ data }: { data?: IUser }) => {
         values,
       })
       .then(async () => {
+        form.reset(values);
         await queryClient.invalidateQueries({
           queryKey: queryKeys.profile.authenticated(
             data?.username,
@@ -120,247 +133,275 @@ export const Profile = ({ data }: { data?: IUser }) => {
 
   useEffect(() => {
     if (user) {
-      form.reset({
-        first_name: user.first_name ?? '',
-        last_name: user.last_name ?? '',
-        address: user.address ?? '',
-        contact_number: user.contact_number ?? '',
-        bio: user.bio ?? '',
-        date_of_birth: profileBirthdayDate(user.date_of_birth),
-        twitter: user.twitter ?? '',
-        linkedin: user.linkedin ?? '',
-        instagram: user.instagram ?? '',
-        github: user.github ?? '',
-      });
+      form.reset(
+        {
+          first_name: user.first_name ?? '',
+          last_name: user.last_name ?? '',
+          address: user.address ?? '',
+          contact_number: user.contact_number ?? '',
+          bio: user.bio ?? '',
+          date_of_birth: profileBirthdayDate(user.date_of_birth),
+          twitter: user.twitter ?? '',
+          linkedin: user.linkedin ?? '',
+          instagram: user.instagram ?? '',
+          github: user.github ?? '',
+        },
+        { keepDirtyValues: true }
+      );
     }
   }, [user, form]);
 
   useEffect(() => {
+    if (!hasProfile) return;
     const params = new URLSearchParams(window.location.search);
     if (params.get('focus') === 'birthday') {
       setBirthdayCompletion(true);
       window.requestAnimationFrame(() => form.setFocus('date_of_birth'));
     }
-  }, [form]);
+  }, [form, hasProfile]);
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <Section sectionTitle='Basic Information'>
-          <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
-            <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
-              <p className='w-full col-span-1 sm:col-span-2 text-sm'>
-                Profile Photo
-              </p>
+        {profileError ? (
+          <div
+            role='alert'
+            className='flex flex-wrap items-center gap-3 text-sm text-alert-red'
+          >
+            <p>Could not load the latest profile.</p>
+            <Button
+              type='button'
+              size='sm'
+              variant='outline'
+              onClick={() => void refetch()}
+            >
+              Try again
+            </Button>
+          </div>
+        ) : null}
+        <fieldset
+          disabled={!user || loading}
+          aria-busy={!user || loading}
+          className='min-w-0 space-y-8'
+        >
+          <Section sectionTitle='Basic Information'>
+            <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
+              <div className='col-span-1 sm:col-span-2 flex flex-wrap items-end gap-2'>
+                <p className='w-full col-span-1 sm:col-span-2 text-sm'>
+                  Profile Photo
+                </p>
 
-              <ProfileFrame className='size-[100px] sm:size-[120px]'>
-                {data?.username && <ProfileImage username={data.username} />}
-              </ProfileFrame>
+                <ProfileFrame className='size-[100px] sm:size-[120px]'>
+                  {data?.username && <ProfileImage username={data.username} />}
+                </ProfileFrame>
 
-              <div className='space-x-2'>
-                {hasProfileImage && <DeleteProfileDialog />}
+                <div className='space-x-2'>
+                  {hasProfileImage && <DeleteProfileDialog />}
 
-                <UpdateProfileDialog />
+                  <UpdateProfileDialog />
+                </div>
               </div>
+
+              <FormField
+                control={form.control}
+                name='first_name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>First Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter first name'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='last_name'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Last Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter last name'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='address'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Location</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter location'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='contact_number'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Contact Number</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        type='tel'
+                        inputMode='tel'
+                        placeholder='Enter contact number'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='bio'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Bio</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter bio'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='date_of_birth'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel htmlFor='profile-birthday' className='text-sm'>
+                      Birth Date
+                    </FormLabel>
+                    <FormControl>
+                      <BirthdayInput
+                        {...field}
+                        id='profile-birthday'
+                        aria-label='Birth Date'
+                        value={field.value || ''}
+                        className='w-full'
+                        min='1900-01-01'
+                        max={latestBirthday}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
+          </Section>
 
-            <FormField
-              control={form.control}
-              name='first_name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>First Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter first name'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <Section sectionTitle='Social Accounts'>
+            <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
+              <FormField
+                control={form.control}
+                name='twitter'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Twitter</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter username'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name='last_name'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>Last Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter last name'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='linkedin'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>LinkedIn</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter username'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name='address'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>Location</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter location'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='instagram'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>Instagram</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter username'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name='contact_number'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>Contact Number</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter contact number'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name='github'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-sm'>GitHub</FormLabel>
+                    <FormControl>
+                      <Input
+                        className='w-full'
+                        {...field}
+                        placeholder='Enter username'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </Section>
 
-            <FormField
-              control={form.control}
-              name='bio'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>Bio</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter bio'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='date_of_birth'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor='profile-birthday' className='text-sm'>
-                    Birth Date
-                  </FormLabel>
-                  <FormControl>
-                    <BirthdayInput
-                      {...field}
-                      id='profile-birthday'
-                      aria-label='Birth Date'
-                      value={field.value || ''}
-                      className='w-full'
-                      min='1900-01-01'
-                      max={latestBirthday}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <div className='flex justify-end'>
+            <Button size='lg' disabled={loading || !user} type='submit'>
+              {(loading || !user) && <Loader />} Save Changes
+            </Button>
           </div>
-        </Section>
-
-        <Section sectionTitle='Social Accounts'>
-          <div className='p-1 grid grid-cols-1 sm:grid-cols-2 gap-4'>
-            <FormField
-              control={form.control}
-              name='twitter'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>Twitter</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter username'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='linkedin'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>LinkedIn</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter username'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='instagram'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>Instagram</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter username'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name='github'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className='text-sm'>GitHub</FormLabel>
-                  <FormControl>
-                    <Input
-                      className='w-full'
-                      {...field}
-                      placeholder='Enter username'
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        </Section>
-
-        <div className='flex justify-end'>
-          <Button size='lg' disabled={loading ? true : false} type='submit'>
-            {loading && <Loader />} Save Changes
-          </Button>
-        </div>
+        </fieldset>
       </form>
     </Form>
   );
