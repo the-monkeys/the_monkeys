@@ -194,7 +194,7 @@ function GroupDetailContent({ group }: { group: GroupItem }) {
             )}
           </div>
 
-          <div className='flex shrink-0 items-center gap-2'>
+          <div className='flex min-w-0 shrink-0 flex-wrap items-center gap-2'>
             {(isActiveGroupMember(group) || manage) && (
               <GroupCreateMenu
                 includeEvent={manage}

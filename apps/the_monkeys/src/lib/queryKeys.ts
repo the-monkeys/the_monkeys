@@ -111,6 +111,7 @@ export const queryKeys = {
     detail: (blogId: QueryId) => ['blog-detail', blogId] as const,
     published: (account: QueryId, blogId: QueryId) =>
       ['published-blog-detail', account, blogId] as const,
+    byUsernameRoot: () => ['blogs-by-username'] as const,
     byUsername: (username: QueryId, limit?: number, offset?: number) =>
       limit === undefined
         ? (['blogs-by-username', username] as const)

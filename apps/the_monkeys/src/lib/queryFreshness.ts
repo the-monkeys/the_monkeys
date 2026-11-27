@@ -5,11 +5,16 @@ import { queryKeys } from './queryKeys';
 /** Discover lists are user-generated and must refetch on mount/focus. */
 export const LIVE_LIST_STALE_MS = 0;
 
-/** Narrow branch: article writes must not invalidate ordinary feed caches. */
+/** Homepage invalidation stays separate from ordinary feed caches. */
 export const HOMEPAGE_BLOG_QUERY_ROOT = queryKeys.blog.homepageRoot();
 
-export function invalidateAfterArticleWrite(qc: QueryClient) {
-  return qc.invalidateQueries({ queryKey: HOMEPAGE_BLOG_QUERY_ROOT });
+export async function invalidateAfterArticleWrite(qc: QueryClient) {
+  await Promise.all([
+    qc.invalidateQueries({ queryKey: HOMEPAGE_BLOG_QUERY_ROOT }),
+    qc.invalidateQueries({ queryKey: queryKeys.blog.byUsernameRoot() }),
+    qc.invalidateQueries({ queryKey: queryKeys.blog.drafts.all() }),
+    qc.invalidateQueries({ queryKey: queryKeys.blog.scheduled.all() }),
+  ]);
 }
 
 export async function invalidateAfterEventWrite(
