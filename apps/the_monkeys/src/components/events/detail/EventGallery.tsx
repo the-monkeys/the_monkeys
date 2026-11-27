@@ -53,7 +53,10 @@ export function EventGallery({
         } else {
           const itemWidth =
             (scrollRef.current.firstChild as HTMLElement)?.clientWidth || 0;
-          scrollRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+          scrollRef.current.scrollBy({
+            left: itemWidth + 16,
+            behavior: 'smooth',
+          });
         }
       }
     }, 15000);
@@ -62,17 +65,19 @@ export function EventGallery({
 
   const goLeft = () => {
     if (scrollRef.current) {
-      const itemWidth =
-        (scrollRef.current.firstChild as HTMLElement)?.clientWidth || 0;
-      scrollRef.current.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+      scrollRef.current.scrollBy({
+        left: -(scrollRef.current.clientWidth + 16),
+        behavior: 'smooth',
+      });
     }
   };
 
   const goRight = () => {
     if (scrollRef.current) {
-      const itemWidth =
-        (scrollRef.current.firstChild as HTMLElement)?.clientWidth || 0;
-      scrollRef.current.scrollBy({ left: itemWidth, behavior: 'smooth' });
+      scrollRef.current.scrollBy({
+        left: scrollRef.current.clientWidth + 16,
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -179,7 +184,7 @@ export function EventGallery({
             {photos.map((p) => (
               <div
                 key={p.id}
-                className='relative aspect-[3/4] w-full min-w-[280px] flex-shrink-0 snap-start overflow-hidden rounded-2xl bg-foreground-light/40 sm:min-w-[calc(50%-8px)] md:min-w-[calc(33.333%-10.66px)] dark:bg-foreground-dark/30'
+                className='relative aspect-[4/3] w-full min-w-full flex-shrink-0 snap-start overflow-hidden rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'
               >
                 <img
                   src={p.url}
@@ -259,6 +264,12 @@ export function EventGallery({
 }
 
 export function EventGalleryPreview({ files }: { files: File[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    setActiveIndex((index) => Math.min(index, Math.max(files.length - 1, 0)));
+  }, [files.length]);
+
   return (
     <section aria-labelledby='event-gallery-preview-heading'>
       <h2
@@ -269,15 +280,45 @@ export function EventGalleryPreview({ files }: { files: File[] }) {
       </h2>
 
       {files.length ? (
-        <div className='mt-4 grid grid-cols-2 gap-3 sm:gap-4'>
-          {files.map((file, index) => (
-            <div
-              key={`${file.name}-${file.lastModified}-${index}`}
-              className='relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'
-            >
-              <GalleryPreviewImage file={file} />
-            </div>
-          ))}
+        <div className='group relative mt-4'>
+          <div className='relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-foreground-light/40 dark:bg-foreground-dark/30'>
+            <GalleryPreviewImage
+              key={`${files[activeIndex]?.name}-${files[activeIndex]?.lastModified}`}
+              file={files[activeIndex]}
+            />
+          </div>
+          {files.length > 1 && (
+            <>
+              <button
+                type='button'
+                aria-label='Previous photo'
+                onClick={() =>
+                  setActiveIndex(
+                    (index) => (index - 1 + files.length) % files.length
+                  )
+                }
+                className='absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-gray-900 shadow-sm hover:bg-white dark:bg-black/60 dark:text-white dark:hover:bg-black/80'
+              >
+                <Icon name='RiArrowLeftS' size={22} />
+              </button>
+              <button
+                type='button'
+                aria-label='Next photo'
+                onClick={() =>
+                  setActiveIndex((index) => (index + 1) % files.length)
+                }
+                className='absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-gray-900 shadow-sm hover:bg-white dark:bg-black/60 dark:text-white dark:hover:bg-black/80'
+              >
+                <Icon name='RiArrowRightS' size={22} />
+              </button>
+              <p
+                className='mt-2 text-center text-sm text-gray-500 dark:text-gray-400'
+                aria-live='polite'
+              >
+                {activeIndex + 1} / {files.length}
+              </p>
+            </>
+          )}
         </div>
       ) : (
         <div className='mt-4 flex flex-col items-center justify-center rounded-2xl border border-dashed border-border-light py-12 text-center dark:border-border-dark/60'>
