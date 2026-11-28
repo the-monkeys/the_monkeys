@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   breadcrumb,
   indexRobots,
@@ -9,6 +11,8 @@ import {
   truncateMeta,
 } from '@/lib/seo';
 import { eventJsonLd } from '@/lib/seoSchema';
+import { getQueryClient } from '@/utils/get-query-client';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import EventDetailClient from './EventDetailClient';
 import { loadEventForMetadata } from './eventMetadata';
@@ -36,6 +40,10 @@ export async function generateMetadata({
   const event = data?.event;
   if (!event) {
     return { title: 'Event not found', robots: noIndexRobots };
+  }
+
+  if (!isPublicContentSafe(event)) {
+    return { title: 'Sensitive event', robots: noIndexRobots };
   }
 
   if (!isIndexable(event.status, event.visibility)) {
@@ -66,31 +74,48 @@ export default async function EventDetailPage({
   if (data === null) notFound();
   const event = data?.event;
 
+  const queryClient = getQueryClient();
+  if (
+    event &&
+    isPublicContentSafe(event) &&
+    isIndexable(event.status, event.visibility)
+  ) {
+    // Public first-paint content never carries attendee-only meeting access.
+    const { meeting_link: _meetingLink, ...publicEvent } = event;
+    queryClient.setQueryData(queryKeys.events.detail(params.slug), {
+      event: publicEvent,
+    });
+  }
+
   return (
     <>
-      {event && isIndexable(event.status, event.visibility) && (
-        <>
-          <script
-            type='application/ld+json'
-            dangerouslySetInnerHTML={{
-              __html: serializeJsonLd(eventJsonLd(event)),
-            }}
-          />
-          <script
-            type='application/ld+json'
-            dangerouslySetInnerHTML={{
-              __html: serializeJsonLd(
-                breadcrumb([
-                  { name: 'Home', path: '/' },
-                  { name: 'Events', path: '/events' },
-                  { name: event.title, path: `/events/${event.slug}` },
-                ])
-              ),
-            }}
-          />
-        </>
-      )}
-      <EventDetailClient slug={params.slug} />
+      {event &&
+        isPublicContentSafe(event) &&
+        isIndexable(event.status, event.visibility) && (
+          <>
+            <script
+              type='application/ld+json'
+              dangerouslySetInnerHTML={{
+                __html: serializeJsonLd(eventJsonLd(event)),
+              }}
+            />
+            <script
+              type='application/ld+json'
+              dangerouslySetInnerHTML={{
+                __html: serializeJsonLd(
+                  breadcrumb([
+                    { name: 'Home', path: '/' },
+                    { name: 'Events', path: '/events' },
+                    { name: event.title, path: `/events/${event.slug}` },
+                  ])
+                ),
+              }}
+            />
+          </>
+        )}
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <EventDetailClient slug={params.slug} />
+      </HydrationBoundary>
     </>
   );
 }

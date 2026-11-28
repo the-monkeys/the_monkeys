@@ -1,6 +1,9 @@
+import { useRef } from 'react';
+
+import useAuth from '@/hooks/auth/useAuth';
 import { queryKeys } from '@/lib/queryKeys';
+import axiosInstance from '@/services/api/axiosInstance';
 import { IsLikedResponse, likesCountResponse } from '@/services/blog/blogTypes';
-import { authFetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
 
 const STALE_TIME = 60 * 1000;
@@ -10,19 +13,26 @@ export const useIsPostLiked = (
   isAuthenticated: boolean,
   initialIsLiked?: boolean
 ) => {
+  const { data: session } = useAuth();
+  const viewer = session?.username;
+  const initialViewer = useRef(viewer).current;
+  const enabled = !!blogId && isAuthenticated && !!viewer;
   const { data, isLoading, error, isError } = useQuery<IsLikedResponse, Error>({
-    queryKey: queryKeys.blog.likes.status(blogId),
-    queryFn: () => authFetcher(`/user/is-liked/${blogId}`),
-    enabled: !!blogId && isAuthenticated,
+    queryKey: queryKeys.blog.likes.status(blogId, viewer),
+    queryFn: ({ signal }) =>
+      axiosInstance
+        .get('/user/is-liked/' + blogId, { signal })
+        .then((response) => response.data),
+    enabled,
     initialData:
-      initialIsLiked === undefined
-        ? undefined
-        : { status: 'success', isLiked: initialIsLiked },
+      enabled && viewer === initialViewer && initialIsLiked !== undefined
+        ? { status: 'success', isLiked: initialIsLiked }
+        : undefined,
     staleTime: STALE_TIME,
   });
 
   return {
-    likeStatus: data?.isLiked ?? false,
+    likeStatus: enabled ? data?.isLiked ?? false : false,
     isLoading,
     isError,
     error,
@@ -33,13 +43,17 @@ export const useGetLikesCount = (
   blogId: string | undefined,
   initialCount?: number
 ) => {
+  const { data: session } = useAuth();
   const { data, isLoading, error, isError } = useQuery<
     likesCountResponse,
     Error
   >({
     queryKey: queryKeys.blog.likes.count(blogId),
-    queryFn: () => authFetcher(`/user/count-likes/${blogId}`),
-    enabled: !!blogId,
+    queryFn: ({ signal }) =>
+      axiosInstance
+        .get('/user/count-likes/' + blogId, { signal })
+        .then((response) => response.data),
+    enabled: !!blogId && !!session?.username,
     initialData:
       initialCount === undefined ? undefined : { count: initialCount },
     staleTime: STALE_TIME,

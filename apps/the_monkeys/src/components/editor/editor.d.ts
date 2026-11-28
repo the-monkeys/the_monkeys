@@ -36,3 +36,20 @@ declare module '@editorjs/table' {
   import Table from '@editorjs/table';
   export = Table;
 }
+
+declare module 'editorjs-undo' {
+  const Undo: new (opts: {
+    editor: unknown;
+    maxLength?: number;
+    onUpdate?: () => void;
+    config?: { shortcuts?: { undo?: string; redo?: string } };
+  }) => {
+    undo: () => void;
+    redo: () => void;
+    initialize: (data: unknown) => void;
+    destroy?: () => void;
+    canUndo?: boolean | (() => boolean);
+    canRedo?: boolean | (() => boolean);
+  };
+  export default Undo;
+}

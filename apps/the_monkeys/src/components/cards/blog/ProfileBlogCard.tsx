@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
+import { BlogAudienceBadge } from '@/components/blog/BlogAudienceBadge';
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import { BlogShareDialog } from '@/components/blog/actions/BlogShareDialog';
 import { DeleteBlogDialog } from '@/components/blog/actions/DeleteBlogDialog';
 import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
@@ -14,9 +15,14 @@ import {
 import Icon from '@/components/icon';
 import { UserInfoCardShowcase } from '@/components/user/userInfo';
 import { LIVE_URL } from '@/constants/api';
-import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
+import {
+  BLOG_ROUTE,
+  GROUPS_ROUTE,
+  TOPIC_ROUTE,
+} from '@/constants/routeConstants';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 import { isNonValidBannerImage } from '@/utils/imageUtils';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { topicToSlug } from '@/utils/topicUtils';
@@ -41,7 +47,7 @@ export const ProfileBlogCard = ({
   const descriptionContent = purifyHTMLString(blog?.first_paragraph);
   const imageContent = blog?.first_image;
 
-  const blogSlug = generateSlug(titleContent);
+  const blogSlug = fromMetaBlog(blog).slug;
   const blogURL = `${BLOG_ROUTE}/${blogSlug}-${blogId}`;
 
   const showModificationOptions = isAuthenticated && modificationEnable;
@@ -51,107 +57,129 @@ export const ProfileBlogCard = ({
   };
 
   return (
-    <div className='pb-4 border-b-1 border-border-light/60 dark:border-border-dark/60'>
-      <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
-        <div className='relative shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
-          <Link href={blogURL} className='absolute inset-0'>
-            {isNonValidBannerImage(imageContent) ? (
-              <BlogPlaceholderImage
-                title={titleContent}
-                className='h-full w-full object-cover object-center'
-              />
-            ) : (
-              <BlogImage
-                title={titleContent}
-                image={imageContent}
-                className='h-full w-full object-cover object-center'
-              />
-            )}
-          </Link>
-        </div>
-
-        <div className='w-full flex flex-col justify-between gap-[10px]'>
-          <div>
-            <UserInfoCardShowcase
-              authorID={authorId}
-              date={date}
-              isDraft={isDraft}
-            />
-
-            {isDraft ? (
-              <div className='w-full'>
-                <BlogTitle
-                  className='pt-2 font-semibold text-[1.12rem] leading-[1.4] line-clamp-2'
-                  title={titleContent || 'Untitled Post'}
+    <PostCardGate
+      content={blog}
+      target={{ kind: 'blog', id: blog.blog_id }}
+      compact
+      href={blogURL}
+    >
+      <div className='pb-4 border-b-1 border-border-light/60 dark:border-border-dark/60'>
+        <article className='flex flex-col sm:flex-row gap-3 sm:gap-4'>
+          <div className='relative shrink-0 aspect-[3/2] h-[200px] sm:h-fit w-full sm:w-[200px] bg-foreground-light/60 dark:bg-foreground-dark/60 rounded-sm shadow-sm overflow-hidden'>
+            <Link href={blogURL} className='absolute inset-0'>
+              {isNonValidBannerImage(imageContent) ? (
+                <BlogPlaceholderImage
+                  title={titleContent}
+                  className='h-full w-full object-cover object-center'
                 />
-              </div>
-            ) : (
-              <Link href={blogURL} className='w-full'>
-                <BlogTitle
-                  className='pt-2 font-semibold text-[1.12rem] leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
-                  title={titleContent || 'Untitled Post'}
+              ) : (
+                <BlogImage
+                  content={blog}
+                  title={titleContent}
+                  image={imageContent}
+                  className='h-full w-full object-cover object-center'
                 />
-              </Link>
-            )}
-
-            {descriptionContent !== '' && (
-              <BlogDescription
-                description={descriptionContent}
-                className='pt-[6px] text-[0.9rem] line-clamp-2 sm:line-clamp-1 opacity-90'
-              />
-            )}
+              )}
+            </Link>
           </div>
 
-          <div className='pt-3 w-full flex justify-between items-center gap-2'>
-            <div className='flex items-center gap-[6px]'>
-              {blog?.tags.length ? (
-                <div className='w-fit flex items-center gap-1'>
-                  <Link
-                    href={`${TOPIC_ROUTE}/${topicToSlug(blog?.tags[0])}`}
-                    target='_blank'
-                    className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
-                  >
-                    {blog?.tags[0]}
-                  </Link>
+          <div className='w-full flex flex-col justify-between gap-[10px]'>
+            <div>
+              <UserInfoCardShowcase
+                authorID={authorId}
+                date={date}
+                isDraft={isDraft}
+              />
+
+              {(blog.group_slug || blog.audience === 'group_only') && (
+                <div className='min-w-0 pt-2 flex flex-wrap items-center gap-2'>
+                  {blog.group_slug && (
+                    <Link
+                      href={`${GROUPS_ROUTE}/${blog.group_slug}`}
+                      className='max-w-full truncate rounded-full border border-border-light px-2.5 py-1 font-inter text-xs font-semibold capitalize transition-colors hover:border-brand-orange/40 hover:text-brand-orange dark:border-border-dark'
+                    >
+                      {blog.group_slug.replace(/-/g, ' ')}
+                    </Link>
+                  )}
+                  {blog.audience === 'group_only' && <BlogAudienceBadge />}
+                </div>
+              )}
+
+              {isDraft ? (
+                <div className='w-full'>
+                  <BlogTitle
+                    className='pt-2 font-semibold text-[1.12rem] leading-[1.4] line-clamp-2'
+                    title={titleContent || 'Untitled Post'}
+                  />
                 </div>
               ) : (
-                <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
+                <Link href={blogURL} className='w-full'>
+                  <BlogTitle
+                    className='pt-2 font-semibold text-[1.12rem] leading-[1.4] hover:underline underline-offset-2 line-clamp-2'
+                    title={titleContent || 'Untitled Post'}
+                  />
+                </Link>
               )}
 
-              {!isDraft && (
-                <>
-                  <p className='font-medium text-sm opacity-80'>{' · '}</p>
-
-                  <BlogShareDialog
-                    blogURL={`${LIVE_URL}${blogURL}`}
-                    size={16}
-                  />
-                </>
+              {descriptionContent !== '' && (
+                <BlogDescription
+                  description={descriptionContent}
+                  className='pt-[6px] text-[0.9rem] line-clamp-2 sm:line-clamp-1 opacity-90'
+                />
               )}
             </div>
 
-            <div className='flex items-center gap-2'>
-              {showModificationOptions && !isDraft && (
-                <EditBlogDialog blogId={blogId} />
-              )}
+            <div className='pt-3 w-full flex flex-wrap justify-between items-center gap-2'>
+              <div className='min-w-0 flex flex-wrap items-center gap-[6px]'>
+                {blog?.tags.length ? (
+                  <div className='w-fit flex items-center gap-1'>
+                    <Link
+                      href={`${TOPIC_ROUTE}/${topicToSlug(blog?.tags[0])}`}
+                      target='_blank'
+                      className='shrink-0 font-medium text-sm text-brand-orange capitalize hover:underline'
+                    >
+                      {blog?.tags[0]}
+                    </Link>
+                  </div>
+                ) : (
+                  <p className='shrink-0 text-sm opacity-90 italic'>Untagged</p>
+                )}
 
-              {showModificationOptions && isDraft && (
-                <button
-                  onClick={() => handleEdit(blogId)}
-                  className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
-                  title='Edit Draft'
-                >
-                  <Icon name='RiEdit2' size={18} />
-                </button>
-              )}
+                {!isDraft && blog.audience !== 'group_only' && (
+                  <>
+                    <p className='font-medium text-sm opacity-80'>{' · '}</p>
 
-              {showModificationOptions && (
-                <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
-              )}
+                    <BlogShareDialog
+                      blogURL={`${LIVE_URL}${blogURL}`}
+                      size={16}
+                    />
+                  </>
+                )}
+              </div>
+
+              <div className='flex items-center gap-2'>
+                {showModificationOptions && !isDraft && (
+                  <EditBlogDialog blogId={blogId} />
+                )}
+
+                {showModificationOptions && isDraft && (
+                  <button
+                    onClick={() => handleEdit(blogId)}
+                    className='p-1 flex items-center justify-center cursor-pointer opacity-80 hover:opacity-100'
+                    title='Edit Draft'
+                  >
+                    <Icon name='RiEdit2' size={18} />
+                  </button>
+                )}
+
+                {showModificationOptions && (
+                  <DeleteBlogDialog blogId={blogId} isDraft={isDraft} />
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      </article>
-    </div>
+        </article>
+      </div>
+    </PostCardGate>
   );
 };

@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Hindi combining marks",
+    "text": "ज्ञान जीवन काम",
+    "count": 3
+  },
+  {
+    "name": "Hindi inline formatting",
+    "text": "<b>नम</b>स्ते दुनिया",
+    "count": 2
+  },
+  {
+    "name": "CJK continuous text",
+    "text": "学习中文",
+    "count": 4
+  },
+  {
+    "name": "Latin accents",
+    "text": "Café naïve résumé",
+    "count": 3
+  },
+  {
+    "name": "Arabic marks",
+    "text": "مَرْحَبًا بِالعالَم",
+    "count": 2
+  },
+  {
+    "name": "Inline words stay joined",
+    "text": "<strong>Hel</strong>lo &amp; world",
+    "count": 2
+  },
+  {
+    "name": "HTML block boundaries",
+    "text": "<p>one</p><p>two</p>",
+    "count": 2
+  },
+  {
+    "name": "Entity text",
+    "text": "&#233;cole déjà",
+    "count": 2
+  },
+  {
+    "name": "URLs contribute no words",
+    "text": "https://example.test/one/two?q=three www.example.test/four",
+    "count": 0
+  },
+  {
+    "name": "Link attributes are not prose",
+    "text": "<a href=\"https://example.test/hidden words\">Visible link</a>",
+    "count": 2
+  },
+  {
+    "name": "Hidden elements are not prose",
+    "text": "safe<script>hidden words</script><style>more hidden</style>after",
+    "count": 2
+  },
+  {
+    "name": "Fullwidth normalization",
+    "text": "ｈｅｌｌｏ　ｗｏｒｌｄ",
+    "count": 2
+  },
+  {
+    "name": "Indic joiners stay inside words",
+    "text": "क्‍ष के बारे में",
+    "count": 4
+  }
+]

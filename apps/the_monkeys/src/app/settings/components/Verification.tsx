@@ -10,11 +10,11 @@ import { Section } from './Section';
  */
 export const Verification = () => {
   return (
-    <div className='space-y-6'>
+    <div className='min-w-0 font-dm_sans'>
       <Section sectionTitle='Account verification'>
-        <p className='text-sm opacity-70 -mt-2 mb-4 max-w-xl'>
-          Get a verified badge on your profile. Documents are stored privately
-          and are visible only to you and review admins.
+        <p className='mb-5 max-w-xl text-sm leading-relaxed opacity-80'>
+          Help people recognise you with a verified badge on your profile.
+          Review your request and manage your verification here.
         </p>
         <VerificationPanel />
       </Section>

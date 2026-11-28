@@ -1,0 +1,404 @@
+{
+  "date": "2026-11-26",
+  "mode": "local Next production build; local APIs; safe synthetic NSFW fixtures",
+  "base_commit": "9a0f85565f1cf76323ad32967bba9ec1ef2791ea",
+  "build_id": "Bh3P_js1Q4us9BmPd7GGi",
+  "source_sha256": {
+    "apps/the_monkeys/src/app/LandingPageClient.tsx": "3bc780e19bf9a58c930dfd1225112e1951cec8dabf8cc628485a21c29bf88700",
+    "apps/the_monkeys/src/components/discussions/DiscussionCard.tsx": "6b07fd2fefa415d35041f007383b58de596cae32a823c33c85dd67f4e702fba1",
+    "apps/the_monkeys/src/components/discussions/discussionChrome.tsx": "b803a3af4c4eb1e5cb899a4b02d14c284935e7d39997356b877fb56cf4d75c90",
+    "apps/the_monkeys/src/components/landing/LandingCommunity.tsx": "e97fe21e730918d4e91050b769339ab58ebbe08a3232e68e4d3e4b9ea47dfeb7",
+    "apps/the_monkeys/src/components/landing/LandingDiscoveryRail.tsx": "11d36521ec92ce3fbe8103f8c822e9610dade7dc06bf3aa931277928e1b05729",
+    "apps/the_monkeys/src/components/landing/LandingEditorialFeed.tsx": "d1878c36b431ca4199a1a70dec4aa9cf4ac610a90506707e1fbde462058ff07c",
+    "apps/the_monkeys/src/components/landing/LandingEventsSection.tsx": "2ae1196168434a56ef3bfd24cc518e6bd14bfb16081fc318b73f9a0718b8efb4",
+    "apps/the_monkeys/src/components/landing/LandingFeaturedEvent.tsx": "56b9e9244943ba2db2ae9f65220e7deaa4a894ce24928100bb82a937d3687854",
+    "apps/the_monkeys/src/components/landing/LandingFeedEvent.tsx": "b8046bc7b89799a6224e1349ab79d7608bb5a2bc04841845fe52673d86a09349",
+    "apps/the_monkeys/src/components/landing/LandingHero.tsx": "9136e3d4c72a7731b9f4d04cb0f141918b6653072a729b03d48cf310534cd4a4",
+    "apps/the_monkeys/src/components/landing/LandingMorePosts.tsx": "645d0ec2d641882ceff01e7b6a71ff551d65fc5f935a0976b5df0bad7d163c93",
+    "apps/the_monkeys/src/components/landing/content-slots.css": "f2587f87911d98dcb312efd552cc87542c733b1cdc82c81d2f81d02585448da4",
+    "apps/the_monkeys/src/components/moderation/ContentGate.tsx": "b8a680028ee75335f4cab88aae74e5d429952f92bee9caa6024f7779a25f8975",
+    "apps/the_monkeys/src/components/moderation/LandingContentAccess.tsx": "3a15e783f31302d15c9503966705c81027ac9a44238bfefb8b1fdf3ef364ede5",
+    "apps/the_monkeys/src/hooks/blog/useGetHomepageBlogs.test.tsx": "f211873e9e0ced7ba1097807621c8d410005ba12a95565f2c0cb4332ffe7fef5",
+    "apps/the_monkeys/src/hooks/blog/useGetHomepageBlogs.ts": "1a0bbf5774cfb3b33c791a3d8a8f65877d5c6ddffc3b6306641aeeec53636340",
+    "apps/the_monkeys/src/hooks/blog/useGetHomepageBlogs.viewer.test.tsx": "85b0d297171a2cfc05516560c7ad25426d5ad98636dea2300db6428827df099b",
+    "apps/the_monkeys/src/hooks/events/useEventQueries.ts": "45efddc2b57bf5983107a3fafee25235daf8bc7a8d5b5f0b9d70fb41f7f6a479",
+    "apps/the_monkeys/src/hooks/landing/useLandingCommunity.ts": "42499ca4657969b5a78864ed788a4ba51f602243b8ff1820a3cb473f612b7f12",
+    "apps/the_monkeys/src/lib/landingPolicyRead.ts": "f168ee321c19beb66e4eec544cc901d46b5501377e54c117bc0ac53ce6c1e07e",
+    "apps/the_monkeys/src/services/blog/homepageApi.ts": "ad143f75c5e60543e61543f27b76663dbb3ba4171e350d6285c1832933428123",
+    "apps/the_monkeys/src/services/fetcher.ts": "60c12311d448a1e55d3f0c0cefe34f769df9c4c2f89cfbaade034f65dbaf98f2"
+  },
+  "recordings": {
+    "final-mobile": {
+      "samples": 45,
+      "actual_content_widths_px": [
+        375
+      ],
+      "states": [
+        {
+          "sample_ms": 1410,
+          "pending_cards": 4
+        },
+        {
+          "sample_ms": 2305,
+          "pending_cards": 0
+        }
+      ],
+      "feed_position_ranges_px": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "slots": {
+        "discussion": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "event-row": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "feed-event": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "lead": {
+          "height_range_px": 0.0,
+          "position_range_px": 0.0
+        }
+      },
+      "horizontal_overflow": false
+    },
+    "final-mobile-warm": {
+      "samples": 40,
+      "actual_content_widths_px": [
+        375
+      ],
+      "states": [
+        {
+          "sample_ms": 675,
+          "pending_cards": 4
+        },
+        {
+          "sample_ms": 1445,
+          "pending_cards": 0
+        }
+      ],
+      "feed_position_ranges_px": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "slots": {
+        "discussion": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "event-row": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "feed-event": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "lead": {
+          "height_range_px": 0.0,
+          "position_range_px": 0.0
+        }
+      },
+      "horizontal_overflow": false
+    },
+    "final-tablet": {
+      "samples": 40,
+      "actual_content_widths_px": [
+        805
+      ],
+      "states": [
+        {
+          "sample_ms": 657,
+          "pending_cards": 4
+        },
+        {
+          "sample_ms": 1445,
+          "pending_cards": 0
+        }
+      ],
+      "feed_position_ranges_px": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "slots": {
+        "discussion": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "event-row": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "feed-event": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "lead": {
+          "height_range_px": 0.0,
+          "position_range_px": 0.0
+        }
+      },
+      "horizontal_overflow": false
+    },
+    "final-desktop": {
+      "samples": 45,
+      "actual_content_widths_px": [
+        1865
+      ],
+      "states": [
+        {
+          "sample_ms": 733,
+          "pending_cards": 4
+        },
+        {
+          "sample_ms": 1934,
+          "pending_cards": 0
+        }
+      ],
+      "feed_position_ranges_px": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "slots": {
+        "discussion": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "event-row": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "feed-event": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "lead": {
+          "height_range_px": 0.0,
+          "position_range_px": 0.0
+        }
+      },
+      "horizontal_overflow": false
+    },
+    "final-anonymous": {
+      "samples": 40,
+      "actual_content_widths_px": [
+        375
+      ],
+      "states": [
+        {
+          "sample_ms": 722,
+          "pending_cards": 4
+        },
+        {
+          "sample_ms": 1217,
+          "pending_cards": 0
+        }
+      ],
+      "feed_position_ranges_px": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "slots": {
+        "discussion": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "event-row": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "feed-event": {
+          "height_range_px": 0,
+          "position_range_px": 0.0
+        },
+        "lead": {
+          "height_range_px": 0.0,
+          "position_range_px": 0.0
+        }
+      },
+      "horizontal_overflow": false
+    }
+  },
+  "browser_checks": {
+    "browserErrors": {
+      "hydration": 0,
+      "uncaught": 0
+    },
+    "anonymousCheck": {
+      "overflow": false,
+      "privateMarkers": 0,
+      "protectedImages": 0
+    },
+    "unknownAuthor": {
+      "width": 305,
+      "footerHeight": 44,
+      "overlap": false,
+      "datePresent": true
+    },
+    "lowerGeometry": [
+      {
+        "body": 8988,
+        "footers": [
+          44,
+          44,
+          44,
+          44,
+          44,
+          44
+        ]
+      },
+      {
+        "body": 8988,
+        "footers": [
+          44,
+          44,
+          44,
+          44,
+          44,
+          44
+        ]
+      },
+      {
+        "body": 8988,
+        "footers": [
+          44,
+          44,
+          44,
+          44,
+          44,
+          44
+        ]
+      },
+      {
+        "body": 8988,
+        "footers": [
+          44,
+          44,
+          44,
+          44,
+          44,
+          44
+        ]
+      },
+      {
+        "body": 8988,
+        "footers": [
+          44,
+          44,
+          44,
+          44,
+          44,
+          44
+        ]
+      },
+      {
+        "body": 8988,
+        "footers": [
+          44,
+          44,
+          44,
+          44,
+          44,
+          44
+        ]
+      }
+    ]
+  },
+  "lower_page": [
+    {
+      "body": 8988,
+      "footers": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "body": 8988,
+      "footers": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "body": 8988,
+      "footers": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "body": 8988,
+      "footers": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "body": 8988,
+      "footers": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    },
+    {
+      "body": 8988,
+      "footers": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ]
+    }
+  ],
+  "tests": {
+    "full_suite_files": 272,
+    "full_suite_tests": 2387,
+    "post_review_scoped_tests": 181,
+    "post_footer_scoped_tests": 107,
+    "final_homepage_tests": 40,
+    "api_content_media_html": 39,
+    "api_profile_privacy": 108
+  },
+  "limits": [
+    "Timed screenshots and sequential DOM samples, not continuous video, CLS, LCP or field Core Web Vitals.",
+    "Small local fixture samples with varying warm-up/cache state; no production timing or guaranteed speed percentage.",
+    "Chromium browser only; responsive emulation, not physical-device or Safari/Firefox testing."
+  ]
+}

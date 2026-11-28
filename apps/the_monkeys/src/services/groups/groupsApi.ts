@@ -1,3 +1,4 @@
+import { creationErrorMessage, creationHeaders } from '@/lib/creationAttempt';
 import axiosInstance from '@/services/api/axiosInstance';
 import axiosInstanceNoAuth from '@/services/api/axiosInstanceNoAuth';
 import { fetcher } from '@/services/fetcher';
@@ -8,6 +9,8 @@ import {
   BanBody,
   BasicResp,
   CreateInviteBody,
+  GroupBlogsParams,
+  GroupBlogsResponse,
   GroupBody,
   GroupEventBody,
   GroupEventResp,
@@ -32,7 +35,9 @@ export function groupError(err: unknown): string {
   if (axios.isAxiosError(err)) {
     const data = (err as AxiosError<{ error?: string; message?: string }>)
       .response?.data;
-    return data?.error || data?.message || err.message;
+    return (
+      creationErrorMessage(data) || data?.error || data?.message || err.message
+    );
   }
   return 'Something went wrong';
 }
@@ -76,12 +81,19 @@ export const getGroup = (slug: string) =>
     .get<GroupResp>(`${root}/${seg(slug)}`)
     .then((r) => r.data);
 
+export const listGroupBlogs = (slug: string, params: GroupBlogsParams = {}) =>
+  axiosInstanceNoAuth
+    .get<GroupBlogsResponse>(`${root}/${seg(slug)}/blogs`, { params })
+    .then((r) => r.data);
+
 // -----------------------------------------------------------------------------
 // Group lifecycle
 // -----------------------------------------------------------------------------
 
-export const createGroup = (body: GroupBody) =>
-  axiosInstance.post<GroupResp>(root, body).then((r) => r.data);
+export const createGroup = (body: GroupBody, idempotencyKey?: string) =>
+  axiosInstance
+    .post<GroupResp>(root, body, creationHeaders(idempotencyKey))
+    .then((r) => r.data);
 
 export const updateGroup = (slug: string, body: GroupBody) =>
   axiosInstance
@@ -229,7 +241,15 @@ export const deleteGroupRule = (slug: string, id: number) =>
 // Group-scoped event creation (delegated to the events service).
 // -----------------------------------------------------------------------------
 
-export const createGroupEvent = (slug: string, body: GroupEventBody) =>
+export const createGroupEvent = (
+  slug: string,
+  body: GroupEventBody,
+  idempotencyKey?: string
+) =>
   axiosInstance
-    .post<GroupEventResp>(`${root}/${seg(slug)}/events`, body)
+    .post<GroupEventResp>(
+      `${root}/${seg(slug)}/events`,
+      body,
+      creationHeaders(idempotencyKey)
+    )
     .then((r) => r.data);

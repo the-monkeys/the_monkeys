@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { GetAllTopicsAPIResponse } from '@/services/category/categoryTypes';
 import { fetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +10,7 @@ const useGetAllTopics = () => {
     GetAllTopicsAPIResponse,
     Error
   >({
-    queryKey: [ALL_TOPICS_QUERY_KEY],
+    queryKey: queryKeys.topics.all(),
     queryFn: () => fetcher('/user/topics'),
     staleTime: 5 * 60 * 1000,
   });

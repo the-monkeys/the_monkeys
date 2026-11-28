@@ -86,6 +86,9 @@ describe('post SEO', () => {
   it('connects Article schema to its author and legal publisher', () => {
     const schema = buildBlogJsonLd(blog, 'useful-post-123', 'Ada', 'ada');
 
+    expect(schema).not.toBeNull();
+    if (!schema) throw new Error('Expected public article schema');
+
     expect(schema).toMatchObject({
       '@type': 'Article',
       headline: 'Useful Post',
@@ -103,5 +106,77 @@ describe('post SEO', () => {
       },
     });
     expect(schema.articleBody).toContain('central idea clearly');
+  });
+
+  it('does not build public SEO for members-only posts', () => {
+    const privateBlog = { ...blog, audience: 'group_only' as const };
+    const metadata = buildBlogMetadata(privateBlog, 'useful-post-123', 'Ada');
+
+    expect(metadata.robots).toMatchObject({ index: false, follow: false });
+    expect(metadata.openGraph).toBeUndefined();
+    expect(buildBlogJsonLd(privateBlog, 'useful-post-123', 'Ada')).toBeNull();
+  });
+
+  it.each([
+    {
+      blocks: [{ type: 'title', data: { text: 'Legacy title' } }],
+      title: 'Legacy title',
+      slug: 'legacy-title-123',
+    },
+    {
+      blocks: [
+        { id: 'title', type: 'title', data: { text: 'Legacy title' } },
+        { type: 'header', data: { text: 'Existing heading preference' } },
+      ],
+      title: 'Existing heading preference',
+      slug: 'existing-heading-preference-123',
+    },
+    {
+      blocks: [
+        { type: 'header', data: { text: 'A &amp; B &mdash; <b>Research</b>' } },
+      ],
+      title: 'A & B &mdash; Research',
+      slug: 'a-b-mdash-research-123',
+    },
+    { blocks: [], title: 'Published Post', slug: 'published-post-123' },
+  ])(
+    'keeps existing title and canonical for $title',
+    ({ blocks, title, slug }) => {
+      const value = { ...blog, blog: { ...blog.blog, blocks } } as Blog;
+      expect(canonicalBlogSlug(value)).toBe(slug);
+      expect(buildBlogMetadata(value, 'alias-123').title).toEqual({
+        absolute: `${title} | Monkeys`,
+      });
+      expect(buildBlogJsonLd(value, 'alias-123')).toMatchObject({
+        headline: title,
+      });
+    }
+  );
+
+  it('preserves the existing title truncation boundary and fallback description/image', () => {
+    const title = `${'a'.repeat(99)} word beyond the boundary`;
+    const value = {
+      ...blog,
+      blog: {
+        ...blog.blog,
+        blocks: [{ type: 'header', data: { text: title } }],
+      },
+    } as Blog;
+    expect(canonicalBlogSlug(value)).toBe(`${'a'.repeat(99)}-123`);
+    expect(buildBlogMetadata(value, 'alias-123').description).toBe(
+      'Read this community post on Monkeys.'
+    );
+    expect(buildBlogJsonLd(value, 'alias-123')?.image).toEqual([
+      'https://monkeys.com.co/opengraph-image.png?b7ef6eff2b7766be',
+    ]);
+  });
+
+  it('keeps draft metadata out of search', () => {
+    expect(
+      buildBlogMetadata({ ...blog, is_draft: true }, 'useful-post-123')
+    ).toMatchObject({
+      title: { absolute: 'Post unavailable | Monkeys' },
+      robots: { index: false, follow: true },
+    });
   });
 });

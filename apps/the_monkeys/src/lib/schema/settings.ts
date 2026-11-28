@@ -6,10 +6,12 @@ export const updateProfileSchema = z.object({
   address: z.string().max(100).optional(),
   contact_number: z
     .string()
-    .regex(/^[0-9]+$/, 'Contact number must be digits only')
-    .min(10)
-    .max(15)
-    .optional(),
+    .regex(
+      /^\+?[0-9]{10,15}$/,
+      'Enter 10 to 15 digits, with an optional leading +.'
+    )
+    .optional()
+    .or(z.literal('')),
   bio: z.string().max(500).optional(),
   date_of_birth: z.string().optional(),
   twitter: z
@@ -51,7 +53,10 @@ export const updateProfileDetailsSchema = z.object({
 
 export const updateEmailSchema = z.object({
   email: z
-    .string({ required_error: 'Email is required' })
+    .string({
+      error: (issue) =>
+        issue.input === undefined ? 'Email is required' : undefined,
+    })
     .min(1, 'Email is required')
     .email('Invalid email'),
 });

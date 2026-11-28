@@ -1,4 +1,19 @@
-export interface Blog {
+import type { HomepageEligibility } from '@/lib/homepageEligibility';
+import type { RatedContent } from '@/services/moderation/moderationTypes';
+
+export type BlogAudience = 'public' | 'group_only';
+
+export interface PublishedEditorialMetadata extends RatedContent {
+  slug?: string;
+  rss_guid?: string;
+  canonical_slug?: string;
+  seo_description?: string;
+  content_modified_at?: string;
+}
+
+export interface Blog extends PublishedEditorialMetadata {
+  seo_indexable?: boolean;
+  seo_crawler?: boolean;
   blog_id: string;
   owner_account_id: string;
   blog: {
@@ -12,9 +27,12 @@ export interface Blog {
   like_count: number;
   BookmarkCount: number;
   bookmark_count: number;
+  audience?: BlogAudience;
+  group_slug?: string;
 }
 
-export interface MetaBlog {
+export interface MetaBlog extends PublishedEditorialMetadata {
+  homepage_eligibility?: HomepageEligibility;
   blog_id: string;
   title: string;
   first_image: string;
@@ -25,6 +43,8 @@ export interface MetaBlog {
   tags: string[];
   bookmark_count?: number;
   content_type?: string;
+  audience?: BlogAudience;
+  group_slug?: string;
 }
 
 export interface Block {
@@ -97,7 +117,7 @@ export interface GetUserTagsResponse {
   tags: Record<string, number>;
 }
 
-export interface FollowingFeed {
+export interface FollowingFeed extends PublishedEditorialMetadata {
   BookmarkCount: number;
   IsBookmarkedByMe: boolean;
   IsLikedByMe: boolean;
@@ -120,9 +140,11 @@ export interface FollowingFeed {
   slug?: string;
   tags: string[];
   user_agent?: string;
+  audience?: BlogAudience;
+  group_slug?: string;
 }
 
-export interface BlogCardData {
+export interface BlogCardData extends RatedContent {
   blogId: string;
   authorId: string;
   date: string;
@@ -134,4 +156,6 @@ export interface BlogCardData {
   initialIsLiked?: boolean;
   initialIsBookmarked?: boolean;
   initialLikeCount?: number;
+  audience?: BlogAudience;
+  groupSlug?: string;
 }

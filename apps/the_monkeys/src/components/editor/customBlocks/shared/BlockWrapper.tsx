@@ -220,3 +220,24 @@ export function EmptyState({ message, icon }: EmptyStateProps) {
     </div>
   );
 }
+
+export function BlockHelp({ children }: { children: ReactNode }) {
+  return (
+    <p className='mb-3 text-sm leading-5 text-slate-600 dark:text-slate-300'>
+      {children}
+    </p>
+  );
+}
+
+export function EditDataDetails({ children }: { children: ReactNode }) {
+  return (
+    <details className='mt-3'>
+      <summary className='flex min-h-11 cursor-pointer list-none items-center text-sm font-medium text-slate-700 dark:text-slate-200'>
+        Edit data
+      </summary>
+      <div className='mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2'>
+        {children}
+      </div>
+    </details>
+  );
+}

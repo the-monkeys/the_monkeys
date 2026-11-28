@@ -1,0 +1,106 @@
+{
+  "date": "2026-11-27",
+  "status": "Core browser journeys verified; exhaustive sign-off remains limited by explicitly unrun cases",
+  "branch": "codex/nsfw-reporting-age-gate",
+  "frontend_source_commit": "8c2571bd",
+  "backend_commit": "11d46d4d4a9ee1e3b32e2f9851de31d03c47ad4b",
+  "build_id": "b52gOWcdmLMM5BYfK50t6",
+  "automated": {
+    "frontend_files_passed": 274,
+    "frontend_tests_passed": 2423,
+    "backend": "go test ./microservices/the_monkeys_blog/... passed",
+    "gopls": "changed files, exit 0",
+    "optimized_build": "passed",
+    "lint": "no errors; 2 preexisting img-element warnings",
+    "fresh_profile_privacy_checks_passed": 98,
+    "fresh_nsfw_and_public_control_checks_passed": 22
+  },
+  "browser": {
+    "new_account": "UI signup and Mailpit OTP, private profile saves including leading + phone, DOB/minor gates, photo replacement, username change, email verification, synthetic ID request, article/discussion/group/event creation and core edit/persistence paths",
+    "existing_account": "UI login/logout, article/discussion/group/event creation, discussion edit and reply, combined profile saves and restore, avatar update, synthetic ID request, Library bookmarks and empty drafts/scheduled, Studio controls and exports",
+    "publication_lists": "schedule -> draft -> publish immediately visible without reload, including previously cached author list",
+    "code_and_image": "inserted through editor UI; preview and draft reopen retain both; published image visually rendered and code copied exactly",
+    "responsive": {
+      "pages": [
+        "settings",
+        "library",
+        "discussion",
+        "group",
+        "event",
+        "article",
+        "studio",
+        "topics",
+        "feed",
+        "homepage"
+      ],
+      "widths": [
+        320,
+        390,
+        820,
+        1440
+      ],
+      "cases": 40,
+      "stable_horizontal_overflow": 0,
+      "caveat": "Initial immediate-resize Studio measurement was transient; four fresh-load measurements plus screenshots fit. Original measurement retained separately."
+    },
+    "studio": {
+      "templates_selected": 8,
+      "themes_selected": 13,
+      "scope": "selection/preview smoke checks, not all combinations/export comparisons",
+      "png_dimensions": [
+        2400,
+        1254
+      ],
+      "jpeg_download": "passed",
+      "clipboard": "image/png present after asynchronous copy completed",
+      "new_account_story_png_dimensions": [
+        2160,
+        3840
+      ]
+    },
+    "final_session_switch": "adult signout -> anonymous -> new minor account: no restricted body marker, minor has no Show content button"
+  },
+  "fixtures": {
+    "new_account_username": "local_qa_journey_20261127",
+    "new_account_id": "8ad09868c7d6fb9518eba842ae8a577d",
+    "new_articles": [
+      "w9e0rb",
+      "c877gn"
+    ],
+    "new_discussion": "29a3c244c2b5f68a",
+    "new_group": "local-only-qa-20261127-community-8a7d8a19",
+    "new_event": "local-only-qa-20261127-online-event-4746c5cf",
+    "existing_article": "325tz",
+    "existing_discussion": "1f762ca15c1fc934",
+    "existing_group": "local-only-qa-existing-community-20261127-2530874b",
+    "existing_event": "local-only-qa-existing-event-20261127-f72588bc"
+  },
+  "not_run": [
+    "Password and final email-credential changes: browser policy requires manual user participation",
+    "Fresh live signup wrong-code retest after fix: component-tested; another account with new terms acceptance was not created while user absent",
+    "Destructive deletion or profile-image removal; local data must remain",
+    "Paid checkout/refunds, external X imports and external notifications",
+    "All Studio template/theme/accent/content combinations and maximum-length/multilingual export matrix",
+    "Every group/event co-host, invite, ticket/coupon and admin control",
+    "Firefox/Safari or physical devices; in-app Chromium viewport checks only",
+    "Production-load performance effect of explicit publication refresh; production untouched"
+  ],
+  "environment": {
+    "ui_http": 200,
+    "gateway_http": 200,
+    "keep_ui_services_mailpit_running": true,
+    "local_data_deleted": false,
+    "auth_health": "gRPC SERVING; Docker unhealthy due existing local health-command variable expansion",
+    "notification_delivery": "disabled locally"
+  },
+  "protected_patch_sha256": {
+    "staged_mobile": "3adf9af88183cce349877ad19cfa2b87088544a5e5224bf4ad60201a6147666d",
+    "unrelated_backend": "dfbdfad462e39c44caa85176bb9fe5a4ec51c99428f82ebb828e3e8a349ba2e6"
+  },
+  "notes": [
+    "Four public-account 404s during the final privacy run were caused by an incorrect harness account ID; read-only local DB lookup corrected the harness and all checks passed. No application change for those 404s.",
+    "Initial social-handle DOM comparisons returned redacted values. All four handles were verified visually after reload, then original text fields restored.",
+    "Existing synthetic adult fixture avatar intentionally retains a public QA image and its mock verification request remains Pending review. No real Dave profile changed.",
+    "SEO/GEO and additional safe-context work remain paused. No PR, deployment, production write or cleanup."
+  ]
+}

@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 
@@ -12,14 +12,14 @@ import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
  */
 export default function CreateBlog() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Generate a fresh blog ID
     const blogId = Math.random().toString(36).substring(7);
-
-    // Redirect to the new edit route immediately
-    router.replace(`/edit/${blogId}?isNew=true`);
-  }, [router]);
+    const group = searchParams.get('group')?.trim();
+    const groupQuery = group ? `&group=${encodeURIComponent(group)}` : '';
+    router.replace(`/edit/${blogId}?isNew=true${groupQuery}`);
+  }, [router, searchParams]);
 
   // Show a skeleton while the redirect is processing
   return (

@@ -37,7 +37,8 @@ export const useSnapshotState = ({
       if (
         cur?.username === next.username &&
         cur?.displayName === next.displayName &&
-        cur?.avatarUrl === next.avatarUrl
+        cur?.avatarUrl === next.avatarUrl &&
+        cur?.isVerified === next.isVerified
       ) {
         return s;
       }

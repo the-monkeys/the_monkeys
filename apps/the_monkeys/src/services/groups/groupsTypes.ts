@@ -1,4 +1,6 @@
+import { Blog } from '@/services/blog/blogTypes';
 import { EventResp, EventType, ProtoTime } from '@/services/events/eventTypes';
+import type { RatedContent } from '@/services/moderation/moderationTypes';
 
 export type GroupVisibility = 'public' | 'private' | 'unlisted';
 
@@ -42,7 +44,7 @@ export type GroupMember = {
   permissions?: string[];
 };
 
-export type GroupItem = {
+export type GroupItem = RatedContent & {
   id: number;
   slug: string;
   name: string;
@@ -206,6 +208,15 @@ export type MemberListParams = {
   limit?: number;
   offset?: number;
   status?: string;
+};
+
+export type GroupBlogsParams = {
+  limit?: number;
+  offset?: number;
+};
+
+export type GroupBlogsResponse = {
+  blogs: Blog[];
 };
 
 export type GroupResp = {

@@ -37,8 +37,8 @@ describe('topic catalog SEO', () => {
     const collection = schema['@graph'][0];
     const breadcrumbs = schema['@graph'][1];
 
-    expect(collection.mainEntity.numberOfItems).toBe(2);
-    expect(collection.mainEntity.itemListElement).toEqual([
+    expect(collection.mainEntity?.numberOfItems).toBe(2);
+    expect(collection.mainEntity?.itemListElement).toEqual([
       {
         '@type': 'ListItem',
         position: 1,
@@ -77,8 +77,8 @@ describe('topic catalog SEO', () => {
     expect(summary.category.Business.Topics).toEqual(topics.slice(0, 6));
     expect(summary.category.Culture.Topics).toEqual(['Books', 'Film']);
     expect(catalog.category.Business.Topics).toHaveLength(105);
-    expect(collection.mainEntity.numberOfItems).toBe(100);
-    expect(collection.mainEntity.itemListElement).toHaveLength(100);
+    expect(collection.mainEntity?.numberOfItems).toBe(100);
+    expect(collection.mainEntity?.itemListElement).toHaveLength(100);
   });
 
   it('keeps discovery pages resilient but rejects transient sitemap failures', async () => {

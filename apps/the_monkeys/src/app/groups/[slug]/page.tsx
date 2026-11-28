@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { JsonLd } from '@/components/seo/JsonLd';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
+import { queryKeys } from '@/lib/queryKeys';
 import {
   breadcrumb,
   indexRobots,
@@ -11,6 +13,8 @@ import {
 } from '@/lib/seo';
 import { groupJsonLd } from '@/lib/seoSchema';
 import { GroupResp } from '@/services/groups/groupsTypes';
+import { getQueryClient } from '@/utils/get-query-client';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import GroupDetailClient from './GroupDetailClient';
 import { loadGroupForMetadata } from './groupMetadata';
@@ -32,6 +36,10 @@ export async function generateMetadata({
   const group = data?.group;
   if (!group) {
     return { title: 'Group not found', robots: noIndexRobots };
+  }
+
+  if (!isPublicContentSafe(group)) {
+    return { title: 'Sensitive group', robots: noIndexRobots };
   }
 
   if (!isIndexable(group)) {
@@ -62,9 +70,14 @@ export default async function GroupDetailPage({
   if (data === null) notFound();
   const group = data?.group;
 
+  const queryClient = getQueryClient();
+  if (group && isPublicContentSafe(group) && isIndexable(group)) {
+    queryClient.setQueryData(queryKeys.groups.detail(params.slug), { group });
+  }
+
   return (
     <>
-      {group && isIndexable(group) && (
+      {group && isPublicContentSafe(group) && isIndexable(group) && (
         <>
           <JsonLd data={groupJsonLd(group)} />
           <JsonLd
@@ -76,7 +89,9 @@ export default async function GroupDetailPage({
           />
         </>
       )}
-      <GroupDetailClient slug={params.slug} />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <GroupDetailClient slug={params.slug} />
+      </HydrationBoundary>
     </>
   );
 }

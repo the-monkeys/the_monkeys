@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -8,6 +8,7 @@ import { BackButton } from '@/components/buttons/backButton';
 import { EventForm } from '@/components/events/EventForm';
 import { EVENTS_ROUTE, LOGIN_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
+import { useCreationAttempt } from '@/hooks/useCreationAttempt';
 import { invalidateAfterEventWrite } from '@/lib/queryFreshness';
 import { EventBody } from '@/services/events/eventTypes';
 import {
@@ -25,6 +26,10 @@ export default function NewEventPage() {
   const router = useRouter();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const submitting = useRef(false);
+  const attempt = useCreationAttempt(
+    `events:${session?.account_id || session?.username || ''}`
+  );
 
   if (!isLoading && !session) {
     router.replace(LOGIN_ROUTE);
@@ -32,36 +37,46 @@ export default function NewEventPage() {
   }
 
   const onSubmit = async (body: EventBody, coverFile?: File) => {
+    if (submitting.current) return;
+    submitting.current = true;
     setSaving(true);
+    let created = false;
     try {
-      const res = body.recurrence
-        ? await createSeries(body)
-        : await createEvent(body);
-      const slug = res.event?.slug;
-      // One v2 upload. For a series the backend maps that URL onto every
-      // occurrence — do not upload once per date.
-      if (slug && coverFile) {
-        try {
-          const up = await uploadEventCover(slug, coverFile);
-          if (up?.url)
-            await updateEvent(slug, { ...body, cover_image: up.url });
-        } catch {
-          toast({
-            title: 'Event saved, but the cover upload failed',
-            description: 'You can add it from the edit page.',
-          });
+      await attempt.run(body, async (key) => {
+        const res = body.recurrence
+          ? await createSeries(body, key)
+          : await createEvent(body, key);
+        created = true;
+        const slug = res.event?.slug;
+        // One v2 upload. For a series the backend maps that URL onto every
+        // occurrence — do not upload once per date.
+        if (slug && coverFile) {
+          try {
+            const up = await uploadEventCover(slug, coverFile);
+            if (up?.url)
+              await updateEvent(slug, { ...body, cover_image: up.url });
+          } catch {
+            toast({
+              title: 'Event saved, but the cover upload failed',
+              description: 'You can add it from the edit page.',
+            });
+          }
         }
-      }
-      toast({
-        title: 'Draft saved',
-        description: 'It is not on Discover yet. Publish when you are ready.',
+        toast({
+          title: 'Draft saved',
+          description: 'It is not on Discover yet. Publish when you are ready.',
+        });
+        await invalidateAfterEventWrite(getQueryClient(), slug);
+        router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
       });
-      await invalidateAfterEventWrite(getQueryClient(), slug);
-      router.push(slug ? `${EVENTS_ROUTE}/${slug}/manage` : EVENTS_ROUTE);
     } catch (err) {
+      // App Router push returns before the old page unmounts. Keep a saved
+      // creation locked even if a later refresh/navigation step fails.
+      if (!created) {
+        submitting.current = false;
+        setSaving(false);
+      }
       toast({ title: 'Could not create event', description: eventError(err) });
-    } finally {
-      setSaving(false);
     }
   };
 

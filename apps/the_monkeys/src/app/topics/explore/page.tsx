@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { JsonLd } from '@/components/seo/JsonLd';
 import {
   buildTopicCatalogJsonLd,
@@ -15,6 +17,23 @@ export default async function ExploreTopicsPage() {
     <>
       <JsonLd data={buildTopicCatalogJsonLd(categories)} />
       <TopicsExplorerClient initialCategories={initialCategories} />
+      <nav
+        className='flex flex-wrap gap-x-6 gap-y-3 py-4'
+        aria-label='Learning and creator tools'
+      >
+        <Link
+          href='/learn'
+          className='inline-flex min-h-11 items-center text-brand-orange hover:underline'
+        >
+          Developer learning resources
+        </Link>
+        <Link
+          href='/snapshot'
+          className='inline-flex min-h-11 items-center text-brand-orange hover:underline'
+        >
+          Explore Studio
+        </Link>
+      </nav>
     </>
   );
 }

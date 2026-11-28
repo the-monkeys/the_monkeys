@@ -21,9 +21,9 @@ export const fetcher = async (url: string) => {
 export const authFetcherV2 = (url: string) =>
   axiosInstanceV2.get(url).then((res) => res.data);
 
-export const fetcherV2 = async (url: string) => {
+export const fetcherV2 = async (url: string, signal?: AbortSignal) => {
   try {
-    const response = await axiosInstanceNoAuthV2.get(url);
+    const response = await axiosInstanceNoAuthV2.get(url, { signal });
     return response.data;
   } catch (error) {
     console.error('Error fetching data:', error, url);

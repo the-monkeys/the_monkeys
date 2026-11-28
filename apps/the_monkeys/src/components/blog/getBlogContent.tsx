@@ -1,7 +1,13 @@
 import Image from 'next/image';
 
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import { Blog } from '@/services/blog/blogTypes';
+import {
+  type RatedContent,
+  isSensitive,
+} from '@/services/moderation/moderationTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
+import { OutputData } from '@themonkeys/monkeys-editor';
 import { twMerge } from 'tailwind-merge';
 
 import placeholderImage from '../../../public/image-placeholder.png';
@@ -44,6 +50,25 @@ export const getCardContent = ({ blog }: { blog: Blog }) => {
     imageContent,
   };
 };
+
+export function isDocumentTitleBlock(block?: {
+  type?: string;
+  data?: { level?: number };
+}): boolean {
+  if (!block?.type) return false;
+  if (block.type === 'title') return true;
+  return block.type === 'header' && block.data?.level === 1;
+}
+
+export function withoutPostTitle(data?: OutputData): OutputData | undefined {
+  if (!data?.blocks?.length) return data;
+  const firstType = data.blocks[0]?.type;
+  if (firstType !== 'header' && firstType !== 'title') return data;
+  return {
+    ...data,
+    blocks: data.blocks.slice(1),
+  };
+}
 
 export const BlogTitle = ({
   title,
@@ -107,22 +132,28 @@ export const BlogImage = ({
   image,
   className,
   priority = true,
+  quality = 100,
   sizes,
+  content,
 }: {
   title: string;
   image: string;
   className?: string;
   priority?: boolean;
+  quality?: number;
   sizes?: string;
+  content?: RatedContent;
 }) => {
+  const sensitive = isSensitive(content);
   return (
     <Image
-      src={image}
+      src={sensitive ? authenticatedArticleImageUrl(image) : image}
+      unoptimized={sensitive}
       alt={title}
       height='500'
       width='800'
       className={twMerge('h-full w-full object-contain', className)}
-      quality={100}
+      quality={quality}
       priority={priority}
       sizes={sizes}
     />
@@ -133,11 +164,13 @@ export const BlogPlaceholderImage = ({
   title,
   className,
   priority = true,
+  quality = 100,
   sizes,
 }: {
   title: string;
   className?: string;
   priority?: boolean;
+  quality?: number;
   sizes?: string;
 }) => {
   return (
@@ -147,7 +180,7 @@ export const BlogPlaceholderImage = ({
       height='500'
       width='800'
       className={twMerge('h-full w-full object-cover object-center', className)}
-      quality={100}
+      quality={quality}
       priority={priority}
       sizes={sizes}
     />

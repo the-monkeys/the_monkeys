@@ -1,3 +1,9 @@
+import useAuth from '@/hooks/auth/useAuth';
+import { hasKnownViewer, keepPreviousViewerData } from '@/lib/authQuerySession';
+import {
+  readLandingPolicy,
+  useLandingPolicySource,
+} from '@/lib/landingPolicyRead';
 import { LIVE_LIST_STALE_MS } from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
 import { ListFilters } from '@/services/events/eventTypes';
@@ -15,21 +21,58 @@ import {
   uploadEventCover,
   uploadEventPhoto,
 } from '@/services/events/eventsApi';
-import {
-  keepPreviousData,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { isSensitive } from '@/services/moderation/moderationTypes';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export function useEventList(filters: ListFilters, enabled = true) {
-  return useQuery({
-    queryKey: queryKeys.events.list(filters),
-    queryFn: () => listEvents(filters),
-    enabled,
+export function useEventList(
+  filters: ListFilters,
+  enabled = true,
+  checkedLanding = false
+) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
+  const qc = useQueryClient();
+  const query = useQuery({
+    queryKey: queryKeys.events.list(filters, viewer),
+    initialData: () =>
+      qc.getQueryData<Awaited<ReturnType<typeof listEvents>>>(
+        queryKeys.events.list(filters)
+      ),
+    initialDataUpdatedAt: () =>
+      viewer
+        ? 1
+        : qc.getQueryState(queryKeys.events.list(filters))?.dataUpdatedAt,
+    ...(checkedLanding
+      ? {
+          structuralSharing: false as const,
+          refetchOnWindowFocus: (query: {
+            state: { data?: Awaited<ReturnType<typeof listEvents>> };
+          }) =>
+            query.state.data?.events?.some(isSensitive)
+              ? ('always' as const)
+              : true,
+        }
+      : {}),
+    queryFn: checkedLanding
+      ? ({ signal }) =>
+          readLandingPolicy(qc, viewer, signal, () => listEvents(filters))
+      : () => listEvents(filters),
+    enabled: enabled && hasKnownViewer(auth),
     staleTime: LIVE_LIST_STALE_MS,
-    placeholderData: keepPreviousData,
+    placeholderData: keepPreviousViewerData(viewer),
   });
+  const policySource = useLandingPolicySource(
+    qc,
+    viewer,
+    queryKeys.events.list(filters, viewer),
+    query,
+    query.data?.events ?? [],
+    enabled && hasKnownViewer(auth),
+    checkedLanding
+  );
+  return checkedLanding
+    ? { ...query, policySource }
+    : { ...query, policySource: undefined };
 }
 
 export function useUserEvents(
@@ -37,10 +80,12 @@ export function useUserEvents(
   filters: ListFilters = {},
   enabled = true
 ) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.events.user(username, filters),
+    queryKey: queryKeys.events.user(username, filters, viewer),
     queryFn: () => listUserEvents(username!, filters),
-    enabled: enabled && !!username,
+    enabled: hasKnownViewer(auth) && enabled && !!username,
     staleTime: LIVE_LIST_STALE_MS,
   });
 }
@@ -50,52 +95,79 @@ export function useGroupEvents(
   filters: ListFilters = {},
   enabled = true
 ) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.events.group(slug, filters),
+    queryKey: queryKeys.events.group(slug, filters, viewer),
     queryFn: () => listGroupEvents(slug!, filters),
-    enabled: enabled && !!slug,
+    enabled: hasKnownViewer(auth) && enabled && !!slug,
     staleTime: LIVE_LIST_STALE_MS,
   });
 }
 
 export function useAttendingEvents(filters: ListFilters = {}, enabled = true) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.events.attending,
+    queryKey: queryKeys.events.attendingList(viewer, filters),
     queryFn: () => listAttendingEvents(filters),
-    enabled,
+    enabled: enabled && hasKnownViewer(auth) && !!viewer,
     staleTime: LIVE_LIST_STALE_MS,
   });
 }
 
 export function useEventDetail(slug: string | undefined) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
+  const qc = useQueryClient();
   return useQuery({
-    queryKey: queryKeys.events.detail(slug),
+    queryKey: queryKeys.events.detail(slug, viewer),
+    initialData: () =>
+      qc.getQueryData<Awaited<ReturnType<typeof getEvent>>>(
+        queryKeys.events.detail(slug)
+      ),
+    initialDataUpdatedAt: () =>
+      viewer
+        ? 1
+        : qc.getQueryState(queryKeys.events.detail(slug))?.dataUpdatedAt,
     queryFn: () => getEvent(slug!),
-    enabled: !!slug,
+    enabled: hasKnownViewer(auth) && !!slug,
+    // Refresh viewer-specific RSVP and meeting access after public SSR data.
+    staleTime: 0,
   });
 }
 
 export function useEventComments(slug: string | undefined, offset = 0) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.events.comments(slug, offset),
+    queryKey: queryKeys.events.comments(slug, offset, viewer),
     queryFn: () => listComments(slug!, 50, offset),
-    enabled: !!slug,
+    enabled: hasKnownViewer(auth) && !!slug,
   });
 }
 
-export function useEventAttendees(slug: string | undefined, enabled = true) {
+export function useEventAttendees(
+  slug: string | undefined,
+  enabled = true,
+  params: NonNullable<Parameters<typeof listAttendees>[1]> = { limit: 200 }
+) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.events.attendees(slug),
-    queryFn: () => listAttendees(slug!, { limit: 200 }),
-    enabled: enabled && !!slug,
+    queryKey: queryKeys.events.attendeePage(slug, params, viewer),
+    queryFn: () => listAttendees(slug!, params),
+    enabled: hasKnownViewer(auth) && enabled && !!slug,
   });
 }
 
 export function useEventCoupons(slug: string | undefined, enabled = true) {
+  const auth = useAuth();
+  const viewer = auth.data?.account_id || auth.data?.username || null;
   return useQuery({
-    queryKey: queryKeys.events.coupons(slug),
+    queryKey: queryKeys.events.coupons(slug, viewer),
     queryFn: () => listCoupons(slug!),
-    enabled: enabled && !!slug,
+    enabled: hasKnownViewer(auth) && enabled && !!slug,
   });
 }
 

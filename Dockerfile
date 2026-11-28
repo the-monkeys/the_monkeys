@@ -9,6 +9,7 @@ RUN corepack enable pnpm
 
 # Copy package files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches ./patches
 COPY apps/the_monkeys/package.json ./apps/the_monkeys/
 COPY packages/ui/package.json ./packages/ui/  
 COPY packages/config/package.json ./packages/config/

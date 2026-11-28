@@ -46,13 +46,13 @@ const SettingsPage = () => {
   return (
     <Tabs
       defaultValue='profile'
-      className='px-4 grid grid-cols-4 gap-10 sm:gap-8'
+      className='grid min-w-0 grid-cols-4 gap-6 px-4 sm:gap-8'
     >
-      <div className='col-span-4 md:col-span-1 flex flex-col'>
-        <TabsList className='font-dm_sans flex md:flex-col justify-evenly flex-wrap items-start gap-[6px]'>
+      <div className='col-span-4 min-w-0 md:col-span-1'>
+        <TabsList className='flex w-full flex-wrap justify-start gap-1 pb-2 font-dm_sans md:flex-col md:flex-nowrap md:items-stretch md:pb-0'>
           <TabsTrigger
             value='profile'
-            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+            className='group w-auto shrink-0 px-3 py-2 md:w-full data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
           >
             <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
               Profile
@@ -61,7 +61,7 @@ const SettingsPage = () => {
 
           <TabsTrigger
             value='account'
-            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+            className='group w-auto shrink-0 px-3 py-2 md:w-full data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
           >
             <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
               Account
@@ -70,7 +70,7 @@ const SettingsPage = () => {
 
           <TabsTrigger
             value='security'
-            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+            className='group w-auto shrink-0 px-3 py-2 md:w-full data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
           >
             <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
               Security
@@ -79,7 +79,7 @@ const SettingsPage = () => {
 
           <TabsTrigger
             value='verification'
-            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+            className='group w-auto shrink-0 px-3 py-2 md:w-full data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
           >
             <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
               Verification
@@ -88,7 +88,7 @@ const SettingsPage = () => {
 
           <TabsTrigger
             value='notifications'
-            className='w-full group px-3 py-[6px] data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
+            className='group w-auto shrink-0 px-3 py-2 md:w-full data-[state=active]:bg-foreground-light/40 dark:data-[state=active]:bg-foreground-dark/40 items-start rounded-md hover:bg-foreground-light/40 dark:hover:bg-foreground-dark/40'
           >
             <p className='font-dm_sans group-data-[state=active]:font-medium opacity-90 group-data-[state=active]:opacity-100'>
               Notifications
@@ -97,7 +97,7 @@ const SettingsPage = () => {
         </TabsList>
       </div>
 
-      <div className='col-span-4 md:col-span-3'>
+      <div className='col-span-4 min-w-0 md:col-span-3'>
         <TabsContent value='profile'>
           <Profile data={data} />
         </TabsContent>

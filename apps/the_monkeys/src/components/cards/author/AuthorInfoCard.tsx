@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Icon from '@/components/icon';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { AuthorInfoCardSkeleton } from '@/components/skeletons/profileSkeleton';
+import { AuthorName } from '@/components/user/AuthorName';
 import { FollowButton } from '@/components/user/buttons/followButton';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
@@ -58,9 +59,13 @@ export const AuthorInfoCard = ({
           <div className='flex-1 overflow-hidden'>
             <p className='text-sm truncate'>{`@${userData?.username}`}</p>
 
-            <h2 className='flex-1 font-dm_sans font-medium text-2xl capitalize'>
-              {userData?.first_name}{' '}
-              {userData?.last_name ? userData?.last_name : ''}
+            <h2 className='flex min-w-0 flex-1 items-center font-dm_sans font-medium text-2xl capitalize'>
+              <AuthorName
+                firstName={userData?.first_name}
+                lastName={userData?.last_name}
+                isVerified={userData?.is_verified}
+                size={20}
+              />
             </h2>
           </div>
         </div>

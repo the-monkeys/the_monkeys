@@ -6,13 +6,15 @@ import {
   PageHeading,
   PageSubheading,
 } from '@/components/layout/pageHeading';
-import { absoluteUrl, noIndexFollowRobots } from '@/lib/seo';
+import { noIndexFollowRobots, pageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = {
-  title: { absolute: 'Search Posts and Authors | Monkeys' },
-  description:
-    'Search public posts and authors on Monkeys, then explore their topics, events, and communities.',
-  alternates: { canonical: absoluteUrl('/search') },
+  ...pageMetadata({
+    title: 'Search Posts and Authors | Monkeys',
+    description:
+      'Search public posts and authors on Monkeys, then explore their topics, events, and communities.',
+    path: '/search',
+  }),
   robots: noIndexFollowRobots,
 };
 

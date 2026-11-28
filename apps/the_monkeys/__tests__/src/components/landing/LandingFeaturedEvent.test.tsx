@@ -3,9 +3,11 @@ import { EventItem } from '@/services/events/eventTypes';
 import { cleanup, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+const avatar = vi.hoisted(() => ({ imageUrl: '/profiles/host.jpg' }));
+
 vi.mock('@/hooks/profile/useProfileImage', () => ({
   default: () => ({
-    imageUrl: '/profiles/host.jpg',
+    imageUrl: avatar.imageUrl,
     isLoading: false,
     isError: false,
   }),
@@ -15,6 +17,14 @@ vi.mock('@/hooks/user/useGetProfileInfoByUserId', () => ({
     user: { user: { username: 'account-host' } },
     isLoading: false,
     isError: false,
+  }),
+}));
+vi.mock('@/hooks/user/useUser', () => ({
+  default: () => ({
+    user: undefined,
+    isLoading: false,
+    isError: null,
+    mutate: vi.fn(),
   }),
 }));
 
@@ -34,7 +44,10 @@ const featuredEvent: EventItem = {
 };
 
 describe('LandingFeaturedEvent', () => {
-  afterEach(cleanup);
+  afterEach(() => {
+    cleanup();
+    avatar.imageUrl = '/profiles/host.jpg';
+  });
 
   it('links real event details without inventing an RSVP action', () => {
     render(<LandingFeaturedEvent event={featuredEvent} />);
@@ -49,10 +62,8 @@ describe('LandingFeaturedEvent', () => {
     ).toBe('/events/community-design-session');
     expect(screen.getByText('Online')).toBeDefined();
     expect(
-      screen.getByText(
-        (_, element) => element?.textContent === 'Hosted by @host'
-      )
-    ).toBeDefined();
+      screen.getByRole('link', { name: /Hosted by @host/ }).getAttribute('href')
+    ).toBe('/host');
     const attendance = screen.getByRole('group', {
       name: 'Event host and attendance',
     });
@@ -61,7 +72,9 @@ describe('LandingFeaturedEvent', () => {
         .getByRole('link', { name: 'View event host profile' })
         .getAttribute('href')
     ).toBe('/host');
-    expect(attendance.querySelector('img')).toBeDefined();
+    expect(attendance.querySelector('img')?.src).toBe(
+      new URL('/profiles/host.jpg', document.baseURI).href
+    );
     expect(within(attendance).getByText('+12 attending')).toBeDefined();
     expect(screen.queryByRole('link', { name: /RSVP/i })).toBeNull();
   });
@@ -89,8 +102,28 @@ describe('LandingFeaturedEvent', () => {
         .getByRole('link', { name: 'View event host profile' })
         .getAttribute('href')
     ).toBe('/account-host');
-    expect(attendance.querySelector('img')).toBeDefined();
+    expect(attendance.querySelector('img')?.src).toBe(
+      new URL('/profiles/host.jpg', document.baseURI).href
+    );
     expect(within(attendance).queryByText(internalUsername)).toBeNull();
+  });
+
+  it.each([
+    'blob:http://localhost:3000/host-avatar',
+    'https://images.example.test/profiles/host.jpg',
+  ])('preserves the supplied host avatar URL %s', (imageUrl) => {
+    avatar.imageUrl = imageUrl;
+    render(<LandingFeaturedEvent event={featuredEvent} />);
+
+    const attendance = screen.getByRole('group', {
+      name: 'Event host and attendance',
+    });
+    const image = attendance.querySelector('img');
+    expect(image?.src).toBe(imageUrl);
+    expect(image?.alt).toBe('Event host');
+    expect(image?.getAttribute('width')).toBe('50');
+    expect(image?.getAttribute('height')).toBe('50');
+    expect(image?.className).toBe('w-full h-full object-cover rounded-full');
   });
 
   it('resolves the host photo from the organizer account when username is absent', () => {

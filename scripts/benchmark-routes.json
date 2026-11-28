@@ -1,0 +1,160 @@
+{
+  "routes": [
+    {
+      "path": "/cookies",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/privacy",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/terms",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/about",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/activity",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/auth/forgot-password",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/auth/login",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/auth/register",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/cards/new",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/cards",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/contact-us",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/create",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/discussions",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/events/new",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/events",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/feed",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/groups/new",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/groups",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/learn",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/library",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/notifications",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/search",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/settings",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/snapshot/new",
+      "label": "client-only/protected initial HTML; not full authenticated-page performance"
+    },
+    {
+      "path": "/snapshot",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/support",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/topics/explore",
+      "label": "public initial HTML; client execution excluded"
+    },
+    {
+      "path": "/blog/five-essential-strategies-to-safeguard-your-privacy-with-smart-home-technology-7hy2z8",
+      "label": "representative article initial HTML; viewer/NSFW policy applies when restricted"
+    },
+    {
+      "path": "/dave",
+      "label": "representative profile initial HTML"
+    },
+    {
+      "path": "/discussions/0d44c8cdcba32c84",
+      "label": "representative discussion initial HTML; viewer/NSFW policy applies when restricted"
+    },
+    {
+      "path": "/groups/innovation-hub-a4d81c13",
+      "label": "representative group initial HTML; viewer/NSFW policy applies when restricted"
+    },
+    {
+      "path": "/events/the-friday-science-4187786a",
+      "label": "representative event initial HTML; viewer/NSFW policy applies when restricted"
+    },
+    {
+      "path": "/topics/science",
+      "label": "representative topic initial HTML"
+    },
+    {
+      "path": "/blog/post-4560930fc2ea",
+      "label": "local-only NSFW fixture: gated initial HTML; exclude from future production comparison",
+      "local_only": true
+    },
+    {
+      "path": "/discussions/5a1cb26e5294867d",
+      "label": "local-only NSFW fixture: gated initial HTML; exclude from future production comparison",
+      "local_only": true
+    },
+    {
+      "path": "/events/local-only-nsfw-event-matrix-november-2026-ab948e52",
+      "label": "local-only NSFW fixture: gated initial HTML; exclude from future production comparison",
+      "local_only": true
+    },
+    {
+      "path": "/groups/local-only-nsfw-group-matrix-november-2026-b2071b28",
+      "label": "local-only NSFW fixture: gated initial HTML; exclude from future production comparison",
+      "local_only": true
+    }
+  ]
+}

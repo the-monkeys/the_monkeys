@@ -1,17 +1,24 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 
+import { TimezoneSelect } from '@/components/events/TimezoneSelect';
 import { CategoryChips } from '@/components/geo/CategoryChips';
 import { PlacePin } from '@/components/geo/PlacePin';
+import { EventReadiness } from '@/features/content-readiness/EventReadiness';
 import { useIPLocation } from '@/hooks/useIPLocation';
 import { mergeCategoryTags, partitionTags } from '@/lib/eventCategories';
 import { defaultTimezone, fromLocalInput, toLocalInput } from '@/lib/eventTime';
-import { geocodeAddress, pinFromCoords } from '@/lib/geoSearch';
+import {
+  geocodeAddress,
+  normalizePlaceText,
+  pinFromCoords,
+} from '@/lib/geoSearch';
 import { EventItem, EventType } from '@/services/events/eventTypes';
 import {
   GroupEventBody,
   GroupEventVisibility,
+  GroupItem,
 } from '@/services/groups/groupsTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { Input } from '@the-monkeys/ui/atoms/input';
@@ -19,10 +26,13 @@ import { Label } from '@the-monkeys/ui/atoms/label';
 import { TextArea } from '@the-monkeys/ui/atoms/text-area';
 
 type Props = {
+  group?: Pick<GroupItem, 'slug' | 'name' | 'visibility'>;
+  accountKey?: string;
+  organizerName?: string;
   event?: EventItem;
   saving?: boolean;
   submitLabel: string;
-  onSubmit: (body: GroupEventBody) => void;
+  onSubmit: (body: GroupEventBody) => void | Promise<unknown>;
 };
 
 const TYPES: { value: EventType; label: string }[] = [
@@ -48,25 +58,21 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
-// Local now as a `datetime-local` value (YYYY-MM-DDTHH:mm) for the `min` guard
-// that forbids scheduling an event in the past.
-function localNowInput(): string {
-  const d = new Date();
-  const off = d.getTimezoneOffset();
-  return new Date(d.getTime() - off * 60_000).toISOString().slice(0, 16);
-}
-
 /**
  * Focused form for creating an event inside a group. It maps 1:1 to the
  * group-event API body (no tiers/co-hosts, plus a group-event visibility),
  * reusing the styling and field conventions of the standalone EventForm.
  */
 export function GroupEventForm({
+  group,
+  accountKey,
+  organizerName,
   event,
   saving,
   submitLabel,
   onSubmit,
 }: Props) {
+  const formRef = useRef<HTMLFormElement>(null);
   const ipLocation = useIPLocation();
   const [eventType, setEventType] = useState<EventType>(
     event?.event_type || 'in_person'
@@ -74,6 +80,29 @@ export function GroupEventForm({
   const [pin, setPin] = useState(() =>
     pinFromCoords(event?.venue?.latitude, event?.venue?.longitude)
   );
+  const [location, setLocation] = useState(event?.location || '');
+  const submissionId = useRef(0);
+  const validatedPlace = useRef<{
+    pin: ReturnType<typeof pinFromCoords>;
+  } | null>(null);
+  const activeSubmission = useRef<{
+    revision: number;
+    submitted: boolean;
+  } | null>(null);
+  const invalidateSubmission = () => {
+    submissionId.current++;
+    validatedPlace.current = null;
+  };
+  useEffect(() => {
+    const pending = submissionId;
+    return () => {
+      pending.current++;
+    };
+  }, []);
+  useEffect(() => {
+    submissionId.current++;
+    validatedPlace.current = null;
+  }, [accountKey]);
   const [selectedTags, setSelectedTags] = useState(
     () => partitionTags(event?.tags).selected
   );
@@ -85,16 +114,26 @@ export function GroupEventForm({
   );
   // Controlled so the end picker can forbid a moment before the start and so
   // both fields reject past times.
-  const [startVal, setStartVal] = useState(toLocalInput(event?.start_time));
-  const [endVal, setEndVal] = useState(toLocalInput(event?.end_time));
+  const [timezone, setTimezone] = useState(event?.timezone || 'UTC');
+  useEffect(() => {
+    if (!event) setTimezone(defaultTimezone());
+  }, [event]);
+  const [startVal, setStartVal] = useState(
+    toLocalInput(event?.start_time, event?.timezone || 'UTC')
+  );
+  const [endVal, setEndVal] = useState(
+    toLocalInput(event?.end_time, event?.timezone || 'UTC')
+  );
   const [dateError, setDateError] = useState('');
-  const minStart = useMemo(() => localNowInput(), []);
+  const minStart = useMemo(
+    () => toLocalInput(new Date().toISOString(), timezone),
+    [timezone]
+  );
 
   const initial = useMemo(
     () => ({
       title: event?.title || '',
       description: event?.description || '',
-      timezone: event?.timezone || defaultTimezone(),
       location: event?.location || '',
       meeting_link: event?.meeting_link || '',
       capacity: event?.capacity ? String(event.capacity) : '',
@@ -106,61 +145,103 @@ export function GroupEventForm({
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const start = fromLocalInput(startVal);
-    const end = fromLocalInput(endVal);
-    if (!start || !end) return;
-
-    // Guard against past or inverted ranges; the browser `min` is advisory only.
-    const startMs = new Date(start).getTime();
-    const endMs = new Date(end).getTime();
-    if (startMs < Date.now() - 60_000) {
-      setDateError('Start time cannot be in the past.');
+    const active = activeSubmission.current;
+    if (
+      saving ||
+      (active && (active.submitted || active.revision === submissionId.current))
+    )
       return;
-    }
-    if (endMs < startMs) {
-      setDateError('End time must be after the start time.');
-      return;
-    }
-    setDateError('');
+    const attempt = { revision: submissionId.current + 1, submitted: false };
+    activeSubmission.current = attempt;
+    try {
+      const element = e.currentTarget;
+      const submission = ++submissionId.current;
+      const form = new FormData(element);
+      let start: string, end: string;
+      try {
+        start = fromLocalInput(startVal, timezone);
+        end = fromLocalInput(endVal, timezone);
+      } catch (error) {
+        setDateError(
+          error instanceof Error
+            ? error.message
+            : 'Check the event date and timezone.'
+        );
+        return;
+      }
+      if (!start || !end) return;
 
-    const body: GroupEventBody = {
-      title: String(form.get('title') || '').trim(),
-      description: String(form.get('description') || '').trim(),
-      start_time: start,
-      end_time: end,
-      timezone: String(form.get('timezone') || defaultTimezone()),
-      event_type: eventType,
-      location: String(form.get('location') || '').trim(),
-      meeting_link: String(form.get('meeting_link') || '').trim(),
-      capacity: Number(form.get('capacity') || 0) || 0,
-      cover_image: String(form.get('cover_image') || '').trim(),
-      tags: mergeCategoryTags(
-        selectedTags,
-        splitList(String(form.get('tags') || ''))
-      ),
-      visibility,
-      requires_host_review: requiresHostReview,
-    };
-    if (eventType !== 'virtual') {
-      let resolved = pin;
-      if (!resolved && body.location) {
-        resolved = await geocodeAddress(body.location, ipLocation.city);
+      // Guard against past or inverted ranges; the browser `min` is advisory only.
+      const startMs = new Date(start).getTime();
+      const endMs = new Date(end).getTime();
+      if (startMs < Date.now() - 60_000) {
+        setDateError('Start time cannot be in the past.');
+        return;
       }
-      if (resolved) {
-        body.latitude = resolved.latitude;
-        body.longitude = resolved.longitude;
+      if (endMs <= startMs) {
+        setDateError('End time must be after the start time.');
+        return;
       }
+      setDateError('');
+
+      const body: GroupEventBody = {
+        title: String(form.get('title') || '').trim(),
+        description: String(form.get('description') || '').trim(),
+        start_time: start,
+        end_time: end,
+        timezone,
+        event_type: eventType,
+        location: String(form.get('location') || '').trim(),
+        meeting_link: String(form.get('meeting_link') || '').trim(),
+        capacity: Number(form.get('capacity') || 0) || 0,
+        cover_image: String(form.get('cover_image') || '').trim(),
+        tags: mergeCategoryTags(
+          selectedTags,
+          splitList(String(form.get('tags') || ''))
+        ),
+        visibility,
+        requires_host_review: requiresHostReview,
+      };
+      if (eventType !== 'virtual') {
+        let resolved = pin;
+        if (!resolved && body.location) {
+          // A map lookup is optional; the backend can resolve the address too.
+          // Reuse even an empty result until input changes, so an unchanged
+          // retry cannot silently send a different creation payload/key.
+          if (validatedPlace.current) resolved = validatedPlace.current.pin;
+          else {
+            resolved = await geocodeAddress(
+              body.location,
+              ipLocation.city
+            ).catch(() => null);
+            if (submission === submissionId.current)
+              validatedPlace.current = { pin: resolved };
+          }
+        }
+        if (resolved) {
+          body.latitude = resolved.latitude;
+          body.longitude = resolved.longitude;
+        }
+      }
+      if (!body.title) return;
+      if (submission !== submissionId.current || !element.isConnected) return;
+      attempt.submitted = true;
+      await onSubmit(body);
+    } finally {
+      if (activeSubmission.current === attempt) activeSubmission.current = null;
     }
-    if (!body.title) return;
-    onSubmit(body);
   };
 
   const showPlace = eventType !== 'virtual';
   const showLink = eventType !== 'in_person';
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-5'>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      onChangeCapture={invalidateSubmission}
+      className='space-y-5'
+    >
       <Field label='Title'>
         <Input
           name='title'
@@ -179,6 +260,13 @@ export function GroupEventForm({
         />
       </Field>
 
+      <TimezoneSelect
+        value={timezone}
+        onChange={(zone) => {
+          setTimezone(zone);
+          setDateError('');
+        }}
+      />
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
         <Field label='Starts'>
           <Input
@@ -215,10 +303,6 @@ export function GroupEventForm({
         </p>
       )}
 
-      <Field label='Timezone'>
-        <Input name='timezone' defaultValue={initial.timezone} />
-      </Field>
-
       <fieldset>
         <legend className='mb-2 font-inter text-sm font-medium'>Type</legend>
         <div className='flex flex-wrap gap-2'>
@@ -226,7 +310,12 @@ export function GroupEventForm({
             <button
               key={t.value}
               type='button'
-              onClick={() => setEventType(t.value)}
+              onClick={() => {
+                if (eventType !== t.value) {
+                  invalidateSubmission();
+                  setEventType(t.value);
+                }
+              }}
               className={`rounded-full border-2 px-3 py-1.5 font-inter text-sm transition-colors ${
                 eventType === t.value
                   ? 'border-brand-orange bg-brand-orange text-white'
@@ -244,11 +333,29 @@ export function GroupEventForm({
           <Field label='Place'>
             <Input
               name='location'
-              defaultValue={initial.location}
+              value={location}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (normalizePlaceText(next) !== normalizePlaceText(location)) {
+                  setPin(null);
+                }
+                setLocation(next);
+              }}
               placeholder='City or venue'
             />
           </Field>
-          <PlacePin value={pin} onChange={setPin} />
+          <PlacePin
+            value={pin}
+            onChange={(next) => {
+              if (
+                next?.latitude !== pin?.latitude ||
+                next?.longitude !== pin?.longitude
+              )
+                invalidateSubmission();
+              setPin(next);
+            }}
+            address={location}
+          />
         </>
       )}
       {showLink && (
@@ -283,13 +390,14 @@ export function GroupEventForm({
       <Field label='Topics'>
         <CategoryChips
           selected={selectedTags}
-          onToggle={(tag) =>
+          onToggle={(tag) => {
+            invalidateSubmission();
             setSelectedTags((prev) =>
               prev.includes(tag)
                 ? prev.filter((t) => t !== tag)
                 : [...prev, tag]
-            )
-          }
+            );
+          }}
         />
         <Input
           name='tags'
@@ -308,7 +416,12 @@ export function GroupEventForm({
             <button
               key={v.value}
               type='button'
-              onClick={() => setVisibility(v.value)}
+              onClick={() => {
+                if (visibility !== v.value) {
+                  invalidateSubmission();
+                  setVisibility(v.value);
+                }
+              }}
               className={`rounded-lg border-2 px-3 py-2 font-inter text-sm transition-colors ${
                 visibility === v.value
                   ? 'border-brand-orange bg-brand-orange/5'
@@ -337,6 +450,42 @@ export function GroupEventForm({
         </span>
       </label>
 
+      <EventReadiness
+        formRef={formRef}
+        readValues={() => {
+          const value = (name: string) => {
+            const field = formRef.current?.elements.namedItem(name) as
+              | HTMLInputElement
+              | HTMLTextAreaElement
+              | null;
+            return field && typeof field.value === 'string' ? field.value : '';
+          };
+          return {
+            title: value('title'),
+            description: value('description'),
+            coverImage: value('cover_image'),
+            topics: mergeCategoryTags(selectedTags, splitList(value('tags'))),
+            eventType,
+            startLocal: startVal,
+            endLocal: endVal,
+            timezone,
+            location,
+            visibility,
+          };
+        }}
+        context={{
+          resourceKey: `group-event:new:${group?.slug || 'unknown-group'}`,
+          accountKey: accountKey || 'unknown-account',
+          authorName: organizerName,
+          groupSlug: group?.slug,
+          groupName: group?.name,
+          groupVisibility: group?.visibility,
+          groupLinked: true,
+          publicationState: 'draft',
+          isExistingEvent: false,
+          eventEnded: false,
+        }}
+      />
       <Button
         type='submit'
         variant='brand'

@@ -1,0 +1,94 @@
+{
+  "date": "2026-11-26",
+  "browser": "built-in Chromium; no Safari/Firefox or physical-device claim",
+  "method": "Sequential read-only DOM observations during page loads, plus visual inspection and UI interactions. These samples are not a video, field CLS or LCP.",
+  "sensitive_homepage": {
+    "logged_out_390": {
+      "samples": 90,
+      "discussion_y_positions": [
+        673.2083740234375
+      ],
+      "loaders_completed": true,
+      "private_markers_exposed": false,
+      "horizontal_overflow": false
+    },
+    "logged_out_320": {
+      "samples": 70,
+      "discussion_y_positions": [
+        626.8333740234375
+      ]
+    },
+    "logged_out_820": {
+      "samples": 70,
+      "discussion_y_positions": [
+        491.8333435058594
+      ]
+    },
+    "logged_out_1440": {
+      "samples": 70,
+      "discussion_y_positions": [
+        493.5
+      ]
+    },
+    "all_observed_sizes": {
+      "loaders_completed": true,
+      "private_markers_exposed": false,
+      "horizontal_overflow": false
+    },
+    "remembered_adult_390": {
+      "samples": 90,
+      "discussion_y_positions": [
+        673.2083740234375,
+        671.5833740234375
+      ],
+      "remembered_content_shown": true,
+      "repeated_show_content_prompts": 0,
+      "horizontal_overflow": false
+    },
+    "final_port_3000_390": {
+      "samples": 75,
+      "discussion_y_positions": [
+        673.2083740234375
+      ],
+      "private_markers_exposed": false,
+      "horizontal_overflow": false
+    }
+  },
+  "avatar_update": {
+    "account": "disposable local adult fixture",
+    "header_and_settings_photos_updated_without_reload": true,
+    "uploaded_image_dimensions": [
+      192,
+      192
+    ],
+    "removal_updated_both_without_reload": true,
+    "original_default_photo_restored": true,
+    "own_birthday_loaded": true,
+    "private_values_saved": false
+  },
+  "public_mobile_routes_checked": [
+    "/learn",
+    "/events",
+    "/groups",
+    "/discussions",
+    "/blog/five-essential-strategies-to-safeguard-your-privacy-with-smart-home-technology-7hy2z8",
+    "/dave"
+  ],
+  "article_hydration": {
+    "baseline_reproduced": true,
+    "baseline_minified_errors": {
+      "418": 8,
+      "423": 1
+    },
+    "development_cause": "TopicListDialog rendered a button inside DialogTrigger default button.",
+    "fix": "DialogTrigger asChild preserves the existing styled Button.",
+    "final_production_hydration_errors": 0,
+    "topic_dialog_links": 8,
+    "open_and_close_verified": true
+  },
+  "access_privacy_checks": {
+    "content_media_and_html": 39,
+    "profile": 108,
+    "failures": 0
+  }
+}

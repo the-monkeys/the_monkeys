@@ -3,14 +3,25 @@ import { notFound } from 'next/navigation';
 
 import { BLOG_DETAIL_QUERY_KEY } from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import { USER_PROFILE_QUERY_KEY } from '@/hooks/user/useGetProfileInfoByUserId';
+import {
+  prefetchPublicPageMetadata,
+  publicAuthorCard,
+} from '@/lib/publicPagePrefetch';
+import { loadPublicRelatedPosts } from '@/lib/relatedPosts';
+import { nsfwSeoEnabled } from '@/lib/searchCrawler';
 import { noIndexFollowRobots } from '@/lib/seo';
-import { Blog } from '@/services/blog/blogTypes';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
 import { getQueryClient } from '@/utils/get-query-client';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 
 import BlogPageClient from './BlogPageClient';
-import { loadPublicAuthorForSeo, loadPublicBlogForSeo } from './blogData';
+import CrawlerArticle from './CrawlerArticle';
+import {
+  loadBlogForViewer,
+  loadCrawlerBlogForSeo,
+  loadPublicAuthorForSeo,
+  loadPublicBlogForSeo,
+} from './blogData';
 import {
   authorDisplayName,
   buildBlogJsonLd,
@@ -24,6 +35,14 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const blogId = getBlogIdFromSlug(params.slug);
+  const crawler = nsfwSeoEnabled() ? await loadCrawlerBlogForSeo(blogId) : null;
+  if (crawler) {
+    const author = await loadPublicAuthorForSeo(crawler.owner_account_id);
+    return buildBlogMetadata(crawler, params.slug, authorDisplayName(author), {
+      indexRestricted: true,
+      crawler: true,
+    });
+  }
   const blog = await loadPublicBlogForSeo(blogId);
   if (blog === undefined) {
     return {
@@ -39,7 +58,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const author = await loadPublicAuthorForSeo(blog.owner_account_id);
-  return buildBlogMetadata(blog, params.slug, authorDisplayName(author));
+  return buildBlogMetadata(blog, params.slug, authorDisplayName(author), {
+    indexRestricted: nsfwSeoEnabled(),
+  });
 }
 
 export default async function BlogPage({ params }: Props) {
@@ -47,9 +68,33 @@ export default async function BlogPage({ params }: Props) {
   const fullSlug = params.slug;
   const blogId = getBlogIdFromSlug(fullSlug);
 
-  if (!blogId) return null;
+  if (!blogId) notFound();
 
-  const blog = await loadPublicBlogForSeo(blogId);
+  const crawler = nsfwSeoEnabled() ? await loadCrawlerBlogForSeo(blogId) : null;
+  if (crawler) {
+    const author = await loadPublicAuthorForSeo(crawler.owner_account_id);
+    const schema = buildBlogJsonLd(
+      crawler,
+      fullSlug,
+      authorDisplayName(author),
+      author?.user?.username,
+      { indexRestricted: true, crawler: true }
+    );
+    return (
+      <>
+        {schema && (
+          <script
+            type='application/ld+json'
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(schema).replace(/</g, '\\u003c'),
+            }}
+          />
+        )}
+        <CrawlerArticle blog={crawler} />
+      </>
+    );
+  }
+  const blog = await loadBlogForViewer(blogId);
   if (blog === null || blog?.is_draft) notFound();
   if (blog) queryClient.setQueryData([BLOG_DETAIL_QUERY_KEY, blogId], blog);
 
@@ -59,21 +104,45 @@ export default async function BlogPage({ params }: Props) {
     if (authorData) {
       queryClient.setQueryData(
         [USER_PROFILE_QUERY_KEY, blog.owner_account_id],
-        authorData
+        publicAuthorCard(authorData)
       );
     }
   }
 
+  const publicSeoBlog =
+    blog && blog.audience !== 'group_only'
+      ? await loadPublicBlogForSeo(blogId)
+      : blog === undefined
+        ? undefined
+        : null;
+
+  // Public schema always uses the anonymous DTO.
   // Prepare JSON-LD
   let jsonLd = null;
-  if (blog && !blog.is_draft) {
+  if (publicSeoBlog && !publicSeoBlog.is_draft) {
     jsonLd = buildBlogJsonLd(
-      blog,
+      publicSeoBlog,
       fullSlug,
       authorDisplayName(authorData),
       authorData?.user?.username
     );
   }
+
+  const publicBlog =
+    blog === undefined
+      ? undefined
+      : blog.audience !== 'group_only'
+        ? publicSeoBlog
+        : null;
+  const initialRelatedPosts = publicBlog
+    ? await loadPublicRelatedPosts(publicBlog)
+    : publicBlog === null
+      ? []
+      : undefined;
+
+  await prefetchPublicPageMetadata(queryClient, {
+    authorIds: (initialRelatedPosts || []).map((post) => post.owner_account_id),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
@@ -85,7 +154,11 @@ export default async function BlogPage({ params }: Props) {
           }}
         />
       )}
-      <BlogPageClient urlBlogId={blogId} fullSlug={fullSlug} />
+      <BlogPageClient
+        urlBlogId={blogId}
+        fullSlug={fullSlug}
+        initialRelatedPosts={initialRelatedPosts}
+      />
     </HydrationBoundary>
   );
 }

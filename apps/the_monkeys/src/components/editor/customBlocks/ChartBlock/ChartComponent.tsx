@@ -14,7 +14,9 @@ import { Switch } from '@the-monkeys/ui/atoms/switch';
 
 import {
   Badge,
+  BlockHelp,
   BlockWrapper,
+  EditDataDetails,
   EmptyState,
   FormField,
   StyledInput,
@@ -23,10 +25,11 @@ import {
 } from '../shared/BlockWrapper';
 import type { ChartBlockData, ChartSeries, ChartType } from '../shared/types';
 import { PALETTES } from '../shared/types';
+import { generateChartMarkup } from './chartSvg';
 
 /* ------------------------------------------------------------------ */
 /*  ChartComponent — React UI for the Chart Block                      */
-/*  Renders SVG via D3 or a simple preview for edit mode.              */
+/*  Hand-rolled SVG, not D3. Preview for edit mode.                  */
 /*  Uses internal state + ref to handle edits without stale closures.  */
 /* ------------------------------------------------------------------ */
 
@@ -124,7 +127,9 @@ export default function ChartComponent({
     [update]
   );
 
-  const seriesText = internal.series
+  const labels = Array.isArray(internal.labels) ? internal.labels : [];
+  const series = Array.isArray(internal.series) ? internal.series : [];
+  const seriesText = series
     .map((s) => `${s.name}:${s.values.join(',')}`)
     .join('\n');
 
@@ -146,7 +151,56 @@ export default function ChartComponent({
       </div>
 
       {!readOnly && (
-        <div className='mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2'>
+        <BlockHelp>
+          Paste CSV (first row = headers) or one series per line:
+          Revenue:10,20,30
+        </BlockHelp>
+      )}
+
+      {/* Chart Preview */}
+      <div className='mt-2'>
+        {labels.length === 0 || series.length === 0 ? (
+          <EmptyState
+            message={
+              readOnly ? 'No chart data' : 'Add data above to see a preview'
+            }
+          />
+        ) : (
+          <ChartPreview data={{ ...internal, labels, series }} />
+        )}
+      </div>
+
+      {/* Axis Labels */}
+      {(internal.xLabel || internal.yLabel) && (
+        <div className='mt-2 flex gap-3 text-xs text-slate-400 dark:text-slate-500'>
+          {internal.xLabel && <span>X: {internal.xLabel}</span>}
+          {internal.yLabel && <span>Y: {internal.yLabel}</span>}
+        </div>
+      )}
+
+      {/* Legend */}
+      {internal.showLegend && series.length > 0 && (
+        <div className='mt-2 flex flex-wrap gap-3'>
+          {series.map((s, i) => {
+            const colors = PALETTES[internal.palette] || PALETTES.ocean;
+            return (
+              <span
+                key={s.name}
+                className='inline-flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300'
+              >
+                <span
+                  className='inline-block h-2.5 w-2.5 rounded-full'
+                  style={{ backgroundColor: colors[i % colors.length] }}
+                />
+                {s.name}
+              </span>
+            );
+          })}
+        </div>
+      )}
+
+      {!readOnly && (
+        <EditDataDetails>
           {/* Chart Type */}
           <FormField label='Chart Type'>
             <StyledSelect
@@ -215,7 +269,7 @@ export default function ChartComponent({
           {/* Labels */}
           <FormField label='Labels (comma-separated)' className='sm:col-span-2'>
             <StyledInput
-              value={internal.labels.join(', ')}
+              value={labels.join(', ')}
               onChange={(e) =>
                 update({
                   labels: e.target.value
@@ -260,248 +314,36 @@ export default function ChartComponent({
               type='button'
               variant='outline'
               size='sm'
-              className='mt-1 w-fit text-xs'
+              className='mt-1 w-full text-xs sm:w-auto'
               onClick={() => parseCSV(csvText)}
             >
               Parse CSV
             </Button>
           </FormField>
-        </div>
-      )}
-
-      {/* Chart Preview */}
-      <div className='mt-2'>
-        {internal.labels.length === 0 || internal.series.length === 0 ? (
-          <EmptyState
-            message={
-              readOnly ? 'No chart data' : 'Add data above to see a preview'
-            }
-          />
-        ) : (
-          <ChartPreview data={internal} />
-        )}
-      </div>
-
-      {/* Axis Labels */}
-      {(internal.xLabel || internal.yLabel) && (
-        <div className='mt-2 flex gap-3 text-xs text-slate-400 dark:text-slate-500'>
-          {internal.xLabel && <span>X: {internal.xLabel}</span>}
-          {internal.yLabel && <span>Y: {internal.yLabel}</span>}
-        </div>
-      )}
-
-      {/* Legend */}
-      {internal.showLegend && internal.series.length > 0 && (
-        <div className='mt-2 flex flex-wrap gap-3'>
-          {internal.series.map((s, i) => {
-            const colors = PALETTES[internal.palette] || PALETTES.ocean;
-            return (
-              <span
-                key={s.name}
-                className='inline-flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300'
-              >
-                <span
-                  className='inline-block h-2.5 w-2.5 rounded-full'
-                  style={{ backgroundColor: colors[i % colors.length] }}
-                />
-                {s.name}
-              </span>
-            );
-          })}
-        </div>
+        </EditDataDetails>
       )}
     </BlockWrapper>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  ChartPreview — renders the actual SVG chart                        */
-/*  Uses D3 library for all chart types.                               */
+/*  ChartPreview — hand-rolled SVG, not D3                             */
 /* ------------------------------------------------------------------ */
 
 function ChartPreview({ data }: { data: ChartBlockData }) {
-  const svgContent = useMemo(() => generateSVG(data), [data]);
+  const svgContent = useMemo(() => {
+    try {
+      return generateChartMarkup(data);
+    } catch {
+      return '';
+    }
+  }, [data]);
 
   return (
     <div
-      className='w-full overflow-hidden rounded-lg border border-slate-200/60 bg-white/50 dark:border-slate-700/40 dark:bg-slate-900/40'
+      data-chart-preview
+      className='h-36 w-full overflow-hidden rounded-lg border border-slate-200/60 bg-white/50 text-slate-600 dark:border-slate-700/40 dark:bg-slate-900/40 dark:text-slate-300 sm:h-44'
       dangerouslySetInnerHTML={{ __html: svgContent }}
     />
   );
-}
-
-function generateSVG(data: ChartBlockData): string {
-  if (data.type === 'pie') return renderPieSVG(data);
-  return renderCartesianSVG(data);
-}
-
-/* ---------- Cartesian (line, bar, area) ---------- */
-
-function renderCartesianSVG(data: ChartBlockData): string {
-  const W = 600;
-  const H = 300;
-  const PL = 50;
-  const PR = 20;
-  const PT = 20;
-  const PB = 40;
-  const plotW = W - PL - PR;
-  const plotH = H - PT - PB;
-
-  const count = Math.max(
-    data.labels.length,
-    ...data.series.map((s) => s.values.length),
-    1
-  );
-
-  const pointsPerSeries = data.series.map((s) =>
-    Array.from({ length: count }, (_, i) => s.values[i] ?? 0)
-  );
-  const allVals = pointsPerSeries.flat();
-  const rawMin = Math.min(0, ...allVals);
-  const rawMax = Math.max(...allVals, 1);
-  const span = rawMax - rawMin || 1;
-
-  const colors = PALETTES[data.palette] || PALETTES.ocean;
-
-  const toX = (i: number) =>
-    PL + (count > 1 ? (i / (count - 1)) * plotW : plotW / 2);
-  const toY = (v: number) => PT + plotH - ((v - rawMin) / span) * plotH;
-
-  // Axis ticks
-  const tickCount = 5;
-  const tickStep = getNice(rawMax / (tickCount - 1), true);
-
-  let lines = '';
-  let yTicks = '';
-  for (
-    let v = Math.floor(rawMin / tickStep) * tickStep;
-    v <= rawMax + tickStep * 0.5;
-    v += tickStep
-  ) {
-    const y = toY(v);
-    lines += `<line x1="${PL}" y1="${y}" x2="${W - PR}" y2="${y}" stroke="rgba(148,163,184,0.25)" stroke-dasharray="4 4"/>`;
-    yTicks += `<text x="${PL - 6}" y="${y + 4}" fill="rgba(100,116,139,0.7)" font-size="10" text-anchor="end">${fmtAxis(v)}</text>`;
-  }
-
-  // X labels
-  let xTicks = '';
-  const stride = count > 10 ? 2 : 1;
-  for (let i = 0; i < count; i++) {
-    if (i % stride !== 0 && i !== count - 1) continue;
-    xTicks += `<text x="${toX(i)}" y="${H - PB + 16}" fill="rgba(100,116,139,0.7)" font-size="10" text-anchor="middle">${data.labels[i] || `P${i + 1}`}</text>`;
-  }
-
-  // Axes
-  const axisColor = 'rgba(148,163,184,0.5)';
-  const axes = `
-    <line x1="${PL}" y1="${PT}" x2="${PL}" y2="${H - PB}" stroke="${axisColor}"/>
-    <line x1="${PL}" y1="${H - PB}" x2="${W - PR}" y2="${H - PB}" stroke="${axisColor}"/>
-  `;
-
-  // Series rendering
-  let seriesRenders = '';
-
-  if (data.type === 'bar') {
-    const groupW = plotW / count;
-    const barW = Math.max(6, (groupW - 8) / data.series.length);
-
-    data.series.forEach((s, si) => {
-      pointsPerSeries[si].forEach((v, i) => {
-        const x = PL + i * groupW + 4 + si * barW;
-        const y = toY(v);
-        const h = Math.max(1, H - PB - y);
-        seriesRenders += `<rect x="${x}" y="${y}" width="${Math.max(6, barW - 2)}" height="${h}" fill="${colors[si % colors.length]}" opacity="0.88" rx="2"/>`;
-      });
-    });
-  } else {
-    // line / area
-    data.series.forEach((s, si) => {
-      const pts = pointsPerSeries[si]
-        .map((v, i) => `${toX(i)},${toY(v)}`)
-        .filter((_, i) => Number.isFinite(pointsPerSeries[si][i]))
-        .join(' ');
-
-      if (!pts) return;
-
-      if (data.type === 'area') {
-        const firstX = toX(0);
-        const lastX = toX(count - 1);
-        const baseline = H - PB;
-        seriesRenders += `<polygon points="${firstX},${baseline} ${pts} ${lastX},${baseline}" fill="${colors[si % colors.length]}" opacity="0.2"/>`;
-      }
-
-      seriesRenders += `<polyline points="${pts}" fill="none" stroke="${colors[si % colors.length]}" stroke-width="2" stroke-linejoin="round"/>`;
-    });
-  }
-
-  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:auto;">
-    ${lines}${yTicks}${xTicks}${axes}${seriesRenders}
-  </svg>`;
-}
-
-/* ---------- Pie ---------- */
-
-function renderPieSVG(data: ChartBlockData): string {
-  const values = data.series[0]?.values || [];
-  const labels = data.labels;
-  const total = values.reduce((s, v) => s + Math.max(v, 0), 0);
-
-  if (total <= 0) {
-    return `<div class="flex items-center justify-center h-[200px] text-xs text-slate-400">No positive values</div>`;
-  }
-
-  const colors = PALETTES[data.palette] || PALETTES.ocean;
-  let offset = 0;
-  const segments = values
-    .map((v, i) => {
-      const ratio = Math.max(v, 0) / total;
-      const from = offset;
-      const to = offset + ratio * 100;
-      offset = to;
-      return `${colors[i % colors.length]} ${from}% ${to}%`;
-    })
-    .join(', ');
-
-  // Simple conic gradient pie
-  const labelsHtml = values
-    .map((v, i) => {
-      const pct = ((v / total) * 100).toFixed(1);
-      return `<span class="inline-flex items-center gap-1 text-xs text-slate-600 dark:text-slate-300">
-        <span class="inline-block h-2.5 w-2.5 rounded-full" style="background:${colors[i % colors.length]}"></span>
-        ${labels[i] || `Item ${i + 1}`}: ${pct}%
-      </span>`;
-    })
-    .join('');
-
-  return `<div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:16px;">
-    <div style="width:160px;height:160px;border-radius:50%;background:conic-gradient(${segments});border:1px solid rgba(148,163,184,0.3);"></div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">${labelsHtml}</div>
-  </div>`;
-}
-
-/* ---------- Utils ---------- */
-
-function getNice(v: number, round: boolean): number {
-  const sv = Math.max(v, 0.000001);
-  const exp = Math.floor(Math.log10(sv));
-  const frac = sv / Math.pow(10, exp);
-  let nf: number;
-  if (round) {
-    if (frac < 1.5) nf = 1;
-    else if (frac < 3) nf = 2;
-    else if (frac < 7) nf = 5;
-    else nf = 10;
-  } else {
-    if (frac <= 1) nf = 1;
-    else if (frac <= 2) nf = 2;
-    else if (frac <= 5) nf = 5;
-    else nf = 10;
-  }
-  return nf * Math.pow(10, exp);
-}
-
-function fmtAxis(v: number): string {
-  if (Math.abs(v) >= 1000) return Math.round(v).toLocaleString();
-  if (Math.abs(v) >= 1) return Number(v.toFixed(0)).toString();
-  return v.toFixed(2);
 }

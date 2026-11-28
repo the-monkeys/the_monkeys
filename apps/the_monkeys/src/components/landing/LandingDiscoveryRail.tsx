@@ -1,6 +1,5 @@
 import Link from 'next/link';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import NewsletterCard from '@/components/editorial/NewsletterCard';
 import ProfileImage, { ProfileFrame } from '@/components/profileImage';
 import { FollowButton } from '@/components/user/buttons/followButton';
@@ -10,9 +9,11 @@ import {
   TOPIC_ROUTE,
 } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
+import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { getRelativeTime } from '@/lib/utils';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
+import { isSensitive } from '@/services/moderation/moderationTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { topicToSlug } from '@/utils/topicUtils';
 
@@ -34,7 +35,7 @@ interface LandingDiscoveryRailProps {
   trendingError?: boolean;
 }
 
-function TrendingPosts({
+export function TrendingPosts({
   posts,
   isLoading,
   isError,
@@ -72,8 +73,9 @@ function TrendingPosts({
         <div className='mt-2 divide-y divide-border-light/70 dark:divide-border-dark/40'>
           {posts.slice(0, 4).map((post, index) => {
             const title = purifyHTMLString(post.title);
+            const sensitive = isSensitive(post);
             const topic = post.tags?.[0];
-            const href = `${BLOG_ROUTE}/${generateSlug(title)}-${post.blog_id}`;
+            const href = `${BLOG_ROUTE}/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`;
             const time = post.published_time
               ? getRelativeTime(post.published_time)
               : '';
@@ -89,20 +91,28 @@ function TrendingPosts({
                 <div className='min-w-0'>
                   <Link
                     href={href}
-                    className='line-clamp-2 font-inter text-sm font-semibold leading-5 text-text-light transition group-hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange dark:text-text-dark'
+                    className={`line-clamp-2 font-inter text-sm font-semibold leading-5 text-text-light transition group-hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange dark:text-text-dark ${sensitive ? 'h-10' : ''}`}
                   >
                     {title}
                   </Link>
-                  <div className='mt-1 flex flex-wrap items-center gap-1.5 font-inter text-[10px] uppercase tracking-[0.08em] text-gray-400'>
-                    {topic && (
+                  <div
+                    className={`mt-1 flex flex-wrap items-center gap-1.5 font-inter text-[10px] uppercase tracking-[0.08em] text-gray-400 ${sensitive ? 'h-[15px] flex-nowrap overflow-hidden' : ''}`}
+                  >
+                    {sensitive ? (
+                      <span className='shrink-0 rounded-full bg-brand-orange/10 px-1.5 font-medium text-brand-orange'>
+                        NSFW &middot; 18+
+                      </span>
+                    ) : topic ? (
                       <Link
                         href={`${TOPIC_ROUTE}/${topicToSlug(topic)}`}
                         className='hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange'
                       >
                         {topic}
                       </Link>
+                    ) : null}
+                    {(sensitive || topic) && time && (
+                      <span aria-hidden='true'>•</span>
                     )}
-                    {topic && time && <span aria-hidden='true'>•</span>}
                     {time && <span>{time}</span>}
                   </div>
                 </div>

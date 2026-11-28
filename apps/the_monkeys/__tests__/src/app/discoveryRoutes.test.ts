@@ -36,6 +36,8 @@ describe('crawler discovery routes', () => {
     expect(body).toContain('content and community platform');
     expect(body).toContain('/posts/feed.xml');
     expect(body).toContain('/topics/explore');
+    expect(body).toContain('Latest posts: https://monkeys.com.co/\n');
+    expect(body).not.toContain('https://monkeys.com.co/feed\n');
     expect(body.toLowerCase()).not.toContain('blogs');
     expect(body).not.toContain('\u2014');
   });

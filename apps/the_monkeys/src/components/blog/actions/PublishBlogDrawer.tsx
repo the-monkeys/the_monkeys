@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
+import { BlogPublicationScopeFields } from '@/components/blog/actions/BlogPublicationScopeFields';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { ContentLabelToggle } from '@/components/moderation/ContentLabelToggle';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
+import useAuth from '@/hooks/auth/useAuth';
 import { useScheduleState } from '@/hooks/blog/schedule/useScheduleState';
 import useGetAllTopics from '@/hooks/user/useGetAllTopics';
+import { BlogPublicationSelection } from '@/services/blog/blogPublication';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import {
   Drawer,
@@ -28,13 +32,25 @@ import ScheduleDateTimePicker from '../ScheduleDateTimePicker';
 import { BlogDescription, BlogImage, BlogTitle } from '../getBlogContent';
 
 interface PublishBlogDrawerProps {
+  blogId?: string;
+  initialMarked?: boolean;
   topics: string[];
   setTopics: React.Dispatch<React.SetStateAction<string[]>>;
   data: OutputData | null;
   setData?: React.Dispatch<React.SetStateAction<OutputData | null>>;
-  handlePublish: () => void;
-  handleSchedule?: (scheduleTime: string, timezone: string) => void;
+  handlePublish: (selection: BlogPublicationSelection) => void;
+  handleSchedule?: (
+    scheduleTime: string,
+    timezone: string,
+    selection: BlogPublicationSelection
+  ) => void;
   isPublishing: boolean;
+  publication: BlogPublicationSelection | null;
+  onPublicationChange: (selection: BlogPublicationSelection) => void;
+  publicationPending: boolean;
+  publicationError: string | null;
+  intendedGroupSlug: string;
+  onRetryGroup: () => void;
 }
 
 const INVALID_IMAGE_EXTENSIONS = ['gif', 'apng'];
@@ -77,6 +93,8 @@ const toSelectOptions = (
   (topics ?? []).map(({ topic }) => ({ value: topic, label: topic }));
 
 export const PublishBlogDrawer = ({
+  blogId,
+  initialMarked,
   topics,
   setTopics,
   data,
@@ -84,8 +102,28 @@ export const PublishBlogDrawer = ({
   handlePublish,
   handleSchedule,
   isPublishing,
+  publication,
+  onPublicationChange,
+  publicationPending,
+  publicationError,
+  intendedGroupSlug,
+  onRetryGroup,
 }: PublishBlogDrawerProps) => {
+  const { data: session } = useAuth();
   const { topics: allTopics } = useGetAllTopics();
+
+  const [ratingDirty, setRatingDirty] = useState(false);
+  const [ratingPending, setRatingPending] = useState(false);
+  // Block clicks synchronously, before React commits the disabled button state.
+  const ratingState = useRef({ dirty: false, pending: false });
+  const onRatingDirtyChange = useCallback((dirty: boolean) => {
+    ratingState.current.dirty = dirty;
+    setRatingDirty(dirty);
+  }, []);
+  const onRatingPendingChange = useCallback((pending: boolean) => {
+    ratingState.current.pending = pending;
+    setRatingPending(pending);
+  }, []);
 
   const [isScheduleMode, setIsScheduleMode] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -172,10 +210,22 @@ export const PublishBlogDrawer = ({
   };
 
   const handleActionClick = () => {
+    if (
+      !publication ||
+      publicationPending ||
+      publicationError ||
+      isPublishing ||
+      ratingState.current.dirty ||
+      ratingState.current.pending
+    )
+      return;
     if (isScheduleMode && handleSchedule) {
-      validateAndSubmit(handleSchedule);
+      validateAndSubmit((scheduleTime, timezone) => {
+        if (ratingState.current.dirty || ratingState.current.pending) return;
+        handleSchedule(scheduleTime, timezone, publication);
+      });
     } else {
-      handlePublish();
+      handlePublish(publication);
     }
   };
 
@@ -195,7 +245,7 @@ export const PublishBlogDrawer = ({
         </Button>
       </DrawerTrigger>
 
-      <DrawerContent>
+      <DrawerContent data-shortcut-scope='chrome'>
         <DrawerHeader className='!p-0 !pt-4'>
           <DrawerTitle>Publish Post</DrawerTitle>
 
@@ -386,6 +436,51 @@ export const PublishBlogDrawer = ({
             {/* ---- Right column: Topics & Scheduling ---- */}
             <div className='flex flex-col justify-between h-full col-span-2 sm:col-span-1 space-y-6'>
               <div className='space-y-4'>
+                {publicationPending || publicationError || !publication ? (
+                  <section className='space-y-3 rounded-xl border border-border-light p-4 dark:border-border-dark'>
+                    <p
+                      className='font-inter text-sm'
+                      role={publicationError ? 'alert' : 'status'}
+                    >
+                      {publicationError || 'Checking group membership...'}
+                    </p>
+                    {intendedGroupSlug && (
+                      <>
+                        <p className='break-words font-inter text-sm'>
+                          {intendedGroupSlug}
+                        </p>
+                        <Button
+                          type='button'
+                          variant='outline'
+                          onClick={() =>
+                            onPublicationChange({
+                              group: null,
+                              audience: 'public',
+                            })
+                          }
+                        >
+                          Remove group
+                        </Button>
+                      </>
+                    )}
+                    {publicationError && (
+                      <Button
+                        type='button'
+                        variant='outline'
+                        onClick={onRetryGroup}
+                      >
+                        Try again
+                      </Button>
+                    )}
+                  </section>
+                ) : (
+                  <BlogPublicationScopeFields
+                    username={session?.username}
+                    value={publication}
+                    onChange={onPublicationChange}
+                  />
+                )}
+
                 <div className='space-y-1'>
                   <Label className='font-dm_sans font-medium'>
                     Topics Included
@@ -423,6 +518,15 @@ export const PublishBlogDrawer = ({
                   )}
                 </div>
 
+                {blogId && (
+                  <ContentLabelToggle
+                    target={{ kind: 'blog', id: blogId }}
+                    initialMarked={initialMarked}
+                    onDirtyChange={onRatingDirtyChange}
+                    onPendingChange={onRatingPendingChange}
+                  />
+                )}
+
                 {/* Schedule toggle */}
                 <div className='pt-4 border-t border-border-light dark:border-border-dark'>
                   <div className='flex items-center justify-between mb-4'>
@@ -452,6 +556,14 @@ export const PublishBlogDrawer = ({
                 </div>
               </div>
 
+              {(ratingDirty || ratingPending) && (
+                <p aria-live='polite' className='text-sm text-brand-orange'>
+                  {ratingPending
+                    ? 'Saving content rating...'
+                    : 'Save or revert the content rating before publishing or scheduling.'}
+                </p>
+              )}
+
               {/* Action buttons */}
               <div className='flex justify-end gap-2 pt-4 border-t mt-auto'>
                 <DrawerClose asChild>
@@ -461,7 +573,14 @@ export const PublishBlogDrawer = ({
                 <Button
                   type='button'
                   onClick={handleActionClick}
-                  disabled={isPublishing}
+                  disabled={
+                    isPublishing ||
+                    ratingDirty ||
+                    ratingPending ||
+                    publicationPending ||
+                    !!publicationError ||
+                    !publication
+                  }
                   variant='brand'
                 >
                   {isPublishing && <Loader />}

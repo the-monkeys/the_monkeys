@@ -1,10 +1,17 @@
+'use client';
+
 import { memo } from 'react';
 
 import Link from 'next/link';
 
+import { EventContentOptions } from '@/components/events/EventContentOptions';
+import { EventHostName } from '@/components/events/EventHostName';
 import { EventSeriesNote } from '@/components/events/detail/EventSeriesNote';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import {
   eventDateParts,
   eventTypeLabel,
@@ -20,7 +27,7 @@ function Cover({ event }: { event: EventItem }) {
   if (event.cover_image) {
     return (
       <img
-        src={event.cover_image}
+        src={authenticatedArticleImageUrl(event.cover_image)}
         alt=''
         loading='lazy'
         decoding='async'
@@ -45,20 +52,21 @@ function placeLabel(event: EventItem): string {
 
 // Removed thin wrapper — call eventDateParts directly to avoid arg mismatch.
 
-export const EventGridCard = memo(function EventGridCard({
+const EventGridCardContent = memo(function EventGridCardContent({
   event,
 }: {
   event: EventItem;
 }) {
   const href = `${EVENTS_ROUTE}/${event.slug}`;
-  const date = eventDateParts(event.start_time, event.timezone);
+  const timezone = useViewerTimezone();
+  const date = eventDateParts(event.start_time, timezone);
   const price = formatPrice(
     lowestTierPrice(event),
     event.ticket_tiers?.[0]?.currency
   );
   const category = event.tags?.[0] || eventTypeLabel(event.event_type);
   const ended = isEventEnded(event);
-  const extraDates = formatUpcomingDates(event.upcoming_dates, event.timezone);
+  const extraDates = formatUpcomingDates(event.upcoming_dates, timezone);
 
   return (
     <article className='group flex h-full flex-col overflow-hidden rounded-xl border border-border-light bg-background-light shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 dark:border-border-dark/40 dark:bg-background-dark'>
@@ -97,7 +105,7 @@ export const EventGridCard = memo(function EventGridCard({
           </h3>
         </Link>
         <p className='mt-1.5 font-inter text-sm text-gray-500 dark:text-gray-400'>
-          {formatEventCardWhen(event.start_time, event.timezone)}
+          {formatEventCardWhen(event.start_time, timezone)}
         </p>
         <EventSeriesNote
           event={event}
@@ -118,10 +126,14 @@ export const EventGridCard = memo(function EventGridCard({
         </p>
 
         <div className='mt-auto flex items-center justify-between gap-3 pt-4 font-inter text-xs text-gray-500 dark:text-gray-400'>
-          {event.organizer_username ? (
-            <span className='flex items-center gap-1.5 truncate'>
-              <Icon name='RiUser' size={14} className='opacity-70' />@
-              {event.organizer_username}
+          {event.organizer_username || event.organizer_account_id ? (
+            <span className='flex min-w-0 items-center gap-1.5'>
+              <Icon name='RiUser' size={14} className='shrink-0 opacity-70' />
+              <EventHostName
+                username={event.organizer_username}
+                accountId={event.organizer_account_id}
+                className='text-inherit'
+              />
             </span>
           ) : (
             <span />
@@ -137,3 +149,22 @@ export const EventGridCard = memo(function EventGridCard({
     </article>
   );
 });
+
+export function EventGridCard({ event }: { event: EventItem }) {
+  return (
+    <div className='relative h-full min-w-0'>
+      <EventContentOptions
+        event={event}
+        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={event}
+        target={{ kind: 'event', id: event.slug }}
+        compact
+        href={`/events/${event.slug}`}
+      >
+        <EventGridCardContent event={event} />
+      </ContentGate>
+    </div>
+  );
+}

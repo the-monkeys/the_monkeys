@@ -1,7 +1,18 @@
 import { LandingEventsSection } from '@/components/landing/LandingEventsSection';
 import { EventItem } from '@/services/events/eventTypes';
 import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+
+import { renderWithProviders } from '../../../utils';
+
+vi.mock('@/hooks/auth/useAuth', () => ({
+  default: () => ({ data: undefined }),
+}));
+
+vi.mock('@/services/fetcher', () => ({
+  fetcher: vi.fn().mockResolvedValue(null),
+  authFetcher: vi.fn().mockResolvedValue(null),
+}));
 
 const event = (id: number): EventItem => ({
   id,
@@ -31,7 +42,7 @@ describe('LandingEventsSection', () => {
   afterEach(cleanup);
 
   it('shows up to three crawlable upcoming event cards', () => {
-    render(
+    renderWithProviders(
       <LandingEventsSection
         events={[event(1), event(2), event(3), event(4)]}
         isLoading={false}

@@ -2,6 +2,7 @@ import { CSSProperties } from 'react';
 
 import { carouselSlide2Body, carouselSlide3Body } from '../lib/carouselSlides';
 import { SnapshotRenderProps, SnapshotTemplate } from '../types';
+import { DiscussionByline, DiscussionSource } from './DiscussionAttribution';
 import {
   AccentBar,
   Avatar,
@@ -146,9 +147,13 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
                   color: theme.foreground,
                 }}
               >
-                {input.author?.displayName ?? 'the_monkeys'}
+                {input.source === 'discussion' ? (
+                  <DiscussionByline input={input} />
+                ) : (
+                  input.author?.displayName ?? 'the_monkeys'
+                )}
               </div>
-              {input.author?.username ? (
+              {input.source !== 'discussion' && input.author?.username ? (
                 <div
                   style={{
                     display: 'flex',
@@ -172,6 +177,7 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
             Swipe →
           </div>
         </Row>
+        <DiscussionSource input={input} theme={theme} />
       </SlideShell>
 
       {/* SLIDE 2 — Body excerpt (description, not pull-quote) */}
@@ -239,6 +245,12 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
             {BRAND_URL}
           </div>
         </Row>
+        {input.source === 'discussion' ? (
+          <div style={{ display: 'flex', fontSize: 24 }}>
+            <DiscussionByline input={input} />
+          </div>
+        ) : null}
+        <DiscussionSource input={input} theme={theme} />
       </SlideShell>
 
       {/* SLIDE 3 — Continuation + CTA */}
@@ -312,7 +324,11 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
                   fontWeight: 600,
                 }}
               >
-                {input.author?.displayName ?? 'the_monkeys'}
+                {input.source === 'discussion' ? (
+                  <DiscussionByline input={input} />
+                ) : (
+                  input.author?.displayName ?? 'the_monkeys'
+                )}
               </div>
             </Row>
             <div
@@ -327,6 +343,7 @@ const Render = ({ input, theme, accent }: SnapshotRenderProps): JSX.Element => {
             </div>
           </Row>
         </Col>
+        <DiscussionSource input={input} theme={theme} />
       </SlideShell>
     </div>
   );

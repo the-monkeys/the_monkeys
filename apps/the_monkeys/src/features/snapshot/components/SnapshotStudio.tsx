@@ -75,6 +75,8 @@ export interface SnapshotStudioProps {
   initialAccent?: string;
   previewMode?: PreviewMode;
   onPreviewModeChange?: (mode: PreviewMode) => void;
+  /** Wait for authoritative attribution before enabling image exports. */
+  isSourceLoading?: boolean;
 }
 
 /**
@@ -89,6 +91,7 @@ export const SnapshotStudio = ({
   initialAccent,
   previewMode: propsPreviewMode,
   onPreviewModeChange,
+  isSourceLoading = false,
 }: SnapshotStudioProps) => {
   const [internalPreviewMode, setInternalPreviewMode] =
     useState<PreviewMode>('template');
@@ -191,6 +194,7 @@ export const SnapshotStudio = ({
     previewMode === 'x' ? tweetExportError ?? tweetLoadError : error;
 
   const handleExport = async (opts?: SnapshotExportOptions) => {
+    if (isSourceLoading) return null;
     if (previewMode === 'x') {
       if (!tweetId) return null;
 
@@ -299,6 +303,7 @@ export const SnapshotStudio = ({
   const [isCopying, setIsCopying] = useState(false);
 
   const handleCopy = async () => {
+    if (isSourceLoading) return;
     if (previewMode === 'x' && !tweetId) return;
     setIsCopying(true);
     try {
@@ -336,8 +341,28 @@ export const SnapshotStudio = ({
   );
 
   return (
-    <div className='flex w-full flex-col gap-6 md:grid md:grid-cols-[1fr_minmax(300px,400px)] md:items-start'>
-      <section className='contents md:sticky md:top-20 md:flex md:min-w-0 md:flex-col md:gap-3 md:self-start'>
+    <div className='flex w-full min-w-0 flex-col gap-6 md:grid md:grid-cols-[minmax(0,1fr)_minmax(300px,400px)] md:items-start'>
+      {previewMode === 'x' ? (
+        <div className='min-w-0 md:col-start-2 md:row-start-1'>
+          <TweetUrlPanel
+            value={tweetUrl}
+            onChange={setTweetUrl}
+            tweetId={tweetId}
+            error={tweetLoadError}
+          />
+        </div>
+      ) : null}
+      <section
+        className={cn(
+          'contents md:sticky md:top-20 md:flex md:min-w-0 md:flex-col md:gap-3 md:self-start',
+          previewMode === 'x' && 'md:col-start-1 md:row-start-1 md:row-span-2'
+        )}
+      >
+        {isSourceLoading ? (
+          <p role='status' className='text-sm text-foreground/60'>
+            Loading author details…
+          </p>
+        ) : null}
         <StudioPreviewSticky
           actions={
             previewMode === 'x' ? (
@@ -350,7 +375,7 @@ export const SnapshotStudio = ({
                 copied={copied}
                 copying={isCopying}
                 exporting={activeExporting}
-                disabled={!tweetId}
+                disabled={!tweetId || isSourceLoading}
               />
             ) : (
               <StudioMobileExportIcons
@@ -364,6 +389,7 @@ export const SnapshotStudio = ({
                 copied={copied}
                 copying={isCopying}
                 exporting={activeExporting}
+                disabled={isSourceLoading}
               />
             )
           }
@@ -455,7 +481,12 @@ export const SnapshotStudio = ({
         ) : null}
       </section>
 
-      <aside className='flex flex-col gap-5'>
+      <aside
+        className={cn(
+          'flex min-w-0 flex-col gap-5',
+          previewMode === 'x' && 'md:col-start-2 md:row-start-2'
+        )}
+      >
         {previewMode === 'template' ? (
           <Accordion
             key='snapshot-template-options'
@@ -532,27 +563,12 @@ export const SnapshotStudio = ({
             key='snapshot-x-options'
             type='multiple'
             defaultValue={[
-              'x-post',
               'screenshot-style',
               'watermark-styling',
               'x-post-style',
             ]}
             className='w-full flex flex-col gap-2'
           >
-            <AccordionItem value='x-post' className='border-none'>
-              <AccordionTrigger className='text-sm font-semibold uppercase tracking-wide text-foreground/60 py-2 hover:no-underline'>
-                X post
-              </AccordionTrigger>
-              <AccordionContent className='pt-2'>
-                <TweetUrlPanel
-                  value={tweetUrl}
-                  onChange={setTweetUrl}
-                  tweetId={tweetId}
-                  error={tweetLoadError}
-                />
-              </AccordionContent>
-            </AccordionItem>
-
             <TweetScreenshotOptionsPanel
               options={tweetOptions}
               onChange={patchTweetOptions}
@@ -675,7 +691,7 @@ export const SnapshotStudio = ({
             <div className='flex items-center gap-2 w-full'>
               <CopyImageButton
                 onClick={handleCopy}
-                disabled={isCopying || activeExporting}
+                disabled={isCopying || activeExporting || isSourceLoading}
                 copied={copied}
                 copying={isCopying}
               />
@@ -683,7 +699,7 @@ export const SnapshotStudio = ({
                 isExporting={activeExporting}
                 onExport={handleExport}
                 filename={filename}
-                disabled={false}
+                disabled={isSourceLoading}
               />
             </div>
           )}

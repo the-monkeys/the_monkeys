@@ -67,9 +67,9 @@ const Nav = () => {
         className='sticky top-0 left-0  bg-white dark:bg-background-dark backdrop-blur-md z-40'
       >
         <Container className='w-full  pt-2.5 flex flex-col gap-1'>
-          <div className='flex items-center justify-between gap-4 w-full'>
+          <div className='flex items-center justify-between gap-1 min-[375px]:gap-4 w-full'>
             {/* Left: Hamburger & Logo */}
-            <div className='flex items-center shrink-0 gap-3'>
+            <div className='flex items-center shrink-0 gap-0 min-[375px]:gap-3'>
               <button
                 onClick={() => setMobileMenuOpen(true)}
                 className={cn(STYLES.iconButton, 'lg:hidden')}
@@ -97,13 +97,13 @@ const Nav = () => {
             </div>
 
             {/* Right: Search & Actions */}
-            <div className='flex items-center justify-end gap-4 shrink-0'>
-              <div className='max-w-[240px]'>
-                <SearchInput className='hidden sm:block' />
+            <div className='flex items-center justify-end gap-0 min-[375px]:gap-4 shrink-0'>
+              <div className='hidden max-w-[240px] lg:block'>
+                <SearchInput className='hidden lg:block' />
               </div>
 
-              <div className='flex items-center gap-3'>
-                <div className='block sm:hidden'>
+              <div className='flex items-center gap-0 min-[375px]:gap-3'>
+                <div className='block lg:hidden'>
                   <SearchInputLink />
                 </div>
 
@@ -114,8 +114,16 @@ const Nav = () => {
 
                 <div className={STYLES.divider} />
 
-                {session ? (
-                  <div className='flex items-center gap-3'>
+                {isAuthLoading ? (
+                  <div
+                    role='status'
+                    aria-label='Loading account'
+                    className='h-9 w-20 animate-pulse rounded-full bg-gray-100 dark:bg-gray-800 sm:w-40'
+                  >
+                    <span className='sr-only'>Loading account</span>
+                  </div>
+                ) : session ? (
+                  <div className='flex items-center gap-0 min-[375px]:gap-3'>
                     {!isAuthLoading && <CreateButton />}
                     <ProfileDropdown session={session} />
                   </div>

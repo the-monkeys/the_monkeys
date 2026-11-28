@@ -1,3 +1,4 @@
+import { queryKeys } from '@/lib/queryKeys';
 import { GetAllCategoriesAPIResponse } from '@/services/category/categoryTypes';
 import { fetcher } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
@@ -9,7 +10,7 @@ const useGetAllCategories = () => {
     GetAllCategoriesAPIResponse,
     Error
   >({
-    queryKey: [ALL_CATEGORIES_QUERY_KEY],
+    queryKey: queryKeys.topics.categories(),
     queryFn: () => fetcher('/user/category'),
     staleTime: 5 * 60 * 1000,
   });

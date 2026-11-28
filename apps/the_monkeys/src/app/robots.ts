@@ -48,6 +48,7 @@ export default function robots(): MetadataRoute.Robots {
       `${baseUrl}/topics/sitemap.xml`,
       `${baseUrl}/events/sitemap.xml`,
       `${baseUrl}/groups/sitemap.xml`,
+      `${baseUrl}/discussions/sitemap.xml`,
     ],
   };
 }

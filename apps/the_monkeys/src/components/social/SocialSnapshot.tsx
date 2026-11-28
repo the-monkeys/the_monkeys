@@ -1,10 +1,22 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { Blog } from '@/services/blog/blogTypes';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
-export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
+type SocialSnapshotCardProps =
+  | { blog: Blog; discussionId?: never }
+  | { blog?: never; discussionId: string };
+
+export const SocialSnapshotCard = ({
+  blog,
+  discussionId,
+}: SocialSnapshotCardProps) => {
+  if (blog && !isPublicContentSafe(blog)) return null;
+  const href = discussionId
+    ? `/snapshot/discussion/${encodeURIComponent(discussionId)}`
+    : `/snapshot/${encodeURIComponent(blog!.blog_id)}`;
   return (
     <div className='relative border-1 border-brand-orange/40 bg-brand-orange/10 rounded-2xl overflow-hidden'>
       <div className='w-full p-4 sm:p-6 flex items-center justify-between gap-6 flex-wrap'>
@@ -18,15 +30,14 @@ export const SocialSnapshotCard = ({ blog }: { blog: Blog }) => {
           </h4>
 
           <p className='text-sm'>
-            Instantly create a share-worthy social post for this post.
+            Instantly create a share-worthy social post for this{' '}
+            {discussionId ? 'discussion' : 'post'}.
           </p>
         </div>
 
         <div className='py-2'>
           <Button asChild variant='brand'>
-            <Link href={`/snapshot/${encodeURIComponent(blog.blog_id)}`}>
-              Open Studio →
-            </Link>
+            <Link href={href}>Open Studio →</Link>
           </Button>
         </div>
       </div>

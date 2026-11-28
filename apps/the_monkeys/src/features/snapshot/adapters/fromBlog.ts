@@ -1,4 +1,5 @@
 import { getCardContent } from '@/components/blog/getBlogContent';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { Blog } from '@/services/blog/blogTypes';
 
 import { SnapshotAuthor, SnapshotInput } from '../types';
@@ -40,7 +41,7 @@ const estimateReadingTime = (blog: Blog): number => {
  * duplicates removed. Used to populate the snapshot background picker.
  */
 export const extractBlogImages = (blog: Blog | undefined | null): string[] => {
-  if (!blog?.blog?.blocks) return [];
+  if (!isPublicContentSafe(blog) || !blog?.blog?.blocks) return [];
   const urls: string[] = [];
   for (const block of blog.blog.blocks) {
     if (block.type !== 'image') continue;
@@ -62,6 +63,9 @@ export const fromBlog = (
   blog: Blog,
   opts: FromBlogOpts = {}
 ): SnapshotInput => {
+  // Conservative export policy: flagged posts cannot enter Studio, even after reveal.
+  if (!isPublicContentSafe(blog))
+    throw new Error('Snapshot unavailable for sensitive content');
   const { titleContent, descriptionContent, imageContent } = getCardContent({
     blog,
   });

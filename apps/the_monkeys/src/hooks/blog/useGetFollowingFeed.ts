@@ -1,8 +1,10 @@
+import { FOLLOWING_FEED_QUERY_KEY } from '@/lib/followingFeedKeys';
+import { queryKeys } from '@/lib/queryKeys';
 import { FollowingFeed } from '@/services/blog/blogTypes';
 import { authFetcherV2 } from '@/services/fetcher';
 import { useQuery } from '@tanstack/react-query';
 
-export const FOLLOWING_FEED_QUERY_KEY = 'following-feed-blogs';
+export { FOLLOWING_FEED_QUERY_KEY } from '@/lib/followingFeedKeys';
 
 type FollowingFeedType = {
   blogs: FollowingFeed[];
@@ -12,12 +14,24 @@ type FollowingFeedType = {
 const useGetFollowingFeed = ({
   limit = 50,
   offset = 0,
-}: { limit?: number; offset?: number } = {}) => {
+  viewerUsername,
+  viewerAccountId,
+}: {
+  limit?: number;
+  offset?: number;
+  viewerUsername?: string;
+  viewerAccountId?: string;
+} = {}) => {
   const { data, error, isLoading, isError } = useQuery<
     FollowingFeedType,
     Error
   >({
-    queryKey: [FOLLOWING_FEED_QUERY_KEY, limit, offset],
+    queryKey: queryKeys.blog.followingFeed(
+      viewerAccountId ?? viewerUsername,
+      limit,
+      offset
+    ),
+    enabled: Boolean(viewerUsername && viewerAccountId),
     queryFn: () =>
       authFetcherV2(`/blog/following-feed?limit=${limit}&offset=${offset}`),
   });

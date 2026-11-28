@@ -5,25 +5,35 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { generateSlug } from '@/app/blog/utils/generateSlug';
 import { PublishBlogDrawer } from '@/components/blog/actions/PublishBlogDrawer';
+import { isDocumentTitleBlock } from '@/components/blog/getBlogContent';
 import BlogPreview from '@/components/editor/BlogPreview';
-import Icon from '@/components/icon';
+import { EditorToolbar } from '@/components/editor/EditorToolbar';
+import { withFirstBlockTitleId } from '@/components/editor/postCanvas/withFirstBlockTitleId';
 import { Loader } from '@/components/loader';
 import { EditorBlockSkeleton } from '@/components/skeletons/blogSkeleton';
 import { WSS_URL_V2 } from '@/constants/api';
+import { PostReadiness } from '@/features/content-readiness/PostReadiness';
 import useAuth from '@/hooks/auth/useAuth';
-import useGetDraftBlogDetail, {
-  DRAFT_BLOG_DETAIL_QUERY_KEY,
-} from '@/hooks/blog/useGetDraftBlogDetail';
+import { useDraftPublication } from '@/hooks/blog/useDraftPublication';
+import useGetDraftBlogDetail from '@/hooks/blog/useGetDraftBlogDetail';
+import { publicationPostSlug } from '@/lib/postUrl';
+import { invalidateAfterArticleWrite } from '@/lib/queryFreshness';
+import { queryKeys } from '@/lib/queryKeys';
 import { useIsImageUploading } from '@/lib/store/useFileUpload';
 import axiosInstance from '@/services/api/axiosInstance';
-import axiosInstanceV2 from '@/services/api/axiosInstanceV2';
+import {
+  getPublishedBlog,
+  publishBlog,
+  scheduleBlog,
+} from '@/services/blog/blogApi';
+import {
+  blogApiError,
+  publicationScope,
+} from '@/services/blog/blogPublication';
 import { useQueryClient } from '@tanstack/react-query';
-import { Tabs, TabsList, TabsTrigger } from '@the-monkeys/ui/atoms/tabs';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { OutputData } from '@themonkeys/monkeys-editor';
-import { twMerge } from 'tailwind-merge';
 
 const Editor = dynamic(() => import('@/components/editor'), {
   ssr: false,
@@ -53,10 +63,19 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isNew = searchParams.get('isNew') === 'true';
+  const preferredGroupSlug = useRef(searchParams.get('group')?.trim() || '');
 
   const { blog, isLoading, isError } = useGetDraftBlogDetail(blogId, {
     enabled: !isNew,
   });
+  const publication = useDraftPublication({
+    draft: blog,
+    isNew,
+    preferredGroupSlug: preferredGroupSlug.current,
+    username: session?.username,
+  });
+  const publicationScopeRef = useRef(publication.draftScope);
+  publicationScopeRef.current = publication.draftScope;
   const isImageUploading = useIsImageUploading();
 
   // Refs for latest values
@@ -65,6 +84,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const blogTopicsRef = useRef<string[]>([]);
   const webSocketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isConnectedRef = useRef(false);
 
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [isPreviewMode, setIsPreviewMode] = useState<boolean>(false);
@@ -73,6 +93,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState('Connecting...');
+  isConnectedRef.current = isConnected;
 
   const [data, setData] = useState<OutputData | null>(
     isNew ? INITIAL_DATA : null
@@ -83,7 +104,10 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     if (!isNew) return;
 
     // Clean up the URL so that subsequent refreshes perform a regular fetch
-    const newUrl = window.location.pathname;
+    const query = new URLSearchParams(window.location.search);
+    query.delete('isNew');
+    const suffix = query.toString();
+    const newUrl = `${window.location.pathname}${suffix ? `?${suffix}` : ''}${window.location.hash}`;
     window.history.replaceState(
       { ...window.history.state, as: newUrl, url: newUrl },
       '',
@@ -133,9 +157,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Format data
   const formatData = useCallback(
     (data: OutputData, accountId: string | undefined, blogTopics: string[]) => {
-      const title = data?.blocks[0]?.data.text || 'No Title';
-      const slug = generateSlug(title);
-      const blogSlug = `${slug}-${blogId}`;
+      const blogSlug = publicationPostSlug(data, blogId);
 
       return {
         owner_account_id: accountId,
@@ -144,7 +166,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         blog: {
           time: data?.time || Date.now(),
           blocks:
-            data?.blocks?.map((block) => ({
+            withFirstBlockTitleId(data?.blocks)?.map((block) => ({
               ...block,
               author: [accountId],
               time: Date.now(),
@@ -152,6 +174,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         },
         tags: blogTopics,
         slug: blogSlug,
+        ...publicationScopeRef.current,
       };
     },
     [blogId]
@@ -185,7 +208,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         retryCount = 0;
 
         // Send latest data on reconnect
-        if (dataRef.current) {
+        if (dataRef.current && publicationScopeRef.current) {
           const formattedData = formatData(
             dataRef.current,
             accountIdRef.current,
@@ -196,9 +219,16 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         }
       };
 
-      ws.onmessage = () => {
+      ws.onmessage = (event) => {
         setIsSaving(false);
-        // Optional: Handle any incoming messages from server
+        try {
+          // The gateway acknowledges persisted content/scope saves with type=success.
+          if (JSON.parse(event.data)?.type === 'success') {
+            void invalidateAfterArticleWrite(queryClient);
+          }
+        } catch {
+          // Connection, control and unrecognised messages are not write acknowledgements.
+        }
       };
 
       ws.onclose = (event) => {
@@ -234,7 +264,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
 
     // Handle tab visibility changes
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && !isConnected && token) {
+      if (
+        document.visibilityState === 'visible' &&
+        !isConnectedRef.current &&
+        token
+      ) {
         // Reconnect immediately when tab becomes visible
         if (reconnectTimeoutRef.current) {
           clearTimeout(reconnectTimeoutRef.current);
@@ -255,11 +289,11 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [token, blogId, formatData, isConnected]);
+  }, [token, blogId, formatData, queryClient]);
 
   // Auto-save when data changes
   useEffect(() => {
-    if (!data || !isConnected) return;
+    if (!data || !isConnected || !publicationScopeRef.current) return;
 
     const formattedData = formatData(data, accountId, blogTopics);
 
@@ -272,10 +306,19 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       console.error('Error sending data:', error);
       setIsSaving(false);
     }
-  }, [data, blogTopics, isConnected, accountId, formatData]);
+  }, [
+    data,
+    blogTopics,
+    isConnected,
+    accountId,
+    formatData,
+    publication.draftScope?.group_slug,
+    publication.draftScope?.audience,
+  ]);
 
   // Handle blog publishing
   const handlePublishStep = useCallback(async () => {
+    if (!publication.canPublish || !publication.selection) return;
     if (!data || data.blocks.length <= 2) {
       toast({
         variant: 'destructive',
@@ -285,7 +328,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       return;
     }
 
-    if (data.blocks[0].type !== 'header' && data?.blocks[0].data.level !== 1) {
+    if (!isDocumentTitleBlock(data.blocks[0])) {
       toast({
         variant: 'destructive',
         title: 'Error',
@@ -309,20 +352,44 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     setBlogPublishLoading(true);
 
     try {
-      await axiosInstance.post(
-        `/blog/publish/${blogId}`,
-        formatData(data, accountId, blogTopics)
+      const formatted = formatData(data, accountId, blogTopics);
+      const scope = publicationScope(
+        publication.selection.group,
+        publication.selection.audience
       );
+      await publishBlog(blogId, {
+        tags: formatted.tags,
+        slug: formatted.slug,
+        ...scope,
+      });
+
+      void invalidateAfterArticleWrite(queryClient);
+
+      let successDescription = 'Your post was published.';
+      try {
+        const actual = await getPublishedBlog(blogId);
+        queryClient.setQueryData(queryKeys.blog.detail(blogId), actual);
+        if (actual.group_slug) {
+          queryClient.invalidateQueries({
+            queryKey: queryKeys.groups.blogs(actual.group_slug),
+          });
+        }
+        if (actual.audience === 'group_only') {
+          successDescription = 'Published for group members.';
+        }
+      } catch {
+        // Publishing already succeeded. Read-back only refines local state and copy.
+      }
 
       toast({
         variant: 'success',
-        title: 'Blog Published Successfully',
-        description: 'Your post is now live!',
+        title: 'Post published',
+        description: successDescription,
       });
 
       // Invalidate cache and redirect
       queryClient.invalidateQueries({
-        queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+        queryKey: queryKeys.blog.drafts.detail(blogId),
       });
       router.push(`/${username}`);
     } catch (error) {
@@ -330,7 +397,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       toast({
         variant: 'destructive',
         title: 'Error Publishing Blog',
-        description: 'There was an error while publishing. Please try again.',
+        description: blogApiError(error),
       });
     } finally {
       setBlogPublishLoading(false);
@@ -344,6 +411,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
     router,
     username,
     queryClient,
+    publication.canPublish,
+    publication.selection,
   ]);
 
   // Initialize editor data
@@ -352,8 +421,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
       if (blog && !data) {
         setData(blog.blog || INITIAL_DATA);
         setBlogTopics(blog.tags || []);
-      } else if ((isError || !blog) && !data) {
-        // Handle new draft or fetch error by providing blank slate
+      } else if (isNew && !data) {
+        // Only a new draft may start with a blank document.
         setData(INITIAL_DATA);
         setBlogTopics([]);
       }
@@ -364,13 +433,14 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
   // Fetch draft blog data on mount
   useEffect(() => {
     queryClient.invalidateQueries({
-      queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+      queryKey: queryKeys.blog.drafts.detail(blogId),
     });
   }, [blogId, queryClient]);
 
   // Handle blog scheduling
   const handleScheduleStep = useCallback(
     async (scheduleTime: string, timezone: string) => {
+      if (!publication.canPublish || !publication.selection) return;
       if (!data || data.blocks.length <= 2) {
         toast({
           variant: 'destructive',
@@ -380,10 +450,7 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         return;
       }
 
-      if (
-        data.blocks[0].type !== 'header' &&
-        data?.blocks[0].data.level !== 1
-      ) {
+      if (!isDocumentTitleBlock(data.blocks[0])) {
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -415,24 +482,30 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
           webSocketRef.current.send(JSON.stringify(formatted));
         }
 
+        const scope = publicationScope(
+          publication.selection.group,
+          publication.selection.audience
+        );
         const payload = {
           tags: formatted.tags,
           slug: formatted.slug,
           schedule_time: scheduleTime,
           timezone: timezone,
+          ...scope,
         };
 
-        await axiosInstanceV2.post(`/blog/${blogId}/schedule_blog`, payload);
+        await scheduleBlog(blogId, payload);
+        void invalidateAfterArticleWrite(queryClient);
 
         toast({
           variant: 'success',
-          title: 'Blog Scheduled Successfully',
-          description: 'Your post has been scheduled!',
+          title: 'Post scheduled',
+          description: 'Your post has been scheduled.',
         });
 
         // Invalidate cache and redirect
         queryClient.invalidateQueries({
-          queryKey: [DRAFT_BLOG_DETAIL_QUERY_KEY, blogId],
+          queryKey: queryKeys.blog.drafts.detail(blogId),
         });
         router.push(`/library?source=scheduled`);
       } catch (error) {
@@ -440,13 +513,23 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         toast({
           variant: 'destructive',
           title: 'Error Scheduling Blog',
-          description: 'There was an error while scheduling. Please try again.',
+          description: blogApiError(error),
         });
       } finally {
         setBlogPublishLoading(false);
       }
     },
-    [data, accountId, blogId, blogTopics, formatData, router, queryClient]
+    [
+      data,
+      accountId,
+      blogId,
+      blogTopics,
+      formatData,
+      router,
+      queryClient,
+      publication.canPublish,
+      publication.selection,
+    ]
   );
 
   return (
@@ -457,76 +540,58 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
         </div>
       ) : (
         <div className='relative min-h-screen'>
-          <div className='pt-4 pb-3 flex justify-between items-center gap-2'>
-            <div
-              className={twMerge(
-                'px-[10px] py-[1px] flex items-center gap-1 border-1 rounded-full',
-                isConnected
-                  ? 'border-alert-green/80 bg-alert-green/20'
-                  : 'border-alert-red/80 bg-alert-red/20'
-              )}
-            >
-              <div
-                className={`inline-block size-2 rounded-full ${
-                  isConnected ? 'bg-alert-green' : 'bg-alert-red'
-                }`}
+          <EditorToolbar
+            connected={isConnected}
+            saving={isSaving}
+            preview={isPreviewMode}
+            imageUploading={isImageUploading}
+            onViewChange={setIsPreviewMode}
+            readinessAction={
+              <PostReadiness
+                presentation='toolbar'
+                document={data}
+                topics={blogTopics}
+                resourceKey={blogId}
+                accountKey={accountId || 'unknown-account'}
+                audience={publication.draftScope?.audience}
+                groupSlug={publication.groupSlug}
+                groupVisibility={publication.selection?.group?.visibility}
+                groupResolved={
+                  !!publication.selection &&
+                  !publication.pending &&
+                  !publication.error
+                }
+                publicationState={
+                  blog?.is_draft === false ? 'published' : 'draft'
+                }
+                authorName={username}
+                imagePending={isImageUploading}
               />
-
-              <p className='text-xs'>{isConnected ? 'Online' : 'Offline'}</p>
-            </div>
-
-            <Tabs
-              value={isPreviewMode ? 'preview' : 'edit'}
-              onValueChange={(val) => setIsPreviewMode(val === 'preview')}
-            >
-              <TabsList className='flex items-center gap-1 font-mono text-foreground/40'>
-                <TabsTrigger value='edit'>
-                  <p className='flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground transition-colors'>
-                    <Icon
-                      name='RiPencil'
-                      size={16}
-                      className='group-data-[state=active]:text-brand-orange'
-                    />
-                    Edit
-                  </p>
-                  <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
-                </TabsTrigger>
-
-                <TabsTrigger
-                  value='preview'
-                  disabled={isImageUploading}
-                  className={isImageUploading ? 'cursor-not-allowed' : ''}
-                >
-                  <p
-                    className={twMerge(
-                      'flex items-center gap-1.5 px-2 py-1 rounded-md font-mono text-sm sm:text-base transition-colors',
-                      isImageUploading
-                        ? 'opacity-20'
-                        : 'opacity-40 group-hover:opacity-70 group-data-[state=active]:opacity-100 group-data-[state=active]:bg-foreground/10 group-data-[state=active]:text-foreground'
-                    )}
-                  >
-                    <Icon
-                      name='RiEye'
-                      size={16}
-                      className='group-data-[state=active]:text-brand-orange'
-                    />
-                    Preview
-                  </p>
-                  <div className='h-0.5 w-0 bg-brand-orange rounded-full group-data-[state=active]:w-3/5 transition-all' />
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <PublishBlogDrawer
-              topics={blogTopics}
-              setTopics={setBlogTopics}
-              data={data}
-              setData={setData}
-              isPublishing={blogPublishLoading}
-              handlePublish={handlePublishStep}
-              handleSchedule={handleScheduleStep}
-            />
-          </div>
+            }
+            publishAction={
+              <PublishBlogDrawer
+                blogId={blogId}
+                initialMarked={blog?.is_nsfw || blog?.content_rating?.is_nsfw}
+                topics={blogTopics}
+                setTopics={setBlogTopics}
+                data={data}
+                setData={setData}
+                isPublishing={blogPublishLoading}
+                handlePublish={handlePublishStep}
+                handleSchedule={handleScheduleStep}
+                publication={publication.selection}
+                onPublicationChange={publication.change}
+                publicationPending={publication.pending}
+                publicationError={
+                  isError
+                    ? 'Could not load this draft. Refresh to try again.'
+                    : publication.error
+                }
+                intendedGroupSlug={publication.groupSlug}
+                onRetryGroup={publication.retry}
+              />
+            }
+          />
 
           <div className='py-3'>
             <Suspense
@@ -545,18 +610,6 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
               )}
             </Suspense>
           </div>
-
-          {isSaving && (
-            <div className='fixed left-1/2 -translate-x-1/2 bottom-[30px] p-2 z-50'>
-              <div className='px-3 py-1 border-1 border-yellow-500/80 bg-yellow-500/50 rounded-full shadow-sm flex items-center gap-1'>
-                <div
-                  className={`inline-block size-2 rounded-full bg-yellow-500`}
-                />
-
-                <p className='text-xs sm:text-sm'>Saving...</p>
-              </div>
-            </div>
-          )}
         </div>
       )}
     </>

@@ -20,7 +20,7 @@ export function TextTabs<T extends string>({
     <div
       role='tablist'
       aria-label={ariaLabel}
-      className='mb-4 flex items-center gap-1 border-b border-border-light dark:border-border-dark'
+      className='mb-4 flex w-full items-center gap-1 overflow-x-auto overflow-y-hidden overscroll-x-contain scrollbar-hide border-b border-border-light dark:border-border-dark'
     >
       {items.map((item) => {
         const active = item.id === value;
@@ -31,7 +31,7 @@ export function TextTabs<T extends string>({
             role='tab'
             aria-selected={active}
             onClick={() => onChange(item.id)}
-            className={`-mb-px min-h-[44px] border-b-2 px-3 font-inter text-sm transition-colors ${
+            className={`-mb-px min-h-[44px] shrink-0 whitespace-nowrap border-b-2 px-3 font-inter text-sm transition-colors ${
               active
                 ? 'border-brand-orange text-brand-orange'
                 : 'border-transparent text-gray-500 hover:text-text-light dark:hover:text-text-dark'

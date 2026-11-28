@@ -1,7 +1,14 @@
+'use client';
+
 import Link from 'next/link';
 
+import { EventContentOptions } from '@/components/events/EventContentOptions';
+import { EventHostName } from '@/components/events/EventHostName';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
+import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import {
   eventStatusLabel,
   eventTypeLabel,
@@ -15,7 +22,7 @@ function Cover({ event }: { event: EventItem }) {
   if (event.cover_image) {
     return (
       <img
-        src={event.cover_image}
+        src={authenticatedArticleImageUrl(event.cover_image)}
         alt=''
         className='h-full w-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out'
         loading='lazy'
@@ -30,7 +37,8 @@ function Cover({ event }: { event: EventItem }) {
   );
 }
 
-export function EventCard({ event }: { event: EventItem }) {
+function EventCardContent({ event }: { event: EventItem }) {
+  const timezone = useViewerTimezone();
   const href = `${EVENTS_ROUTE}/${event.slug}`;
   const tag = event.tags?.[0];
   const lowest = event.ticket_tiers?.reduce<number | undefined>((min, t) => {
@@ -39,7 +47,7 @@ export function EventCard({ event }: { event: EventItem }) {
   }, undefined);
 
   return (
-    <article className='group flex items-start gap-4 sm:gap-6 py-5 border-b border-border-light dark:border-border-dark/40 last:border-b-0'>
+    <article className='group flex items-start gap-4 sm:gap-6 py-5 border-b border-border-light dark:border-border-dark/40'>
       <div className='flex-1 min-w-0'>
         <div className='flex flex-wrap items-center gap-2'>
           {tag ? (
@@ -72,17 +80,15 @@ export function EventCard({ event }: { event: EventItem }) {
         </Link>
 
         <p className='mt-1.5 font-inter text-sm text-gray-500 dark:text-gray-400 line-clamp-1'>
-          {formatEventWhen(event.start_time, event.end_time, event.timezone)}
+          {formatEventWhen(event.start_time, event.end_time, timezone)}
         </p>
 
         <div className='mt-2 flex flex-wrap items-center gap-3 text-xs font-inter text-gray-500 dark:text-gray-400'>
-          {event.organizer_username && (
-            <Link
-              href={`/${event.organizer_username}`}
-              className='hover:text-brand-orange'
-            >
-              @{event.organizer_username}
-            </Link>
+          {(event.organizer_username || event.organizer_account_id) && (
+            <EventHostName
+              username={event.organizer_username}
+              accountId={event.organizer_account_id}
+            />
           )}
           {event.location && event.event_type !== 'virtual' && (
             <span className='inline-flex items-center gap-1'>
@@ -111,7 +117,8 @@ export function EventCard({ event }: { event: EventItem }) {
   );
 }
 
-export function EventHeroCard({ event }: { event: EventItem }) {
+function EventHeroCardContent({ event }: { event: EventItem }) {
+  const timezone = useViewerTimezone();
   const href = `${EVENTS_ROUTE}/${event.slug}`;
 
   return (
@@ -122,7 +129,7 @@ export function EventHeroCard({ event }: { event: EventItem }) {
       <div className='relative w-full aspect-[16/9] sm:aspect-[2/1] bg-gray-900'>
         {event.cover_image ? (
           <img
-            src={event.cover_image}
+            src={authenticatedArticleImageUrl(event.cover_image)}
             alt=''
             className='absolute inset-0 h-full w-full object-cover opacity-70 group-hover:opacity-80 group-hover:scale-[1.02] transition-all duration-700 ease-out'
           />
@@ -133,7 +140,7 @@ export function EventHeroCard({ event }: { event: EventItem }) {
         <div className='absolute inset-x-0 bottom-0 p-5 sm:p-7'>
           <p className='font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.18em] mb-2'>
             {eventTypeLabel(event.event_type)} ·{' '}
-            {formatEventWhen(event.start_time)}
+            {formatEventWhen(event.start_time, undefined, timezone)}
           </p>
           <h3 className='font-newsreader font-bold text-2xl sm:text-3xl md:text-4xl leading-[1.15] text-white line-clamp-3 group-hover:text-brand-orange transition-colors'>
             {event.title}
@@ -164,6 +171,44 @@ export function EventEmpty({
           {hint}
         </p>
       )}
+    </div>
+  );
+}
+
+export function EventCard({ event }: { event: EventItem }) {
+  return (
+    <div className='relative h-full min-w-0 [&:last-child>article]:border-b-0'>
+      <EventContentOptions
+        event={event}
+        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={event}
+        target={{ kind: 'event', id: event.slug }}
+        compact
+        href={`/events/${event.slug}`}
+      >
+        <EventCardContent event={event} />
+      </ContentGate>
+    </div>
+  );
+}
+
+export function EventHeroCard({ event }: { event: EventItem }) {
+  return (
+    <div className='relative h-full min-w-0 [&:last-child>article]:border-b-0'>
+      <EventContentOptions
+        event={event}
+        className='absolute right-2 top-2 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={event}
+        target={{ kind: 'event', id: event.slug }}
+        compact
+        href={`/events/${event.slug}`}
+      >
+        <EventHeroCardContent event={event} />
+      </ContentGate>
     </div>
   );
 }

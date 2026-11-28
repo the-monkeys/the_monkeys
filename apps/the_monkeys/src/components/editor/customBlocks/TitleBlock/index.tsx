@@ -29,10 +29,11 @@ export default class TitleBlockTool implements BlockTool {
   }
 
   render(): HTMLElement {
-    this.input = document.createElement('div');
+    this.input = document.createElement('h1');
     this.input.className = 'title-block-input';
     this.input.contentEditable = 'true';
     this.input.innerText = this.data.text || '';
+    this.input.dataset.placeholder = 'Title';
 
     // to prevent backspace or delete from removing block
     // this.input.addEventListener('keydown', (e) => {

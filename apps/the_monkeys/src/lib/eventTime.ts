@@ -19,16 +19,107 @@ export function toIso(date: Date): string {
   return date.toISOString();
 }
 
-export function toLocalInput(value: ProtoTime): string {
-  const d = parseEventTime(value);
-  if (!d) return '';
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+export function isValidTimezone(timezone: string): boolean {
+  if (timezone !== 'UTC' && !timezone.includes('/')) return false;
+  try {
+    new Intl.DateTimeFormat('en', { timeZone: timezone }).format(0);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
-export function fromLocalInput(value: string): string {
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? '' : d.toISOString();
+function wallParts(date: Date, timezone: string): number[] {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone: timezone,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date);
+  return ['year', 'month', 'day', 'hour', 'minute', 'second'].map((key) =>
+    Number(parts.find((part) => part.type === key)?.value)
+  );
+}
+
+const wallUtc = ([year, month, day, hour, minute, second]: number[]) =>
+  Date.UTC(year, month - 1, day, hour, minute, second);
+
+export function toLocalInput(
+  value: ProtoTime,
+  timezone = defaultTimezone()
+): string {
+  const d = parseEventTime(value);
+  if (!d) return '';
+  if (!isValidTimezone(timezone)) return '';
+  const [year, month, day, hour, minute] = wallParts(d, timezone);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${year}-${pad(month)}-${pad(day)}T${pad(hour)}:${pad(minute)}`;
+}
+
+export function fromLocalInput(
+  value: string,
+  timezone = defaultTimezone()
+): string {
+  if (!value) return '';
+  if (!isValidTimezone(timezone))
+    throw new Error('Choose a valid event timezone.');
+  const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(
+    value
+  );
+  if (!match) throw new Error('Enter a valid date and time.');
+  const parts = match.slice(1).map((part) => Number(part || 0));
+  const wall = wallUtc(parts);
+  if (
+    !Number.isFinite(wall) ||
+    new Date(wall).toISOString().slice(0, 19) !==
+      `${value.slice(0, 16)}:${match[6] || '00'}`
+  ) {
+    throw new Error('Enter a valid date and time.');
+  }
+  // Inspect offsets on both sides of transitions. A wall time can map to zero,
+  // one, or two instants; never silently normalize a DST gap or choose a fold.
+  const offsets = new Set<number>();
+  for (let hours = -48; hours <= 48; hours += 6) {
+    const probe = wall + hours * 3_600_000;
+    offsets.add(wallUtc(wallParts(new Date(probe), timezone)) - probe);
+  }
+  const candidates = Array.from(offsets)
+    .map((offset) => wall - offset)
+    .filter(
+      (instant) => wallUtc(wallParts(new Date(instant), timezone)) === wall
+    );
+  if (!candidates.length)
+    throw new Error(
+      'This time does not exist in the selected timezone because the clocks change. Choose another time.'
+    );
+  if (candidates.length > 1)
+    throw new Error(
+      'This time occurs twice in the selected timezone because the clocks change. Choose an unambiguous time.'
+    );
+  return new Date(candidates[0]).toISOString();
+}
+
+function formatInZone(
+  date: Date,
+  options: Intl.DateTimeFormatOptions,
+  timezone?: string
+): string {
+  const opts: Intl.DateTimeFormatOptions = { ...options };
+  if (timezone) opts.timeZone = timezone;
+  try {
+    return date.toLocaleString(undefined, opts);
+  } catch {
+    try {
+      const { timeZone: _ignored, ...rest } = opts;
+      return date.toLocaleString(undefined, rest);
+    } catch {
+      return '';
+    }
+  }
 }
 
 export function formatEventWhen(
@@ -45,17 +136,23 @@ export function formatEventWhen(
     day: 'numeric',
     hour: 'numeric',
     minute: '2-digit',
+    timeZoneName: 'short',
   };
-  if (timezone) opts.timeZone = timezone;
-
-  const startLabel = from.toLocaleString(undefined, opts);
+  const startLabel = formatInZone(from, opts, timezone);
   const to = parseEventTime(end);
   if (!to) return startLabel;
 
-  const sameDay = from.toDateString() === to.toDateString();
-  const endLabel = to.toLocaleString(
-    undefined,
-    sameDay ? { hour: 'numeric', minute: '2-digit', timeZone: timezone } : opts
+  const zone =
+    timezone && isValidTimezone(timezone) ? timezone : defaultTimezone();
+  const sameDay =
+    toLocalInput(from.toISOString(), zone).slice(0, 10) ===
+    toLocalInput(to.toISOString(), zone).slice(0, 10);
+  const endLabel = formatInZone(
+    to,
+    sameDay
+      ? { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' }
+      : opts,
+    timezone
   );
   return `${startLabel} – ${endLabel}`;
 }
@@ -68,17 +165,16 @@ export function formatEventCardWhen(
   const d = parseEventTime(start);
   if (!d) return '';
   const tz = timezone || undefined;
-  const date = d.toLocaleString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    timeZone: tz,
-  });
-  const time = d.toLocaleString(undefined, {
-    hour: 'numeric',
-    minute: '2-digit',
-    timeZone: tz,
-  });
+  const date = formatInZone(
+    d,
+    { weekday: 'short', month: 'short', day: 'numeric' },
+    tz
+  );
+  const time = formatInZone(
+    d,
+    { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' },
+    tz
+  );
   return `${date} · ${time}`;
 }
 
@@ -95,16 +191,10 @@ export function formatUpcomingDates(
   const tz = timezone || undefined;
   return parsed
     .map((d, i) => {
-      const day = d.toLocaleString(undefined, { day: 'numeric', timeZone: tz });
-      const month = d.toLocaleString(undefined, {
-        month: 'short',
-        timeZone: tz,
-      });
+      const day = formatInZone(d, { day: 'numeric' }, tz);
+      const month = formatInZone(d, { month: 'short' }, tz);
       if (i === 0) return `${month} ${day}`;
-      const prevMonth = parsed[i - 1].toLocaleString(undefined, {
-        month: 'short',
-        timeZone: tz,
-      });
+      const prevMonth = formatInZone(parsed[i - 1], { month: 'short' }, tz);
       return prevMonth === month ? day : `${month} ${day}`;
     })
     .join(' · ');
@@ -289,13 +379,13 @@ export function eventDateParts(
   if (!d) return null;
   const tz = timezone || undefined;
   return {
-    weekday: d.toLocaleString(undefined, { weekday: 'long', timeZone: tz }),
-    day: d.toLocaleString(undefined, { day: 'numeric', timeZone: tz }),
-    month: d.toLocaleString(undefined, { month: 'short', timeZone: tz }),
-    time: d.toLocaleString(undefined, {
-      hour: 'numeric',
-      minute: '2-digit',
-      timeZone: tz,
-    }),
+    weekday: formatInZone(d, { weekday: 'long' }, tz),
+    day: formatInZone(d, { day: 'numeric' }, tz),
+    month: formatInZone(d, { month: 'short' }, tz),
+    time: formatInZone(
+      d,
+      { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' },
+      tz
+    ),
   };
 }

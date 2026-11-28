@@ -2,45 +2,52 @@
 
 import { useEffect } from 'react';
 
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 
 // import AdUnit from '@/components/AdSense/AdUnit';
 import { EditBlogDialog } from '@/components/blog/actions/EditBlogDialog';
-import { BlogHeading, getCardContent } from '@/components/blog/getBlogContent';
+import {
+  BlogHeading,
+  getCardContent,
+  withoutPostTitle,
+} from '@/components/blog/getBlogContent';
 import { BackButton } from '@/components/buttons/backButton';
 import { AuthorInfoCard } from '@/components/cards/author/AuthorInfoCard';
+import { PostArticleCanvas } from '@/components/editor/postCanvas/PostArticleCanvas';
 import Icon from '@/components/icon';
 import Container from '@/components/layout/Container';
-import {
-  BlogPageSkeleton,
-  EditorBlockSkeleton,
-} from '@/components/skeletons/blogSkeleton';
+import { ContentGate } from '@/components/moderation/ContentGate';
+import { ContentOptions } from '@/components/moderation/ContentOptions';
+import { BlogPageSkeleton } from '@/components/skeletons/blogSkeleton';
 import { SocialSnapshotCard } from '@/components/social/SocialSnapshot';
 import { TopicLinksContainerCompact } from '@/components/topics/topicsContainer';
 import { UserInfoCardBlogPage } from '@/components/user/userInfo';
 import useAuth from '@/hooks/auth/useAuth';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
+import type { MetaBlog } from '@/services/blog/blogTypes';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import moment from 'moment';
 import { RiPencilFill } from 'react-icons/ri';
 
+import { BlogArticleBody } from '../components/BlogArticleBody';
 import { BlogReactionsContainer } from '../components/BlogReactions';
 import { BlogRecommendations } from '../components/BlogRecommendations';
-
-const Editor = dynamic(() => import('@/components/editor/preview'), {
-  ssr: false,
-  loading: () => <EditorBlockSkeleton />,
-});
+import { BlogScopeLine } from '../components/BlogScopeLine';
 
 interface BlogPageClientProps {
   urlBlogId: string;
   fullSlug: string;
+  initialRelatedPosts?: MetaBlog[];
 }
 
-const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
+const BlogPageClient = ({
+  urlBlogId,
+  fullSlug,
+  initialRelatedPosts,
+}: BlogPageClientProps) => {
   const router = useRouter();
   const { data: session } = useAuth();
   const { blog, isError, isLoading } =
@@ -52,6 +59,8 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
     !!session?.account_id && String(authorId) === String(session?.account_id);
 
   useEffect(() => {
+    if (!blog || isLoading || isError) return;
+
     const startTime = Date.now();
     let hasSent = false;
 
@@ -97,7 +106,7 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       sendData();
     };
-  }, [urlBlogId]);
+  }, [blog, isError, isLoading, urlBlogId]);
 
   if (isLoading) {
     return <BlogPageSkeleton />;
@@ -130,22 +139,18 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
   const blogTitle = blog?.blog?.blocks?.[0]?.data?.text;
   const sanitizedBlogTitle = purifyHTMLString(blogTitle);
 
-  const blogDataWithoutHeading = () => {
-    const firstBlock = blog?.blog?.blocks[0];
-
-    if (firstBlock?.type !== 'header') return blog?.blog;
-
-    return {
-      ...blog.blog,
-      blocks: blog?.blog.blocks.slice(1),
-    };
-  };
+  const blogDataWithoutHeading = () => withoutPostTitle(blog?.blog);
 
   return (
     <>
       <div className='px-4'>
         <Container className='pt-6 max-w-4xl flex items-center justify-between'>
           <BackButton />
+          <ContentOptions
+            target={{ kind: 'blog', id: urlBlogId }}
+            canLabel={isOwner}
+            initialMarked={blog.is_nsfw || blog.content_rating?.is_nsfw}
+          />
 
           {isOwner && (
             <EditBlogDialog
@@ -156,56 +161,80 @@ const BlogPageClient = ({ urlBlogId, fullSlug }: BlogPageClientProps) => {
           )}
         </Container>
       </div>
-      <div className='px-4'>
-        <Container className='pt-4 sm:pt-6 pb-6 max-w-3xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
-          <p className='text-sm opacity-90'>
-            {moment(date).format('MMM DD, yyyy')}
-            {' / '}
-            {moment(date).utc().format('hh:mm A')} UTC
-          </p>
+      <ContentGate
+        content={blog}
+        target={{ kind: 'blog', id: urlBlogId }}
+        href={`/blog/${fullSlug}`}
+      >
+        <div className='px-4'>
+          <Container className='pt-4 sm:pt-6 pb-6 max-w-3xl flex flex-col items-center gap-3 border-b-1 border-border-light/80 dark:border-border-dark/80'>
+            <p className='text-sm opacity-90'>
+              {moment(date).format('MMM DD, yyyy')}
+              {' / '}
+              {moment(date).utc().format('hh:mm A')} UTC
+            </p>
 
-          <BlogHeading
-            title={sanitizedBlogTitle || 'Untitled Post'}
-            className='pt-1 pb-4 font-dm_sans font-semibold text-[28px] sm:text-3xl md:text-4xl !leading-[1.32] text-center'
-          />
+            <BlogScopeLine
+              groupSlug={blog.group_slug}
+              audience={blog.audience}
+            />
 
-          <UserInfoCardBlogPage id={authorId} />
-        </Container>
-      </div>
-      {/* removing ads unit bcz currently we have issue in google ads account */}
-      {/* <AdUnit slot='4598536509' /> */}
-      <div className='p-4'>
-        <Container className='max-w-3xl'>
-          <div className='px-1 pb-4 overflow-hidden'>
-            <Editor key={blogId} data={blogDataWithoutHeading()} />
-          </div>
+            <BlogHeading
+              title={sanitizedBlogTitle || 'Untitled Post'}
+              className='pt-1 pb-4 font-dm_sans font-semibold text-[28px] sm:text-3xl md:text-4xl !leading-[1.32] text-center'
+            />
 
-          <BlogReactionsContainer blogURL={fullSlug} blogId={blogId} />
+            <UserInfoCardBlogPage id={authorId} />
+          </Container>
+        </div>
+        {/* removing ads unit bcz currently we have issue in google ads account */}
+        {/* <AdUnit slot='4598536509' /> */}
+        <div className='p-4'>
+          <Container className='max-w-3xl'>
+            <PostArticleCanvas className='px-1 pb-4 overflow-hidden'>
+              <BlogArticleBody
+                key={blogId}
+                data={blogDataWithoutHeading()}
+                sensitive={!isPublicContentSafe(blog)}
+              />
+            </PostArticleCanvas>
+            <BlogReactionsContainer
+              blogURL={fullSlug}
+              blogId={blogId}
+              showShare={blog.audience !== 'group_only'}
+            />
 
-          <div className='pt-10 space-y-12'>
-            <div className='space-y-4'>
-              <h6 className='font-dm_sans font-medium'>Topics included</h6>
-              <TopicLinksContainerCompact topics={tags} />
+            <div className='pt-10 space-y-12'>
+              <div className='space-y-4'>
+                <h6 className='font-dm_sans font-medium'>Topics included</h6>
+                <TopicLinksContainerCompact topics={tags} />
+              </div>
+
+              {/* <AuthorInfoCard userId={authorId} /> */}
+
+              {isPublicContentSafe(blog) && blog.audience !== 'group_only' && (
+                <SocialSnapshotCard blog={blog} />
+              )}
             </div>
+          </Container>
+        </div>
 
-            {/* <AuthorInfoCard userId={authorId} /> */}
+        <div className='px-4 mt-12'>
+          <Container className='max-w-5xl space-y-12'>
+            <div className='space-y-6'>
+              <h6 className='font-dm_sans font-medium text-lg'>
+                Explore similar content
+              </h6>
 
-            <SocialSnapshotCard blog={blog} />
-          </div>
-        </Container>
-      </div>
-
-      <div className='px-4 mt-12'>
-        <Container className='max-w-5xl space-y-12'>
-          <div className='space-y-6'>
-            <h6 className='font-dm_sans font-medium text-lg'>
-              Explore similar content
-            </h6>
-
-            <BlogRecommendations blogId={blogId} topics={tags} />
-          </div>
-        </Container>
-      </div>
+              <BlogRecommendations
+                blogId={blogId}
+                topics={tags}
+                initialBlogs={initialRelatedPosts}
+              />
+            </div>
+          </Container>
+        </div>
+      </ContentGate>
     </>
   );
 };

@@ -67,6 +67,11 @@ export interface DatasetBlockData {
   notes: string;
 }
 
+export interface MarkdownBlockData {
+  markdown: string;
+  sourceFileName?: string;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Block Constructor Arguments                                        */
 /* ------------------------------------------------------------------ */
@@ -117,6 +122,11 @@ export const METHODOLOGY_TOOLBOX: ToolboxConfig = {
 export const DATASET_TOOLBOX: ToolboxConfig = {
   title: 'Dataset',
   icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',
+};
+
+export const MARKDOWN_TOOLBOX: ToolboxConfig = {
+  title: 'Markdown',
+  icon: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M7 15V9l2 2 2-2v6"/><path d="M15 12h2v3"/></svg>',
 };
 
 /* ------------------------------------------------------------------ */

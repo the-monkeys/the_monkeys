@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-27",
+  "scope": "profile and registration form corrections; full user journey still partial",
+  "source_sha256": {
+    "apps/the_monkeys/src/app/settings/components/Profile.tsx": "9554ecb901c775e627f3bdf8997e79e29d0588ae375937777ccdebf66205e78d",
+    "apps/the_monkeys/src/lib/schema/settings.ts": "8425f593f5030767b074f4de7b25b27c8d01d9f5921c70dce427535e26275f76",
+    "apps/the_monkeys/src/app/auth/components/forms/RegisterUserForm.tsx": "f1c1a6b9d63ea86379f8d49a29c2c5650681e6ff4ab99d2df1ad9e3a96da990e"
+  },
+  "build_id": "YYePGQBmrPCTR_o0pX3B5",
+  "automated": {
+    "full_suite_files": 274,
+    "full_suite_tests": 2422,
+    "focused_tests": 41,
+    "scoped_lint": "pass",
+    "optimized_build": "pass"
+  },
+  "browser": {
+    "plus_phone_save_and_refresh": "pass",
+    "new_user_discussion_create_edit_reply_like_refresh": "pass",
+    "discussion_link_copy": "pass",
+    "studio_story_png_export_dimensions": [
+      2160,
+      3840
+    ],
+    "group_draft_rule_publish_refresh": "pass",
+    "group_event_create_publish_timezone": "pass",
+    "username_ui_update": "pass",
+    "verification_synthetic_submit_refresh_pending": "pass",
+    "profile_photo_upload_immediate_and_refresh": "pass",
+    "new_otp_ui_after_fix": "not run",
+    "full_new_and_existing_user_regression": "not complete"
+  },
+  "privacy": [
+    {
+      "case": "owner_phone_plus_roundtrip",
+      "http": 200,
+      "pass": true
+    },
+    {
+      "case": "anonymous_legacy",
+      "http": 401,
+      "pass": true
+    },
+    {
+      "case": "anonymous_public",
+      "http": 202,
+      "pass": true
+    },
+    {
+      "case": "other_member_legacy",
+      "http": 200,
+      "pass": true
+    },
+    {
+      "case": "other_member_public",
+      "http": 202,
+      "pass": true
+    }
+  ],
+  "limits": [
+    "Chromium in-app browser only; no claim about all browsers or devices",
+    "Password change requires user participation; not run",
+    "No production changes; local data and services retained"
+  ]
+}

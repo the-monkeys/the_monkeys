@@ -1,27 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 
 import { Loader } from '@/components/loader';
 import { VerifiedBadge } from '@/components/user/VerifiedBadge';
+import { parseEventTime } from '@/lib/eventTime';
 import { verificationErrorMessage } from '@/services/verification/verificationApi';
 import type {
   DocKind,
   VerificationStatus,
 } from '@/services/verification/verificationTypes';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { RiEyeLine, RiShieldCheckLine } from '@remixicon/react';
 import {
-  RiCloseLine,
-  RiErrorWarningLine,
-  RiEyeLine,
-  RiLoader4Line,
-} from '@remixicon/react';
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from '@the-monkeys/ui/atoms/alert';
 import { Badge } from '@the-monkeys/ui/atoms/badge';
 import { Button } from '@the-monkeys/ui/atoms/button';
-import { Input } from '@the-monkeys/ui/atoms/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@the-monkeys/ui/atoms/dialog';
 import { Label } from '@the-monkeys/ui/atoms/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@the-monkeys/ui/atoms/select';
 import { toast } from '@the-monkeys/ui/hooks/use-toast';
 import { useForm } from 'react-hook-form';
 
@@ -34,14 +51,10 @@ import {
   countryLabel,
 } from '../constants';
 import { useMyVerification } from '../hooks/useMyVerification';
-import {
-  UploadedDoc,
-  VerificationFormValues,
-  verificationSchema,
-} from '../schema';
+import { type VerificationFormValues, verificationSchema } from '../schema';
 import { DocumentTile } from './DocumentTile';
 
-// Code-split: the viewer (and its dialog markup) loads only when used.
+// Private URLs are requested only after the owner explicitly opens the viewer.
 const DocumentPreview = dynamic(
   () => import('./DocumentPreview').then((m) => m.DocumentPreview),
   { ssr: false }
@@ -49,23 +62,60 @@ const DocumentPreview = dynamic(
 
 const STATUS_META: Record<
   VerificationStatus,
-  { label: string; variant: 'brand' | 'destructive' | 'default' }
+  { title: string; label: string; description: string }
 > = {
-  pending: { label: 'Pending review', variant: 'default' },
-  under_review: { label: 'Under review', variant: 'brand' },
-  approved: { label: 'Approved', variant: 'brand' },
-  rejected: { label: 'Rejected', variant: 'destructive' },
+  pending: {
+    title: 'Request received',
+    label: 'Pending review',
+    description:
+      'Your request is waiting for review. You can check its progress here, or cancel it before the review starts.',
+  },
+  under_review: {
+    title: 'Review in progress',
+    label: 'Under review',
+    description:
+      'A reviewer is checking your request. No further action is needed right now. Return here to see the decision.',
+  },
+  approved: {
+    title: "You're verified",
+    label: 'Verified',
+    description:
+      'Your account now has a verified badge, helping people recognise your profile across Monkeys.',
+  },
+  rejected: {
+    title: 'Your request needs an update',
+    label: 'Changes needed',
+    description:
+      'We could not verify your account from this request. Review the feedback below, update your details and submit again.',
+  },
 };
 
-/**
- * Settings tab body for account verification. One component, four states
- * (form / pending / decided) — no per-status subcomponents to keep the
- * tree flat and the bundle small.
- */
 export const VerificationPanel = () => {
-  const { request, none, isLoading, uploadDoc, submit, cancel } =
-    useMyVerification();
+  const state = useMyVerification();
+  return (
+    <VerificationPanelContent
+      key={state.accountIdentity ?? 'anonymous'}
+      state={state}
+    />
+  );
+};
 
+// Changing accounts unmounts every private form value and upload callback target.
+const VerificationPanelContent = ({
+  state,
+}: {
+  state: ReturnType<typeof useMyVerification>;
+}) => {
+  const {
+    request,
+    none,
+    isLoading,
+    isError,
+    refetch,
+    uploadDoc,
+    submit,
+    cancel,
+  } = state;
   const [showForm, setShowForm] = useState(false);
   const [progress, setProgress] = useState<Partial<Record<DocKind, number>>>(
     {}
@@ -74,363 +124,525 @@ export const VerificationPanel = () => {
     Partial<Record<DocKind, string>>
   >({});
   const [previewKind, setPreviewKind] = useState<DocKind>();
-  const [armCancel, setArmCancel] = useState(false);
+  const [cancelOpen, setCancelOpen] = useState(false);
+  const [cancelError, setCancelError] = useState<string>();
+  // Serialize uploads so mutation callbacks cannot be lost to another tile's upload.
+  const uploadActive = useRef(false);
+  const cancelActive = useRef(false);
 
-  const form = useForm<VerificationFormValues>({
-    resolver: zodResolver(verificationSchema),
-    defaultValues: {
-      verification_type: 'id_document',
-      docs: {},
-    },
-  });
-  const { register, watch, setValue, handleSubmit, reset, formState } = form;
+  const { register, watch, setValue, handleSubmit, reset, formState } =
+    useForm<VerificationFormValues>({
+      resolver: zodResolver(verificationSchema),
+      defaultValues: { verification_type: 'id_document', docs: {} },
+    });
   const values = watch();
-  const isID = values.verification_type === 'id_document';
-
-  // A decided-but-rejected request can be resubmitted; anything else active
-  // blocks the form.
   const status = request?.status;
-  const formVisible =
-    none || status === undefined || (status === 'rejected' && showForm);
+  const uploading =
+    uploadDoc.isPending ||
+    Object.values(progress).some((pct) => pct !== undefined);
+  const busy = uploading || submit.isPending;
+  const formVisible = (!request && none) || (status === 'rejected' && showForm);
+  const docTypes = allowedDocTypes(values.country);
 
   const handleFile = (kind: DocKind, file: File) => {
-    setTileErrors((p) => ({ ...p, [kind]: undefined }));
-    setProgress((p) => ({ ...p, [kind]: 0 }));
+    if (uploadActive.current || submit.isPending) return;
+    uploadActive.current = true;
+    // A replacement must succeed before its document reference can be submitted.
+    setValue(`docs.${kind}`, undefined, { shouldDirty: true });
+    setTileErrors((previous) => ({ ...previous, [kind]: undefined }));
+    setProgress((previous) => ({ ...previous, [kind]: 0 }));
     uploadDoc.mutate(
       {
         kind,
         file,
-        onProgress: (pct) => setProgress((p) => ({ ...p, [kind]: pct })),
+        onProgress: (pct) =>
+          setProgress((previous) => ({ ...previous, [kind]: pct })),
       },
       {
-        onSuccess: (res) => {
-          setProgress((p) => ({ ...p, [kind]: undefined }));
+        onSuccess: (result) => {
+          uploadActive.current = false;
+          setProgress((previous) => ({ ...previous, [kind]: undefined }));
           setValue(
-            `docs.${kind}` as const,
-            { checksum: res.checksum },
-            {
-              shouldValidate: true,
-            }
+            `docs.${kind}`,
+            { checksum: result.checksum },
+            { shouldValidate: true, shouldDirty: true }
           );
         },
-        onError: (err) =>
-          setTileErrors((p) => ({
-            ...p,
-            [kind]: verificationErrorMessage(err),
-          })),
+        onError: (error) => {
+          uploadActive.current = false;
+          setProgress((previous) => ({ ...previous, [kind]: undefined }));
+          setTileErrors((previous) => ({
+            ...previous,
+            [kind]: verificationErrorMessage(error),
+          }));
+        },
       }
     );
   };
 
-  const onSubmit = handleSubmit(
-    (v) => {
-      submit.mutate(
-        {
-          verification_type: v.verification_type,
-          additional_info: v.additional_info || undefined,
-          ...(v.verification_type === 'id_document'
-            ? {
-                country: v.country,
-                id_document_type: v.id_document_type,
-                selfie_checksum: v.docs.selfie?.checksum,
-                id_front_checksum: v.docs.id_front?.checksum,
-                id_back_checksum: v.docs.id_back?.checksum,
-              }
-            : {}),
+  const onSubmit = handleSubmit((values) => {
+    if (uploadActive.current || busy) return;
+    submit.mutate(
+      {
+        verification_type: 'id_document',
+        additional_info: values.additional_info || undefined,
+        country: values.country,
+        id_document_type: values.id_document_type,
+        selfie_checksum: values.docs.selfie?.checksum,
+        id_front_checksum: values.docs.id_front?.checksum,
+        id_back_checksum: values.docs.id_back?.checksum,
+      },
+      {
+        onSuccess: () => {
+          setShowForm(false);
+          toast({
+            title: 'Request submitted',
+            description: 'You can check the review status here.',
+          });
         },
-        {
-          onSuccess: () => {
-            setShowForm(false);
-            toast({
-              title: 'Request submitted',
-              description: 'We review requests within a few days.',
-            });
-          },
-          onError: (err) =>
-            toast({
-              title: 'Could not submit',
-              description: verificationErrorMessage(err),
-              variant: 'destructive',
-            }),
-        }
-      );
-    },
-    (errors) => {
-      const first = Object.values(errors)[0];
-      if (first?.message) {
-        toast({
-          title: 'Check the form',
-          description: first.message,
-          variant: 'destructive',
-        });
+        onError: (error) =>
+          toast({
+            title: 'Could not submit',
+            description: verificationErrorMessage(error),
+            variant: 'destructive',
+          }),
       }
-    }
-  );
+    );
+  });
 
   if (isLoading) {
     return (
-      <div className='p-6 grid place-items-center'>
-        <Loader size={32} />
+      <div
+        role='status'
+        aria-label='Loading verification status'
+        className='flex items-center gap-3 rounded-xl border-1 border-border-light p-5 dark:border-border-dark'
+      >
+        <Loader size={24} />
+        <p className='text-sm'>Loading verification status…</p>
       </div>
     );
   }
 
-  /* ----------------------------- status views ---------------------------- */
-
-  if (!formVisible && status) {
-    const meta = STATUS_META[status];
+  if (isError || (!formVisible && (!status || !STATUS_META[status]))) {
     return (
-      <div className='space-y-4'>
-        <div className='rounded-md border-1 border-border-light dark:border-border-dark p-4 space-y-3'>
-          <div className='flex items-center gap-2'>
-            {status === 'approved' ? (
-              <>
-                <VerifiedBadge isVerified />
-                <span className='text-sm opacity-80'>
-                  Your account shows the verified badge.
-                </span>
-              </>
-            ) : status === 'rejected' ? (
-              <>
-                <RiErrorWarningLine
-                  size={18}
-                  className='text-alert-red shrink-0'
-                />
-                <Badge variant={meta.variant}>{meta.label}</Badge>
-              </>
-            ) : (
-              <>
-                <RiLoader4Line size={16} className='animate-spin opacity-70' />
-                <Badge variant={meta.variant}>{meta.label}</Badge>
-              </>
-            )}
-          </div>
+      <Alert className='rounded-xl'>
+        <AlertTitle>We couldn&apos;t load your verification status</AlertTitle>
+        <AlertDescription className='flex flex-col items-start gap-4 text-sm'>
+          <p>
+            Your request may still be active. Try again to see its current
+            status.
+          </p>
+          <Button
+            type='button'
+            variant='outline'
+            onClick={() => void refetch()}
+          >
+            Try again
+          </Button>
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
-          {status === 'rejected' && request.rejection_reason && (
-            <div className='text-sm space-y-1'>
-              <p className='font-medium'>Reviewer note</p>
-              <p className='opacity-80'>{request.rejection_reason}</p>
+  if (!formVisible && status && request) {
+    const meta = STATUS_META[status];
+    const createdAt = parseEventTime(request.created_at);
+    const submittedDate =
+      createdAt && !Number.isNaN(createdAt.getTime())
+        ? createdAt.toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+          })
+        : undefined;
+    return (
+      <section
+        aria-labelledby='verification-status-title'
+        className='flex flex-col gap-5 rounded-xl border-1 border-border-light bg-foreground-light/20 p-5 dark:border-border-dark dark:bg-foreground-dark/20 sm:p-6'
+      >
+        <div className='flex flex-wrap items-center gap-2'>
+          {status === 'approved' && <VerifiedBadge isVerified />}
+          <Badge
+            variant={
+              status === 'rejected'
+                ? 'destructive'
+                : status === 'approved'
+                  ? 'brand'
+                  : 'default'
+            }
+          >
+            {meta.label}
+          </Badge>
+        </div>
+        <div className='flex flex-col gap-2'>
+          <h2
+            id='verification-status-title'
+            className='font-dm_sans text-xl font-medium sm:text-2xl'
+          >
+            {meta.title}
+          </h2>
+          <p className='max-w-xl text-sm leading-relaxed opacity-80'>
+            {meta.description}
+          </p>
+        </div>
+        <dl className='grid gap-4 border-t-1 border-border-light pt-4 text-sm dark:border-border-dark sm:grid-cols-2'>
+          <div className='flex flex-col gap-1'>
+            <dt className='opacity-70'>Verification method</dt>
+            <dd className='font-medium'>
+              {request.verification_type === 'id_document'
+                ? 'Government ID'
+                : request.verification_type === 'social_proof'
+                  ? 'Social proof (previous request)'
+                  : 'Previous verification method'}
+            </dd>
+          </div>
+          <div className='flex flex-col gap-1'>
+            <dt className='opacity-70'>Submitted</dt>
+            <dd className='font-medium'>
+              {submittedDate ?? 'Date unavailable'}
+            </dd>
+          </div>
+          {request.country && (
+            <div className='flex flex-col gap-1'>
+              <dt className='opacity-70'>Issuing country / territory</dt>
+              <dd className='font-medium'>{countryLabel(request.country)}</dd>
             </div>
           )}
-
-          {(status === 'pending' || status === 'under_review') && (
-            <p className='text-sm opacity-70'>
-              Submitted{' '}
-              {request.created_at
-                ? new Date(request.created_at).toLocaleDateString()
-                : 'recently'}
-              . You&apos;ll see the decision here — no emails needed.
+        </dl>
+        {status === 'rejected' && request.rejection_reason && (
+          <Alert className='rounded-xl'>
+            <AlertTitle>Reviewer note</AlertTitle>
+            <AlertDescription className='whitespace-pre-wrap break-words text-sm'>
+              {request.rejection_reason}
+            </AlertDescription>
+          </Alert>
+        )}
+        {status === 'approved' && (
+          <div className='flex flex-col items-start gap-3'>
+            <p className='text-sm opacity-80'>
+              Your documents stay private. Only you and authorised reviewers can
+              access them.
             </p>
-          )}
-        </div>
-
-        <div className='flex flex-wrap gap-2'>
-          {status === 'pending' && (
-            <Button
-              type='button'
-              variant='outline'
-              disabled={cancel.isPending}
-              onClick={() => {
-                if (!armCancel) {
-                  setArmCancel(true);
-                  setTimeout(() => setArmCancel(false), 4000);
-                  return;
-                }
-                cancel.mutate(request.id, {
-                  onSuccess: () => setArmCancel(false),
-                  onError: (err) =>
-                    toast({
-                      title: 'Could not cancel',
-                      description: verificationErrorMessage(err),
-                      variant: 'destructive',
-                    }),
-                });
-              }}
-            >
-              {cancel.isPending
-                ? 'Cancelling…'
-                : armCancel
-                  ? 'Tap again to confirm cancel'
-                  : 'Cancel request'}
+            <Button asChild variant='outline'>
+              <Link href={`/${encodeURIComponent(request.username)}`}>
+                View profile
+              </Link>
             </Button>
-          )}
-
-          {status === 'rejected' && (
-            <Button
-              type='button'
-              onClick={() => {
-                reset({
-                  verification_type: request.verification_type,
-                  country: request.country ?? '',
-                  id_document_type:
-                    (request.id_document_type as VerificationFormValues['id_document_type']) ??
-                    undefined,
-                  docs: {
-                    selfie: request.selfie_checksum
-                      ? ({ checksum: request.selfie_checksum } as UploadedDoc)
-                      : undefined,
-                    id_front: request.id_front_checksum
-                      ? ({ checksum: request.id_front_checksum } as UploadedDoc)
-                      : undefined,
-                    id_back: request.id_back_checksum
-                      ? ({ checksum: request.id_back_checksum } as UploadedDoc)
-                      : undefined,
-                  },
-                  additional_info: request.additional_info ?? '',
-                });
-                setShowForm(true);
-              }}
-            >
-              Resubmit
-            </Button>
-          )}
-        </div>
-      </div>
+          </div>
+        )}
+        {status === 'pending' && (
+          <Dialog
+            open={cancelOpen}
+            onOpenChange={(open) => {
+              setCancelOpen(open);
+              if (open) setCancelError(undefined);
+            }}
+          >
+            <DialogTrigger asChild>
+              <Button type='button' variant='outline' className='self-start'>
+                Cancel request
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Cancel verification request?</DialogTitle>
+                <DialogDescription>
+                  This withdraws your pending request. You can submit a new
+                  request when you are ready.
+                </DialogDescription>
+              </DialogHeader>
+              {cancelError && (
+                <Alert variant='destructive'>
+                  <AlertDescription>{cancelError}</AlertDescription>
+                </Alert>
+              )}
+              <DialogFooter className='gap-2 sm:space-x-0'>
+                <Button
+                  type='button'
+                  variant='outline'
+                  disabled={cancel.isPending}
+                  onClick={() => setCancelOpen(false)}
+                >
+                  Keep request
+                </Button>
+                <Button
+                  type='button'
+                  variant='destructive'
+                  disabled={cancel.isPending}
+                  onClick={() => {
+                    if (cancelActive.current) return;
+                    cancelActive.current = true;
+                    cancel.mutate(request.id, {
+                      onSuccess: () => {
+                        cancelActive.current = false;
+                        setCancelOpen(false);
+                        submit.reset();
+                        reset();
+                      },
+                      onError: (error) => {
+                        cancelActive.current = false;
+                        setCancelError(verificationErrorMessage(error));
+                      },
+                    });
+                  }}
+                >
+                  {cancel.isPending ? 'Cancelling…' : 'Cancel request'}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )}
+        {status === 'rejected' && (
+          <Button
+            type='button'
+            variant='brand'
+            className='self-start'
+            onClick={() => {
+              submit.reset();
+              reset({
+                verification_type: 'id_document',
+                country:
+                  request.country && COUNTRY_CODES.includes(request.country)
+                    ? request.country
+                    : '',
+                id_document_type: docTypes.find(
+                  (type) => type === request.id_document_type
+                ),
+                docs: {
+                  selfie: request.selfie_checksum
+                    ? { checksum: request.selfie_checksum }
+                    : undefined,
+                  id_front: request.id_front_checksum
+                    ? { checksum: request.id_front_checksum }
+                    : undefined,
+                  id_back: request.id_back_checksum
+                    ? { checksum: request.id_back_checksum }
+                    : undefined,
+                },
+                additional_info: request.additional_info ?? '',
+              });
+              setTileErrors({});
+              setShowForm(true);
+            }}
+          >
+            Update and resubmit
+          </Button>
+        )}
+      </section>
     );
   }
-
-  /* -------------------------------- form -------------------------------- */
-
-  const docTypes = allowedDocTypes(values.country || undefined);
-  const infoLen = values.additional_info?.length ?? 0;
 
   return (
-    <form onSubmit={onSubmit} className='space-y-5 max-w-xl'>
-      {/* Type */}
-      <div className='space-y-2'>
-        <Label>Verification type</Label>
-        <div className='grid gap-2 sm:grid-cols-2'>
-          {(['social_proof', 'id_document'] as const).map((t) => (
-            <button
-              key={t}
-              type='button'
-              onClick={() => setValue('verification_type', t)}
-              className={`text-left rounded-md border-1 p-3 transition-colors ${
-                values.verification_type === t
-                  ? 'border-brand-orange bg-brand-orange/5'
-                  : 'border-border-light dark:border-border-dark hover:border-brand-orange/40'
-              }`}
-            >
-              <p className='text-sm font-medium capitalize'>
-                {t.replace('_', ' ')}
-              </p>
-              <p className='text-xs opacity-70 mt-0.5'>
-                {t === 'id_document'
-                  ? 'Selfie + government ID, reviewed privately'
-                  : 'Established presence elsewhere'}
-              </p>
-            </button>
-          ))}
+    <form onSubmit={onSubmit} className='flex min-w-0 flex-col gap-5'>
+      <section
+        aria-labelledby='verification-method-title'
+        className='flex flex-col gap-5 rounded-xl border-1 border-border-light p-4 dark:border-border-dark sm:p-6'
+      >
+        <div className='flex flex-col gap-2'>
+          <h2
+            id='verification-method-title'
+            className='font-dm_sans text-lg font-medium'
+          >
+            Verify with a government ID
+          </h2>
+          <p className='text-sm leading-relaxed opacity-80'>
+            Use a government-issued ID from any country or territory. Upload a
+            clear front image and a selfie holding the same ID.
+          </p>
         </div>
-      </div>
-
-      {isID && (
-        <>
-          <div className='grid gap-4 sm:grid-cols-2'>
-            <div className='space-y-1.5'>
-              <Label htmlFor='ver-country'>Country</Label>
-              <select
+        {request?.country === 'OT' && (
+          <p className='text-sm opacity-80'>
+            Your previous request did not specify a country. Choose the country
+            or territory that issued your ID to continue.
+          </p>
+        )}
+        <div className='grid gap-5 sm:grid-cols-2'>
+          <div className='flex min-w-0 flex-col gap-2'>
+            <Label htmlFor='ver-country'>Issuing country / territory</Label>
+            <Select
+              value={values.country || ''}
+              disabled={busy}
+              onValueChange={(country) =>
+                setValue('country', country, {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                })
+              }
+            >
+              <SelectTrigger
                 id='ver-country'
-                value={values.country ?? ''}
-                onChange={(e) => {
-                  const cc = e.target.value;
-                  setValue('country', cc);
-                  if (!allowedDocTypes(cc).includes(values.id_document_type!)) {
-                    setValue('id_document_type', undefined);
-                  }
-                }}
-                className='w-full h-9 rounded-md border-1 border-border-light dark:border-border-dark bg-transparent px-2 text-sm'
-              >
-                <option value=''>Select…</option>
-                {COUNTRY_CODES.map((cc) => (
-                  <option key={cc} value={cc}>
-                    {countryLabel(cc)} ({cc})
-                  </option>
-                ))}
-                <option value='OT'>Other / not listed</option>
-              </select>
-            </div>
-
-            <div className='space-y-1.5'>
-              <Label htmlFor='ver-doctype'>Document type</Label>
-              <select
-                id='ver-doctype'
-                value={values.id_document_type ?? ''}
-                onChange={(e) =>
-                  setValue(
-                    'id_document_type',
-                    (e.target.value ||
-                      undefined) as VerificationFormValues['id_document_type']
-                  )
+                className='h-auto min-h-10 w-full text-left [&>span]:truncate'
+                aria-invalid={!!formState.errors.country}
+                aria-describedby={
+                  formState.errors.country ? 'ver-country-error' : undefined
                 }
-                className='w-full h-9 rounded-md border-1 border-border-light dark:border-border-dark bg-transparent px-2 text-sm'
               >
-                <option value=''>Select…</option>
-                {docTypes.map((dt) => (
-                  <option key={dt} value={dt}>
-                    {ID_DOCUMENT_TYPE_LABELS[dt]}
-                  </option>
+                <SelectValue placeholder='Choose a country or territory' />
+              </SelectTrigger>
+              <SelectContent side='bottom' className='max-h-60'>
+                {COUNTRY_CODES.map((code) => (
+                  <SelectItem key={code} value={code}>
+                    {countryLabel(code)}
+                  </SelectItem>
                 ))}
-              </select>
-            </div>
-          </div>
-
-          <div className='space-y-2'>
-            <Label>Documents</Label>
-            <div className='grid grid-cols-1 sm:grid-cols-3 gap-3'>
-              {(['selfie', 'id_front', 'id_back'] as const).map((k) => (
-                <div key={k} className='space-y-1'>
-                  <DocumentTile
-                    kind={k}
-                    label={DOC_KIND_LABELS[k]}
-                    doc={values.docs[k]}
-                    error={tileErrors[k]}
-                    disabled={uploadDoc.isPending && progress[k] !== undefined}
-                    onFile={handleFile}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {request && (
-              <button
-                type='button'
-                onClick={() => setPreviewKind('selfie')}
-                className='inline-flex items-center gap-1 text-xs underline underline-offset-2 opacity-70 hover:opacity-100'
+              </SelectContent>
+            </Select>
+            {formState.errors.country && (
+              <p
+                role='alert'
+                id='ver-country-error'
+                className='text-sm text-alert-red'
               >
-                <RiEyeLine size={12} /> View an uploaded document
-              </button>
+                {formState.errors.country.message}
+              </p>
             )}
           </div>
-        </>
-      )}
+          <div className='flex min-w-0 flex-col gap-2'>
+            <Label htmlFor='ver-doctype'>Document type</Label>
+            <Select
+              value={values.id_document_type || ''}
+              disabled={busy}
+              onValueChange={(type) =>
+                setValue(
+                  'id_document_type',
+                  type as VerificationFormValues['id_document_type'],
+                  { shouldValidate: true, shouldDirty: true }
+                )
+              }
+            >
+              <SelectTrigger
+                id='ver-doctype'
+                className='h-auto min-h-10 w-full text-left [&>span]:truncate'
+                aria-invalid={!!formState.errors.id_document_type}
+                aria-describedby={
+                  formState.errors.id_document_type
+                    ? 'ver-doctype-error'
+                    : undefined
+                }
+              >
+                <SelectValue placeholder='Choose a document type' />
+              </SelectTrigger>
+              <SelectContent side='bottom' className='max-h-60'>
+                {docTypes.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {ID_DOCUMENT_TYPE_LABELS[type]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {formState.errors.id_document_type && (
+              <p
+                role='alert'
+                id='ver-doctype-error'
+                className='text-sm text-alert-red'
+              >
+                {formState.errors.id_document_type.message}
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
 
-      {/* Notes */}
-      <div className='space-y-1.5'>
+      <section
+        aria-labelledby='verification-documents-title'
+        className='flex flex-col gap-4 rounded-xl border-1 border-border-light p-4 dark:border-border-dark sm:p-6'
+      >
+        <div className='flex flex-col gap-2'>
+          <h3
+            id='verification-documents-title'
+            className='font-dm_sans text-lg font-medium'
+          >
+            Your documents
+          </h3>
+          <p className='text-sm leading-relaxed opacity-80'>
+            JPEG, PNG or WebP, up to 10 MB per image. Use your camera or upload
+            a file. The back of your ID is optional.
+          </p>
+        </div>
+        <div className='grid gap-3 sm:grid-cols-2 xl:grid-cols-3'>
+          {(['selfie', 'id_front', 'id_back'] as const).map((kind) => (
+            <div key={kind} className='flex min-w-0 flex-col gap-2'>
+              <DocumentTile
+                kind={kind}
+                label={DOC_KIND_LABELS[kind]}
+                doc={values.docs[kind]}
+                progress={progress[kind]}
+                error={
+                  tileErrors[kind] || formState.errors.docs?.[kind]?.message
+                }
+                disabled={busy}
+                onFile={handleFile}
+                onInvalidFile={(kind, message) => {
+                  setValue(`docs.${kind}`, undefined, { shouldDirty: true });
+                  setTileErrors((previous) => ({
+                    ...previous,
+                    [kind]: message,
+                  }));
+                }}
+              />
+              {request?.[`${kind}_checksum`] && (
+                <Button
+                  type='button'
+                  variant='link'
+                  size='sm'
+                  className='h-auto whitespace-normal px-0 text-left'
+                  onClick={() => setPreviewKind(kind)}
+                >
+                  <RiEyeLine size={16} className='mr-1 shrink-0' aria-hidden />
+                  View previously submitted{' '}
+                  {kind === 'selfie'
+                    ? 'selfie'
+                    : kind === 'id_front'
+                      ? 'front'
+                      : 'back'}
+                </Button>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className='flex flex-col gap-2'>
         <Label htmlFor='ver-info'>
-          {isID ? 'Anything reviewers should know (optional)' : 'Proof & links'}
+          Anything reviewers should know (optional)
         </Label>
         <textarea
           id='ver-info'
-          rows={4}
+          rows={3}
           maxLength={MAX_ADDITIONAL_INFO}
+          disabled={busy}
           {...register('additional_info')}
-          className='w-full rounded-md border-1 border-border-light dark:border-border-dark bg-transparent p-2 text-sm resize-y'
-          placeholder={
-            isID
-              ? 'Optional context'
-              : 'https://linkedin.com/in/you · https://github.com/you …'
-          }
+          aria-invalid={!!formState.errors.additional_info}
+          aria-describedby='ver-info-help'
+          className='w-full resize-y rounded-xl border-1 border-border-light bg-transparent p-3 text-base leading-relaxed focus-visible:outline-brand-orange dark:border-border-dark sm:text-sm'
+          placeholder='Add context to help us review your ID.'
         />
-        <p className='text-[11px] opacity-50 text-right'>
-          {infoLen}/{MAX_ADDITIONAL_INFO}
+        <p id='ver-info-help' className='text-right text-sm opacity-70'>
+          {values.additional_info?.length ?? 0}/{MAX_ADDITIONAL_INFO}
         </p>
+        {formState.errors.additional_info && (
+          <p role='alert' className='text-sm text-alert-red'>
+            {formState.errors.additional_info.message}
+          </p>
+        )}
       </div>
 
-      <div className='flex items-center gap-3'>
+      <Alert role='note' className='rounded-xl'>
+        <RiShieldCheckLine size={20} aria-hidden />
+        <AlertTitle>Your documents stay private</AlertTitle>
+        <AlertDescription className='text-sm'>
+          Only you and authorised reviewers can access these images. They are
+          not shown on your profile. You can check the decision here after
+          submitting.
+        </AlertDescription>
+      </Alert>
+
+      <div className='flex flex-col gap-3 sm:flex-row sm:items-center'>
         <Button
           type='submit'
-          disabled={submit.isPending || uploadDoc.isPending}
+          variant='brand'
+          className='min-h-10'
+          disabled={busy}
         >
           {submit.isPending ? 'Submitting…' : 'Submit request'}
         </Button>
@@ -438,13 +650,19 @@ export const VerificationPanel = () => {
           <Button
             type='button'
             variant='outline'
+            disabled={busy}
             onClick={() => {
               setShowForm(false);
               reset();
             }}
           >
-            <RiCloseLine size={14} /> Close
+            Back to request
           </Button>
+        )}
+        {uploading && (
+          <p role='status' className='text-sm opacity-80'>
+            Wait for your image to finish uploading.
+          </p>
         )}
       </div>
 
@@ -453,7 +671,7 @@ export const VerificationPanel = () => {
           requestId={request.id}
           kind={previewKind}
           open
-          onOpenChange={(o) => !o && setPreviewKind(undefined)}
+          onOpenChange={(open) => !open && setPreviewKind(undefined)}
         />
       )}
     </form>
