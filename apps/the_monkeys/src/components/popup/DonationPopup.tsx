@@ -8,7 +8,7 @@ import { RiCloseLine } from 'react-icons/ri';
 
 import DonationHeartVisual from './DonationHeartVisual';
 
-const DonationPopup = () => {
+const DailyDonationPopup = () => {
   const pathname = usePathname();
   const { shouldShowPopup, handleClosePopup } = useDailyDonationPopup();
 
@@ -99,5 +99,12 @@ const DonationPopup = () => {
     </div>
   );
 };
+
+// Temporarily disabled across all routes. Keep the current prompt design ready
+// for re-enablement without mounting its daily timer or touching saved state.
+const DONATION_POPUPS_ENABLED = false;
+
+const DonationPopup = () =>
+  DONATION_POPUPS_ENABLED ? <DailyDonationPopup /> : null;
 
 export default DonationPopup;
