@@ -1,0 +1,41 @@
+{
+  "method": "Single anonymous read-only local API GET per explicit path; no body saved; not a percentile or capacity test.",
+  "samples": [
+    {
+      "path": "/api/v2/blog/homepage?limit=12&offset=0&sort=latest",
+      "status": 200,
+      "bytes": 20089,
+      "total_ms": 1021.32
+    },
+    {
+      "path": "/api/v2/blog/homepage?limit=12&offset=0&sort=trending",
+      "status": 200,
+      "bytes": 7015,
+      "total_ms": 460.41
+    },
+    {
+      "path": "/api/v1/discussions",
+      "status": 200,
+      "bytes": 4487,
+      "total_ms": 541.12
+    },
+    {
+      "path": "/api/v1/groups?limit=6&status=published&public_only=1",
+      "status": 200,
+      "bytes": 4458,
+      "total_ms": 339.24
+    },
+    {
+      "path": "/api/v1/events?limit=4&date=upcoming",
+      "status": 200,
+      "bytes": 4255,
+      "total_ms": 357.24
+    },
+    {
+      "path": "/api/v2/blog/meta-feed?limit=500&offset=0",
+      "status": 503,
+      "bytes": 55,
+      "total_ms": 6612.14
+    }
+  ]
+}

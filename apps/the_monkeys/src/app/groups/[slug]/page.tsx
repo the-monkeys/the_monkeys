@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { JsonLd } from '@/components/seo/JsonLd';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { queryKeys } from '@/lib/queryKeys';
 import {
   breadcrumb,
@@ -37,6 +38,10 @@ export async function generateMetadata({
     return { title: 'Group not found', robots: noIndexRobots };
   }
 
+  if (!isPublicContentSafe(group)) {
+    return { title: 'Sensitive group', robots: noIndexRobots };
+  }
+
   if (!isIndexable(group)) {
     return { title: group.name, robots: noIndexRobots };
   }
@@ -66,13 +71,13 @@ export default async function GroupDetailPage({
   const group = data?.group;
 
   const queryClient = getQueryClient();
-  if (group && isIndexable(group)) {
+  if (group && isPublicContentSafe(group) && isIndexable(group)) {
     queryClient.setQueryData(queryKeys.groups.detail(params.slug), { group });
   }
 
   return (
     <>
-      {group && isIndexable(group) && (
+      {group && isPublicContentSafe(group) && isIndexable(group) && (
         <>
           <JsonLd data={groupJsonLd(group)} />
           <JsonLd

@@ -8,6 +8,7 @@ import {
   useEventPhotos,
   useUploadEventPhoto,
 } from '@/hooks/events/useEventQueries';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import { eventError } from '@/services/events/eventsApi';
 import { Button } from '@the-monkeys/ui/atoms/button';
 import { useToast } from '@the-monkeys/ui/hooks/use-toast';
@@ -180,7 +181,7 @@ export function EventGallery({
                 className='relative aspect-[3/4] w-full min-w-[280px] flex-shrink-0 snap-start overflow-hidden rounded-2xl bg-foreground-light/40 sm:min-w-[calc(50%-8px)] md:min-w-[calc(33.333%-10.66px)] dark:bg-foreground-dark/30'
               >
                 <img
-                  src={p.url}
+                  src={authenticatedArticleImageUrl(p.url)}
                   alt='Event gallery photo'
                   loading='lazy'
                   className='h-full w-full object-cover'

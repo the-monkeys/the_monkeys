@@ -1,9 +1,10 @@
 import Link from 'next/link';
 
+import { PostCardGate } from '@/components/blog/PostCardGate';
 import BlogActionBar from '@/components/editorial/BlogActionBar';
 import { BLOG_ROUTE, TOPIC_ROUTE } from '@/constants/routeConstants';
-import { canonicalPostTitleSlug } from '@/lib/postUrl';
 import { MetaBlog } from '@/services/blog/blogTypes';
+import { fromMetaBlog } from '@/utils/blogCardAdapters';
 import { purifyHTMLString } from '@/utils/purifyHTML';
 import { topicToSlug } from '@/utils/topicUtils';
 
@@ -21,46 +22,49 @@ export const MinimalBlogCard = ({
   label?: string;
 }) => {
   const title = purifyHTMLString(blog?.title);
-  const slug = canonicalPostTitleSlug(
-    blog?.title,
-    blog?.canonical_slug,
-    blog?.blog_id
-  );
+  const slug = fromMetaBlog(blog).slug;
   const url = `${BLOG_ROUTE}/${slug}-${blog?.blog_id}`;
   const tag = blog?.tags?.[0];
   const display = (label ?? tag ?? 'Research').toUpperCase();
 
   return (
-    <article className='h-full group p-4 sm:p-5 rounded-md  transition-colors bg-background-light dark:bg-background-dark'>
-      {tag ? (
-        <Link
-          href={`${TOPIC_ROUTE}/${topicToSlug(tag)}`}
-          className='inline-block font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.15em] hover:opacity-80 transition-opacity'
-        >
-          {display}
+    <PostCardGate
+      content={blog}
+      target={{ kind: 'blog', id: blog.blog_id }}
+      compact
+      href={url}
+    >
+      <article className='h-full group p-4 pr-14 sm:p-5 sm:pr-14 rounded-md  transition-colors bg-background-light dark:bg-background-dark'>
+        {tag ? (
+          <Link
+            href={`${TOPIC_ROUTE}/${topicToSlug(tag)}`}
+            className='inline-block font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.15em] hover:opacity-80 transition-opacity'
+          >
+            {display}
+          </Link>
+        ) : (
+          <span className='inline-block font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.15em]'>
+            {display}
+          </span>
+        )}
+
+        <Link href={url} className='block mt-2 group/title'>
+          <h3
+            className='font-newsreader font-bold text-lg sm:text-xl leading-[1.2] text-text-light dark:text-text-dark group-hover/title:text-brand-orange transition-colors line-clamp-3'
+            dangerouslySetInnerHTML={{ __html: title || 'Untitled' }}
+          />
         </Link>
-      ) : (
-        <span className='inline-block font-inter font-bold text-[11px] text-brand-orange uppercase tracking-[0.15em]'>
-          {display}
-        </span>
-      )}
 
-      <Link href={url} className='block mt-2 group/title'>
-        <h3
-          className='font-newsreader font-bold text-lg sm:text-xl leading-[1.2] text-text-light dark:text-text-dark group-hover/title:text-brand-orange transition-colors line-clamp-3'
-          dangerouslySetInnerHTML={{ __html: title || 'Untitled' }}
-        />
-      </Link>
-
-      <div className='mt-3'>
-        <BlogActionBar
-          blogId={blog?.blog_id}
-          blogURL={url}
-          size={16}
-          initialLikeCount={blog?.like_count}
-        />
-      </div>
-    </article>
+        <div className='mt-3'>
+          <BlogActionBar
+            blogId={blog?.blog_id}
+            blogURL={url}
+            size={16}
+            initialLikeCount={blog?.like_count}
+          />
+        </div>
+      </article>
+    </PostCardGate>
   );
 };
 

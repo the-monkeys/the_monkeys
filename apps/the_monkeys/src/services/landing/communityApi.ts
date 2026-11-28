@@ -5,10 +5,11 @@ import {
 } from '@/lib/landingCommunity';
 import { queryKeys } from '@/lib/queryKeys';
 
-async function readPublicList(
+async function readCommunityList(
   path: string,
   field: string,
-  signal?: AbortSignal
+  signal?: AbortSignal,
+  authenticated = false
 ): Promise<unknown> {
   const origin =
     typeof window === 'undefined' ? API_URL?.replace(/\/$/, '') : '/api/v1';
@@ -17,10 +18,16 @@ async function readPublicList(
   const abort = () => controller.abort();
   if (signal?.aborted) abort();
   else signal?.addEventListener('abort', abort, { once: true });
-  const timeout = setTimeout(abort, 5000);
+  // The gateway may spend five seconds checking content after the list read.
+  // Keep SSR bounded, but do not race that check from the browser.
+  const timeout = setTimeout(
+    abort,
+    typeof window === 'undefined' ? 5000 : 15000
+  );
   try {
     const res = await fetch(`${origin}${path}`, {
-      credentials: 'omit',
+      credentials:
+        authenticated && typeof window !== 'undefined' ? 'same-origin' : 'omit',
       cache: 'no-store',
       signal: controller.signal,
     });
@@ -43,18 +50,30 @@ async function readPublicList(
   }
 }
 
-export async function readLandingDiscussions(signal?: AbortSignal) {
+export async function readLandingDiscussions(
+  signal?: AbortSignal,
+  authenticated = false
+) {
   return selectLandingDiscussions(
-    await readPublicList('/discussions', 'discussions', signal)
+    await readCommunityList(
+      '/discussions',
+      'discussions',
+      signal,
+      authenticated
+    )
   );
 }
 
-export async function readLandingGroups(signal?: AbortSignal) {
+export async function readLandingGroups(
+  signal?: AbortSignal,
+  authenticated = false
+) {
   return selectLandingGroups(
-    await readPublicList(
+    await readCommunityList(
       '/groups?limit=6&status=published&public_only=1',
       'groups',
-      signal
+      signal,
+      authenticated
     )
   );
 }

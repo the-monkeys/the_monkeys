@@ -1,11 +1,26 @@
 import { API_URL_V2 } from '@/constants/api';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { selectPublicRelatedPosts } from '@/lib/publicRelatedPosts';
 import type { Blog, MetaBlog } from '@/services/blog/blogTypes';
 
 export async function loadPublicRelatedPosts(
-  post: Pick<Blog, 'blog_id' | 'tags' | 'is_draft' | 'audience'>
+  post: Pick<
+    Blog,
+    | 'blog_id'
+    | 'tags'
+    | 'is_draft'
+    | 'audience'
+    | 'is_nsfw'
+    | 'content_rating'
+    | 'content_unavailable'
+  >
 ): Promise<MetaBlog[] | undefined> {
-  if (post.is_draft || (post.audience && post.audience !== 'public')) return [];
+  if (
+    !isPublicContentSafe(post) ||
+    post.is_draft ||
+    (post.audience && post.audience !== 'public')
+  )
+    return [];
   const tags = Array.isArray(post.tags)
     ? post.tags.filter((tag) => typeof tag === 'string' && tag.trim())
     : [];
@@ -19,7 +34,7 @@ export async function loadPublicRelatedPosts(
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ tags }),
-        next: { revalidate: 300 },
+        cache: 'no-store',
         signal: AbortSignal.timeout(2500),
       }
     );

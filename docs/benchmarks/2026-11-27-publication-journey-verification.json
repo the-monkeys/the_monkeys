@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-27",
+  "scope": "Publication list freshness and group owner responsive fixes; user journey regression still in progress",
+  "frontend_build_id": "b52gOWcdmLMM5BYfK50t6",
+  "backend_binary_sha256": "2f4ec22f4b9fa02937b011bbc8f36e443569f294f9f8d694b3953833e85c0f46",
+  "automated": {
+    "frontend_files": 274,
+    "frontend_tests": 2423,
+    "frontend_build": "pass",
+    "scoped_lint": "0 errors, 2 existing img-element warnings in GroupDetailClient",
+    "backend_blog_service_packages": "pass",
+    "gopls_changed_files": "exit 0, no diagnostics",
+    "publication_regression_red": "all 3 transitions failed before fix",
+    "publication_regression_green": "all transitions and success/conflict cases pass"
+  },
+  "browser": {
+    "schedule_visible_without_reload": "pass",
+    "move_to_draft_updates_both_lists_without_reload": "pass",
+    "publish_visible_on_previously_cached_author_profile_without_reload": "pass",
+    "group_owner_viewports_no_horizontal_overflow": [
+      320,
+      390,
+      820,
+      1440
+    ],
+    "event_gallery_after_reload": "960x540 image loaded",
+    "topic_follow_after_reload": "Unfollow control present",
+    "topic_mobile_menu_open_close_320": "pass"
+  },
+  "compatibility": {
+    "publication_scripts_and_retry_on_conflict": "unchanged",
+    "autosave_refresh_policy": "unchanged",
+    "public_api_proto_db_schema": "unchanged",
+    "staged_mobile_patch_sha256": "3adf9af88183cce349877ad19cfa2b87088544a5e5224bf4ad60201a6147666d",
+    "unrelated_backend_patch_sha256": "dfbdfad462e39c44caa85176bb9fe5a4ec51c99428f82ebb828e3e8a349ba2e6"
+  },
+  "limits": [
+    "No production writes",
+    "Full new and existing user journeys still in progress",
+    "Chromium in-app browser, not every browser or physical device",
+    "Password and final email credential changes not run; require manual participation",
+    "Fresh live wrong-signup-code UI retest after fix not run; component test passes",
+    "Local notification delivery disabled; auth gRPC SERVING despite malformed local container health command",
+    "Synthetic data, services and Mailpit retained"
+  ]
+}

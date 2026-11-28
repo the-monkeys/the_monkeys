@@ -1,4 +1,5 @@
 import { parseEventTime, toIsoTime } from '@/lib/eventTime';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import {
   MONKEYS_WEBSITE_ID,
   OG_IMAGE,
@@ -96,6 +97,7 @@ export function studioHubGraph(opts: {
 }
 
 export function eventJsonLd(event: EventItem) {
+  if (!isPublicContentSafe(event)) return null;
   const url = absoluteUrl(`/events/${event.slug}`);
   const attendanceMode =
     event.event_type === 'virtual'
@@ -254,6 +256,7 @@ export function eventJsonLd(event: EventItem) {
 }
 
 export function groupJsonLd(group: GroupItem) {
+  if (!isPublicContentSafe(group)) return null;
   const url = absoluteUrl(`/groups/${group.slug}`);
   const jsonLd: Record<string, unknown> = {
     '@context': 'https://schema.org',

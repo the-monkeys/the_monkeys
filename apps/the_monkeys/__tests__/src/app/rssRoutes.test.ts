@@ -16,7 +16,7 @@ describe.each(routes)('%s RSS availability', (_name, route, emptyCatalog) => {
     expect(route).toHaveProperty('dynamic', 'force-dynamic');
   });
 
-  it('preserves the RSS format and successful-response cache policy', async () => {
+  it('preserves the RSS format without retaining later-restricted items in shared caches', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => Response.json(emptyCatalog))
@@ -26,9 +26,7 @@ describe.each(routes)('%s RSS availability', (_name, route, emptyCatalog) => {
     expect(response.headers.get('Content-Type')).toBe(
       'application/rss+xml; charset=utf-8'
     );
-    expect(response.headers.get('Cache-Control')).toBe(
-      'public, s-maxage=300, stale-while-revalidate=600'
-    );
+    expect(response.headers.get('Cache-Control')).toBe('no-store');
     expect(await response.text()).toContain('<rss version="2.0">');
   });
 

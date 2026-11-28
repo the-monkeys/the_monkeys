@@ -5,9 +5,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 vi.mock('next/navigation', () => ({
   usePathname: () => '/',
 }));
-vi.mock('@/hooks/auth/useAuth', () => ({
-  default: () => ({ data: null, isLoading: false }),
-}));
+const auth = vi.hoisted(() => ({ data: null, isLoading: false }));
+vi.mock('@/hooks/auth/useAuth', () => ({ default: () => auth }));
 vi.mock('@/components/buttons/createButton', () => ({
   CreateButton: () => null,
 }));
@@ -50,4 +49,18 @@ describe('Nav browser compatibility', () => {
       document.documentElement.style.getPropertyValue('--app-header-h')
     ).not.toBe('');
   });
+});
+
+it('does not display a misleading login action before session validation completes', () => {
+  auth.isLoading = true;
+  try {
+    render(<Nav />);
+    expect(screen.queryByRole('button', { name: 'Log in' })).toBeNull();
+    expect(
+      screen.getByRole('status', { name: 'Loading account' })
+    ).toBeTruthy();
+  } finally {
+    cleanup();
+    auth.isLoading = false;
+  }
 });

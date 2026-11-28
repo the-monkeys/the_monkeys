@@ -8,6 +8,7 @@ import { BackButton } from '@/components/buttons/backButton';
 import { EventActions } from '@/components/events/EventActions';
 import { EventEmpty } from '@/components/events/EventCard';
 import { EventComments } from '@/components/events/EventComments';
+import { EventContentOptions } from '@/components/events/EventContentOptions';
 import { EventHostName } from '@/components/events/EventHostName';
 import { EventReactions } from '@/components/events/EventReactions';
 import { RsvpPanel } from '@/components/events/RsvpPanel';
@@ -23,10 +24,12 @@ import { EventSidebarMeta } from '@/components/events/detail/EventSidebarMeta';
 import { EventStickyBar } from '@/components/events/detail/EventStickyBar';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import useAuth from '@/hooks/auth/useAuth';
 import { useEventDetail } from '@/hooks/events/useEventQueries';
 import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import {
   eventStatusLabel,
   eventTypeLabel,
@@ -35,14 +38,63 @@ import {
   isHost,
   isValidTimezone,
 } from '@/lib/eventTime';
+import type { EventItem, RsvpStatus } from '@/services/events/eventTypes';
 import { getShareMeta } from '@/services/events/eventsApi';
+import type { IUser } from '@/services/models/user';
 import { Button } from '@the-monkeys/ui/atoms/button';
 
 export default function EventDetailClient({ slug }: { slug: string }) {
-  const timezone = useViewerTimezone();
   const { data: session } = useAuth();
   const { data, isLoading, isError } = useEventDetail(slug);
   const event = data?.event;
+  if (isLoading) {
+    return (
+      <div className='flex justify-center py-24'>
+        <Loader size={32} />
+      </div>
+    );
+  }
+
+  if (isError || !event) {
+    return (
+      <EventEmpty
+        title='Event not found'
+        hint='It may be private or removed.'
+      />
+    );
+  }
+
+  return (
+    <div className='relative'>
+      <EventContentOptions
+        event={event}
+        className='absolute right-4 top-0 z-20'
+      />
+      <ContentGate
+        content={event}
+        target={{ kind: 'event', id: event.slug }}
+        href={`/events/${event.slug}`}
+      >
+        <EventDetailContent
+          event={event}
+          session={session}
+          viewerStatus={data?.viewer_rsvp_status}
+        />
+      </ContentGate>
+    </div>
+  );
+}
+
+function EventDetailContent({
+  event,
+  session,
+  viewerStatus,
+}: {
+  event: EventItem;
+  session?: IUser | null;
+  viewerStatus?: RsvpStatus;
+}) {
+  const timezone = useViewerTimezone();
   const host = isHost(event, session?.username);
 
   const onShare = useCallback(async () => {
@@ -67,23 +119,6 @@ export default function EventDetailClient({ slug }: { slug: string }) {
     }
   }, [event]);
 
-  if (isLoading) {
-    return (
-      <div className='flex justify-center py-24'>
-        <Loader size={32} />
-      </div>
-    );
-  }
-
-  if (isError || !event) {
-    return (
-      <EventEmpty
-        title='Event not found'
-        hint='It may be private or removed.'
-      />
-    );
-  }
-
   return (
     <>
       {/* Extra bottom padding leaves room for the fixed registration bar. */}
@@ -99,7 +134,7 @@ export default function EventDetailClient({ slug }: { slug: string }) {
             style={{ aspectRatio: '3 / 1' }}
           >
             <img
-              src={event.cover_image}
+              src={authenticatedArticleImageUrl(event.cover_image)}
               alt={event.title}
               className='h-full w-full object-cover'
               loading='eager'
@@ -194,7 +229,12 @@ export default function EventDetailClient({ slug }: { slug: string }) {
             )}
 
             <div className='mt-6'>
-              <EventActions event={event} session={session} canManage={host} />
+              <EventActions
+                event={event}
+                session={session}
+                canManage={host}
+                showContentOptions={false}
+              />
             </div>
 
             <div className='mt-8 space-y-10'>
@@ -219,7 +259,7 @@ export default function EventDetailClient({ slug }: { slug: string }) {
                 ) : (
                   <RsvpPanel
                     event={event}
-                    viewerStatus={data?.viewer_rsvp_status}
+                    viewerStatus={viewerStatus}
                     session={session}
                   />
                 )}
@@ -249,7 +289,7 @@ export default function EventDetailClient({ slug }: { slug: string }) {
                 ) : (
                   <RsvpPanel
                     event={event}
-                    viewerStatus={data?.viewer_rsvp_status}
+                    viewerStatus={viewerStatus}
                     session={session}
                   />
                 )}
@@ -262,7 +302,7 @@ export default function EventDetailClient({ slug }: { slug: string }) {
 
       <EventStickyBar
         event={event}
-        viewerStatus={data?.viewer_rsvp_status}
+        viewerStatus={viewerStatus}
         host={host}
         onShare={onShare}
       />

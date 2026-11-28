@@ -11,6 +11,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    // Ratings can change after publication. Next 14 serves optimizer cache
+    // before app policy; disable it so historical cached URLs return 404.
+    unoptimized: true,
     domains: ['monkeys.support', 'dev.themonkeys.site'],
     qualities: [80, 100],
     remotePatterns: [

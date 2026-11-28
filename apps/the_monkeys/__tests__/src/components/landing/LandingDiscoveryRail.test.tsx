@@ -1,4 +1,7 @@
-import { LandingDiscoveryRail } from '@/components/landing/LandingDiscoveryRail';
+import {
+  LandingDiscoveryRail,
+  TrendingPosts,
+} from '@/components/landing/LandingDiscoveryRail';
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem } from '@/services/events/eventTypes';
 import { cleanup, screen } from '@testing-library/react';
@@ -100,4 +103,23 @@ describe('LandingDiscoveryRail', () => {
     expect(screen.getByText('Subscriptions are coming soon.')).toBeDefined();
     expect(screen.queryByText(/check your inbox/i)).toBeNull();
   });
+});
+
+it('labels a sensitive trending post as NSFW and 18+ without adding warnings to ordinary posts', () => {
+  renderWithProviders(
+    <TrendingPosts
+      posts={[
+        { ...post(1), title: 'Sensitive content', is_nsfw: true },
+        post(2),
+      ]}
+      isLoading={false}
+      isError={false}
+    />
+  );
+  expect(screen.getByText('NSFW \u00b7 18+')).toBeTruthy();
+  expect(
+    screen.getByRole('link', { name: 'Sensitive content' }).getAttribute('href')
+  ).toContain('post-1');
+  expect(screen.getByRole('link', { name: 'Trending post 2' })).toBeTruthy();
+  expect(screen.getAllByText('NSFW \u00b7 18+')).toHaveLength(1);
 });

@@ -60,7 +60,8 @@ describe('homepage hook and ordinary-feed compatibility', () => {
     expect(result.current.blogs).toBeUndefined();
     expect(fetcherV2).toHaveBeenCalledTimes(1);
     expect(fetcherV2).toHaveBeenCalledWith(
-      '/blog/homepage?limit=12&offset=0&sort=latest'
+      '/blog/homepage?limit=12&offset=0&sort=latest',
+      expect.any(AbortSignal)
     );
   });
   it('withholds previously eligible homepage data after a failed freshness check', async () => {

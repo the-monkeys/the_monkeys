@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 
 import { canonicalPostTitleSlug } from '@/lib/postUrl';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import {
   LEGAL_PUBLISHER_ID,
   MONKEYS_WEBSITE_ID,
@@ -33,7 +34,11 @@ export function relatedTopicLinks(
     )
   );
   const current = topicToSlug(topic);
-  const slugs = new Set(posts.flatMap((post) => post.tags.map(topicToSlug)));
+  const slugs = new Set(
+    posts
+      .filter(isPublicContentSafe)
+      .flatMap((post) => post.tags.map(topicToSlug))
+  );
   return Array.from(slugs)
     .filter((slug) => slug && slug !== current && catalogTopics.has(slug))
     .slice(0, 6)
@@ -48,6 +53,7 @@ export function buildTopicMetadata(
   slug: string,
   posts: MetaBlog[]
 ): Metadata {
+  posts = posts.filter(isPublicContentSafe);
   const countText = posts.length
     ? `Explore ${posts.length} public post${posts.length === 1 ? '' : 's'} about ${topic}`
     : `Explore public posts and community conversations about ${topic}`;
@@ -65,6 +71,7 @@ export function buildTopicJsonLd(
   slug: string,
   posts: MetaBlog[]
 ) {
+  posts = posts.filter(isPublicContentSafe);
   const url = absoluteUrl(`/topics/${slug}`);
   return {
     '@context': 'https://schema.org',

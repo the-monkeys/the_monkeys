@@ -1,4 +1,5 @@
 import type { DiscussionInstant } from '@/lib/discussionTime';
+import type { RatedContent } from '@/services/moderation/moderationTypes';
 
 export type DiscussionFile = {
   storage_key: string;
@@ -22,20 +23,21 @@ export type DiscussionReply = DiscussionAuthor & {
 
 export type DiscussionAudience = 'public' | 'group_only';
 
-export type Discussion = DiscussionAuthor & {
-  public_id: string;
-  body: string;
-  status: string;
-  group_slug?: string;
-  audience?: DiscussionAudience;
-  reply_count?: number;
-  like_count?: number;
-  liked?: boolean;
-  created_at?: DiscussionInstant;
-  edited_until?: DiscussionInstant;
-  files?: DiscussionFile[];
-  replies?: DiscussionReply[];
-};
+export type Discussion = DiscussionAuthor &
+  RatedContent & {
+    public_id: string;
+    body: string;
+    status: string;
+    group_slug?: string;
+    audience?: DiscussionAudience;
+    reply_count?: number;
+    like_count?: number;
+    liked?: boolean;
+    created_at?: DiscussionInstant;
+    edited_until?: DiscussionInstant;
+    files?: DiscussionFile[];
+    replies?: DiscussionReply[];
+  };
 
 export type DiscussionList = {
   discussions: Discussion[];

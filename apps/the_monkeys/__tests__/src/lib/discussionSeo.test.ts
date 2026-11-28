@@ -80,9 +80,9 @@ describe('discussionSeo', () => {
 
   it('emits DiscussionForumPosting text in JSON-LD', () => {
     const data = buildDiscussionJsonLd(post);
-    expect(data['@type']).toBe('DiscussionForumPosting');
-    expect(data.articleBody).toBe('Chai notes\nA short public thread.');
-    expect(data.url).toContain('/discussions/abc');
+    expect(data?.['@type']).toBe('DiscussionForumPosting');
+    expect(data?.articleBody).toBe('Chai notes\nA short public thread.');
+    expect(data?.url).toContain('/discussions/abc');
   });
 });
 
@@ -99,7 +99,7 @@ describe('discussion author profile URLs', () => {
       name: 'lee',
       url: 'https://monkeys.com.co/lee',
     });
-    expect(data.url).toBe('https://monkeys.com.co/discussions/abc');
+    expect(data?.url).toBe('https://monkeys.com.co/discussions/abc');
     expect(data.comment[0].url).toBe(
       'https://monkeys.com.co/discussions/abc#reply-r1'
     );

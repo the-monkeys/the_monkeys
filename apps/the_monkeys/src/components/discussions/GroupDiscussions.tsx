@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { DiscussionComposer } from '@/components/discussions/DiscussionComposer';
 import { DiscussionFeed } from '@/components/discussions/DiscussionListClient';
@@ -13,16 +13,37 @@ import axios from 'axios';
 
 export function GroupDiscussions({ group }: { group: GroupItem }) {
   const { data: session } = useAuth();
+  const viewer = session?.account_id || session?.username || 'anonymous';
+  return (
+    <ViewerGroupDiscussions
+      key={`${viewer}:${group.slug}`}
+      group={group}
+      signedIn={!!session}
+    />
+  );
+}
+
+function ViewerGroupDiscussions({
+  group,
+  signedIn,
+}: {
+  group: GroupItem;
+  signedIn: boolean;
+}) {
+  const request = useRef(0);
   const [posts, setPosts] = useState<Discussion[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const slug = group.slug;
 
   const load = useCallback(async () => {
+    const version = ++request.current;
     try {
       const page = await listDiscussions({ kind: 'group', slug });
+      if (request.current !== version) return;
       setPosts(Array.isArray(page?.discussions) ? page.discussions : []);
       setError(null);
     } catch (err) {
+      if (request.current !== version) return;
       setError(
         axios.isAxiosError(err) && err.response?.status === 404
           ? 'This group is not available.'
@@ -33,9 +54,12 @@ export function GroupDiscussions({ group }: { group: GroupItem }) {
 
   useEffect(() => {
     void load();
+    return () => {
+      ++request.current;
+    };
   }, [load]);
 
-  const locked = !session
+  const locked = !signedIn
     ? 'login'
     : !isActiveGroupMember(group)
       ? 'join'

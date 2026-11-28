@@ -1,8 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import FeaturedAuthorAvatar from '@/components/editorial/FeaturedAuthorAvatar';
+import FeaturedAuthorAvatar, {
+  FeaturedAuthorSkeleton,
+} from '@/components/editorial/FeaturedAuthorAvatar';
 import Icon from '@/components/icon';
 import useActiveUsers from '@/hooks/user/useActiveUsers';
 
@@ -31,17 +33,16 @@ interface FeaturedAuthorsStripProps {
  *      so the most recent activity floats to the front, de-duplicated
  *      against the pinned list.
  *
- * Avatars without a real profile picture hide themselves, so the strip
- * is implicitly filtered to users who have uploaded an image.
+ * Candidate images resolve and decode offscreen before the successful
+ * avatars are revealed together, without provisional named author slots.
  */
 export const FeaturedAuthorsStrip = ({
   title = 'Featured authors:',
   variant = 'default',
 }: FeaturedAuthorsStripProps) => {
-  const { details } = useActiveUsers('24h');
+  const { details, isLoading: activeUsersLoading } = useActiveUsers('24h');
 
-  // Reverse so the most recently active user (Dave, per current data)
-  // appears first after the pinned leaders.
+  // Most recently active users appear first after the pinned leaders.
   const recent = [...details].reverse();
 
   // De-dupe by username (case-insensitive) — pinned wins over API.
@@ -63,6 +64,25 @@ export const FeaturedAuthorsStrip = ({
   }
 
   const allAuthors = [...PINNED_AUTHORS, ...apiUsers];
+  const [availability, setAvailability] = useState<
+    Record<string, boolean | undefined>
+  >({});
+  const onAvailabilityChange = useCallback(
+    (username: string, available: boolean | undefined) => {
+      setAvailability((previous) =>
+        previous[username] === available
+          ? previous
+          : { ...previous, [username]: available }
+      );
+    },
+    []
+  );
+  const ready =
+    !activeUsersLoading &&
+    allAuthors.every((author) => availability[author.username] !== undefined);
+  const visibleCount = allAuthors.filter(
+    (author) => availability[author.username]
+  ).length;
 
   // Scroll plumbing — chevrons appear only when content overflows.
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -86,7 +106,7 @@ export const FeaturedAuthorsStrip = ({
       el.removeEventListener('scroll', recompute);
       window.removeEventListener('resize', recompute);
     };
-  }, [allAuthors.length]);
+  }, [allAuthors.length, ready, visibleCount]);
 
   const scrollBy = (dir: 'left' | 'right') => {
     const el = scrollRef.current;
@@ -101,6 +121,7 @@ export const FeaturedAuthorsStrip = ({
   return (
     <section
       aria-label={title}
+      aria-busy={!ready}
       className={
         variant === 'compact'
           ? 'flex min-w-0 items-center gap-4 border-b border-border-light/70 py-3 dark:border-border-dark/40 sm:gap-6'
@@ -124,7 +145,7 @@ export const FeaturedAuthorsStrip = ({
       </h4>
 
       <div className='relative flex min-w-0 flex-1 items-center gap-2'>
-        {showLeft && (
+        {ready && showLeft && (
           <button
             onClick={() => scrollBy('left')}
             className='absolute left-0 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors'
@@ -150,18 +171,27 @@ export const FeaturedAuthorsStrip = ({
               msOverflowStyle: 'none',
             }}
           >
+            {!ready &&
+              PINNED_AUTHORS.map((author) => (
+                <FeaturedAuthorSkeleton
+                  key={author.username}
+                  variant={variant}
+                />
+              ))}
             {allAuthors.map((u) => (
               <FeaturedAuthorAvatar
                 key={u.username}
                 username={u.username}
                 firstName={u.firstName}
                 variant={variant}
+                visible={ready}
+                onAvailabilityChange={onAvailabilityChange}
               />
             ))}
           </div>
         </div>
 
-        {showRight && (
+        {ready && showRight && (
           <button
             onClick={() => scrollBy('right')}
             className='absolute right-0 top-1/2 z-10 -translate-y-1/2 flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-gray-800 shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors'

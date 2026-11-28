@@ -6,7 +6,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { DiscussionCard } from '@/components/discussions/DiscussionCard';
+import { GroupContentOptions } from '@/components/groups/GroupContentOptions';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
 import type { GroupItem } from '@/services/groups/groupsTypes';
 
@@ -152,33 +155,51 @@ export function LandingGroups({
           className={`grid min-w-0 gap-3 sm:grid-cols-2 ${rail ? 'xl:grid-cols-1' : ''}`}
         >
           {groups.data.slice(0, 2).map((group) => (
-            <li key={group.id} className={`${border} min-w-0`}>
-              <Link
-                aria-label={`View group ${group.name}`}
+            <li key={group.id} className={`${border} relative min-w-0`}>
+              <GroupContentOptions
+                group={group}
+                className='absolute right-1 top-1 z-20'
+              />
+              <ContentGate
+                layout='group'
+                content={group}
+                target={{ kind: 'group', id: group.slug }}
+                compact
                 href={`/groups/${encodeURIComponent(group.slug)}`}
-                className={`group grid h-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-x-3 gap-y-1 rounded-xl p-3 ${focusRing}`}
               >
-                <div className='row-span-3'>
-                  <GroupLogo src={group.logo_image} />
-                </div>
-                <div className='min-w-0'>
-                  <h3 className='line-clamp-2 break-words font-inter text-sm font-semibold text-text-light [overflow-wrap:anywhere] group-hover:text-brand-orange dark:text-text-dark'>
-                    {group.name}
-                  </h3>
-                  <span className='font-inter text-xs text-gray-500 dark:text-gray-400'>
-                    Public group
+                <Link
+                  aria-label={`View group ${group.name}`}
+                  href={`/groups/${encodeURIComponent(group.slug)}`}
+                  className={`group grid h-full min-w-0 grid-cols-[2.75rem_minmax(0,1fr)] items-start gap-x-3 gap-y-1 rounded-xl p-3 ${focusRing}`}
+                >
+                  <div className='row-span-3'>
+                    <GroupLogo
+                      src={
+                        group.logo_image
+                          ? authenticatedArticleImageUrl(group.logo_image)
+                          : undefined
+                      }
+                    />
+                  </div>
+                  <div className='min-w-0'>
+                    <h3 className='pr-9 line-clamp-2 break-words font-inter text-sm font-semibold text-text-light [overflow-wrap:anywhere] group-hover:text-brand-orange dark:text-text-dark'>
+                      {group.name}
+                    </h3>
+                    <span className='font-inter text-xs text-gray-500 dark:text-gray-400'>
+                      Public group
+                    </span>
+                  </div>
+                  {group.description ? (
+                    <p className='line-clamp-2 break-words font-inter text-sm leading-5 text-gray-500 [overflow-wrap:anywhere] dark:text-gray-400'>
+                      {group.description}
+                    </p>
+                  ) : null}
+                  <span className='inline-flex min-h-7 items-center gap-1.5 font-inter text-sm font-medium text-brand-orange'>
+                    View group
+                    <Icon name='RiArrowRight' size={16} />
                   </span>
-                </div>
-                {group.description ? (
-                  <p className='line-clamp-2 break-words font-inter text-sm leading-5 text-gray-500 [overflow-wrap:anywhere] dark:text-gray-400'>
-                    {group.description}
-                  </p>
-                ) : null}
-                <span className='inline-flex min-h-7 items-center gap-1.5 font-inter text-sm font-medium text-brand-orange'>
-                  View group
-                  <Icon name='RiArrowRight' size={16} />
-                </span>
-              </Link>
+                </Link>
+              </ContentGate>
             </li>
           ))}
         </ul>

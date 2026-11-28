@@ -1,0 +1,39 @@
+{
+  "build_id": "IA3F5IvTtS8x2EZiCCYOY",
+  "source_sha256": {
+    "apps/the_monkeys/src/components/moderation/ContentGate.tsx": "7bf6abf4c4c9e02010588e0b3f274f61a8ab7b7f3cc843c955070dfbbf10ff37",
+    "apps/the_monkeys/src/components/landing/content-slots.css": "b301073d90411ced3d7d98b965f815bed2fb9f992dc2877154e9572a3ebae2ca",
+    "apps/the_monkeys/src/components/landing/LandingDiscoveryRail.tsx": "2397a418e14ca1825675b2b1c0f2851d6e34f496fc270c7fa8abce397acbf1e6"
+  },
+  "unit_files": 272,
+  "unit_tests_passed": 2396,
+  "targeted_tests_passed": 65,
+  "browser_cases_passed": 48,
+  "browser_account_classes": [
+    "under18",
+    "anonymous",
+    "missing_dob"
+  ],
+  "requested_widths": [
+    320,
+    390,
+    820,
+    1024,
+    1100,
+    1200,
+    1280,
+    1440
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "privacy_checks_passed": 147,
+  "phone_nonowner_checks_passed": 4,
+  "limitations": [
+    "Chromium emulated viewports only",
+    "Only currently present homepage warning placements measured; NSFW group not in homepage sample",
+    "Broader new/existing user creation and editing journeys remain pending",
+    "Phone leading-plus and edit-preservation fixes not yet implemented"
+  ]
+}

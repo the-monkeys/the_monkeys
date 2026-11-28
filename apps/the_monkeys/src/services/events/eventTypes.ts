@@ -1,3 +1,5 @@
+import type { RatedContent } from '@/services/moderation/moderationTypes';
+
 export type EventType = 'virtual' | 'in_person' | 'hybrid';
 
 export type EventStatus =
@@ -57,7 +59,7 @@ export type TicketTierInput = {
   sort_order?: number;
 };
 
-export type EventItem = {
+export type EventItem = RatedContent & {
   id: number;
   title: string;
   description?: string;

@@ -208,3 +208,29 @@ describe('server-compatible persisted cover structure', () => {
     expect(usableHomepageCover(cover)).toBe(false);
   });
 });
+
+describe('concealed homepage post placement', () => {
+  it.each([{ is_nsfw: true }, { content_rating: { is_nsfw: true } }])(
+    'retains an explicitly eligible lead after its cover is redacted: %j',
+    (rating) => {
+      const concealed = post('concealed-lead', {
+        title: 'Sensitive content',
+        first_image: '',
+        first_paragraph: '',
+        ...rating,
+      });
+      const slots = selectLandingPosts([
+        concealed,
+        post('next', { first_image: '/next.jpg' }),
+      ]);
+      expect(slots.lead?.blog_id).toBe('concealed-lead');
+      expect(slots.supporting.map((item) => item.blog_id)).toEqual(['next']);
+      expect(slots.lead?.first_image).toBe('');
+    }
+  );
+  it('does not promote a restricted article without explicit lead eligibility', () => {
+    const concealed = post('not-lead', { is_nsfw: true });
+    concealed.homepage_eligibility!.lead_eligible = false;
+    expect(selectLandingPosts([concealed]).lead).toBeUndefined();
+  });
+});

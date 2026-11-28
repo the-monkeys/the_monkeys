@@ -121,3 +121,37 @@ it('article writes invalidate every homepage sort/page without invalidating ordi
   for (const key of unrelated)
     expect(qc.getQueryState(key)?.isInvalidated).toBe(false);
 });
+
+it('publishing refreshes cached author and library lists before their freshness window expires', async () => {
+  const qc = new QueryClient();
+  const author = queryKeys.blog.byUsername('writer', 10, 0);
+  const drafts = queryKeys.blog.drafts.list('writer', 10, 0);
+  const scheduled = queryKeys.blog.scheduled.list('writer', 10, 0);
+  qc.setQueryData(author, { blogs: [] });
+  qc.setQueryData(drafts, { blogs: ['published-post'] });
+  qc.setQueryData(scheduled, { blogs: ['published-post'] });
+
+  await invalidateAfterArticleWrite(qc);
+
+  expect(
+    await qc.fetchQuery({
+      queryKey: author,
+      staleTime: 60_000,
+      queryFn: async () => ({ blogs: ['published-post'] }),
+    })
+  ).toEqual({ blogs: ['published-post'] });
+  expect(
+    await qc.fetchQuery({
+      queryKey: drafts,
+      staleTime: 60_000,
+      queryFn: async () => ({ blogs: [] }),
+    })
+  ).toEqual({ blogs: [] });
+  expect(
+    await qc.fetchQuery({
+      queryKey: scheduled,
+      staleTime: 60_000,
+      queryFn: async () => ({ blogs: [] }),
+    })
+  ).toEqual({ blogs: [] });
+});

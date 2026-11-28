@@ -1,6 +1,7 @@
 import type { Metadata, MetadataRoute } from 'next';
 
 import { discussionIsoTime } from '@/lib/discussionTime';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import {
   MONKEYS_WEBSITE_ID,
   absoluteUrl,
@@ -60,6 +61,12 @@ export function buildDiscussionMetadata(
   post: Discussion,
   indexable: boolean
 ): Metadata {
+  if (!isPublicContentSafe(post)) {
+    return {
+      title: { absolute: 'Sensitive discussion | Monkeys' },
+      robots: noIndexRobots,
+    };
+  }
   const title = `${discussionHeadline(post.body)} | Monkeys`;
   const description = discussionDescription(post.body);
   if (!indexable) {
@@ -80,10 +87,11 @@ export function buildDiscussionMetadata(
 
 export function buildDiscussionJsonLd(
   post: Discussion
-): Record<string, unknown> {
+): Record<string, unknown> | null {
+  if (!isPublicContentSafe(post)) return null;
   const url = absoluteUrl(discussionPath(post.public_id));
   const comments = (post.replies ?? [])
-    .filter((reply) => reply.status === 'visible')
+    .filter((reply) => reply.status === 'visible' && isPublicContentSafe(reply))
     .map((reply) => {
       const dateCreated = discussionIsoTime(reply.created_at);
       return {

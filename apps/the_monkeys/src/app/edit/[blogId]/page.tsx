@@ -570,6 +570,8 @@ const EditPage = ({ params }: { params: { blogId: string } }) => {
             }
             publishAction={
               <PublishBlogDrawer
+                blogId={blogId}
+                initialMarked={blog?.is_nsfw || blog?.content_rating?.is_nsfw}
                 topics={blogTopics}
                 setTopics={setBlogTopics}
                 data={data}

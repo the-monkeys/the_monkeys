@@ -1,5 +1,9 @@
 import useAuth from '@/hooks/auth/useAuth';
 import { hasKnownViewer, keepPreviousViewerData } from '@/lib/authQuerySession';
+import {
+  readLandingPolicy,
+  useLandingPolicySource,
+} from '@/lib/landingPolicyRead';
 import { LIVE_LIST_STALE_MS } from '@/lib/queryFreshness';
 import { queryKeys } from '@/lib/queryKeys';
 import { ListFilters } from '@/services/events/eventTypes';
@@ -17,13 +21,18 @@ import {
   uploadEventCover,
   uploadEventPhoto,
 } from '@/services/events/eventsApi';
+import { isSensitive } from '@/services/moderation/moderationTypes';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export function useEventList(filters: ListFilters, enabled = true) {
+export function useEventList(
+  filters: ListFilters,
+  enabled = true,
+  checkedLanding = false
+) {
   const auth = useAuth();
   const viewer = auth.data?.account_id || auth.data?.username || null;
   const qc = useQueryClient();
-  return useQuery({
+  const query = useQuery({
     queryKey: queryKeys.events.list(filters, viewer),
     initialData: () =>
       qc.getQueryData<Awaited<ReturnType<typeof listEvents>>>(
@@ -33,11 +42,37 @@ export function useEventList(filters: ListFilters, enabled = true) {
       viewer
         ? 1
         : qc.getQueryState(queryKeys.events.list(filters))?.dataUpdatedAt,
-    queryFn: () => listEvents(filters),
+    ...(checkedLanding
+      ? {
+          structuralSharing: false as const,
+          refetchOnWindowFocus: (query: {
+            state: { data?: Awaited<ReturnType<typeof listEvents>> };
+          }) =>
+            query.state.data?.events?.some(isSensitive)
+              ? ('always' as const)
+              : true,
+        }
+      : {}),
+    queryFn: checkedLanding
+      ? ({ signal }) =>
+          readLandingPolicy(qc, viewer, signal, () => listEvents(filters))
+      : () => listEvents(filters),
     enabled: enabled && hasKnownViewer(auth),
     staleTime: LIVE_LIST_STALE_MS,
     placeholderData: keepPreviousViewerData(viewer),
   });
+  const policySource = useLandingPolicySource(
+    qc,
+    viewer,
+    queryKeys.events.list(filters, viewer),
+    query,
+    query.data?.events ?? [],
+    enabled && hasKnownViewer(auth),
+    checkedLanding
+  );
+  return checkedLanding
+    ? { ...query, policySource }
+    : { ...query, policySource: undefined };
 }
 
 export function useUserEvents(

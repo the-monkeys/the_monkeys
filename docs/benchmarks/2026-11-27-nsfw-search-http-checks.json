@@ -1,0 +1,441 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "check": "anonymous current policy available",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "anonymous birthday eligibility unchanged",
+      "passed": true
+    },
+    {
+      "check": "anonymous body authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "anonymous body no-store",
+      "passed": true
+    },
+    {
+      "check": "anonymous restricted image authorization",
+      "passed": true,
+      "http": 404
+    },
+    {
+      "check": "anonymous restricted image no-store",
+      "passed": true
+    },
+    {
+      "check": "adult current policy available",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "adult birthday eligibility unchanged",
+      "passed": true
+    },
+    {
+      "check": "adult body authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "adult body no-store",
+      "passed": true
+    },
+    {
+      "check": "adult restricted image authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "adult restricted image no-store",
+      "passed": true
+    },
+    {
+      "check": "missing_dob current policy available",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "missing_dob birthday eligibility unchanged",
+      "passed": true
+    },
+    {
+      "check": "missing_dob body authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "missing_dob body no-store",
+      "passed": true
+    },
+    {
+      "check": "missing_dob restricted image authorization",
+      "passed": true,
+      "http": 404
+    },
+    {
+      "check": "missing_dob restricted image no-store",
+      "passed": true
+    },
+    {
+      "check": "minor current policy available",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "minor birthday eligibility unchanged",
+      "passed": true
+    },
+    {
+      "check": "minor body authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "minor body no-store",
+      "passed": true
+    },
+    {
+      "check": "minor restricted image authorization",
+      "passed": true,
+      "http": 404
+    },
+    {
+      "check": "minor restricted image no-store",
+      "passed": true
+    },
+    {
+      "check": "exactly_18 current policy available",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "exactly_18 birthday eligibility unchanged",
+      "passed": true
+    },
+    {
+      "check": "exactly_18 body authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "exactly_18 body no-store",
+      "passed": true
+    },
+    {
+      "check": "exactly_18 restricted image authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "exactly_18 restricted image no-store",
+      "passed": true
+    },
+    {
+      "check": "one_day_under_18 current policy available",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "one_day_under_18 birthday eligibility unchanged",
+      "passed": true
+    },
+    {
+      "check": "one_day_under_18 body authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "one_day_under_18 body no-store",
+      "passed": true
+    },
+    {
+      "check": "one_day_under_18 restricted image authorization",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "one_day_under_18 restricted image no-store",
+      "passed": true
+    },
+    {
+      "check": "Google verified crawler receives original text",
+      "passed": true,
+      "http": 200,
+      "elapsed_ms": 2270
+    },
+    {
+      "check": "Google keeps original canonical",
+      "passed": true
+    },
+    {
+      "check": "Google text remains indexable and snippet eligible",
+      "passed": true
+    },
+    {
+      "check": "Google registration schema",
+      "passed": true
+    },
+    {
+      "check": "Google no body duplication in schema",
+      "passed": true
+    },
+    {
+      "check": "Google response no-store",
+      "passed": true
+    },
+    {
+      "check": "Google private settings never serialized",
+      "passed": true
+    },
+    {
+      "check": "Google inspection verified crawler receives original text",
+      "passed": true,
+      "http": 200,
+      "elapsed_ms": 189
+    },
+    {
+      "check": "Google inspection keeps original canonical",
+      "passed": true
+    },
+    {
+      "check": "Google inspection text remains indexable and snippet eligible",
+      "passed": true
+    },
+    {
+      "check": "Google inspection registration schema",
+      "passed": true
+    },
+    {
+      "check": "Google inspection no body duplication in schema",
+      "passed": true
+    },
+    {
+      "check": "Google inspection response no-store",
+      "passed": true
+    },
+    {
+      "check": "Google inspection private settings never serialized",
+      "passed": true
+    },
+    {
+      "check": "OpenAI verified crawler receives original text",
+      "passed": true,
+      "http": 200,
+      "elapsed_ms": 133
+    },
+    {
+      "check": "OpenAI keeps original canonical",
+      "passed": true
+    },
+    {
+      "check": "OpenAI text remains indexable and snippet eligible",
+      "passed": true
+    },
+    {
+      "check": "OpenAI registration schema",
+      "passed": true
+    },
+    {
+      "check": "OpenAI no body duplication in schema",
+      "passed": true
+    },
+    {
+      "check": "OpenAI response no-store",
+      "passed": true
+    },
+    {
+      "check": "OpenAI private settings never serialized",
+      "passed": true
+    },
+    {
+      "check": "Perplexity verified crawler receives original text",
+      "passed": true,
+      "http": 200,
+      "elapsed_ms": 165
+    },
+    {
+      "check": "Perplexity keeps original canonical",
+      "passed": true
+    },
+    {
+      "check": "Perplexity text remains indexable and snippet eligible",
+      "passed": true
+    },
+    {
+      "check": "Perplexity registration schema",
+      "passed": true
+    },
+    {
+      "check": "Perplexity no body duplication in schema",
+      "passed": true
+    },
+    {
+      "check": "Perplexity response no-store",
+      "passed": true
+    },
+    {
+      "check": "Perplexity private settings never serialized",
+      "passed": true
+    },
+    {
+      "check": "anonymous HTML/embedded stream remains protected after bot cache warm",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "anonymous human HTML no-store",
+      "passed": true
+    },
+    {
+      "check": "anonymous RSC remains protected",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "minor HTML/embedded stream remains protected after bot cache warm",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "minor human HTML no-store",
+      "passed": true
+    },
+    {
+      "check": "minor RSC remains protected",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "missing_dob HTML/embedded stream remains protected after bot cache warm",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "missing_dob human HTML no-store",
+      "passed": true
+    },
+    {
+      "check": "missing_dob RSC remains protected",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "fake user agent does not bypass age gate",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "wrong source IP does not bypass age gate",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "bad ingress proof does not bypass age gate",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "prefetch does not bypass age gate",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "RSC does not bypass age gate",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "user-triggered AI does not bypass age gate",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "browser prefetch does not bypass age gate",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "spoofed bot prefetch does not bypass age gate",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "sitemap includes restricted canonical exactly once",
+      "passed": true,
+      "http": 200,
+      "elapsed_ms": 3534
+    },
+    {
+      "check": "RSS excludes restricted original content and location",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "adult owner profile remains readable",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "adult profile privacy public username",
+      "passed": true,
+      "http": 202
+    },
+    {
+      "check": "adult profile privacy public account",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "adult profile privacy other signed-in reader",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "minor owner profile remains readable",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "minor profile privacy public username",
+      "passed": true,
+      "http": 202
+    },
+    {
+      "check": "minor profile privacy public account",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "minor profile privacy other signed-in reader",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "missing_dob owner profile remains readable",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "missing_dob profile privacy public username",
+      "passed": true,
+      "http": 202
+    },
+    {
+      "check": "missing_dob profile privacy public account",
+      "passed": true,
+      "http": 200
+    },
+    {
+      "check": "missing_dob profile privacy other signed-in reader",
+      "passed": true,
+      "http": 200
+    }
+  ],
+  "scope": "Local HTTP real policies and existing synthetic sessions. No production indexing claim."
+}

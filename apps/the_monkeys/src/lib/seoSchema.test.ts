@@ -31,7 +31,7 @@ describe('public event and group structured data', () => {
         },
       ],
     });
-    expect(schema.offers).toEqual([
+    expect(schema?.offers).toEqual([
       expect.objectContaining({ name: 'Community', price: '0.00' }),
       expect.objectContaining({ name: 'Supporter', price: '500.00' }),
     ]);
@@ -49,7 +49,7 @@ describe('public event and group structured data', () => {
         { id: 2, name: 'Online', price: 200, capacity: 0, booked: 100 },
       ],
     });
-    expect(schema.offers).toEqual([
+    expect(schema?.offers).toEqual([
       expect.objectContaining({ availability: 'https://schema.org/SoldOut' }),
       expect.objectContaining({ availability: 'https://schema.org/InStock' }),
     ]);
@@ -65,7 +65,7 @@ describe('public event and group structured data', () => {
       capacity: 20,
       attendee_count: 20,
     });
-    expect(schema.offers).toMatchObject({
+    expect(schema?.offers).toMatchObject({
       availability: 'https://schema.org/SoldOut',
     });
   });
@@ -83,7 +83,7 @@ describe('public event and group structured data', () => {
     expect(JSON.stringify(schema)).not.toContain(
       'https://meet.example.test/private-room'
     );
-    expect(schema.location).toEqual({
+    expect(schema?.location).toEqual({
       '@type': 'VirtualLocation',
       url: 'https://monkeys.com.co/events/public-event',
     });
@@ -101,7 +101,7 @@ describe('public event and group structured data', () => {
       meeting_link: 'https://meet.example.test/private-hybrid-room',
     });
 
-    expect(schema.location).toEqual([
+    expect(schema?.location).toEqual([
       expect.objectContaining({ '@type': 'Place' }),
       {
         '@type': 'VirtualLocation',
@@ -124,15 +124,15 @@ describe('public event and group structured data', () => {
 
     expect(schema).not.toHaveProperty('numberOfEmployees');
     expect(schema).not.toHaveProperty('parentOrganization');
-    expect(schema['@id']).toBe(
+    expect(schema?.['@id']).toBe(
       'https://monkeys.com.co/groups/ai-builders#group'
     );
-    expect(schema.mainEntityOfPage).toEqual({
+    expect(schema?.mainEntityOfPage).toEqual({
       '@type': 'WebPage',
       '@id': 'https://monkeys.com.co/groups/ai-builders',
       isPartOf: { '@id': 'https://monkeys.com.co/#website' },
     });
-    expect(schema.interactionStatistic).toEqual({
+    expect(schema?.interactionStatistic).toEqual({
       '@type': 'InteractionCounter',
       interactionType: { '@type': 'JoinAction' },
       userInteractionCount: 42,
@@ -168,13 +168,13 @@ describe('event offer registration opening dates', () => {
     'uses the actual %s opening date for a free event without tiers',
     (_name, date, expected) => {
       const schema = eventJsonLd({ ...base, rsvp_opens_at: date });
-      expect(schema.offers).toMatchObject({
+      expect(schema?.offers).toMatchObject({
         price: '0',
         priceCurrency: 'INR',
         availability: 'https://schema.org/InStock',
         validFrom: expected,
       });
-      expect(schema.isAccessibleForFree).toBe(true);
+      expect(schema?.isAccessibleForFree).toBe(true);
     }
   );
   it('keeps the opening date on a sold-out event with free tiers', () => {
@@ -183,7 +183,7 @@ describe('event offer registration opening dates', () => {
       rsvp_opens_at: '2026-11-20T09:00:00Z',
       ticket_tiers: [{ id: 1, name: 'Free', price: 0, capacity: 2, booked: 2 }],
     });
-    expect(schema.offers).toMatchObject({
+    expect(schema?.offers).toMatchObject({
       validFrom: '2026-11-20T09:00:00.000Z',
       availability: 'https://schema.org/SoldOut',
       price: '0',
@@ -198,7 +198,7 @@ describe('event offer registration opening dates', () => {
         { id: 2, name: 'Paid', price: 500, currency: 'INR', capacity: 10 },
       ],
     });
-    expect(schema.offers).toEqual([
+    expect(schema?.offers).toEqual([
       expect.objectContaining({
         name: 'Free',
         price: '0.00',
@@ -225,9 +225,9 @@ describe('event offer registration opening dates', () => {
     'omits unknown or invalid opening dates without inventing a fallback: %j',
     (date) => {
       const schema = eventJsonLd({ ...base, rsvp_opens_at: date });
-      expect(JSON.stringify(schema.offers)).not.toContain('validFrom');
-      expect(JSON.stringify(schema.offers)).not.toContain('2026-12-01');
-      expect(JSON.stringify(schema.offers)).not.toContain('2026-11-01');
+      expect(JSON.stringify(schema?.offers)).not.toContain('validFrom');
+      expect(JSON.stringify(schema?.offers)).not.toContain('2026-12-01');
+      expect(JSON.stringify(schema?.offers)).not.toContain('2026-11-01');
     }
   );
 });

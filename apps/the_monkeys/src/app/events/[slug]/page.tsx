@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { queryKeys } from '@/lib/queryKeys';
 import {
   breadcrumb,
@@ -41,6 +42,10 @@ export async function generateMetadata({
     return { title: 'Event not found', robots: noIndexRobots };
   }
 
+  if (!isPublicContentSafe(event)) {
+    return { title: 'Sensitive event', robots: noIndexRobots };
+  }
+
   if (!isIndexable(event.status, event.visibility)) {
     return { title: event.title, robots: noIndexRobots };
   }
@@ -70,7 +75,11 @@ export default async function EventDetailPage({
   const event = data?.event;
 
   const queryClient = getQueryClient();
-  if (event && isIndexable(event.status, event.visibility)) {
+  if (
+    event &&
+    isPublicContentSafe(event) &&
+    isIndexable(event.status, event.visibility)
+  ) {
     // Public first-paint content never carries attendee-only meeting access.
     const { meeting_link: _meetingLink, ...publicEvent } = event;
     queryClient.setQueryData(queryKeys.events.detail(params.slug), {
@@ -80,28 +89,30 @@ export default async function EventDetailPage({
 
   return (
     <>
-      {event && isIndexable(event.status, event.visibility) && (
-        <>
-          <script
-            type='application/ld+json'
-            dangerouslySetInnerHTML={{
-              __html: serializeJsonLd(eventJsonLd(event)),
-            }}
-          />
-          <script
-            type='application/ld+json'
-            dangerouslySetInnerHTML={{
-              __html: serializeJsonLd(
-                breadcrumb([
-                  { name: 'Home', path: '/' },
-                  { name: 'Events', path: '/events' },
-                  { name: event.title, path: `/events/${event.slug}` },
-                ])
-              ),
-            }}
-          />
-        </>
-      )}
+      {event &&
+        isPublicContentSafe(event) &&
+        isIndexable(event.status, event.visibility) && (
+          <>
+            <script
+              type='application/ld+json'
+              dangerouslySetInnerHTML={{
+                __html: serializeJsonLd(eventJsonLd(event)),
+              }}
+            />
+            <script
+              type='application/ld+json'
+              dangerouslySetInnerHTML={{
+                __html: serializeJsonLd(
+                  breadcrumb([
+                    { name: 'Home', path: '/' },
+                    { name: 'Events', path: '/events' },
+                    { name: event.title, path: `/events/${event.slug}` },
+                  ])
+                ),
+              }}
+            />
+          </>
+        )}
       <HydrationBoundary state={dehydrate(queryClient)}>
         <EventDetailClient slug={params.slug} />
       </HydrationBoundary>

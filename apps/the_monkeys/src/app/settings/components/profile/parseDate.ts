@@ -88,3 +88,16 @@ export const convertDate = (dateString: string) => {
     '00:00:00 GMT+0530 (India Standard Time)'
   );
 };
+
+/** Read a profile calendar date without interpreting legacy Go timestamps in local time. */
+export const profileBirthdayDate = (value?: string | null): string => {
+  if (!value) return '';
+  const date = parseDateOnly(value);
+  // Go's zero time is the historical API representation of a missing birthday.
+  if (!date || date.startsWith('0001-') || date.startsWith('0000-')) return '';
+  const parsed = new Date(`${date}T00:00:00.000Z`);
+  return Number.isFinite(parsed.getTime()) &&
+    parsed.toISOString().slice(0, 10) === date
+    ? date
+    : '';
+};

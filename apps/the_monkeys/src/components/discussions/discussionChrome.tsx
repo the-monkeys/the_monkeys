@@ -25,15 +25,19 @@ export function discussionHandle(author: DiscussionAuthor) {
 export function DiscussionIdentity({
   author,
   createdAt,
+  compact = false,
 }: {
   author: DiscussionAuthor;
   createdAt?: DiscussionInstant;
+  compact?: boolean;
 }) {
   const handle = discussionHandle(author);
   const timeLabel = discussionTimeLabel(createdAt);
 
   return (
-    <div className='flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 font-inter'>
+    <div
+      className={`flex min-w-0 items-center gap-x-1.5 gap-y-0.5 font-inter ${compact ? 'h-6 flex-nowrap overflow-hidden' : 'flex-wrap'}`}
+    >
       {handle ? (
         <DiscussionAuthorLink handle={handle} />
       ) : (

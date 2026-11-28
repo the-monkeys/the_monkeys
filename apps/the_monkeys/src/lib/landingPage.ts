@@ -1,5 +1,6 @@
 import { MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem, ListFilters } from '@/services/events/eventTypes';
+import { isSensitive } from '@/services/moderation/moderationTypes';
 
 import { isHomepageEligible, usableHomepageCover } from './homepageEligibility';
 
@@ -51,7 +52,8 @@ export function selectLandingPosts(posts: MetaBlog[]): LandingPostSlots {
   const lead = eligible.find(
     (post) =>
       post.homepage_eligibility?.lead_eligible === true &&
-      usableHomepageCover(post.first_image)
+      // A redacted cover must not move an explicitly qualified lead.
+      (isSensitive(post) || usableHomepageCover(post.first_image))
   );
   const remaining = eligible.filter((post) => post.blog_id !== lead?.blog_id);
 

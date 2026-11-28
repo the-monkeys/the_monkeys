@@ -1,8 +1,10 @@
 import type { HomepageEligibility } from '@/lib/homepageEligibility';
+import type { RatedContent } from '@/services/moderation/moderationTypes';
 
 export type BlogAudience = 'public' | 'group_only';
 
-export interface PublishedEditorialMetadata {
+export interface PublishedEditorialMetadata extends RatedContent {
+  slug?: string;
   rss_guid?: string;
   canonical_slug?: string;
   seo_description?: string;
@@ -10,6 +12,8 @@ export interface PublishedEditorialMetadata {
 }
 
 export interface Blog extends PublishedEditorialMetadata {
+  seo_indexable?: boolean;
+  seo_crawler?: boolean;
   blog_id: string;
   owner_account_id: string;
   blog: {
@@ -140,7 +144,7 @@ export interface FollowingFeed extends PublishedEditorialMetadata {
   group_slug?: string;
 }
 
-export interface BlogCardData {
+export interface BlogCardData extends RatedContent {
   blogId: string;
   authorId: string;
   date: string;

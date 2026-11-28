@@ -72,8 +72,10 @@ export const queryKeys = {
       ['search-suggest-v2', q, limit] as const,
   },
   landing: {
-    discussions: () => ['discussions', 'landing', 'public'] as const,
-    groups: () => ['groups', 'landing', 'public'] as const,
+    discussions: (viewer?: Viewer) =>
+      scoped(['discussions', 'landing', 'public'] as const, viewer),
+    groups: (viewer?: Viewer) =>
+      scoped(['groups', 'landing', 'public'] as const, viewer),
   },
   discussions: {
     preview: (target: unknown, timezone?: string) =>
@@ -90,21 +92,26 @@ export const queryKeys = {
       sort: 'latest' | 'trending',
       limit: number,
       offset: number,
-      version: string
+      version: string,
+      viewer?: string
     ) =>
-      [
-        'meta-feed-blogs',
-        'homepage',
-        'public',
-        version,
-        sort,
-        limit,
-        offset,
-      ] as const,
+      scoped(
+        [
+          'meta-feed-blogs',
+          'homepage',
+          'public',
+          version,
+          sort,
+          limit,
+          offset,
+        ] as const,
+        viewer
+      ),
     byId: blogById,
     detail: (blogId: QueryId) => ['blog-detail', blogId] as const,
     published: (account: QueryId, blogId: QueryId) =>
       ['published-blog-detail', account, blogId] as const,
+    byUsernameRoot: () => ['blogs-by-username'] as const,
     byUsername: (username: QueryId, limit?: number, offset?: number) =>
       limit === undefined
         ? (['blogs-by-username', username] as const)

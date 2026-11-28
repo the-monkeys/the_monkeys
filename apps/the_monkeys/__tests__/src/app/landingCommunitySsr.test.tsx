@@ -81,10 +81,12 @@ it('hydrates public community links into server HTML without cookies or browser 
   expect(html).toContain('href="/groups/ssr-group"');
   expect(html).not.toContain('Secret hidden text');
   expect(fetcherV2).toHaveBeenCalledWith(
-    '/blog/homepage?limit=12&offset=0&sort=latest'
+    '/blog/homepage?limit=12&offset=0&sort=latest',
+    expect.any(AbortSignal)
   );
   expect(fetcherV2).toHaveBeenCalledWith(
-    '/blog/homepage?limit=12&offset=0&sort=trending'
+    '/blog/homepage?limit=12&offset=0&sort=trending',
+    expect.any(AbortSignal)
   );
   expect(
     vi

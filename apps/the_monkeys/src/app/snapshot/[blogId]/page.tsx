@@ -12,6 +12,7 @@ import { SnapshotStudio } from '@/features/snapshot/components/SnapshotStudio';
 import { useSnapshotAuthor } from '@/features/snapshot/hooks/useSnapshotAuthor';
 import useGetPublishedBlogDetailByBlogId from '@/hooks/blog/useGetPublishedBlogDetailByBlogId';
 import useGetProfileInfoById from '@/hooks/user/useGetProfileInfoByUserId';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { Skeleton } from '@the-monkeys/ui/atoms/skeleton';
 
 interface SnapshotStudioPageProps {
@@ -22,7 +23,7 @@ export default function SnapshotStudioPage({
   params,
 }: SnapshotStudioPageProps) {
   const blogId = decodeURIComponent(params.blogId);
-  const { blog, isLoading, isError } =
+  const { blog, isLoading, isError, isFresh } =
     useGetPublishedBlogDetailByBlogId(blogId);
   const { user: profile } = useGetProfileInfoById(blog?.owner_account_id);
 
@@ -38,7 +39,7 @@ export default function SnapshotStudioPage({
   const { author } = useSnapshotAuthor(authorUsername, displayName);
 
   const input = useMemo(() => {
-    if (!blog) return null;
+    if (!blog || !isPublicContentSafe(blog)) return null;
     return fromBlog(blog, {
       author,
       sourceUrl:
@@ -52,7 +53,7 @@ export default function SnapshotStudioPage({
 
   const [previewMode, setPreviewMode] = useState<'template' | 'x'>('template');
 
-  if (isLoading || !blog) {
+  if (isLoading || !blog || (isFresh === false && !isError)) {
     return (
       <div className='mx-auto w-full max-w-6xl px-4 py-8'>
         <Skeleton className='mb-4 h-8 w-48' />
@@ -61,7 +62,7 @@ export default function SnapshotStudioPage({
     );
   }
 
-  if (isError) {
+  if (isError || !isPublicContentSafe(blog)) {
     return (
       <div className='mx-auto max-w-md px-4 py-16 text-center'>
         <h1 className='mb-2 font-newsreader text-2xl'>Snapshot unavailable</h1>

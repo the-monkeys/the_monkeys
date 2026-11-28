@@ -141,8 +141,13 @@ export default function RegisterUserForm() {
 
       router.replace(safeCallbackPath(params.get('callbackURL')) || '/feed');
     } catch (err: unknown) {
+      const serverMessage = axios.isAxiosError(err)
+        ? err.response?.data?.message
+        : undefined;
       const message =
-        err instanceof Error ? err.message : 'Invalid verification code';
+        typeof serverMessage === 'string' && serverMessage.trim()
+          ? serverMessage
+          : 'Unable to verify the code. Please try again.';
       toast({
         variant: 'error',
         title: 'Verification failed',
@@ -279,6 +284,7 @@ export default function RegisterUserForm() {
                 <Input
                   placeholder='Enter first Name'
                   {...field}
+                  value={field.value ?? ''}
                   className={cn(
                     !!fieldState.error && 'dark:border-red-500 border-red-600'
                   )}
@@ -298,6 +304,7 @@ export default function RegisterUserForm() {
                 <Input
                   placeholder='Enter last Name'
                   {...field}
+                  value={field.value ?? ''}
                   className={cn(
                     !!fieldState.error && 'dark:border-red-500 border-red-600'
                   )}
@@ -317,6 +324,7 @@ export default function RegisterUserForm() {
                 <Input
                   placeholder='Enter email address'
                   {...field}
+                  value={field.value ?? ''}
                   className={cn(
                     !!fieldState.error && 'dark:border-red-500 border-red-600'
                   )}
@@ -365,7 +373,7 @@ export default function RegisterUserForm() {
               <FormControl>
                 <PasswordInput
                   placeholder='Enter password'
-                  value={field.value}
+                  value={field.value ?? ''}
                   onChange={field.onChange}
                   className={cn(
                     !!fieldState.error && 'dark:border-red-500 border-red-600'
@@ -387,7 +395,7 @@ export default function RegisterUserForm() {
                 <PasswordInput
                   placeholder='Confirm Password'
                   onChange={field.onChange}
-                  value={field.value}
+                  value={field.value ?? ''}
                   className={cn(
                     !!fieldState.error && 'dark:border-red-500 border-red-600'
                   )}

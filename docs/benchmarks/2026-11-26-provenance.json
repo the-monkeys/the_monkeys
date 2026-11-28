@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-26",
+  "frontend_baseline_commit": "a5212d6a6df0ed241a75d3bbe9a8436a25a03893",
+  "backend_baseline_commit": "fee247383df52dd86671930a663aa867547cf78f",
+  "backend_optimized_commit": "a28a31dc75792302835b7379d4a941e69834eb72",
+  "frontend_build_source_sha256": {
+    "apps/the_monkeys/src/components/icon.tsx": "c1ffc81c18f3933c27c6ab2aa8e79434c8cc4cbe5648643df65648db44543e02",
+    "apps/the_monkeys/src/components/moderation/ContentGate.tsx": "31c9accdc45774521355e81bf6a541513749652140bfe6f010fa0fc6acf5dce2",
+    "apps/the_monkeys/src/components/landing/LandingHero.tsx": "5b53e651f9d4162a4e8c970298c701f91c048463f419d1833caa56413bdce1d6",
+    "apps/the_monkeys/src/components/topics/topicListDialog.tsx": "216e8ffcb74fb7243abd4b048f76d8a8ea830e456e944f6a2ba6d17856ef9dd3"
+  },
+  "build": {
+    "mode": "next build + next start",
+    "next": "14.2.26",
+    "node": "24.4.1",
+    "python": "3.10.0",
+    "platform": "Windows + Docker Desktop Linux",
+    "logical_processors": 16,
+    "physical_memory_gib": 15.3,
+    "node_options": "--max-old-space-size=2048",
+    "circle_node_total": "2",
+    "next_public_api_v1": "http://127.0.0.1:8081/api/v1",
+    "next_public_api_v2": "http://127.0.0.1:8081/api/v2",
+    "nsfw_policy_api": "http://127.0.0.1:8081/api/v1",
+    "snapshot_gateway": "http://127.0.0.1:8081",
+    "before_dist": ".next-perf-before",
+    "after_dist": ".next-perf-after",
+    "before_build_id": "HKAOQ4Jz5Mfk1D_IM4Tf6",
+    "after_build_id": "q7Bme3JMoZMIHAmpNkZDq"
+  },
+  "workload": {
+    "routes": 38,
+    "repeats_per_route": 5,
+    "concurrency": [
+      1,
+      4
+    ],
+    "warmup": "one sequential request per route per run, separate from measured samples",
+    "session": "anonymous; no benchmark cookie",
+    "response_bodies_saved": false,
+    "production_requests": false,
+    "dataset": {
+      "metadata_catalog_total": 459,
+      "storage_assets_at_sql_probe": 104,
+      "scanner_flagged_assets_at_sql_probe": 0,
+      "manual_nsfw_local_fixtures": 4
+    },
+    "limitations": [
+      "Local optimized workload, not production traffic replay or a capacity result.",
+      "HTTP headers/body measurements, not browser LCP or JS execution timing.",
+      "Browser performance API unavailable through this connection.",
+      "Five samples give a small sanity comparison; nearest-rank p95 is the maximum.",
+      "Protected HTML shells and redirects are not authenticated full-page performance.",
+      "Background apps and existing containers remained open; no CPU or network throttling.",
+      "Source checkout SHA in HTTP reports identifies HEAD, not uncommitted build contents; use these source hashes and build IDs.",
+      "The final UI was available on port 3000 during the last run; the unchanged baseline had only the benchmark server on port 3001."
+    ]
+  }
+}

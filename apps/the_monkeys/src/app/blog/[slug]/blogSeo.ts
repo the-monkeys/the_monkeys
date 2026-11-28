@@ -2,7 +2,11 @@ import type { Metadata } from 'next';
 
 import { postModificationTime } from '@/lib/postModificationTime';
 import { getPostSeoContent } from '@/lib/postSeoContent';
-import { canonicalPostDocumentTitleSlug } from '@/lib/postUrl';
+import {
+  canonicalPostDocumentTitleSlug,
+  postLinkTitleSlug,
+} from '@/lib/postUrl';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import {
   MONKEYS_WEBSITE_ID,
   absoluteUrl,
@@ -15,6 +19,13 @@ import {
 } from '@/lib/seo';
 import { Blog } from '@/services/blog/blogTypes';
 import { GetProfileInfoByIdResponse } from '@/services/profile/userApiTypes';
+
+import {
+  type BlogSeoOptions,
+  canIndexRestricted,
+  restrictedJsonLd,
+  restrictedMetadata,
+} from './restrictedSeo';
 
 export function getBlogIdFromSlug(slug: string): string {
   if (!slug || typeof slug !== 'string') return '';
@@ -34,11 +45,13 @@ function blogContent(blog: Blog) {
 }
 
 export function canonicalBlogSlug(blog: Blog): string {
-  const titleSlug = canonicalPostDocumentTitleSlug(
-    blog.blog,
-    blog.canonical_slug,
-    blog.blog_id
-  );
+  const titleSlug = !isPublicContentSafe(blog)
+    ? postLinkTitleSlug('Post', blog.blog_id, blog.slug, blog.canonical_slug)
+    : canonicalPostDocumentTitleSlug(
+        blog.blog,
+        blog.canonical_slug,
+        blog.blog_id
+      );
   return `${titleSlug}-${blog.blog_id}`;
 }
 
@@ -55,8 +68,17 @@ export function authorDisplayName(
 export function buildBlogMetadata(
   blog: Blog,
   _requestedSlug: string,
-  authorName = 'Monkeys Author'
+  authorName = 'Monkeys Author',
+  options?: BlogSeoOptions
 ): Metadata {
+  if (!isPublicContentSafe(blog)) {
+    if (canIndexRestricted(blog, options))
+      return restrictedMetadata(blog, canonicalBlogSlug(blog), options);
+    return {
+      title: { absolute: 'Sensitive post | Monkeys' },
+      robots: noIndexRobots,
+    };
+  }
   if (blog.audience === 'group_only') {
     return {
       title: { absolute: 'Members-only post | Monkeys' },
@@ -102,9 +124,28 @@ export function buildBlogJsonLd(
   blog: Blog,
   _requestedSlug: string,
   authorName = 'Monkeys Author',
-  authorUsername?: string
+  authorUsername?: string,
+  options?: BlogSeoOptions
 ) {
-  if (blog.audience === 'group_only') return null;
+  if (
+    !isPublicContentSafe(blog) &&
+    options?.crawler &&
+    blog.seo_crawler &&
+    canIndexRestricted(blog, options)
+  ) {
+    return restrictedJsonLd(
+      blog,
+      canonicalBlogSlug(blog),
+      authorName,
+      authorUsername
+    );
+  }
+  if (
+    !isPublicContentSafe(blog) ||
+    blog.is_draft ||
+    blog.audience === 'group_only'
+  )
+    return null;
 
   const content = blogContent(blog);
   const slug = canonicalBlogSlug(blog);

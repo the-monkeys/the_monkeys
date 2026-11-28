@@ -8,11 +8,18 @@ import useUser from '@/hooks/user/useUser';
 import { SITE_URL } from '@/lib/seo';
 import type { Discussion } from '@/services/discussions/discussionsTypes';
 
-import { fromDiscussion } from '../adapters/fromDiscussion';
+import {
+  canSnapshotDiscussion,
+  fromDiscussion,
+} from '../adapters/fromDiscussion';
 import { useSnapshotAuthor } from '../hooks/useSnapshotAuthor';
 import { SnapshotStudio } from './SnapshotStudio';
 
-export function DiscussionStudio({
+export function DiscussionStudio(props: { post: Discussion; origin?: string }) {
+  if (!canSnapshotDiscussion(props.post)) return null;
+  return <SafeDiscussionStudio {...props} />;
+}
+function SafeDiscussionStudio({
   post,
   origin = SITE_URL,
 }: {

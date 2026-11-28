@@ -2,8 +2,10 @@
 
 import Link from 'next/link';
 
+import { EventContentOptions } from '@/components/events/EventContentOptions';
 import { EventGridCard } from '@/components/events/EventGridCard';
 import Icon from '@/components/icon';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { EVENTS_ROUTE } from '@/constants/routeConstants';
 import { useViewerTimezone } from '@/hooks/events/useViewerTimezone';
 import { eventDateParts, formatEventCardWhen } from '@/lib/eventTime';
@@ -92,30 +94,41 @@ export function LandingEventsSection({
             {events.map((event) => {
               const date = eventDateParts(event.start_time, timezone);
               return (
-                <article
-                  key={event.id || event.slug}
-                  className='group flex gap-3 py-3'
-                >
-                  <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-gray-50 text-center dark:bg-white/[0.04]'>
-                    <span className='font-inter text-[9px] font-bold uppercase tracking-wider text-brand-orange'>
-                      {date?.month || 'Soon'}
-                    </span>
-                    <span className='font-newsreader text-lg font-semibold leading-none text-text-light dark:text-text-dark'>
-                      {date?.day || ''}
-                    </span>
-                  </div>
-                  <div className='min-w-0'>
-                    <Link
-                      href={`${EVENTS_ROUTE}/${event.slug}`}
-                      className='line-clamp-2 font-inter text-sm font-semibold leading-5 text-text-light transition group-hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange dark:text-text-dark'
-                    >
-                      {event.title}
-                    </Link>
-                    <p className='mt-1 font-inter text-[11px] text-gray-500 dark:text-gray-400'>
-                      {formatEventCardWhen(event.start_time, timezone)}
-                    </p>
-                  </div>
-                </article>
+                <div key={event.id || event.slug} className='relative min-w-0'>
+                  <EventContentOptions
+                    event={event}
+                    className='absolute right-0 top-2 z-20'
+                  />
+                  <ContentGate
+                    layout='event-row'
+                    content={event}
+                    target={{ kind: 'event', id: event.slug }}
+                    compact
+                    href={`${EVENTS_ROUTE}/${event.slug}`}
+                  >
+                    <article className='group flex gap-3 py-3 pr-11'>
+                      <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-lg bg-gray-50 text-center dark:bg-white/[0.04]'>
+                        <span className='font-inter text-[9px] font-bold uppercase tracking-wider text-brand-orange'>
+                          {date?.month || 'Soon'}
+                        </span>
+                        <span className='font-newsreader text-lg font-semibold leading-none text-text-light dark:text-text-dark'>
+                          {date?.day || ''}
+                        </span>
+                      </div>
+                      <div className='min-w-0'>
+                        <Link
+                          href={`${EVENTS_ROUTE}/${event.slug}`}
+                          className='line-clamp-2 font-inter text-sm font-semibold leading-5 text-text-light transition group-hover:text-brand-orange focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange dark:text-text-dark'
+                        >
+                          {event.title}
+                        </Link>
+                        <p className='mt-1 font-inter text-[11px] text-gray-500 dark:text-gray-400'>
+                          {formatEventCardWhen(event.start_time, timezone)}
+                        </p>
+                      </div>
+                    </article>
+                  </ContentGate>
+                </div>
               );
             })}
           </div>

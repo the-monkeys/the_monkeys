@@ -1,5 +1,10 @@
 import { API_URL, API_URL_V2 } from '@/constants/api';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
 import { normalizePublicPosts } from '@/lib/publicPostMetadata';
+import {
+  type RestrictedPostLocation,
+  normalizeRestrictedPostLocations,
+} from '@/lib/restrictedPostLocations';
 import { fetchTopicCatalogStrict } from '@/lib/topicCatalog';
 import { GetMetaFeedBlogs, MetaBlog } from '@/services/blog/blogTypes';
 import { EventItem, ListEventsResp } from '@/services/events/eventTypes';
@@ -22,7 +27,7 @@ async function getJson<T>(origin: string, path: string): Promise<T | null> {
   const url = `${origin}${path}`;
   const res = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
-    next: { revalidate: 300 },
+    cache: 'no-store',
   });
   if (res.status === 404) return null;
   if (!res.ok) {
@@ -67,7 +72,10 @@ export async function fetchRecentPublicPosts(): Promise<MetaBlog[]> {
   );
 }
 
-export async function fetchPublicPosts(pageSize = 500): Promise<MetaBlog[]> {
+async function collectPublicPosts(
+  pageSize = 500,
+  restricted?: RestrictedPostLocation[]
+): Promise<MetaBlog[]> {
   const posts: MetaBlog[] = [];
   let offset = 0;
   let knownTotal: number | undefined;
@@ -83,6 +91,7 @@ export async function fetchPublicPosts(pageSize = 500): Promise<MetaBlog[]> {
       throw new Error('Public post catalog returned an invalid post list');
     }
     const pagePosts = normalizePublicPosts(data);
+    if (restricted) restricted.push(...normalizeRestrictedPostLocations(data));
     const rawCount = Array.isArray(data.blogs) ? data.blogs.length : 0;
     if (rawCount > 0) {
       const pageKey = JSON.stringify(data.blogs.map((post) => post?.blog_id));
@@ -111,6 +120,21 @@ export async function fetchPublicPosts(pageSize = 500): Promise<MetaBlog[]> {
   throw new Error('Public post catalog exceeded the discovery page limit');
 }
 
+export async function fetchPublicPosts(pageSize = 500): Promise<MetaBlog[]> {
+  return collectPublicPosts(pageSize);
+}
+export async function fetchSitemapPostCatalog(
+  includeRestricted = false,
+  pageSize = 500
+): Promise<{ posts: MetaBlog[]; restricted: RestrictedPostLocation[] }> {
+  const restricted: RestrictedPostLocation[] = [];
+  const posts = await collectPublicPosts(
+    pageSize,
+    includeRestricted ? restricted : undefined
+  );
+  return { posts, restricted: uniqueBy(restricted, (item) => item.path) };
+}
+
 export async function fetchPublicTopics(): Promise<string[]> {
   const catalog = await fetchTopicCatalogStrict();
   return Array.from(
@@ -131,6 +155,7 @@ export function normalizePublicEvents(value: unknown): EventItem[] {
     if (!raw || typeof raw !== 'object') return false;
     const event = raw as Partial<EventItem>;
     return (
+      isPublicContentSafe(event) &&
       typeof event.id === 'number' &&
       typeof event.title === 'string' &&
       Boolean(event.title.trim()) &&
@@ -181,6 +206,7 @@ export function normalizePublicGroups(value: unknown): GroupItem[] {
     if (!raw || typeof raw !== 'object') return false;
     const group = raw as Partial<GroupItem>;
     return (
+      isPublicContentSafe(group) &&
       typeof group.id === 'number' &&
       typeof group.name === 'string' &&
       Boolean(group.name.trim()) &&

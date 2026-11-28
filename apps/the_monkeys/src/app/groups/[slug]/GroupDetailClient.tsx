@@ -5,16 +5,20 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 import { GroupEmpty } from '@/components/groups/GroupCard';
+import { GroupContentOptions } from '@/components/groups/GroupContentOptions';
 import { GroupCommunity } from '@/components/groups/detail/GroupCommunity';
 import { GroupCreateMenu } from '@/components/groups/detail/GroupCreateMenu';
 import { GroupJoinButton } from '@/components/groups/detail/GroupJoinButton';
 import { GroupRules } from '@/components/groups/detail/GroupRules';
 import Icon, { IconName } from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { ContentGate } from '@/components/moderation/ContentGate';
 import { GROUPS_ROUTE } from '@/constants/routeConstants';
 import { useGroupDetail } from '@/hooks/groups/useGroupQueries';
+import { authenticatedArticleImageUrl } from '@/lib/articleMedia';
 import { canManageGroup, isActiveGroupMember } from '@/lib/groupPerms';
 import { normalizeSeoText } from '@/lib/seo';
+import type { GroupItem } from '@/services/groups/groupsTypes';
 import { GroupVisibility } from '@/services/groups/groupsTypes';
 
 const VISIBILITY: Record<
@@ -28,8 +32,6 @@ const VISIBILITY: Record<
 
 export default function GroupDetailClient({ slug }: { slug: string }) {
   const { data, isLoading, isError } = useGroupDetail(slug);
-  const [forcePostsToken, setForcePostsToken] = useState(0);
-  const [focusDiscussionToken, setFocusDiscussionToken] = useState(0);
   const group = data?.group;
 
   if (isLoading) {
@@ -49,6 +51,26 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
     );
   }
 
+  return (
+    <div className='relative'>
+      <GroupContentOptions
+        group={group}
+        className='absolute right-3 top-3 z-20 rounded-full bg-background-light/90 dark:bg-background-dark/90'
+      />
+      <ContentGate
+        content={group}
+        target={{ kind: 'group', id: group.slug }}
+        href={`/groups/${group.slug}`}
+      >
+        <GroupDetailContent group={group} />
+      </ContentGate>
+    </div>
+  );
+}
+
+function GroupDetailContent({ group }: { group: GroupItem }) {
+  const [forcePostsToken, setForcePostsToken] = useState(0);
+  const [focusDiscussionToken, setFocusDiscussionToken] = useState(0);
   const visibility = VISIBILITY[group.visibility] ?? VISIBILITY.public;
   const place = [group.city, group.region, group.country]
     .filter(Boolean)
@@ -65,7 +87,7 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
       >
         {group.cover_image ? (
           <img
-            src={group.cover_image}
+            src={authenticatedArticleImageUrl(group.cover_image)}
             alt=''
             className='h-full w-full object-cover'
             loading='eager'
@@ -82,7 +104,7 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
           <div className='h-20 w-20 shrink-0 overflow-hidden rounded-2xl border-4 border-background-light bg-foreground-light/40 dark:border-background-dark dark:bg-foreground-dark/30'>
             {group.logo_image ? (
               <img
-                src={group.logo_image}
+                src={authenticatedArticleImageUrl(group.logo_image)}
                 alt=''
                 className='h-full w-full object-cover'
                 loading='lazy'
@@ -172,7 +194,7 @@ export default function GroupDetailClient({ slug }: { slug: string }) {
             )}
           </div>
 
-          <div className='flex shrink-0 items-center gap-2'>
+          <div className='flex min-w-0 shrink-0 flex-wrap items-center gap-2'>
             {(isActiveGroupMember(group) || manage) && (
               <GroupCreateMenu
                 includeEvent={manage}

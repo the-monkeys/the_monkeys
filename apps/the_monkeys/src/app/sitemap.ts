@@ -2,8 +2,11 @@ import type { MetadataRoute } from 'next';
 
 import { postModificationTime } from '@/lib/postModificationTime';
 import { canonicalPostTitleSlug } from '@/lib/postUrl';
+import { isPublicContentSafe } from '@/lib/publicContentSafety';
+import type { RestrictedPostLocation } from '@/lib/restrictedPostLocations';
+import { nsfwSeoEnabled } from '@/lib/searchCrawler';
 import { SITE_URL } from '@/lib/seo';
-import { fetchPublicPosts } from '@/lib/seoCatalog';
+import { fetchSitemapPostCatalog } from '@/lib/seoCatalog';
 import { MetaBlog } from '@/services/blog/blogTypes';
 
 const STATIC_PATHS: Array<{
@@ -35,23 +38,40 @@ function validDate(value?: string): Date | undefined {
   return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
-export function buildMainSitemap(posts: MetaBlog[]): MetadataRoute.Sitemap {
+export function buildMainSitemap(
+  posts: MetaBlog[],
+  restricted: RestrictedPostLocation[] = []
+): MetadataRoute.Sitemap {
   const staticEntries = STATIC_PATHS.map((entry) => ({
     url: `${SITE_URL}${entry.path === '/' ? '/' : entry.path}`,
     changeFrequency: entry.changeFrequency,
     priority: entry.priority,
   }));
-  const postEntries = posts.map((post) => ({
+  const postEntries = posts.filter(isPublicContentSafe).map((post) => ({
     url: `${SITE_URL}/blog/${canonicalPostTitleSlug(post.title, post.canonical_slug, post.blog_id)}-${post.blog_id}`,
     changeFrequency: 'monthly' as const,
     priority: 0.8,
     lastModified: validDate(postModificationTime(post)),
   }));
-  return [...staticEntries, ...postEntries];
+  const protectedEntries = restricted.map((post) => ({
+    url: SITE_URL + post.path,
+    changeFrequency: 'monthly' as const,
+    priority: 0.8,
+    lastModified: validDate(post.content_modified_at || post.published_time),
+  }));
+  const seen = new Set<string>();
+  return [...staticEntries, ...postEntries, ...protectedEntries].filter(
+    (entry) => {
+      if (seen.has(entry.url)) return false;
+      seen.add(entry.url);
+      return true;
+    }
+  );
 }
 
-export const revalidate = 300;
+export const revalidate = 0;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  return buildMainSitemap(await fetchPublicPosts());
+  const { posts, restricted } = await fetchSitemapPostCatalog(nsfwSeoEnabled());
+  return buildMainSitemap(posts, restricted);
 }

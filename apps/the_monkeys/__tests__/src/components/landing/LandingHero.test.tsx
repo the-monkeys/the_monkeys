@@ -8,6 +8,7 @@ import { renderWithProviders } from '../../../utils';
 
 vi.mock('next/navigation', () => ({
   usePathname: () => '/',
+  useRouter: () => ({ refresh: vi.fn(), push: vi.fn() }),
   useSearchParams: () => ({ toString: () => '' }),
 }));
 
@@ -215,4 +216,37 @@ describe('LandingHero', () => {
     ).toBeNull();
     expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
   });
+});
+
+it('keeps a lead slot ahead of discussions when the initial article request is still pending', () => {
+  renderWithProviders(
+    <LandingHero
+      leadFallback={<div role='status'>Loading featured post</div>}
+      communityContent={<p>Discussion previews</p>}
+    />
+  );
+  const lead = screen.getByRole('status');
+  const discussion = screen.getByText('Discussion previews');
+  expect(
+    lead.compareDocumentPosition(discussion) & Node.DOCUMENT_POSITION_FOLLOWING
+  ).toBeTruthy();
+  expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
+});
+
+it('reserves the sensitive lead profile without mounting the headline', () => {
+  renderWithProviders(
+    <LandingHero
+      lead={{
+        ...lead,
+        is_nsfw: true,
+        content_rating: { is_nsfw: true, revision: 1, revealed: false },
+      }}
+    />
+  );
+  const gate = screen.getByRole('region', { name: 'Sensitive content' });
+  expect(
+    gate.closest('[data-content-slot]')?.getAttribute('data-content-slot')
+  ).toBe('lead');
+  expect(screen.queryByRole('article', { name: 'Featured post' })).toBeNull();
+  expect(screen.queryByRole('heading', { name: lead.title })).toBeNull();
 });

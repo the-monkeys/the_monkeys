@@ -1,10 +1,11 @@
 'use client';
 
-import { createContext, createElement, useContext } from 'react';
+import { createContext, createElement, useContext, useMemo } from 'react';
 
 import dynamic from 'next/dynamic';
 
 import { articleAnchor, articleImageAlt } from '@/lib/articleAnnotations';
+import { authenticatedArticleMedia } from '@/lib/articleMedia';
 import type { OutputData } from '@themonkeys/monkeys-editor';
 import DOMPurify from 'isomorphic-dompurify';
 
@@ -139,7 +140,7 @@ function blockContent(type: string, data: Record<string, unknown>) {
       return (
         <figure className='image-tool'>
           {url && (
-            // Match the editor's ordinary image element, without adding an image proxy.
+            // Native images retain viewer cookies for revealed same-origin storage URLs.
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={url}
@@ -229,10 +230,20 @@ const Editor = dynamic(() => import('@/components/editor/preview'), {
   loading: ArticleBodyLoading,
 });
 
-export function BlogArticleBody({ data }: { data?: OutputData }) {
+export function BlogArticleBody({
+  data,
+  sensitive = false,
+}: {
+  data?: OutputData;
+  sensitive?: boolean;
+}) {
+  const viewerData = useMemo(
+    () => (sensitive ? authenticatedArticleMedia(data) : data),
+    [data, sensitive]
+  );
   return (
-    <ArticleData.Provider value={data}>
-      <Editor data={data} />
+    <ArticleData.Provider value={viewerData}>
+      <Editor data={viewerData} />
     </ArticleData.Provider>
   );
 }

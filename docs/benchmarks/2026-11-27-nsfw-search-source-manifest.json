@@ -1,0 +1,33 @@
+{
+  "backend": {
+    "microservices/the_monkeys_gateway/internal/searchcrawler/verifier.go": "1039fcc497e1ec44d7158b46c50ea0a930a75052f078870a913ec163b69dd6ac",
+    "microservices/the_monkeys_gateway/internal/searchcrawler/verifier_test.go": "793b585079f3433158a00c06878ae52ff06f192e7f00a791007f9041a503078b",
+    "microservices/the_monkeys_gateway/internal/moderation/filter.go": "389306a4714f58d66a060a5223794d167a42f8e85cd94fe4eb46ca0018736ece",
+    "microservices/the_monkeys_gateway/internal/moderation/crawler.go": "141f86f7b16f5b094f278a037d5441fb3fee34ac76100e67075182422ba691df",
+    "microservices/the_monkeys_gateway/internal/moderation/crawler_test.go": "42e6c7f7e206dbf349f922dbc578dd8f5a37e79ffff9eb88f637677abda8f05d",
+    "microservices/the_monkeys_blog/internal/database/blogs_matadata.go": "914df6f9d19ed04f4f47f4d20c2ad64efa0d7ac11306c7125354ccb194add19e",
+    "microservices/the_monkeys_blog/internal/database/public_catalog.go": "bccadbd432bd2d4e8ec4c7f4df67b012ae3fabc54a82869fa9d33fe0a5d1182a",
+    "microservices/the_monkeys_blog/internal/database/public_catalog_test.go": "6f4686dce1290566513706e27e88e3838eee2ceeb2259886ee31eece72340cfa",
+    "microservices/the_monkeys_blog/internal/database/editorial_test.go": "0858148beb23b822b5018b90f8763780daf4bbeb8ef64f92dc4205b1bab29b04"
+  },
+  "frontend": {
+    "apps/the_monkeys/src/lib/searchCrawler.ts": "0d07bb6f332ef3860a7d6912860f1917eb86b66412cb02b7afcfed6c059da58f",
+    "apps/the_monkeys/src/lib/searchCrawler.test.ts": "dd9ea2139446bbd5be875fed554b9171f69d9bc4a9ca139a3e99408b770daa56",
+    "apps/the_monkeys/src/lib/nsfwSeoPolicy.ts": "7940670c35be7a7d0cc325d94d1f38bfa4956ac60ba78b0d8657fb80a5a70ba7",
+    "apps/the_monkeys/src/lib/restrictedPostLocations.ts": "a95db8dc83baa635e5a39b6ef1cb91c8d7db8e1cf87b5036333333fb59af6dc7",
+    "apps/the_monkeys/src/lib/restrictedPostLocations.test.ts": "3e1305b1a21be01f5b6ccda1b3aae83e3b013929d66ba167837ec8ba2496ec1f",
+    "apps/the_monkeys/src/middleware.ts": "9f4d19f30127361dddf6b3c3c6839b13f1230f3251e7a09cbd83084b88e94b56",
+    "apps/the_monkeys/src/middleware.test.ts": "14385ebb3b84aa9bbd66104c635da29190bf0a6266894bed6e99e3365c8cb9cb",
+    "apps/the_monkeys/src/app/blog/[slug]/CrawlerArticle.tsx": "199f7a1f57a5280f097bb650b09b7e70dd760a192f9efb6db364228f7ea69776",
+    "apps/the_monkeys/src/app/blog/[slug]/restrictedSeo.ts": "c7d8d8c839353e522dfa1faebff14b194a7abf0645bc21313affc9f72c1dfcab",
+    "apps/the_monkeys/src/app/blog/[slug]/blogData.ts": "25cb8390c5cbead021cbfc479aec8c7fb7b265503db49e74ced997429156bfd2",
+    "apps/the_monkeys/src/app/blog/[slug]/blogSeo.ts": "a722faa0a2386350a73acd1e466334dd75e2043e21ba956de3bfdbe5288d8556",
+    "apps/the_monkeys/src/app/blog/[slug]/page.tsx": "a17be9584f313feb665327a79a3691a14ddc250dd2abf93f7cb6875cd28b9396",
+    "apps/the_monkeys/src/app/sitemap.ts": "1630a58ce9510d45c0e7edb7df2a924051dcccd35e920f916b7c37c0401194a6",
+    "apps/the_monkeys/src/lib/seoCatalog.ts": "499031f765d4cd145dec18aee99418d6edee95cdf4567685356ca5949a23873a",
+    "apps/the_monkeys/src/services/blog/blogTypes.ts": "5ae58027be59ed79f2a5469cb05b2e694f4a89699a0bec388803df370154aa50",
+    "apps/the_monkeys/__tests__/src/app/blog/crawlerData.test.ts": "9ef127f9e7df8d965236127e4dbd8964451345e2df39ef64de881c01b4a3cba6",
+    "apps/the_monkeys/__tests__/src/app/blog/nsfwSearch.test.tsx": "b6f647186e26b344fe08090ce341d94301215b94ae8caa68035f58da4fd8f7e9",
+    "apps/the_monkeys/__tests__/src/components/moderation/RegistrationCodeFeedback.test.tsx": "0d171575a7cb9ee71beeba1f1f69e21d08e038c0c205d6c3d15f639144515554"
+  }
+}

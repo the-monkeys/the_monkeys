@@ -19,14 +19,12 @@ export interface HomepageBlogsResponse {
   has_more: boolean;
   homepage_policy_version: 'homepage-v1';
 }
-export async function readHomepageBlogs({
-  limit = 12,
-  offset = 0,
-  sort = 'latest',
-}: HomepageBlogParams = {}): Promise<HomepageBlogsResponse> {
-  const data = await fetcherV2(
-    `/blog/homepage?limit=${limit}&offset=${offset}&sort=${sort}`
-  );
+export async function readHomepageBlogs(
+  { limit = 12, offset = 0, sort = 'latest' }: HomepageBlogParams = {},
+  signal?: AbortSignal
+): Promise<HomepageBlogsResponse> {
+  const path = `/blog/homepage?limit=${limit}&offset=${offset}&sort=${sort}`;
+  const data = await (signal ? fetcherV2(path, signal) : fetcherV2(path));
   if (
     !data ||
     data.homepage_policy_version !== HOMEPAGE_POLICY_VERSION ||
@@ -40,19 +38,20 @@ export async function readHomepageBlogs({
 }
 
 /** Writes refresh this homepage-only branch; ordinary and personalized caches stay separate. */
-export function homepageBlogQuery({
-  limit = 12,
-  offset = 0,
-  sort = 'latest',
-}: HomepageBlogParams = {}) {
+export function homepageBlogQuery(
+  { limit = 12, offset = 0, sort = 'latest' }: HomepageBlogParams = {},
+  viewer?: string
+) {
   return {
     queryKey: queryKeys.blog.homepage(
       sort,
       limit,
       offset,
-      HOMEPAGE_POLICY_VERSION
+      HOMEPAGE_POLICY_VERSION,
+      viewer
     ),
-    queryFn: () => readHomepageBlogs({ limit, offset, sort }),
+    queryFn: ({ signal }: { signal?: AbortSignal } = {}) =>
+      readHomepageBlogs({ limit, offset, sort }, signal),
     staleTime: LIVE_LIST_STALE_MS,
     retry: false,
     // Keep mutation invalidation immediate; coalesce rapid focus-only checks.

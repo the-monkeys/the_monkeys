@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 import FormSearchSelect from '@/components/FormSearchSelect';
 import { BlogPublicationScopeFields } from '@/components/blog/actions/BlogPublicationScopeFields';
 import Icon from '@/components/icon';
 import { Loader } from '@/components/loader';
+import { ContentLabelToggle } from '@/components/moderation/ContentLabelToggle';
 import { BLOG_TOPICS_MAX_COUNT } from '@/constants/topics';
 import useAuth from '@/hooks/auth/useAuth';
 import { useScheduleState } from '@/hooks/blog/schedule/useScheduleState';
@@ -31,6 +32,8 @@ import ScheduleDateTimePicker from '../ScheduleDateTimePicker';
 import { BlogDescription, BlogImage, BlogTitle } from '../getBlogContent';
 
 interface PublishBlogDrawerProps {
+  blogId?: string;
+  initialMarked?: boolean;
   topics: string[];
   setTopics: React.Dispatch<React.SetStateAction<string[]>>;
   data: OutputData | null;
@@ -90,6 +93,8 @@ const toSelectOptions = (
   (topics ?? []).map(({ topic }) => ({ value: topic, label: topic }));
 
 export const PublishBlogDrawer = ({
+  blogId,
+  initialMarked,
   topics,
   setTopics,
   data,
@@ -106,6 +111,19 @@ export const PublishBlogDrawer = ({
 }: PublishBlogDrawerProps) => {
   const { data: session } = useAuth();
   const { topics: allTopics } = useGetAllTopics();
+
+  const [ratingDirty, setRatingDirty] = useState(false);
+  const [ratingPending, setRatingPending] = useState(false);
+  // Block clicks synchronously, before React commits the disabled button state.
+  const ratingState = useRef({ dirty: false, pending: false });
+  const onRatingDirtyChange = useCallback((dirty: boolean) => {
+    ratingState.current.dirty = dirty;
+    setRatingDirty(dirty);
+  }, []);
+  const onRatingPendingChange = useCallback((pending: boolean) => {
+    ratingState.current.pending = pending;
+    setRatingPending(pending);
+  }, []);
 
   const [isScheduleMode, setIsScheduleMode] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -192,11 +210,20 @@ export const PublishBlogDrawer = ({
   };
 
   const handleActionClick = () => {
-    if (!publication || publicationPending || publicationError) return;
+    if (
+      !publication ||
+      publicationPending ||
+      publicationError ||
+      isPublishing ||
+      ratingState.current.dirty ||
+      ratingState.current.pending
+    )
+      return;
     if (isScheduleMode && handleSchedule) {
-      validateAndSubmit((scheduleTime, timezone) =>
-        handleSchedule(scheduleTime, timezone, publication)
-      );
+      validateAndSubmit((scheduleTime, timezone) => {
+        if (ratingState.current.dirty || ratingState.current.pending) return;
+        handleSchedule(scheduleTime, timezone, publication);
+      });
     } else {
       handlePublish(publication);
     }
@@ -491,6 +518,15 @@ export const PublishBlogDrawer = ({
                   )}
                 </div>
 
+                {blogId && (
+                  <ContentLabelToggle
+                    target={{ kind: 'blog', id: blogId }}
+                    initialMarked={initialMarked}
+                    onDirtyChange={onRatingDirtyChange}
+                    onPendingChange={onRatingPendingChange}
+                  />
+                )}
+
                 {/* Schedule toggle */}
                 <div className='pt-4 border-t border-border-light dark:border-border-dark'>
                   <div className='flex items-center justify-between mb-4'>
@@ -520,6 +556,14 @@ export const PublishBlogDrawer = ({
                 </div>
               </div>
 
+              {(ratingDirty || ratingPending) && (
+                <p aria-live='polite' className='text-sm text-brand-orange'>
+                  {ratingPending
+                    ? 'Saving content rating...'
+                    : 'Save or revert the content rating before publishing or scheduling.'}
+                </p>
+              )}
+
               {/* Action buttons */}
               <div className='flex justify-end gap-2 pt-4 border-t mt-auto'>
                 <DrawerClose asChild>
@@ -531,6 +575,8 @@ export const PublishBlogDrawer = ({
                   onClick={handleActionClick}
                   disabled={
                     isPublishing ||
+                    ratingDirty ||
+                    ratingPending ||
                     publicationPending ||
                     !!publicationError ||
                     !publication
