@@ -20,7 +20,12 @@ export function findCatalogTopic(
   const topics = Object.values(catalog.category).flatMap(
     (category) => category.Topics
   );
-  return topics.find((topic) => topicToSlug(topic) === slug) || null;
+  const categoryNames = Object.keys(catalog.category);
+  return (
+    [...topics, ...categoryNames].find(
+      (topic) => topicToSlug(topic) === slug
+    ) || null
+  );
 }
 
 export function relatedTopicLinks(
